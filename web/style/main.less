@@ -1,1 +1,31 @@
 // TODO styling for the SoGive app
+
+.avoid-navbar {
+    margin-top:100px;
+    border: solid blue 1px;
+}
+
+// Hides an item by sliding it to one side while fading out (and shows by the reverse)
+.slide-hide {
+	transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+}
+
+.hide-left, .hide-right, .hide-down {
+	position: absolute !important;
+	margin-top: inherit;
+	top: 0;
+	opacity: 0;
+	visibility: hidden;
+}
+
+.hide-left {
+	transform: translateX(-30%);
+}
+
+.hide-right {
+	transform: translateX(30%);
+}
+
+.hide-down {
+	transform: translateY(100%);
+}
