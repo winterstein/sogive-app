@@ -7,28 +7,34 @@ import printer from '../utils/printer.js';
 import C from '../C.js';
 
 
-const Dashboard = React.createClass({
+const DOnateToCampaign = React.createClass({
 
     render: function() {
         console.log('PAGE RENDER');
         return (
-            <div className='dashboard'>
-                <h2>My Dashboard</h2>
+            <div className='campaign'>
+                <h2>Alice's Sponsored Marathon for Kiddy Shoes</h2>
 
                 <div class='panel'>
-                    Time-Series CHart
+                    About the charity
                 </div>
 
                 <div class='panel'>
-                    Pie-Chart by category
+                    Donate!
+                    <div>£10 will pay for 5 pairs of Shoes.</div>
+                    <div>Amongst other benefits, that means 0.1 less snake bite victims.</div>
+                    more info...
                 </div>
 
                 <div class='panel'>
-                    Badges (encouraging use of all features, and repeated use -- but not extra £s)
+                    Campaign Info: 823 shoes funded
+                    Target: 1000 shoes
+
+                    Donations by: ALice, Bob, Carol... (no value given)
+
                 </div>
 
                 <div class='panel'>
-                    List of donations and impacts
                 </div>
             </div>
         );

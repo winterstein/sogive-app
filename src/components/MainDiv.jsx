@@ -16,11 +16,14 @@ import MessageBar from './MessageBar.jsx';
 import Dashboard from './Dashboard.jsx';
 import Search from './Search.jsx';
 import Account from './Account.jsx';
+import DonateToCampaign from './DonateToCampaign.jsx';
+
 // import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
     'search': Search,
     'dashboard': Dashboard,
-    'account': Account
+    'account': Account,
+	'campaign': DonateToCampaign
 }
 
 const TABORDER = ['dashboard', 'search']
@@ -97,9 +100,13 @@ const NavBar = function({page, showTab}) {
             <div id="navbar" className="navbar-collapse collapse">
                 <ul className="nav navbar-nav">
                     <li className={ page === 'dashboard'? 'active' : '' }>
-                        <a className="nav-item nav-link" href="#dashboard" onClick={ showTab.bind(null, 'dashboard') }>Dashboard</a></li>
+                        <a className="nav-item nav-link" href="#dashboard" onClick={ showTab.bind(null, 'dashboard') }>My Profile</a></li>
                     <li className={ page === 'search'? 'active' : '' }>
                         <a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'search') }>Search</a></li>
+
+					<li className={ page === 'campaign'? 'active' : '' }>
+						<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'campaign') }>(dummy) Donate to Campaign</a>
+					</li>
                 </ul>
                 <AccountMenu active={ page === 'account' } onClick={ showTab.bind(null, 'account') }/>
             </div>
