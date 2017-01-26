@@ -8,5 +8,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.datalog"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.web"/>
+	<classpathentry kind="lib" path="/middleware/jsr305/jsr305.jar"/>
+	<classpathentry kind="lib" path="/middleware/schemaorg-java/schemaorg-java.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

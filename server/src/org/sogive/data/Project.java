@@ -9,6 +9,8 @@ package org.sogive.data;
  */
 public class Project {
 
+	// Does schema org have a task defined by inputs / outputs??
+	
 	public static void main(String[] args) {
 		JsonLdSerializer serializer = new JsonLdSerializer(true /* setPrettyPrinting */);
 		DataFeed object =
