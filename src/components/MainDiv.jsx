@@ -13,17 +13,17 @@ import C from '../C.js';
 
 // Temaplates
 import MessageBar from './MessageBar.jsx';
-import Dashboard from './Dashboard.jsx';
-import Search from './Search.jsx';
+import DashboardPage from './DashboardPage.jsx';
+import SearchPage from './SearchPage.jsx';
 import Account from './Account.jsx';
-import DonateToCampaign from './DonateToCampaign.jsx';
+import DonateToCampaignPage from './DonateToCampaignPage.jsx';
 
 // import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
-    'search': Search,
-    'dashboard': Dashboard,
+    'search': SearchPage,
+    'dashboard': DashboardPage,
     'account': Account,
-	'campaign': DonateToCampaign
+	'campaign': DonateToCampaignPage
 }
 
 const TABORDER = ['dashboard', 'search']

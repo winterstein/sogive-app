@@ -1,0 +1,34 @@
+{
+    "cargo": {
+        "type": "charity", // TODO use schema.org organisation NGO
+        "id": "solar-aid",
+        "name": "Solar Aid",
+        "desc": "",
+        "logo": "",
+        "photos": [
+        ],
+        "tags": "energy, climate change, health, education",
+        "projects": {
+            "main": {
+                "ref": "http://www.solar-aid.org/assets/Uploads/Impact-week-2015/SolarAid-IMPACT-REPORT-2015.pdf"
+                "desc": "Providing solar-powered lights for a hut or room that doesn't have electricity. Lighting at home helps with study and improves family time. We take electricity and lighting for granted, but many homes in the developing world don't have them.",
+                "img": "",
+                "inputs": [
+                    {"input": "£", "number": 6326794}
+                ],
+                "outputs": [
+                    {
+                        "output": "solar-light", "number": 624443,
+                        "beneficiaries": "$number * 6",
+                        "name": "Solar Light"
+                    } // ./solar-light
+                ]
+            },
+            "effects": [ // can we describe knock-on effects?
+                {"input": "solar-light"}
+            ]
+        } // ./projects
+    } // ./cargo
+}
+
+// Solar Aid	Energy & climate change & health & education	1115960	Sanjay	Overall	1-Apr-2014	31-Mar-2015	Yes	• EDUCATION / TRAINING • THE PREVENTION OR RELIEF OF POVERTY • ENVIRONMENT / CONSERVATION / HERITAGE • ECONOMIC / COMMUNITY DEVELOPMENT / EMPLOYMENT	• CHILDREN / YOUNG PEOPLE • ELDERLY / OLD PEOPLE • PEOPLE WITH DISABILITIES • OTHER CHARITIES OR VOLUNTAY BODIES • THE GENERAL PUBLIC / MANKIND 	• PROVIDES HUMAN RESOURCES • PROVIDES BUILDINGS / FACILITIES / OPEN SPACE • PROVIDES SERVICES • PROVIDES ADVOCACY / ADVICE / INFORMATION • SPONSORS OR UNDERTAKES RESEARCH 	http://apps.charitycommission.gov.uk/Showcharity/RegisterOfCharities/CharityWithPartB.aspx?RegisteredCharityNumber=1115960&SubsidiaryNumber=0	http://www.solar-aid.org/assets/Uploads/Impact-week-2015/SolarAid-IMPACT-REPORT-2015.pdf	624,443 is the number of solar lights sold - see page 5 of the impact report. 3.9 million have access to clean safe light as a result according to accounts: http://apps.charitycommission.gov.uk/Accounts/Ends60/0001115960_AC_20150331_E_C.pdf	624,443	3,900,000	132,000,000	775,000,000	2,200,000	330,000	£6,326,794	£3,654,481	£324,602	£0.00	£2,347,711	£3.76	£0.60	£0.02	£0.00	£1.07	£7.11	Could also have used the 3.9 million who have access to clean safe light as a result. Good to look at the social impact calculator that solar aid has - http://www.solar-aid.org/online-impact-calculator/	£6,191,995	£821,599	£109,121	2%	Reserves taken from note 16. This figure looks low. Could there be other reserves held within the Sunnymoney entity? The comments on page 8 indicate that the target is 3 months, and they are planning to build back up to this level, which presumably means that they acknowledge their reserves are too low.	You enabled access to XXXX solar lights, well done!	Yes	High	Plenty of information provided, and it seems to align with independently conducted calcs, as far as they can be checked			Multiple meetings and emails				A	5	Impact seems high, with beneficiaries enjoying health impacts, improved education, and there are climate change benefits too. Coudl look at GWWC's research, but it's incomplete: https://www.givingwhatwecan.org/sites/givingwhatwecan.org/files/reports/SolarAid%20Report.pdf	

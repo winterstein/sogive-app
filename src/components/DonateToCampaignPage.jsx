@@ -7,26 +7,26 @@ import printer from '../utils/printer.js';
 import C from '../C.js';
 
 
-const DOnateToCampaign = React.createClass({
+class DonateToCampaignPage extends React.Component {
 
-    render: function() {
+    render() {
         console.log('PAGE RENDER');
         return (
             <div className='campaign'>
                 <h2>Alice's Sponsored Marathon for Kiddy Shoes</h2>
 
-                <div class='panel'>
+                <div className='panel'>
                     About the charity
                 </div>
 
-                <div class='panel'>
+                <div className='panel'>
                     Donate!
                     <div>£10 will pay for 5 pairs of Shoes.</div>
                     <div>Amongst other benefits, that means 0.1 less snake bite victims.</div>
                     more info...
                 </div>
 
-                <div class='panel'>
+                <div className='panel'>
                     Campaign Info: 823 shoes funded
                     Target: 1000 shoes
 
@@ -34,12 +34,12 @@ const DOnateToCampaign = React.createClass({
 
                 </div>
 
-                <div class='panel'>
+                <div className='panel'>
                 </div>
             </div>
         );
     }
 
-}); // ./Dashboard
+}; // ./DonateToCampaign
 
-export default Dashboard;
+export default DonateToCampaignPage;
