@@ -1,5 +1,5 @@
-import ServerIO from '../plumbing/ServerIO.js';
-import C from'../C.js';
+import ServerIO from '../src/plumbing/ServerIO.js';
+import C from '../src/C.js';
 
 describe('ServerIO', function() {
     this.timeout(5000);

@@ -7,10 +7,10 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assertMatch} from 'sjtest';
-import C from '../c.js';
+import C from '../C.js';
 
 import DataStore from './DataStore.js';
-import Login from 'hooru';
+// import Login from 'hooru';
 
 const ServerIO = {};
 
@@ -95,6 +95,6 @@ ServerIO.addDefaultParams = function(params) {
 	return params;
 };
 
-ServerIO.getCharity(charityId) {
+ServerIO.getCharity = function(charityId) {
     return ServerIO.load('/mock-server/'+charityId+'.json');
 }
