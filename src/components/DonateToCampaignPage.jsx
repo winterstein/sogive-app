@@ -17,11 +17,11 @@ export default class DonateToCampaignPage extends React.Component {
             loading: false,
             // HACK!!!
             charity: {
-                "type": "charity",
+                "@type": "NGO",
                 "id": "solar-aid",
                 "name": "Solar Aid",
-                "desc": "Providing solar-powered lights for the developing world.",
-                "logo": "http://",
+                "description": "Providing solar-powered lights for the developing world.",
+                "logo": "https://solar-aid.org/wp-content/uploads/2016/10/solar-aid-default-logo.png",
                 "photos": [
                     {"url": "http://", "caption": "a well lit family is a happy family"}
                 ],
@@ -40,10 +40,12 @@ export default class DonateToCampaignPage extends React.Component {
                                 "beneficiaries": "$number * 6"
                             }     
                         ],
-                        "impact": {
+                        "impact": [
                             // £10 funds 1 solar light
-                            10: {"output": "solar-light"} 
-                        }                 
+                            {"price":5, "output": "solar-light", "number": 0.5},
+                            {"price":10, "output": "solar-light", "number": 1}, // always put £10 middle 
+                            {"price":50, "output": "solar-light", "number": 5},
+                        ]
                     },
                     "effects": [
                         {"input": "solar-light", "beneficiaries": 3, "output": "Improved education from studying at home"}
@@ -85,6 +87,7 @@ export default class DonateToCampaignPage extends React.Component {
                 <h2>Alice's Sponsored Marathon for {charity.name}</h2>
 
                 <div className='panel'>
+                    <img src={charity.logo} className='logo'/>
                     <h3>About {charity.name}</h3>
                     <p>{charity.desc}</p>
                 </div>
@@ -92,20 +95,28 @@ export default class DonateToCampaignPage extends React.Component {
                 <div className='panel'>
                     <h3>Donate!</h3>
                     <div>{project.desc}</div>
-                    <DonationAmounts amounts={["£10", "£20"]} charity={charity} project={project} />
+                    <DonationAmounts impacts={project.impact} charity={charity} project={project} />
                     <div>Amongst other benefits, that means better education opportunities for a family.</div>
                     more info...
                 </div>
 
                 <div className='panel'>
-                    Campaign Info: 823 shoes funded
-                    Target: 1000 shoes
+                    Campaign Info: 823 lights funded
+                    Target: 1000 lights
 
-                    Donations by: ALice, Bob, Carol... (no value given)
+                    Donations by: 
+                    <DonationList donations={["Alice", "Bob", "Carol"]} />
 
                 </div>
 
                 <div className='panel'>
+                    <h3>Spread the word on social media</h3>
+
+                    Facebook
+                    Twitter
+                    Instagram
+
+                    Sharing boosts the value of your donation by an average of 2 to 3 times.
                 </div>
             </div>
         );
@@ -117,11 +128,17 @@ class DonationAmounts extends React.Component {
     render() {
         let charity = this.props.charity;
         let project = this.props.project;
-        let damounts = _.map(this.props.amounts, a => (<DonationAmount key={uid()} charity={charity} project={project} amount={a}/>) );
-        return(<div>{damounts}</div>)
+        let damounts = _.map(this.props.impacts, a => (<DonationAmount key={uid()} charity={charity} project={project} impact={a}/>) );
+        return(<ul>{damounts}</ul>)
     }
 }
 
-const DonationAmount = function({charity, project, amount}) {
-    return <div>{amount}</div>
+const DonationAmount = function({charity, project, impact}) {
+    return <li>£{impact.price} will fund {impact.number} {impact.output}</li>;
+};
+
+
+const DonationList = ({donations}) => {
+    let ddivs = _.map(donations, d => <li>{d}</li>);
+    return <ul>{ddivs}</ul>
 };

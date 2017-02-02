@@ -1,17 +1,30 @@
 {
     "cargo": {
-        "type": "charity",
+        "@context": "http://schema.org",
+        "@type": "NGO",
+        "@id": "solar-aid",
         "id": "solar-aid",
+        "location": {
+            "@type": "PostalAddress",
+            "addressCountry": "gb"
+        },
+        "url": "https://solar-aid.org",
+        "description": "DOing nice stuff",
+        "numberOfEmployees": 10,
+        "logo": "https://solar-aid.org/wp-content/uploads/2016/10/solar-aid-default-logo.png",
+        "image": {
+            "@type": "ImageObject",
+            "url": "",
+            "description": ""
+        },
         "name": "Solar Aid",
-        "desc": "",
-        "logo": "",
         "photos": [
         ],
         "tags": "energy, climate change, health, education",
         "projects": {
             "main": {
                 "ref": "http://www.solar-aid.org/assets/Uploads/Impact-week-2015/SolarAid-IMPACT-REPORT-2015.pdf",
-                "desc": "Providing solar-powered lights for a hut or room that doesn't have electricity. Lighting at home helps with study and improves family time. We take electricity and lighting for granted, but many homes in the developing world don't have them.",
+                "description": "Providing solar-powered lights for a hut or room that doesn't have electricity. Lighting at home helps with study and improves family time. We take electricity and lighting for granted, but many homes in the developing world don't have them.",
                 "img": "",
                 "inputs": [
                     {"input": "£", "number": 6326794}
