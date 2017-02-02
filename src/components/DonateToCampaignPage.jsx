@@ -26,8 +26,11 @@ export default class DonateToCampaignPage extends React.Component {
                     {"url": "http://", "caption": "a well lit family is a happy family"}
                 ],
                 "tags": "energy, climate change, health, education",
+                "what": "• EDUCATION / TRAINING • THE PREVENTION OR RELIEF OF POVERTY • ENVIRONMENT / CONSERVATION / HERITAGE • ECONOMIC / COMMUNITY DEVELOPMENT / EMPLOYMENT• CHILDREN",
+                "who": "YOUNG PEOPLE • ELDERLY / OLD PEOPLE • PEOPLE WITH DISABILITIES • OTHER CHARITIES OR VOLUNTAY BODIES • THE GENERAL PUBLIC / MANKIND",
+                "how": "PROVIDES HUMAN RESOURCES • PROVIDES BUILDINGS / FACILITIES / OPEN SPACE • PROVIDES SERVICES • PROVIDES ADVOCACY / ADVICE / INFORMATION • SPONSORS OR UNDERTAKES RESEARCH",
                 "projects": {
-                    "main": {
+                    "overall": {
                         "ref": "http://www.solar-aid.org/assets/Uploads/Impact-week-2015/SolarAid-IMPACT-REPORT-2015.pdf",
                         "desc": "Providing solar-powered lights for a hut or room that doesn't have electricity. Lighting at home helps with study and improves family time. We take electricity and lighting for granted, but many homes in the developing world don't have them.",
                         "img": "",
@@ -80,7 +83,7 @@ export default class DonateToCampaignPage extends React.Component {
             return (<div>Loading...</div>);
         }
         const charity = this.state.charity;
-        const project = charity.projects && charity.projects.main;
+        const project = charity.projects && charity.projects.overall;
         console.log('PAGE RENDER');
         return (
             <div className='campaign'>
