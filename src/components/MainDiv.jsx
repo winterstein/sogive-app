@@ -5,6 +5,7 @@ import SJTest from 'sjtest'
 const assert = SJTest.assert;
 // import LoginWidget from './LoginWidget.jsx';
 import printer from '../utils/printer.js';
+import {getUrlVars} from 'wwutils';
 
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 // import {ActionMan, Action} from '../js/plumbing/ActionMan.js';
@@ -33,12 +34,24 @@ const TABORDER = ['dashboard', 'search']
 */
 export default React.createClass({
     getInitialState: function() {
-		var hash = window.location.hash.substr(1);
+		let page;
+		let hash = window.location.hash.substr(1);
+		if (hash.indexOf('?') !== -1) hash = hash.substr(0, hash.indexOf('?')); 
 		if (TABORDER.indexOf(hash) >= 0) {
-			return { page: hash };
-		}
+			page = hash;
+		} else {
         // TODO logged in? then show dashboard
-		return { page: 'search' };
+			page = 'search';
+		}
+		const webProps = getUrlVars();
+		// FIXME
+		webProps.charityId = 'solar-aid';
+		const istate = {
+			page: page,
+			pageProps: webProps
+		};
+		console.log("initstate", istate);
+		return istate;
 	},
 
 	showTab: function(tab) {
@@ -64,21 +77,21 @@ export default React.createClass({
             <NavBar page={this.state.page} showTab={this.showTab} />
 			<div className="container avoid-navbar">
                 <MessageBar />
-                <Tab page={page} />                
+				<Tab page={page} pageProps={this.state.pageProps}/>                
             </div>            
         </div>);
 	}
 });
 
 
-const Tab = function({page}) {
+const Tab = function({page, pageProps}) {	
 	assert(page);
     const Page = PAGES[page];
     assert(Page, (page, PAGES));
 	console.log("Tab", page, Page);
     return (
       <div className='slide-hide' id={page}>
-        <Page />
+		<Page {...pageProps} />
       </div>
     );
 };

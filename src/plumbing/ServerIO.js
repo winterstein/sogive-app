@@ -13,6 +13,7 @@ import DataStore from './DataStore.js';
 // import Login from 'hooru';
 
 const ServerIO = {};
+export default ServerIO;
 
 /**
  * Submits an AJAX request. This is the key base method
@@ -61,15 +62,15 @@ ServerIO.load = function(url, params) {
 	}
 	defrd = defrd
 			.then(ServerIO.handleMessages)
-			.fail(function(response) {
-				console.error('fail',url,params,response);
-				ServerIO.ActionMan.perform({
-					verb:C.action.notify, 
-					messages:[{
-						type:'error', 
-						text:'Failed to load: '+url
-					}]
-				});
+			.fail(function(response, huh, bah) {
+				console.error('fail',url,params,response,huh,bah);
+				// ServerIO.ActionMan.perform({
+				// 	verb:C.action.notify, 
+				// 	messages:[{
+				// 		type:'error', 
+				// 		text:'Failed to load: '+url
+				// 	}]
+				// });
 				return response;
 			}.bind(this));
 	return defrd;
@@ -96,5 +97,6 @@ ServerIO.addDefaultParams = function(params) {
 };
 
 ServerIO.getCharity = function(charityId) {
+	assert(charityId);
     return ServerIO.load('/mock-server/'+charityId+'.json');
 }
