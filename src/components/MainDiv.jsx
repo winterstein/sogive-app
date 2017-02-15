@@ -19,6 +19,7 @@ import SearchPage from './SearchPage.jsx';
 import Account from './Account.jsx';
 import DonateToCampaignPage from './DonateToCampaignPage.jsx';
 import AccountMenu from './AccountMenu.jsx';
+import {Nav,NavBar,NavItem} from 'react-bootstrap';
 
 // import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
@@ -75,7 +76,7 @@ export default React.createClass({
         const page = this.state.page;
         assert(page, this.state);
         return ( <div>
-            <NavBar page={this.state.page} showTab={this.showTab} />
+            <SoGiveNavBar page={this.state.page} showTab={this.showTab} />
 			<div className="container avoid-navbar">
                 <MessageBar />
 				<Tab page={page} pageProps={this.state.pageProps}/>                
@@ -97,8 +98,28 @@ const Tab = function({page, pageProps}) {
     );
 };
 
-const NavBar = function({page, showTab}) {
+const SoGiveNavBar = function({page, showTab}) {
     console.log('NavBar', page);
+// https://react-bootstrap.github.io/components.html#navbars
+    // return (
+    //     <NavBar inverse defaultExpanded>
+    //         <NavBar.Header>
+    //             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>            
+    //             <Navbar.Toggle />
+    //         </NavBar.Header>
+    //         <Navbar.Collapse>
+    //         <Nav>
+    //             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
+    //             <NavItem eventKey={1} href="#">Link</NavItem>
+    //             <NavItem eventKey={2} href="#">Link</NavItem>
+    //         </Nav>
+    //         <Nav pullRight>
+    //             <NavItem eventKey={1} href="#">Link Right</NavItem>
+    //             <NavItem eventKey={2} href="#">Link Right</NavItem>
+    //         </Nav>
+    //         </Navbar.Collapse>
+    //     </NavBar>
+    // );
     return (
     <nav className="navbar navbar-fixed-top navbar-inverse">
         <div className="container">
@@ -126,7 +147,7 @@ const NavBar = function({page, showTab}) {
             </div>
         </div>
     </nav>
-    )
+    );
 };
 // ./NavBar
 

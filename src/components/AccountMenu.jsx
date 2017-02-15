@@ -12,6 +12,7 @@ import {getUrlVars} from 'wwutils';
 // import ViewManager from '../js/plumbing/ViewManager.js';
 import C from '../C.js';
 import Login from 'hooru';
+import {Nav,NavItem} from 'react-bootstrap';
 
 /*
 The top-right menu
@@ -27,7 +28,13 @@ export default class AccountMenu extends React.Component {
 	}
 
 	render() {
-
+        if ( ! Login.isLoggedIn()) {
+            return (
+                <Nav pullRight>
+                    <NavItem eventKey={1} href="#">Login or Register</NavItem>
+                </Nav>
+            );
+        }
 		// const user = this.state.user;
 		let name = 'Not Logged In';
 		// if (user && XId.service(user.xid)!=='temp') {
