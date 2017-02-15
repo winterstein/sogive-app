@@ -149,7 +149,6 @@ public class ImportCharityDataFromCSV {
 			pi.setDocAsUpsert(true);
 			ListenableFuture<ESHttpResponse> f = pi.execute();
 			f.get().check();
-//			Utils.sleep(1000);
 			cnt++;
 		}
 		return cnt;
