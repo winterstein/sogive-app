@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sogive.data;
+package org.sogive.data.charity;
 
 import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdFactory;
