@@ -3,6 +3,8 @@
  */
 package org.sogive.data.charity;
 
+import java.util.HashMap;
+
 import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdFactory;
 import com.google.schemaorg.JsonLdSerializer;
@@ -18,10 +20,16 @@ import com.google.schemaorg.core.NGO.Builder;
  * @author daniel
  *
  */
-public class Project {
+public class Project extends Thing {
 
 	// Does schema org have a task defined by inputs / outputs??
 	
+	private static final long serialVersionUID = 1L;
+
+	public Project(String name) {
+		put("name", name);
+	}
+
 	public static void main(String[] args) throws JsonIOException, JsonLdSyntaxException {
 		JsonLdSerializer serializer = new JsonLdSerializer(true /* setPrettyPrinting */);
 		DataFeed object =
@@ -52,5 +60,9 @@ public class Project {
 	  .build();
 	  String jsonLdStr2 = serializer.serialize(ngo);		
 	  System.out.println(jsonLdStr2);
+	}
+
+	public String getName() {
+		return (String) get("name");
 	}
 }
