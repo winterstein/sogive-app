@@ -1,8 +1,6 @@
 /** 
  * Wrapper for server calls, which populates DataStore.
  *
- * This can choose whether or not to use cached values.
- * 
  */
 import _ from 'lodash';
 import $ from 'jquery';
@@ -15,6 +13,18 @@ import DataStore from './DataStore.js';
 const ServerIO = {};
 export default ServerIO;
 
+// for debug
+window.ServerIO = ServerIO;
+
+/**
+ * @param query {!String} query string
+ */
+ServerIO.search = function(query) {
+	assert(_.isString(query), query);
+	return ServerIO.load('/search.json', {data: {q: query}} );
+}
+
+
 /**
  * Submits an AJAX request. This is the key base method
  *
@@ -22,7 +32,7 @@ export default ServerIO;
  
  * @param {Object} [params] Optional map of settings to modify the request.
  * See <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> for details.
- * To specify form data, use params.data
+ * IMPORTANT: To specify form data, use params.data
  
  * To swallow any messages returned by the server - use params.swallow=true
  * 

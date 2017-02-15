@@ -11,8 +11,8 @@ const Account = React.createClass({
 
     render: function() {
         return (
-            <div className='Search'>
-                <h2>Search</h2>
+            <div className=''>
+                <h2>My Account</h2>
             </div>
         );
     }

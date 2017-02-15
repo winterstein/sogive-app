@@ -86,6 +86,13 @@ public class ImportCharityDataFromCSV {
 		return new MonetaryAmount(MathUtils.getNumber(value));
 	}
 	
+	public static void main(String[] args) throws Exception {
+		File export = new File("data/charities.csv");
+		
+		ImportCharityDataFromCSV importer = new ImportCharityDataFromCSV(export);
+		int cnt = importer.run();
+		System.out.println(cnt);
+	}
 	
 	private static final int COL_REG_NUMBER = 2;
 	

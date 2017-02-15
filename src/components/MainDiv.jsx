@@ -18,6 +18,7 @@ import DashboardPage from './DashboardPage.jsx';
 import SearchPage from './SearchPage.jsx';
 import Account from './Account.jsx';
 import DonateToCampaignPage from './DonateToCampaignPage.jsx';
+import AccountMenu from './AccountMenu.jsx';
 
 // import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
@@ -129,40 +130,4 @@ const NavBar = function({page, showTab}) {
 };
 // ./NavBar
 
-
-/*
-The top-right menu
-*/
-var AccountMenu = React.createClass({
-	componentWillMount: function() {
-	},
-
-	componentWillUnmount: function() {
-	},
-
-	logOut: function() {
-	},
-
-	render: function() {
-		// const user = this.state.user;
-		let name = 'Not Logged In';
-		// if (user && XId.service(user.xid)!=='temp') {
-		// 	name = user.name || XId.prettyName(user.xid);
-		// }
-		let wsname = this.state && this.state.workspace? this.state.workspace.slug : 'scratch';
-		return (
-			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
-				<li className={ 'dropdown' + (this.props.active? ' active' : '') }>
-					<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{ name } <span className="caret"></span></a>
-					<ul className="dropdown-menu">            
-						<li><a href="#">Account</a></li>
-						<li><a><small>(workspace: { wsname })</small></a></li>
-						<li role="separator" className="divider"></li>
-						<li><a href="#">Log out</a></li>
-					</ul>
-				</li>
-			</ul>
-		);
-	}
-}); // ./AccountMenu
 
