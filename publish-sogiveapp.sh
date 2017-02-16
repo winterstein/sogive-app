@@ -18,4 +18,4 @@ for server in ${TARGETSERVERS[*]}; do
 	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app reset --hard FETCH_HEAD'
 	echo -e "$server updated"
 done
-echo -e "server(s) in array, $TARGETSERVERS updated"
+echo -e "server(s) $TARGETSERVERS updated"
