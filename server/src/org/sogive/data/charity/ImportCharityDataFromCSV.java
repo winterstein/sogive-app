@@ -157,6 +157,7 @@ public class ImportCharityDataFromCSV {
 			ListenableFuture<ESHttpResponse> f = pi.execute();
 			f.get().check();
 			cnt++;
+			break;
 		}
 		return cnt;
 	}
@@ -170,11 +171,13 @@ public class ImportCharityDataFromCSV {
 		String[] row1 = csvr.next();
 		String[] row2 = csvr.next();
 		String[] row3 = csvr.next();
-//		String[] row4 = csvr.next();		
+		String[] row4 = csvr.next();		
 		for(int i=0; i<100; i++) {
 			String name = Containers.get(row2, i);
 			String desc = Containers.get(row3, i);
-			String eg = ""; //Containers.get(row4, i);
+			String eg = 
+//					""; 
+					Containers.get(row4, i);
 			if (Utils.isBlank(name)) continue;
 			Printer.out(i+"\t"+name+"\t"+desc+"\t"+eg);			
 		}
