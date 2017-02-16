@@ -16,6 +16,8 @@ for server in ${TARGETSERVERS[*]}; do
 	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app gc --prune=now'
 	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app pull origin master'
 	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app reset --hard FETCH_HEAD'
+	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app && npm i'
+	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app && npm run compile'
 	echo -e "$server updated"
 done
 echo -e "server(s) $TARGETSERVERS updated"
