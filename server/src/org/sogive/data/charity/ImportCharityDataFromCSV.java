@@ -142,12 +142,37 @@ public class ImportCharityDataFromCSV {
 			ngo.put("englandWalesCharityRegNum", regNum);
 			ngo.setTags(row[1]);
 			
+//			38	Representative project?	Where a charity has several projects, we may have to choose one as the representative project. For really big mega-charities, it may be necessary to have the "representative" row being an aggregate or "average" of all the projects	yes
+//			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
+//			40	Confidence indicator	An indicator of the confidence we have in the data, especially the cost per impact	Low
+//			41	Comments on confidence indicator	Why?	The cost shown is based on CR UK funding 4000 researchers for a cost of £600m, minus some deductions to get to £400m. It is not clear whether this is right, for example, those 4000 researchers might include some who are partfunded by other organisations, or it may be that there are 4000 "inhouse" cruk researchers, but CRUK also funds some researchers who work externally, and some of the cruk funds are also partfunding some other researchers outside of the 4000 mentioned in the accounts. When I contacted CRUK for clarity on this, they were unable to clarify the situation
+//			42	Stories	Stories about beneficiaries (either as a link, or copied and pasted - if copied and pasted also include a source). Sometimes this is available in the annual report and accounts, but may need to look on the charity's website	
+//			43	Images	A link to an image of a beneficiary. Sometimes this is available in the annual report and accounts, but may need to look on the charity's website	
+//			44	Description of charity	About one sentence long	A UK charity which primarily funds cancer research
+//			45	Communications with charity	notes about if and when any emails were sent to the charity	Request sent via website on 25 Jan 2016 asking for a conversation to talk about how they look at impact. Site says they will reply in 5 days. Reply sent on 15th Feb (while I was travelling, so I didn't see it for a while). The response included several paragraphs, but not one referred to how they assess impact, and I infer that they do not do this. Response email sent on 6th Mar asking about how to compare costs with number of researchers. The people I spoke with demonstrated themselves to be poorly equipped to deal with these questions.
+//			46	Where hear about?	where we heard about the charity. OK to leave this blank	
+//			47	Location of intervention	what part of the world the charity interventions are	
+//			48	External assessments	Links to any external assessments	
+//			49	Assessment		C
+						
 			// Should projects be separate documents??
-			Project overall = new Project("overall");
+//			3	Analyst	Add your name if you've contributed to this data collection!	Sanjay
+//			4	Project	This is for when a charity has multiple projects and we've split the analysis up. The Overall category is for the aggregate.	Overall
+			String analyst = get(row, 3);
+			String project = get(row, 4);
+			if (Utils.isBlank(project)) project = "overall";
+			project = StrUtils.toCanonical(project);
+			Project overall = new Project(project);
+			overall.put("analyst", analyst);
+			overall.put("stories", get(row, 42));
+			overall.put("images", get(row, 43));
+			overall.put("location", get(row, 47));
 			overall.put("directImpact", MathUtils.getNumber(get(row, COL_DIRECTIMPACT)));
 			overall.put("indirectImpact", MathUtils.getNumber(get(row, COL_INDIRECTIMPACT)));
 			overall.put("annualCosts", cost(get(row, COL_ANNUALCOSTS)));
-			overall.put("fundraisingCosts", cost(get(row, COL_FUNDRAISINGCOSTS)));			
+			overall.put("fundraisingCosts", cost(get(row, COL_FUNDRAISINGCOSTS)));
+//			37	Wording for SoGive app		You funded XXXX hours/days/weeks of cancer research, well done!
+			overall.put("donationWording", get(row, 37));
 			ngo.addProject(overall);
 			
 			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);

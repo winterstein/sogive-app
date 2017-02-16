@@ -2,6 +2,7 @@ package org.sogive.server;
 
 import java.io.File;
 
+import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
 
 import com.winterwell.utils.Utils;
@@ -52,6 +53,17 @@ public class SoGiveServer {
 		jl.run();
 
 		Log.i("Running...");
+		
+		initCharityData();
+	}
+
+	private static void initCharityData() {
+		try {
+			File export = new File("data/charities.csv");
+			new ImportCharityDataFromCSV(export).run();
+		} catch(Throwable ex) {
+			Log.e("init", ex);
+		}
 	}
 
 	private static void init() {
