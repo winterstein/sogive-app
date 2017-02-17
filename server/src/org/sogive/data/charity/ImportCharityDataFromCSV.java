@@ -182,7 +182,6 @@ public class ImportCharityDataFromCSV {
 			ListenableFuture<ESHttpResponse> f = pi.execute();
 			f.get().check();
 			cnt++;
-			break;
 		}
 		return cnt;
 	}
