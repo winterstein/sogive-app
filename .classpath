@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="/middleware/jsr305/jsr305.jar"/>
 	<classpathentry kind="lib" path="/middleware/schemaorg-java/schema-org-client.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/elasticsearch"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
