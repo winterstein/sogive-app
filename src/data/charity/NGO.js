@@ -7,5 +7,6 @@ const NGO = {};
 export default NGO;
 
 
+NGO.isa = (ngo) => isa(ngo, 'NGO');
 NGO.name = (ngo) => isa(ngo, 'NGO') && ngo.name;
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest from 'sjtest'
-const assert = SJTest.assert;
+import SJTest,{assert} from 'sjtest'
+
 // import LoginWidget from './LoginWidget.jsx';
 import printer from '../utils/printer.js';
 import {getUrlVars} from 'wwutils';
@@ -16,16 +16,17 @@ import C from '../C.js';
 import MessageBar from './MessageBar.jsx';
 import DashboardPage from './DashboardPage.jsx';
 import SearchPage from './SearchPage.jsx';
+import CharityPage from './CharityPage.jsx';
 import Account from './Account.jsx';
 import DonateToCampaignPage from './DonateToCampaignPage.jsx';
 import AccountMenu from './AccountMenu.jsx';
 import {Nav,NavBar,NavItem} from 'react-bootstrap';
 
-// import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
     'search': SearchPage,
     'dashboard': DashboardPage,
     'account': Account,
+	'charity': CharityPage,
 	'campaign': DonateToCampaignPage
 }
 
@@ -39,7 +40,7 @@ export default React.createClass({
 		let page;
 		let hash = window.location.hash.substr(1);
 		if (hash.indexOf('?') !== -1) hash = hash.substr(0, hash.indexOf('?')); 
-		if (TABORDER.indexOf(hash) >= 0) {
+		if (PAGES[hash]) {
 			page = hash;
 		} else {
         // TODO logged in? then show dashboard
@@ -137,10 +138,13 @@ const SoGiveNavBar = function({page, showTab}) {
                     <li className={ page === 'dashboard'? 'active' : '' }>
                         <a className="nav-item nav-link" href="#dashboard" onClick={ showTab.bind(null, 'dashboard') }>My Profile</a></li>
                     <li className={ page === 'search'? 'active' : '' }>
-                        <a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'search') }>Search</a></li>
-
+                        <a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'search') }>Search</a>
+					</li>
+					<li className={ page === 'charity'? 'active' : '' }>
+						<a className="nav-item nav-link" href="#charity" onClick={ showTab.bind(null, 'charity') }>(dummy) Charity</a>
+					</li>
 					<li className={ page === 'campaign'? 'active' : '' }>
-						<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'campaign') }>(dummy) Donate to Campaign</a>
+						<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'campaign') }>(dummy) Campaign</a>
 					</li>
                 </ul>
                 <AccountMenu active={ page === 'account' } onClick={ showTab.bind(null, 'account') }/>

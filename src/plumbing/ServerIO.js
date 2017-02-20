@@ -4,7 +4,7 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import {SJTest, assert, assertMatch} from 'sjtest';
+import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
 import DataStore from './DataStore.js';
@@ -27,7 +27,7 @@ ServerIO.search = function(query) {
 
 ServerIO.getCharity = function(charityId) {
 	assMatch(charityId, String);
-    return ServerIO.load('/mock-server/'+charityId+'.json');
+    return ServerIO.load('/charity/'+charityId+'.json');
 }
 
 

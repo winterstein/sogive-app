@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {SJTest,assert} from 'sjtest'
+import {SJTest,assert,assMatch} from 'sjtest'
 // const assert = SJTest.assert;
 import printer from '../utils/printer.js';
 import C from '../C.js';
@@ -142,6 +142,6 @@ const DonationAmount = function({charity, project, impact}) {
 
 
 const DonationList = ({donations}) => {
-    let ddivs = _.map(donations, d => <li>{d}</li>);
+    let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
     return <ul>{ddivs}</ul>
 };
