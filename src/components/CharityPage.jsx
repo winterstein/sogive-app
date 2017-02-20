@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import SJTest, {assert} from 'sjtest'
-
+import _ from 'lodash';
+import SJTest, {assert} from 'sjtest';
+import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer.js';
 import C from '../C.js';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
+
+import StripeCheckout from 'react-stripe-checkout';
 
 class CharityPage extends React.Component {	
 
 	constructor(...params) {
 		super(...params);
 		this.state = {			
-		}
+		};
 	}
 
 	componentWillMount() {
@@ -30,7 +32,7 @@ class CharityPage extends React.Component {
     render() {
 		const charity = this.state.charity;
 		if ( ! charity) {
-			return <Misc.Loading />
+			return <Misc.Loading />;
 		}
 		let repProject = _.find(charity.projects, p => p.isRep);
 		if ( ! repProject) repProject = _.find(charity.projects, p => p.name === 'overall');
@@ -47,20 +49,41 @@ class CharityPage extends React.Component {
 
 				Employees: {charity.numberOfEmployees}
 
-				Website: <a href={charity.url} target='_blank'>{charity.url}</a>
+				Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
 				<ProjectList charity={charity} />
 				<DonationForm charity={charity} project={repProject} />
             </div>
         );
     }
 
-}; // ./CharityPage
+} // ./CharityPage
 
 class DonationForm extends React.Component {
+	onToken() {
+
+	}
+
 	render() {
 		return(<div className='DonationForm'>
-
 			<button>Donate</button>
+			Do we need a Stripe token??
+			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
+  image="https://www.vidhub.co/assets/logos/vidhub-icon-2e5c629f64ced5598a56387d4e3d0c7c.png"
+  panelLabel="Give Money"
+  amount={1000000}
+  currency="USD"
+  stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
+  email="info@vidhub.co"
+  alipay
+  bitcoin
+  allowRememberMe
+  token={this.onToken}
+  >
+  <button className="btn btn-primary">
+    Use your own child component, which gets wrapped in whatever
+    component you pass into as "ComponentClass" (defaults to span)
+  </button>
+</StripeCheckout>
 		</div>);
 	}
 }

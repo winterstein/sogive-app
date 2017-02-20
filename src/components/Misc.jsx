@@ -13,16 +13,15 @@ E.g. "Loading your settings...""
 */
 Misc.Loading = ({text}) => (<div><span className="glyphicon glyphicon-cd spinning"></span> Loading {text || ''}...</div>);
 
-
 	/** eg a Twitter logo */
-Misc.Logo = ({service}) => {
-	const service = this.props.service;
+Misc.Logo = ({service, size}) => {
 	assert(service);
 	let klass = "img-rounded logo";
-	if (this.props.size) klass += "-"+this.props.size;
+	if (size) klass += "-"+size;
 	let file = '/img/'+service+'-logo.svg';
 	if (service==='instagram') file = '/img/'+service+'-logo.png';
-	return (<img alt={service} className={klass} src={file} />);
+	if (service==='sogive') file = '/img/logo.png';
+	return (<img alt={service} data-pin-nopin="true" className={klass} src={file} />);
 }; // ./Logo
 
 export default Misc;

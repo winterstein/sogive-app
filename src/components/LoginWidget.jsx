@@ -92,7 +92,6 @@ class LoginWidget extends React.Component {
 		if (LoginIO.isLoggedIn()) {
 			return <div>Signed in as { XId.dewart(LoginIO.getId()) }</div>;
 		}
-		console.log("render LoginWidget",LoginIO, LoginIO.error);
 		// TODO s/verb/action/ NB: verb upsets ActionMan
 		const verb = this.state.action;
 		const card = (
@@ -122,7 +121,7 @@ class LoginWidget extends React.Component {
 				<div className="panel panel-default">
 					<div className="panel-heading">Welcome (back) to Orla</div>
 					<div className="panel-body">
-							<img className="img-responsive login-logo" src="img/orla-circle-extendedA.svg" />
+							<Misc.Logo service="sogive" size='large' />
 							{card}
 					</div> {/* ./panel-body */}
 				</div>
@@ -145,17 +144,17 @@ const SocialSignin = React.createClass({
 		return (<div className="social-signin">
 		<div className="form-group">
 			<button onClick={ this.socialLogin.bind(null, 'twitter') } className="btn btn-default form-control">
-				<img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-link.png" data-pin-nopin="true" />
+				<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
 			</button>
 		</div>
 		<div className="form-group hidden">
 			<button onClick={ this.socialLogin.bind(null, 'facebook') } className="btn btn-default form-control">
-				<Util.Logo size="small" service="facebook" /> { verb } with Facebook
+				<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
 			</button>
 		</div>
 		<div className="form-group hidden">
 			<button onClick={ this.socialLogin.bind(null, 'instagram') } className="btn btn-default form-control">
-				<Util.Logo size='small' service='instagram' /> { verb } with Instagram
+				<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 			</button>
 		</div>
 		<p><small>SoGive will never share your data, and will never act without your consent. 
