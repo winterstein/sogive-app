@@ -896,3 +896,4 @@
 [20 Feb 2017 19:24:22 GMT]	FINE	#config	class com.winterwell.es.client.ESConfig: No properties file: config/elasticsearch.properties = /home/daniel/winterwell/sogive-app/config/elasticsearch.properties			Thread[qtp797925218-21,5,main]
 [20 Feb 2017 19:24:30 GMT]	FINE	#config	class com.winterwell.es.client.ESConfig: No properties file: config/elasticsearch.properties = /home/daniel/winterwell/sogive-app/config/elasticsearch.properties			Thread[qtp797925218-18,5,main]
 [20 Feb 2017 19:24:31 GMT]	FINE	#config	class com.winterwell.es.client.ESConfig: No properties file: config/elasticsearch.properties = /home/daniel/winterwell/sogive-app/config/elasticsearch.properties			Thread[qtp797925218-16,5,main]
+[20 Feb 2017 19:31:39 GMT]	FINE	#config	class com.winterwell.es.client.ESConfig: No properties file: config/elasticsearch.properties = /home/daniel/winterwell/sogive-app/config/elasticsearch.properties			Thread[qtp797925218-19,5,main]
