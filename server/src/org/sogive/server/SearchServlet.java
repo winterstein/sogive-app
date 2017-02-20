@@ -36,6 +36,8 @@ public class SearchServlet {
 			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, "id", "englandWalesCharityRegNum", "name", "description");
 			s.setQuery(qb);
 		}
+		// TODO paging!
+		s.setSize(100);
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();

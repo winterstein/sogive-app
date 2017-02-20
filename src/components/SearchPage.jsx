@@ -113,7 +113,7 @@ class SearchResult extends React.Component {
         const item = this.props.item;
         const logo = item.image || '';
         return (
-            <div className='SearchResult'>
+            <div className='SearchResult' onClick={??}>
                 <Media>
                     <Media.Left>
                         <img width={64} height={64} src={logo} alt="Image"/>
