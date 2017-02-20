@@ -25,6 +25,13 @@ ServerIO.search = function(query) {
 }
 
 
+ServerIO.getCharity = function(charityId) {
+	assMatch(charityId, String);
+    return ServerIO.load('/mock-server/'+charityId+'.json');
+}
+
+
+
 /**
  * Submits an AJAX request. This is the key base method
  *
@@ -105,8 +112,3 @@ ServerIO.addDefaultParams = function(params) {
 	if ( ! params.data) params.data = {};
 	return params;
 };
-
-ServerIO.getCharity = function(charityId) {
-	assert(charityId);
-    return ServerIO.load('/mock-server/'+charityId+'.json');
-}
