@@ -71,10 +71,8 @@ class DonationForm extends React.Component {
   image="https://www.vidhub.co/assets/logos/vidhub-icon-2e5c629f64ced5598a56387d4e3d0c7c.png"
   panelLabel="Give Money"
   amount={1000000}
-  currency="USD"
+  currency="GBP"
   stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
-  email="info@vidhub.co"
-  alipay
   bitcoin
   allowRememberMe
   token={this.onToken}
