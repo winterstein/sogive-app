@@ -27,4 +27,7 @@ Misc.Logo = ({service, size, transparent}) => {
 	return (<img alt={service} data-pin-nopin="true" className={klass} src={file} />);
 }; // ./Logo
 
+Misc.Checkbox = ({on, label, onChange}) => 
+	(<div className="checkbox"><label><input onChange={onChange} type="checkbox" checked={on || false} /> {label} </label></div>);
+
 export default Misc;

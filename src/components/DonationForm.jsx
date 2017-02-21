@@ -13,6 +13,7 @@ import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
 import {XId,uid} from 'wwutils';
 import {Text} from 'react-bootstrap';
+import GiftAidForm from './GiftAidForm.jsx';
 
 export default class DonationForm extends React.Component {
 	onToken() {
@@ -23,8 +24,15 @@ export default class DonationForm extends React.Component {
 		let charity = this.props.charity;
 		assert(NGO.isa(charity), charity);
 		let project = this.props.project || NGO.getProject(charity);
+		assert(project, charity);
 		let impacts = NGO.getImpacts(project);
-
+		if ( ! impacts) {
+			impacts = [{price:'5'}, {
+				price: 10,
+				// number: , NA
+				// output: '', NA
+			}];
+		}
 		// donated?
 		if (false) {
 			return (<ThankYouAndShare />);
@@ -33,6 +41,8 @@ export default class DonationForm extends React.Component {
 		return (<div className='DonationForm'>
 
 			<DonationAmounts impacts={impacts} charity={charity} project={project} />
+
+			<GiftAidForm />
 
 			<DonationFormButton onToken={this.onToken.bind(this)} />
 
@@ -122,9 +132,8 @@ const DonationFormButton = ({onToken}) => {
 };
 
 
-const DonationAmounts = ({charity}) => {
-	let project = this.props.project;
-	let damounts = _.map(this.props.impacts, a => (<DonationAmount key={"donate_"+a.price} charity={charity} project={project} impact={a}/>) );
+const DonationAmounts = ({charity, project, impacts}) => {
+	let damounts = _.map(impacts, a => (<DonationAmount key={"donate_"+a.price} charity={charity} project={project} impact={a}/>) );
 	return(<ul>{damounts}</ul>);
 };
 

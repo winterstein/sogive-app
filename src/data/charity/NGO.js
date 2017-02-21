@@ -47,7 +47,7 @@ NGO.getProject = (ngo) => {
 
 /*
 
-impact {price, }
+impact {price, number, output}
 
 */
 
