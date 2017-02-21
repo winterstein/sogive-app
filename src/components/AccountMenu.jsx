@@ -30,10 +30,10 @@ export default class AccountMenu extends React.Component {
 
 	render() {
         if ( ! Login.isLoggedIn()) {
+			// TODO <LoginWidget />
             return (
                 <Nav pullRight>
-                    <NavItem eventKey={1} href="#">Login or Register</NavItem>
-					<LoginWidget />					
+                    <NavItem eventKey={1} href="#">Login or Register</NavItem>					
                 </Nav>
             );
         }

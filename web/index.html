@@ -22,12 +22,28 @@
 			<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
-		<!--
-		<script src="/lib/jquery.min.js"></script>
-		<script src="/lib/bootstrap.min.js"></script>
-		<script src="/lib/less-1.4.2.min.js"></script>
-		-->
-		
+
+		<script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1847521215521290',
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    //FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
 		<!-- everything else comes via webpack -->
 		<script src="/build/js/bundle.js"></script>
 

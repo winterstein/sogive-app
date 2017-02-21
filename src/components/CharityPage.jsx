@@ -9,8 +9,9 @@ import printer from '../utils/printer.js';
 import C from '../C.js';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
-
-import StripeCheckout from 'react-stripe-checkout';
+import Login from 'hooru';
+import DonationForm from './DonationForm.jsx';
+import PageMetaInfo from './PageMetaInfo.jsx';
 
 class CharityPage extends React.Component {	
 
@@ -31,7 +32,7 @@ class CharityPage extends React.Component {
 		}.bind(this));
 	}
 
-    render() {
+    render() {		
 		const charity = this.state.charity;
 		if ( ! charity) {
 			return <Misc.Loading />;
@@ -39,8 +40,9 @@ class CharityPage extends React.Component {
 		let repProject = _.find(charity.projects, p => p.isRep);
 		if ( ! repProject) repProject = _.find(charity.projects, p => p.name === 'overall');
 		if ( ! repProject) repProject = charity.projects && charity.projects[0];
-        return (
+        return (			
             <div className='page CharityPage'>
+				<PageMetaInfo />
                 <h2>Charity Profile: {charity.name}</h2>
 				<div><small><a href={'/#charity/'+charity.id}>{charity.id}</a></small></div>
 				<img src={charity.logo} />
@@ -60,38 +62,6 @@ class CharityPage extends React.Component {
 
 } // ./CharityPage
 
-class ThankYouAndShare extends React.Component {
-
- } // ./ThankYouAndShare
-let x : String;
-
-class DonationForm extends React.Component {
-	onToken() {
-
-	}
-
-	render() {
-		return(<div className='DonationForm'>
-			<button>Donate</button>
-			Do we need a Stripe token??
-			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
-  image="http://local.sogive.org/img/SoGive-Light-70px.png"
-  panelLabel="Give Money"
-  amount={1000000}
-  currency="GBP"
-  stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
-  bitcoin
-  allowRememberMe
-  token={this.onToken}
-  >
-  <button className="btn btn-primary">
-    Use your own child component, which gets wrapped in whatever
-    component you pass into as "ComponentClass" (defaults to span)
-  </button>
-</StripeCheckout>
-		</div>);
-	}
-}
 
 const ProjectList = ({charity}) => {
 	return (<div>

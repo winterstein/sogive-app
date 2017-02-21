@@ -6,6 +6,7 @@ import C from '../C.js';
 import Cookies from 'js-cookie';
 import LoginIO from 'hooru';
 import Misc from './Misc.jsx';
+import {XId} from 'wwutils';
 
 /**
 		Login or Signup (one widget)
@@ -121,7 +122,7 @@ class LoginWidget extends React.Component {
 				<div className="panel panel-default">
 					<div className="panel-heading">Welcome (back) to Orla</div>
 					<div className="panel-body">
-							<Misc.Logo service="sogive" size='large' />
+							<Misc.Logo service="sogive" size='large' transparent={false} />
 							{card}
 					</div> {/* ./panel-body */}
 				</div>
@@ -147,7 +148,7 @@ const SocialSignin = React.createClass({
 				<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
 			</button>
 		</div>
-		<div className="form-group hidden">
+		<div className="form-group">
 			<button onClick={ this.socialLogin.bind(null, 'facebook') } className="btn btn-default form-control">
 				<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
 			</button>
