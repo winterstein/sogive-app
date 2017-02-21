@@ -1,6 +1,8 @@
 package org.sogive.data.charity;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVReader;
+import com.winterwell.utils.time.Time;
+
 import static com.winterwell.utils.containers.Containers.get;
 
 // https://docs.google.com/spreadsheets/d/1Gy4sZv_WZRQzdfwVH0e3tBvyBnuEJnhSFx7_7BHLSDI/edit#gid=0
@@ -101,7 +105,7 @@ public class ImportCharityDataFromCSV {
 	private File csv;
 	private ESHttpClient client;
 
-	private String[] HEADER_ROW;
+	private List<String> HEADER_ROW;
 
 	public ImportCharityDataFromCSV(File export) {
 		this.csv = export;
@@ -128,6 +132,8 @@ public class ImportCharityDataFromCSV {
 			ngo.put("englandWalesCharityRegNum", regNum);
 			ngo.setTags(row[1]);
 			ngo.put("logo", get(row, col("logo image")));
+			String ukbased = get(row, col("UK-based charity?"));
+			ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
 			
 //			38	Representative project?	Where a charity has several projects, we may have to choose one as the representative project. For really big mega-charities, it may be necessary to have the "representative" row being an aggregate or "average" of all the projects	yes
 //			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
@@ -160,14 +166,28 @@ public class ImportCharityDataFromCSV {
 			project.put("data-src", get(row, col("source of data")));
 			project.put("images", get(row, col("photo image")));
 			project.put("location", get(row, col("location")));
-			project.put("directImpact", MathUtils.getNumber(get(row, col("impact 1"))));
-			project.put("indirectImpact", MathUtils.getNumber(get(row, col("impact 2"))));
-			project.put("annualCosts", cost(get(row, col("annual cost"))));
-			project.put("fundraisingCosts", cost(get(row, col("fundraising cost"))));
+			Time start = Time.of(get(row, col("start date")));
+			Time end = Time.of(get(row, col("end date")));
+			
+			// inputs
+			for(String cost : new String[]{"annual costs", "fundraising costs", "trading costs", "income from beneficiaries"}) {
+				MonetaryAmount ac = cost(get(row, col(cost)));
+				ac.setPeriod(start, end);
+				String costName = StrUtils.toCamelCase(cost);
+				project.addInput(costName, ac);
+			}
+			
+			// outputs
+			double impact1 = MathUtils.getNumber(get(row, col("impact 1")));			
+			String type1 = get(row, col("impact 1 unit"));
+			Output output1 = new Output(impact1, type1, null);
+			project.addOutput(output1);
+			
 			project.put("ready", ready);
 			project.put("isRep", isRep);
 //			37	Wording for SoGive app		You funded XXXX hours/days/weeks of cancer research, well done!
 			project.put("donationWording", get(row, col("wording")));
+			
 			ngo.addProject(project);
 			
 			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
@@ -183,13 +203,14 @@ public class ImportCharityDataFromCSV {
 
 	static final Map<String,Integer> cols = new HashMap();
 	
-	private int col(String colname) {
+	private int col(String colName) {
+		String colname = StrUtils.toCanonical(colName);
 		Integer ci = cols.get(colname);
 		if (ci==null) {
-			List<String> hs = Containers.filter(HEADER_ROW, h -> h.toLowerCase().trim().equals(colname));
-			if (hs.isEmpty()) hs = Containers.filter(HEADER_ROW, h -> h.toLowerCase().contains(colname));
+			List<String> hs = Containers.filter(h -> h.equals(colname), HEADER_ROW);
+			if (hs.isEmpty()) hs = Containers.filter(h -> h.contains(colname), HEADER_ROW);
 			assert hs.size() == 1 : colname+" "+hs;
-			ci = Containers.indexOf(hs.get(0), HEADER_ROW);
+			ci = HEADER_ROW.indexOf(hs.get(0));
 			cols.put(colname, ci);			
 		}
 		return ci;
@@ -202,7 +223,7 @@ public class ImportCharityDataFromCSV {
 
 	private void dumpFileHeader(CSVReader csvr) {
 		String[] row1 = csvr.next();
-		HEADER_ROW = csvr.next();
+		HEADER_ROW = Containers.apply(StrUtils::toCanonical, Arrays.asList(csvr.next()));
 		String[] row3 = csvr.next();
 		String[] row4 = csvr.next();		
 		for(int i=0; i<100; i++) {

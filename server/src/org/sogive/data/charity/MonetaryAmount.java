@@ -7,7 +7,7 @@ public class MonetaryAmount extends Thing {
 	public MonetaryAmount(double value) {
 		// ISO 4217 £
 		put("currency", "GBP");
-		put("value", value);
+		put("value", value);		
 	}
 	
 }
