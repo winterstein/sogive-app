@@ -9,6 +9,9 @@ sudo npm install
 
 ElasticSearch - sudo apt-get install should work
 
+/etc/hosts
+local.sogive.org 127.0.0.1
+
 ## Run
 
 Java: Run SoGiveServer

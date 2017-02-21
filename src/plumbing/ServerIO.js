@@ -1,5 +1,5 @@
 /** 
- * Wrapper for server calls, which populates DataStore.
+ * Wrapper for server calls.
  *
  */
 import _ from 'lodash';
