@@ -68,7 +68,7 @@ class DonationForm extends React.Component {
 			<button>Donate</button>
 			Do we need a Stripe token??
 			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
-  image="https://www.vidhub.co/assets/logos/vidhub-icon-2e5c629f64ced5598a56387d4e3d0c7c.png"
+  image="http://local.sogive.org/img/SoGive-Light-70px.png"
   panelLabel="Give Money"
   amount={1000000}
   currency="GBP"
