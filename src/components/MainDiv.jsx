@@ -1,8 +1,8 @@
-import React from 'react';
+import { React, Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest from 'sjtest'
-const assert = SJTest.assert;
+import SJTest from 'sjtest';
+
 // import LoginWidget from './LoginWidget.jsx';
 import printer from '../utils/printer.js';
 import {getUrlVars} from 'wwutils';
@@ -19,30 +19,42 @@ import SearchPage from './SearchPage.jsx';
 import Account from './Account.jsx';
 import DonateToCampaignPage from './DonateToCampaignPage.jsx';
 import AccountMenu from './AccountMenu.jsx';
-import {Nav,NavBar,NavItem} from 'react-bootstrap';
+import { Nav, NavBar, NavItem } from 'react-bootstrap';
+
+import { connect } from 'react-redux';
+
+const assert = SJTest.assert;
 
 // import LoginWidget from './LoginWidget.jsx'
 const PAGES = {
-    'search': SearchPage,
-    'dashboard': DashboardPage,
-    'account': Account,
-	'campaign': DonateToCampaignPage
-}
+	search: SearchPage,
+	dashboard: DashboardPage,
+	account: Account,
+	campaign: DonateToCampaignPage
+};
 
-const TABORDER = ['dashboard', 'search']
+const TABORDER = ['dashboard', 'search'];
 
 /**
 		Top-level: SoGive tabs
 */
-export default React.createClass({
-    getInitialState: function() {
+class MainDiv extends Component {
+	static propTypes = {
+		data: PropTypes.object,
+		component: PropTypes.object,
+		setListener: PropTypes.function.isRequired,
+		removeListener: PropTypes.function.isRequired,
+	};
+
+
+	getInitialState() {
 		let page;
 		let hash = window.location.hash.substr(1);
 		if (hash.indexOf('?') !== -1) hash = hash.substr(0, hash.indexOf('?')); 
 		if (TABORDER.indexOf(hash) >= 0) {
 			page = hash;
 		} else {
-        // TODO logged in? then show dashboard
+		// TODO logged in? then show dashboard
 			page = 'search';
 		}
 		const webProps = getUrlVars();
@@ -54,101 +66,53 @@ export default React.createClass({
 		};
 		console.log("initstate", istate);
 		return istate;
-	},
-
-	showTab: function(tab) {
-		this.setState({ page: tab });
-	},
-
-	getTabState: function(tab) {
-		return tab === this.state.page? '' :
-			TABORDER.indexOf(tab) < TABORDER.indexOf(this.state.page)?
-			'hide-left' : 'hide-right'
-	},
-
-	componentWillMount: function() {
-	},
-
-	componentWillUnmount: function() {
-	},
-
-	render: function() {
-        const page = this.state.page;
-        assert(page, this.state);
-        return ( <div>
-            <SoGiveNavBar page={this.state.page} showTab={this.showTab} />
-			<div className="container avoid-navbar">
-                <MessageBar />
-				<Tab page={page} pageProps={this.state.pageProps}/>                
-            </div>            
-        </div>);
 	}
-});
+
+	showTab(tab) {
+		this.setState({ page: tab });
+	}
+
+	getTabState(tab) {
+		if (tab === this.state.page) return '';
+		return TABORDER.indexOf(tab) < TABORDER.indexOf(this.state.page)?
+			'hide-left' : 'hide-right';
+	}
+
+	componentWillMount() {
+	}
+
+	componentWillUnmount() {
+	}
+
+	render() {
+		const page = this.state.page;
+		assert(page, this.state);
+		return ( <div>
+			<SoGiveNavBar page={this.state.page} showTab={this.showTab} />
+			<div className="container avoid-navbar">
+				<MessageBar />
+				<Tab page={page} pageProps={this.state.pageProps} />
+			</div>            
+		</div>);
+	}
+}
 
 
-const Tab = function({page, pageProps}) {	
+const Tab = function({page, pageProps}) {
 	assert(page);
-    const Page = PAGES[page];
-    assert(Page, (page, PAGES));
+	const Page = PAGES[page];
+	assert(Page, (page, PAGES));
 	console.log("Tab", page, Page);
-    return (
-      <div className='slide-hide' id={page}>
-		<Page {...pageProps} />
-      </div>
-    );
+	return (
+		<div className="slide-hide" id={page}>
+			<Page {...pageProps} />
+		</div>
+	);
 };
 
-const SoGiveNavBar = function({page, showTab}) {
-    console.log('NavBar', page);
-// https://react-bootstrap.github.io/components.html#navbars
-    // return (
-    //     <NavBar inverse defaultExpanded>
-    //         <NavBar.Header>
-    //             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>            
-    //             <Navbar.Toggle />
-    //         </NavBar.Header>
-    //         <Navbar.Collapse>
-    //         <Nav>
-    //             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
-    //             <NavItem eventKey={1} href="#">Link</NavItem>
-    //             <NavItem eventKey={2} href="#">Link</NavItem>
-    //         </Nav>
-    //         <Nav pullRight>
-    //             <NavItem eventKey={1} href="#">Link Right</NavItem>
-    //             <NavItem eventKey={2} href="#">Link Right</NavItem>
-    //         </Nav>
-    //         </Navbar.Collapse>
-    //     </NavBar>
-    // );
-    return (
-    <nav className="navbar navbar-fixed-top navbar-inverse">
-        <div className="container">
-            <div className="navbar-header" title="Dashbrd">
-                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span className="sr-only">Toggle navigation</span>
-                    <span className="icon-bar"></span>
-                    <span className="icon-bar"></span>
-                    <span className="icon-bar"></span>
-                </button>
-                <a className="navbar-brand" href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a>
-            </div>
-            <div id="navbar" className="navbar-collapse collapse">
-                <ul className="nav navbar-nav">
-                    <li className={ page === 'dashboard'? 'active' : '' }>
-                        <a className="nav-item nav-link" href="#dashboard" onClick={ showTab.bind(null, 'dashboard') }>My Profile</a></li>
-                    <li className={ page === 'search'? 'active' : '' }>
-                        <a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'search') }>Search</a></li>
-
-					<li className={ page === 'campaign'? 'active' : '' }>
-						<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'campaign') }>(dummy) Donate to Campaign</a>
-					</li>
-                </ul>
-                <AccountMenu active={ page === 'account' } onClick={ showTab.bind(null, 'account') }/>
-            </div>
-        </div>
-    </nav>
-    );
-};
-// ./NavBar
 
 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainDiv);
