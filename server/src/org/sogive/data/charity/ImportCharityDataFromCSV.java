@@ -133,7 +133,8 @@ public class ImportCharityDataFromCSV {
 //			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
 			String _ready = get(row, col("ready"));
 			boolean ready = _ready.toLowerCase().contains("yes");
-			boolean isRep= Utils.yes(get(row, col("representative")));
+			String rep = get(row, col("representative")).toLowerCase();
+			boolean isRep = rep.toLowerCase().contains("yes");
 //			40	Confidence indicator	An indicator of the confidence we have in the data, especially the cost per impact	Low
 //			41	Comments on confidence indicator	Why?	The cost shown is based on CR UK funding 4000 researchers for a cost of £600m, minus some deductions to get to £400m. It is not clear whether this is right, for example, those 4000 researchers might include some who are partfunded by other organisations, or it may be that there are 4000 "inhouse" cruk researchers, but CRUK also funds some researchers who work externally, and some of the cruk funds are also partfunding some other researchers outside of the 4000 mentioned in the accounts. When I contacted CRUK for clarity on this, they were unable to clarify the situation
 //			42	Stories	Stories about beneficiaries (either as a link, or copied and pasted - if copied and pasted also include a source). Sometimes this is available in the annual report and accounts, but may need to look on the charity's website	
@@ -155,6 +156,8 @@ public class ImportCharityDataFromCSV {
 			Project project = new Project(projectName);
 			project.put("analyst", analyst);
 			project.put("stories", get(row, col("stories")));
+			project.put("stories_src", get(row, col("stories - source")));
+			project.put("data-src", get(row, col("source of data")));
 			project.put("images", get(row, col("photo image")));
 			project.put("location", get(row, col("location")));
 			project.put("directImpact", MathUtils.getNumber(get(row, col("impact 1"))));

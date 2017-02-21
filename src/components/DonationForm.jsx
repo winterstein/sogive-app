@@ -20,12 +20,20 @@ export default class DonationForm extends React.Component {
 	}
 
 	render() {		
+		let charity = this.props.charity;
+		assert(NGO.isa(charity), charity);
+		let project = this.props.project || NGO.getProject(charity);
+		let impacts = NGO.getImpacts(project);
+
 		// donated?
 		if (false) {
 			return (<ThankYouAndShare />);
 		}
 
 		return (<div className='DonationForm'>
+
+			<DonationAmounts impacts={impacts} charity={charity} project={project} />
+
 			<DonationFormButton onToken={this.onToken.bind(this)} />
 
 			<ThankYouAndShare />
@@ -54,8 +62,8 @@ class ThankYouAndShare extends React.Component {
 			function(response) {
 				console.log("FB", response);
 				if (response && response.error_message) {
-				console.error('Error while posting.');
-				return;
+					console.error('Error while posting.');
+					return;
 				}
 				// foo
 			}

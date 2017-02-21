@@ -37,9 +37,7 @@ class CharityPage extends React.Component {
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}
-		let repProject = _.find(charity.projects, p => p.isRep);
-		if ( ! repProject) repProject = _.find(charity.projects, p => p.name === 'overall');
-		if ( ! repProject) repProject = charity.projects && charity.projects[0];
+		let repProject = NGO.getProject(charity);		
         return (			
             <div className='page CharityPage'>
 				<PageMetaInfo />
