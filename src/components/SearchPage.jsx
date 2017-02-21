@@ -110,10 +110,11 @@ class SearchResults extends React.Component {
 class SearchResult extends React.Component {
 
     render() {
+		// onClick={this.props.gotoCharityPage(item.id)}
         const item = this.props.item;
         const logo = item.image || '';
         return (
-            <div className='SearchResult'>
+            <div className='SearchResult' >
                 <Media>
                     <Media.Left>
                         <img width={64} height={64} src={logo} alt="Image"/>

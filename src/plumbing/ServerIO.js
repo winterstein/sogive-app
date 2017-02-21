@@ -1,10 +1,10 @@
 /** 
- * Wrapper for server calls, which populates DataStore.
+ * Wrapper for server calls.
  *
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import {SJTest, assert, assertMatch} from 'sjtest';
+import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
 import DataStore from './DataStore.js';
@@ -23,6 +23,13 @@ ServerIO.search = function(query) {
 	assert(_.isString(query), query);
 	return ServerIO.load('/search.json', {data: {q: query}} );
 }
+
+
+ServerIO.getCharity = function(charityId) {
+	assMatch(charityId, String);
+    return ServerIO.load('/charity/'+charityId+'.json');
+}
+
 
 
 /**
@@ -105,8 +112,3 @@ ServerIO.addDefaultParams = function(params) {
 	if ( ! params.data) params.data = {};
 	return params;
 };
-
-ServerIO.getCharity = function(charityId) {
-	assert(charityId);
-    return ServerIO.load('/mock-server/'+charityId+'.json');
-}

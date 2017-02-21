@@ -13,6 +13,7 @@ import {getUrlVars} from 'wwutils';
 import C from '../C.js';
 import Login from 'hooru';
 import {Nav,NavItem} from 'react-bootstrap';
+import LoginWidget from './LoginWidget.jsx';
 
 /*
 The top-right menu
@@ -29,9 +30,10 @@ export default class AccountMenu extends React.Component {
 
 	render() {
         if ( ! Login.isLoggedIn()) {
+			// TODO <LoginWidget />
             return (
                 <Nav pullRight>
-                    <NavItem eventKey={1} href="#">Login or Register</NavItem>
+                    <NavItem eventKey={1} href="#">Login or Register</NavItem>					
                 </Nav>
             );
         }

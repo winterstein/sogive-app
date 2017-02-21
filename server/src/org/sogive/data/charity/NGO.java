@@ -1,6 +1,8 @@
 package org.sogive.data.charity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.winterwell.utils.web.SimpleJson;
@@ -21,6 +23,9 @@ public class NGO extends Thing {
 	 * @param project
 	 */
 	public void addProject(Project project) {
-		SimpleJson.set(this, project, "project", project.getName());
+		List projects = (List) get("projects");
+		if (projects==null) projects = new ArrayList();
+		projects.add(project);
+		put("projects", projects);
 	}
 }
