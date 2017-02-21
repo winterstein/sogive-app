@@ -1,3 +1,5 @@
+// @Flow
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
@@ -57,6 +59,11 @@ class CharityPage extends React.Component {
     }
 
 } // ./CharityPage
+
+class ThankYouAndShare extends React.Component {
+
+ } // ./ThankYouAndShare
+let x : String;
 
 class DonationForm extends React.Component {
 	onToken() {

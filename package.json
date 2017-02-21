@@ -40,6 +40,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.0",
+	"eslint-plugin-flowtype": "^2.30.0",
     "flow-bin": "^0.36.0"
   }
 }
