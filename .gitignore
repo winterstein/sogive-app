@@ -4,3 +4,4 @@ tmp-lib
 /bin/
 bin/
 *.class
+*.log

@@ -163,11 +163,17 @@ public class ImportCharityDataFromCSV {
 			project.put("analyst", analyst);
 			project.put("stories", get(row, col("stories")));
 			project.put("stories_src", get(row, col("stories - source")));
-			project.put("data-src", get(row, col("source of data")));
-			project.put("images", get(row, col("photo image")));
-			project.put("location", get(row, col("location")));
 			Time start = Time.of(get(row, col("start date")));
 			Time end = Time.of(get(row, col("end date")));
+			Integer year = end!=null? end.getYear() : null;
+			String dataSrc = get(row, col("source of data"));
+			if ( ! Utils.isBlank(dataSrc)) {
+				Citation citation = new Citation(dataSrc);
+				if (year!=null) citation.put("year", year);
+				project.addOrMerge("data-src", citation);
+			}
+			project.put("images", get(row, col("photo image")));
+			project.put("location", get(row, col("location")));
 			
 			// inputs
 			for(String cost : new String[]{"annual costs", "fundraising costs", "trading costs", "income from beneficiaries"}) {
@@ -178,10 +184,14 @@ public class ImportCharityDataFromCSV {
 			}
 			
 			// outputs
-			double impact1 = MathUtils.getNumber(get(row, col("impact 1")));			
-			String type1 = get(row, col("impact 1 unit"));
-			Output output1 = new Output(impact1, type1, null);
-			project.addOutput(output1);
+			for(int i=1; i<4; i++) {
+				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
+				if (impact1==0) continue;
+				String type1 = get(row, col("impact "+i+" unit"));
+				Output output1 = new Output(impact1, type1, null);
+				output1.setPeriod(start, end);
+				project.addOutput(output1);
+			}
 			
 			project.put("ready", ready);
 			project.put("isRep", isRep);

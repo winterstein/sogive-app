@@ -11,6 +11,11 @@ const DashboardPage = () => (
 	<div className="page DashboardPage">
 		<h2>My Dashboard</h2>
 
+		<DashboardWidget title="Donation History">
+			TODO list your donations with impact
+		</DashboardWidget>
+
+		<h2>Version 2+...</h2>
 		<DashboardWidget title="News Feed">
 			Updates from projects you support and people you follow.
 		</DashboardWidget>
