@@ -33,9 +33,6 @@ public class Project extends Thing {
 		put("name", name);
 	}
 
-	public String getName() {
-		return (String) get("name");
-	}
 
 	public void merge(Project project) {
 		// union inputs & outputs
@@ -78,23 +75,13 @@ public class Project extends Thing {
 	}
 
 	public void addInput(String costName, MonetaryAmount ac) {
-		List<MonetaryAmount> inputs = getInputs();
 		ac.put("name", costName);
-		if (inputs.contains(ac)) return;
-		// TODO name & year
-//		int i = Containers.indexOf(inputs, in -> costName.equals(in.get("name")));
-//		if (i==-1) {
-			inputs.add(ac);
-//			return;
-//		}
-//		inputs.set(i, ac);
+		addOrMerge("inputs", ac);
 	}
 
 
 	public void addOutput(Output ac) {
-		List<Output> inputs = getOutputs();
-		if (inputs.contains(ac)) return;
-		inputs.add(ac);
+		addOrMerge("outputs", ac);
 	}
 
 }
