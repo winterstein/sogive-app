@@ -3,7 +3,9 @@
  */
 package org.sogive.data.charity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdFactory;
@@ -15,6 +17,7 @@ import com.google.schemaorg.core.CoreFactory;
 import com.google.schemaorg.core.DataFeed;
 import com.google.schemaorg.core.NGO;
 import com.google.schemaorg.core.NGO.Builder;
+import com.winterwell.utils.containers.Containers;
 
 /**
  * @author daniel
@@ -30,39 +33,68 @@ public class Project extends Thing {
 		put("name", name);
 	}
 
-	public static void main(String[] args) throws JsonIOException, JsonLdSyntaxException {
-		JsonLdSerializer serializer = new JsonLdSerializer(true /* setPrettyPrinting */);
-		DataFeed object =
-		    CoreFactory.newDataFeedBuilder()
-		        .addJsonLdContext(
-		            JsonLdFactory.newContextBuilder()
-		                .setBase("http://example.com/"))
-//		        .addDataFeedElement(
-//		            CoreFactory.newRecipeBuilder()
-//		                .setJsonLdId("123456")
-//		                .addName("recipe name")
-//		                .addAuthor(CoreFactory.newPersonBuilder().addName("John Smith"))
-//		                .addIsFamilyFriendly(BooleanEnum.TRUE)
-//		                .setJsonLdReverse(
-//		                    CoreConstants.PROPERTY_RECIPE,
-//		                    CoreFactory.newCookActionBuilder().setJsonLdId("54321"))
-		        .build();
-	  String jsonLdStr = serializer.serialize(object);		
-	  
-	  NGO ngo = CoreFactory.newNGOBuilder()
-	  .setJsonLdId("solar-aid")
-	  .addLocation(CoreFactory.newPostalAddressBuilder().addAddressCountry("gb"))
-	  .addUrl("https://solar-aid.org")
-	  .addDescription("DOing nice stuff")
-	  .addNumberOfEmployees("10")
-	  .addLogo("https://solar-aid.org/wp-content/uploads/2016/10/solar-aid-default-logo.png")
-	  .addImage(CoreFactory.newImageObjectBuilder().addUrl("").addDescription(""))
-	  .build();
-	  String jsonLdStr2 = serializer.serialize(ngo);		
-	  System.out.println(jsonLdStr2);
-	}
-
 	public String getName() {
 		return (String) get("name");
 	}
+
+	public void merge(Project project) {
+		// union inputs & outputs
+		List<MonetaryAmount> inputs = getInputs();
+		List<MonetaryAmount> newInputs = project.getInputs();
+		for (MonetaryAmount n : newInputs) {
+			if ( ! inputs.contains(n)) { // TODO match on name & year, to allow amounts to be corrected
+				inputs.add(n);
+			}
+		}		
+		List<Output> outputs = getOutputs();
+		List<Output> newOutputs = project.getOutputs();
+		for (Output n : newOutputs) {
+			if ( ! outputs.contains(n)) { // TODO match on name & year, to allow amounts to be corrected
+				outputs.add(n);
+			}
+		}
+		// overwrite the rest
+		putAll(project);
+		project.put("inputs", inputs);
+		project.put("outputs", outputs);
+	}
+
+	List<MonetaryAmount> getInputs() {
+		List outputs = (List) get("inputs");
+		if (outputs==null) {
+			outputs = new ArrayList();
+			put("inputs", outputs);
+		}
+		return outputs;
+	}
+	
+	List<Output> getOutputs() {
+		List outputs = (List) get("outputs");
+		if (outputs==null) {
+			outputs = new ArrayList();
+			put("outputs", outputs);
+		}
+		return outputs;
+	}
+
+	public void addInput(String costName, MonetaryAmount ac) {
+		List<MonetaryAmount> inputs = getInputs();
+		ac.put("name", costName);
+		if (inputs.contains(ac)) return;
+		// TODO name & year
+//		int i = Containers.indexOf(inputs, in -> costName.equals(in.get("name")));
+//		if (i==-1) {
+			inputs.add(ac);
+//			return;
+//		}
+//		inputs.set(i, ac);
+	}
+
+
+	public void addOutput(Output ac) {
+		List<Output> inputs = getOutputs();
+		if (inputs.contains(ac)) return;
+		inputs.add(ac);
+	}
+
 }
