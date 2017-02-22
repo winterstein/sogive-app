@@ -163,11 +163,17 @@ public class ImportCharityDataFromCSV {
 			project.put("analyst", analyst);
 			project.put("stories", get(row, col("stories")));
 			project.put("stories_src", get(row, col("stories - source")));
-			project.put("data-src", get(row, col("source of data")));
-			project.put("images", get(row, col("photo image")));
-			project.put("location", get(row, col("location")));
 			Time start = Time.of(get(row, col("start date")));
 			Time end = Time.of(get(row, col("end date")));
+			Integer year = end!=null? end.getYear() : null;
+			String dataSrc = get(row, col("source of data"));
+			if ( ! Utils.isBlank(dataSrc)) {
+				Citation citation = new Citation(dataSrc);
+				if (year!=null) citation.put("year", year);
+				project.addOrMerge("data-src", citation);
+			}
+			project.put("images", get(row, col("photo image")));
+			project.put("location", get(row, col("location")));
 			
 			// inputs
 			for(String cost : new String[]{"annual costs", "fundraising costs", "trading costs", "income from beneficiaries"}) {
