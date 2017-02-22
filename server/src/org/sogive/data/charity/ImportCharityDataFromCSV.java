@@ -184,10 +184,14 @@ public class ImportCharityDataFromCSV {
 			}
 			
 			// outputs
-			double impact1 = MathUtils.getNumber(get(row, col("impact 1")));			
-			String type1 = get(row, col("impact 1 unit"));
-			Output output1 = new Output(impact1, type1, null);
-			project.addOutput(output1);
+			for(int i=0; i<5; i++) {
+				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
+				if (impact1==0) continue;
+				String type1 = get(row, col("impact "+i+" unit"));
+				Output output1 = new Output(impact1, type1, null);
+				output1.setPeriod(start, end);
+				project.addOutput(output1);
+			}
 			
 			project.put("ready", ready);
 			project.put("isRep", isRep);
