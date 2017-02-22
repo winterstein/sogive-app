@@ -2,6 +2,7 @@
 */
 
 import _ from 'lodash';
+import {assert} from 'sjtest';
 
 /**
  * assert the type!
@@ -11,7 +12,7 @@ const isa = function(obj, typ) {
 	if ( ! obj['@type']) return true;
 	assert(obj['@type'] === typ);
 	return true;
-}
+};
 
 
 export {isa};

@@ -60,9 +60,9 @@ const SoGiveNavBar = ({page, handleSwitchPage}) => {
 							<a className="nav-item nav-link" href="#search" onClick={() => handleSwitchPage('search')}>
 								Search
 							</a></li>
-						<li className={page === 'campaign'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#campaign" onClick={() => handleSwitchPage('campaign')}>
-								(dummy) Donate to Campaign
+						<li className={page === 'charity'? 'active' : ''}>
+							<a className="nav-item nav-link" href="#charity" onClick={() => handleSwitchPage('charity')}>
+								(dummy) Charity
 							</a>
 						</li>
 					</ul>

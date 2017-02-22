@@ -56,7 +56,7 @@ public class Project extends Thing {
 		project.put("outputs", outputs);
 	}
 
-	List<MonetaryAmount> getInputs() {
+	public List<MonetaryAmount> getInputs() {
 		List outputs = (List) get("inputs");
 		if (outputs==null) {
 			outputs = new ArrayList();
@@ -65,7 +65,7 @@ public class Project extends Thing {
 		return outputs;
 	}
 	
-	List<Output> getOutputs() {
+	public List<Output> getOutputs() {
 		List outputs = (List) get("outputs");
 		if (outputs==null) {
 			outputs = new ArrayList();

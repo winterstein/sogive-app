@@ -18,7 +18,7 @@ import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
 import Account from '../Account';
 import DonateToCampaignPage from '../DonateToCampaignPage';
-
+import CharityPage from '../CharityPage';
 
 const assert = SJTest.assert;
 
@@ -27,6 +27,7 @@ const PAGES = {
 	search: SearchPage,
 	dashboard: DashboardPage,
 	account: Account,
+	charity: CharityPage,
 	campaign: DonateToCampaignPage
 };
 

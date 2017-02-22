@@ -17,7 +17,9 @@ import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders; 
+import org.elasticsearch.index.query.QueryBuilders;
+import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Project; 
 
 public class CharityServlet {
 
@@ -37,6 +39,12 @@ public class CharityServlet {
 		GetResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		Map<String, Object> charity = sr.getSourceAsMap();
+		
+//		// impacts
+//		Project project;
+//		calcImpacts(project);
+//		List<MonetaryAmount> inputs = project.getInputs();
+		
 		JsonResponse output = new JsonResponse(state, charity);
 		WebUtils2.sendJson(output, state);
 	}

@@ -184,7 +184,7 @@ public class ImportCharityDataFromCSV {
 			}
 			
 			// outputs
-			for(int i=0; i<5; i++) {
+			for(int i=1; i<4; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
 				String type1 = get(row, col("impact "+i+" unit"));
