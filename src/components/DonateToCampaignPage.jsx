@@ -1,10 +1,11 @@
 import React from 'react';
 import {uid} from 'wwutils';
+import _ from 'lodash';
 import { SJTest, assert, assMatch} from 'sjtest';
 
-import ServerIO from '../plumbing/ServerIO.js';
+import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer.js';
-import C from '../C.js';
+import C from '../C';
 
 
 export default class DonateToCampaignPage extends React.Component {
@@ -126,10 +127,10 @@ export default class DonateToCampaignPage extends React.Component {
 	}
 } // ./DonateToCampaign
 
-const DonationAmounts = ({ charity, project }) => (
+const DonationAmounts = ({ charity, project, impacts }) => (
 	<ul>
 		{
-			_.map(this.props.impacts, a => (
+			impacts.map(a => (
 				<DonationAmount
 					key={uid()}
 					charity={charity}
@@ -149,6 +150,6 @@ const DonationAmount = function({ impact }) {
 
 const DonationList = ({ donations }) => (
 	<ul>
-		{_.map(donations, d => <li key={uid()}>{d}</li>) }
+		{ donations.map(donation => <li key={uid()}>{ donation }</li>) }
 	</ul>
 );

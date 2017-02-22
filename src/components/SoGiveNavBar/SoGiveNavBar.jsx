@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import AccountMenu from '../AccountMenu';
-import { switchPage } from './actions';
+import { switchPage } from './SoGiveNavBar-actions';
 
 // import { Nav, NavBar, NavItem } from 'react-bootstrap';
 // https://react-bootstrap.github.io/components.html#navbars

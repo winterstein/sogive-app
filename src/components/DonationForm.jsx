@@ -1,5 +1,4 @@
 // @Flow
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
@@ -21,7 +20,7 @@ export default class DonationForm extends React.Component {
 
 	}
 
-	render() {		
+	render() {
 		let charity = this.props.charity;
 		assert(NGO.isa(charity), charity);
 		let project = this.props.project || NGO.getProject(charity);
@@ -88,10 +87,10 @@ class ThankYouAndShare extends React.Component {
 	}
 
 	render() {
-		// <div className="fb-share-button" 
-	/*data-href={url} 
-	data-layout="button_count" 
-	data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank" 
+		// <div className="fb-share-button"
+	/*data-href={url}
+	data-layout="button_count"
+	data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
 	href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a></div>*/
 
 		let url = ""+window.location;
@@ -100,7 +99,7 @@ class ThankYouAndShare extends React.Component {
 
 			<p>Share this on social media? On average this leads to 2-3 times more donations.</p>
 
-			<textarea className='form-control' value={this.state.shareText} onChange={this.onChangeShareText.bind(this)}>				
+			<textarea className='form-control' value={this.state.shareText} onChange={this.onChangeShareText.bind(this)}>
 			</textarea>
 
 			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}><Misc.Logo service='twitter'/></a>
@@ -117,19 +116,21 @@ const DonationFormButton = ({onToken}) => {
 		return <button>Donate</button>;
 	}
 	let email = Login.getId('Email');
-	return (<StripeCheckout name="SoGive" description="See the impact of your charity donations"
-				image="http://local.sogive.org/img/SoGive-Light-70px.png"
-				email={email}
-				panelLabel="Give Money"
-				amount={1000000}
-				currency="GBP"
-				stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
-				bitcoin
-				allowRememberMe
-				token={onToken}
-			>
-				<button className="btn btn-primary">Donate</button>
-			</StripeCheckout>);
+	return (
+		<StripeCheckout name="SoGive" description="See the impact of your charity donations"
+			image="http://local.sogive.org/img/SoGive-Light-70px.png"
+			email={email}
+			panelLabel="Give Money"
+			amount={1000000}
+			currency="GBP"
+			stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
+			bitcoin
+			allowRememberMe
+			token={onToken}
+		>
+			<button className="btn btn-primary">Donate</button>
+		</StripeCheckout>
+	);
 };
 
 
@@ -139,11 +140,11 @@ const DonationAmounts = ({charity, project, impacts}) => {
 };
 
 const DonationAmount = function({charity, project, impact}) {
-    return <li>£{impact.price} will fund {impact.number} {impact.output}</li>;
+	return <li>£{impact.price} will fund {impact.number} {impact.output}</li>;
 };
 
 
 const DonationList = ({donations}) => {
-    let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
-    return <ul>{ddivs}</ul>;
+	let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
+	return <ul>{ddivs}</ul>;
 };
