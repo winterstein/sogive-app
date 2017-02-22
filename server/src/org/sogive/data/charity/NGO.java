@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.web.SimpleJson;
 
 public class NGO extends Thing {
@@ -21,19 +23,12 @@ public class NGO extends Thing {
 	/**
 	 * Name should be unique or it will merge.
 	 * @param project
+	 * @return 
 	 */
-	public void addProject(Project project) {
-		List<Project> projects = (List) get("projects");
-		if (projects==null) {
-			projects = new ArrayList();
-			put("projects", projects);
-		}
-		for (Project pold : projects) {
-			if (project.getId().equals(pold.getId())) {
-				pold.merge(project);
-				return;
-			}
-		}
-		projects.add(project);
+	public List<Project> addProject(Project project) {
+		BiPredicate<Project,Project> matcher = (p1, p2) -> 
+				Utils.equals(p1.getName(), p2.getName()) && Utils.equals(p1.get("year"), p2.get("year"));
+		List<Project> projects = addOrMerge("projects", project, matcher);
+		return projects;
 	}
 }
