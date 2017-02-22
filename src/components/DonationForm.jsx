@@ -4,15 +4,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import SJTest, {assert} from 'sjtest';
+import Login from 'hooru';
+import StripeCheckout from 'react-stripe-checkout';
+import {XId,uid} from 'wwutils';
+import {Text} from 'react-bootstrap';
+
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer.js';
 import C from '../C.js';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
-import Login from 'hooru';
-import StripeCheckout from 'react-stripe-checkout';
-import {XId,uid} from 'wwutils';
-import {Text} from 'react-bootstrap';
 import GiftAidForm from './GiftAidForm.jsx';
 
 export default class DonationForm extends React.Component {

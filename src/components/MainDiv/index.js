@@ -1,3 +1,3 @@
-import MainDiv from './MainDiv.jsx';
+import MainDiv from './MainDiv';
 
 export default MainDiv;

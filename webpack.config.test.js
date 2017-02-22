@@ -5,6 +5,9 @@ module.exports = {
   entry: './test/test-all.js',
   output: { path: __dirname, filename: './web/build/js/test.bundle.js' },
   devtool: 'source-map',
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
   module: {
     loaders: [
       {

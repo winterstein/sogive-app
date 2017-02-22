@@ -1,30 +1,34 @@
-import { React, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-import AccountMenu from '../../AccountMenu.jsx';
+import AccountMenu from '../AccountMenu';
+import { switchPage } from './actions';
+
 // import { Nav, NavBar, NavItem } from 'react-bootstrap';
-
-const SoGiveNavBar = function({page, showTab}) {
-	console.log('NavBar', page);
 // https://react-bootstrap.github.io/components.html#navbars
-	// return (
-	//     <NavBar inverse defaultExpanded>
-	//         <NavBar.Header>
-	//             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
-	//             <Navbar.Toggle />
-	//         </NavBar.Header>
-	//         <Navbar.Collapse>
-	//         <Nav>
-	//             <NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
-	//             <NavItem eventKey={1} href="#">Link</NavItem>
-	//             <NavItem eventKey={2} href="#">Link</NavItem>
-	//         </Nav>
-	//         <Nav pullRight>
-	//             <NavItem eventKey={1} href="#">Link Right</NavItem>
-	//             <NavItem eventKey={2} href="#">Link Right</NavItem>
-	//         </Nav>
-	//         </Navbar.Collapse>
-	//     </NavBar>
-	// );
+// 	return (
+// 			<NavBar inverse defaultExpanded>
+// 					<NavBar.Header>
+// 							<NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
+// 							<Navbar.Toggle />
+// 					</NavBar.Header>
+// 					<Navbar.Collapse>
+// 					<Nav>
+// 							<NavBar.Brand><a href="#"><img style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" /></a></NavBar.Brand>
+// 							<NavItem eventKey={1} href="#">Link</NavItem>
+// 							<NavItem eventKey={2} href="#">Link</NavItem>
+// 					</Nav>
+// 					<Nav pullRight>
+// 							<NavItem eventKey={1} href="#">Link Right</NavItem>
+// 							<NavItem eventKey={2} href="#">Link Right</NavItem>
+// 					</Nav>
+// 					</Navbar.Collapse>
+// 			</NavBar>
+// 	);
+
+const SoGiveNavBar = ({page, handleSwitchPage}) => {
+	console.log('NavBar', page);
+
 	return (
 		<nav className="navbar navbar-fixed-top navbar-inverse">
 			<div className="container">
@@ -42,22 +46,27 @@ const SoGiveNavBar = function({page, showTab}) {
 						<span className="icon-bar" />
 						<span className="icon-bar" />
 					</button>
-					<a className="navbar-brand" href="#">
+					<a className="navbar-brand" href="#dashboard">
 						<img alt="SoGive logo" style={{maxWidth:'100px',maxHeight:'50px',background:'black'}} src="img/logo.png" />
 					</a>
 				</div>
 				<div id="navbar" className="navbar-collapse collapse">
 					<ul className="nav navbar-nav">
 						<li className={page === 'dashboard'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#dashboard" onClick={showTab.bind(null, 'dashboard')}>My Profile</a></li>
+							<a className="nav-item nav-link" href="#dashboard" onClick={() => handleSwitchPage('dashboard')}>
+								My Profile
+							</a></li>
 						<li className={page === 'search'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'search')}>Search</a></li>
-
+							<a className="nav-item nav-link" href="#search" onClick={() => handleSwitchPage('search')}>
+								Search
+							</a></li>
 						<li className={page === 'campaign'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#search" onClick={ showTab.bind(null, 'campaign')}>(dummy) Donate to Campaign</a>
+							<a className="nav-item nav-link" href="#campaign" onClick={() => handleSwitchPage('campaign')}>
+								(dummy) Donate to Campaign
+							</a>
 						</li>
 					</ul>
-					<AccountMenu active={page === 'account'} onClick={ showTab.bind(null, 'account')} />
+					<AccountMenu active={page === 'account'} onClick={() => handleSwitchPage('account')} />
 				</div>
 			</div>
 		</nav>
@@ -67,7 +76,20 @@ const SoGiveNavBar = function({page, showTab}) {
 
 SoGiveNavBar.propTypes = {
 	page: PropTypes.string.isRequired,
-	showTab: PropTypes.function.isRequired,
+	handleSwitchPage: PropTypes.func.isRequired,
 };
 
-export default SoGiveNavBar;
+
+const mapStateToProps = (state, ownProps) => ({
+	...ownProps,
+	page: state.navigation.page,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+handleSwitchPage: (value) => dispatch(switchPage(value)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SoGiveNavBar);

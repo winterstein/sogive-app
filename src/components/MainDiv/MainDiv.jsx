@@ -1,22 +1,23 @@
-import { React, Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import SJTest from 'sjtest';
 
 // import LoginWidget from './LoginWidget.jsx';
 // import printer from '../../utils/printer.js';
-import {getUrlVars} from 'wwutils';
+import { getUrlVars } from 'wwutils';
 
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 // import C from '../../C.js';
 
 // Templates
-import MessageBar from '../MessageBar.jsx';
-import DashboardPage from '../DashboardPage.jsx';
-import SearchPage from '../SearchPage.jsx';
-import Account from '../Account.jsx';
-import DonateToCampaignPage from '../DonateToCampaignPage.jsx';
+import MessageBar from '../MessageBar';
 import SoGiveNavBar from '../SoGiveNavBar';
+// Pages
+import DashboardPage from '../DashboardPage';
+import SearchPage from '../SearchPage';
+import Account from '../Account';
+import DonateToCampaignPage from '../DonateToCampaignPage';
 
 
 const assert = SJTest.assert;
@@ -28,8 +29,6 @@ const PAGES = {
 	account: Account,
 	campaign: DonateToCampaignPage
 };
-
-const TABORDER = ['dashboard', 'search'];
 
 const Tab = function({page, pageProps}) {
 	assert(page);
@@ -45,32 +44,19 @@ const Tab = function({page, pageProps}) {
 
 Tab.propTypes = {
 	page: PropTypes.string.isRequired,
-	pageProps: PropTypes.object.isRequired,
+	pageProps: PropTypes.shape({}).isRequired,
 };
 
 /**
 		Top-level: SoGive tabs
 */
 class MainDiv extends Component {
-	getInitialState() {
-		let page;
-		let hash = window.location.hash.substr(1);
-		if (hash.indexOf('?') !== -1) hash = hash.substr(0, hash.indexOf('?'));
-		if (TABORDER.indexOf(hash) >= 0) {
-			page = hash;
-		} else {
-		// TODO logged in? then show dashboard
-			page = 'search';
-		}
-		const webProps = getUrlVars();
+	constructor() {
+		super();
+		const pageProps = getUrlVars();
 		// FIXME
-		webProps.charityId = 'solar-aid';
-		const istate = {
-			page: page,
-			pageProps: webProps
-		};
-		console.log("initstate", istate);
-		return istate;
+		pageProps.charityId = 'solar-aid';
+		this.state = { pageProps };
 	}
 
 	componentWillMount() {
@@ -84,15 +70,18 @@ class MainDiv extends Component {
 	}
 
 	render() {
-		const page = this.state.page;
-		assert(page, this.state);
-		return ( <div>
-			<SoGiveNavBar page={this.state.page} showTab={this.showTab} />
-			<div className="container avoid-navbar">
-				<MessageBar />
-				<Tab page={page} pageProps={this.state.pageProps} />
+		const { page } = this.props;
+		const { pageProps } = this.state;
+		assert(page, this.props);
+		return (
+			<div>
+				<SoGiveNavBar />
+				<div className="container avoid-navbar">
+					<MessageBar />
+					<Tab page={page} pageProps={pageProps} />
+				</div>
 			</div>
-		</div>);
+		);
 	}
 }
 
@@ -102,17 +91,12 @@ class MainDiv extends Component {
  * ...and we can use dynamic refs like state.xids[ownProps.user].bio
  * We can also disregard the supplied props by omitting ownProps.
  */
-const MapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
 	page: state.navigation.page,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(MainDiv);
 
