@@ -30,14 +30,20 @@ export default class GiftAidForm extends React.Component {
 
 	render() {
 		if ( ! this.state.addGiftAid) {
-			return (<div>
-				<div className='form-group'>
-					<Misc.Checkbox on={this.onChangeAddGiftAid.bind(this)} /> Yes, add Gift Aid
-					<a href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'
-					>Find out more about Gift Aid</a>
+			return (
+				<div>
+					<div className='form-group'>
+						<Misc.Checkbox
+							on={this.onChangeAddGiftAid.bind(this)}
+							label='Yes, add Gift Aid'
+						/>
+						<a href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
+							Find out more about Gift Aid
+						</a>
+					</div>
 				</div>
-			</div>);			
-		}
+			);
+	}
 
 		// check em all
 		return (<div>
