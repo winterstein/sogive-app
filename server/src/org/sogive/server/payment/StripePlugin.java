@@ -82,6 +82,11 @@ public class StripePlugin {
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.token);
         chargeMap.put("amount", plan);
+        description
+        metadata key value
+        receipt_email
+        customer id
+        statement_descriptor 22 chars
         chargeMap.put("currency", currency);
         chargeMap.put("email", email);
 //        chargeMap.put("currency", "gbp");
