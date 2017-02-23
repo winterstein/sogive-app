@@ -97,6 +97,7 @@ public class StripePlugin {
 //        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
 //        Customer c = Customer.create(chargeMap, requestOptions);
 //        Log.d(LOGTAG, c);
+		return null;
 
 	}
 	
