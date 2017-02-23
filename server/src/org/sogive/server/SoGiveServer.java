@@ -18,6 +18,7 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.GsonBuilder;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.ESStorage;
 import com.winterwell.datalog.IDataLog;
@@ -79,6 +80,8 @@ public class SoGiveServer {
 	}
 
 	private static void init() {
+		// TODO gson
+//		new GsonBuilder()
 		// config
 		ESConfig value = new ESConfig();
 		Dependency.set(ESConfig.class, value);

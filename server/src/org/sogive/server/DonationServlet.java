@@ -16,11 +16,13 @@ import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.utils.Dependency;
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.fields.IntField;
 
 /**
  * TODO action=donate 
@@ -58,12 +60,22 @@ public class DonationServlet {
 	}
 
 	private void doMakeDonation() throws Exception {
+		// curl 'http://local.sogive.org/donation' -H 'Cookie: JSESSIONID=xylenet95aiaj2gfi83otlqv' -H 'Origin: http://local.sogive.org' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: en-US,en;q=0.8' -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: */*' -H 'Referer: http://local.sogive.org/' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --data 'action=donate&charityId=sightsavers-royal-commonwealth-society-for-the-blind&currency=GBP&giftAid=false&total100=100000&stripeToken=tok_19qQiqLRMN0tOY9GUnBPP0xh&stripeTokenType=card&stripeEmail=roscoe.mcinerney%40gmail.com' --compressed
+		// --data 'action=donate&charityId=sightsavers-royal-commonwealth-society-for-the-blind&
+		// currency=GBP&giftAid=false&total100=100000&stripeToken=tok_19qQiqLRMN0tOY9GUnBPP0xh
+		// &stripeTokenType=card&stripeEmail=roscoe.mcinerney%40gmail.com' --compressed
 		XId user = state.getUserId();
+		String email = state.get("stripeEmail");
+		if (user==null && email!=null) {
+			user = new XId(email, "Email");
+		}			
 		XId charity = new XId(state.get("charityId"), "sogive");
+		String currency = state.get("currency");
+		Integer total100 = state.get(new IntField("total100"));
 		MonetaryAmount ourFee= null;
 		MonetaryAmount otherFees= null;
 		boolean giftAid = false;
-		MonetaryAmount total= null;
+		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 
 		// Store in the database (acts as a form of lock)

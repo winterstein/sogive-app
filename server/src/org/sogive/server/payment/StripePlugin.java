@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
@@ -19,6 +20,7 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
@@ -81,6 +83,7 @@ public class StripePlugin {
 		// https://stripe.com/docs/api#create_charge
 		String secretKey = secretKey();
 //		// Charge them!
+		Stripe.apiKey = secretKey;
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.token);
@@ -91,20 +94,39 @@ public class StripePlugin {
         chargeMap.put("customer", sa.customerId);
         chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
         chargeMap.put("currency", Utils.or(donation.getTotal().getCurrency(), "GBP"));
-        chargeMap.put("email", sa.email);
+//        chargeMap.put("email", sa.email);
         
 //        https://stripe.com/docs/api#idempotent_requests
 //        add header Idempotency-Key:
         	
         Log.i(LOGTAG, "create-map:"+chargeMap);
-        Customer c = Customer.create(chargeMap, requestOptions);
+        // blank entries upset Stripe
+        for(String k : chargeMap.keySet().toArray(new String[0])) {
+        	Object val = chargeMap.get(k);
+        	if (val == null) {
+        		chargeMap.remove(k);
+        		continue;
+        	}
+        	if (val instanceof String && Utils.isBlank((String)val)) {
+        		chargeMap.remove(k);
+        	}
+        }
+        // Charge!!
+        Charge c = Charge.create(chargeMap);
+//        Customer c = Customer.create(chargeMap, requestOptions);
         Log.d(LOGTAG, c);
-        user.put("stripe", new ArrayMap(
-        			"customerId", c.getId(),
-        			"email", c.getEmail()
-        		));
+        if (user!=null) {
+	        user.put("stripe", new ArrayMap(
+	        			"customerId", c.getCustomer(),
+	        			"email", c.getCustomerObject().getEmail()
+	        		));
+        }
         // TODO turn into a map
-		return c;
+		return new ArrayMap(
+				"id", c.getId(),
+				"status", c.getStatus(),
+				"outcome", c.getOutcome()
+				);
 
 	}
 

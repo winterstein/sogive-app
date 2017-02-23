@@ -69,6 +69,7 @@ public class MasterHttpServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			WebRequest request = new WebRequest(null, req, resp);
+			Log.d("servlet", request);
 			String path = request.getRequestPath();
 			if (path.startsWith("/search")) {
 				SearchServlet s = new SearchServlet(request);
@@ -89,17 +90,10 @@ public class MasterHttpServlet extends HttpServlet {
 				StripeWebhookServlet s = new StripeWebhookServlet();
 				s.process(request);
 				return;
-			}
-			// TODO stats explorer
-			
-			// TODO experiment reports table
-			
-			// TODO experiment reports details
-			
-			// TODO dataspace admin
-			
+			}			
 			WebUtils2.sendError(500, "TODO", resp);
 		} catch(Throwable ex) {
+			ex.printStackTrace();
 			Log.e("error", ex);
 			WebUtils2.sendError(500, "Server Error: "+ex, resp);
 		}

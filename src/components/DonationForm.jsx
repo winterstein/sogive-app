@@ -47,7 +47,7 @@ class DonationForm extends React.Component {
 		}
 
 		// donated?
-		if (false) {
+		if (donationSuccess) {
 			return (<ThankYouAndShare />);
 		}
 
@@ -57,12 +57,10 @@ class DonationForm extends React.Component {
 				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
 			/>
 		) : (
-			<Button disabled>Donate</Button>
+			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
 
-		const content = donationSuccess ? (
-			<ThankYouAndShare />
-		) : (
+		return (
 			<div className='DonationForm'>
 				<DonationAmounts
 					impacts={impacts}
@@ -75,8 +73,6 @@ class DonationForm extends React.Component {
 				{ donateButton }
 			</div>
 		);
-
-		return content;
 	}
 }
 

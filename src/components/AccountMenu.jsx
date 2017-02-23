@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import SJTest from 'sjtest'
 const assert = SJTest.assert;
-// import LoginWidget from './LoginWidget.jsx';
 import printer from '../utils/printer.js';
 import {getUrlVars} from 'wwutils';
 
@@ -13,7 +12,7 @@ import {getUrlVars} from 'wwutils';
 import C from '../C.js';
 import Login from 'hooru';
 import {Nav,NavItem} from 'react-bootstrap';
-import LoginWidget from './LoginWidget.jsx';
+import LoginWidget from './LoginWidget/LoginWidget.jsx';
 
 /*
 The top-right menu

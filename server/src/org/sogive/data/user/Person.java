@@ -10,4 +10,8 @@ public class Person extends Thing {
 
 	private static final long serialVersionUID = 1L;
 
+	public String getEmail() {
+		return (String) get("email");
+	}
+
 }
