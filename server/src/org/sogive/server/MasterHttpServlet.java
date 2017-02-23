@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.util.ajax.JSON;
+import org.sogive.server.payment.StripeWebhookServlet;
 
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
@@ -82,6 +83,11 @@ public class MasterHttpServlet extends HttpServlet {
 			if (path.startsWith("/donation")) {
 				DonationServlet s = new DonationServlet(request);
 				s.run();
+				return;
+			}
+			if (path.startsWith("/stripe/webhook")) {
+				StripeWebhookServlet s = new StripeWebhookServlet();
+				s.process(request);
 				return;
 			}
 			// TODO stats explorer

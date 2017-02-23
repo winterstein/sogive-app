@@ -5,7 +5,12 @@ import com.winterwell.web.app.WebRequest;
 import com.stripe.model.Event;
 import com.stripe.net.APIResource;
 
-public class StripeWebHookServlet {
+/**
+ * /stripe/webhook
+ * @author daniel
+ *
+ */
+public class StripeWebhookServlet {
 
 	private WebRequest state;
 
