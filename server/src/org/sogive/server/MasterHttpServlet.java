@@ -79,6 +79,11 @@ public class MasterHttpServlet extends HttpServlet {
 				s.run();
 				return;
 			}
+			if (path.startsWith("/donation")) {
+				DonationServlet s = new DonationServlet(request);
+				s.run();
+				return;
+			}
 			// TODO stats explorer
 			
 			// TODO experiment reports table
