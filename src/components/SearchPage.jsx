@@ -47,7 +47,7 @@ class SearchForm extends React.Component {
 
 	componentDidMount() {
 		if (this.state.q) {
-			this.onSubmit();
+			this.search(this.state.q);
 		}
 	}
 
@@ -59,10 +59,14 @@ class SearchForm extends React.Component {
 		this.setState(newState);
 	}
 
-	onSubmit(e, showAll) {
-		if (e) e.preventDefault();
+	onSubmit(e) {
+		e.preventDefault();
 		console.warn("submit",this.state);
-		ServerIO.search(showAll ? '' : this.state.q)
+		this.search(this.state.q);
+	}
+
+	search(query) {
+		ServerIO.search(query)
 		.then(function(res) {
 			console.warn(res);
 			let charities = res.cargo.hits;
@@ -73,7 +77,7 @@ class SearchForm extends React.Component {
 
 	render() {
 		return(
-			<Form inline onSubmit={this.onSubmit.bind(this)} >
+			<Form inline onSubmit={(event) => { this.onSubmit(event); }} >
 				<Well>
 					<FormGroup bsSize='lg' controlId="formq">
 						<ControlLabel bsSize='lg'>Keywords</ControlLabel>
@@ -88,7 +92,7 @@ class SearchForm extends React.Component {
 						&nbsp;
 						<Button type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
 					</FormGroup>
-					<Button onClick={() => { this.onSubmit(null, true); }} className="pull-right" bsSize='lg'>Show All</Button>
+					<Button onClick={() => { this.search(''); }} className="pull-right" bsSize='lg'>Show All</Button>
 				</Well>
 			</Form>
 		);
