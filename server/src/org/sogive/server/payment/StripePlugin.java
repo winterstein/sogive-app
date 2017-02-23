@@ -75,29 +75,27 @@ public class StripePlugin {
 	}
 
 	public static void collect(Donation donation) {
-		
-		
-		
-		String token = state.getRequired(new SField("stripeToken"));
-		String tokenType = state.get(new SField("stripeTokenType"));
-		String email = state.get(new SField("stripeEmail"));		
-		if (email==null) {
-			email = Email.getEmail(state);
-		}
-		String key = StripePlugin.SECRET_KEY;
-//		if (state.debug) key = StripePlugin.TEST_SECRET_KEY;
-
-		// Charge them!
-		RequestOptions requestOptions = RequestOptions.builder().setApiKey(key).build();
-        Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("source", token);
-        chargeMap.put("plan", plan);
-        chargeMap.put("email", email);
-//        chargeMap.put("currency", "gbp");
-        
-        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
-        Customer c = Customer.create(chargeMap, requestOptions);
-        Log.d(LOGTAG, c);
+//				
+//		String token = state.getRequired(new SField("stripeToken"));
+//		String tokenType = state.get(new SField("stripeTokenType"));
+//		String email = state.get(new SField("stripeEmail"));		
+//		if (email==null) {
+//			email = Email.getEmail(state);
+//		}
+//		String key = StripePlugin.SECRET_KEY;
+////		if (state.debug) key = StripePlugin.TEST_SECRET_KEY;
+//
+//		// Charge them!
+//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(key).build();
+//        Map<String, Object> chargeMap = new HashMap<String, Object>();
+//        chargeMap.put("source", token);
+//        chargeMap.put("plan", plan);
+//        chargeMap.put("email", email);
+////        chargeMap.put("currency", "gbp");
+//        
+//        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
+//        Customer c = Customer.create(chargeMap, requestOptions);
+//        Log.d(LOGTAG, c);
 
 	}
 	

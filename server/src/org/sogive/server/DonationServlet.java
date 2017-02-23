@@ -1,14 +1,22 @@
 package org.sogive.server;
 
+import java.io.IOException;
+
+import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
 import org.sogive.server.payment.StripePlugin;
 
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
+import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.data.XId;
 
 /**
- * TODO action=add-payment-method log stripe token 
+ * TODO action=donate 
+ * 
+ * TODO log stripe token 
  * 
  * TODO make donation
  * 
@@ -25,10 +33,8 @@ public class DonationServlet {
 		this.state = request;
 	}
 
-	public void run() {
-		if (state.actionIs("add-payment-method")) {
-			doAddPaymentMethod();
-		} else if (state.actionIs("make-donation")) {
+	public void run() throws IOException {
+		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
 			doList();
@@ -42,11 +48,23 @@ public class DonationServlet {
 		throw new TodoException();
 	}
 
-	private void doMakeDonation() {
-		Donation donation;
-		StripePlugin.collect(donation)
-		new Donation(from, to, ourFee, otherFees, giftAid, total)
+	private void doMakeDonation() throws IOException {
+		XId user = state.getUserId();
+		XId charity = null;
+		MonetaryAmount ourFee= null;
+		MonetaryAmount otherFees= null;
+		boolean giftAid = false;
+		MonetaryAmount total= null;
+		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 
+		// TODO store in the database
+		
+		StripePlugin.collect(donation);
+		
+		// TODO store in the database
+		
+		JsonResponse output = new JsonResponse(state, donation);
+		WebUtils2.sendJson(output, state);
 	}
 
 	private void doAddPaymentMethod() {
