@@ -76,27 +76,27 @@ public class StripePlugin {
 
 	public static Map collect(Donation donation, StripeAuth sa, String idempotencyKey) {
 		// https://stripe.com/docs/api#create_charge
-		String key = StripePlugin.SECRET_KEY;
-		// Charge them!
-		RequestOptions requestOptions = RequestOptions.builder().setApiKey(key).build();
-        Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("source", sa.token);
-        chargeMap.put("amount", plan);
-        description
-        metadata key value
-        receipt_email
-        customer id
-        statement_descriptor 22 chars
-        chargeMap.put("currency", currency);
-        chargeMap.put("email", email);
-//        chargeMap.put("currency", "gbp");
-        
-//        https://stripe.com/docs/api#idempotent_requests
-//        add header Idempotency-Key:
-        	
-        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
-        Customer c = Customer.create(chargeMap, requestOptions);
-        Log.d(LOGTAG, c);
+//		String key = StripePlugin.SECRET_KEY;
+//		// Charge them!
+//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(key).build();
+//        Map<String, Object> chargeMap = new HashMap<String, Object>();
+//        chargeMap.put("source", sa.token);
+//        chargeMap.put("amount", plan);
+//        description
+//        metadata key value
+//        receipt_email
+//        customer id
+//        statement_descriptor 22 chars
+//        chargeMap.put("currency", currency);
+//        chargeMap.put("email", email);
+////        chargeMap.put("currency", "gbp");
+//        
+////        https://stripe.com/docs/api#idempotent_requests
+////        add header Idempotency-Key:
+//        	
+//        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
+//        Customer c = Customer.create(chargeMap, requestOptions);
+//        Log.d(LOGTAG, c);
 
 	}
 	
