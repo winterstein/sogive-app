@@ -1,8 +1,12 @@
 package org.sogive.server;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
@@ -15,9 +19,13 @@ import com.stripe.model.Charge;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
+import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.utils.Dependency;
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
@@ -56,9 +64,28 @@ public class DonationServlet {
 		}
 	}
 
-	private void doList() {
-		// TODO Auto-generated method stub
-		throw new TodoException();
+	private void doList() throws IOException {
+		XId user = state.getUserId();
+		
+		ESHttpClient es = Dependency.get(ESHttpClient.class);
+		SearchRequestBuilder s = es.prepareSearch("donation");
+		if (user==null) {
+//			throw new WebEx.E401(null, "No user"); TODO!!!
+		} else {
+			TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
+			s.setQuery(qb);
+		}
+		// TODO paging!
+		s.setSize(100);
+		SearchResponse sr = s.get();
+		List<Map> hits = sr.getHits();
+		List<Map> hits2 = Containers.apply(h -> (Map)h.get("_source"), hits);
+		int total = sr.getTotal();
+		JsonResponse output = new JsonResponse(state, new ArrayMap(
+				"hits", hits2,
+				"total", total
+				));
+		WebUtils2.sendJson(output, state);
 	}
 
 	private void doMakeDonation() throws Exception {
@@ -113,11 +140,5 @@ public class DonationServlet {
 		WebUtils2.sendJson(output, state);
 	}
 
-	private void doAddPaymentMethod() {
-		// TODO Auto-generated method stub
-		throw new TodoException();
-	}
-
-	
 	
 }

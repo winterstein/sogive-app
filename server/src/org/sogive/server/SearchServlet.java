@@ -35,7 +35,8 @@ public class SearchServlet {
 		SearchRequestBuilder s = client.prepareSearch(Dependency.get(SoGiveConfig.class).charityIndex);
 		String q = state.get(Q);
 		if ( q != null) {
-			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, "id", "englandWalesCharityRegNum", "name", "description");
+			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
+					"id", "englandWalesCharityRegNum", "name", "description");
 			s.setQuery(qb);
 		}
 		// TODO paging!
