@@ -13,9 +13,17 @@ public class Donation {
 	
 	XId to;
 	
+
+	/**
+	 * Whether we think this has been collected. 
+	 * Note that Stripe can reclaim money, we we have to allow a period before
+	 * counting this as firm.
+	 */
 	boolean collected;
 	
 	boolean paidOut;
+	
+	String trackerId;
 	
 	MonetaryAmount transfer;
 	
@@ -42,6 +50,14 @@ public class Donation {
 		this.giftAid = giftAid;
 		this.total = total;
 		transfer = total.minus(ourFee).minus(otherFees);
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setCollected(boolean b) {
+		this.collected = b;
 	}
 
 }

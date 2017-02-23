@@ -5,6 +5,7 @@ import java.io.File;
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
 
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.log.Log;
@@ -25,6 +26,7 @@ import com.winterwell.datalog.StatConfig;
 import com.winterwell.datalog.DataLogImpl;
 import com.winterwell.es.ESUtils;
 import com.winterwell.es.client.ESConfig;
+import com.winterwell.es.client.ESHttpClient;
 
 public class SoGiveServer {
 
@@ -36,6 +38,7 @@ public class SoGiveServer {
 
 	public static void main(String[] args) {
 		config = ArgsParser.getConfig(new SoGiveConfig(), args, new File("config/sogive.properties"), null);
+		Dependency.set(SoGiveConfig.class, config);
 		assert config != null;
 		
 		logFile = new LogFile()
@@ -67,6 +70,13 @@ public class SoGiveServer {
 	}
 
 	private static void init() {
+		// config
+		ESConfig value = new ESConfig();
+		Dependency.set(ESConfig.class, value);
+		// client
+		Dependency.setSupplier(ESHttpClient.class, true, 
+				() -> new ESHttpClient(Dependency.get(ESConfig.class))
+				);		
 	}
 
 

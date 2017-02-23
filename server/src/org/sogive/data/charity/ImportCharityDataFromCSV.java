@@ -18,6 +18,7 @@ import com.winterwell.es.client.ESHttpResponse;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.UpdateRequestBuilder;
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.StrUtils;
@@ -227,7 +228,7 @@ public class ImportCharityDataFromCSV {
 	}
 
 	private void init() {
-		ESConfig config = new ESConfig();
+		ESConfig config = Dependency.get(ESConfig.class);
 		client = new ESHttpClient(config);
 	}
 

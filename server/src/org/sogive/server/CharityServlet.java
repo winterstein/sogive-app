@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.GetRequestBuilder;
 import com.winterwell.es.client.GetResponse;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils2;
@@ -31,7 +33,7 @@ public class CharityServlet {
 	
 	public void run() throws IOException {
 		String id = state.getSlugBits(1);
-		ESHttpClient client = new ESHttpClient();
+		ESHttpClient client = new ESHttpClient(Dependency.get(ESConfig.class));
 		ESHttpClient.debug = true;
 		GetRequestBuilder s = new GetRequestBuilder(client);
 		s.setIndex(SoGiveServer.config.charityIndex).setType("charity").setId(id);

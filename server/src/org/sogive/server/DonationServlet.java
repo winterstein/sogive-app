@@ -6,6 +6,12 @@ import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
 import org.sogive.server.payment.StripePlugin;
 
+import com.google.gson.Gson;
+import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.es.client.IESResponse;
+import com.winterwell.es.client.IndexRequestBuilder;
+import com.winterwell.es.client.UpdateRequestBuilder;
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
@@ -50,18 +56,35 @@ public class DonationServlet {
 
 	private void doMakeDonation() throws IOException {
 		XId user = state.getUserId();
-		XId charity = null;
+		XId charity = new XId(state.get("charityId"), "sogive");
 		MonetaryAmount ourFee= null;
 		MonetaryAmount otherFees= null;
 		boolean giftAid = false;
 		MonetaryAmount total= null;
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 
-		// TODO store in the database
+		// Store in the database (acts as a form of lock)
+		ESHttpClient es = Dependency.get(ESHttpClient.class);
+		IndexRequestBuilder pi = es.prepareIndex("donation", "donation", donation.getId());
+		pi.setRefresh("true");
+		pi.setOpTypeCreate(true);		
+		String json = Dependency.get(Gson.class).toJson(donation);
+		pi.setSource(json);
+		IESResponse res = pi.get().check();
+		String json2 = res.getJson();
 		
+		// check we haven't done before: done by the op_type=create
+		
+		// collect the money
 		StripePlugin.collect(donation);
 		
 		// TODO store in the database
+		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
+		donation.setCollected(true);
+		String json3 = Dependency.get(Gson.class).toJson(donation);
+		pu.setSource(json);
+		IESResponse resAfter = pu.get().check();
+		String json4 = res.getJson();		
 		
 		JsonResponse output = new JsonResponse(state, donation);
 		WebUtils2.sendJson(output, state);
