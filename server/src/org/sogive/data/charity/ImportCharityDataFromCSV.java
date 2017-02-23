@@ -90,7 +90,7 @@ public class ImportCharityDataFromCSV {
 
 	static MonetaryAmount cost(Object value) {
 		if (value==null) return null;
-		return new MonetaryAmount(MathUtils.getNumber(value));
+		return MonetaryAmount.pound(MathUtils.getNumber(value));
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -184,7 +184,7 @@ public class ImportCharityDataFromCSV {
 			}
 			
 			// outputs
-			for(int i=0; i<5; i++) {
+			for(int i=1; i<3; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
 				String type1 = get(row, col("impact "+i+" unit"));
