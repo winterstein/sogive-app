@@ -100,13 +100,15 @@ const SearchResults = ({ results }) => (
 const SearchResult = ({ item }) => (
 	<div className='SearchResult' >
 		<Media>
-			<Media.Left>
-				<img width={64} height={64} src={item.logo} alt={`Logo for ${item.name}`} />
-			</Media.Left>
-			<Media.Body>
-				<Media.Heading>{item.name}</Media.Heading>
-				<p>{item.description}</p>
-			</Media.Body>
+			<a href={`#charity?charityId=${item['@id']}`}>
+				<Media.Left>
+					<img width={64} height={64} src={item.logo} alt={`Logo for ${item.name}`} />
+				</Media.Left>
+				<Media.Body>
+					<Media.Heading>{item.name}</Media.Heading>
+					<p>{item.description}</p>
+				</Media.Body>
+			</a>
 		</Media>
 	</div>
 ); //./SearchResult

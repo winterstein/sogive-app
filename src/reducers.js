@@ -1,8 +1,7 @@
 import { combineReducers } from 'redux';
-
-import navigation from './components/MainDiv/MainDiv-reducer';
+import donationForm from './components/DonationForm-reducer';
 
 export default combineReducers({
-	navigation,
+	donationForm,
 });
 

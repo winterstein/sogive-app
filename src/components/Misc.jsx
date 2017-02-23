@@ -11,7 +11,11 @@ const Misc = {};
 /**
 E.g. "Loading your settings...""
 */
-Misc.Loading = ({text}) => (<div><span className="glyphicon glyphicon-cd spinning"></span> Loading {text || ''}...</div>);
+Misc.Loading = ({text}) => (
+	<div>
+		<span className="glyphicon glyphicon-cd spinning" /> Loading {text || ''}...
+	</div>
+);
 
 	/** eg a Twitter logo */
 Misc.Logo = ({service, size, transparent}) => {
@@ -24,10 +28,17 @@ Misc.Logo = ({service, size, transparent}) => {
 		file = '/img/logo.png';
 		if (transparent === false) file = '/img/SoGive-Light-70px.png';
 	}
-	return (<img alt={service} data-pin-nopin="true" className={klass} src={file} />);
+	return (
+		<img alt={service} data-pin-nopin="true" className={klass} src={file} />
+	);
 }; // ./Logo
 
-Misc.Checkbox = ({on, label, onChange}) => 
-	(<div className="checkbox"><label><input onChange={onChange} type="checkbox" checked={on || false} /> {label} </label></div>);
+Misc.Checkbox = ({on, label, onChange}) => (
+	<div className="checkbox">
+		<label>
+			<input onChange={onChange} type="checkbox" checked={on || false} /> {label}
+		</label>
+	</div>
+);
 
 export default Misc;

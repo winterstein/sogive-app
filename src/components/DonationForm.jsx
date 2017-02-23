@@ -1,12 +1,12 @@
 // @Flow
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import SJTest, {assert} from 'sjtest';
 import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
-import {XId,uid} from 'wwutils';
-import {Text} from 'react-bootstrap';
+import { XId, uid } from 'wwutils';
+import { Button, FormControl } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer.js';
@@ -15,16 +15,27 @@ import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
 import GiftAidForm from './GiftAidForm.jsx';
 
-export default class DonationForm extends React.Component {
-	onToken() {
+import { donate } from './DonationForm-actions';
+import { updateField } from './genericActions';
 
-	}
+
+class DonationForm extends React.Component {
 
 	render() {
-		let charity = this.props.charity;
+		const { charity, donationAmount, addGiftAid, donateOK, handleChange, sendDonation } = this.props;
+
 		assert(NGO.isa(charity), charity);
+
 		let project = this.props.project || NGO.getProject(charity);
 		assert(project, charity);
+
+		const donationParams = {
+			charityId: charity['@id'],
+			currency: 'GBP',
+			giftAid: addGiftAid,
+			total100: donationAmount,
+		};
+
 		let impacts = NGO.getImpacts(project);
 		if ( ! impacts) {
 			impacts = [{price:'5'}, {
@@ -33,18 +44,25 @@ export default class DonationForm extends React.Component {
 				// output: '', NA
 			}];
 		}
+
 		// donated?
 		if (false) {
 			return (<ThankYouAndShare />);
 		}
 
+		const donateButton = donateOK ? (
+			<DonationFormButton
+				amount={donationAmount}
+				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
+			/>
+		) : (
+			<Button disabled>Donate</Button>
+		);
+
 		return (<div className='DonationForm'>
-
 			<DonationAmounts impacts={impacts} charity={charity} project={project} />
-
-			<GiftAidForm />
-
-			<DonationFormButton onToken={this.onToken.bind(this)} />
+			<GiftAidForm {...this.props} handleChange={handleChange} />
+			<p>{ `OK to donate: ${donateOK}` }</p>
 
 			<ThankYouAndShare />
 		</div>);
@@ -87,23 +105,35 @@ class ThankYouAndShare extends React.Component {
 	}
 
 	render() {
-		// <div className="fb-share-button"
-	/*data-href={url}
-	data-layout="button_count"
-	data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
-	href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a></div>*/
+		const {shareText} = this.state;
+	/*
+	<div className="fb-share-button"
+		data-href={url}
+		data-layout="button_count"
+		data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
+		href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a>
+	</div>
+	*/
 
-		let url = ""+window.location;
+		let url = `${window.location}`;
 		return (<div className='ThankYouAndShare'>
 			<h3>Thank you for donating!</h3>
 
 			<p>Share this on social media? On average this leads to 2-3 times more donations.</p>
 
-			<textarea className='form-control' value={this.state.shareText} onChange={this.onChangeShareText.bind(this)}>
-			</textarea>
+			<textarea
+				className='form-control'
+				onChange={() => { this.onChangeShareText(); }}
+				defaultValue={shareText}
+			/>
 
-			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}><Misc.Logo service='twitter'/></a>
-			<button className='btn btn-default' onClick={this.shareOnFacebook.bind(this)}><Misc.Logo service='facebook'/></button>
+			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}>
+				<Misc.Logo service='twitter' />
+			</a>
+
+			<button className='btn btn-default' onClick={() => { this.shareOnFacebook(); }}>
+				<Misc.Logo service='facebook' />
+			</button>
 		</div>);
 	}
 } // ./ThankYouAndShare
@@ -111,7 +141,7 @@ class ThankYouAndShare extends React.Component {
 /**
  * one-click donate, or Stripe form?
  */
-const DonationFormButton = ({onToken}) => {
+const DonationFormButton = ({onToken, amount}) => {
 	if (false) {
 		return <button>Donate</button>;
 	}
@@ -120,8 +150,8 @@ const DonationFormButton = ({onToken}) => {
 		<StripeCheckout name="SoGive" description="See the impact of your charity donations"
 			image="http://local.sogive.org/img/SoGive-Light-70px.png"
 			email={email}
-			panelLabel="Give Money"
-			amount={1000000}
+			panelLabel="Donate"
+			amount={amount}
 			currency="GBP"
 			stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
 			bitcoin
@@ -136,7 +166,16 @@ const DonationFormButton = ({onToken}) => {
 
 const DonationAmounts = ({charity, project, impacts}) => {
 	let damounts = _.map(impacts, a => (<DonationAmount key={"donate_"+a.price} charity={charity} project={project} impact={a}/>) );
-	return(<ul>{damounts}</ul>);
+	return(
+		<div>
+			<ul>{damounts}</ul>
+			<FormControl
+				type="text"
+				placeholder="Enter donation amount"
+				onChange={({ value }) => { updateField('donationAmount', value); }}
+			/>
+		</div>
+	);
 };
 
 const DonationAmount = function({charity, project, impact}) {
@@ -148,3 +187,18 @@ const DonationList = ({donations}) => {
 	let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
 	return <ul>{ddivs}</ul>;
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	...ownProps,
+	...state.donationForm,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	handleChange: (field, value) => dispatch(updateField('DONATION_FORM_UPDATE', field, value)),
+	sendDonation: (charityId, stripeResponse, amount) => dispatch(donate(dispatch, charityId, stripeResponse, amount)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DonationForm);

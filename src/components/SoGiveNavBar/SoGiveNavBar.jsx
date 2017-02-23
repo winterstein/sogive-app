@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
 
 import AccountMenu from '../AccountMenu';
-import { switchPage } from './SoGiveNavBar-actions';
 
 // import { Nav, NavBar, NavItem } from 'react-bootstrap';
 // https://react-bootstrap.github.io/components.html#navbars
@@ -26,7 +24,7 @@ import { switchPage } from './SoGiveNavBar-actions';
 // 			</NavBar>
 // 	);
 
-const SoGiveNavBar = ({page, handleSwitchPage}) => {
+const SoGiveNavBar = ({page}) => {
 	console.log('NavBar', page);
 
 	return (
@@ -53,20 +51,22 @@ const SoGiveNavBar = ({page, handleSwitchPage}) => {
 				<div id="navbar" className="navbar-collapse collapse">
 					<ul className="nav navbar-nav">
 						<li className={page === 'dashboard'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#dashboard" onClick={() => handleSwitchPage('dashboard')}>
+							<a className="nav-item nav-link" href="#dashboard">
 								My Profile
 							</a></li>
 						<li className={page === 'search'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#search" onClick={() => handleSwitchPage('search')}>
+							<a className="nav-item nav-link" href="#search">
 								Search
 							</a></li>
 						<li className={page === 'charity'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#charity" onClick={() => handleSwitchPage('charity')}>
+							<a className="nav-item nav-link" href="#charity">
 								(dummy) Charity
 							</a>
 						</li>
 					</ul>
-					<AccountMenu active={page === 'account'} onClick={() => handleSwitchPage('account')} />
+					<a href="#account">
+						<AccountMenu active={page === 'account'} />
+					</a>
 				</div>
 			</div>
 		</nav>
@@ -76,20 +76,6 @@ const SoGiveNavBar = ({page, handleSwitchPage}) => {
 
 SoGiveNavBar.propTypes = {
 	page: PropTypes.string.isRequired,
-	handleSwitchPage: PropTypes.func.isRequired,
 };
 
-
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-	page: state.navigation.page,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-handleSwitchPage: (value) => dispatch(switchPage(value)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SoGiveNavBar);
+export default SoGiveNavBar;

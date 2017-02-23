@@ -31,6 +31,8 @@ const PAGES = {
 	campaign: DonateToCampaignPage
 };
 
+const DEFAULT_PAGE = 'dashboard';
+
 const Tab = function({page, pageProps}) {
 	assert(page);
 	const Page = PAGES[page];
@@ -57,26 +59,35 @@ class MainDiv extends Component {
 		const pageProps = getUrlVars();
 		// FIXME
 		pageProps.charityId = 'solar-aid';
-		this.state = { pageProps };
+		this.state = this.decodeHash(window.location.href);
 	}
 
 	componentWillMount() {
+		window.addEventListener('hashchange', this.hashChanged);
 	}
 
 	componentWillUnmount() {
+		window.removeEventListener('hashchange', (event) => { this.hashChanged(event); });
 	}
 
-	showTab(tab) {
-		this.setState({ page: tab });
+	hashChanged({ newUrl }) {
+		this.setState(this.decodeHash(newUrl));
+	}
+
+	decodeHash(url) {
+		const hashIndex = url.indexOf('#');
+		const hash = (hashIndex >= 0) ? url.slice(hashIndex + 1) : '';
+		const page = hash.split('?')[0] || DEFAULT_PAGE;
+		const pageProps = getUrlVars(hash);
+		return { page, pageProps };
 	}
 
 	render() {
-		const { page } = this.props;
-		const { pageProps } = this.state;
+		const { page, pageProps } = this.state;
 		assert(page, this.props);
 		return (
 			<div>
-				<SoGiveNavBar />
+				<SoGiveNavBar page={page} />
 				<div className="container avoid-navbar">
 					<MessageBar />
 					<Tab page={page} pageProps={pageProps} />
@@ -86,18 +97,4 @@ class MainDiv extends Component {
 	}
 }
 
-/**
- * This function maps parts of the Redux central state object onto the component's props.
- * We can use deep refs like state.navigation.previousTab...
- * ...and we can use dynamic refs like state.xids[ownProps.user].bio
- * We can also disregard the supplied props by omitting ownProps.
- */
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-	page: state.navigation.page,
-});
-
-export default connect(
-  mapStateToProps,
-)(MainDiv);
-
+export default MainDiv;
