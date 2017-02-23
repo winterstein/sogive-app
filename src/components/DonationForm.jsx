@@ -63,7 +63,7 @@ class DonationForm extends React.Component {
 			<DonationAmounts impacts={impacts} charity={charity} project={project} />
 			<GiftAidForm {...this.props} handleChange={handleChange} />
 			<p>{ `OK to donate: ${donateOK}` }</p>
-
+			{ donateButton }
 			<ThankYouAndShare />
 		</div>);
 	}

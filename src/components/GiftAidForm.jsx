@@ -42,7 +42,7 @@ const GiftAidForm = ({
 	return (
 		<div>
 			<FormGroup>
-				<Checkbox checked={addGiftAid} onChange={(event) => { handleChange('addGiftAid', event.target.checked); }}>
+				<Checkbox checked={addGiftAid} onChange={(event) => { handleChange('addGiftAid', event.target.checked); console.log(event.value); }}>
 					Yes, add Gift Aid
 				</Checkbox>
 				<a href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>

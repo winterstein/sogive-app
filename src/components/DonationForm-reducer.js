@@ -9,31 +9,30 @@ const initialState = {
 };
 
 const checkDonationForm = (state, action) => {
-	const { donationAmount, addGiftAid, giftAidTaxpayer, giftAidOwnMoney, giftAidNoCompensation, giftAidNoLottery } = state;
 	const { field, value } = action;
-	// Validation!
-	const donateOK = (
+	const newState = {
+		...state,
+		[field]: value,
+	};
+
+	newState.donateOK = (
 		// have to be donating something
 		(
-			donationAmount &&
-			donationAmount > 0
+			newState.donationAmount &&
+			newState.donationAmount > 0
 		) &&
 		// if gift-aiding, must have checked all confirmations
 		(
-			!addGiftAid ||
+			!newState.addGiftAid ||
 			(
-				giftAidTaxpayer &&
-				giftAidOwnMoney &&
-				giftAidNoCompensation &&
-				giftAidNoLottery
+				newState.giftAidTaxpayer &&
+				newState.giftAidOwnMoney &&
+				newState.giftAidNoCompensation &&
+				newState.giftAidNoLottery
 			)
 		)
 	);
-	return {
-		...state,
-		[field]: value,
-		donateOK,
-	};
+	return newState;
 };
 
 const donationFormReducer = (state = initialState, action) => {
