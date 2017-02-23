@@ -10,6 +10,7 @@ const initialState = {
 
 const checkDonationForm = (state, action) => {
 	const { field, value } = action;
+
 	const newState = {
 		...state,
 		[field]: value,

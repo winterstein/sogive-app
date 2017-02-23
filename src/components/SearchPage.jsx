@@ -5,8 +5,6 @@ import {Button, Form, FormGroup, FormControl, ControlLabel, Media, MediaLeft, Me
 import {uid} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
-import printer from '../utils/printer.js';
-import C from '../C.js';
 
 
 export default class SearchPage extends React.Component {
@@ -27,10 +25,11 @@ export default class SearchPage extends React.Component {
 	}
 
 	render() {
+		const { q } = this.props;
 		return (
 			<div className='page SearchPage'>
 				<h2>Search</h2>
-				<SearchForm setResults={this.setResults.bind(this)}/>
+				<SearchForm query={q} setResults={this.setResults.bind(this)}/>
 				<SearchResults results={this.state.results} />
 			</div>
 		);
@@ -42,7 +41,14 @@ class SearchForm extends React.Component {
 	constructor(...params) {
 		super(...params);
 		this.state = {
+			q: this.props.query,
 		};
+	}
+
+	componentDidMount() {
+		if (this.state.q) {
+			this.onSubmit();
+		}
 	}
 
 	onChange(name, e) {
@@ -53,10 +59,10 @@ class SearchForm extends React.Component {
 		this.setState(newState);
 	}
 
-	onSubmit(e) {
-		e.preventDefault();
+	onSubmit(e, showAll) {
+		if (e) e.preventDefault();
 		console.warn("submit",this.state);
-		ServerIO.search(this.state.q)
+		ServerIO.search(showAll ? '' : this.state.q)
 		.then(function(res) {
 			console.warn(res);
 			let charities = res.cargo.hits;
@@ -70,23 +76,23 @@ class SearchForm extends React.Component {
 			<Form inline onSubmit={this.onSubmit.bind(this)} >
 				<Well>
 					<FormGroup bsSize='lg' controlId="formq">
-						<ControlLabel bsSize='lg' >Keywords</ControlLabel>
+						<ControlLabel bsSize='lg'>Keywords</ControlLabel>
 						&nbsp;
 						<FormControl
 							bsSize='lg'
-							type="search"                        
+							type="search"
 							value={this.state.q || ''}
 							placeholder="Enter search terms"
-							onChange={this.onChange.bind(this,'q')}
+							onChange={(e) => this.onChange('q', e)}
 						/>
 						&nbsp;
 						<Button type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
 					</FormGroup>
+					<Button onClick={() => { this.onSubmit(null, true); }} bsSize='lg'>Show All</Button>
 				</Well>
 			</Form>
 		);
 	} // ./render
-
 } //./SearchForm
 
 

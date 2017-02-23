@@ -6,7 +6,7 @@ import SJTest, {assert} from 'sjtest';
 import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
 import { XId, uid } from 'wwutils';
-import { Button, FormControl } from 'react-bootstrap';
+import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer.js';
@@ -30,10 +30,11 @@ class DonationForm extends React.Component {
 		assert(project, charity);
 
 		const donationParams = {
+			action: 'donate',
 			charityId: charity['@id'],
 			currency: 'GBP',
 			giftAid: addGiftAid,
-			total100: donationAmount,
+			total100: Math.floor(donationAmount * 100),
 		};
 
 		let impacts = NGO.getImpacts(project);
@@ -52,20 +53,27 @@ class DonationForm extends React.Component {
 
 		const donateButton = donateOK ? (
 			<DonationFormButton
-				amount={donationAmount}
+				amount={Math.floor(donationAmount * 100)}
 				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
 			/>
 		) : (
 			<Button disabled>Donate</Button>
 		);
 
-		return (<div className='DonationForm'>
-			<DonationAmounts impacts={impacts} charity={charity} project={project} />
-			<GiftAidForm {...this.props} handleChange={handleChange} />
-			<p>{ `OK to donate: ${donateOK}` }</p>
-			{ donateButton }
-			<ThankYouAndShare />
-		</div>);
+		return (
+			<div className='DonationForm'>
+				<DonationAmounts
+					impacts={impacts}
+					charity={charity}
+					project={project}
+					donationAmount={donationAmount}
+					handleChange={handleChange}
+				/>
+				<GiftAidForm {...this.props} handleChange={handleChange} />
+				{ donateButton }
+				<ThankYouAndShare />
+			</div>
+		);
 	}
 }
 
@@ -161,29 +169,50 @@ const DonationFormButton = ({onToken, amount}) => {
 				allowRememberMe
 				token={onToken}
 			>
-				<button className="btn btn-primary">Donate</button>
+				<Button bsStyle="primary">Donate</Button>
 			</StripeCheckout>
 		</div>
 	);
 };
 
 
-const DonationAmounts = ({charity, project, impacts}) => {
-	let damounts = _.map(impacts, a => (<DonationAmount key={"donate_"+a.price} charity={charity} project={project} impact={a}/>) );
+const DonationAmounts = ({charity, project, impacts, donationAmount, handleChange}) => {
+	let damounts = _.map(impacts, impact => (
+		<DonationAmount
+			key={`donate_${impact.price}`}
+			charity={charity}
+			project={project}
+			impact={impact}
+			handleChange={handleChange}
+		/>) );
 	return(
 		<div>
 			<ul>{damounts}</ul>
-			<FormControl
-				type="text"
-				placeholder="Enter donation amount"
-				onChange={({ value }) => { updateField('donationAmount', value); }}
-			/>
+			<InputGroup>
+				<InputGroup.Addon>£</InputGroup.Addon>
+				<FormControl
+					type="number"
+					placeholder="Enter donation amount"
+					onChange={({ value }) => { handleChange('donationAmount', value); }}
+					value={donationAmount}
+				/>
+			</InputGroup>
 		</div>
 	);
 };
 
-const DonationAmount = function({charity, project, impact}) {
-	return <li>£{impact.price} will fund {impact.number} {impact.output}</li>;
+const DonationAmount = function({charity, project, impact, handleChange}) {
+	return (
+		<li>
+			<Button
+				bsStyle="primary"
+				bsSize="small"
+				onClick={() => handleChange('donationAmount', impact.price)}
+			>
+				£{impact.price}
+			</Button> will fund {impact.number} {impact.output}
+		</li>
+	);
 };
 
 

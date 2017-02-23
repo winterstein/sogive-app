@@ -63,15 +63,15 @@ class MainDiv extends Component {
 	}
 
 	componentWillMount() {
-		window.addEventListener('hashchange', this.hashChanged);
+		window.addEventListener('hashchange', ({newURL}) => { this.hashChanged(newURL); });
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('hashchange', (event) => { this.hashChanged(event); });
+		window.removeEventListener('hashchange', ({newURL}) => { this.hashChanged(newURL); });
 	}
 
-	hashChanged({ newUrl }) {
-		this.setState(this.decodeHash(newUrl));
+	hashChanged(newURL) {
+		this.setState(this.decodeHash(newURL));
 	}
 
 	decodeHash(url) {
