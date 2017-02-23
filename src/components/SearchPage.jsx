@@ -88,7 +88,7 @@ class SearchForm extends React.Component {
 						&nbsp;
 						<Button type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
 					</FormGroup>
-					<Button onClick={() => { this.onSubmit(null, true); }} bsSize='lg'>Show All</Button>
+					<Button onClick={() => { this.onSubmit(null, true); }} className="pull-right" bsSize='lg'>Show All</Button>
 				</Well>
 			</Form>
 		);
