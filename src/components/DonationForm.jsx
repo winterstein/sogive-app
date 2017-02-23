@@ -192,8 +192,10 @@ const DonationAmounts = ({charity, project, impacts, donationAmount, handleChang
 				<InputGroup.Addon>£</InputGroup.Addon>
 				<FormControl
 					type="number"
+					min="0"
+					step="0.01"
 					placeholder="Enter donation amount"
-					onChange={({ value }) => { handleChange('donationAmount', value); }}
+					onChange={({ target }) => { handleChange('donationAmount', target.value); }}
 					value={donationAmount}
 				/>
 			</InputGroup>
