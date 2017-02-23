@@ -147,19 +147,23 @@ const DonationFormButton = ({onToken, amount}) => {
 	}
 	let email = Login.getId('Email');
 	return (
-		<StripeCheckout name="SoGive" description="See the impact of your charity donations"
-			image="http://local.sogive.org/img/SoGive-Light-70px.png"
-			email={email}
-			panelLabel="Donate"
-			amount={amount}
-			currency="GBP"
-			stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
-			bitcoin
-			allowRememberMe
-			token={onToken}
-		>
-			<button className="btn btn-primary">Donate</button>
-		</StripeCheckout>
+		<div>
+			<pre>Stripe Test Card details: 4000 0082 6000 0000,	Visa, UK</pre>
+			<pre>Stripe bad card: 4000 0000 0000 0069</pre>
+			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
+				image="http://local.sogive.org/img/SoGive-Light-70px.png"
+				email={email}
+				panelLabel="Donate"
+				amount={amount}
+				currency="GBP"
+				stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
+				bitcoin
+				allowRememberMe
+				token={onToken}
+			>
+				<button className="btn btn-primary">Donate</button>
+			</StripeCheckout>
+		</div>
 	);
 };
 
