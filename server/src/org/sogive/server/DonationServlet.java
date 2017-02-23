@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
+import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
 import com.google.gson.Gson;
@@ -66,8 +67,8 @@ public class DonationServlet {
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
 		IndexRequestBuilder pi = es.prepareIndex("donation", "donation", donation.getId());
-		pi.setRefresh("true");
-		pi.setOpTypeCreate(true);		
+//		pi.setRefresh("true"); TODO
+//		pi.setOpTypeCreate(true);		
 		String json = Dependency.get(Gson.class).toJson(donation);
 		pi.setSource(json);
 		IESResponse res = pi.get().check();
@@ -75,8 +76,10 @@ public class DonationServlet {
 		
 		// check we haven't done before: done by the op_type=create
 		
+		String ikey = null;
+		StripeAuth sa = null;
 		// collect the money
-		StripePlugin.collect(donation);
+		StripePlugin.collect(donation, sa, ikey);
 		
 		// TODO store in the database
 		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
