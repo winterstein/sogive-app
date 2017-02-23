@@ -90,7 +90,7 @@ public class ImportCharityDataFromCSV {
 
 	static MonetaryAmount cost(Object value) {
 		if (value==null) return null;
-		return new MonetaryAmount(MathUtils.getNumber(value));
+		return MonetaryAmount.pound(MathUtils.getNumber(value));
 	}
 	
 	public static void main(String[] args) throws Exception {
