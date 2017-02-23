@@ -15,6 +15,11 @@ export const donate = (dispatch, donationParams, stripeResponse) => {
 			type: 'DONATION_RESPONSE',
 			response,
 		});
+	}, function(error) {
+		dispatch({
+			type: 'DONATION_RESPONSE',
+			error,
+		});
 	});
 	// Action dispatched immediately
 	return {

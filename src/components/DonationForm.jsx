@@ -22,7 +22,7 @@ import { updateField } from './genericActions';
 class DonationForm extends React.Component {
 
 	render() {
-		const { charity, donationAmount, addGiftAid, donateOK, handleChange, sendDonation } = this.props;
+		const { charity, donationSuccess, donationAmount, addGiftAid, donateOK, handleChange, sendDonation } = this.props;
 
 		assert(NGO.isa(charity), charity);
 
@@ -60,7 +60,9 @@ class DonationForm extends React.Component {
 			<Button disabled>Donate</Button>
 		);
 
-		return (
+		const content = donationSuccess ? (
+			<ThankYouAndShare />
+		) : (
 			<div className='DonationForm'>
 				<DonationAmounts
 					impacts={impacts}
@@ -71,9 +73,10 @@ class DonationForm extends React.Component {
 				/>
 				<GiftAidForm {...this.props} handleChange={handleChange} />
 				{ donateButton }
-				<ThankYouAndShare />
 			</div>
 		);
+
+		return content;
 	}
 }
 

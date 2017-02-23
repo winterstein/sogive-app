@@ -6,6 +6,9 @@ const initialState = {
 	giftAidNoCompensation: false,
 	giftAidNoLottery: false,
 	donateOK: true,
+	donationSuccess: false,
+	donationPending: false,
+	donationError: false,
 };
 
 const checkDonationForm = (state, action) => {
@@ -42,10 +45,17 @@ const donationFormReducer = (state = initialState, action) => {
 		return checkDonationForm(state, action);
 	case 'DONATION_REQUESTED':
 		console.log('DONATION_REQUESTED', action);
-		return state;
+		return {
+			...state,
+			donationPending: true,
+		};
 	case 'DONATION_RESPONSE':
 		console.log('DONATION_RESPONSE', action);
-		return state;
+		return {
+			...state,
+			donationPending: false,
+			donationSuccess: true,
+		};
 	default:
 		return state;
 	}
