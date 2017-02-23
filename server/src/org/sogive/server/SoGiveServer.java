@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.server.payment.StripeConfig;
 
 import com.winterwell.utils.Dependency;
 import com.winterwell.utils.Utils;
@@ -33,13 +34,10 @@ public class SoGiveServer {
 	private static JettyLauncher jl;
 	
 	public static LogFile logFile;
-	
-	public static SoGiveConfig config;
 
 	public static void main(String[] args) {
-		config = ArgsParser.getConfig(new SoGiveConfig(), args, new File("config/sogive.properties"), null);
-		Dependency.set(SoGiveConfig.class, config);
-		assert config != null;
+		SoGiveConfig config = getConfig(new SoGiveConfig(), args);
+		StripeConfig sc = getConfig(new StripeConfig(), args); 
 		
 		logFile = new LogFile()
 					// keep 8 weeks of 1 week log files ??revise this??
@@ -58,6 +56,17 @@ public class SoGiveServer {
 		Log.i("Running...");
 		
 		initCharityData();
+	}
+
+	private static <X> X getConfig(X config, String[] args) {
+		config = ArgsParser.getConfig(config, args, new File("config/sogive.properties"), null);
+		String thingy = config.getClass().getSimpleName().toLowerCase().replace("config", "");
+		config = ArgsParser.getConfig(config, args, new File("config/"+thingy+".properties"), null);
+		config = ArgsParser.getConfig(config, args, new File("config/"+WebUtils2.hostname()+".properties"), null);
+		Dependency.set((Class)config.getClass(), config);
+		assert config != null;
+		return config;
+
 	}
 
 	private static void initCharityData() {

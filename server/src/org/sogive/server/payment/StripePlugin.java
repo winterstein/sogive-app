@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.user.Donation;
+import org.sogive.data.user.Person;
 
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.WeirdException;
@@ -31,8 +33,7 @@ import com.winterwell.utils.containers.ArrayMap;
 public class StripePlugin {
 
 	public static final String SERVICE = "stripe";
-
-	static String SECRET_KEY;
+	private static final String LOGTAG = "stripe";
 
 	/**
 	 * 
@@ -42,8 +43,9 @@ public class StripePlugin {
 	public static void cancelPlan(Map gateway) throws Exception {
 		Log.i(SERVICE, "cancelPlan "+gateway);
 		String id = (String) gateway.get("id");
-		Stripe.apiKey = SECRET_KEY; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
-		RequestOptions requestOptions = RequestOptions.builder().setApiKey(SECRET_KEY).build();
+		String secretKey = Dependency.get(StripeConfig.class).secretKey;
+		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
+		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
 		Customer customer = Customer.retrieve(id, requestOptions);
 		// TODO just cancel one plan
 //		CustomerSubscriptionCollection subs = customer.getSubscriptions();
@@ -60,7 +62,8 @@ public class StripePlugin {
 	public static List<Subscription> checkSubscriptions(Map map) {
 		try {
 			String id = (String) map.get("id");
-			RequestOptions requestOptions = RequestOptions.builder().setApiKey(SECRET_KEY).build();
+			String secretKey = Dependency.get(StripeConfig.class).secretKey;
+			RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
 			Customer customer = Customer.retrieve(id, requestOptions);
 			CustomerSubscriptionCollection subs = customer.getSubscriptions();
 			if (subs==null || subs.getData().isEmpty()) { // bug seen Dec 2015 When/why does this happen?
@@ -74,31 +77,44 @@ public class StripePlugin {
 		}
 	}
 
-	public static Map collect(Donation donation, StripeAuth sa, String idempotencyKey) {
+	public static Object collect(Donation donation, StripeAuth sa, Person user, String idempotencyKey) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		// https://stripe.com/docs/api#create_charge
-//		String key = StripePlugin.SECRET_KEY;
+		String secretKey = secretKey();
 //		// Charge them!
-//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(key).build();
-//        Map<String, Object> chargeMap = new HashMap<String, Object>();
-//        chargeMap.put("source", sa.token);
-//        chargeMap.put("amount", plan);
-//        description
+		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
+        Map<String, Object> chargeMap = new HashMap<String, Object>();
+        chargeMap.put("source", sa.token);
+        chargeMap.put("amount", donation.getTotal().getValue100());
+        chargeMap.put("description", donation.getId());
 //        metadata key value
-//        receipt_email
-//        customer id
-//        statement_descriptor 22 chars
-//        chargeMap.put("currency", currency);
-//        chargeMap.put("email", email);
-////        chargeMap.put("currency", "gbp");
-//        
-////        https://stripe.com/docs/api#idempotent_requests
-////        add header Idempotency-Key:
-//        	
-//        Log.i(LOGTAG, "create-map:"+chargeMap+" params:"+state.getParameterMap());
-//        Customer c = Customer.create(chargeMap, requestOptions);
-//        Log.d(LOGTAG, c);
-		return null;
+        chargeMap.put("receipt_email", sa.email);        
+        chargeMap.put("customer", sa.customerId);
+        chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
+        chargeMap.put("currency", Utils.or(donation.getTotal().getCurrency(), "GBP"));
+        chargeMap.put("email", sa.email);
+        
+//        https://stripe.com/docs/api#idempotent_requests
+//        add header Idempotency-Key:
+        	
+        Log.i(LOGTAG, "create-map:"+chargeMap);
+        Customer c = Customer.create(chargeMap, requestOptions);
+        Log.d(LOGTAG, c);
+        user.put("stripe", new ArrayMap(
+        			"customerId", c.getId(),
+        			"email", c.getEmail()
+        		));
+        // TODO turn into a map
+		return c;
 
+	}
+
+	private static String secretKey() {		
+		StripeConfig stripeConfig = Dependency.get(StripeConfig.class);
+		if (stripeConfig.testStripe) {
+			return stripeConfig.testSecretKey;
+		}
+		String skey = stripeConfig.secretKey;
+		return skey;
 	}
 	
 }

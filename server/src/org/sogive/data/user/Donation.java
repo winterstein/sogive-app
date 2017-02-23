@@ -2,6 +2,7 @@ package org.sogive.data.user;
 
 import org.sogive.data.charity.MonetaryAmount;
 
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.data.XId;
 
@@ -12,6 +13,10 @@ public class Donation {
 	XId from;
 	
 	XId to;
+	
+	public MonetaryAmount getTotal() {
+		return total;
+	}
 	
 
 	/**
@@ -50,6 +55,9 @@ public class Donation {
 		this.giftAid = giftAid;
 		this.total = total;
 		transfer = total.minus(ourFee).minus(otherFees);
+		// make an ID to block repeats
+		long tmin = time.getTime() / TUnit.MINUTE.millisecs;
+		this.id = total.getValue100()+" "+from+" -> "+to+" at "+(tmin);
 	}
 
 	public String getId() {

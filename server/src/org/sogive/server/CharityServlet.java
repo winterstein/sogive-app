@@ -21,7 +21,8 @@ import com.winterwell.web.fields.SField;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.charity.MonetaryAmount;
-import org.sogive.data.charity.Project; 
+import org.sogive.data.charity.Project;
+import org.sogive.data.charity.SoGiveConfig; 
 
 public class CharityServlet {
 
@@ -36,19 +37,23 @@ public class CharityServlet {
 		ESHttpClient client = new ESHttpClient(Dependency.get(ESConfig.class));
 		ESHttpClient.debug = true;
 		GetRequestBuilder s = new GetRequestBuilder(client);
-		s.setIndex(SoGiveServer.config.charityIndex).setType("charity").setId(id);
+		s.setIndex(SoGiveConfig.charityIndex).setType(SoGiveConfig.charityType).setId(id);
 		s.setSourceOnly(true);
 		GetResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		Map<String, Object> charity = sr.getSourceAsMap();
 		
 //		// impacts
-//		Project project;
-//		calcImpacts(project);
-//		List<MonetaryAmount> inputs = project.getInputs();
+		doCalcImpacts(charity);
 		
 		JsonResponse output = new JsonResponse(state, charity);
 		WebUtils2.sendJson(output, state);
+	}
+
+	private void doCalcImpacts(Map<String, Object> charity) {
+		Project project;
+		System.out.println(charity.getClass());
+//		List<MonetaryAmount> inputs = project.getInputs();
 	}
 
 }

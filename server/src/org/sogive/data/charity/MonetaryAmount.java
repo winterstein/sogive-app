@@ -35,4 +35,9 @@ public class MonetaryAmount extends Thing {
 	public static MonetaryAmount pound(double number) {
 		return new MonetaryAmount((int) (number*100));
 	}
+
+
+	public String getCurrency() {
+		return (String) get("currency");
+	}
 }

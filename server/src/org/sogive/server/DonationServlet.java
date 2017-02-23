@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
+import org.sogive.data.user.Person;
+import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
@@ -40,7 +42,7 @@ public class DonationServlet {
 		this.state = request;
 	}
 
-	public void run() throws IOException {
+	public void run() throws Exception {
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
@@ -55,7 +57,7 @@ public class DonationServlet {
 		throw new TodoException();
 	}
 
-	private void doMakeDonation() throws IOException {
+	private void doMakeDonation() throws Exception {
 		XId user = state.getUserId();
 		XId charity = new XId(state.get("charityId"), "sogive");
 		MonetaryAmount ourFee= null;
@@ -75,11 +77,11 @@ public class DonationServlet {
 		String json2 = res.getJson();
 		
 		// check we haven't done before: done by the op_type=create
-		
-		String ikey = null;
-		StripeAuth sa = null;
+		Person userObj = DB.getUser(user);
+		String ikey = donation.getId();
+		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money
-		StripePlugin.collect(donation, sa, ikey);
+		Object customer = StripePlugin.collect(donation, sa, userObj, ikey);
 		
 		// TODO store in the database
 		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
