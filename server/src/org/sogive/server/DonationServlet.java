@@ -1,6 +1,7 @@
 package org.sogive.server;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
@@ -10,6 +11,7 @@ import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
 import com.google.gson.Gson;
+import com.stripe.model.Charge;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
@@ -93,11 +95,15 @@ public class DonationServlet {
 		String ikey = donation.getId();
 		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money
-		Object customer = StripePlugin.collect(donation, sa, userObj, ikey);
+		Charge charge = StripePlugin.collect(donation, sa, userObj, ikey);
+		
+		Log.d("stripe", charge);
+		donation.setCollected(true);
+		donation.setPaymentId(charge.getId());
 		
 		// TODO store in the database
 		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
-		donation.setCollected(true);
+		
 		String json3 = Dependency.get(Gson.class).toJson(donation);
 		pu.setSource(json);
 		IESResponse resAfter = pu.get().check();

@@ -79,7 +79,7 @@ public class StripePlugin {
 		}
 	}
 
-	public static Object collect(Donation donation, StripeAuth sa, Person user, String idempotencyKey) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
+	public static Charge collect(Donation donation, StripeAuth sa, Person user, String idempotencyKey) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		// https://stripe.com/docs/api#create_charge
 		String secretKey = secretKey();
 //		// Charge them!
@@ -122,12 +122,7 @@ public class StripePlugin {
 	        		));
         }
         // TODO turn into a map
-		return new ArrayMap(
-				"id", c.getId(),
-				"status", c.getStatus(),
-				"outcome", c.getOutcome()
-				);
-
+		return c;
 	}
 
 	private static String secretKey() {		

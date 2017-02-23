@@ -29,7 +29,14 @@ public class Donation {
 	
 	boolean paidOut;
 	
-	String trackerId;
+	/**
+	 * e.g. a stripe charge id
+	 */
+	String paymentId;
+	
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
 	
 	MonetaryAmount transfer;
 	

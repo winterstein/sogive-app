@@ -14,8 +14,8 @@ public class StripeWebhookServlet {
 
 	private WebRequest state;
 
-	public void process(WebRequest state) throws Exception {
-		this.state = state;
+	public void process(WebRequest _state) throws Exception {
+		this.state = _state;
 		// Retrieve the request's body and parse it as JSON
 		Event eventJson = APIResource.GSON.fromJson(state.getPostBody(), Event.class);
 		Log.d("stripe", "json: "+state.getPostBody());
