@@ -35,6 +35,10 @@ ServerIO.donate = function(data) {
 	return ServerIO.post('/donation', data);
 };
 
+ServerIO.getDonations = function() {
+	return ServerIO.load('/donation');
+};
+
 
 /**
  * Submits an AJAX request. This is the key base method
