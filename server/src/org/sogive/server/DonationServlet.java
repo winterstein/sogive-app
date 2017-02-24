@@ -8,6 +8,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DB;
@@ -55,6 +56,7 @@ public class DonationServlet {
 	}
 
 	public void run() throws Exception {
+		Login.login(state);
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
@@ -68,7 +70,8 @@ public class DonationServlet {
 		XId user = state.getUserId();
 		
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
-		SearchRequestBuilder s = es.prepareSearch("donation");
+		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
+		SearchRequestBuilder s = es.prepareSearch(config.donationIndex);
 		if (user==null) {
 //			throw new WebEx.E401(null, "No user"); TODO!!!
 		} else {
@@ -109,7 +112,8 @@ public class DonationServlet {
 
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
-		IndexRequestBuilder pi = es.prepareIndex("donation", "donation", donation.getId());
+		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
+		IndexRequestBuilder pi = es.prepareIndex(config.donationIndex, "donation", donation.getId());
 //		pi.setRefresh("true"); TODO
 //		pi.setOpTypeCreate(true);		
 		String json = Dependency.get(Gson.class).toJson(donation);
