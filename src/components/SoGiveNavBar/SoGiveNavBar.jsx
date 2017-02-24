@@ -58,11 +58,6 @@ const SoGiveNavBar = ({page}) => {
 							<a className="nav-item nav-link" href="#search">
 								Search
 							</a></li>
-						<li className={page === 'charity'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#charity">
-								(dummy) Charity
-							</a>
-						</li>
 					</ul>
 					<a href="#account">
 						<AccountMenu active={page === 'account'} />
