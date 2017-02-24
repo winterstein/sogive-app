@@ -2,18 +2,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import SJTest, {assert} from 'sjtest';
+import { assert } from 'sjtest';
 import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
-import { XId, uid } from 'wwutils';
+import { uid } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
-import ServerIO from '../plumbing/ServerIO';
-import printer from '../utils/printer.js';
-import C from '../C.js';
 import NGO from '../data/charity/NGO';
-import Misc from './Misc.jsx';
-import GiftAidForm from './GiftAidForm.jsx';
+import Misc from './Misc';
+import GiftAidForm from './GiftAidForm';
 
 import { donate } from './DonationForm-actions';
 import { updateField } from './genericActions';
@@ -22,43 +19,48 @@ import { updateField } from './genericActions';
 class DonationForm extends React.Component {
 
 	render() {
-		const { charity, donationSuccess, donationAmount, addGiftAid, donateOK, handleChange, sendDonation } = this.props;
+		const { user, charity, donation, handleChange, sendDonation } = this.props;
 
 		assert(NGO.isa(charity), charity);
 
 		let project = this.props.project || NGO.getProject(charity);
 		assert(project, charity);
 
+		// donated?
+		if (donation.complete) {
+			return (<ThankYouAndShare user={user} charity={charity} />);
+		}
+
 		const donationParams = {
 			action: 'donate',
 			charityId: charity['@id'],
 			currency: 'GBP',
-			giftAid: addGiftAid,
-			total100: Math.floor(donationAmount * 100),
+			giftAid: donation.giftAid,
+			total100: Math.floor(donation.amount * 100),
 		};
 
-		let impacts = NGO.getImpacts(project);
-		if ( ! impacts) {
-			impacts = [{price:'5'}, {
-				price: 10,
-				// number: , NA
-				// output: '', NA
-			}];
-		}
+		const impacts = project.impacts || [
+			{ price: 5 },
+			{ price: 10 },
+			// {
+			// 	price: 0
+			// 	number: 1, NA
+			// 	output: '', NA
+			// }
+		];
 
-		// donated?
-		if (donationSuccess) {
-			return (<ThankYouAndShare />);
-		}
-
-		const donateButton = donateOK ? (
+		const donateButton = donation.ready ? (
 			<DonationFormButton
-				amount={Math.floor(donationAmount * 100)}
+				amount={Math.floor(donation.amount * 100)}
 				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
 			/>
 		) : (
 			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
+
+		const giftAidForm = charity.ukBased ? (
+			<GiftAidForm {...donation} handleChange={handleChange} />
+		) : '';
 
 		return (
 			<div className='DonationForm'>
@@ -66,10 +68,10 @@ class DonationForm extends React.Component {
 					impacts={impacts}
 					charity={charity}
 					project={project}
-					donationAmount={donationAmount}
+					amount={donation.amount}
 					handleChange={handleChange}
 				/>
-				<GiftAidForm {...this.props} handleChange={handleChange} />
+				{ giftAidForm }
 				{ donateButton }
 			</div>
 		);
@@ -81,8 +83,14 @@ class ThankYouAndShare extends React.Component {
 
 	constructor(...params) {
 		super(...params);
+		const { user, charity } = this.props;
+		// TODO: Turn impact data into "for funding $charity to $DO_THING"
+		const shareText = (user && user.name) ?
+			`SoGive thanks ${user.name} for funding ${charity.name}`
+			: `I used SoGive to fund ${charity.name}!`;
+
 		this.state = {
-			shareText: 'SoGive thanks $name for funding $charity to $impact'
+			shareText,
 		};
 	}
 
@@ -155,8 +163,7 @@ const DonationFormButton = ({onToken, amount}) => {
 	let email = Login.getId('Email');
 	return (
 		<div>
-			<pre>Stripe Test Card details: 4000 0082 6000 0000,	Visa, UK</pre>
-			<pre>Stripe bad card: 4000 0000 0000 0069</pre>
+
 			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
 				image="http://local.sogive.org/img/SoGive-Light-70px.png"
 				email={email}
@@ -170,23 +177,26 @@ const DonationFormButton = ({onToken, amount}) => {
 			>
 				<Button bsStyle="primary">Donate</Button>
 			</StripeCheckout>
+			<small className="pull-right">
+				Stripe test cards:<br />
+				Good: 4000008260000000<br />
+				Bad: 4000000000000069
+			</small>
 		</div>
 	);
 };
 
 
-const DonationAmounts = ({charity, project, impacts, donationAmount, handleChange}) => {
+const DonationAmounts = ({impacts, amount, handleChange}) => {
 	let damounts = _.map(impacts, impact => (
 		<DonationAmount
-			key={`donate_${impact.price}`}
-			charity={charity}
-			project={project}
+			key={`donate_${impact.price.value}`}
 			impact={impact}
 			handleChange={handleChange}
 		/>) );
 	return(
 		<div>
-			<ul>{damounts}</ul>
+			<ul className="list-unstyled">{damounts}</ul>
 			<InputGroup>
 				<InputGroup.Addon>£</InputGroup.Addon>
 				<FormControl
@@ -194,24 +204,28 @@ const DonationAmounts = ({charity, project, impacts, donationAmount, handleChang
 					min="0"
 					step="0.01"
 					placeholder="Enter donation amount"
-					onChange={({ target }) => { handleChange('donationAmount', target.value); }}
-					value={donationAmount}
+					onChange={({ target }) => { handleChange('amount', target.value); }}
+					value={amount}
 				/>
 			</InputGroup>
 		</div>
 	);
 };
 
-const DonationAmount = function({charity, project, impact, handleChange}) {
+const DonationAmount = function({impact, handleChange}) {
+	const impactDesc = (impact.number && impact.output) ?
+		`will fund ${impact.number} ${impact.output}`
+		: '';
+
 	return (
 		<li>
 			<Button
 				bsStyle="primary"
 				bsSize="small"
-				onClick={() => handleChange('donationAmount', impact.price)}
+				onClick={() => handleChange('amount', impact.price.value)}
 			>
-				£{impact.price}
-			</Button> will fund {impact.number} {impact.output}
+				£{impact.price.value}
+			</Button> { impactDesc }
 		</li>
 	);
 };
@@ -224,7 +238,8 @@ const DonationList = ({donations}) => {
 
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
-	...state.donationForm,
+	donation: state.donationForm,
+	user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -1,27 +1,18 @@
 // @Flow
-
 import React from 'react';
-import { assert } from 'sjtest';
-import Login from 'hooru';
-import StripeCheckout from 'react-stripe-checkout';
-import { XId, uid } from 'wwutils';
 import { FormGroup, Checkbox } from 'react-bootstrap';
-
-import printer from '../utils/printer';
-import C from '../C';
-import Misc from './Misc';
 
 
 const GiftAidForm = ({
 	handleChange,
-	addGiftAid,
+	giftAid,
 	giftAidTaxpayer,
 	giftAidOwnMoney,
 	giftAidNoCompensation,
 	giftAidNoLottery,
 }) => {
 	// Gift Aiding? Check all these!
-	const giftAidChecks = addGiftAid ? (
+	const giftAidChecks = giftAid ? (
 		<FormGroup>
 			<p>Please tick all the following to confirm your donation is eligible for Gift Aid.</p>
 			<Checkbox checked={giftAidTaxpayer} onChange={(event) => { handleChange('giftAidTaxpayer', event.target.checked); }}>
@@ -42,14 +33,14 @@ const GiftAidForm = ({
 	return (
 		<div>
 			<FormGroup>
-				<Checkbox checked={addGiftAid} onChange={(event) => { handleChange('addGiftAid', event.target.checked); console.log(event.value); }}>
+				<Checkbox checked={giftAid} onChange={(event) => handleChange('giftAid', event.target.checked)}>
 					Yes, add Gift Aid
 				</Checkbox>
-				<a href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
-					Find out more about Gift Aid
-				</a>
 			</FormGroup>
 			{ giftAidChecks }
+			<a href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
+				Find out more about Gift Aid
+			</a>
 		</div>
 	);
 };

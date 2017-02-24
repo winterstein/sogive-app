@@ -1,14 +1,14 @@
+
 const initialState = {
-	donationAmount: 1000,
-	addGiftAid: false,
+	amount: 10,
+	giftAid: false,
 	giftAidTaxpayer: false,
 	giftAidOwnMoney: false,
 	giftAidNoCompensation: false,
 	giftAidNoLottery: false,
-	donateOK: true,
-	donationSuccess: false,
-	donationPending: false,
-	donationError: false,
+	ready: true,
+	pending: false,
+	complete: false,
 };
 
 const checkDonationForm = (state, action) => {
@@ -19,15 +19,15 @@ const checkDonationForm = (state, action) => {
 		[field]: value,
 	};
 
-	newState.donateOK = (
+	newState.ready = (
 		// have to be donating something
 		(
-			newState.donationAmount &&
-			newState.donationAmount > 0
+			newState.amount &&
+			newState.amount > 0
 		) &&
 		// if gift-aiding, must have checked all confirmations
 		(
-			!newState.addGiftAid ||
+			!newState.giftAid ||
 			(
 				newState.giftAidTaxpayer &&
 				newState.giftAidOwnMoney &&
@@ -36,6 +36,7 @@ const checkDonationForm = (state, action) => {
 			)
 		)
 	);
+
 	return newState;
 };
 
@@ -44,21 +45,20 @@ const donationFormReducer = (state = initialState, action) => {
 	case 'DONATION_FORM_UPDATE':
 		return checkDonationForm(state, action);
 	case 'DONATION_REQUESTED':
-		console.log('DONATION_REQUESTED', action);
 		return {
 			...state,
-			donationPending: true,
+			pending: true,
 		};
 	case 'DONATION_RESPONSE':
-		console.log('DONATION_RESPONSE', action);
 		return {
 			...state,
-			donationPending: false,
-			donationSuccess: true,
+			pending: false,
+			complete: true,
 		};
 	default:
 		return state;
 	}
 };
+
 
 export default donationFormReducer;
