@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.sogive.server.CharityServlet;
+
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -124,10 +126,12 @@ public class ImportCharityDataFromCSV {
 		for (String[] row : csvr) {
 			// the charity
 			if (Utils.isBlank(row[0])) continue;
-			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-"); 
+			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
+			if ( ! ourid.equals("solar-aid")) continue;
 			String desc = Containers.get(row, col("desc"));
 			String regNum = Containers.get(row, col("reg num"));
-			NGO ngo = new NGO(ourid);
+			NGO ngo = CharityServlet.getCharity(ourid);
+			if (ngo==null) ngo = new NGO(ourid);
 			ngo.put(ngo.name, row[0]);
 			ngo.put("description", desc);
 			ngo.put("englandWalesCharityRegNum", regNum);
@@ -166,6 +170,7 @@ public class ImportCharityDataFromCSV {
 			project.put("stories_src", get(row, col("stories - source")));
 			Time start = Time.of(get(row, col("start date")));
 			Time end = Time.of(get(row, col("end date")));
+			project.setPeriod(start, end);
 			Integer year = end!=null? end.getYear() : null;
 			String dataSrc = get(row, col("source of data"));
 			if ( ! Utils.isBlank(dataSrc)) {
@@ -200,6 +205,7 @@ public class ImportCharityDataFromCSV {
 			project.put("donationWording", get(row, col("wording")));
 			
 			ngo.addProject(project);
+			
 			
 			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
 //			String json = gson.toJson(ngo);		

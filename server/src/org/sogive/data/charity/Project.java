@@ -25,6 +25,11 @@ import com.winterwell.utils.containers.Containers;
  */
 public class Project extends Thing {
 
+	
+	@Override
+	public String toString() {	
+		return "Project["+getName()+" "+get("year")+"]";
+	}
 	// Does schema org have a task defined by inputs / outputs??
 	
 	private static final long serialVersionUID = 1L;
@@ -32,7 +37,8 @@ public class Project extends Thing {
 	public Project(String name) {
 		put("name", name);
 	}
-
+	Project() {	
+	}
 
 	public void merge(Project project) {
 		// union inputs & outputs
@@ -57,7 +63,7 @@ public class Project extends Thing {
 	}
 
 	public List<MonetaryAmount> getInputs() {
-		List outputs = (List) get("inputs");
+		List outputs = getThings((List) get("inputs"), MonetaryAmount.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("inputs", outputs);
@@ -66,7 +72,7 @@ public class Project extends Thing {
 	}
 	
 	public List<Output> getOutputs() {
-		List outputs = (List) get("outputs");
+		List outputs = getThings((List) get("outputs"), Output.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("outputs", outputs);
@@ -82,6 +88,9 @@ public class Project extends Thing {
 
 	public void addOutput(Output ac) {
 		addOrMerge("outputs", ac);
+	}
+	public Integer getYear() {
+		return getInteger("year");
 	}
 
 }
