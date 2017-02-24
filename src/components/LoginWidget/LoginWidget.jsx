@@ -1,17 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import SJTest, {assert} from 'sjtest';
+import { assert } from 'sjtest';
 import Login from 'hooru';
 import { XId, uid } from 'wwutils';
-
-import printer from '../../utils/printer.js';
-import C from '../../C.js';
-import Misc from '../Misc.jsx';
-import { updateField } from '../genericActions';
-
 import Cookies from 'js-cookie';
+
+import Misc from '../Misc';
+import { updateField } from '../genericActions';
+import { emailLogin, socialLogin } from './LoginWidget-actions';
+
+/**
+	TODO:
+	- doEmailLogin(email, password) and doSocialLogin(service) are available as props now
+	- Use them in the appropriate section of the form
+*/
+
 
 /**
 		Login or Signup (one widget)
@@ -44,12 +47,16 @@ class LoginWidget extends React.Component {
 						<SocialSignin verb={verb} services={null} />
 					</div> {/* ./social sign in */}
 				</div> {/* ./row */}
-				<div>{verb==='register'? "Already have an account?" : "Don't yet have an account?"}
-					&nbsp;<a href='#' onClick={ this.toggleVerb }>{ verb === 'register'? "Login" : "Sign-up" }</a>
+				<div>
+					{verb==='register'? "Already have an account?" : "Don't yet have an account?"}
+					&nbsp;
+					<a href='#' onClick={ this.toggleVerb }>
+						{ verb === 'register'? "Login" : "Sign-up" }
+					</a>
 				</div>
 			</div>
 		);
-		
+
 		if (this.props.incard) {
 			return card;
 		}
@@ -71,25 +78,28 @@ class LoginWidget extends React.Component {
 
 const SocialSignin = () => {
 	const verb = this.props.verb;
-	return (<div className="social-signin">
-	<div className="form-group">
-		<button onClick={ this.socialLogin.bind(null, 'twitter') } className="btn btn-default form-control">
-			<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
-		</button>
-	</div>
-	<div className="form-group">
-		<button onClick={ this.socialLogin.bind(null, 'facebook') } className="btn btn-default form-control">
-			<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
-		</button>
-	</div>
-	<div className="form-group hidden">
-		<button onClick={ this.socialLogin.bind(null, 'instagram') } className="btn btn-default form-control">
-			<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
-		</button>
-	</div>
-	<p><small>SoGive will never share your data, and will never act without your consent. 
-		You can read our <a href='http://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
-	</small></p></div>);	
+	return (
+		<div className="social-signin">
+			<div className="form-group">
+				<button onClick={ this.socialLogin.bind(null, 'twitter') } className="btn btn-default form-control">
+					<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
+				</button>
+			</div>
+			<div className="form-group">
+				<button onClick={ this.socialLogin.bind(null, 'facebook') } className="btn btn-default form-control">
+					<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
+				</button>
+			</div>
+			<div className="form-group hidden">
+				<button onClick={ this.socialLogin.bind(null, 'instagram') } className="btn btn-default form-control">
+					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
+				</button>
+			</div>
+			<p><small>SoGive will never share your data, and will never act without your consent. 
+				You can read our <a href='http://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
+			</small></p>
+		</div>
+	);
 };
 
 
@@ -99,56 +109,91 @@ class EmailSignin extends React.Component {
 		// reset?
 		if (this.props.verb === 'reset') {
 			return (
-					<form id="loginByEmail">
-						<div className="form-group">
-							<label>Email</label>
-							<input id="person_input" className="form-control" type="email" name="person" placeholder="Email"
-								onChange={ this.props.setEmail } />
-						</div>
-						<div className="form-group">
-							<button type="submit" className="btn btn-default form-control" 
-									onClick={ this.props.doPasswordReset }>Send password reset</button>
-						</div>
-						<LoginError />
-					</form>
-				);			
-		}
-		// login/register		
-		return (
 				<form id="loginByEmail">
 					<div className="form-group">
 						<label>Email</label>
-						<input id="person_input" className="form-control" type="email" name="person" placeholder="Email"
-							onChange={ this.props.setEmail } />
+						<input
+							id="person_input"
+							className="form-control"
+							type="email" name="person"
+							placeholder="Email"
+							onChange={this.props.setEmail}
+						/>
 					</div>
 					<div className="form-group">
-						<label>Password</label>
-						<input id="password_input" className="form-control" type="password" name="password" placeholder="Password"
-							onChange={ this.props.setPassword } />
-					</div>
-					<div className="form-group">
-						<button type="submit" className="btn btn-default form-control" onClick={ this.props.loginOrRegister }>{ this.props.verb }</button>
+						<button
+							type="submit"
+							className="btn btn-default form-control"
+							onClick={this.props.doPasswordReset}
+						>
+							Send password reset
+						</button>
 					</div>
 					<LoginError />
-					<ResetLink verb={this.props.verb} setVerbReset={this.props.setVerbReset} />
 				</form>
 			);
+		}
+		// login/register
+		return (
+			<form id="loginByEmail">
+				<div className="form-group">
+					<label>Email</label>
+					<input
+						id="person_input"
+						className="form-control"
+						type="email" name="person"
+						placeholder="Email"
+						onChange={this.props.setEmail}
+					/>
+				</div>
+				<div className="form-group">
+					<label>Password</label>
+					<input
+						id="password_input"
+						className="form-control"
+						type="password"
+						name="password"
+						placeholder="Password"
+						onChange={this.props.setPassword}
+					/>
+				</div>
+				<div className="form-group">
+					<button
+						type="submit"
+						className="btn btn-default form-control"
+						onClick={this.props.loginOrRegister}
+					>
+						{ this.props.verb }
+					</button>
+				</div>
+				<LoginError />
+				<ResetLink verb={this.props.verb} setVerbReset={this.props.setVerbReset} />
+			</form>
+		);
 	}
 } // ./EmailSignin
 
-const ResetLink = ({verb, setVerbReset}) => {	
+const ResetLink = ({verb, setVerbReset}) => {
 	if (verb==='login') {
-		return (<div className='pull-right'><small><a onClick={setVerbReset}>Forgotten password?</a></small></div>);
-	} 
+		return (
+			<div className='pull-right'>
+				<small>
+					<a onClick={setVerbReset}>Forgotten password?</a>
+				</small>
+			</div>
+		);
+	}
 	return null;
 };
 
 const LoginError = function() {
-	if ( ! Login.error) return <div></div>;
-	return <div className="form-group"><div className="alert alert-danger">{ Login.error.text }</div></div>;
+	if ( ! Login.error) return <div />;
+	return (
+		<div className="form-group">
+			<div className="alert alert-danger">{ Login.error.text }</div>
+		</div>
+	);
 };
-
-
 
 
 const mapStateToProps = (state, ownProps) => ({
@@ -156,8 +201,9 @@ const mapStateToProps = (state, ownProps) => ({
 	...state.login,
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-	handleLogin: (field, value) => dispatch(updateField('DONATION_FORM_UPDATE', field, value)),
+const mapDispatchToProps = (dispatch) => ({
+	doEmailLogin: (email, password) => dispatch(emailLogin(dispatch, email, password)),
+	doSocialLogin: (service) => dispatch(socialLogin(dispatch, service)),
 });
 
 export default connect(

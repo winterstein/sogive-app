@@ -1,18 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-
-import SJTest from 'sjtest';
-
-// import LoginWidget from './LoginWidget.jsx';
-// import printer from '../../utils/printer.js';
+import Login from 'hooru';
+import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
 
-// import {XId,yessy,uid} from '../js/util/orla-utils.js';
-// import C from '../../C.js';
 
 // Templates
 import MessageBar from '../MessageBar';
-import SoGiveNavBar from '../SoGiveNavBar';
+import SoGiveNavBar from '../SoGiveNavBar/SoGiveNavBar';
+// import LoginWidget from './LoginWidget.jsx';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
@@ -20,9 +16,10 @@ import Account from '../Account';
 import DonateToCampaignPage from '../DonateToCampaignPage';
 import CharityPage from '../CharityPage';
 
-const assert = SJTest.assert;
+// Actions
+import { loginChanged } from '../genericActions';
 
-// import LoginWidget from './LoginWidget.jsx'
+
 const PAGES = {
 	search: SearchPage,
 	dashboard: DashboardPage,
@@ -33,36 +30,24 @@ const PAGES = {
 
 const DEFAULT_PAGE = 'dashboard';
 
-const Tab = function({page, pageProps}) {
-	assert(page);
-	const Page = PAGES[page];
-	assert(Page, (page, PAGES));
-	console.log("Tab", page, Page);
-	return (
-		<div className="slide-hide" id={page}>
-			<Page {...pageProps} />
-		</div>
-	);
-};
-
-Tab.propTypes = {
-	page: PropTypes.string.isRequired,
-	pageProps: PropTypes.shape({}).isRequired,
-};
 
 /**
 		Top-level: SoGive tabs
 */
 class MainDiv extends Component {
-	constructor() {
-		super();
-		const pageProps = getUrlVars();
-		// FIXME
-		pageProps.charityId = 'solar-aid';
+	constructor(props) {
+		super(props);
 		this.state = this.decodeHash(window.location.href);
+
+		// Set up login watcher here, at the highest level
+		Login.change(() => {
+			loginChanged(this.props.dispatch);
+		});
+		// And trigger it to make sure we're up to date.
+		Login.change();
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		window.addEventListener('hashchange', ({newURL}) => { this.hashChanged(newURL); });
 	}
 
@@ -71,7 +56,9 @@ class MainDiv extends Component {
 	}
 
 	hashChanged(newURL) {
-		this.setState(this.decodeHash(newURL));
+		this.setState(
+			this.decodeHash(newURL)
+		);
 	}
 
 	decodeHash(url) {
@@ -85,16 +72,24 @@ class MainDiv extends Component {
 	render() {
 		const { page, pageProps } = this.state;
 		assert(page, this.props);
+		const Page = PAGES[page];
+		assert(Page, (page, PAGES));
+
 		return (
 			<div>
 				<SoGiveNavBar page={page} />
 				<div className="container avoid-navbar">
 					<MessageBar />
-					<Tab page={page} pageProps={pageProps} />
+					<div id={page}>
+						<Page {...pageProps} />
+					</div>
 				</div>
 			</div>
 		);
 	}
 }
 
-export default MainDiv;
+/* connect() with no second argument (normally mapDispatchToProps)
+ * makes dispatch itself available as a prop of MainDiv
+ */
+export default connect()(MainDiv);
