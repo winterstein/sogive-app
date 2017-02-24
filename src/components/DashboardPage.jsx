@@ -14,8 +14,11 @@ const DashboardPage = () => (
 		<DashboardWidget title="Donation History">
 			TODO list your donations with impact
 		</DashboardWidget>
+	</div>
+);// ./Dashboard
 
-		<h2>Version 2+...</h2>
+
+		/*<h2>Version 2+...</h2>
 		<DashboardWidget title="News Feed">
 			Updates from projects you support and people you follow.
 		</DashboardWidget>
@@ -34,9 +37,8 @@ const DashboardPage = () => (
 
 		<DashboardWidget title="Recent Donations">
 			List of recent donations and impacts, with a link to the full history
-		</DashboardWidget>
-	</div>
-);// ./Dashboard
+		</DashboardWidget>*/
+
 
 export default DashboardPage;
 
