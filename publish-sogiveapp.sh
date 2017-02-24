@@ -13,9 +13,19 @@ if [[ -z $VAR ]]; then
 fi
 
 for server in ${TARGETSERVERS[*]}; do
-	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app gc --prune=now'
-	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app pull origin master'
-	ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app reset --hard FETCH_HEAD'
+## Make sure all repos are up-to-date	
+##probably have to export flex-gson project to a jar
+##run BuildAllWWProjects
+##run SoGiveServer.java and sync all jars from tmp-lib
+## Sync jars from winterwell.math winterwell.utils winterwell.web winterwell.datalog flexi-gson
+## run npm i
+## run npm run compile
+## restart sogiveapp service
+
+
+	# ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app gc --prune=now'
+	# ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app pull origin master'
+	# ssh winterwell@$server.soda.sh 'git --git-dir=/home/winterwell/sogive-app/.git/ --work-tree=/home/winterwell/sogive-app reset --hard FETCH_HEAD'
 	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app && npm i'
 	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app && npm run compile'
 	ssh winterwell@$server.soda.sh 'service sogiveapp restart'
