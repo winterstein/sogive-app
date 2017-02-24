@@ -1,53 +1,80 @@
 // @Flow
-
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { connect } from 'react-redux';
 import _ from 'lodash';
-import SJTest, {assert} from 'sjtest';
-import ServerIO from '../plumbing/ServerIO';
-import printer from '../utils/printer.js';
-import C from '../C.js';
-import NGO from '../data/charity/NGO';
-import Misc from './Misc.jsx';
+import { assert } from 'sjtest';
 import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
-import {XId,uid} from 'wwutils';
-import {Text} from 'react-bootstrap';
-import GiftAidForm from './GiftAidForm.jsx';
+import { uid } from 'wwutils';
+import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
-export default class DonationForm extends React.Component {
-	onToken() {
+import NGO from '../data/charity/NGO';
+import Misc from './Misc';
+import GiftAidForm from './GiftAidForm';
 
-	}
+import { donate } from './DonationForm-actions';
+import { updateField } from './genericActions';
 
-	render() {		
-		let charity = this.props.charity;
+
+class DonationForm extends React.Component {
+
+	render() {
+		const { user, charity, donation, handleChange, sendDonation } = this.props;
+
 		assert(NGO.isa(charity), charity);
+
 		let project = this.props.project || NGO.getProject(charity);
 		assert(project, charity);
-		let impacts = NGO.getImpacts(project);
-		if ( ! impacts) {
-			impacts = [{price:'5'}, {
-				price: 10,
-				// number: , NA
-				// output: '', NA
-			}];
-		}
+
 		// donated?
-		if (false) {
-			return (<ThankYouAndShare />);
+		if (donation.complete) {
+			return (<ThankYouAndShare user={user} charity={charity} />);
 		}
 
-		return (<div className='DonationForm'>
+		const donationParams = {
+			action: 'donate',
+			charityId: charity['@id'],
+			currency: 'GBP',
+			giftAid: donation.giftAid,
+			total100: Math.floor(donation.amount * 100),
+		};
 
-			<DonationAmounts impacts={impacts} charity={charity} project={project} />
+		const impacts = project.impacts || [
+			{ price: 5 },
+			{ price: 10 },
+			// {
+			// 	price: 0
+			// 	number: 1, NA
+			// 	output: '', NA
+			// }
+		];
 
-			<GiftAidForm />
+		const donateButton = donation.ready ? (
+			<DonationFormButton
+				amount={Math.floor(donation.amount * 100)}
+				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
+			/>
+		) : (
+			<Button disabled title='Something is wrong with your donation'>Donate</Button>
+		);
 
-			<DonationFormButton onToken={this.onToken.bind(this)} />
+		const giftAidForm = charity.ukBased ? (
+			<GiftAidForm {...donation} handleChange={handleChange} />
+		) : '';
 
-			<ThankYouAndShare />
-		</div>);
+		return (
+			<div className='DonationForm'>
+				<DonationAmounts
+					impacts={impacts}
+					charity={charity}
+					project={project}
+					amount={donation.amount}
+					handleChange={handleChange}
+				/>
+				{ giftAidForm }
+				{ donateButton }
+			</div>
+		);
 	}
 }
 
@@ -56,8 +83,14 @@ class ThankYouAndShare extends React.Component {
 
 	constructor(...params) {
 		super(...params);
+		const { user, charity } = this.props;
+		// TODO: Turn impact data into "for funding $charity to $DO_THING"
+		const shareText = (user && user.name) ?
+			`SoGive thanks ${user.name} for funding ${charity.name}`
+			: `I used SoGive to fund ${charity.name}!`;
+
 		this.state = {
-			shareText: 'SoGive thanks $name for funding $charity to $impact'
+			shareText,
 		};
 	}
 
@@ -87,23 +120,35 @@ class ThankYouAndShare extends React.Component {
 	}
 
 	render() {
-		// <div className="fb-share-button" 
-	/*data-href={url} 
-	data-layout="button_count" 
-	data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank" 
-	href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a></div>*/
+		const {shareText} = this.state;
+	/*
+	<div className="fb-share-button"
+		data-href={url}
+		data-layout="button_count"
+		data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
+		href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a>
+	</div>
+	*/
 
-		let url = ""+window.location;
+		let url = `${window.location}`;
 		return (<div className='ThankYouAndShare'>
 			<h3>Thank you for donating!</h3>
 
 			<p>Share this on social media? On average this leads to 2-3 times more donations.</p>
 
-			<textarea className='form-control' value={this.state.shareText} onChange={this.onChangeShareText.bind(this)}>				
-			</textarea>
+			<textarea
+				className='form-control'
+				onChange={() => { this.onChangeShareText(); }}
+				defaultValue={shareText}
+			/>
 
-			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}><Misc.Logo service='twitter'/></a>
-			<button className='btn btn-default' onClick={this.shareOnFacebook.bind(this)}><Misc.Logo service='facebook'/></button>
+			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}>
+				<Misc.Logo service='twitter' />
+			</a>
+
+			<button className='btn btn-default' onClick={() => { this.shareOnFacebook(); }}>
+				<Misc.Logo service='facebook' />
+			</button>
 		</div>);
 	}
 } // ./ThankYouAndShare
@@ -111,38 +156,98 @@ class ThankYouAndShare extends React.Component {
 /**
  * one-click donate, or Stripe form?
  */
-const DonationFormButton = ({onToken}) => {
+const DonationFormButton = ({onToken, amount}) => {
 	if (false) {
 		return <button>Donate</button>;
 	}
 	let email = Login.getId('Email');
-	return (<StripeCheckout name="SoGive" description="See the impact of your charity donations"
+	return (
+		<div>
+
+			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
 				image="http://local.sogive.org/img/SoGive-Light-70px.png"
 				email={email}
-				panelLabel="Give Money"
-				amount={1000000}
+				panelLabel="Donate"
+				amount={amount}
 				currency="GBP"
 				stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
 				bitcoin
 				allowRememberMe
 				token={onToken}
 			>
-				<button className="btn btn-primary">Donate</button>
-			</StripeCheckout>);
+				<Button bsStyle="primary">Donate</Button>
+			</StripeCheckout>
+			<small className="pull-right">
+				Stripe test cards:<br />
+				Good: 4000008260000000<br />
+				Bad: 4000000000000069
+			</small>
+		</div>
+	);
 };
 
 
-const DonationAmounts = ({charity, project, impacts}) => {
-	let damounts = _.map(impacts, a => (<DonationAmount key={"donate_"+a.price} charity={charity} project={project} impact={a}/>) );
-	return(<ul>{damounts}</ul>);
+const DonationAmounts = ({impacts, amount, handleChange}) => {
+	let damounts = _.map(impacts, impact => (
+		<DonationAmount
+			key={`donate_${impact.price.value}`}
+			impact={impact}
+			handleChange={handleChange}
+		/>) );
+	return(
+		<div>
+			<ul className="list-unstyled">{damounts}</ul>
+			<InputGroup>
+				<InputGroup.Addon>£</InputGroup.Addon>
+				<FormControl
+					type="number"
+					min="0"
+					step="0.01"
+					placeholder="Enter donation amount"
+					onChange={({ target }) => { handleChange('amount', target.value); }}
+					value={amount}
+				/>
+			</InputGroup>
+		</div>
+	);
 };
 
-const DonationAmount = function({charity, project, impact}) {
-    return <li>£{impact.price} will fund {impact.number} {impact.output}</li>;
+const DonationAmount = function({impact, handleChange}) {
+	const impactDesc = (impact.number && impact.output) ?
+		`will fund ${impact.number} ${impact.output}`
+		: '';
+
+	return (
+		<li>
+			<Button
+				bsStyle="primary"
+				bsSize="small"
+				onClick={() => handleChange('amount', impact.price.value)}
+			>
+				£{impact.price.value}
+			</Button> { impactDesc }
+		</li>
+	);
 };
 
 
 const DonationList = ({donations}) => {
-    let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
-    return <ul>{ddivs}</ul>;
+	let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
+	return <ul>{ddivs}</ul>;
 };
+
+const mapStateToProps = (state, ownProps) => ({
+	...ownProps,
+	donation: state.donationForm,
+	user: state.login.user,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	handleChange: (field, value) => dispatch(updateField('DONATION_FORM_UPDATE', field, value)),
+	sendDonation: (charityId, stripeResponse, amount) => dispatch(donate(dispatch, charityId, stripeResponse, amount)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DonationForm);

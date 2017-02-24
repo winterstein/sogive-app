@@ -7,6 +7,7 @@ import java.util.Map;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.utils.Dependency;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils2;
@@ -15,7 +16,8 @@ import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders; 
+import org.elasticsearch.index.query.QueryBuilders;
+import org.sogive.data.charity.SoGiveConfig; 
 
 public class SearchServlet {
 
@@ -30,10 +32,11 @@ public class SearchServlet {
 	public void run() throws IOException {
 		ESHttpClient client = new ESHttpClient();
 		ESHttpClient.debug = true;
-		SearchRequestBuilder s = client.prepareSearch(SoGiveServer.config.charityIndex);
+		SearchRequestBuilder s = client.prepareSearch(Dependency.get(SoGiveConfig.class).charityIndex);
 		String q = state.get(Q);
 		if ( q != null) {
-			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, "id", "englandWalesCharityRegNum", "name", "description");
+			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
+					"id", "englandWalesCharityRegNum", "name", "description");
 			s.setQuery(qb);
 		}
 		// TODO paging!

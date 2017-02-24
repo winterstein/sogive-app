@@ -3,9 +3,12 @@ package org.sogive.data.charity;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.time.Time;
 
-public class MonetaryAmount extends Thing {
+public class MonetaryAmount extends Thing<MonetaryAmount> {
 	private static final long serialVersionUID = 1L;
 
+	MonetaryAmount() {	
+	}
+	
 	/**
 	 * 
 	 * @param value100 The pence / cents. This is to avoid rounding errors.
@@ -34,5 +37,10 @@ public class MonetaryAmount extends Thing {
 
 	public static MonetaryAmount pound(double number) {
 		return new MonetaryAmount((int) (number*100));
+	}
+
+
+	public String getCurrency() {
+		return (String) get("currency");
 	}
 }

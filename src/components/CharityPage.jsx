@@ -1,23 +1,24 @@
 // @Flow
-
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import SJTest, {assert} from 'sjtest';
-import ServerIO from '../plumbing/ServerIO';
-import printer from '../utils/printer.js';
-import C from '../C.js';
-import NGO from '../data/charity/NGO';
-import Misc from './Misc.jsx';
-import Login from 'hooru';
-import DonationForm from './DonationForm.jsx';
-import PageMetaInfo from './PageMetaInfo.jsx';
+import {assert} from 'sjtest';
 
-class CharityPage extends React.Component {	
+import { Panel, Image, Well, Label } from 'react-bootstrap';
+
+import ServerIO from '../plumbing/ServerIO';
+import printer from '../utils/printer';
+import C from '../C';
+import NGO from '../data/charity/NGO';
+import Misc from './Misc';
+
+import DonationForm from './DonationForm';
+import PageMetaInfo from './PageMetaInfo';
+
+class CharityPage extends React.Component {
 
 	constructor(...params) {
 		super(...params);
-		this.state = {			
+		this.state = {
 		};
 	}
 
@@ -32,46 +33,90 @@ class CharityPage extends React.Component {
 		}.bind(this));
 	}
 
-    render() {		
+
+	splitTags(tags = []) {
+		return 
+	}
+
+	render() {
 		const charity = this.state.charity;
+
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}
-		let repProject = NGO.getProject(charity);		
-        return (			
-            <div className='page CharityPage'>
-				<PageMetaInfo />
-                <h2>Charity Profile: {charity.name}</h2>
-				<div><small><a href={'/#charity/'+charity.id}>{charity.id}</a></small></div>
-				<img src={charity.logo} />
-				<p>{charity.description}</p>
-				Tags: {charity.tags}
 
-				Turnover: 
+		const tags = charity.tags && (
+			<p>
+				<h4>Tags</h4>
+				{ charity.tags.split('&').map((tag) => (
+					<span key={tag}><Label>{tag.trim()}</Label> </span>
+				)) }
+			</p>
+		);
 
-				Employees: {charity.numberOfEmployees}
+		const turnover = charity.turnover && (
+			<p>
+				Turnover: { charity.turnover }
+			</p>
+		);
 
+		const employees = charity.employees && (
+			<p>
+				Employees: { charity.employees }
+			</p>
+		);
+
+		const website = charity.website && (
+			<p>
 				Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
-				<ProjectList charity={charity} />
-				<DonationForm charity={charity} project={repProject} />
-            </div>
-        );
-    }
+			</p>
+		);
 
+
+		return (
+			<div className='page CharityPage'>
+				<PageMetaInfo />
+				<Panel header="Charity Profile">
+					<Image src={charity.logo} responsive thumbnail className="pull-right" />
+					<h2>{charity.name}</h2>
+
+					<div ><small><a href={`/#charity/${charity['@id']}`}>{charity.id}</a></small></div>
+					<p>{charity.description}</p>
+					{ tags }
+					{ turnover }
+					{ employees }
+					{ website }
+					<ProjectList charity={charity} />
+				</Panel>
+				<Panel header={<h2>Donate to { charity.name }</h2>}>
+					<DonationForm charity={charity} project={NGO.getProject(charity)} />
+				</Panel>
+			</div>
+		);
+	}
 } // ./CharityPage
 
 
 const ProjectList = ({charity}) => {
-	return (<div>
-		<h2>Projects</h2>
-		{ _.map(charity.projects, p => <Project key={p.name} project={p} charity={charity} />) }
-	</div>);
+	if (!charity.projects) return <div />;
+
+	const renderedProjects = charity.projects
+		.map(p => <Project key={`${p.name}${p.year}`} project={p} charity={charity} />);
+
+	if (renderedProjects.length === 0) return <div />;
+
+	return (
+		<div>
+			<h2>Projects</h2>
+			{ renderedProjects }
+		</div>
+	);
 };
 
 const Project = ({project}) => {
-	return (<div>		
-		{printer.str(project.name)}
-		{printer.str(project.stories)}
+	return (<div>
+		<h3>{project.name}</h3>
+		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
 		{printer.str(project.directImpact)}
 		{printer.str(project.annualCosts)}
 	</div>);

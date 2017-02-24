@@ -9,26 +9,39 @@ import java.util.function.BiPredicate;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.web.SimpleJson;
 
-public class NGO extends Thing {
+public class NGO extends Thing<NGO> {
 	private static final long serialVersionUID = 1L;
 
 	public NGO(String ourid) {
 		put("@id", ourid);
 	}
 
+	public NGO() {
+		
+	}
+	
 	public void setTags(String tags) {
 		put("tags", tags); // TODO split. Notes say & but not sure the data follows that
 	}
 
 	/**
-	 * Name should be unique or it will merge.
+	 * Name & year should be unique or it will merge.
 	 * @param project
 	 * @return 
 	 */
-	public List<Project> addProject(Project project) {
+	public List<Project> addProject(Project project) {		
 		BiPredicate<Project,Project> matcher = (p1, p2) -> 
-				Utils.equals(p1.getName(), p2.getName()) && Utils.equals(p1.get("year"), p2.get("year"));
+				Utils.equals(p1.getName(), p2.getName()) && Utils.equals(p1.getYear(), p2.getYear());
 		List<Project> projects = addOrMerge("projects", project, matcher);
 		return projects;
 	}
+
+	public List<Project> getProjects() {
+		// TODO this is not good :(
+		List ps = (List) get("projects");
+		ps = getThings(ps, Project.class);
+		put("projects", ps);
+		return ps;
+	}
+
 }

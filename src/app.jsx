@@ -1,5 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MainDiv from './components/MainDiv.jsx';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<MainDiv />, document.getElementById('mainDiv'));
+import SJTest from 'sjtest';
+
+import reducer from './reducers';
+import MainDiv from './components/MainDiv/MainDiv';
+
+const store = createStore(reducer);
+
+ReactDOM.render(
+	<Provider store={store}>
+		<MainDiv />
+	</Provider>,
+	document.getElementById('mainDiv'));
