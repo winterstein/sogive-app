@@ -193,9 +193,11 @@ public class ImportCharityDataFromCSV {
 			for(int i=1; i<7; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
+				String impactUnit = get(row, col("impact "+i+" unit"));
 				String type1 = get(row, col("impact "+i+" unit"));
-				Output output1 = new Output(impact1, type1, type1);
+				Output output1 = new Output(impact1, type1, "thing");
 				output1.put("order", i-1);
+				output1.setName(impactUnit);
 				output1.setPeriod(start, end);
 				project.addOutput(output1);
 			}

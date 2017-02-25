@@ -9,18 +9,27 @@ public class Output extends Thing<Output> {
 
 	private static final long serialVersionUID = 1L;
 
+	public static boolean match(Output a, Output b) {
+		if (a==b) return true;
+		if (a.getName()!=null && b.getName()!=null) {
+			return a.getName().equals(b.getName());
+		}
+		return a.equals(b);
+	}
+	
 	/**
 	 * 
 	 * @param number
 	 * @param type e.g. "solar-light"
-	 * @param unit 
+	 * @param unit e.g. year | thing
 	 */
 	public Output(double number, String type, String unit) {
 		put("number", number);
 		put("type", StrUtils.toCanonical(type));
-		put("label", type);
+		put("name", type);
 		put("unit", StrUtils.toCanonical(unit));
 	}
+	
 	
 	Output() {
 		
@@ -50,6 +59,10 @@ public class Output extends Thing<Output> {
 			scaled.put(pv.getKey(), pv.getValue());
 		}
 		return scaled;
+	}
+
+	public void setName(String name) {
+		put("name", name);
 	}
 
 	

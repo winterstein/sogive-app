@@ -6,6 +6,7 @@ package org.sogive.data.charity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdFactory;
@@ -23,7 +24,7 @@ import com.winterwell.utils.containers.Containers;
  * @author daniel
  *
  */
-public class Project extends Thing {
+public class Project extends Thing<Project> {
 
 	
 	@Override
@@ -87,8 +88,9 @@ public class Project extends Thing {
 
 
 	public void addOutput(Output ac) {
-		addOrMerge("outputs", ac);
+		List<Output> os = addOrMerge("outputs", ac, Output::match);
 	}
+	
 	public Integer getYear() {
 		return getInteger("year");
 	}
