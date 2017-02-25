@@ -30,7 +30,7 @@ export default class SearchPage extends React.Component {
 			<div className='page SearchPage'>
 				<h2>Search</h2>
 				<SearchForm query={q} setResults={this.setResults.bind(this)}/>
-				<SearchResults results={this.state.results} />
+				<SearchResults results={this.state.results} query={q} />
 			</div>
 		);
 	}
@@ -100,12 +100,14 @@ class SearchForm extends React.Component {
 } //./SearchForm
 
 
-const SearchResults = ({ results }) => (
-	<div className='SearchResults'>
-		<div>{results.length} results found</div>
-		{ _.map(results, item => <SearchResult key={uid()} item={item} />) }
-	</div>
-); //./SearchResults
+const SearchResults = ({ results, query }) => {
+	const num = results.length || query? <div>{results.length} results found</div> : null;
+	return (
+		<div className='SearchResults'>
+			{num}
+			{ _.map(results, item => <SearchResult key={uid()} item={item} />) }
+		</div>);
+}; //./SearchResults
 
 
 const SearchResult = ({ item }) => (

@@ -12,7 +12,7 @@ import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
 import {XId,uid} from 'wwutils';
 import {Text} from 'react-bootstrap';
-import Helmet from "react-helmet";
+import {Title,Meta,Link} from "../utils/reacthead.jsx";
 
 class PageMetaInfo extends React.Component {	
 
@@ -34,29 +34,26 @@ class PageMetaInfo extends React.Component {
 
 	render() {				
 		let url = ""+window.location;
-		let title = 'SoGive';
-		let description = 'See the impact of your donations';
-		let image = this.props.image || 'https://app.sogive.org/img/SoGive-Light-70px.png';
+		const charity = this.props.charity || {};
+		let title = charity.name? 'SoGive: '+charity.name : 'SoGive';
+		let description = charity.description || 'See the impact of your donations';
+		let image = charity.image || charity.logo || 'https://app.sogive.org/img/SoGive-Light-70px.png';
 		// chop the ? - we keep page info in # + slug
 		// if (url.indexOf('?')) url = url.substr(0, url.indexOf('?'));
-		return(<div><Helmet 
-			title={title}
-			meta={[
-				{name: "description", content: description },
-				{property: "og:description", content: description },
-				{property: "og:url", content: url },
-				{property: "og:title", content: title },
-				{property: "og:image", content: title },
-				{property: "twitter:card", content: "summary" },
-				{property: "twitter:site", content: "@sogivecharity" },
-				{property: "twitter:title", content: title },
-				{property: "twitter:description", content: description },
-				{property: "twitter:image", content: image},
-			]}
-			link={[
-				{rel: "canonical", href: url},
-			]}
-		></Helmet>where is my page info?</div>);
+		return(<div>
+			<Title title={title} />
+			<Meta name='description' content={description} />
+			<Meta property="og:description" content={description }/>
+			<Meta property="og:url" content={url }/>
+			<Meta property="og:title" content={title}/>
+			<Meta property="og:image" content={image}/>
+			<Meta property="twitter:card" content={"summary" }/>
+			<Meta property="twitter:site" content={"@sogivecharity" }/>
+			<Meta property="twitter:title" content={title}/>
+			<Meta property="twitter:description" content={description}/>
+			<Meta property="twitter:image" content={image}/>
+			<Link rel="canonical" href="url" />
+		</div>);
 	}
 
 }

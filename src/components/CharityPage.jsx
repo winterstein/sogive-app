@@ -9,6 +9,7 @@ import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
+import Project from '../data/charity/Project';
 import Misc from './Misc';
 
 import DonationForm from './DonationForm';
@@ -33,18 +34,15 @@ class CharityPage extends React.Component {
 		}.bind(this));
 	}
 
-
-	splitTags(tags = []) {
-		return 
-	}
-
 	render() {
 		const charity = this.state.charity;
-
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}
-
+		const projects = charity.projects;
+		const overalls = _.filter(projects, p => Project.name(p) === 'overall');
+		const overall = Project.getLatest(overalls);
+		// page pieces
 		const tags = charity.tags && (
 			<div>
 				<h4>Tags</h4>
@@ -53,29 +51,28 @@ class CharityPage extends React.Component {
 				)) }
 			</div>
 		);
-
 		const turnover = charity.turnover && (
 			<p>
 				Turnover: { charity.turnover }
 			</p>
 		);
-
 		const employees = charity.employees && (
 			<p>
 				Employees: { charity.employees }
 			</p>
 		);
-
 		const website = charity.website && (
 			<p>
 				Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
 			</p>
 		);
-
-
+		// TODO not if there's only overall		
+		const projectsDiv = <div><h2>Projects</h2><ProjectList projects={projects} charity={charity} /></div>;
+		const overallDiv = <ProjectPanel project={overall} charity={charity} />;
+		// put it together
 		return (
 			<div className='page CharityPage'>
-				<PageMetaInfo />
+				<PageMetaInfo charity={charity} />
 				<Panel header={<h2>Charity Profile</h2>}>
 					<Image src={charity.logo} responsive thumbnail className="pull-right" />
 					<h2>{charity.name}</h2>
@@ -87,12 +84,11 @@ class CharityPage extends React.Component {
 					{ employees }
 					{ website }
 				</Panel>
-				<Panel header={<h2>Donate to { charity.name }</h2>}>
+				<Panel bsStyle='primary' header={<h2>Donate to { charity.name }</h2>}>
 					<DonationForm charity={charity} project={NGO.getProject(charity)} />
 				</Panel>
-				<Panel header={<h2>Projects</h2>}>
-					<ProjectList charity={charity} />
-				</Panel>
+				{overallDiv}
+				{projectsDiv}
 			</div>
 		);
 	}
@@ -103,7 +99,7 @@ const ProjectList = ({charity}) => {
 	if (!charity.projects) return <div />;
 
 	const renderedProjects = charity.projects
-		.map(p => <Project key={p.name+'-'+p.year} project={p} charity={charity} />);
+		.map(p => <ProjectPanel key={p.name+'-'+p.year} project={p} charity={charity} />);
 
 	if (renderedProjects.length === 0) return <div />;
 
@@ -114,13 +110,12 @@ const ProjectList = ({charity}) => {
 	);
 };
 
-const Project = ({project}) => {
-	return (<div>
-		<h3>{project.name}</h3>
+const ProjectPanel = ({project}) => {
+	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
 		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
 		{printer.str(project.directImpact)}
 		{printer.str(project.annualCosts)}
-	</div>);
+	</Panel>);
 };
 
 export default CharityPage;

@@ -40,7 +40,7 @@ public class SearchServlet {
 			s.setQuery(qb);
 		}
 		// TODO paging!
-		s.setSize(100);
+		s.setSize(10000);
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();
