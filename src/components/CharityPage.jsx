@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {assert} from 'sjtest';
-
+import {yessy} from 'wwutils';
 import { Panel, Image, Well, Label } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
@@ -39,9 +39,11 @@ class CharityPage extends React.Component {
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}
-		const projects = charity.projects;
+		let projects = charity.projects;
+		// split out overall vs projects
 		const overalls = _.filter(projects, p => Project.name(p) === 'overall');
-		const overall = Project.getLatest(overalls);
+		projects = _.filter(projects, p => Project.name(p) !== 'overall');
+		const overall = Project.getLatest(overalls);		
 		// page pieces
 		const tags = charity.tags && (
 			<div>
@@ -67,7 +69,7 @@ class CharityPage extends React.Component {
 			</p>
 		);
 		// TODO not if there's only overall		
-		const projectsDiv = <div><h2>Projects</h2><ProjectList projects={projects} charity={charity} /></div>;
+		const projectsDiv = yessy(projects)? <div><h2>Projects</h2><ProjectList projects={projects} charity={charity} /></div> : null;
 		const overallDiv = <ProjectPanel project={overall} charity={charity} />;
 		// put it together
 		return (
@@ -77,7 +79,7 @@ class CharityPage extends React.Component {
 					<Image src={charity.logo} responsive thumbnail className="pull-right" />
 					<h2>{charity.name}</h2>
 
-					<div ><small><a href={`/#charity/${charity['@id']}`}>{charity.id}</a></small></div>
+					<div ><small><a href={'/#charity/'+charity['@id']}>{charity.id}</a></small></div>
 					<p>{charity.description}</p>
 					{ tags }
 					{ turnover }
@@ -95,10 +97,10 @@ class CharityPage extends React.Component {
 } // ./CharityPage
 
 
-const ProjectList = ({charity}) => {
-	if (!charity.projects) return <div />;
+const ProjectList = ({projects, charity}) => {
+	if ( ! projects) return <div />;
 
-	const renderedProjects = charity.projects
+	const renderedProjects = projects
 		.map(p => <ProjectPanel key={p.name+'-'+p.year} project={p} charity={charity} />);
 
 	if (renderedProjects.length === 0) return <div />;
@@ -111,11 +113,42 @@ const ProjectList = ({charity}) => {
 };
 
 const ProjectPanel = ({project}) => {
+	const outputs = project.outputs || [];
+	const inputs = project.inputs || [];
 	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
 		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
-		{printer.str(project.directImpact)}
-		{printer.str(project.annualCosts)}
+		<div><h4>Inputs</h4>
+			{inputs.map(output => <div key={"in_"+output.name}>{output.name}: <Money precision={false} amount={output}/></div>)}
+		</div>
+		<div><h4>Outputs</h4>
+			{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+		</div>
+		<Citations thing={project} />
 	</Panel>);
+};
+
+const CURRENCY = {
+	"GBP": "£",
+	"USD": "$"
+};
+const Money = ({amount,precision}) => {
+	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
+};
+
+const Citations = ({thing}) => {
+	let dsrc = thing['data-src'];
+	if ( ! dsrc) return null;
+	if (_.isArray(dsrc)) {
+		if (dsrc.length > 1) {
+			return <div>Sources:<ul>{dsrc.map(ds => <Citation citation={ds} />)}</ul></div>;
+		}
+		dsrc = dsrc[0];
+	}
+	return <div>Source: <Citation citation={dsrc} /></div>;	
+};
+const Citation = ({citation}) => {
+	if (_.isString(citation)) return <p>{citation}</p>;
+	return <a href={citation.url}>{citation.name || citation.url}</a>;
 };
 
 export default CharityPage;

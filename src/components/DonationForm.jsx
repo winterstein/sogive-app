@@ -7,7 +7,7 @@ import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
 import { uid } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
-
+import printer from '../utils/printer';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
@@ -39,16 +39,6 @@ class DonationForm extends React.Component {
 			total100: Math.floor(donation.amount * 100),
 		};
 
-		const impacts = project.impacts || [
-			{ price: 5 },
-			{ price: 10 },
-			// {
-			// 	price: 0
-			// 	number: 1, NA
-			// 	output: '', NA
-			// }
-		];
-
 		const donateButton = donation.ready ? (
 			<DonationFormButton
 				amount={Math.floor(donation.amount * 100)}
@@ -65,7 +55,8 @@ class DonationForm extends React.Component {
 		return (
 			<div className='DonationForm'>
 				<DonationAmounts
-					impacts={impacts}
+					options={[5, 10]}
+					impacts={project.impacts}
 					charity={charity}
 					project={project}
 					amount={donation.amount}
@@ -187,46 +178,52 @@ const DonationFormButton = ({onToken, amount}) => {
 };
 
 
-const DonationAmounts = ({impacts, amount, handleChange}) => {
-	let damounts = _.map(impacts, impact => (
+const DonationAmounts = ({options, impacts, amount, handleChange}) => {
+	let unitImpact = impacts && impacts[0];
+	const impactDesc = (unitImpact && unitImpact.number && unitImpact.name) ?
+		`will fund ${printer.prettyNumber(unitImpact.number * amount)} ${unitImpact.name}`
+		: '';
+	let damounts = _.map(options, price => (
 		<DonationAmount
-			key={`donate_${impact.price.value}`}
-			impact={impact}
+			key={'donate_'+price}
+			price={price}
+			selected={price===amount}
+			unitImpact={unitImpact}
 			handleChange={handleChange}
 		/>) );
+	let bgcol = options.indexOf(amount)===-1? '#337ab7' : null;
 	return(
 		<div>
-			<ul className="list-unstyled">{damounts}</ul>
-			<InputGroup>
-				<InputGroup.Addon>£</InputGroup.Addon>
-				<FormControl
-					type="number"
-					min="0"
-					step="0.01"
-					placeholder="Enter donation amount"
-					onChange={({ target }) => { handleChange('amount', target.value); }}
-					value={amount}
-				/>
-			</InputGroup>
+			<div className="flexbox-1row">
+				{damounts}
+				<InputGroup>
+					<InputGroup.Addon style={{backgroundColor: bgcol}}>£</InputGroup.Addon>
+					<FormControl
+						type="number"
+						min="0"
+						step="1"
+						placeholder="Enter donation amount"
+						onChange={({ target }) => { handleChange('amount', target.value); }}
+						value={amount}
+					/>
+				</InputGroup>
+			</div>
+			<div>
+				{impactDesc}
+			</div>
 		</div>
 	);
 };
 
-const DonationAmount = function({impact, handleChange}) {
-	const impactDesc = (impact.number && impact.output) ?
-		`will fund ${impact.number} ${impact.output}`
-		: '';
-
+const DonationAmount = function({selected, price, handleChange}) {
 	return (
-		<li>
 			<Button
-				bsStyle="primary"
+				bsStyle={selected? 'primary' : null}
 				bsSize="small"
-				onClick={() => handleChange('amount', impact.price.value)}
+				onClick={() => handleChange('amount', price)}
 			>
-				£{impact.price.value}
-			</Button> { impactDesc }
-		</li>
+				£{price}
+			</Button>
 	);
 };
 
