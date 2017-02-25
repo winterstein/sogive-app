@@ -43,7 +43,9 @@ public class CharityServlet {
 	public void run() throws IOException {
 		String id = state.getSlugBits(1);
 		NGO charity = getCharity(id);
-		
+		if (charity==null) {
+			throw new WebEx.E404("No charity: "+id);
+		}
 //		// impacts
 		doCalcImpacts(charity);
 		

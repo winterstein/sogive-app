@@ -59,9 +59,9 @@ const SoGiveNavBar = ({page}) => {
 								Search
 							</a></li>
 					</ul>
-					<a href="#account">
+					<div>
 						<AccountMenu active={page === 'account'} />
-					</a>
+					</div>
 				</div>
 			</div>
 		</nav>

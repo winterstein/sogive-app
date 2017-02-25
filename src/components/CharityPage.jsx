@@ -46,12 +46,12 @@ class CharityPage extends React.Component {
 		}
 
 		const tags = charity.tags && (
-			<p>
+			<div>
 				<h4>Tags</h4>
 				{ charity.tags.split('&').map((tag) => (
 					<span key={tag}><Label>{tag.trim()}</Label> </span>
 				)) }
-			</p>
+			</div>
 		);
 
 		const turnover = charity.turnover && (
@@ -76,7 +76,7 @@ class CharityPage extends React.Component {
 		return (
 			<div className='page CharityPage'>
 				<PageMetaInfo />
-				<Panel header="Charity Profile">
+				<Panel header={<h2>Charity Profile</h2>}>
 					<Image src={charity.logo} responsive thumbnail className="pull-right" />
 					<h2>{charity.name}</h2>
 
@@ -86,10 +86,12 @@ class CharityPage extends React.Component {
 					{ turnover }
 					{ employees }
 					{ website }
-					<ProjectList charity={charity} />
 				</Panel>
 				<Panel header={<h2>Donate to { charity.name }</h2>}>
 					<DonationForm charity={charity} project={NGO.getProject(charity)} />
+				</Panel>
+				<Panel header={<h2>Projects</h2>}>
+					<ProjectList charity={charity} />
 				</Panel>
 			</div>
 		);
@@ -101,13 +103,12 @@ const ProjectList = ({charity}) => {
 	if (!charity.projects) return <div />;
 
 	const renderedProjects = charity.projects
-		.map(p => <Project key={`${p.name}${p.year}`} project={p} charity={charity} />);
+		.map(p => <Project key={p.name+'-'+p.year} project={p} charity={charity} />);
 
 	if (renderedProjects.length === 0) return <div />;
 
 	return (
 		<div>
-			<h2>Projects</h2>
 			{ renderedProjects }
 		</div>
 	);

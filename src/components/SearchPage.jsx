@@ -102,6 +102,7 @@ class SearchForm extends React.Component {
 
 const SearchResults = ({ results }) => (
 	<div className='SearchResults'>
+		<div>{results.length} results found</div>
 		{ _.map(results, item => <SearchResult key={uid()} item={item} />) }
 	</div>
 ); //./SearchResults

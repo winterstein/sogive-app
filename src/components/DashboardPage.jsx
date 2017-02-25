@@ -1,21 +1,27 @@
 import React, { Component, PropTypes } from 'react';
 import SJTest from 'sjtest';
-
+import Login from 'hooru';
 // import printer from '../utils/printer';
 // import C from '../C';
 import ChartWidget from './ChartWidget';
 
 const assert = SJTest.assert;
 
-const DashboardPage = () => (
+const DashboardPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return (<div className="page DashboardPage">
+		<h2>My Dashboard: Login or Register</h2>
+		</div>);
+	}
+	return (
 	<div className="page DashboardPage">
 		<h2>My Dashboard</h2>
-
+		
 		<DashboardWidget title="Donation History">
-			TODO list your donations with impact
+			<ul><li>TODO list your donations with impact</li></ul>
 		</DashboardWidget>
-	</div>
-);// ./Dashboard
+	</div>);
+};// ./Dashboard
 
 
 		/*<h2>Version 2+...</h2>
@@ -55,7 +61,7 @@ const DashboardWidget = ({ children, iconClass, title }) =>
 
 DashboardWidget.propTypes = {
 	children: PropTypes.element,
-	iconClass: PropTypes.string.isRequired,
+	iconClass: PropTypes.string,
 	title: PropTypes.string,
 };
 
@@ -63,5 +69,5 @@ const DashTitleIcon = ({ iconClass }) =>
 	<i className={iconClass} aria-hidden="true" />;
 
 DashTitleIcon.propTypes = {
-	iconClass: PropTypes.string.isRequired,
+	iconClass: PropTypes.string,
 };

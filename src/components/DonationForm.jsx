@@ -131,10 +131,10 @@ class ThankYouAndShare extends React.Component {
 	*/
 
 		let url = `${window.location}`;
-		return (<div className='ThankYouAndShare'>
+		return (<div className='ThankYouAndShare panel-success'>
 			<h3>Thank you for donating!</h3>
 
-			<p>Share this on social media? On average this leads to 2-3 times more donations.</p>
+			<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
 
 			<textarea
 				className='form-control'

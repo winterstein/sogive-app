@@ -39,7 +39,7 @@ class PageMetaInfo extends React.Component {
 		let image = this.props.image || 'https://app.sogive.org/img/SoGive-Light-70px.png';
 		// chop the ? - we keep page info in # + slug
 		// if (url.indexOf('?')) url = url.substr(0, url.indexOf('?'));
-		return(<Helmet 
+		return(<div><Helmet 
 			title={title}
 			meta={[
 				{name: "description", content: description },
@@ -56,7 +56,7 @@ class PageMetaInfo extends React.Component {
 			link={[
 				{rel: "canonical", href: url},
 			]}
-		></Helmet>);
+		></Helmet>where is my page info?</div>);
 	}
 
 }

@@ -190,11 +190,12 @@ public class ImportCharityDataFromCSV {
 			}
 			
 			// outputs
-			for(int i=1; i<4; i++) {
+			for(int i=1; i<7; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
 				String type1 = get(row, col("impact "+i+" unit"));
-				Output output1 = new Output(impact1, type1, null);
+				Output output1 = new Output(impact1, type1, type1);
+				output1.put("order", i-1);
 				output1.setPeriod(start, end);
 				project.addOutput(output1);
 			}
