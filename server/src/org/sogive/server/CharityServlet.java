@@ -14,6 +14,7 @@ import com.winterwell.es.client.GetResponse;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
@@ -72,6 +73,14 @@ public class CharityServlet {
 		return charity;
 	}
 
+	public String getImpact(NGO charity, MonetaryAmount amount) {
+		Project project = NGO.getRepProject(charity);
+		doCalcImpacts(charity);
+		List impacts = (List) project.get("impacts");
+		Object impact = impacts.get(0);
+		return Printer.str(impact);
+	}
+	
 	private void doCalcImpacts(NGO charity) {
 		List<Project> projects = charity.getProjects();
 		List impacts = new ArrayList();

@@ -1,5 +1,7 @@
 package org.sogive.data.user;
 
+import java.util.Map;
+
 import org.sogive.data.charity.MonetaryAmount;
 
 import com.winterwell.utils.Utils;
@@ -53,6 +55,8 @@ public class Donation {
 	 */
 	Time time = new Time();
 
+	private Map impact;
+
 	public Donation(XId from, XId to, MonetaryAmount ourFee, MonetaryAmount otherFees, boolean giftAid,
 			MonetaryAmount total) {
 		Utils.check4null(from, to, total);
@@ -81,6 +85,10 @@ public class Donation {
 	@Override
 	public String toString() {
 		return "Donation[from=" + from + ", to=" + to + ", total=" + total + ", time=" + time + "]";
+	}
+
+	public void setImpact(Map impact) {
+		this.impact = impact;
 	}
 	
 	

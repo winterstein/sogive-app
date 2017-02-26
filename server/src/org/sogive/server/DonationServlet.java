@@ -109,7 +109,12 @@ public class DonationServlet {
 		boolean giftAid = false;
 		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
-
+		
+		String impact = state.get("impact");
+		if (impact!=null) {
+			donation.setImpact(new ArrayMap("text", impact));
+		}
+		
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
 		SoGiveConfig config = Dependency.get(SoGiveConfig.class);

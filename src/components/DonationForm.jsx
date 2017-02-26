@@ -36,6 +36,7 @@ class DonationForm extends React.Component {
 			charityId: charity['@id'],
 			currency: 'GBP',
 			giftAid: donation.giftAid,
+			impact: donation.impact,
 			total100: Math.floor(donation.amount * 100),
 		};
 
