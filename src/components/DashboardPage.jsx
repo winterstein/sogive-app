@@ -50,7 +50,7 @@ const DonationList = ({donations}) => {
 };
 
 const Donation = ({donation}) => {
-	return (<div>
+	return (<div className='well'>
 		Charity: {printer.str(donation.to)} <br/>
 		Impact: {printer.str(donation.impact)} <br/>
 		Amount: <Misc.Money precision={false} amount={donation.total} /> <br/>
