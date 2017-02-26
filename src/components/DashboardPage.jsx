@@ -52,7 +52,7 @@ const DonationList = ({donations}) => {
 const Donation = ({donation}) => {
 	return (<div>
 		Charity: {printer.str(donation.to)} <br/>
-		Impact: {donation.impact} <br/>
+		Impact: {printer.str(donation.impact)} <br/>
 		Amount: <Misc.Money precision={false} amount={donation.total} /> <br/>
 		GiftAid? {donation.giftAid? 'yes' : 'no'} <br/>
 		Date: <Misc.Time time={donation.time} /> <br/>
