@@ -8,6 +8,7 @@ import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.FakeBrowser;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.SField;
 
 public class Login {
@@ -21,8 +22,12 @@ public class Login {
 		Map<String, Object> params = state.getParameterMap();
 		Set<String> pkeys = params.keySet();
 		String jwt = state.get(JWT);
+		String as = state.get("as");
+		XId uxid = new XId(as,false);
 		// Now verify it
-		Map user = verify(jwt);
+//		Map user = verify(jwt); // FIXME
+		ArrayMap user = new ArrayMap("xid", uxid);
+		state.setUserId(uxid);
 		return user;
 	}
 

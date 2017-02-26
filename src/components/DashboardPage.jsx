@@ -1,28 +1,58 @@
 import React, { Component, PropTypes } from 'react';
 import SJTest from 'sjtest';
+import _ from 'lodash';
 import Login from 'hooru';
-// import printer from '../utils/printer';
+import printer from '../utils/printer';
 // import C from '../C';
-import ChartWidget from './ChartWidget';
+import ServerIO from '../plumbing/ServerIO';
+// import ChartWidget from './ChartWidget';
+import Misc from './Misc.jsx';
 
 const assert = SJTest.assert;
 
-const DashboardPage = () => {
-	if ( ! Login.isLoggedIn()) {
-		return (<div className="page DashboardPage">
-		<h2>My Dashboard: Login or Register</h2>
+class DashboardPage extends React.Component {
+
+	componentWillMount() {
+	}
+
+	render() {
+		if ( ! Login.isLoggedIn()) {
+			return (<div className="page DashboardPage">
+			<h2>My Dashboard: Login or Register</h2>
+			</div>);
+		}
+		let donations = this.state && this.state.donations;
+		// loaded?
+		if ( ! donations) {
+			ServerIO.getDonations()
+			.then(function(result) {
+				let dons = result.cargo.hits;
+				this.setState({donations: dons});
+			}.bind(this));
+			return <Misc.Loading />;
+		}
+		// display...
+		return (
+		<div className="page DashboardPage">
+			<h2>My Dashboard</h2>
+			
+			<DashboardWidget title="Donation History">
+				<DonationList donations={this.state.donations} />
+			</DashboardWidget>
 		</div>);
 	}
-	return (
-	<div className="page DashboardPage">
-		<h2>My Dashboard</h2>
-		
-		<DashboardWidget title="Donation History">
-			<ul><li>TODO list your donations with impact</li></ul>
-		</DashboardWidget>
-	</div>);
-};// ./Dashboard
+}// ./DashboardPage
 
+
+const DonationList = ({donations}) => {
+	return <div>{ _.map(donations, d => <Donation key={'d'+d.id} donation={d} />) }</div>;
+};
+
+const Donation = ({donation}) => {
+	return (<div>
+		{printer.str(donation)}
+	</div>);
+};
 
 		/*<h2>Version 2+...</h2>
 		<DashboardWidget title="News Feed">

@@ -76,7 +76,7 @@ public class DonationServlet {
 //			throw new WebEx.E401(null, "No user"); TODO!!!
 		} else {
 			TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
-			s.setQuery(qb);
+//			s.setQuery(qb);
 		}
 		// TODO paging!
 		s.setSize(100);

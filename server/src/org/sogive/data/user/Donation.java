@@ -11,9 +11,9 @@ public class Donation {
 
 	String id;
 
-	XId from;
+	String from;
 	
-	XId to;
+	String to;
 	
 	public MonetaryAmount getTotal() {
 		return total;
@@ -56,8 +56,8 @@ public class Donation {
 	public Donation(XId from, XId to, MonetaryAmount ourFee, MonetaryAmount otherFees, boolean giftAid,
 			MonetaryAmount total) {
 		Utils.check4null(from, to, total);
-		this.from = from;
-		this.to = to;
+		this.from = from.toJSONString();
+		this.to = to.toJSONString();
 		this.ourFee = ourFee;
 		this.otherFees = otherFees;
 		this.giftAid = giftAid;

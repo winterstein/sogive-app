@@ -25,7 +25,7 @@ class CharityPage extends React.Component {
 
 	componentWillMount() {
 		// fetch
-		let cid = this.props.charityId || 'solar-aid';
+		let cid = this.props.charityId;
 		ServerIO.getCharity(cid)
 		.then(function(result) {
 			let charity = result.cargo;
@@ -124,10 +124,10 @@ const ProjectPanel = ({project}) => {
 	const inputs = project.inputs || [];
 	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
 		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
-		<div><h4>Inputs</h4>
+		<div className='inputs'><h4>Inputs</h4>
 			{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Money precision={false} amount={output}/></div>)}
 		</div>
-		<div><h4>Outputs</h4>
+		<div className='outputs'><h4>Outputs</h4>
 			{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
 		</div>
 		<Citations thing={project} />

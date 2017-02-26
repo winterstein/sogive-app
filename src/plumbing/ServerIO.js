@@ -7,7 +7,7 @@ import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
-// import Login from 'hooru';
+import Login from 'hooru';
 
 const ServerIO = {};
 export default ServerIO;
@@ -36,7 +36,7 @@ ServerIO.donate = function(data) {
 };
 
 ServerIO.getDonations = function() {
-	return ServerIO.load('/donation');
+	return ServerIO.load('/donation/list');
 };
 
 
@@ -57,6 +57,7 @@ ServerIO.load = function(url, params) {
 	assMatch(url,String);
 	console.log("ServerIO.load", url, params);
 	params = ServerIO.addDefaultParams(params);
+	if ( ! params.data) params.data = {};
 	// sanity check: no Objects except arrays
 	_.values(params.data).map(
 		v => assert( ! _.isObject(v) || _.isArray(v), v)
@@ -68,11 +69,15 @@ ServerIO.load = function(url, params) {
 	params.url = url;
 	// send cookies
 	params.xhrFields = {withCredentials: true};
+	// add auth
+	if (Login.isLoggedIn()) {
+		params.data.as = Login.getId();
+		params.data.jwt = Login.getUser().jwt;
+	}
 	// debug: add stack
 	if (window.DEBUG) {
 		try {
-			const stack = new Error().stack;
-			if ( ! params.data) params.data = {};
+			const stack = new Error().stack;			
 			// stacktrace, chop leading "Error at Object." bit
 			params.data.stacktrace = (""+stack).replace(/\s+/g,' ').substr(16);
 		} catch(error) {
