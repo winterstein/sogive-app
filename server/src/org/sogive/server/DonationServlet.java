@@ -114,8 +114,8 @@ public class DonationServlet {
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
 		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
 		IndexRequestBuilder pi = es.prepareIndex(config.donationIndex, "donation", donation.getId());
-//		pi.setRefresh("true"); TODO
-//		pi.setOpTypeCreate(true);		
+		pi.setRefresh("true");
+		pi.setOpTypeCreate(true);		
 		String json = Dependency.get(Gson.class).toJson(donation);
 		pi.setSource(json);
 		IESResponse res = pi.get().check();
@@ -129,14 +129,14 @@ public class DonationServlet {
 		Charge charge = StripePlugin.collect(donation, sa, userObj, ikey);
 		
 		Log.d("stripe", charge);
-		donation.setCollected(true);
 		donation.setPaymentId(charge.getId());
+		donation.setCollected(true);
 		
-		// TODO store in the database
+		// store in the database
 		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
 		
 		String json3 = Dependency.get(Gson.class).toJson(donation);
-		pu.setSource(json);
+		pu.setDoc(json3);
 		IESResponse resAfter = pu.get().check();
 		String json4 = res.getJson();		
 		
