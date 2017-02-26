@@ -13,12 +13,16 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.LogFile;
 import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
+import com.winterwell.web.data.XId;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.KLoopPolicy;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.ESStorage;
 import com.winterwell.datalog.IDataLog;
@@ -27,8 +31,10 @@ import com.winterwell.datalog.IDataLogStorage;
 import com.winterwell.datalog.StatConfig;
 import com.winterwell.datalog.DataLogImpl;
 import com.winterwell.es.ESUtils;
+import com.winterwell.es.XIdTypeAdapter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.gson.StandardAdapters;
 
 public class SoGiveServer {
 
@@ -80,10 +86,19 @@ public class SoGiveServer {
 	}
 
 	private static void init() {
-		// TODO gson
-//		new GsonBuilder()
+
+		// gson
+		Gson gson = new GsonBuilder()
+		.setLenientReader(true)
+		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
+		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
+		.serializeSpecialFloatingPointValues()
+		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+		.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL)
+		.create();
 		// config
 		ESConfig value = new ESConfig();
+		value.gson = gson;
 		Dependency.set(ESConfig.class, value);
 		// client
 		Dependency.setSupplier(ESHttpClient.class, true, 
