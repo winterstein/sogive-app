@@ -125,7 +125,7 @@ const ProjectPanel = ({project}) => {
 	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
 		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
 		<div className='inputs'><h4>Inputs</h4>
-			{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Money precision={false} amount={output}/></div>)}
+			{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output}/></div>)}
 		</div>
 		<div className='outputs'><h4>Outputs</h4>
 			{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
@@ -134,13 +134,6 @@ const ProjectPanel = ({project}) => {
 	</Panel>);
 };
 
-const CURRENCY = {
-	"GBP": "£",
-	"USD": "$"
-};
-const Money = ({amount,precision}) => {
-	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
-};
 
 const Citations = ({thing}) => {
 	let dsrc = thing['data-src'];

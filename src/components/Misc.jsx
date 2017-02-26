@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest from 'sjtest'
+import SJTest from 'sjtest';
 const assert = SJTest.assert;
 import printer from '../utils/printer.js';
 import C from '../C.js';
-
+import _ from 'lodash';
 const Misc = {};
 
 /**
@@ -16,6 +16,31 @@ Misc.Loading = ({text}) => (
 		<span className="glyphicon glyphicon-cd spinning" /> Loading {text || ''}...
 	</div>
 );
+
+
+const CURRENCY = {
+	"GBP": "£",
+	"USD": "$"
+};
+Misc.Money = ({amount,precision}) => {
+	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
+};
+/**
+ * Handle a few formats, inc gson-turned-a-Time.java-object-into-json
+ */
+Misc.Time = ({time}) => {
+	try {
+		if (_.isString(time)) {
+			return <span>{new Date(time).toLocaleDateString()}</span>;			
+		}
+		if (time.ut) {
+			return <span>{new Date(time.ut).toLocaleDateString()}</span>;
+		}
+		return <span>{printer.str(time)}</span>;
+	} catch(err) {
+		return <span>{printer.str(time)}</span>;
+	}
+};
 
 	/** eg a Twitter logo */
 Misc.Logo = ({service, size, transparent}) => {

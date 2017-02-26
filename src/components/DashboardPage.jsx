@@ -7,6 +7,7 @@ import printer from '../utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 // import ChartWidget from './ChartWidget';
 import Misc from './Misc.jsx';
+import {XId} from 'wwutils';
 
 const assert = SJTest.assert;
 
@@ -50,7 +51,12 @@ const DonationList = ({donations}) => {
 
 const Donation = ({donation}) => {
 	return (<div>
-		{printer.str(donation)}
+		Charity: {printer.str(donation.to)} <br/>
+		Impact: {donation.impact} <br/>
+		Amount: <Misc.Money precision={false} amount={donation.total} /> <br/>
+		GiftAid? {donation.giftAid? 'yes' : 'no'} <br/>
+		Date: <Misc.Time time={donation.time} /> <br/>
+		<small>payment-id: {donation.paymentId}</small>
 	</div>);
 };
 
