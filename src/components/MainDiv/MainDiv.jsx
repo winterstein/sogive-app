@@ -28,7 +28,7 @@ const PAGES = {
 	campaign: DonateToCampaignPage
 };
 
-const DEFAULT_PAGE = 'dashboard';
+const DEFAULT_PAGE = 'search';
 
 
 /**

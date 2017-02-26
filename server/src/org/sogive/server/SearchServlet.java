@@ -16,6 +16,8 @@ import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.charity.SoGiveConfig; 
 
@@ -35,8 +37,9 @@ public class SearchServlet {
 		SearchRequestBuilder s = client.prepareSearch(Dependency.get(SoGiveConfig.class).charityIndex);
 		String q = state.get(Q);
 		if ( q != null) {
-			MultiMatchQueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
-					"id", "englandWalesCharityRegNum", "name", "description");
+			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
+					"id", "englandWalesCharityRegNum", "name", "description")
+							.operator(Operator.AND);
 			s.setQuery(qb);
 		}
 		// TODO paging!

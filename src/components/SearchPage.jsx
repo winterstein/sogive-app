@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, ControlLabel, Media, MediaLeft, MediaBody, MediaHeading, Well} from 'react-bootstrap';
-import {uid} from 'wwutils';
+import {uid, yessy} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
 
@@ -102,10 +102,15 @@ class SearchForm extends React.Component {
 
 const SearchResults = ({ results, query }) => {
 	const num = results.length || query? <div>{results.length} results found</div> : null;
+	const ready = _.filter(results, c => _.find(c.projects, 'ready') );
+	const unready = _.filter(results, r => ready.indexOf(r) === -1);
+	const hu = unready.length? <h3>Analysis in progress</h3> : null;
 	return (
 		<div className='SearchResults'>
 			{num}
-			{ _.map(results, item => <SearchResult key={uid()} item={item} />) }
+			{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
+			{hu}
+			{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
 		</div>);
 }; //./SearchResults
 
@@ -115,7 +120,7 @@ const SearchResult = ({ item }) => (
 		<Media>
 			<a href={`#charity?charityId=${item['@id']}`}>
 				<Media.Left>
-					<img width={64} height={64} src={item.logo} alt={`Logo for ${item.name}`} />
+					{item.logo? <img width={64} height={64} src={item.logo} alt={`Logo for ${item.name}`} /> : null}
 				</Media.Left>
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>
