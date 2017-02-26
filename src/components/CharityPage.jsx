@@ -112,13 +112,20 @@ const ProjectList = ({projects, charity}) => {
 	);
 };
 
+const COSTNAMES = {
+	annualCosts: "Annual costs",
+	fundraisingCosts: "Fundraising costs",
+	tradingCosts: "Trading costs",
+	incomeFromBeneficiaries: "Income from beneficiaries"
+};
+
 const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
 		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
 		<div><h4>Inputs</h4>
-			{inputs.map(output => <div key={"in_"+output.name}>{output.name}: <Money precision={false} amount={output}/></div>)}
+			{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Money precision={false} amount={output}/></div>)}
 		</div>
 		<div><h4>Outputs</h4>
 			{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
