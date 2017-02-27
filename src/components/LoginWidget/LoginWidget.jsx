@@ -67,7 +67,13 @@ const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
 
 	// login/register
 	return (
-		<form id="loginByEmail">
+		<form
+			id="loginByEmail"
+			onSubmit={(event) => {
+				event.preventDefault();
+				doItFn();
+			}}
+		>
 			<div className="form-group">
 				<label htmlFor="person">Email</label>
 				<input
@@ -82,11 +88,7 @@ const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
 			</div>
 			{ passwordField }
 			<div className="form-group">
-				<button
-					type="submit"
-					className="btn btn-default form-control"
-					onClick={doItFn}
-				>
+				<button type="submit" className="btn btn-default form-control" >
 					{ buttonText }
 				</button>
 			</div>
