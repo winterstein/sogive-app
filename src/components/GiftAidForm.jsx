@@ -9,7 +9,6 @@ const GiftAidForm = ({
 	giftAidTaxpayer,
 	giftAidOwnMoney,
 	giftAidNoCompensation,
-	giftAidNoLottery,
 	name,
 	address,
 	postcode,
@@ -26,10 +25,7 @@ const GiftAidForm = ({
 				This is my own money. I am not paying in donations made by a third party e.g. money collected at an event, in the pub, a company donation or a donation from a friend or family member.
 			</Checkbox>
 			<Checkbox checked={giftAidNoCompensation} onChange={(event) => { handleChange('giftAidNoCompensation', event.target.checked); }}>
-				I am not receiving anything in return for my donation e.g. book, auction prize, ticket to an event.
-			</Checkbox>
-			<Checkbox checked={giftAidNoLottery} onChange={(event) => { handleChange('giftAidNoLottery', event.target.checked); }}>
-				I am not making a donation as part of a sweepstake, raffle or lottery.
+				I am not receiving anything in return for my donation e.g. book, auction prize, ticket to an event, or donating as part of a sweepstake, raffle or lottery.
 			</Checkbox>
 			<label htmlFor="name">Name</label>
 			<FormControl
