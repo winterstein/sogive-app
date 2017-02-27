@@ -57,8 +57,8 @@ const DonationList = ({donations}) => {
 
 const Donation = ({donation}) => {
 	return (<div className='well'>
-		<Misc.Time time={donation.time} />
-		You donated <Misc.Money precision={false} amount={donation.total} /> to {donation.to.name}.
+		<Misc.Time time={donation.time} /> &nbsp;
+		You donated <Misc.Money precision={false} amount={donation.total} /> to {XId.id(donation.to)}. <br/>
 		Impact: {printer.str(donation.impact)} <br />
 		GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
 		Date: <Misc.Time time={donation.time} /> <br />
