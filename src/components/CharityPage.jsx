@@ -44,7 +44,8 @@ class CharityPage extends React.Component {
 		const overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
 		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
 		// latest only
-		const overall = Project.getLatest(overalls);		
+		const overall = Project.getLatest(overalls);	
+		const year = overall? overall.year : 0;
 		let oldProjects = _.filter(projectProjects, p => p.year !== overall.year);
 		let currentProjects = _.filter(projectProjects, p => p.year === overall.year);
 		// sort by cost, biggest first

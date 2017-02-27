@@ -199,12 +199,14 @@ public class PublishSoGiveApp extends BuildTask {
 					File jar = ((BuildWinterwellProject) buildTask).getJar();
 					FileUtils.copy(jar, localLib);
 				}
-			}
+			}			
 			
 			// This jar
 			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));
 			jarTask.run();
 			jarTask.close();
+			
+			if (true) return;
 			
 			// Do the rsync!
 			String from = localLib.getAbsolutePath();
