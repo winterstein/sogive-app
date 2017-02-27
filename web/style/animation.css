@@ -1,0 +1,40 @@
+.slide-hide {
+  transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+}
+.hide-left,
+.hide-right,
+.hide-down {
+  position: absolute !important;
+  margin-top: inherit;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+}
+.hide-left {
+  transform: translateX(-30%);
+}
+.hide-right {
+  transform: translateX(30%);
+}
+.hide-down {
+  transform: translateY(100%);
+}
+.spinning {
+  animation: spin 3s infinite linear;
+}
+@keyframes spin {
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
+}
+@-webkit-keyframes spin2 {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
