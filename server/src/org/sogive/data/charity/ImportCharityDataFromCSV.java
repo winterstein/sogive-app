@@ -215,7 +215,7 @@ public class ImportCharityDataFromCSV {
 				List<Output> outputs = repProject.getOutputs();
 				if (outputs!=null) {
 					List<Output> impacts = repProject.getImpact(outputs, MonetaryAmount.pound(1));
-					ngo.put("unitRepImpact", impacts.get(0));
+					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 				}
 			}
 			

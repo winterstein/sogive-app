@@ -107,8 +107,8 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	public static final String url = "url";
 	
 	void setPeriod(Time start, Time end) {
-		put("start", start.toISOString());
-		put("end", end.toISOString());
+		if (start!=null) put("start", start.toISOString());
+		if (end!=null) put("end", end.toISOString());
 		// also store the year, which
 		if (end!=null) {
 			put("year", end.getYear());

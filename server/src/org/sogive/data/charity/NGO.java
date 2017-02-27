@@ -48,7 +48,7 @@ public class NGO extends Thing<NGO> {
 
 	
 	public Project getRepProject() {
-		List<Project> projects = getProjects();
+		List<Project> projects = getProjects();		
 		// Representative and ready for use?
 //		List<Project> repProjects = Containers.filter(p -> (p.isRep && p.ready), projects);
 //		
@@ -68,7 +68,7 @@ public class NGO extends Thing<NGO> {
 //
 //		return repProject;
 //
-//		return null;
+		return null;
 	}
 
 }

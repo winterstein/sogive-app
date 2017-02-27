@@ -95,7 +95,7 @@ public class Project extends Thing<Project> {
 	
 	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
 		Optional<Integer> year = outputs.stream().map(o -> o.getYear()).max(Integer::compare);
-		List<MonetaryAmount> allinputs = getInputs();
+		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
 		MonetaryAmount totalCosts = Containers.first(ma -> "annualCosts".equals(ma.getName()), inputs);
@@ -106,7 +106,7 @@ public class Project extends Thing<Project> {
 		MonetaryAmount cost = totalCosts;
 		if (cost==null) {
 			// can't calc anything
-			continue;
+			return null;
 		}
 		// What should the formula be?
 		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
@@ -127,6 +127,7 @@ public class Project extends Thing<Project> {
 			cost = cost.minus(tradingCosts);
 		}
 		// a unit is
+		List impacts = new ArrayList();
 		double unitFraction = 1.0 /  cost.getValue();
 		for(Output output : outputs) {
 			Output unitImpact = output.scale(unitFraction);
