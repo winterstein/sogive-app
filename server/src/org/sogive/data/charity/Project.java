@@ -146,7 +146,7 @@ public class Project extends Thing<Project> {
 		}
 		for(Output output : outputs) {
 			Output unitImpact = output.scale(unitFraction);
-			unitImpact.put("price", new MonetaryAmount(1));
+			unitImpact.put("price", MonetaryAmount.pound(1));
 			impacts.add(unitImpact);
 		}
 		// done
