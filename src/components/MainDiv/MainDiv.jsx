@@ -8,7 +8,7 @@ import { getUrlVars } from 'wwutils';
 // Templates
 import MessageBar from '../MessageBar';
 import SoGiveNavBar from '../SoGiveNavBar/SoGiveNavBar';
-// import LoginWidget from './LoginWidget.jsx';
+import LoginWidget from '../LoginWidget/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
@@ -41,7 +41,7 @@ class MainDiv extends Component {
 
 		// Set up login watcher here, at the highest level
 		Login.change(() => {
-			loginChanged(this.props.dispatch);
+			this.props.dispatch(loginChanged(false));
 		});
 		// And trigger it to make sure we're up to date.
 		Login.change();
@@ -84,6 +84,7 @@ class MainDiv extends Component {
 						<Page {...pageProps} />
 					</div>
 				</div>
+				<LoginWidget />
 			</div>
 		);
 	}

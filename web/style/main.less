@@ -34,3 +34,23 @@ img.logo-large {
 .flexitem {
 
 }
+
+// Let any singleton column be centred in its row
+.container .row .col-center {
+	float: none;
+	margin: 0 auto;
+}
+
+// Make the login widget a modal overlay
+.login-modal {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.5);
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

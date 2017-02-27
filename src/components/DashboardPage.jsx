@@ -1,48 +1,54 @@
 import React, { Component, PropTypes } from 'react';
-import SJTest from 'sjtest';
+import { connect } from 'react-redux';
+import { assert } from 'sjtest';
 import _ from 'lodash';
-import Login from 'hooru';
+import { XId } from 'wwutils';
+
 import printer from '../utils/printer';
 // import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
+import { showLoginMenu } from './genericActions';
 // import ChartWidget from './ChartWidget';
-import Misc from './Misc.jsx';
-import {XId} from 'wwutils';
+import Misc from './Misc';
 
-const assert = SJTest.assert;
 
-class DashboardPage extends React.Component {
-
-	componentWillMount() {
-	}
-
+class DashboardPage extends Component {
 	render() {
-		if ( ! Login.isLoggedIn()) {
-			return (<div className="page DashboardPage">
-			<h2>My Dashboard: Login or Register</h2>
-			</div>);
-		}
-		let donations = this.state && this.state.donations;
-		// loaded?
-		if ( ! donations) {
+		const { user, openLogin, openRegister } = this.props;
+		const donations = this.state && this.state.donations;
+
+		let content;
+
+		if (!user) {
+			content = (
+				<div>
+					<a href='#' onClick={openLogin}>Login</a> or <a href='#' onClick={openRegister}>register</a> to track your donations.
+				</div>
+			);
+		} else if (!donations) {
 			ServerIO.getDonations()
 			.then(function(result) {
 				let dons = result.cargo.hits;
 				this.setState({donations: dons});
 			}.bind(this));
-			return <Misc.Loading />;
+			content = <Misc.Loading />;
+		} else {
+			content = (
+				<DashboardWidget title="Donation History">
+					<DonationList donations={this.state.donations} />
+				</DashboardWidget>
+			);
 		}
+
 		// display...
 		return (
-		<div className="page DashboardPage">
-			<h2>My Dashboard</h2>
-			
-			<DashboardWidget title="Donation History">
-				<DonationList donations={this.state.donations} />
-			</DashboardWidget>
-		</div>);
+			<div className="page DashboardPage">
+				<h2>My Dashboard</h2>
+				{ content }
+			</div>
+		);
 	}
-}// ./DashboardPage
+} // ./DashboardPage
 
 
 const DonationList = ({donations}) => {
@@ -51,11 +57,11 @@ const DonationList = ({donations}) => {
 
 const Donation = ({donation}) => {
 	return (<div className='well'>
-		Charity: {printer.str(donation.to)} <br/>
-		Impact: {printer.str(donation.impact)} <br/>
-		Amount: <Misc.Money precision={false} amount={donation.total} /> <br/>
-		GiftAid? {donation.giftAid? 'yes' : 'no'} <br/>
-		Date: <Misc.Time time={donation.time} /> <br/>
+		Charity: {printer.str(donation.to)} <br />
+		Impact: {printer.str(donation.impact)} <br />
+		Amount: <Misc.Money precision={false} amount={donation.total} /> <br />
+		GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
+		Date: <Misc.Time time={donation.time} /> <br />
 		<small>payment-id: {donation.paymentId}</small>
 	</div>);
 };
@@ -82,8 +88,6 @@ const Donation = ({donation}) => {
 		</DashboardWidget>*/
 
 
-export default DashboardPage;
-
 const DashboardWidget = ({ children, iconClass, title }) =>
 	<div className="panel panel-default">
 		<div className="panel-heading">
@@ -107,3 +111,19 @@ const DashTitleIcon = ({ iconClass }) =>
 DashTitleIcon.propTypes = {
 	iconClass: PropTypes.string,
 };
+
+
+const mapStateToProps = (state, ownProps) => ({
+	...ownProps,
+	user: state.login.user,
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	openLogin: () => dispatch(showLoginMenu(true, 'login')),
+	openRegister: () => dispatch(showLoginMenu(true, 'register')),
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(DashboardPage);

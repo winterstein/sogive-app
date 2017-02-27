@@ -6,74 +6,14 @@ import { XId, uid } from 'wwutils';
 import Cookies from 'js-cookie';
 
 import Misc from '../Misc';
-import { updateField } from '../genericActions';
-import { emailLogin, socialLogin } from './LoginWidget-actions';
+import { updateField, showLoginMenu } from '../genericActions';
+import { emailLogin, emailRegister, socialLogin } from './LoginWidget-actions';
 
 /**
 	TODO:
 	- doEmailLogin(email, password) and doSocialLogin(service) are available as props now
 	- Use them in the appropriate section of the form
 */
-
-
-/**
-		Login or Signup (one widget)
-		See SigninScriptlet
-
-*/
-class LoginWidget extends React.Component {
-
-	componentWillMount() {
-	}
-
-	componentWillUnmount() {
-	}
-
-	render() {
-		const { loginDialog, verb } = this.props;
-		if (Login.isLoggedIn()) {
-			return <div>Signed in as { XId.dewart(Login.getId()) }</div>;
-		}
-		const card = (
-			<div>
-				<p>Please {verb} below.</p>
-				<div className="row">
-					<div className="email-signin col-sm-6" style={{borderRight: 'solid 2px #999'}}>				
-						<EmailSignin verb={verb} setVerbReset={this.setVerbReset} setEmail={this.setEmail} 
-							setPassword={this.setPassword} loginOrRegister={this.loginOrRegister} 
-							doPasswordReset={this.doPasswordReset} />
-					</div>
-					<div className="col-sm-6">
-						<SocialSignin verb={verb} services={null} />
-					</div> {/* ./social sign in */}
-				</div> {/* ./row */}
-				<div>
-					{verb==='register'? "Already have an account?" : "Don't yet have an account?"}
-					&nbsp;
-					<a href='#' onClick={ this.toggleVerb }>
-						{ verb === 'register'? "Login" : "Sign-up" }
-					</a>
-				</div>
-			</div>
-		);
-
-		if (this.props.incard) {
-			return card;
-		}
-		return (
-			<div className="container">
-				<div className="panel panel-default">
-					<div className="panel-heading">Welcome (back) to Orla</div>
-					<div className="panel-body">
-							<Misc.Logo service="sogive" size='large' transparent={false} />
-							{card}
-					</div> {/* ./panel-body */}
-				</div>
-			</div>
-		);
-	} // ./render()
-
-} // ./LoginWidget
 
 
 const SocialSignin = () => {
@@ -95,7 +35,7 @@ const SocialSignin = () => {
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
-			<p><small>SoGive will never share your data, and will never act without your consent. 
+			<p><small>SoGive will never share your data, and will never act without your consent.
 				You can read our <a href='http://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
 		</div>
@@ -103,78 +43,61 @@ const SocialSignin = () => {
 };
 
 
-class EmailSignin extends React.Component {
+const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
+	const passwordField = verb === 'reset' ? ('') : (
+		<div className="form-group">
+			<label htmlFor="password">Password</label>
+			<input
+				id="password_input"
+				className="form-control"
+				type="password"
+				name="password"
+				placeholder="Password"
+				value={password}
+				onChange={(event) => handleChange('password', event.target.value)}
+			/>
+		</div>
+	);
 
-	render() {
-		// reset?
-		if (this.props.verb === 'reset') {
-			return (
-				<form id="loginByEmail">
-					<div className="form-group">
-						<label>Email</label>
-						<input
-							id="person_input"
-							className="form-control"
-							type="email" name="person"
-							placeholder="Email"
-							onChange={this.props.setEmail}
-						/>
-					</div>
-					<div className="form-group">
-						<button
-							type="submit"
-							className="btn btn-default form-control"
-							onClick={this.props.doPasswordReset}
-						>
-							Send password reset
-						</button>
-					</div>
-					<LoginError />
-				</form>
-			);
-		}
-		// login/register
-		return (
-			<form id="loginByEmail">
-				<div className="form-group">
-					<label>Email</label>
-					<input
-						id="person_input"
-						className="form-control"
-						type="email" name="person"
-						placeholder="Email"
-						onChange={this.props.setEmail}
-					/>
-				</div>
-				<div className="form-group">
-					<label>Password</label>
-					<input
-						id="password_input"
-						className="form-control"
-						type="password"
-						name="password"
-						placeholder="Password"
-						onChange={this.props.setPassword}
-					/>
-				</div>
-				<div className="form-group">
-					<button
-						type="submit"
-						className="btn btn-default form-control"
-						onClick={this.props.loginOrRegister}
-					>
-						{ this.props.verb }
-					</button>
-				</div>
-				<LoginError />
-				<ResetLink verb={this.props.verb} setVerbReset={this.props.setVerbReset} />
-			</form>
-		);
-	}
-} // ./EmailSignin
+	const buttonText = {
+		login: 'Log in',
+		register: 'Register',
+		reset: 'Reset password',
+	}[verb];
+
+	// login/register
+	return (
+		<form id="loginByEmail">
+			<div className="form-group">
+				<label htmlFor="person">Email</label>
+				<input
+					id="person_input"
+					className="form-control"
+					type="email"
+					name="person"
+					placeholder="Email"
+					value={person}
+					onChange={(event) => handleChange('person', event.target.value)}
+				/>
+			</div>
+			{ passwordField }
+			<div className="form-group">
+				<button
+					type="submit"
+					className="btn btn-default form-control"
+					onClick={doItFn}
+				>
+					{ buttonText }
+				</button>
+			</div>
+			<LoginError />
+			<ResetLink verb={verb} setVerbReset={() => handleChange('verb', 'reset')} />
+		</form>
+	);
+}; // ./EmailSignin
 
 const ResetLink = ({verb, setVerbReset}) => {
-	if (verb==='login') {
+	if (verb === 'login') {
 		return (
 			<div className='pull-right'>
 				<small>
@@ -196,14 +119,83 @@ const LoginError = function() {
 };
 
 
+/**
+		Login or Signup (one widget)
+		See SigninScriptlet
+
+*/
+const LoginWidget = ({showDialog, verb, person, password, doEmailLogin, doEmailRegister, closeMenu, handleChange}) => {
+	if (!showDialog) {
+		return <div />;
+	}
+
+	const heading = {
+		login: 'Log In',
+		register: 'Register',
+		reset: 'Reset Password'
+	}[verb];
+
+	const doItFn = {
+		login: doEmailLogin,
+		register: doEmailRegister,
+		reset: null,
+	}[verb];
+
+	return (
+		<div className="login-modal" onClick={closeMenu}>
+			<div className="container">
+				<div className="row">
+					<div className="col-sm-6 col-center">
+						<div className="panel panel-default" onClick={(event) => event.stopPropagation()}>
+							<div className="panel-heading">Welcome (back) to SoGive</div>
+							<div className="panel-body">
+								<Misc.Logo service="sogive" size='large' transparent={false} />
+								<h3>{heading}</h3>
+								<EmailSignin
+									verb={verb}
+									person={person}
+									password={password}
+									handleChange={handleChange}
+									doItFn={() => doItFn(person, password)}
+								/>
+								{/*
+									// Reinstate this later - put the row/column back inside the panel & restore the vertical line
+									<div className="col-sm-6">
+										<SocialSignin verb={verb} services={null} />
+									</div>
+								*/}
+								{
+									verb === 'register' ?
+										<div>
+											Already have an account?
+											&nbsp;<a href='#' onClick={() => handleChange('verb', 'login')}>Login</a>
+										</div> :
+										<div>
+											Don&#39;t yet have an account?
+											&nbsp;<a href='#' onClick={() => handleChange('verb', 'register')}>Register</a>
+										</div>
+								}
+							</div> {/* ./panel-body */}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}; // ./LoginWidget
+
+
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
 	...state.login,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+	closeMenu: () => dispatch(showLoginMenu(false)),
 	doEmailLogin: (email, password) => dispatch(emailLogin(dispatch, email, password)),
+	doEmailRegister: (email, password) => dispatch(emailRegister(dispatch, email, password)),
 	doSocialLogin: (service) => dispatch(socialLogin(dispatch, service)),
+	handleChange: (field, value) => dispatch(updateField('LOGIN_DIALOG_UPDATE_FIELD', field, value)),
 });
 
 export default connect(
