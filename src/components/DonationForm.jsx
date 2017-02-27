@@ -178,7 +178,7 @@ const DonationFormButton = ({onToken, amount}) => {
 				panelLabel="Donate"
 				amount={amount}
 				currency="GBP"
-				stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
+				stripeKey="pk_live_InKkluBNjhUO4XN1QAkCPEGY"
 				bitcoin
 				allowRememberMe
 				token={onToken}
