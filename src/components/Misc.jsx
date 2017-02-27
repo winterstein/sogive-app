@@ -74,14 +74,15 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.name && unitImpact.price) {
 		// more people?
 		let peepText = '';
+		let peeps = 1;
 		if (unitImpact.number*amount < 0.5) {
-			let peeps = 1 / (unitImpact.number * amount);
+			peeps = 1 / (unitImpact.number * amount);
 			peepText = printer.prettyNumber(peeps, 1)+' people donating ';
 		}
 		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
 		return (
 			<div>
-				<strong>{peepText}<Misc.Money amount={amount} /></strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount, 2)}</strong> {unitImpact.name}
+				<strong>{peepText}<Misc.Money amount={amount} /></strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</strong> {unitImpact.name}
 			</div>
 		);
 	}
