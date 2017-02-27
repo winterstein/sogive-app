@@ -1,6 +1,7 @@
 package org.sogive.server;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.Checkbox;
+import com.winterwell.web.fields.DoubleField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.LongField;
 
@@ -112,9 +114,13 @@ public class DonationServlet {
 		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 		
-		String impact = state.get("impact");
-		if (impact!=null) {
-			donation.setImpact(new ArrayMap("text", impact));
+		Double impactCount = state.get(new DoubleField("impactCount"));
+		String impactUnit = state.get("impactUnit");
+		if (impactCount != null && impactUnit != null) {
+			Map impact = new HashMap<String, Object>();
+			impact.put("count", impactCount);
+			impact.put("unit", impactUnit);
+			donation.setImpact(impact);
 		}
 		
 		if (giftAid) {
