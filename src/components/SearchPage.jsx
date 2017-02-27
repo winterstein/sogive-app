@@ -5,7 +5,7 @@ import {Button, Form, FormGroup, FormControl, ControlLabel, Media, MediaLeft, Me
 import {uid, yessy} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
-
+import Misc from './Misc.jsx';
 
 export default class SearchPage extends React.Component {
 
@@ -125,9 +125,12 @@ const SearchResult = ({ item }) => (
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>
 					<p>{item.description}</p>
+					<Misc.ImpactDesc unitImpact={item.unitRepImpact} amount={10} />
 				</Media.Body>
 			</a>
 		</Media>
 	</div>
 ); //./SearchResult
+
+
 

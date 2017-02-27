@@ -66,4 +66,11 @@ Misc.Checkbox = ({on, label, onChange}) => (
 	</div>
 );
 
+Misc.ImpactDesc = ({unitImpact, amount}) => {
+	if (unitImpact && unitImpact.number && unitImpact.name) {
+		return <div>{`will fund ${printer.prettyNumber(unitImpact.number * amount)} ${unitImpact.name}`}</div>;
+	}
+	return null;
+};
+
 export default Misc;

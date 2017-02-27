@@ -180,9 +180,6 @@ const DonationFormButton = ({onToken, amount}) => {
 
 const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 	let unitImpact = impacts && impacts[0];
-	const impactDesc = (unitImpact && unitImpact.number && unitImpact.name) ?
-		`will fund ${printer.prettyNumber(unitImpact.number * amount)} ${unitImpact.name}`
-		: '';
 	let damounts = _.map(options, price => (
 		<DonationAmount
 			key={'donate_'+price}
@@ -208,9 +205,7 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 					/>
 				</InputGroup>
 			</div>
-			<div>
-				{impactDesc}
-			</div>
+			<Misc.ImpactDesc unitImpact={unitImpact} amount={amount} />
 		</div>
 	);
 };
