@@ -23,6 +23,9 @@ const CURRENCY = {
 	"USD": "$"
 };
 Misc.Money = ({amount,precision}) => {
+	if (_.isNumber(amount) || _.isString(amount)) {
+		amount = {value: amount, currency:'GBP'};
+	}
 	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
 };
 /**
@@ -68,7 +71,7 @@ Misc.Checkbox = ({on, label, onChange}) => (
 
 Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.name) {
-		return <div>{`will fund ${printer.prettyNumber(unitImpact.number * amount)} ${unitImpact.name}`}</div>;
+		return <div><Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}</div>;
 	}
 	return null;
 };

@@ -85,9 +85,10 @@ Printer.prototype.toNSigFigs2_small = function(n, sign, lv, keepMe) {
 	return sb;
 };
 
-Printer.prototype.prettyNumber = function(x) {
+Printer.prototype.prettyNumber = function(x, sigFigs) {
+	if ( ! sigFigs) sigFigs = 3;
 	// to 3 sig figs
-	var x3 = this.toNSigFigs(x,3);
+	var x3 = this.toNSigFigs(x, sigFigs);
 	if (x < 1000) return x3;
 	// add commas
 	var rx = "";
