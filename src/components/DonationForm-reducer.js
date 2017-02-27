@@ -6,6 +6,10 @@ const initialState = {
 	giftAidOwnMoney: false,
 	giftAidNoCompensation: false,
 	giftAidNoLottery: false,
+	name: '',
+	address: '',
+	postcode: '',
+	giftAidAddressConsent: false,
 	ready: true,
 	pending: false,
 	complete: false,
@@ -32,7 +36,11 @@ const checkDonationForm = (state, action) => {
 				newState.giftAidTaxpayer &&
 				newState.giftAidOwnMoney &&
 				newState.giftAidNoCompensation &&
-				newState.giftAidNoLottery
+				newState.giftAidNoLottery &&
+				(newState.name.trim().length > 0) &&
+				(newState.address.trim().length > 0) &&
+				(newState.postcode.trim().length > 0) &&
+				newState.giftAidAddressConsent
 			)
 		)
 	);

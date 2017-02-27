@@ -1,6 +1,6 @@
 // @Flow
 import React from 'react';
-import { FormGroup, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormControl, Checkbox } from 'react-bootstrap';
 
 
 const GiftAidForm = ({
@@ -10,6 +10,10 @@ const GiftAidForm = ({
 	giftAidOwnMoney,
 	giftAidNoCompensation,
 	giftAidNoLottery,
+	name,
+	address,
+	postcode,
+	giftAidAddressConsent,
 }) => {
 	// Gift Aiding? Check all these!
 	const giftAidChecks = giftAid ? (
@@ -26,6 +30,33 @@ const GiftAidForm = ({
 			</Checkbox>
 			<Checkbox checked={giftAidNoLottery} onChange={(event) => { handleChange('giftAidNoLottery', event.target.checked); }}>
 				I am not making a donation as part of a sweepstake, raffle or lottery.
+			</Checkbox>
+			<label htmlFor="name">Name</label>
+			<FormControl
+				type="text"
+				name="name"
+				placeholder="Enter your name"
+				onChange={({ target }) => { handleChange('name', target.value); }}
+				value={name}
+			/>
+			<label htmlFor="address">Address</label>
+			<FormControl
+				type="text"
+				name="address"
+				placeholder="Enter your address"
+				onChange={({ target }) => { handleChange('address', target.value); }}
+				value={address}
+			/>
+			<label htmlFor="postcode">Postcode</label>
+			<FormControl
+				type="text"
+				name="postcode"
+				placeholder="Enter your postcode"
+				onChange={({ target }) => { handleChange('postcode', target.value); }}
+				value={postcode}
+			/>
+			<Checkbox checked={giftAidAddressConsent} onChange={(event) => { handleChange('giftAidAddressConsent', event.target.checked); }}>
+				I understand that my name and address may be shared with the charity for processing Gift Aid.
 			</Checkbox>
 		</FormGroup>
 	) : '';
