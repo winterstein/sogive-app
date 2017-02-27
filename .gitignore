@@ -5,3 +5,4 @@ tmp-lib
 bin/
 *.class
 *.log
+config/stripe.properties
