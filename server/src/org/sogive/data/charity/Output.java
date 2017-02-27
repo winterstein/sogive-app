@@ -28,6 +28,7 @@ public class Output extends Thing<Output> {
 		put("type", StrUtils.toCanonical(type));
 		put("name", type);
 		put("unit", StrUtils.toCanonical(unit));
+		assert number >= 0 : this;
 	}
 	
 	
@@ -47,6 +48,7 @@ public class Output extends Thing<Output> {
 	 * @param input
 	 */
 	public Output scale(double fraction) {
+		assert fraction >= 0 : fraction+" "+this;
 		double number = getDouble("number");
 		number = number * fraction;
 		String type = (String) get("type");

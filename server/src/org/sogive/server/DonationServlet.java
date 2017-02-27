@@ -35,6 +35,7 @@ import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.IntField;
+import com.winterwell.web.fields.LongField;
 
 /**
  * TODO action=donate 
@@ -84,7 +85,7 @@ public class DonationServlet {
 		SearchResponse sr = s.get();
 		List<Map> hits = sr.getHits();
 		List<Map> hits2 = Containers.apply(h -> (Map)h.get("_source"), hits);
-		int total = sr.getTotal();
+		long total = sr.getTotal();
 		JsonResponse output = new JsonResponse(state, new ArrayMap(
 				"hits", hits2,
 				"total", total
@@ -104,10 +105,10 @@ public class DonationServlet {
 		}			
 		XId charity = new XId(state.get("charityId"), "sogive");
 		String currency = state.get("currency");
-		Integer total100 = state.get(new IntField("total100"));
-		MonetaryAmount ourFee = null;
-		MonetaryAmount otherFees = null;
-		boolean giftAid = state.get(new Checkbox("giftAid"));
+		Long total100 = state.get(new LongField("total100"));
+		MonetaryAmount ourFee= null;
+		MonetaryAmount otherFees= null;
+		boolean giftAid = false;
 		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 		

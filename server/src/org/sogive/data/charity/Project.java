@@ -20,6 +20,7 @@ import com.google.schemaorg.core.DataFeed;
 import com.google.schemaorg.core.NGO;
 import com.google.schemaorg.core.NGO.Builder;
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 
 /**
@@ -94,7 +95,7 @@ public class Project extends Thing<Project> {
 	}
 	
 	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
-		Optional<Integer> year = outputs.stream().map(o -> o.getYear()).max(Integer::compare);
+		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
@@ -108,6 +109,7 @@ public class Project extends Thing<Project> {
 			// can't calc anything
 			return null;
 		}
+		assert cost.getValue() > 0 : cost;
 		// What should the formula be?
 		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
 		if (incomeFromBeneficiaries != null) {
@@ -137,5 +139,11 @@ public class Project extends Thing<Project> {
 		// done
 		return impacts;
 	}
-
+	public boolean isReady() {
+		return Utils.truthy(get("ready"));
+	}
+	public boolean isRep() {
+		Object ir = get("isRep");
+		return Utils.truthy(ir);
+	}
 }

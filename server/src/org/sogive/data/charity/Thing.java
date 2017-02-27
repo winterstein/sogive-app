@@ -38,11 +38,11 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		return MathUtils.toNum(v);
 	}
 
-	public final Integer getInteger(String key) {
+	public final Long getLong(String key) {
 		Object v = get(key);
 		if (v==null) return null;
-		if (v instanceof Number) return ((Number) v).intValue();
-		return Integer.valueOf((String)v);
+		if (v instanceof Number) return ((Number) v).longValue();
+		return Long.valueOf((String)v);
 	}
 	
 	SubThing mergeIn(SubThing other) {
@@ -115,8 +115,8 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		}
 	}
 	
-	public final Integer getYear() {
-		return getInteger("year");
+	public final Long getYear() {
+		return getLong("year");
 	}
 
 	public static <X extends Thing> List<X> getThings(List list, Class<X> klass) {
@@ -144,6 +144,14 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		} catch(Exception ex) {
 			throw Utils.runtime(ex);
 		}
+	}
+
+	public static <T extends Thing> List<T> getLatestYear(List<T> inputs) {
+		if (inputs.isEmpty()) return inputs;
+		long max = inputs.stream().map(t -> Utils.or(t.getYear(), 0L)).max(Long::compare).get();
+		if (max==0) return inputs;
+		List<T> yearMatch = Containers.filter(t -> t.getYear() == max, inputs);
+		return yearMatch;		
 	}
 	
 }
