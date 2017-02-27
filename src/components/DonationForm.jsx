@@ -163,11 +163,6 @@ const DonationFormButton = ({onToken, amount}) => {
 			>
 				<Button bsStyle="primary">Donate</Button>
 			</StripeCheckout>
-			<small className="pull-right">
-				Stripe test cards:<br />
-				Good: 4000008260000000<br />
-				Bad: 4000000000000069
-			</small>
 		</div>
 	);
 };
