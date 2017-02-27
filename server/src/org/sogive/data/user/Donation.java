@@ -17,6 +17,10 @@ public class Donation {
 	
 	String to;
 	
+	String donorName;
+	String donorAddress;
+	String donorPostcode;
+	
 	public MonetaryAmount getTotal() {
 		return total;
 	}
@@ -89,6 +93,13 @@ public class Donation {
 
 	public void setImpact(Map impact) {
 		this.impact = impact;
+	}
+
+	public void setGiftAid(String name, String address, String postcode) {
+		Utils.check4null(name, address, postcode);
+		this.donorName = name;
+		this.donorAddress = address;
+		this.donorPostcode = postcode;
 	}
 	
 	

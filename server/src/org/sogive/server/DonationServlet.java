@@ -33,6 +33,7 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.LongField;
 
@@ -116,6 +117,15 @@ public class DonationServlet {
 			donation.setImpact(new ArrayMap("text", impact));
 		}
 		
+		if (giftAid) {
+			String name = state.get("name");
+			String address = state.get("address");
+			String postcode = state.get("postcode");
+			if (name != null && address != null && postcode != null) {
+				donation.setGiftAid(name, address, postcode);
+			}
+		}
+		
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dependency.get(ESHttpClient.class);
 		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
@@ -149,6 +159,4 @@ public class DonationServlet {
 		JsonResponse output = new JsonResponse(state, donation);
 		WebUtils2.sendJson(output, state);
 	}
-
-	
 }

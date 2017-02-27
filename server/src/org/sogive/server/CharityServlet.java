@@ -75,13 +75,11 @@ public class CharityServlet {
 	
 	private void doCalcImpacts(NGO charity) {
 		List<Project> projects = charity.getProjects();
-		List impacts = new ArrayList();
 		for (Project project : projects) {
 			List<Output> alloutputs = project.getOutputs();	
 			List<Output> outputs = Thing.getLatestYear(alloutputs);
 			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
-			List<Output> unitImpact = project.getImpact(outputs, unitMoney);				
-			impacts.add(unitImpact);
+			List<Output> impacts = project.getImpact(outputs, unitMoney);
 			project.put("impacts", impacts);
 		}		
 	}
