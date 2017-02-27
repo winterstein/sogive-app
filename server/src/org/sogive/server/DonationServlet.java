@@ -34,6 +34,7 @@ import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.IntField;
+import com.winterwell.web.fields.LongField;
 
 /**
  * TODO action=donate 
@@ -103,7 +104,7 @@ public class DonationServlet {
 		}			
 		XId charity = new XId(state.get("charityId"), "sogive");
 		String currency = state.get("currency");
-		Integer total100 = state.get(new IntField("total100"));
+		Long total100 = state.get(new LongField("total100"));
 		MonetaryAmount ourFee= null;
 		MonetaryAmount otherFees= null;
 		boolean giftAid = false;

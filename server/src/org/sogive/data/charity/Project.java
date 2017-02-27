@@ -95,7 +95,7 @@ public class Project extends Thing<Project> {
 	}
 	
 	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
-		Optional<Integer> year = outputs.stream().map(o -> o.getYear()).max(Integer::compare);
+		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
