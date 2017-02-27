@@ -79,7 +79,7 @@ public class DonationServlet {
 		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
 		SearchRequestBuilder s = es.prepareSearch(config.donationIndex);
 		if (user==null) {
-//			throw new WebEx.E401(null, "No user"); TODO!!!
+			throw new WebEx.E401(null, "No user");
 		} else {
 			TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
 			s.setQuery(qb);
