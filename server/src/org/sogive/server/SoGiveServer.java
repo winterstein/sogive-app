@@ -6,6 +6,7 @@ import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeConfig;
+import org.sogive.server.payment.StripePlugin;
 
 import com.winterwell.utils.Dependency;
 import com.winterwell.utils.Utils;
@@ -16,11 +17,13 @@ import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.data.XId;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.FlexiGson;
 import com.google.gson.FlexiGsonBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,6 +50,8 @@ public class SoGiveServer {
 	public static void main(String[] args) {
 		SoGiveConfig config = getConfig(new SoGiveConfig(), args);
 		StripeConfig sc = getConfig(new StripeConfig(), args); 
+		Log.d("stripe.config", FlexiGson.toJSON(sc));
+		Log.d("stripe.config.key", StripePlugin.secretKey());
 		
 		logFile = new LogFile(new File("sogive.log"))
 					// keep 8 weeks of 1 week log files ??revise this??
