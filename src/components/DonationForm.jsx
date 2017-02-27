@@ -32,7 +32,7 @@ class DonationForm extends React.Component {
 
 		// donated?
 		if (donationForm.complete) {
-			return (<ThankYouAndShare user={user} charity={charity} />);
+			return (<ThankYouAndShare user={user} charity={charity} donationForm={donationForm} project={project} />);
 		}
 
 		const donateButton = donationForm.ready ? (
@@ -60,6 +60,7 @@ class DonationForm extends React.Component {
 				/>
 				{ giftAidForm }
 				{ donateButton }
+				<ThankYouAndShare charity={charity} />
 			</div>
 		);
 	}
@@ -70,11 +71,25 @@ class ThankYouAndShare extends React.Component {
 
 	constructor(...params) {
 		super(...params);
-		const { user, charity } = this.props;
-		// TODO: Turn impact data into "for funding $charity to $DO_THING"
-		const shareText = (user && user.name) ?
-			`SoGive thanks ${user.name} for funding ${charity.name}`
-			: `I used SoGive to fund ${charity.name}!`;
+		const { user, charity, donationForm, project} = this.props;
+
+		let impact;
+		if (project && project.impacts) {
+			const unitImpact = project.impacts[0];
+			const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
+			impact = printer.prettyNumber(impactPerUnitMoney * donationForm.amount, 2) + ' ' + unitImpact.name;
+		}
+
+		let shareText;
+		if (user && user.name) {
+			if (impact) {
+				shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in? https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+			} else {
+				shareText = `${charity.name} and SoGive thank ${user.name} for their donation - why not join in? https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+			}
+		} else {
+			shareText = `Help to fund ${charity.name} and see the impact of your donations on SoGive: https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+		}
 
 		this.state = {
 			shareText,
