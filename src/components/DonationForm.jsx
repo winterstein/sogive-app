@@ -60,7 +60,7 @@ class DonationForm extends React.Component {
 				/>
 				{ giftAidForm }
 				{ donateButton }
-				<ThankYouAndShare charity={charity} />
+				<ThankYouAndShare thanks={false} charity={charity} />
 			</div>
 		);
 	}
@@ -71,7 +71,7 @@ class ThankYouAndShare extends React.Component {
 
 	constructor(...params) {
 		super(...params);
-		const { user, charity, donationForm, project} = this.props;
+		const { thanks, user, charity, donationForm, project} = this.props;
 
 		let impact;
 		if (project && project.impacts) {
@@ -83,12 +83,12 @@ class ThankYouAndShare extends React.Component {
 		let shareText;
 		if (user && user.name) {
 			if (impact) {
-				shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in? https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+				shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in?`;
 			} else {
-				shareText = `${charity.name} and SoGive thank ${user.name} for their donation - why not join in? https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+				shareText = `${charity.name} and SoGive thank ${user.name} for their donation - why not join in?`;
 			}
 		} else {
-			shareText = `Help to fund ${charity.name} and see the impact of your donations on SoGive: https://app.sogive.org/#charity?charityId=${charity['@id']}`;
+			shareText = `Help to fund ${charity.name} and see the impact of your donations on SoGive:`;
 		}
 
 		this.state = {
@@ -133,25 +133,30 @@ class ThankYouAndShare extends React.Component {
 	*/
 
 		let url = `${window.location}`;
-		return (<div className='ThankYouAndShare panel-success'>
-			<h3>Thank you for donating!</h3>
 
-			<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
+		const header = thanks ? <h3>Thank you for donating!</h3> : '';
 
-			<textarea
-				className='form-control'
-				onChange={() => { this.onChangeShareText(); }}
-				defaultValue={shareText}
-			/>
+		return (
+			<div className='ThankYouAndShare panel-success'>
+				{ header }
 
-			<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}>
-				<Misc.Logo service='twitter' />
-			</a>
+				<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
 
-			<button className='btn btn-default' onClick={() => { this.shareOnFacebook(); }}>
-				<Misc.Logo service='facebook' />
-			</button>
-		</div>);
+				<textarea
+					className='form-control'
+					onChange={() => { this.onChangeShareText(); }}
+					defaultValue={shareText}
+				/>
+
+				<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}>
+					<Misc.Logo service='twitter' />
+				</a>
+
+				<button className='btn btn-default' onClick={() => { this.shareOnFacebook(); }}>
+					<Misc.Logo service='facebook' />
+				</button>
+			</div>
+		);
 	}
 } // ./ThankYouAndShare
 
