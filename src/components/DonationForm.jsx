@@ -49,7 +49,7 @@ class DonationForm extends React.Component {
 			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
 
-		const giftAidForm = charity.ukBased ? (
+		const giftAidForm = (charity.ukBased && charity.englandWalesCharityRegNum) ? (
 			<GiftAidForm {...donation} handleChange={handleChange} />
 		) : '';
 
@@ -155,7 +155,6 @@ const DonationFormButton = ({onToken, amount}) => {
 	let email = Login.getId('Email');
 	return (
 		<div>
-
 			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
 				image="http://local.sogive.org/img/SoGive-Light-64px.png"
 				email={email}
