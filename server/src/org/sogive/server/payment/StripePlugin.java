@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.jetty.util.ajax.JSON;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
@@ -127,6 +128,7 @@ public class StripePlugin {
 
 	private static String secretKey() {		
 		StripeConfig stripeConfig = Dependency.get(StripeConfig.class);
+		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
 			return stripeConfig.testSecretKey;
 		}
