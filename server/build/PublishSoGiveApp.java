@@ -59,14 +59,14 @@ import jobs.BuildWinterwellProject;
  * copy pasta of {@link PublishDataServer}
  * FIXME rsync is making sub-dirs :(
  */
-public class PublishSoGive extends BuildTask {
+public class PublishSoGiveApp extends BuildTask {
 
 	String server = "app.sogive.org"; // datalog.soda.sh
 	String remoteUser;
 	private String remoteWebAppDir;
 	private File localWebAppDir;
 			
-	public PublishSoGive() throws Exception {
+	public PublishSoGiveApp() throws Exception {
 		this.remoteUser = "winterwell";
 		this.remoteWebAppDir = "/home/winterwell/sogive-app";
 		// local
