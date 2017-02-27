@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeConfig;
 
 import com.winterwell.utils.Dependency;
@@ -87,7 +88,6 @@ public class SoGiveServer {
 	}
 
 	private static void init() {
-
 		// gson
 		GsonBuilder gb;
 		Gson gson = new FlexiGsonBuilder()
@@ -105,7 +105,9 @@ public class SoGiveServer {
 		// client
 		Dependency.setSupplier(ESHttpClient.class, true, 
 				() -> new ESHttpClient(Dependency.get(ESConfig.class))
-				);		
+				);
+		// mappings
+		DB.init();
 	}
 
 

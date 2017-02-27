@@ -57,7 +57,7 @@ public class Donation {
 	/**
 	 * When this donation was made
 	 */
-	Time time = new Time();
+	String time = new Time().toISOString();
 
 	private Map impact;
 
@@ -73,8 +73,8 @@ public class Donation {
 		if (ourFee!=null && otherFees!=null) {
 			transfer = total.minus(ourFee).minus(otherFees);
 		}
-		// make an ID to block repeats
-		long tmin = time.getTime() / TUnit.MINUTE.millisecs;
+		// HACK: make an ID to block repeats within a couple of minutes
+		long tmin = new Time(time).getTime() / (5*TUnit.MINUTE.millisecs);
 		this.id = total.getValue100()+" "+from+" to "+to+" at "+(tmin);
 	}
 

@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'hooru';
 import StripeCheckout from 'react-stripe-checkout';
-import { uid } from 'wwutils';
+import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 import printer from '../utils/printer';
 import NGO from '../data/charity/NGO';
@@ -148,6 +148,7 @@ const DonationFormButton = ({onToken, amount}) => {
 		return <button>Donate</button>;
 	}
 	let email = Login.getId('Email');
+	if (email) email = XId.id(email);
 	return (
 		<div>
 			<StripeCheckout name="SoGive" description="See the impact of your charity donations"

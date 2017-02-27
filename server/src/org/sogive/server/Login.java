@@ -23,6 +23,7 @@ public class Login {
 		Set<String> pkeys = params.keySet();
 		String jwt = state.get(JWT);
 		String as = state.get("as");
+		if (as==null) return null;
 		XId uxid = new XId(as,false);
 		// Now verify it
 //		Map user = verify(jwt); // FIXME
