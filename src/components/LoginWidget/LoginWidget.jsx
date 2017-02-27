@@ -91,7 +91,7 @@ const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
 				</button>
 			</div>
 			<LoginError />
-			<ResetLink verb={verb} setVerbReset={() => handleChange('verb', 'reset')} />
+			{ /* <ResetLink verb={verb} setVerbReset={() => handleChange('verb', 'reset')} /> */}
 		</form>
 	);
 }; // ./EmailSignin
