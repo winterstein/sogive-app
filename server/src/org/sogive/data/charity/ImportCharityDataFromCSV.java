@@ -209,6 +209,15 @@ public class ImportCharityDataFromCSV {
 			
 			ngo.addProject(project);
 			
+			// stash the impact
+			Project repProject = ngo.getRepProject();
+			if (repProject!=null) {
+				List<Output> outputs = repProject.getOutputs();
+				if (outputs!=null) {
+					List<Output> impacts = repProject.getImpact(outputs, MonetaryAmount.pound(1));
+					ngo.put("unitRepImpact", impacts.get(0));
+				}
+			}
 			
 			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
 //			String json = gson.toJson(ngo);		

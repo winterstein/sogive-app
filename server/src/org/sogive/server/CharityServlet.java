@@ -72,60 +72,16 @@ public class CharityServlet {
 		NGO charity = Thing.getThing(json, NGO.class);
 		return charity;
 	}
-
-	public String getImpact(NGO charity, MonetaryAmount amount) {
-		Project project = NGO.getRepProject(charity);
-		doCalcImpacts(charity);
-		List impacts = (List) project.get("impacts");
-		Object impact = impacts.get(0);
-		return Printer.str(impact);
-	}
 	
 	private void doCalcImpacts(NGO charity) {
 		List<Project> projects = charity.getProjects();
 		List impacts = new ArrayList();
 		for (Project project : projects) {
-			List<MonetaryAmount> allinputs = project.getInputs();
 			List<Output> alloutputs = project.getOutputs();	
-			// only the latest year!
-			List<MonetaryAmount> inputs = getLatestYear(allinputs);
 			List<Output> outputs = getLatestYear(alloutputs);
-			// TODO what if the years don't match?
-			MonetaryAmount totalCosts = Containers.first(ma -> "annualCosts".equals(ma.getName()), inputs);
-			MonetaryAmount fundraisingCosts = Containers.first(ma -> "fundraisingCosts".equals(ma.getName()), inputs);
-			MonetaryAmount tradingCosts = Containers.first(ma -> "tradingCosts".equals(ma.getName()), inputs);
-			MonetaryAmount incomeFromBeneficiaries = Containers.first(ma -> "incomeFromBeneficiaries".equals(ma.getName()), inputs);			
-
-			MonetaryAmount cost = totalCosts;
-			if (cost==null) {
-				// can't calc anything
-				continue;
-			}
-			// What should the formula be?
-			// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
-			if (incomeFromBeneficiaries != null) {
-				cost = cost.minus(incomeFromBeneficiaries);
-			}
-			// Remove fundraising costs. 
-			// This feels dubious to me. I think fundraising is part of how well a charity operates,
-			// and it is likely that some of your donation will be re-invested in fundraising. 
-			// The business equivalent would be to exclude marketing costs when looking at likely dividends
-			// -- which would be odd. ^Dan
-			// TODO make this a user-configurable setting.
-			// TODO test what other people think.
-			if (fundraisingCosts != null) {
-				cost = cost.minus(fundraisingCosts);
-			}
-			if (tradingCosts != null) {
-				cost = cost.minus(tradingCosts);
-			}
-			// a unit is
-			double unitFraction = 1.0 /  cost.getValue();
-			for(Output output : outputs) {
-				Output unitImpact = output.scale(unitFraction);
-				unitImpact.put("price", new MonetaryAmount(1));
-				impacts.add(unitImpact);
-			}
+			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
+			List<Output> unitImpact = project.getImpact(outputs, unitMoney);				
+			impacts.add(unitImpact);
 			project.put("impacts", impacts);
 		}		
 	}

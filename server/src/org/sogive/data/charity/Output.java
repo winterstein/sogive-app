@@ -8,7 +8,7 @@ import com.winterwell.utils.StrUtils;
 public class Output extends Thing<Output> {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	public static boolean match(Output a, Output b) {
 		if (a==b) return true;
 		if (a.getName()!=null && b.getName()!=null) {

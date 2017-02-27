@@ -38,7 +38,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		return MathUtils.toNum(v);
 	}
 
-	public Integer getInteger(String key) {
+	public final Integer getInteger(String key) {
 		Object v = get(key);
 		if (v==null) return null;
 		if (v instanceof Number) return ((Number) v).intValue();
@@ -113,6 +113,10 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		if (end!=null) {
 			put("year", end.getYear());
 		}
+	}
+	
+	public final Integer getYear() {
+		return getInteger("year");
 	}
 
 	public static <X extends Thing> List<X> getThings(List list, Class<X> klass) {

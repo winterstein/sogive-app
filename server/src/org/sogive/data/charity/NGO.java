@@ -46,11 +46,10 @@ public class NGO extends Thing<NGO> {
 		return ps;
 	}
 
-	@Deprecated // TODO
-	public static Project getRepProject(NGO charity) {
-		List<Project> projects = charity.getProjects();
-		throw new TodoException();
-//		// Representative and ready for use?
+	
+	public Project getRepProject() {
+		List<Project> projects = getProjects();
+		// Representative and ready for use?
 //		List<Project> repProjects = Containers.filter(p -> (p.isRep && p.ready), projects);
 //		
 ////		// Get most recent, if more than one

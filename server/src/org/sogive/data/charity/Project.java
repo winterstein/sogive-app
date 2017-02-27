@@ -6,6 +6,7 @@ package org.sogive.data.charity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import com.google.gson.JsonIOException;
@@ -18,6 +19,7 @@ import com.google.schemaorg.core.CoreFactory;
 import com.google.schemaorg.core.DataFeed;
 import com.google.schemaorg.core.NGO;
 import com.google.schemaorg.core.NGO.Builder;
+import com.winterwell.utils.Printer;
 import com.winterwell.utils.containers.Containers;
 
 /**
@@ -91,8 +93,48 @@ public class Project extends Thing<Project> {
 		List<Output> os = addOrMerge("outputs", ac, Output::match);
 	}
 	
-	public Integer getYear() {
-		return getInteger("year");
+	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
+		Optional<Integer> year = outputs.stream().map(o -> o.getYear()).max(Integer::compare);
+		List<MonetaryAmount> allinputs = getInputs();
+		// only the latest year - but a Project is single year
+		// TODO what if the years don't match?
+		MonetaryAmount totalCosts = Containers.first(ma -> "annualCosts".equals(ma.getName()), inputs);
+		MonetaryAmount fundraisingCosts = Containers.first(ma -> "fundraisingCosts".equals(ma.getName()), inputs);
+		MonetaryAmount tradingCosts = Containers.first(ma -> "tradingCosts".equals(ma.getName()), inputs);
+		MonetaryAmount incomeFromBeneficiaries = Containers.first(ma -> "incomeFromBeneficiaries".equals(ma.getName()), inputs);			
+
+		MonetaryAmount cost = totalCosts;
+		if (cost==null) {
+			// can't calc anything
+			continue;
+		}
+		// What should the formula be?
+		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
+		if (incomeFromBeneficiaries != null) {
+			cost = cost.minus(incomeFromBeneficiaries);
+		}
+		// Remove fundraising costs. 
+		// This feels dubious to me. I think fundraising is part of how well a charity operates,
+		// and it is likely that some of your donation will be re-invested in fundraising. 
+		// The business equivalent would be to exclude marketing costs when looking at likely dividends
+		// -- which would be odd. ^Dan
+		// TODO make this a user-configurable setting.
+		// TODO test what other people think.
+		if (fundraisingCosts != null) {
+			cost = cost.minus(fundraisingCosts);
+		}
+		if (tradingCosts != null) {
+			cost = cost.minus(tradingCosts);
+		}
+		// a unit is
+		double unitFraction = 1.0 /  cost.getValue();
+		for(Output output : outputs) {
+			Output unitImpact = output.scale(unitFraction);
+			unitImpact.put("price", new MonetaryAmount(1));
+			impacts.add(unitImpact);
+		}
+		// done
+		return impacts;
 	}
 
 }
