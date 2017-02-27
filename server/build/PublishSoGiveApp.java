@@ -24,6 +24,7 @@ import com.winterwell.bob.BobSettings;
 import com.winterwell.bob.BuildTask;
 import com.winterwell.bob.tasks.EclipseClasspath;
 import com.winterwell.bob.tasks.GitTask;
+import com.winterwell.bob.tasks.JarTask;
 import com.winterwell.bob.tasks.RSyncTask;
 import com.winterwell.bob.tasks.RemoteTask;
 import com.winterwell.bob.tasks.SCPTask;
@@ -199,6 +200,10 @@ public class PublishSoGiveApp extends BuildTask {
 					FileUtils.copy(jar, localLib);
 				}
 			}
+			
+			// This jar
+			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));
+			jarTask.run();
 			
 			// Do the rsync!
 			String from = localLib.getAbsolutePath();
