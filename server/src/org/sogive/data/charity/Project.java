@@ -22,6 +22,7 @@ import com.google.schemaorg.core.NGO.Builder;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.log.Log;
 
 /**
  * @author daniel
@@ -95,7 +96,7 @@ public class Project extends Thing<Project> {
 	}
 	
 	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
-		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
+//		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
@@ -109,12 +110,17 @@ public class Project extends Thing<Project> {
 			// can't calc anything
 			return null;
 		}
-		assert cost.getValue() > 0 : cost;
+		if (cost.getValue()==0) {
+			Log.i("data", "0 cost for "+this);
+			return null;
+		}
+//		assert cost.getValue() > 0 : cost+" "+this;
 		// What should the formula be?
 		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
 		if (incomeFromBeneficiaries != null) {
 			cost = cost.minus(incomeFromBeneficiaries);
 		}
+//		assert cost.getValue() > 0 : cost+" "+this;
 		// Remove fundraising costs. 
 		// This feels dubious to me. I think fundraising is part of how well a charity operates,
 		// and it is likely that some of your donation will be re-invested in fundraising. 
@@ -125,12 +131,19 @@ public class Project extends Thing<Project> {
 		if (fundraisingCosts != null) {
 			cost = cost.minus(fundraisingCosts);
 		}
+//		assert cost.getValue() > 0 : cost+" "+this;
 		if (tradingCosts != null) {
 			cost = cost.minus(tradingCosts);
 		}
+//		assert cost.getValue() > 0 : cost+" "+this;
+		
 		// a unit is
 		List impacts = new ArrayList();
 		double unitFraction = 1.0 /  cost.getValue();
+		if (unitFraction <= 0) {
+			Log.w("data", "Negative costs?! "+cost+" "+this);
+			return null;
+		}
 		for(Output output : outputs) {
 			Output unitImpact = output.scale(unitFraction);
 			unitImpact.put("price", new MonetaryAmount(1));

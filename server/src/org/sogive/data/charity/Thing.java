@@ -150,7 +150,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		if (inputs.isEmpty()) return inputs;
 		long max = inputs.stream().map(t -> Utils.or(t.getYear(), 0L)).max(Long::compare).get();
 		if (max==0) return inputs;
-		List<T> yearMatch = Containers.filter(t -> t.getYear() == max, inputs);
+		List<T> yearMatch = Containers.filter(t -> Utils.or(t.getYear(), 0L) == max, inputs);
 		return yearMatch;		
 	}
 	

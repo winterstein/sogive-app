@@ -1,6 +1,7 @@
 package org.sogive.data.charity;
 
 import com.winterwell.utils.MathUtils;
+import com.winterwell.utils.Printer;
 import com.winterwell.utils.time.Time;
 
 public class MonetaryAmount extends Thing<MonetaryAmount> {
@@ -43,7 +44,7 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 
 	@Override
 	public String toString() {
-		return "MonetaryAmount[£" + getValue() + ", name=" + getName() + "]";
+		return "MonetaryAmount[£" + Printer.prettyNumber(getValue()) + ", name=" + getName() + "]";
 	}
 
 	public String getCurrency() {
