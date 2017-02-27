@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jetty.util.ajax.JSON;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
@@ -16,6 +17,7 @@ import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
+import com.google.gson.FlexiGson;
 import com.google.gson.Gson;
 import com.stripe.model.Charge;
 import com.winterwell.es.client.ESHttpClient;
@@ -161,8 +163,9 @@ public class DonationServlet {
 		pu.setDoc(json3);
 		IESResponse resAfter = pu.get().check();
 		String json4 = res.getJson();		
-		
-		JsonResponse output = new JsonResponse(state, donation);
+				
+		Object dobj = JSON.parse(json3);		
+		JsonResponse output = new JsonResponse(state, dobj);
 		WebUtils2.sendJson(output, state);
 	}
 }
