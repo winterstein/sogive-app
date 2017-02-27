@@ -157,7 +157,7 @@ const DonationFormButton = ({onToken, amount}) => {
 		<div>
 
 			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
-				image="http://local.sogive.org/img/SoGive-Light-70px.png"
+				image="http://local.sogive.org/img/SoGive-Light-64px.png"
 				email={email}
 				panelLabel="Donate"
 				amount={amount}
