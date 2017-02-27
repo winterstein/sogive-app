@@ -63,13 +63,19 @@ const donationFormReducer = (state = initialState, action) => {
 	case 'DONATION_REQUESTED':
 		return {
 			...state,
-			pending: true,
+			[action.charityId]: {
+				...(state.charityId),
+				pending: true,
+			},
 		};
 	case 'DONATION_RESPONSE':
 		return {
 			...state,
-			pending: false,
-			complete: true,
+			[action.charityId]: {
+				...(state.charityId),
+				pending: false,
+				complete: true,
+			},
 		};
 	default:
 		return state;
