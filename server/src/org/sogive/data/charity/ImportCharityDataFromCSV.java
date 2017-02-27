@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.sogive.server.CharityServlet;
 
@@ -102,9 +103,50 @@ public class ImportCharityDataFromCSV {
 		ImportCharityDataFromCSV importer = new ImportCharityDataFromCSV(export);
 		int cnt = importer.run();
 		System.out.println(cnt);
+		importer.run2();
 	}
 
 	
+	private void run2() throws InterruptedException, ExecutionException {
+		init();
+		File export = new File("data/stories-images.csv");
+		CSVReader csvr = new CSVReader(export, ',').setNumFields(-1);
+		Printer.out(csvr.next());
+		Gson gson = new GsonBuilder()
+				.setClassProperty("@type")
+				.create();
+		int cnt = 0;
+		for (String[] row : csvr) {
+			// the charity
+			if (Utils.isBlank(row[0])) continue;
+			String story = get(row, 1);
+			String img = get(row, 2);
+			// ignore story source
+			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
+			NGO ngo = CharityServlet.getCharity(ourid);
+			if (ngo==null) {
+				continue;
+			}
+			boolean mod = false;
+			if ( ! Utils.isBlank(img)) {ngo.put(images, img); mod=true;}
+			if (Utils.truthy(story)) {ngo.put(stories, story); mod=true;}
+			// save
+			if (mod) {
+				UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
+//				String json = gson.toJson(ngo);		
+				pi.setDoc(ngo);
+				pi.setDocAsUpsert(true);
+				ListenableFuture<ESHttpResponse> f = pi.execute();
+				f.get().check();				
+			}
+		}		
+		csvr.close();
+	}
+
+	private final String images = "images";
+	private final String stories = "stories";
+
+
 	private File csv;
 	private ESHttpClient client;
 
@@ -166,7 +208,8 @@ public class ImportCharityDataFromCSV {
 			projectName = StrUtils.toCanonical(projectName);
 			Project project = new Project(projectName);
 			project.put("analyst", analyst);
-			project.put("stories", get(row, col("stories")));
+			String story = get(row, col("stories"));
+			if (Utils.truthy(story)) project.put(stories, story);
 			project.put("stories_src", get(row, col("stories - source")));
 			Time start = Time.of(get(row, col("start date")));
 			Time end = Time.of(get(row, col("end date")));
@@ -178,7 +221,8 @@ public class ImportCharityDataFromCSV {
 				if (year!=null) citation.put("year", year);
 				project.addOrMerge("data-src", citation);
 			}
-			project.put("images", get(row, col("photo image")));
+			Object img = get(row, col("photo image"));
+			if (img!=null) project.put(images, img);
 			project.put("location", get(row, col("location")));
 			
 			// inputs
@@ -252,15 +296,20 @@ public class ImportCharityDataFromCSV {
 
 	private void dumpFileHeader(CSVReader csvr) {
 		String[] row1 = csvr.next();
+		Printer.out(row1);
 		HEADER_ROW = Containers.apply(StrUtils::toCanonical, Arrays.asList(csvr.next()));
+		Printer.out(HEADER_ROW);
 		String[] row3 = csvr.next();
-		String[] row4 = csvr.next();		
+		Printer.out(row3);
+//		String[] row4 = csvr.next();		
 		for(int i=0; i<100; i++) {
 			String name = Containers.get(HEADER_ROW, i);
 			String desc = Containers.get(row3, i);
-			String eg = Containers.get(row4, i);
+//			String eg = Containers.get(row4, i);
 			if (Utils.isBlank(name)) continue;
-			Printer.out(i+"\t"+name+"\t"+desc+"\t"+eg);			
+			Printer.out(i+"\t"+name+"\t"+desc
+//					+"\t"+eg
+					);			
 		}
 		
 	}
