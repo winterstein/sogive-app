@@ -18,9 +18,9 @@ import { donate, updateForm, initDonationForm } from './DonationForm-actions';
 class DonationForm extends React.Component {
 
 	render() {
-		const { user, charity, donation, handleChange, initDonation, sendDonation } = this.props;
+		const { user, charity, donationForm, handleChange, initDonation, sendDonation } = this.props;
 
-		if (!donation) {
+		if (!donationForm) {
 			initDonation();
 			return <div />;
 		}
@@ -31,33 +31,21 @@ class DonationForm extends React.Component {
 		assert(project, charity);
 
 		// donated?
-		if (donation.complete) {
+		if (donationForm.complete) {
 			return (<ThankYouAndShare user={user} charity={charity} />);
 		}
 
-		const donationParams = {
-			action: 'donate',
-			charityId: charity['@id'],
-			currency: 'GBP',
-			giftAid: donation.giftAid,
-			impact: donation.impact,
-			total100: Math.floor(donation.amount * 100),
-			name: donation.name,
-			address: donation.address,
-			postcode: donation.postcode,
-		};
-
-		const donateButton = donation.ready ? (
+		const donateButton = donationForm.ready ? (
 			<DonationFormButton
-				amount={Math.floor(donation.amount * 100)}
-				onToken={(stripeResponse) => { sendDonation(donationParams, stripeResponse); }}
+				amount={Math.floor(donationForm.amount * 100)}
+				onToken={(stripeResponse) => { sendDonation(charity, donationForm, stripeResponse); }}
 			/>
 		) : (
 			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
 
 		const giftAidForm = (charity.ukBased && charity.englandWalesCharityRegNum) ? (
-			<GiftAidForm {...donation} handleChange={handleChange} />
+			<GiftAidForm {...donationForm} handleChange={handleChange} />
 		) : '';
 
 		return (
@@ -67,7 +55,7 @@ class DonationForm extends React.Component {
 					impacts={project.impacts}
 					charity={charity}
 					project={project}
-					amount={donation.amount}
+					amount={donationForm.amount}
 					handleChange={handleChange}
 				/>
 				{ giftAidForm }
@@ -191,7 +179,7 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 		<span key={'donate_'+price}>
 			<DonationAmount
 				price={price}
-				selected={price===amount}
+				selected={price === amount}
 				unitImpact={unitImpact}
 				handleChange={handleChange}
 			/>
@@ -243,13 +231,13 @@ const DonationList = ({donations}) => {
 
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
-	donation: state.donationForm[ownProps.charity['@id']],
+	donationForm: state.donationForm[ownProps.charity['@id']],
 	user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
 	handleChange: (field, value) => dispatch(updateForm(ownProps.charity['@id'], field, value)),
-	sendDonation: (charityId, stripeResponse, amount) => dispatch(donate(dispatch, charityId, stripeResponse, amount)),
+	sendDonation: (charity, donationForm, stripeResponse) => dispatch(donate(dispatch, charity, donationForm, stripeResponse)),
 	initDonation: () => dispatch(initDonationForm(ownProps.charity['@id'])),
 });
 

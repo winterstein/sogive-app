@@ -71,13 +71,19 @@ Misc.Checkbox = ({on, label, onChange}) => (
 );
 
 Misc.ImpactDesc = ({unitImpact, amount}) => {
-	if (unitImpact && unitImpact.number && unitImpact.name) {
+	if (unitImpact && unitImpact.number && unitImpact.name && unitImpact.price) {
 		// more people?
+		let peepText = '';
 		if (unitImpact.number*amount < 0.5) {
 			let peeps = 1 / (unitImpact.number * amount);
-			return <div>{printer.prettyNumber(peeps, 1)} people donating <Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount * peeps, 2)} ${unitImpact.name}`}</div>;
+			peepText = printer.prettyNumber(peeps, 1)+' people donating ';
 		}
-		return <div><Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}</div>;
+		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
+		return (
+			<div>
+				<strong>{peepText}<Misc.Money amount={amount} /></strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount, 2)}</strong> {unitImpact.name}
+			</div>
+		);
 	}
 	return null;
 };

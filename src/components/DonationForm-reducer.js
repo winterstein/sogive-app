@@ -23,7 +23,6 @@ const checkDonationForm = (state, action) => {
 		[field]: value,
 	};
 
-
 	charityState.ready = (
 		// have to be donating something
 		(
