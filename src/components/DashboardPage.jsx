@@ -56,17 +56,17 @@ const DonationList = ({donations}) => {
 };
 
 const Donation = ({donation}) => {
-	let niceName = donation.to.name.split('-');
+	let niceName = XId.id(donation.to).split('-');
 	niceName = niceName.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
 	niceName = niceName.join(' ');
-	const impact = donation.impact? <div>Your donation funded {donation.impact.count} {donation.impact.unit}</div> : null;
+	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
 		<div className='well'>
-			<Misc.Time time={donation.time} />
-			You donated <Misc.Money precision={false} amount={donation.total} /> to <a href={`#charity?charityId=${donation.to.name}`}>{niceName}</a>.
-			{impact}.
-			GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
-			<small>Payment ID: {donation.paymentId}</small>
+			<Misc.Time time={donation.time} /> &nbsp;
+			You donated <Misc.Money precision={false} amount={donation.total} /> to <a href={'#charity?charityId='+XId.id(donation.to)}>{niceName}</a>.
+			{impact}
+			<div>GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
+			<small>Payment ID: {donation.paymentId}</small></div>
 		</div>
 	);
 };
