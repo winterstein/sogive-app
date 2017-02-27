@@ -188,9 +188,8 @@ const DonationFormButton = ({onToken, amount}) => {
 const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 	let unitImpact = impacts && impacts[0];
 	let damounts = _.map(options, price => (
-		<span>
+		<span key={'donate_'+price}>
 			<DonationAmount
-				key={'donate_'+price}
 				price={price}
 				selected={price===amount}
 				unitImpact={unitImpact}
