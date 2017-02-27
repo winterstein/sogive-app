@@ -1,6 +1,5 @@
 import ServerIO from '../plumbing/ServerIO';
 
-// eslint-disable-next-line
 export const donate = (dispatch, donationParams, stripeResponse) => {
 	const params = {
 		...donationParams,
@@ -27,3 +26,15 @@ export const donate = (dispatch, donationParams, stripeResponse) => {
 		params,
 	};
 };
+
+export const updateForm = (charityId, field, value) => ({
+	type: 'DONATION_FORM_UPDATE',
+	charityId,
+	field,
+	value,
+});
+
+export const initDonationForm = (charityId) => ({
+	type: 'DONATION_FORM_INIT',
+	charityId,
+});

@@ -12,14 +12,18 @@ import NGO from '../data/charity/NGO';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 
-import { donate } from './DonationForm-actions';
-import { updateField } from './genericActions';
+import { donate, updateForm, initDonationForm } from './DonationForm-actions';
 
 
 class DonationForm extends React.Component {
 
 	render() {
-		const { user, charity, donation, handleChange, sendDonation } = this.props;
+		const { user, charity, donation, handleChange, initDonation, sendDonation } = this.props;
+
+		if (!donation) {
+			initDonation();
+			return <div />;
+		}
 
 		assert(NGO.isa(charity), charity);
 
@@ -38,6 +42,9 @@ class DonationForm extends React.Component {
 			giftAid: donation.giftAid,
 			impact: donation.impact,
 			total100: Math.floor(donation.amount * 100),
+			name: donation.name,
+			address: donation.address,
+			postcode: donation.postcode,
 		};
 
 		const donateButton = donation.ready ? (
@@ -235,13 +242,14 @@ const DonationList = ({donations}) => {
 
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
-	donation: state.donationForm,
+	donation: state.donationForm[ownProps.charity['@id']],
 	user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-	handleChange: (field, value) => dispatch(updateField('DONATION_FORM_UPDATE', field, value)),
+	handleChange: (field, value) => dispatch(updateForm(ownProps.charity['@id'], field, value)),
 	sendDonation: (charityId, stripeResponse, amount) => dispatch(donate(dispatch, charityId, stripeResponse, amount)),
+	initDonation: () => dispatch(initDonationForm(ownProps.charity['@id'])),
 });
 
 export default connect(

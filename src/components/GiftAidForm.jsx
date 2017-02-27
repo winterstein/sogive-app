@@ -55,9 +55,7 @@ const GiftAidForm = ({
 				onChange={({ target }) => { handleChange('postcode', target.value); }}
 				value={postcode}
 			/>
-			<Checkbox checked={giftAidAddressConsent} onChange={(event) => { handleChange('giftAidAddressConsent', event.target.checked); }}>
-				I understand that my name and address may be shared with the charity for processing Gift Aid.
-			</Checkbox>
+			<small>I understand that my name and address may be shared with the charity for processing Gift Aid.</small>
 		</FormGroup>
 	) : '';
 

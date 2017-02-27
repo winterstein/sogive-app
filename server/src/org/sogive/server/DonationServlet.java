@@ -33,6 +33,7 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.IntField;
 
 /**
@@ -104,15 +105,24 @@ public class DonationServlet {
 		XId charity = new XId(state.get("charityId"), "sogive");
 		String currency = state.get("currency");
 		Integer total100 = state.get(new IntField("total100"));
-		MonetaryAmount ourFee= null;
-		MonetaryAmount otherFees= null;
-		boolean giftAid = false;
+		MonetaryAmount ourFee = null;
+		MonetaryAmount otherFees = null;
+		boolean giftAid = state.get(new Checkbox("giftAid"));
 		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 		
 		String impact = state.get("impact");
 		if (impact!=null) {
 			donation.setImpact(new ArrayMap("text", impact));
+		}
+		
+		if (giftAid) {
+			String name = state.get("name");
+			String address = state.get("address");
+			String postcode = state.get("postcode");
+			if (name != null && address != null && postcode != null) {
+				donation.setGiftAid(name, address, postcode);
+			}
 		}
 		
 		// Store in the database (acts as a form of lock)
@@ -148,6 +158,4 @@ public class DonationServlet {
 		JsonResponse output = new JsonResponse(state, donation);
 		WebUtils2.sendJson(output, state);
 	}
-
-	
 }

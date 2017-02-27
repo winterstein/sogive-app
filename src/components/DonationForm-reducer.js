@@ -1,5 +1,6 @@
+const initialState = {};
 
-const initialState = {
+const initialPerCharityState = {
 	amount: 10,
 	giftAid: false,
 	giftAidTaxpayer: false,
@@ -9,47 +10,57 @@ const initialState = {
 	name: '',
 	address: '',
 	postcode: '',
-	giftAidAddressConsent: false,
 	ready: true,
 	pending: false,
 	complete: false,
 };
 
 const checkDonationForm = (state, action) => {
-	const { field, value } = action;
+	const { charityId, field, value } = action;
 
-	const newState = {
-		...state,
+	const charityState = {
+		...initialPerCharityState,
+		...state[charityId],
 		[field]: value,
 	};
 
-	newState.ready = (
+
+	charityState.ready = (
 		// have to be donating something
 		(
-			newState.amount &&
-			newState.amount > 0
+			charityState.amount &&
+			charityState.amount > 0
 		) &&
-		// if gift-aiding, must have checked all confirmations
+		// if gift-aiding, must have checked all confirmations & supplied name/address
 		(
-			!newState.giftAid ||
+			!charityState.giftAid ||
 			(
-				newState.giftAidTaxpayer &&
-				newState.giftAidOwnMoney &&
-				newState.giftAidNoCompensation &&
-				newState.giftAidNoLottery &&
-				(newState.name.trim().length > 0) &&
-				(newState.address.trim().length > 0) &&
-				(newState.postcode.trim().length > 0) &&
-				newState.giftAidAddressConsent
+				charityState.giftAidTaxpayer &&
+				charityState.giftAidOwnMoney &&
+				charityState.giftAidNoCompensation &&
+				charityState.giftAidNoLottery &&
+				(charityState.name.trim().length > 0) &&
+				(charityState.address.trim().length > 0) &&
+				(charityState.postcode.trim().length > 0)
 			)
 		)
 	);
+
+	const newState = {
+		...state,
+		[charityId]: charityState,
+	};
 
 	return newState;
 };
 
 const donationFormReducer = (state = initialState, action) => {
 	switch (action.type) {
+	case 'DONATION_FORM_INIT':
+		return {
+			...state,
+			[action.charityId]: initialPerCharityState,
+		};
 	case 'DONATION_FORM_UPDATE':
 		return checkDonationForm(state, action);
 	case 'DONATION_REQUESTED':
