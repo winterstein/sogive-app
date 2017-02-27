@@ -39,11 +39,20 @@ class CharityPage extends React.Component {
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}
-		let projects = charity.projects;
+		let allprojects = charity.projects;
 		// split out overall vs projects
-		const overalls = _.filter(projects, p => Project.name(p) === 'overall');
-		projects = _.filter(projects, p => Project.name(p) !== 'overall');
+		const overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
+		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
+		// latest only
 		const overall = Project.getLatest(overalls);		
+		let oldProjects = _.filter(projectProjects, p => p.year !== overall.year);
+		let currentProjects = _.filter(projectProjects, p => p.year === overall.year);
+		// sort by cost, biggest first
+		currentProjects = _.sortBy(currentProjects, p => {
+			let annualCost = _.find(p.inputs, pi => pi.name==='annualCosts');
+			return annualCost? -annualCost.value : 0;
+		});
+
 		// page pieces
 		const tags = charity.tags && (
 			<div>
@@ -69,8 +78,9 @@ class CharityPage extends React.Component {
 			</p>
 		);
 		// TODO not if there's only overall		
-		const projectsDiv = yessy(projects)? <div><h2>Projects</h2><ProjectList projects={projects} charity={charity} /></div> : null;
-		const overallDiv = <ProjectPanel project={overall} charity={charity} />;
+		const projectsDiv = yessy(currentProjects)? <div><h2>Projects</h2><ProjectList projects={currentProjects} charity={charity} /></div> : null;
+		const oldProjectsDiv = yessy(oldProjects)? <div><h2>Old Projects</h2><ProjectList projects={oldProjects} charity={charity} /></div> : null;
+		const overallDiv = <ProjectPanel project={overall} charity={charity} />;		
 		// put it together
 		return (
 			<div className='page CharityPage'>
@@ -91,6 +101,7 @@ class CharityPage extends React.Component {
 				</Panel>
 				{overallDiv}
 				{projectsDiv}
+				{oldProjectsDiv}
 			</div>
 		);
 	}
