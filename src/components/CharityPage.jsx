@@ -87,7 +87,7 @@ class CharityPage extends React.Component {
 			<div className='page CharityPage'>
 				<PageMetaInfo charity={charity} />
 				<Panel header={<h2>Charity Profile</h2>}>
-					<Image src={charity.logo} responsive thumbnail className="pull-right" />
+					<Image src={charity.logo} responsive thumbnail className="pull-right charity-logo" />
 					<h2>{charity.name}</h2>
 
 					<div ><small><a href={'/#charity/'+charity['@id']}>{charity.id}</a></small></div>
@@ -134,16 +134,18 @@ const COSTNAMES = {
 const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
-	return (<Panel header={<h3>{project.name} {project.year}</h3>}>
-		<p dangerouslySetInnerHTML={{ __html: project.stories }} />
-		<div className='inputs'><h4>Inputs</h4>
-			{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output}/></div>)}
-		</div>
-		<div className='outputs'><h4>Outputs</h4>
-			{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
-		</div>
-		<Citations thing={project} />
-	</Panel>);
+	return (
+		<Panel header={<h3>{project.name}: {project.year}</h3>}>
+			<p dangerouslySetInnerHTML={{ __html: project.stories }} />
+			<div className='inputs'><h4>Inputs</h4>
+				{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+			</div>
+			<div className='outputs'><h4>Outputs</h4>
+				{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+			</div>
+			<Citations thing={project} />
+		</Panel>
+	);
 };
 
 
