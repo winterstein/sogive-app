@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { assert } from 'sjtest';
-import _ from 'lodash';
+import {assert} from 'sjtest';
 
-import printer from '../utils/printer';
-import C from '../C';
+import printer from '../utils/printer.js';
+import C from '../C.js';
+import _ from 'lodash';
 
 const Misc = {};
 
@@ -35,7 +35,7 @@ Misc.Money = ({amount, precision}) => {
 Misc.Time = ({time}) => {
 	try {
 		if (_.isString(time)) {
-			return <span>{new Date(time).toLocaleDateString()}</span>;
+			return <span>{new Date(time).toLocaleDateString()}</span>;			
 		}
 		if (time.ut) {
 			return <span>{new Date(time.ut).toLocaleDateString()}</span>;
@@ -72,11 +72,12 @@ Misc.Checkbox = ({on, label, onChange}) => (
 
 Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.name) {
-		return (
-			<div>
-				<Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}
-			</div>
-		);
+		// more people?
+		if (unitImpact.number*amount < 0.5) {
+			let peeps = 1 / (unitImpact.number * amount);
+			return <div>{printer.prettyNumber(peeps, 1)} people donating <Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount * peeps, 2)} ${unitImpact.name}`}</div>;
+		}
+		return <div><Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}</div>;
 	}
 	return null;
 };
