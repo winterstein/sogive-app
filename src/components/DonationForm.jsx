@@ -122,7 +122,8 @@ class ThankYouAndShare extends React.Component {
 	}
 
 	render() {
-		const {shareText} = this.state;
+		const { thanks } = this.props;
+		const { shareText } = this.state;
 	/*
 	<div className="fb-share-button"
 		data-href={url}
