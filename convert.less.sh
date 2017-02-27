@@ -1,6 +1,8 @@
 # !/bin/bash
 
-for file in /home/winterwell/sogive-app/web/style/*.less; do
+USER=`whoami`
+
+for file in /home/$USER/winterwell/sogive-app/web/style/*.less; do
 	if [ -e "$file" ]; then
 		lessc "$file" "${file%.less}.css"
 	else
