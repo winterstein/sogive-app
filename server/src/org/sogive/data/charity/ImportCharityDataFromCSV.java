@@ -169,7 +169,7 @@ public class ImportCharityDataFromCSV {
 			// the charity
 			if (Utils.isBlank(row[0])) continue;
 			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
-//			if ( ! ourid.equals("solar-aid")) continue;
+			if ( ! ourid.contains("rnli")) continue;
 			String desc = Containers.get(row, col("desc"));
 			String regNum = Containers.get(row, col("reg num"));
 			NGO ngo = CharityServlet.getCharity(ourid);

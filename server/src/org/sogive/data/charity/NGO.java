@@ -50,7 +50,7 @@ public class NGO extends Thing<NGO> {
 	public Project getRepProject() {
 		List<Project> projects = getProjects();		
 		// Representative and ready for use?
-//		List<Project> repProjects = Containers.filter(p -> (p.isRep && p.ready), projects);
+		List<Project> repProjects = Containers.filter(p -> (p.isRep() && p.isReady()), projects);
 //		
 ////		// Get most recent, if more than one
 ////		let repProject = repProjects.reduce((best, current) => {

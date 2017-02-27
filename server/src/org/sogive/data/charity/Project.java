@@ -20,6 +20,7 @@ import com.google.schemaorg.core.DataFeed;
 import com.google.schemaorg.core.NGO;
 import com.google.schemaorg.core.NGO.Builder;
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 
 /**
@@ -137,5 +138,11 @@ public class Project extends Thing<Project> {
 		// done
 		return impacts;
 	}
-
+	public boolean isReady() {
+		return Utils.truthy(get("ready"));
+	}
+	public boolean isRep() {
+		Object ir = get("isRep");
+		return Utils.truthy(ir);
+	}
 }
