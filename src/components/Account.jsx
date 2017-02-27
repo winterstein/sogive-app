@@ -13,6 +13,12 @@ const Account = React.createClass({
         return (
             <div className=''>
                 <h2>My Account</h2>
+				<h3>In development...</h3>
+				<p>Thank you for joining SoGive at this early stage. 
+					This is our first release, and there's still lots of work to do.
+					By the way, we release all our code as open-source. If you would
+					like to contribute to building SoGive, please get in touch.
+				</p>
             </div>
         );
     }

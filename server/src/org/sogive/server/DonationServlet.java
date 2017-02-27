@@ -112,7 +112,7 @@ public class DonationServlet {
 		Long total100 = state.get(new LongField("total100"));
 		MonetaryAmount ourFee= null;
 		MonetaryAmount otherFees= null;
-		boolean giftAid = false;
+		boolean giftAid = state.get(new Checkbox("giftAid"));
 		MonetaryAmount total= new MonetaryAmount(total100);
 		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
 		
