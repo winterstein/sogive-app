@@ -48,27 +48,33 @@ public class NGO extends Thing<NGO> {
 
 	
 	public Project getRepProject() {
-		List<Project> projects = getProjects();		
+		List<Project> projects = getProjects();
+		if (Utils.isEmpty(projects)) {
+			return null;
+		}
 		// Representative and ready for use?
-		List<Project> repProjects = Containers.filter(p -> (p.isRep() && p.isReady()), projects);
-//		
-////		// Get most recent, if more than one
-////		let repProject = repProjects.reduce((best, current) => {
-////			return (best.year > current.year) ? best : current;
-////		}, {year: 0});
-//
-//		// ...or fall back.
-//		if ( ! repProject) {
-//			repProject = _.find(ngo.projects, p => p.name === 'overall');
-//		}
-//
-//		if (!repProject) {
-//			repProject = ngo.projects && ngo.projects[0];
-//		}
-//
-//		return repProject;
-//
-		return null;
+		List<Project> projects2 = Containers.filter(p -> p.isReady() && p.isRep(), projects);
+		List<Project> overalls = Containers.filter(p -> p.getName().equals("overall"), projects);
+
+		if ( ! Utils.isEmpty(projects2)) {
+			List<Project> latest = getLatestYear(projects2);
+			assert latest.size() == 1 : latest;
+			return latest.get(0);
+		}
+		if ( ! Utils.isEmpty(overalls)) {
+			List<Project> latest = getLatestYear(overalls);
+			assert latest.size() == 1 : latest;
+			return latest.get(0);
+		}
+		// fallback
+		List<Project> latest = getLatestYear(projects);
+		return latest.get(0);
 	}
 
+	@Override
+	public String toString() {
+		return "NGO[" + getName() + ", id=" + getId() + "]";
+	}
+
+	
 }

@@ -226,14 +226,18 @@ public class ImportCharityDataFromCSV {
 			project.put("location", get(row, col("location")));
 			
 			// inputs
+			List inputs = new ArrayList();
 			for(String cost : new String[]{"annual costs", "fundraising costs", "trading costs", "income from beneficiaries"}) {
 				MonetaryAmount ac = cost(get(row, col(cost)));
 				ac.setPeriod(start, end);
 				String costName = StrUtils.toCamelCase(cost);
-				project.addInput(costName, ac);
+				ac.put("name", costName);
+				inputs.add(ac);
 			}
+			project.put("inputs", inputs);
 			
 			// outputs
+			List outputs = new ArrayList();
 			for(int i=1; i<7; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
@@ -243,8 +247,9 @@ public class ImportCharityDataFromCSV {
 				output1.put("order", i-1);
 				output1.setName(impactUnit);
 				output1.setPeriod(start, end);
-				project.addOutput(output1);
+				outputs.add(output1);
 			}
+			project.put("outputs", outputs);
 			
 			project.put("ready", ready);
 			project.put("isRep", isRep);
@@ -256,9 +261,9 @@ public class ImportCharityDataFromCSV {
 			// stash the impact
 			Project repProject = ngo.getRepProject();
 			if (repProject!=null) {
-				List<Output> outputs = repProject.getOutputs();
-				if (outputs!=null) {
-					List<Output> impacts = repProject.getImpact(outputs, MonetaryAmount.pound(1));
+				List<Output> repoutputs = repProject.getOutputs();
+				if (repoutputs!=null) {
+					List<Output> impacts = repProject.getImpact(repoutputs, MonetaryAmount.pound(1));
 					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 				}
 			}
@@ -286,6 +291,7 @@ public class ImportCharityDataFromCSV {
 			ci = HEADER_ROW.indexOf(hs.get(0));
 			cols.put(colname, ci);			
 		}
+		String h = HEADER_ROW.get(ci);
 		return ci;
 	}
 

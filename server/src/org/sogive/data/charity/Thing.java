@@ -145,5 +145,13 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 			throw Utils.runtime(ex);
 		}
 	}
+
+	public static <T extends Thing> List<T> getLatestYear(List<T> inputs) {
+		if (inputs.isEmpty()) return inputs;
+		int max = inputs.stream().map(t -> Utils.or(t.getYear(), 0)).max(Integer::compare).get();
+		if (max==0) return inputs;
+		List<T> yearMatch = Containers.filter(t -> t.getYear() == max, inputs);
+		return yearMatch;		
+	}
 	
 }

@@ -109,6 +109,7 @@ public class Project extends Thing<Project> {
 			// can't calc anything
 			return null;
 		}
+		assert cost.getValue() > 0 : cost;
 		// What should the formula be?
 		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
 		if (incomeFromBeneficiaries != null) {

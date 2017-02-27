@@ -78,20 +78,12 @@ public class CharityServlet {
 		List impacts = new ArrayList();
 		for (Project project : projects) {
 			List<Output> alloutputs = project.getOutputs();	
-			List<Output> outputs = getLatestYear(alloutputs);
+			List<Output> outputs = Thing.getLatestYear(alloutputs);
 			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
 			List<Output> unitImpact = project.getImpact(outputs, unitMoney);				
 			impacts.add(unitImpact);
 			project.put("impacts", impacts);
 		}		
-	}
-
-	private <T extends Thing> List<T> getLatestYear(List<T> inputs) {
-		if (inputs.isEmpty()) return inputs;
-		double max = inputs.stream().map(t -> Utils.or(t.getDouble("year"), 0.0)).max(Double::compare).get();
-		if (max==0) return inputs;
-		List<T> yearMatch = Containers.filter(t -> t.getDouble("year") == max, inputs);
-		return yearMatch;
 	}
 
 }

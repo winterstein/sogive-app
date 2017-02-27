@@ -13,7 +13,7 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	 * 
 	 * @param value100 The pence / cents. This is to avoid rounding errors.
 	 */
-	public MonetaryAmount(int value100) {
+	public MonetaryAmount(long value100) {
 		// ISO 4217 £
 		put("currency", "GBP");
 		put("value", value100/100.0);
@@ -30,15 +30,21 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 		return MathUtils.toNum(get("value"));
 	}
 	
-	public int getValue100() {
-		return ((Number) get("value100")).intValue();
+	public long getValue100() {
+		return ((Number) get("value100")).longValue();
 	}
 
 
 	public static MonetaryAmount pound(double number) {
-		return new MonetaryAmount((int) (number*100));
+		return new MonetaryAmount((long) (number*100));
 	}
 
+	
+
+	@Override
+	public String toString() {
+		return "MonetaryAmount[£" + getValue() + ", name=" + getName() + "]";
+	}
 
 	public String getCurrency() {
 		return (String) get("currency");
