@@ -33,17 +33,20 @@ export const donate = (dispatch, charity, donationForm, stripeResponse) => {
 		// Action dispatched on server response
 		dispatch({
 			type: 'DONATION_RESPONSE',
+			charityId: charity['@id'],
 			response,
 		});
 	}, function(error) {
 		dispatch({
 			type: 'DONATION_RESPONSE',
+			charityId: charity['@id'],
 			error,
 		});
 	});
 	// Action dispatched immediately
 	return {
 		type: 'DONATION_REQUESTED',
+		charityId: charity['@id'],
 		donationParams,
 	};
 };
