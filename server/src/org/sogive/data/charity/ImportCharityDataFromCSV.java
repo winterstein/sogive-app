@@ -119,7 +119,7 @@ public class ImportCharityDataFromCSV {
 		for (String[] row : csvr) {
 			// the charity
 			if (Utils.isBlank(row[0])) continue;
-			String story = get(row, 1);
+			String story = StrUtils.normalisePunctuation(get(row, 1));
 			String img = get(row, 2);
 			// ignore story source
 			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
@@ -175,7 +175,7 @@ public class ImportCharityDataFromCSV {
 			NGO ngo = CharityServlet.getCharity(ourid);
 			if (ngo==null) ngo = new NGO(ourid);
 			ngo.put(ngo.name, row[0]);
-			ngo.put("description", desc);
+			ngo.put("description", StrUtils.normalisePunctuation(desc));
 			ngo.put("englandWalesCharityRegNum", regNum);
 			ngo.setTags(row[1]);
 			ngo.put("logo", get(row, col("logo image")));
@@ -209,6 +209,7 @@ public class ImportCharityDataFromCSV {
 			Project project = new Project(projectName);
 			project.put("analyst", analyst);
 			String story = get(row, col("stories"));
+			story = StrUtils.normalisePunctuation(story);
 			if (Utils.truthy(story)) project.put(stories, story);
 			project.put("stories_src", get(row, col("stories - source")));
 			Time start = Time.of(get(row, col("start date")));
