@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest from 'sjtest';
-const assert = SJTest.assert;
-import printer from '../utils/printer.js';
-import C from '../C.js';
+import { assert } from 'sjtest';
 import _ from 'lodash';
+
+import printer from '../utils/printer';
+import C from '../C';
+
 const Misc = {};
 
 /**
@@ -22,7 +23,7 @@ const CURRENCY = {
 	"GBP": "£",
 	"USD": "$"
 };
-Misc.Money = ({amount,precision}) => {
+Misc.Money = ({amount, precision}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
@@ -34,7 +35,7 @@ Misc.Money = ({amount,precision}) => {
 Misc.Time = ({time}) => {
 	try {
 		if (_.isString(time)) {
-			return <span>{new Date(time).toLocaleDateString()}</span>;			
+			return <span>{new Date(time).toLocaleDateString()}</span>;
 		}
 		if (time.ut) {
 			return <span>{new Date(time.ut).toLocaleDateString()}</span>;
@@ -51,8 +52,8 @@ Misc.Logo = ({service, size, transparent}) => {
 	let klass = "img-rounded logo";
 	if (size) klass += "-"+size;
 	let file = '/img/'+service+'-logo.svg';
-	if (service==='instagram') file = '/img/'+service+'-logo.png';
-	if (service==='sogive') {
+	if (service === 'instagram') file = '/img/'+service+'-logo.png';
+	if (service === 'sogive') {
 		file = '/img/logo.png';
 		if (transparent === false) file = '/img/SoGive-Light-70px.png';
 	}
@@ -71,7 +72,11 @@ Misc.Checkbox = ({on, label, onChange}) => (
 
 Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.name) {
-		return <div><Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}</div>;
+		return (
+			<div>
+				<Misc.Money amount={amount} />{` will fund ${printer.prettyNumber(unitImpact.number * amount, 2)} ${unitImpact.name}`}
+			</div>
+		);
 	}
 	return null;
 };

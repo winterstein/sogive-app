@@ -188,20 +188,26 @@ const DonationFormButton = ({onToken, amount}) => {
 const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 	let unitImpact = impacts && impacts[0];
 	let damounts = _.map(options, price => (
-		<DonationAmount
-			key={'donate_'+price}
-			price={price}
-			selected={price===amount}
-			unitImpact={unitImpact}
-			handleChange={handleChange}
-		/>) );
-	let bgcol = options.indexOf(amount)===-1? '#337ab7' : null;
+		<span key={'donate_'+price}>
+			<DonationAmount
+				price={price}
+				selected={price===amount}
+				unitImpact={unitImpact}
+				handleChange={handleChange}
+			/>
+			&nbsp;
+		</span>
+	));
+
+	let fgcol = (options.indexOf(amount) === -1) ? 'white' : null;
+	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
+
 	return(
 		<div>
-			<div className="flexbox-1row">
+			<div className="form-inline">
 				{damounts}
 				<InputGroup>
-					<InputGroup.Addon style={{backgroundColor: bgcol}}>£</InputGroup.Addon>
+					<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
 					<FormControl
 						type="number"
 						min="0"
