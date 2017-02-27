@@ -204,6 +204,7 @@ public class PublishSoGiveApp extends BuildTask {
 			// This jar
 			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));
 			jarTask.run();
+			jarTask.close();
 			
 			// Do the rsync!
 			String from = localLib.getAbsolutePath();
