@@ -20,6 +20,7 @@ import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.data.XId;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.FlexiGsonBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.KLoopPolicy;
@@ -46,7 +47,7 @@ public class SoGiveServer {
 		SoGiveConfig config = getConfig(new SoGiveConfig(), args);
 		StripeConfig sc = getConfig(new StripeConfig(), args); 
 		
-		logFile = new LogFile()
+		logFile = new LogFile(new File("sogive.log"))
 					// keep 8 weeks of 1 week log files ??revise this??
 					.setLogRotation(TUnit.WEEK.dt, 8);
 		
@@ -88,7 +89,8 @@ public class SoGiveServer {
 	private static void init() {
 
 		// gson
-		Gson gson = new GsonBuilder()
+		GsonBuilder gb;
+		Gson gson = new FlexiGsonBuilder()
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
