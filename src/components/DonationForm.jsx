@@ -32,7 +32,7 @@ class DonationForm extends React.Component {
 
 		// donated?
 		if (donationForm.complete) {
-			return (<ThankYouAndShare user={user} charity={charity} donationForm={donationForm} project={project} />);
+			return (<ThankYouAndShare thanks={true} user={user} charity={charity} donationForm={donationForm} project={project} />);
 		}
 
 		const donateButton = donationForm.ready ? (
@@ -122,7 +122,8 @@ class ThankYouAndShare extends React.Component {
 	}
 
 	render() {
-		const {shareText} = this.state;
+		const { thanks } = this.props;
+		const { shareText } = this.state;
 	/*
 	<div className="fb-share-button"
 		data-href={url}
@@ -177,7 +178,7 @@ const DonationFormButton = ({onToken, amount}) => {
 				panelLabel="Donate"
 				amount={amount}
 				currency="GBP"
-				stripeKey="pk_test_RyG0ezFZmvNSP5CWjpl5JQnd"
+				stripeKey="pk_live_InKkluBNjhUO4XN1QAkCPEGY"
 				bitcoin
 				allowRememberMe
 				token={onToken}
