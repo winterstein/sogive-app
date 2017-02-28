@@ -74,11 +74,14 @@ class ThankYouAndShare extends React.Component {
 		const { thanks, user, charity, donationForm, project} = this.props;
 
 		let impact;
+		/*
+		// Commented out because it's spitting out "NaN people helped"
 		if (project && project.impacts) {
 			const unitImpact = project.impacts[0];
 			const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
 			impact = printer.prettyNumber(impactPerUnitMoney * donationForm.amount, 2) + ' ' + unitImpact.name;
 		}
+		*/
 
 		let shareText;
 		if (user && user.name) {
