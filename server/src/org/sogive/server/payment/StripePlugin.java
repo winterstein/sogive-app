@@ -126,7 +126,7 @@ public class StripePlugin {
 		return c;
 	}
 
-	private static String secretKey() {		
+	public static String secretKey() {		
 		StripeConfig stripeConfig = Dependency.get(StripeConfig.class);
 		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
