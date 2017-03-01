@@ -28,7 +28,7 @@ import com.winterwell.bob.tasks.JarTask;
 import com.winterwell.bob.tasks.RSyncTask;
 import com.winterwell.bob.tasks.RemoteTask;
 import com.winterwell.bob.tasks.SCPTask;
-
+import com.winterwell.es.BuildESJavaClient;
 import com.winterwell.utils.Environment;
 import com.winterwell.utils.FailureException;
 import com.winterwell.utils.Printer;
