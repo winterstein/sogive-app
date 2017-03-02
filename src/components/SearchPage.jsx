@@ -62,6 +62,14 @@ class SearchForm extends React.Component {
 	onSubmit(e) {
 		e.preventDefault();
 		console.warn("submit",this.state);
+		// Put search query in URL so it's bookmarkable / shareable
+		const newHash = `#search?q=${this.state.q}`;
+		if (window.history.pushState) {
+			window.history.pushState(null, null, newHash);
+		} else {
+			window.location.hash = newHash;
+		}
+
 		this.search(this.state.q);
 	}
 
