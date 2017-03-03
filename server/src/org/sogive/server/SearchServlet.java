@@ -32,13 +32,13 @@ public class SearchServlet {
 	public static final SField Q = new SField("q");
 	
 	public void run() throws IOException {
-		ESHttpClient client = new ESHttpClient();
+		ESHttpClient client = Dependency.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
 		SearchRequestBuilder s = client.prepareSearch(Dependency.get(SoGiveConfig.class).charityIndex);
 		String q = state.get(Q);
 		if ( q != null) {
 			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
-					"id", "englandWalesCharityRegNum", "name", "description")
+					"id", "englandWalesCharityRegNum", "name", "description", "tags")
 							.operator(Operator.AND);
 			s.setQuery(qb);
 		}
