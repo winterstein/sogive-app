@@ -10,7 +10,7 @@ import org.eclipse.jetty.util.ajax.JSON;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.WeirdException;
@@ -46,7 +46,7 @@ public class StripePlugin {
 	public static void cancelPlan(Map gateway) throws Exception {
 		Log.i(SERVICE, "cancelPlan "+gateway);
 		String id = (String) gateway.get("id");
-		String secretKey = Dependency.get(StripeConfig.class).secretKey;
+		String secretKey = Dep.get(StripeConfig.class).secretKey;
 		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
 		Customer customer = Customer.retrieve(id, requestOptions);
@@ -65,7 +65,7 @@ public class StripePlugin {
 	public static List<Subscription> checkSubscriptions(Map map) {
 		try {
 			String id = (String) map.get("id");
-			String secretKey = Dependency.get(StripeConfig.class).secretKey;
+			String secretKey = Dep.get(StripeConfig.class).secretKey;
 			RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
 			Customer customer = Customer.retrieve(id, requestOptions);
 			CustomerSubscriptionCollection subs = customer.getSubscriptions();
@@ -127,7 +127,7 @@ public class StripePlugin {
 	}
 
 	public static String secretKey() {		
-		StripeConfig stripeConfig = Dependency.get(StripeConfig.class);
+		StripeConfig stripeConfig = Dep.get(StripeConfig.class);
 		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
 			return stripeConfig.testSecretKey;

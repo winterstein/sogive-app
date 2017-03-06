@@ -12,7 +12,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import com.google.gson.FlexiGson;
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
@@ -127,7 +127,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	
 	public static <X extends Thing> X getThing(Object obj, Class<X> klass) {
 		if (obj instanceof Thing) return (X) obj;
-		FlexiGson gson = Dependency.get(FlexiGson.class);
+		FlexiGson gson = Dep.get(FlexiGson.class);
 		if (obj instanceof String) {			
 			Object map = gson.fromJson((String)obj);
 			assert ! (map instanceof String) : map;

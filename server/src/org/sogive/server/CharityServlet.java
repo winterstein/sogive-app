@@ -13,7 +13,7 @@ import com.winterwell.es.client.GetRequestBuilder;
 import com.winterwell.es.client.GetResponse;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
@@ -55,7 +55,7 @@ public class CharityServlet {
 	}
 
 	public static NGO getCharity(String id) {
-		ESHttpClient client = new ESHttpClient(Dependency.get(ESConfig.class));
+		ESHttpClient client = new ESHttpClient(Dep.get(ESConfig.class));
 		ESHttpClient.debug = true;
 		GetRequestBuilder s = new GetRequestBuilder(client);
 		s.setIndex(SoGiveConfig.charityIndex).setType(SoGiveConfig.charityType).setId(id);

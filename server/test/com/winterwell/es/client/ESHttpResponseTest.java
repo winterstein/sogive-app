@@ -20,7 +20,7 @@ public class ESHttpResponseTest {
 		
 		Map jobj2 = FlexiGson.fromJSON(json);
 		
-		Object jobj3 = new ESHttpClient().gson.fromJson(json);
+		Object jobj3 = new ESHttpClient().config.gson.fromJson(json);
 	}
 
 }

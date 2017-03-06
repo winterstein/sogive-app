@@ -12,7 +12,7 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.admin.CreateIndexRequest;
 import com.winterwell.es.client.admin.PutMappingRequestBuilder;
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.io.DBUtils.DBOptions;
 import com.winterwell.utils.log.Log;
@@ -30,8 +30,8 @@ import com.winterwell.web.data.XId;
 public class DB {
 
 	public static void init() {
-		ESHttpClient es = Dependency.get(ESHttpClient.class);
-		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		
 		CreateIndexRequest pi = es.admin().indices().prepareCreate(config.donationIndex);
 		IESResponse r = pi.get();
@@ -51,7 +51,7 @@ public class DB {
 	}
 
 	public static Person getUser(XId id) {
-		ESHttpClient es = Dependency.get(ESHttpClient.class);
+		ESHttpClient es = Dep.get(ESHttpClient.class);
 		Map<String, Object> person = es.get("sogive", "user", id.toString());
 		return (Person) person;
 	}

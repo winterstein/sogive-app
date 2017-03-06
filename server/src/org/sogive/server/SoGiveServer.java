@@ -8,7 +8,7 @@ import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.log.Log;
@@ -77,7 +77,7 @@ public class SoGiveServer {
 		String thingy = config.getClass().getSimpleName().toLowerCase().replace("config", "");
 		config = ArgsParser.getConfig(config, args, new File("config/"+thingy+".properties"), null);
 		config = ArgsParser.getConfig(config, args, new File("config/"+WebUtils2.hostname()+".properties"), null);
-		Dependency.set((Class)config.getClass(), config);
+		Dep.set((Class)config.getClass(), config);
 		assert config != null;
 		return config;
 
@@ -106,10 +106,10 @@ public class SoGiveServer {
 		// config
 		ESConfig value = new ESConfig();
 		value.gson = gson;
-		Dependency.set(ESConfig.class, value);
+		Dep.set(ESConfig.class, value);
 		// client
-		Dependency.setSupplier(ESHttpClient.class, true, 
-				() -> new ESHttpClient(Dependency.get(ESConfig.class))
+		Dep.setSupplier(ESHttpClient.class, true, 
+				() -> new ESHttpClient(Dep.get(ESConfig.class))
 				);
 		// mappings
 		DB.init();

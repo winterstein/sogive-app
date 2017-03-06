@@ -26,7 +26,7 @@ import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
@@ -75,8 +75,8 @@ public class DonationServlet {
 	private void doList() throws IOException {
 		XId user = state.getUserId();
 		
-		ESHttpClient es = Dependency.get(ESHttpClient.class);
-		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		SearchRequestBuilder s = es.prepareSearch(config.donationIndex);
 		if (user==null) {
 			throw new WebEx.E401(null, "No user");
@@ -135,12 +135,12 @@ public class DonationServlet {
 		}
 		
 		// Store in the database (acts as a form of lock)
-		ESHttpClient es = Dependency.get(ESHttpClient.class);
-		SoGiveConfig config = Dependency.get(SoGiveConfig.class);
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		IndexRequestBuilder pi = es.prepareIndex(config.donationIndex, "donation", donation.getId());
 		pi.setRefresh("true");
 		pi.setOpTypeCreate(true);		
-		String json = Dependency.get(Gson.class).toJson(donation);
+		String json = Dep.get(Gson.class).toJson(donation);
 		pi.setBodyJson(json);
 		IESResponse res = pi.get().check();
 		String json2 = res.getJson();
@@ -159,7 +159,7 @@ public class DonationServlet {
 		// store in the database
 		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
 		
-		String json3 = Dependency.get(Gson.class).toJson(donation);
+		String json3 = Dep.get(Gson.class).toJson(donation);
 		pu.setDoc(json3);
 		IESResponse resAfter = pu.get().check();
 		String json4 = res.getJson();		

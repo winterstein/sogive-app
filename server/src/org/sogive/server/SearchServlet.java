@@ -7,7 +7,7 @@ import java.util.Map;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
-import com.winterwell.utils.Dependency;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils2;
@@ -32,9 +32,9 @@ public class SearchServlet {
 	public static final SField Q = new SField("q");
 	
 	public void run() throws IOException {
-		ESHttpClient client = Dependency.get(ESHttpClient.class);
+		ESHttpClient client = Dep.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
-		SearchRequestBuilder s = client.prepareSearch(Dependency.get(SoGiveConfig.class).charityIndex);
+		SearchRequestBuilder s = client.prepareSearch(Dep.get(SoGiveConfig.class).charityIndex);
 		String q = state.get(Q);
 		if ( q != null) {
 			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
