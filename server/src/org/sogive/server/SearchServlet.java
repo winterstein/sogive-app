@@ -47,7 +47,7 @@ public class SearchServlet {
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();
-		List<Map> hits2 = Containers.apply(h -> (Map)h.get("_source"), hits);
+		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
 		long total = sr.getTotal();
 		JsonResponse output = new JsonResponse(state, new ArrayMap(
 				"hits", hits2,

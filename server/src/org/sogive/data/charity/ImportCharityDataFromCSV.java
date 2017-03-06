@@ -286,8 +286,8 @@ public class ImportCharityDataFromCSV {
 		String colname = StrUtils.toCanonical(colName);
 		Integer ci = cols.get(colname);
 		if (ci==null) {
-			List<String> hs = Containers.filter(h -> h.equals(colname), HEADER_ROW);
-			if (hs.isEmpty()) hs = Containers.filter(h -> h.contains(colname), HEADER_ROW);
+			List<String> hs = Containers.filter(HEADER_ROW, h -> h.equals(colname));
+			if (hs.isEmpty()) hs = Containers.filter(HEADER_ROW, h -> h.contains(colname));
 			assert hs.size() == 1 : colname+" "+hs;
 			ci = HEADER_ROW.indexOf(hs.get(0));
 			cols.put(colname, ci);			
@@ -304,7 +304,7 @@ public class ImportCharityDataFromCSV {
 	private void dumpFileHeader(CSVReader csvr) {
 		String[] row1 = csvr.next();
 		Printer.out(row1);
-		HEADER_ROW = Containers.apply(StrUtils::toCanonical, Arrays.asList(csvr.next()));
+		HEADER_ROW = Containers.apply(Arrays.asList(csvr.next()), StrUtils::toCanonical);
 		Printer.out(HEADER_ROW);
 		String[] row3 = csvr.next();
 		Printer.out(row3);

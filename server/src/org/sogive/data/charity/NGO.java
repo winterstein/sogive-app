@@ -53,8 +53,8 @@ public class NGO extends Thing<NGO> {
 			return null;
 		}
 		// Representative and ready for use?
-		List<Project> projects2 = Containers.filter(p -> p.isReady() && p.isRep(), projects);
-		List<Project> overalls = Containers.filter(p -> p.getName().equals("overall"), projects);
+		List<Project> projects2 = Containers.filter(projects, p -> p.isReady() && p.isRep());
+		List<Project> overalls = Containers.filter(projects, p -> p.getName().equals("overall"));
 
 		if ( ! Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);

@@ -121,7 +121,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 
 	public static <X extends Thing> List<X> getThings(List list, Class<X> klass) {
 		if (list==null) return null;
-		List<X> things = Containers.apply(obj -> getThing(obj, klass), list);
+		List<X> things = Containers.apply(list, obj -> getThing(obj, klass));
 		return things;
 	}
 	
@@ -150,7 +150,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 		if (inputs.isEmpty()) return inputs;
 		long max = inputs.stream().map(t -> Utils.or(t.getYear(), 0L)).max(Long::compare).get();
 		if (max==0) return inputs;
-		List<T> yearMatch = Containers.filter(t -> Utils.or(t.getYear(), 0L) == max, inputs);
+		List<T> yearMatch = Containers.filter(inputs, t -> Utils.or(t.getYear(), 0L) == max);
 		return yearMatch;		
 	}
 	

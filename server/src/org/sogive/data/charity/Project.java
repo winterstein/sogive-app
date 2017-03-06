@@ -100,10 +100,10 @@ public class Project extends Thing<Project> {
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
-		MonetaryAmount totalCosts = Containers.first(ma -> "annualCosts".equals(ma.getName()), inputs);
-		MonetaryAmount fundraisingCosts = Containers.first(ma -> "fundraisingCosts".equals(ma.getName()), inputs);
-		MonetaryAmount tradingCosts = Containers.first(ma -> "tradingCosts".equals(ma.getName()), inputs);
-		MonetaryAmount incomeFromBeneficiaries = Containers.first(ma -> "incomeFromBeneficiaries".equals(ma.getName()), inputs);			
+		MonetaryAmount totalCosts = Containers.first(inputs, ma -> "annualCosts".equals(ma.getName()));
+		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
+		MonetaryAmount tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
+		MonetaryAmount incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
 
 		MonetaryAmount cost = totalCosts;
 		if (cost==null) {
