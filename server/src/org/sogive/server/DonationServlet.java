@@ -141,7 +141,7 @@ public class DonationServlet {
 		pi.setRefresh("true");
 		pi.setOpTypeCreate(true);		
 		String json = Dependency.get(Gson.class).toJson(donation);
-		pi.setSource(json);
+		pi.setBodyJson(json);
 		IESResponse res = pi.get().check();
 		String json2 = res.getJson();
 		
