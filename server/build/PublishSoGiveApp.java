@@ -227,6 +227,15 @@ public class PublishSoGiveApp extends BuildTask {
 			String out = rsyncCode.getOutput();
 			rsyncCode.close();
 		}
+		
+		RemoteTask satisfynpmdependencies = new RemoteTask("winterwell@"+server, "cd /home/winterwell/sogive-app/ && npm i");
+		satisfynpmdependencies.run();
+		
+		RemoteTask webpackcompile = new RemoteTask("winterwell@"+server, "cd /home/winterwell/sogive-app/ && npm run compile");
+		webpackcompile.run();
+		
+		RemoteTask reboot = new RemoteTask("winterwell@"+server, "service sogiveapp restart");
+		reboot.run();
 	}
 
 	private String rsyncDest(String dir) {
