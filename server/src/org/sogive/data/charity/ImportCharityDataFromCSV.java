@@ -11,16 +11,15 @@ import java.util.concurrent.ExecutionException;
 import org.sogive.server.CharityServlet;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.ESHttpResponse;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.UpdateRequestBuilder;
+import com.winterwell.gson.Gson;
+import com.winterwell.gson.GsonBuilder;
+import com.winterwell.gson.JsonIOException;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;

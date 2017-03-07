@@ -7,7 +7,7 @@ import java.util.Map;
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
 
-import com.google.gson.FlexiGson;
+import com.winterwell.gson.FlexiGson;
 
 public class ESHttpResponseTest {
 

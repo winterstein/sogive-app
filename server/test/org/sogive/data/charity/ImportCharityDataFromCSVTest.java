@@ -6,8 +6,8 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdSyntaxException;
+import com.winterwell.gson.JsonIOException;
 
 public class ImportCharityDataFromCSVTest {
 

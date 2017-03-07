@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import com.google.gson.JsonIOException;
 import com.google.schemaorg.JsonLdFactory;
 import com.google.schemaorg.JsonLdSerializer;
 import com.google.schemaorg.JsonLdSyntaxException;
@@ -19,6 +18,7 @@ import com.google.schemaorg.core.CoreFactory;
 import com.google.schemaorg.core.DataFeed;
 import com.google.schemaorg.core.NGO;
 import com.google.schemaorg.core.NGO.Builder;
+import com.winterwell.gson.JsonIOException;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
