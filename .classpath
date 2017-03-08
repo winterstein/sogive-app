@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="server/test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/elasticsearch-java-client"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.datalog"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
