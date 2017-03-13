@@ -19,6 +19,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.charity.SoGiveConfig; 
 
 public class SearchServlet {
@@ -42,6 +43,7 @@ public class SearchServlet {
 							.operator(Operator.AND);
 			s.setQuery(qb);
 		}
+		s.addSort("name", SortOrder.ASC);
 		// TODO paging!
 		s.setSize(10000);
 		SearchResponse sr = s.get();
