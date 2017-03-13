@@ -17,6 +17,7 @@ import com.winterwell.es.client.ESHttpResponse;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.UpdateRequestBuilder;
+import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.gson.GsonBuilder;
 import com.winterwell.gson.JsonIOException;
@@ -296,6 +297,7 @@ public class ImportCharityDataFromCSV {
 	}
 
 	private void init() {
+		Dep.set(FlexiGson.class, new FlexiGson());
 		ESConfig config = Dep.get(ESConfig.class);
 		client = new ESHttpClient(config);
 	}
