@@ -6,11 +6,11 @@ TARGETSERVERS=(heppner)
 USER=`whoami`
 
 # Are you sure that you want to do this?
-echo -e "\e[31;107m ARE YOU SURE THAT YOU WANT TO PUBLISH/UPDATE THE SOGIVE-APP TO THE FOLLOWING SERVER(S)? ($TARGETSERVERS) TO CANCEL PRESS \033[0m \e[30;107m ctl + c \033[0m \e[31;107m TO CONTINUE PRESS \033[0m \e[30;107m return \033[0m"
-read VAR
-if [[ -z $VAR ]]; then
-	echo -e "Proceeding..."
-fi
+# echo -e "\e[31;107m ARE YOU SURE THAT YOU WANT TO PUBLISH/UPDATE THE SOGIVE-APP TO THE FOLLOWING SERVER(S)? ($TARGETSERVERS) TO CANCEL PRESS \033[0m \e[30;107m ctl + c \033[0m \e[31;107m TO CONTINUE PRESS \033[0m \e[30;107m return \033[0m"
+# read VAR
+# if [[ -z $VAR ]]; then
+# 	echo -e "Proceeding..."
+# fi
 
 echo "converting less files into CSS..."
 for file in /home/$USER/winterwell/sogive-app/web/style/*.less; do
