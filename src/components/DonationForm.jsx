@@ -20,7 +20,12 @@ class DonationForm extends React.Component {
 	render() {
 		const { user, charity, donationForm, handleChange, initDonation, sendDonation } = this.props;
 
-		if (!donationForm) {
+		// some charities dont accept donations
+		if (charity.noPublicDonations) {
+			return (<div className="DonationForm noPublicDonations">Sorry: This charity does not accept public donations.</div>);
+		}
+
+		if ( ! donationForm) {
 			initDonation();
 			return <div />;
 		}
