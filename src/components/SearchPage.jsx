@@ -112,7 +112,7 @@ const SearchResults = ({ results, query }) => {
 	const num = results.length || query? <div>{results.length} results found</div> : null;
 	const ready = _.filter(results, c => _.find(c.projects, 'ready') );
 	const unready = _.filter(results, r => ready.indexOf(r) === -1);
-	const hu = unready.length? <h3>Analysis in progress</h3> : null;
+	const hu = unready.length? <div><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null;
 	return (
 		<div className='SearchResults'>
 			{num}
