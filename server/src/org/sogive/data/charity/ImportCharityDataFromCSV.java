@@ -128,7 +128,9 @@ public class ImportCharityDataFromCSV {
 				continue;
 			}
 			boolean mod = false;
-			if ( ! Utils.isBlank(img)) {ngo.put(images, img); mod=true;}
+			if ( ! Utils.isBlank(img)) {
+				ngo.put(images, img); mod=true;
+			}
 			if (Utils.truthy(story)) {ngo.put(stories, story); mod=true;}
 			// save
 			if (mod) {
@@ -223,7 +225,9 @@ public class ImportCharityDataFromCSV {
 				project.addOrMerge("data-src", citation);
 			}
 			Object img = get(row, col("photo image"));
-			if (img!=null) project.put(images, img);
+			if (img!=null) {
+				project.put(images, img);
+			}
 			project.put("location", get(row, col("location")));
 			
 			// inputs
