@@ -143,6 +143,10 @@ const ProjectPanel = ({project}) => {
 			<div className='outputs'><h4>Outputs</h4>
 				{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
 			</div>
+			<div className='comments'>
+				{project.adjustmentComment}
+				{project.analysisComment}
+			</div>
 			<Citations thing={project} />
 		</Panel>
 	);

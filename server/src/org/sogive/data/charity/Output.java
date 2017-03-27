@@ -19,7 +19,7 @@ public class Output extends Thing<Output> {
 	
 	/**
 	 * 
-	 * @param number
+	 * @param number How many malaria nets or nurses or kittens?
 	 * @param type e.g. "solar-light"
 	 * @param unit e.g. year | thing
 	 */
@@ -48,8 +48,9 @@ public class Output extends Thing<Output> {
 	 * @param input
 	 */
 	public Output scale(double fraction) {
+		// the number
 		assert fraction >= 0 : fraction+" "+this;
-		double number = getDouble("number");
+		double number = getNumber();
 		number = number * fraction;
 		String type = (String) get("type");
 		String unit = (String) get("unit");
@@ -61,6 +62,10 @@ public class Output extends Thing<Output> {
 			scaled.put(pv.getKey(), pv.getValue());
 		}
 		return scaled;
+	}
+	
+	public Double getNumber() {
+		return getDouble("number");
 	}
 
 	public void setName(String name) {

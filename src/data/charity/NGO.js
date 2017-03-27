@@ -24,11 +24,11 @@ NGO.getProject = (ngo) => {
 	}, {year: 0});
 
 	// ...or fall back.
-	if (!repProject) {
+	if ( ! repProject) {
 		repProject = _.find(ngo.projects, p => p.name === 'overall');
 	}
 
-	if (!repProject) {
+	if ( ! repProject) {
 		repProject = ngo.projects && ngo.projects[0];
 	}
 

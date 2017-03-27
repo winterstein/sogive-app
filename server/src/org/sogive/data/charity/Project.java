@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import com.winterwell.gson.JsonIOException;
+import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
@@ -95,7 +96,7 @@ public class Project extends Thing<Project> {
 		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
 		MonetaryAmount tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
 		MonetaryAmount incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
-
+		
 		MonetaryAmount cost = totalCosts;
 		if (cost==null) {
 			// can't calc anything
@@ -128,7 +129,7 @@ public class Project extends Thing<Project> {
 		}
 //		assert cost.getValue() > 0 : cost+" "+this;
 		
-		// a unit is
+		// What would £1 achieve?
 		List impacts = new ArrayList();
 		double unitFraction = 1.0 /  cost.getValue();
 		if (unitFraction <= 0) {
@@ -136,13 +137,25 @@ public class Project extends Thing<Project> {
 			return null;
 		}
 		for(Output output : outputs) {
-			Output unitImpact = output.scale(unitFraction);
+			// override by adhoc formula
+			Object cpb = get("costPerBeneficiary");
+			Output unitImpact;
+			if (cpb!=null) {
+				double costPerBen = MathUtils.getNumber(cpb);
+				assert costPerBen > 0 : cpb;
+				unitImpact = output.scale(1); // i.e. copy
+				unitImpact.put("number", 1.0 / costPerBen);
+			} else {
+				// normal case
+				unitImpact = output.scale(unitFraction);
+			}			
 			unitImpact.put("price", MonetaryAmount.pound(1));
 			impacts.add(unitImpact);
 		}
 		// done
 		return impacts;
 	}
+	
 	public boolean isReady() {
 		return Utils.truthy(get("ready"));
 	}

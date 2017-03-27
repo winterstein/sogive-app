@@ -29,6 +29,7 @@ import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVReader;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
 
 import static com.winterwell.utils.containers.Containers.get;
@@ -165,7 +166,7 @@ public class ImportCharityDataFromCSV {
 		CSVReader csvr = new CSVReader(csv, ',').setNumFields(-1);
 		dumpFileHeader(csvr);
 		
-		System.exit(1); // FIXME
+//		System.exit(1); // FIXME
 		
 		Gson gson = new GsonBuilder()
 				.setClassProperty("@type")
@@ -188,7 +189,15 @@ public class ImportCharityDataFromCSV {
 			String ukbased = get(row, col("UK-based charity?"));
 			ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
 			
-			no donations?
+//			no donations?
+			String ad = get(row, col("accepts donations"));
+			if ( ! Utils.isBlank(ad)) {
+				try {
+					ngo.put("noPublicDonations", ! Utils.yes(ad));
+				} catch(Exception ex) {
+					Log.e("import", ex);
+				}
+			}
 			
 //			38	Representative project?	Where a charity has several projects, we may have to choose one as the representative project. For really big mega-charities, it may be necessary to have the "representative" row being an aggregate or "average" of all the projects	yes
 //			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
@@ -248,7 +257,7 @@ public class ImportCharityDataFromCSV {
 			project.put("inputs", inputs);
 			
 			// outputs
-			List outputs = new ArrayList();
+			List<Output> outputs = new ArrayList();
 			for(int i=1; i<7; i++) {
 				double impact1 = MathUtils.getNumber(get(row, col("impact "+i)));
 				if (impact1==0) continue;
@@ -263,10 +272,20 @@ public class ImportCharityDataFromCSV {
 			project.put("outputs", outputs);
 			
 			// special formula?
-			analysisComment = col("comments analysis about the cost per beneficiary figure");
+			String adjustmentComment = get(row, col("adhoc adjustments"));
+			String analysisComment = get(row, col("comments analysis about the cost per beneficiary figure"));
+			project.put("analysisComment", analysisComment);
+			project.put("adjustmentComment", adjustmentComment);
 			if ( ! Utils.isBlank(analysisComment)) {
 				for(int i=1; i<7; i++) {
-					double costPerBen = MathUtils.getNumber(get(row, col(foo"impact "+i)));
+					double costPerBen = MathUtils.getNumber(get(row, col("cost per ben "+i)));
+					if (costPerBen==0) continue;
+					if (i >= outputs.size()) {
+						Log.d("import", "adhoc cost-per-ben but no outpus (impact)?! "+Printer.toString(row));
+						break;
+					}
+					Output outputi = outputs.get(i);
+					outputi.put("costPerBeneficiary", costPerBen);
 				}				
 			}
 			
@@ -306,7 +325,7 @@ public class ImportCharityDataFromCSV {
 		if (ci==null) {
 			List<String> hs = Containers.filter(HEADER_ROW, h -> h.equals(colname));
 			if (hs.isEmpty()) hs = Containers.filter(HEADER_ROW, h -> h.contains(colname));
-			assert hs.size() == 1 : colname+" "+hs;
+			assert hs.size() == 1 : colname+" "+hs+" from "+HEADER_ROW;
 			ci = HEADER_ROW.indexOf(hs.get(0));
 			cols.put(colname, ci);			
 		}
