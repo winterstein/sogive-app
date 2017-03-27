@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.sogive.server.CharityServlet;
+import org.sogive.server.SoGiveServer;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winterwell.es.client.ESConfig;
@@ -161,6 +162,9 @@ public class ImportCharityDataFromCSV {
 		init();
 		CSVReader csvr = new CSVReader(csv, ',').setNumFields(-1);
 		dumpFileHeader(csvr);
+		
+		System.exit(1); // FIXME
+		
 		Gson gson = new GsonBuilder()
 				.setClassProperty("@type")
 				.create();
@@ -181,6 +185,8 @@ public class ImportCharityDataFromCSV {
 			ngo.put("logo", get(row, col("logo image")));
 			String ukbased = get(row, col("UK-based charity?"));
 			ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
+			
+			no donations?
 			
 //			38	Representative project?	Where a charity has several projects, we may have to choose one as the representative project. For really big mega-charities, it may be necessary to have the "representative" row being an aggregate or "average" of all the projects	yes
 //			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
@@ -252,6 +258,14 @@ public class ImportCharityDataFromCSV {
 			}
 			project.put("outputs", outputs);
 			
+			// special formula?
+			analysisComment = col("comments analysis about the cost per beneficiary figure");
+			if ( ! Utils.isBlank(analysisComment)) {
+				for(int i=1; i<7; i++) {
+					double costPerBen = MathUtils.getNumber(get(row, col(foo"impact "+i)));
+				}				
+			}
+			
 			project.put("ready", ready);
 			project.put("isRep", isRep);
 //			37	Wording for SoGive app		You funded XXXX hours/days/weeks of cancer research, well done!
@@ -298,6 +312,12 @@ public class ImportCharityDataFromCSV {
 
 	private void init() {
 		Dep.set(FlexiGson.class, new FlexiGson());
+		// hack for import w/o server start
+		if ( ! Dep.has(ESConfig.class)) {
+			ESConfig esc = new ESConfig();
+			esc = SoGiveServer.getConfig(esc, new String[0]);
+			Dep.set(ESConfig.class, esc);
+		}
 		ESConfig config = Dep.get(ESConfig.class);
 		client = new ESHttpClient(config);
 	}

@@ -72,7 +72,7 @@ public class SoGiveServer {
 		initCharityData();
 	}
 
-	private static <X> X getConfig(X config, String[] args) {
+	public static <X> X getConfig(X config, String[] args) {
 		config = ArgsParser.getConfig(config, args, new File("config/sogive.properties"), null);
 		String thingy = config.getClass().getSimpleName().toLowerCase().replace("config", "");
 		config = ArgsParser.getConfig(config, args, new File("config/"+thingy+".properties"), null);
