@@ -37,7 +37,7 @@ class DonationForm extends React.Component {
 
 		// donated?
 		if (donationForm.complete) {
-			return (<ThankYouAndShare thanks={true} user={user} charity={charity} donationForm={donationForm} project={project} />);
+			return (<ThankYouAndShare thanks user={user} charity={charity} donationForm={donationForm} project={project} />);
 		}
 
 		const donateButton = donationForm.ready ? (
