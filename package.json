@@ -29,8 +29,7 @@
     "d3-queue": "^3.0.3",
     "react-bootstrap": "^0.30.7",
     "react-stripe-checkout": "^2.2.5",
-    "react-helmet": "^4.0.0",
-	"easyi18n": "^1.0.0"
+    "react-helmet": "^4.0.0"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",

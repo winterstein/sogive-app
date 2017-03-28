@@ -57,7 +57,7 @@ public class Donation {
 	/**
 	 * When this donation was made
 	 */
-	String time = new Time().toISOString();
+	String date = new Time().toISOString();
 
 	private Map impact;
 
@@ -74,7 +74,7 @@ public class Donation {
 			transfer = total.minus(ourFee).minus(otherFees);
 		}
 		// HACK: make an ID to block repeats within a couple of minutes
-		long tmin = new Time(time).getTime() / (5*TUnit.MINUTE.millisecs);
+		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
 		this.id = total.getValue100()+" "+from+" to "+to+" at "+(tmin);
 	}
 
@@ -88,7 +88,7 @@ public class Donation {
 
 	@Override
 	public String toString() {
-		return "Donation[from=" + from + ", to=" + to + ", total=" + total + ", time=" + time + "]";
+		return "Donation[from=" + from + ", to=" + to + ", total=" + total + ", time=" + date + "]";
 	}
 
 	public void setImpact(Map impact) {

@@ -32,6 +32,7 @@ class DonationForm extends React.Component {
 
 		assert(NGO.isa(charity), charity);
 
+		// FIXME props.project set but bogus (empty bar year)!!
 		let project = this.props.project || NGO.getProject(charity);
 		assert(project, charity);
 

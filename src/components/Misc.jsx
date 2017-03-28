@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 
 import {assert} from 'sjtest';
 import _ from 'lodash';
-import i18n from 'easyi18n';
+//import i18n from 'easyi18n';
+//console.warn("TODO use i18n", i18n);
 
 import printer from '../utils/printer.js';
 import C from '../C.js';
 
-console.warn("TODO use i18n", i18n);
 
 const Misc = {};
 
@@ -34,8 +34,10 @@ Misc.Money = ({amount, precision}) => {
 };
 /**
  * Handle a few formats, inc gson-turned-a-Time.java-object-into-json
+ * null is also accepted.
  */
 Misc.Time = ({time}) => {
+	if ( ! time) return null;
 	try {
 		if (_.isString(time)) {
 			return <span>{new Date(time).toLocaleDateString()}</span>;			

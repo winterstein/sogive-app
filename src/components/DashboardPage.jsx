@@ -68,7 +68,7 @@ const Donation = ({donation}) => {
 	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
 		<div className='well'>
-			<Misc.Time time={donation.time} /> &nbsp;
+			<Misc.Time time={donation.date} /> &nbsp;
 			You donated <Misc.Money precision={false} amount={donation.total} /> to <a href={'#charity?charityId='+XId.id(donation.to)}>{niceName}</a>.
 			{impact}
 			<div>GiftAid? {donation.giftAid? 'yes' : 'no'} <br />

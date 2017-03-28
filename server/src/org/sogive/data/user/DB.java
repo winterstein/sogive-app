@@ -32,7 +32,21 @@ public class DB {
 	public static void init() {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+
+		{	// charity
+			CreateIndexRequest pi = es.admin().indices().prepareCreate(config.charityIndex);
+			IESResponse r = pi.get();
+			
+			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(config.charityIndex, config.charityType);
+			ESType dtype = new ESType();
+			dtype.property("name", new ESType().text().fielddata(true));
+			dtype.property("@id", new ESType().keyword());
+			pm.setMapping(dtype);
+			IESResponse r2 = pm.get();
+			r2.check();		
+		}
 		
+		// donation
 		CreateIndexRequest pi = es.admin().indices().prepareCreate(config.donationIndex);
 		IESResponse r = pi.get();
 		
@@ -40,14 +54,10 @@ public class DB {
 		ESType dtype = new ESType();
 		dtype.property("from", new ESType().keyword());
 		dtype.property("to", new ESType().keyword());
-		dtype.property("time", new ESType().date());
+		dtype.property("date", new ESType().date());
 		pm.setMapping(dtype);
 		IESResponse r2 = pm.get();
-		r2.check();
-		
-//		DBOptions options = ArgsParser.getConfig(new DBOptions(), 
-//									new File("config/sogive.properties"));
-//		SqlUtils.setDBOptions(options);
+		r2.check();		
 	}
 
 	public static Person getUser(XId id) {
