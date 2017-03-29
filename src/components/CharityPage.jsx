@@ -92,7 +92,7 @@ class CharityPage extends React.Component {
 					<h2>{charity.name}</h2>
 
 					<div ><small><a href={'/#charity/'+charity['@id']}>{charity.id}</a></small></div>
-					<p>{charity.description}</p>
+					<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
 					{ tags }
 					{ turnover }
 					{ employees }
@@ -137,7 +137,7 @@ const ProjectPanel = ({project}) => {
 	const inputs = project.inputs || [];
 	return (
 		<Panel header={<h3>{project.name}: {project.year}</h3>}>
-			<p dangerouslySetInnerHTML={{ __html: project.stories }} />
+			<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
 			<div className='inputs'><h4>Inputs</h4>
 				{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
 			</div>
