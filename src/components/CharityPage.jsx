@@ -82,6 +82,7 @@ class CharityPage extends React.Component {
 		const projectsDiv = yessy(currentProjects)? <div><h2>Projects</h2><ProjectList projects={currentProjects} charity={charity} /></div> : null;
 		const oldProjectsDiv = yessy(oldProjects)? <div><h2>Old Projects</h2><ProjectList projects={oldProjects} charity={charity} /></div> : null;
 		const overallDiv = <ProjectPanel project={overall} charity={charity} />;		
+		const project = NGO.getProject(charity);
 		// put it together
 		return (
 			<div className='page CharityPage'>
@@ -98,7 +99,7 @@ class CharityPage extends React.Component {
 					{ website }
 				</Panel>
 				<Panel bsStyle='primary' header={<h2>Donate to { charity.name }</h2>}>
-					<DonationForm charity={charity} project={NGO.getProject(charity)} />
+					<DonationForm charity={charity} project={project} />
 				</Panel>
 				{overallDiv}
 				{projectsDiv}
