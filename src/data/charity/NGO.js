@@ -2,12 +2,14 @@
 
 import _ from 'lodash';
 import {isa} from '../DataClass';
+import {assert} from 'sjtest';
 
 const NGO = {};
 export default NGO;
 
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
+NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
 NGO.name = (ngo) => isa(ngo, 'NGO') && ngo.name;
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 
@@ -66,6 +68,8 @@ NGO.getProject = (ngo) => {
 impact {price, number, output}
 
 */
+
+NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 
 NGO.getImpacts = function(project) {
 
