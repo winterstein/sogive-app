@@ -138,6 +138,7 @@ const ProjectPanel = ({project}) => {
 	return (
 		<Panel header={<h3>{project.name}: {project.year}</h3>}>
 			<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
+			<ProjectImage images={project.images} />
 			<div className='inputs'><h4>Inputs</h4>
 				{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
 			</div>
@@ -153,6 +154,11 @@ const ProjectPanel = ({project}) => {
 	);
 };
 
+const ProjectImage = ({images}) => {
+	if ( ! yessy(images)) return null;
+	let image = _.isArray(images)? images[0] : images;
+	return <div><img src={image} className='project-image'/></div>;
+};
 
 const Citations = ({thing}) => {
 	let dsrc = thing['data-src'];

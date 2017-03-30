@@ -180,7 +180,7 @@ Printer.prototype.str = function (object) {
  * links, and some markdown
  *
  * @param contents -
- *            The text context to be replaced
+ *            The text context to be replaced. Can be null/undefined (returns "").
  * @param context -
  *            The message item (gives us the service this message is
  *            from for internal links)
@@ -190,6 +190,7 @@ Printer.prototype.str = function (object) {
  *
  */
 Printer.prototype.textToHtml = function (contents, context, external) {
+	if ( ! contents) return "";
 	var service = context && context.service? context.service : null;
 	// TODO This is too strong! e.g. it would clean away < this >, or "1<2 but 3>2"
 	// TODO convert @you #tag and links ??emoticons -- See TwitterPlugin

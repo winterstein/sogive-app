@@ -85,11 +85,10 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 			peepText = printer.prettyNumber(peeps, 1)+' people donating ';
 		}
 		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
+		// NB long line as easiest way to do spaces in React
 		return (
 			<div>
-				<strong>{peepText}<Misc.Money amount={amount} />
-				</strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</strong> 
-				{unitImpact.name || ''}
+				<strong>{peepText}<Misc.Money amount={amount} /></strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</strong> {unitImpact.name || ''}
 			</div>
 		);
 	}
