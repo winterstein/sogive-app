@@ -22,7 +22,9 @@ NGO.getProject = (ngo) => {
 
 	// Get most recent, if more than one
 	let repProject = repProjects.reduce((best, current) => {
-		return ( ! current || best.year > current.year) ? best : current;
+		if ( ! current) return best;
+		if ( ! best) return current;
+		return best.year > current.year ? best : current;
 	}, null);
 
 	// ...or fall back.
