@@ -1,6 +1,7 @@
 package org.sogive.server;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,9 @@ public class SearchServlet {
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
+		
+//		Collections.sort(arg0);
+		
 		long total = sr.getTotal();
 		JsonResponse output = new JsonResponse(state, new ArrayMap(
 				"hits", hits2,
