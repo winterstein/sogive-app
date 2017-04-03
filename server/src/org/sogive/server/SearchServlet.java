@@ -44,7 +44,7 @@ public class SearchServlet {
 							.operator(Operator.AND);
 			s.setQuery(qb);
 		}
-		s.addSort("name", SortOrder.ASC);
+		s.addSort("@id", SortOrder.ASC);
 		// TODO paging!
 		s.setSize(10000);
 		SearchResponse sr = s.get();
