@@ -56,6 +56,11 @@ img.logo-large {
 .SearchResults {
   margin-top: 50px;
 }
+img.project-image {
+  max-width: 300px;
+  max-height: 300px;
+}
+/* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
   display: flex;
   flex-wrap: nowrap;
