@@ -1,6 +1,77 @@
 .avoid-navbar {
   margin-top: 100px;
 }
+#navbar {
+  background-color: #262741;
+}
+.navbar-inverse {
+  background-color: #262741;
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:focus,
+.navbar-inverse .navbar-nav > .active > a:hover {
+  background-color: #262741;
+}
+.btn-showall {
+  background-color: #A49F79;
+  color: #FFFFFF;
+  width: 9vh;
+  height: 3vh;
+  border-radius: 7%;
+  font-size: 1em;
+}
+.sogive-search {
+  width: 100% !important;
+}
+.no-margin {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+.no-margin-bottom {
+  margin-bottom: 0px;
+}
+.clear-search {
+  background-color: transparent;
+  color: grey;
+  border-radius: none;
+  border-color: transparent;
+}
+.clear-search-btn {
+  background-color: transparent;
+  color: grey;
+  border-radius: 0px;
+  border-color: transparent;
+  border-bottom: 1px solid #262741;
+  height: 8vh;
+}
+.clear-search-btn:hover,
+.clear-search-btn:active,
+.clear-search-btn:focus,
+.clear-search-btn:visited {
+  background-color: transparent;
+  color: grey;
+  border-radius: 0px;
+  border-color: transparent;
+  border-bottom: 1px solid #262741;
+  height: 8vh;
+}
+.sogive-search-box {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #262741;
+  border-radius: 0px !important;
+  outline: 0;
+  height: 8vh !important;
+  font-size: 2em !important;
+}
+.featured-charities-header {
+  font-size: 1em;
+  color: #262741;
+  border-bottom: 2px solid #F04B47;
+}
 img.logo {
   width: 32px;
   max-height: 32px;
@@ -12,6 +83,10 @@ img.logo-small {
 img.logo-large {
   max-width: 64px;
   max-height: 64px;
+}
+.sogive-logo-footer {
+  width: 12vh;
+  height: auto;
 }
 .slide-hide {
   transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
@@ -55,6 +130,10 @@ img.logo-large {
 }
 .SearchResults {
   margin-top: 50px;
+}
+.SearchResult {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 img.project-image {
   max-width: 300px;

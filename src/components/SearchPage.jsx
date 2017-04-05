@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
-import {Button, Form, FormGroup, FormControl, ControlLabel, Media, MediaLeft, MediaBody, MediaHeading, Well} from 'react-bootstrap';
+import {Button, Form, FormGroup, FormControl, Glyphicon, ControlLabel, Media, MediaLeft, MediaBody, MediaHeading, Well, InputGroup, InputGroupButton} from 'react-bootstrap';
 import {uid, yessy} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
@@ -28,9 +28,18 @@ export default class SearchPage extends React.Component {
 		const { q } = this.props;
 		return (
 			<div className='page SearchPage'>
-				<h2>Search</h2>
-				<SearchForm query={q} setResults={this.setResults.bind(this)}/>
-				<SearchResults results={this.state.results} query={q} />
+				<div className='col-md-12'>
+					<SearchForm query={q} setResults={this.setResults.bind(this)}/>
+				</div>
+				<div className='col-md-12'>
+					<SearchResults results={this.state.results} query={q} />
+				</div>
+				<div className='col-md-12 featured-charities'>
+					<p className='featured-charities-header'>
+						Featured Charities
+					{/* <FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity } }/> */}
+					</p>
+				</div>
 			</div>
 		);
 	}
@@ -83,25 +92,40 @@ class SearchForm extends React.Component {
 		}.bind(this));
 	}
 
+clearSearch () {
+	document.getElementById('formq').value = '';
+}
+
+
 	render() {
-		return(
-			<Form inline onSubmit={(event) => { this.onSubmit(event); }} >
-				<Well>
-					<FormGroup bsSize='lg' controlId="formq">
-						<ControlLabel bsSize='lg'>Keywords</ControlLabel>
+		return (
+			<Form onSubmit={(event) => { this.onSubmit(event); }} >
+				<FormGroup className='no-margin-bottom' bsSize='lg' controlId="formq">
+						<ControlLabel bsSize='lg'></ControlLabel>
+						{' '}
+						<InputGroup>
+							<FormControl
+								className='sogive-search-box'
+								bsSize='lg'
+								type="search"
+								value={this.state.q || ''}
+								placeholder="Keyword search"
+								onChange={(e) => this.onChange('q', e)}
+							/>
+							<span className='input-group-btn'>
+								<Button onClick={() => { this.clearSearch; }} type='submit' bsSize='lg' bsStyle='default' className='clear-search-btn'>
+									<Glyphicon glyph='remove-circle' />
+								</Button>
+							</span>
+						</InputGroup>
 						&nbsp;
-						<FormControl
-							bsSize='lg'
-							type="search"
-							value={this.state.q || ''}
-							placeholder="Enter search terms"
-							onChange={(e) => this.onChange('q', e)}
-						/>
-						&nbsp;
-						<Button type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
-					</FormGroup>
-					<Button onClick={() => { this.search(''); }} className="pull-right" bsSize='xs'>Show All</Button>
-				</Well>
+						<Button className='hidden' type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
+				</FormGroup>
+				<div className='col-md-12'>
+					<div className='col-md-offset-3 col-md-6 text-center'>
+						<Button onClick={() => { this.search(''); }} className="btn-showall" bsSize='xs'>Show All</Button>
+					</div>
+				</div>
 			</Form>
 		);
 	} // ./render
