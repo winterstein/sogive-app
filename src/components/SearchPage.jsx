@@ -34,6 +34,8 @@ export default class SearchPage extends React.Component {
 				<div className='col-md-12'>
 					<SearchResults results={this.state.results} query={q} />
 				</div>
+				<div className="col-xs-12 cheapverticalspace">
+				</div>
 				<div className='col-md-12 featured-charities'>
 					<p className='featured-charities-header'>
 						Featured Charities

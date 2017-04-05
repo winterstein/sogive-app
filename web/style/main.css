@@ -88,6 +88,9 @@ img.logo-large {
   width: 12vh;
   height: auto;
 }
+.cheapverticalspace {
+  height: 10em;
+}
 .slide-hide {
   transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
 }
