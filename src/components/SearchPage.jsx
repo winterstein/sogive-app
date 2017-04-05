@@ -135,10 +135,10 @@ clearSearch () {
 
 
 const SearchResults = ({ results, query }) => {
-	const num = results.length || query? <div>{results.length} results found</div> : null;
+	const num = results.length || query? <div className='num-results'>{results.length} results found</div> : null;
 	const ready = _.filter(results, c => _.find(c.projects, 'ready') );
 	const unready = _.filter(results, r => ready.indexOf(r) === -1);
-	const hu = unready.length? <div><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null;
+	const hu = unready.length? <div className='unready-results col-md-10'><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null;
 	return (
 		<div className='SearchResults'>
 			{num}
@@ -150,7 +150,7 @@ const SearchResults = ({ results, query }) => {
 
 
 const SearchResult = ({ item }) => (
-	<div className='SearchResult' >
+	<div className='SearchResult col-md-10' >
 		<Media>
 			<a href={`#charity?charityId=${item['@id']}`}>
 				<Media.Left>
