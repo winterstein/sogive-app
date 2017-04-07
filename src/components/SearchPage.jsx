@@ -31,12 +31,12 @@ export default class SearchPage extends React.Component {
 				<div className='col-md-12'>
 					<SearchForm query={q} setResults={this.setResults.bind(this)}/>
 				</div>
-				<div className='col-md-12'>
+				<div className='col-md-10'>
 					<SearchResults results={this.state.results} query={q} />
 				</div>
-				<div className="col-xs-12 cheapverticalspace">
+				<div className="col-xs-10 cheapverticalspace">
 				</div>
-				<div className='col-md-12 featured-charities'>
+				<div className='col-md-10 featured-charities'>
 					<p className='featured-charities-header'>
 						Featured Charities
 					{/* <FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity } }/> */}
