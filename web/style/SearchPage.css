@@ -16,3 +16,11 @@
   padding-bottom: 2vh;
   border-bottom: 1px solid #F04B47;
 }
+.FeaturedSidebar.affix-top {
+  position: static;
+  margin-top: 3vh;
+}
+.FeaturedSidebar.affix {
+  position: fixed;
+  top: 4vh;
+}

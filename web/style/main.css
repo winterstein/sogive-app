@@ -149,9 +149,64 @@ img.logo-large {
   padding-bottom: 2vh;
   border-bottom: 1px solid #F04B47;
 }
+.FeaturedSidebar.affix-top {
+  position: static;
+  margin-top: 3vh;
+}
+.FeaturedSidebar.affix {
+  position: fixed;
+  top: 4vh;
+}
 img.project-image {
   max-width: 300px;
   max-height: 300px;
+}
+.charity-logo-div {
+  width: 13vh;
+  height: auto;
+}
+.CharityProfile-div {
+  border-bottom: 1px solid #A49F79;
+}
+.CharityProfile {
+  font-size: 1em;
+}
+.project-image {
+  width: 30vh;
+  height: auto;
+}
+.upper-padding {
+  padding-top: 3vh;
+}
+.upper-margin {
+  margin-top: 3vh;
+}
+.donateto {
+  background-color: #A49F79;
+  font-size: 1em;
+  color: #FFFFFF;
+  border-bottom: 1px solid #262741;
+  padding-left: 2%;
+}
+.charity-project-title-div {
+  margin-top: 3vh;
+  border-bottom: 1px solid #A49F79;
+}
+.charity-project-div {
+  margin-top: 1vh;
+}
+.project-name {
+  font-size: 1em;
+  color: #262741;
+}
+.inputs-outputs {
+  border-top: 1px solid #262741;
+  border-bottom: 1px solid #262741;
+  border-left: 1px solid #262741;
+  border-right: 1px solid #262741;
+}
+.inputs {
+  border-right: 1px solid #262741;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -176,6 +231,12 @@ img.project-image {
   justify-content: center;
 }
 img.charity-logo {
-  max-width: 192px;
-  max-height: 192px;
+  width: 10vh;
+  height: auto;
+}
+.colour-03-text {
+  color: #262741;
+}
+body {
+  color: #262741;
 }

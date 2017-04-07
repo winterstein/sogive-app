@@ -87,23 +87,37 @@ class CharityPage extends React.Component {
 		return (
 			<div className='page CharityPage'>
 				<PageMetaInfo charity={charity} />
-				<Panel header={<h2>Charity Profile</h2>}>
-					<Image src={charity.logo} responsive thumbnail className="pull-right charity-logo" />
-					<h2>{charity.name}</h2>
-
-					<div ><small><a href={'/#charity/'+charity['@id']}>{charity.id}</a></small></div>
-					<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					{ tags }
-					{ turnover }
-					{ employees }
-					{ website }
-				</Panel>
-				<Panel bsStyle='primary' header={<h2>Donate to { charity.name }</h2>}>
-					<DonationForm charity={charity} project={project} />
-				</Panel>
-				{overallDiv}
-				{projectsDiv}
-				{oldProjectsDiv}
+				<div className='col-md-12'>
+					<div className='upper-margin CharityProfile-div'>
+						<p className='CharityProfile'>Charity Profile</p>
+					</div>
+					<div className='upper-padding col-md-2 charity-logo-div'>
+						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+					</div>
+					<div className='col-md-10 charity-name-div'>
+						<h2>{charity.name}</h2>
+						<br />
+						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
+						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
+					</div>
+					<div className='col-md-12 charity-data-div'>
+						{ tags }
+						{ turnover }
+						{ employees }
+						{ website }
+					</div>
+				</div>
+				<div className='upper-padding col-md-12 charity-donation-div'>
+					<p className='donateto'>Donate to { charity.name }</p>
+					<div className='col-md-12 charity-donation-form'>
+						<DonationForm charity={charity} project={project} />
+					</div>
+				</div>
+				<div className='col-md-12 charity-statistics-div'>
+					{overallDiv}
+					{projectsDiv}
+					{oldProjectsDiv}
+				</div>
 			</div>
 		);
 	}
@@ -136,21 +150,40 @@ const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (
-		<Panel header={<h3>{project.name}: {project.year}</h3>}>
-			<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
-			<ProjectImage images={project.images} />
-			<div className='inputs'><h4>Inputs</h4>
-				{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+		<div>
+		<div className='col-md-12 charity-project-title-div'>
+			<p className='project-name'>{project.name}: {project.year}</p>
+		</div>
+		<div className='col-md-12 charity-project-div'>
+			<div className='upper-padding col-md-12 image-and-story-div'>
+				<div className='col-md-2 project-image'>
+					<ProjectImage images={project.images} />
+				</div>
+				<div className='col-md-offset-1 col-md-7 project-story'>
+					<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
+				</div>
 			</div>
-			<div className='outputs'><h4>Outputs</h4>
-				{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+			<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
+				<div className='col-md-6 inputs'><h4 className='colour-03-text'>Inputs</h4>
+					{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+				</div>
+				<div className='col-md-6 outputs'><h4 className='colour-03-text'>Outputs</h4>
+					{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+				</div>
 			</div>
-			<div className='comments'>
-				{project.adjustmentComment}
-				{project.analysisComment}
+			<div className='col-md-12 upper-padding'>
+				<div className='col-md-offset-2 col-md-8 comments'>
+					{project.adjustmentComment}
+					{project.analysisComment}
+				</div>
 			</div>
-			<Citations thing={project} />
-		</Panel>
+			<div className='col-md-12 upper-padding'>
+				<div className='col-md-offset-2 col-md-8'>
+					<Citations thing={project} />
+				</div>
+			</div>
+		</div>
+		</div>
 	);
 };
 

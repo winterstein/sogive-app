@@ -31,7 +31,7 @@ export default class SearchPage extends React.Component {
 				<div className='col-md-12'>
 					<SearchForm query={q} setResults={this.setResults.bind(this)}/>
 				</div>
-				<div className='col-md-10'>
+				<div className='col-md-12'>
 					<SearchResults results={this.state.results} query={q} />
 				</div>
 				<div className="col-xs-10 cheapverticalspace">
@@ -39,7 +39,7 @@ export default class SearchPage extends React.Component {
 				<div className='col-md-10 featured-charities'>
 					<p className='featured-charities-header'>
 						Featured Charities
-					{/* <FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity } }/> */}
+					{/* <FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity. When a search returns results, this should convert into a sidebar, or at least become hidden, and a sidebar should be generated. } }/> */}
 					</p>
 				</div>
 			</div>
@@ -94,6 +94,8 @@ class SearchForm extends React.Component {
 		}.bind(this));
 	}
 
+
+/* the 'clearSearch function currently doesn't work */
 clearSearch () {
 	document.getElementById('formq').value = '';
 }
@@ -123,7 +125,7 @@ clearSearch () {
 						&nbsp;
 						<Button className='hidden' type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
 				</FormGroup>
-				<div className='col-md-12'>
+				<div className='col-md-10'>
 					<div className='col-md-offset-3 col-md-6 text-center'>
 						<Button onClick={() => { this.search(''); }} className="btn-showall" bsSize='xs'>Show All</Button>
 					</div>
@@ -148,7 +150,6 @@ const SearchResults = ({ results, query }) => {
 		</div>);
 }; //./SearchResults
 
-
 const SearchResult = ({ item }) => (
 	<div className='SearchResult col-md-10' >
 		<Media>
@@ -165,6 +166,3 @@ const SearchResult = ({ item }) => (
 		</Media>
 	</div>
 ); //./SearchResult
-
-
-
