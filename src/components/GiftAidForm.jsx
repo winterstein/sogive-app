@@ -56,8 +56,8 @@ const GiftAidForm = ({
 	) : '';
 
 	return (
-		<div className='well well-sm'>
-			<Checkbox checked={giftAid} onChange={(event) => handleChange('giftAid', event.target.checked)}>
+		<div className='upper-margin col-md-12 giftAid'>
+			<Checkbox className="well no-padding" checked={giftAid} onChange={(event) => handleChange('giftAid', event.target.checked)}>
 				Yes, add Gift Aid &nbsp;
 				<small><a target='_blank' href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
 					Find out more about Gift Aid

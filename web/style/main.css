@@ -91,6 +91,9 @@ img.logo-large {
 .cheapverticalspace {
   height: 10em;
 }
+.smallverticalspace {
+  height: 2em;
+}
 .slide-hide {
   transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
 }
@@ -187,6 +190,7 @@ img.project-image {
   color: #FFFFFF;
   border-bottom: 1px solid #262741;
   padding-left: 2%;
+  margin: 1% auto 2%;
 }
 .charity-project-title-div {
   margin-top: 3vh;
@@ -207,6 +211,44 @@ img.project-image {
 }
 .inputs {
   border-right: 1px solid #262741;
+}
+.btn-sogive-donate-btn {
+  width: 24%;
+  height: 7vh;
+  font-size: 1.5em;
+  line-height: 1.33;
+  border-radius: 35px;
+  color: #FFFFFF;
+  background-color: #F04B47;
+}
+.btn-amount-btn {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+  margin-top: 16%;
+  margin-bottom: 16%;
+  color: #323257;
+}
+.btn-amount-btn:focus {
+  background-color: #262741;
+}
+.btn.active {
+  background-color: #262741 !important;
+  color: white !important;
+}
+.giftAid {
+  border-bottom: 1px solid #F04B47;
+}
+.no-padding {
+  padding: 0 !important;
+}
+.social-media-btn {
+  border: none;
+  width: 35px;
+  height: auto;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -239,4 +281,11 @@ img.charity-logo {
 }
 body {
   color: #262741;
+}
+.impact-text {
+  text-align: center;
+}
+.impact-units-amount {
+  font-size: 2.5em;
+  margin-bottom: 0;
 }
