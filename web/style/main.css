@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-Regular.ttf');
+}
+body {
+  font-family: 'Roboto';
+}
 .avoid-navbar {
   margin-top: 100px;
 }
