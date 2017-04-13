@@ -212,16 +212,17 @@ img.project-image {
 .inputs {
   border-right: 1px solid #262741;
 }
-.btn-sogive-donate-btn {
-  width: 24%;
-  height: 7vh;
-  font-size: 1.5em;
-  line-height: 1.33;
-  border-radius: 35px;
-  color: #FFFFFF;
-  background-color: #F04B47;
+.sogive-donate-btn {
+  width: 24% !important;
+  height: 7vh !important;
+  font-size: 1.5em !important;
+  line-height: 1.33 !important;
+  border-radius: 35px !important;
+  color: #FFFFFF !important;
+  background-color: #F04B47 !important;
+  border-color: transparent !important;
 }
-.btn-amount-btn {
+.amount-btn {
   width: 30px;
   height: 30px;
   padding: 6px 0;
@@ -232,12 +233,15 @@ img.project-image {
   margin-bottom: 16%;
   color: #323257;
 }
-.btn-amount-btn:focus {
+.btn-primary {
+  color: #FFFFFF !important;
+}
+.amount-btn:focus {
   background-color: #262741;
 }
 .btn.active {
   background-color: #262741 !important;
-  color: white !important;
+  color: #FFFFFF !important;
 }
 .giftAid {
   border-bottom: 1px solid #F04B47;
@@ -247,8 +251,19 @@ img.project-image {
 }
 .social-media-btn {
   border: none;
-  width: 35px;
   height: auto;
+}
+.twitter-btn {
+  color: #1DA1F3;
+}
+.twitter-btn:hover {
+  color: #1DA1F3;
+}
+.facebook-btn {
+  color: #3b5998;
+}
+.facebook-btn:hover {
+  color: #3b5998;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -288,4 +303,10 @@ body {
 .impact-units-amount {
   font-size: 2.5em;
   margin-bottom: 0;
+}
+.impact-text-horizontal-div {
+  width: 100%;
+}
+.impact-text-horizontal {
+  text-align: justify;
 }

@@ -169,12 +169,12 @@ class ThankYouAndShare extends React.Component {
 				</div>
 				<div className='col-md-12 social-media-buttons'>
 					<center>
-						<a className='btn social-media-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
+						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
 							{ /*<Misc.Logo service='twitter' /> */}
 							<i className="fa fa-twitter-square fa-4x" aria-hidden="true"></i>
 						</a>
 
-						<a className='btn social-media-btn' onClick={() => { this.shareOnFacebook(); }}>
+						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(); }}>
 							{ /* <Misc.Logo service='facebook' /> */}
 							<i className="fa fa-facebook-square fa-4x" aria-hidden="true"></i>
 						</a>
@@ -208,7 +208,7 @@ const DonationFormButton = ({onToken, amount}) => {
 				token={onToken}
 			>
 				<center>
-				<Button bsStyle="primary">Donate</Button>
+				<Button bsStyle="primary" className='sogive-donate-btn'>Donate</Button>
 				</center>
 			</StripeCheckout>
 		</div>
@@ -253,7 +253,7 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 					</InputGroup>
 				</div>
 				<div className="form-group col-md-2">
-					<Misc.ImpactDesc unitImpact={unitImpact} amount={amount} />
+					<Misc.ImpactDescVertical unitImpact={unitImpact} amount={amount} />
 				</div>
 			</form>
 		</div>
@@ -265,6 +265,7 @@ const DonationAmount = function({selected, price, handleChange}) {
 			<Button
 				bsStyle={selected? 'primary' : null}
 				bsSize="sm"
+				className='amount-btn'
 				onClick={() => handleChange('amount', price)}
 			>
 				£ {price}

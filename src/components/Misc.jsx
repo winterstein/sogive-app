@@ -87,6 +87,29 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
 		// NB long line as easiest way to do spaces in React
 		return (
+			<div className='impact-text-horizontal-div'>
+				<p className='impact-text-horizontal'>
+					<b>{peepText}<Misc.Money amount={amount} /></b> will fund <span className="">{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</span> {unitImpact.name || ''}
+				</p>
+			</div>
+		);
+	}
+	return null;
+};
+
+
+Misc.ImpactDescVertical = ({unitImpact, amount}) => {
+	if (unitImpact && unitImpact.number && unitImpact.price) {
+		// more people?
+		let peepText = '';
+		let peeps = 1;
+		if (unitImpact.number*amount < 0.5) {
+			peeps = 1 / (unitImpact.number * amount);
+			peepText = printer.prettyNumber(peeps, 1)+' people donating ';
+		}
+		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
+		// NB long line as easiest way to do spaces in React
+		return (
 			<div className='impacts'>
 				<p className='impact-text'>
 					<b>{peepText}<Misc.Money amount={amount} /></b>
@@ -102,5 +125,6 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 	}
 	return null;
 };
+
 
 export default Misc;
