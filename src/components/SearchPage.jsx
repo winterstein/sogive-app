@@ -109,7 +109,15 @@ clearSearch () {
 						{' '}
 						<InputGroup>
 							<FormControl
-								className='sogive-search-box'
+								className='hidden-xs hidden-sm sogive-search-box'
+								bsSize='lg'
+								type="search"
+								value={this.state.q || ''}
+								placeholder="Keyword search"
+								onChange={(e) => this.onChange('q', e)}
+							/>
+							<FormControl
+								className='visible-xs visible-sm sogive-search-box-mobile'
 								bsSize='lg'
 								type="search"
 								value={this.state.q || ''}
@@ -126,8 +134,11 @@ clearSearch () {
 						<Button className='hidden' type='submit' bsSize='lg' bsStyle='primary'>Search</Button>
 				</FormGroup>
 				<div className='col-md-10'>
-					<div className='col-md-offset-3 col-md-6 text-center'>
+					<div className='hidden-xs hidden-sm col-md-offset-3 col-md-6 text-center'>
 						<Button onClick={() => { this.search(''); }} className="btn-showall" bsSize='xs'>Show All</Button>
+					</div>
+					<div className='visible-xs visible-sm col-md-offset-3 col-md-6 text-center'>
+						<Button onClick={() => { this.search(''); }} className="btn-showall-mobile" bsSize='xs'>Show All</Button>
 					</div>
 				</div>
 			</Form>
@@ -155,7 +166,7 @@ const SearchResult = ({ item }) => (
 		<Media>
 			<a href={`#charity?charityId=${item['@id']}`}>
 				<Media.Left>
-					{item.logo? <img width={64} height={64} src={item.logo} alt={`Logo for ${item.name}`} /> : null}
+					{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.name}`} /> : null}
 				</Media.Left>
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>

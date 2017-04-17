@@ -23,7 +23,7 @@ const SoGiveNavBar = ({page}) => {
 						<span className="icon-bar" />
 					</button>
 					<a className="" href="#dashboard">
-						<img alt="SoGive logo" style={{maxWidth:'100px',maxHeight:'50px'}} src="img/logo.png" />
+						<img alt="SoGive logo" style={{maxWidth:'100px',maxHeight:'50px'}} src="img/logo-white-sm.png" />
 					</a>
 				</div>
 				<div id="navbar" className="navbar-collapse collapse">

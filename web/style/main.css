@@ -27,6 +27,14 @@ body {
   border-radius: 7%;
   font-size: 1em;
 }
+.btn-showall-mobile {
+  background-color: #A49F79;
+  color: #FFFFFF;
+  width: 13vh;
+  height: 5vh;
+  border-radius: 7%;
+  font-size: 1em;
+}
 .sogive-search {
   width: 100% !important;
 }
@@ -73,6 +81,16 @@ body {
   outline: 0;
   height: 8vh !important;
   font-size: 2em !important;
+}
+.sogive-search-box-mobile {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #262741;
+  border-radius: 0px !important;
+  outline: 0;
+  height: 8vh !important;
+  font-size: 1em !important;
 }
 .featured-charities-header {
   font-size: 1em;
@@ -167,6 +185,10 @@ img.logo-large {
   position: fixed;
   top: 4vh;
 }
+.charity-logo {
+  height: 64px;
+  width: auto;
+}
 img.project-image {
   max-width: 300px;
   max-height: 300px;
@@ -184,6 +206,12 @@ img.project-image {
 .project-image {
   width: 30vh;
   height: auto;
+}
+.project-image-mobile {
+  max-width: 100%;
+  height: auto;
+  padding-left: 1%;
+  padding-right: 1%;
 }
 .upper-padding {
   padding-top: 3vh;
@@ -219,8 +247,30 @@ img.project-image {
 .inputs {
   border-right: 1px solid #262741;
 }
+.project-story-text {
+  text-align: center;
+}
+.outputs-mobile {
+  padding-bottom: 15px;
+}
+.citation-url {
+  font-size: 85%;
+  word-wrap: break-word;
+}
+.DonationForm {
+  width: 100%;
+}
 .sogive-donate-btn {
   width: 24% !important;
+  height: 7vh !important;
+  font-size: 1.5em !important;
+  line-height: 1.33 !important;
+  border-radius: 35px !important;
+  color: #FFFFFF !important;
+  background-color: #F04B47 !important;
+  border-color: transparent !important;
+}
+.sogive-donate-btn-mobile {
   height: 7vh !important;
   font-size: 1.5em !important;
   line-height: 1.33 !important;
@@ -236,18 +286,28 @@ img.project-image {
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
-  margin-top: 16%;
-  margin-bottom: 16%;
-  color: #323257;
 }
-.btn-primary {
-  color: #FFFFFF !important;
+.amount-btn.btn-primary {
+  background-color: #323257 !important;
+  border-color: #323257 !important;
+}
+.amount-btn-mobile {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.amount-btn-mobile.btn-primary {
+  background-color: #323257 !important;
+  border-color: #323257 !important;
 }
 .amount-btn:focus {
-  background-color: #262741;
+  background-color: #323257;
 }
 .btn.active {
-  background-color: #262741 !important;
+  background-color: #323257 !important;
   color: #FFFFFF !important;
 }
 .giftAid {
@@ -271,6 +331,10 @@ img.project-image {
 }
 .facebook-btn:hover {
   color: #3b5998;
+}
+.mobile-text-input-box {
+  width: auto !important;
+  height: 20vh !important;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -298,6 +362,10 @@ img.charity-logo {
   width: 10vh;
   height: auto;
 }
+img.charity-logo-mobile {
+  width: 30%;
+  height: auto;
+}
 .colour-03-text {
   color: #262741;
 }
@@ -316,4 +384,56 @@ body {
 }
 .impact-text-horizontal {
   text-align: justify;
+}
+.sogive-footer {
+  width: 100%;
+  height: auto;
+  background-color: #EEEEEE;
+  position: relative;
+  bottom: 0;
+}
+.sogive-footer-mobile {
+  width: 100%;
+  height: auto;
+  background-color: #EEEEEE;
+  position: relative;
+  bottom: 0;
+}
+.sogive-footer-text {
+  color: #262741;
+}
+.col-xs-1 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-2 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-3 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-4 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-5 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-6 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-7 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.col-xs-8 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+.full-width {
+  width: 100% !important;
 }

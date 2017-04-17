@@ -55,16 +55,16 @@ class DonationForm extends React.Component {
 		) : '';
 
 		return (
-			<div className='col-md-12 DonationForm'>
-				<div className='col-md-12'>
+			<div>
+				<div className='DonationForm'>
 					<DonationAmounts
-						options={[5, 10, 20]}
-						impacts={project.impacts}
-						charity={charity}
-						project={project}
-						amount={donationForm.amount}
-						handleChange={handleChange}
-					/>
+							options={[5, 10, 20]}
+							impacts={project.impacts}
+							charity={charity}
+							project={project}
+							amount={donationForm.amount}
+							handleChange={handleChange}
+						/>
 				</div>
 				<div className='col-md-12 donate-button'>
 					{ donateButton }
@@ -154,13 +154,24 @@ class ThankYouAndShare extends React.Component {
 			<div className='col-md-12'>
 				<div className='smallverticalspace'>
 				</div>
-				<div className='col-md-12 ThankYouAndShare panel-success'>
+				<div className='hidden-xs hidden-sm ThankYouAndShare panel-success'>
 					{ header }
 
 					<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
 
 					<textarea
 						className='form-control'
+						onChange={() => { this.onChangeShareText(); }}
+						defaultValue={shareText}
+					/>
+				</div>
+				<div className='visible-xs visible-sm ThankYouAndShare panel-success'>
+					{ header }
+
+					<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
+
+					<textarea
+						className='form-control mobile-text-input-box'
 						onChange={() => { this.onChangeShareText(); }}
 						defaultValue={shareText}
 					/>
@@ -208,7 +219,8 @@ const DonationFormButton = ({onToken, amount}) => {
 				token={onToken}
 			>
 				<center>
-				<Button bsStyle="primary" className='sogive-donate-btn'>Donate</Button>
+				<Button bsStyle="primary" className='hidden-xs hidden-sm sogive-donate-btn'>Donate</Button>
+				<Button bsStyle="primary" className='visible-xs visible-sm sogive-donate-btn-mobile'>Donate</Button>
 				</center>
 			</StripeCheckout>
 		</div>
@@ -234,12 +246,15 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
 
 	return(
-		<div>
+		<div className='full-width'>
 			<form>
-				<div className="form-group col-md-1">
+				<div className="hidden-xs hidden-sm form-group col-md-1">
 					{damounts}
 				</div>
-				<div className="form-group col-md-8">
+				<div className="visible-xs visible-sm col-xs-2">
+					{damounts}
+				</div>
+				<div className="hidden-xs hidden-sm form-group col-md-8">
 					<InputGroup>
 						<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
 						<FormControl
@@ -252,7 +267,27 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 						/>
 					</InputGroup>
 				</div>
-				<div className="form-group col-md-2">
+				<center>
+					<div className="visible-xs visible-sm col-xs-10">
+						<div className="visible-xs visible-sm form-group row">
+							<InputGroup>
+								<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
+								<FormControl
+									type="number"
+									min="0"
+									step="1"
+									placeholder="Enter donation amount"
+									onChange={({ target }) => { handleChange('amount', target.value); }}
+									value={amount}
+								/>
+							</InputGroup>
+						</div>
+						<div className="visible-xs visible-sm row">
+							<Misc.ImpactDescVertical unitImpact={unitImpact} amount={amount} />
+						</div>
+					</div>
+				</center>
+				<div className="hidden-xs hidden-sm form-group col-md-2">
 					<Misc.ImpactDescVertical unitImpact={unitImpact} amount={amount} />
 				</div>
 			</form>
@@ -262,14 +297,28 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 
 const DonationAmount = function({selected, price, handleChange}) {
 	return (
-			<Button
-				bsStyle={selected? 'primary' : null}
-				bsSize="sm"
-				className='amount-btn'
-				onClick={() => handleChange('amount', price)}
-			>
-				£ {price}
-			</Button>
+			<div>	
+				<div className='hidden-xs hidden-sm'>
+					<Button
+						bsStyle={selected? 'primary' : null}
+						bsSize="sm"
+						className='amount-btn'
+						onClick={() => handleChange('amount', price)}
+					>
+						£ {price}
+					</Button>
+				</div>
+				<div className='visible-xs visible-sm'>
+					<Button
+						bsStyle={selected? 'primary' : null}
+						bsSize="sm"
+						className='amount-btn-mobile'
+						onClick={() => handleChange('amount', price)}
+					>
+						£ {price}
+					</Button>
+				</div>
+			</div>
 	);
 };
 
