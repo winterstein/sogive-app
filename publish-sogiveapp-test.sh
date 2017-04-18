@@ -52,6 +52,7 @@ for server in ${TARGETSERVERS[*]}; do
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/web/* winterwell@$server.soda.sh:/home/winterwell/sogive-app/web/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/package.json winterwell@$server.soda.sh:/home/winterwell/sogive-app/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/webpack* winterwell@$server.soda.sh:/home/winterwell/sogive-app/
+	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/.babelrc winterwell@$server.soda.sh:/home/winterwell/sogive-app/web/build/js/
 	echo "done syncing"
 	echo ""
 	echo "satisfying NPM dependencies..."
@@ -59,6 +60,11 @@ for server in ${TARGETSERVERS[*]}; do
 	echo ""
 	echo "webpacking..."
 	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app && npm run compile'
+	echo ""
+	echo "Processing bundle.js file for ES5 compatibility"
+	ssh winterwell@$server.soda.sh 'mv /home/winterwell/sogive-app/web/build/js/bundle.js /home/winterwell/sogive-app/web/build/js/original.bundle.js'
+	ssh winterwell@$server.soda.sh 'cd /home/winterwell/sogive-app/web/build/js/ && babel original.bundle.js --out-file bundle.js'
+	echo "done converting bundle.js for ES5 compatibility"
 	echo ""
 	echo "starting the sogiveapp process on $server"
 	ssh winterwell@$server.soda.sh 'service sogiveapp start'
