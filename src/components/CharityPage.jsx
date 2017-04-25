@@ -88,32 +88,17 @@ class CharityPage extends React.Component {
 			<div className='page CharityPage'>
 				<PageMetaInfo charity={charity} />
 				<div className='col-md-12'>
-					<div className='upper-margin CharityProfile-div'>
+					<div className='CharityProfile-div'>
 						<p className='CharityProfile'>Charity Profile</p>
 					</div>
-					<div className='hidden-xs hidden-sm upper-padding col-md-2 charity-logo-div'>
+					<div className='col-md-2 charity-logo-div'>
 						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
 					</div>
-					<div className='visible-xs visible-sm upper-padding charity-logo-div full-width'>
-						<center>
-							<Image src={charity.logo} responsive thumbnail className="charity-logo-mobile" />
-						</center>
-					</div>
-					<div className='hidden-xs hidden-sm col-md-10 charity-name-div'>
+					<div className='col-md-10 charity-name-div'>
 						<h2>{charity.name}</h2>
 						<br />
 						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
 						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					</div>
-					<div className='visible-xs visible-sm col-md-10 charity-name-div'>
-						<center>
-							<h2>{charity.name}</h2>
-						</center>
-						<br />
-						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
-						<center>
-							<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-						</center>
 					</div>
 					<div className='col-md-12 charity-data-div'>
 						{ tags }
@@ -165,44 +150,35 @@ const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (
-		<div className='col-md-12'>
-		<div className='charity-project-title-div'>
-			<p className='project-name'>{project.name}: {project.year}</p>
-		</div>
-		<div className='charity-project-div'>
-			<div className='upper-padding image-and-story-div'>
-				<div className='hidden-xs hidden-sm col-md-2 project-image'>
-					<ProjectImage images={project.images} />
-				</div>
-				<div className='visible-xs visible-sm project-image-mobile'>
-					<ProjectImage images={project.images} />
-				</div>
-				<div className='col-md-offset-1 col-md-7 project-story'>
-					<p className='upper-padding project-story-text' dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
-				</div>
+		<div className='col-md-12 ProjectPanel'>
+			<div className='charity-project-title-div'>
+				<p className='project-name'>{project.name}: {project.year}</p>
 			</div>
-			<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
-				<div className='hidden-xs hidden-sm col-md-6 inputs'><h4 className='colour-03-text'>Inputs</h4>
-					{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+			<div className='charity-project-div'>
+				<div className='image-and-story-div'>
+					<div className='col-md-2 project-image'>
+						<ProjectImage images={project.images} />
+					</div>
+					<div className='col-md-offset-1 col-md-7 project-story'>
+						<p className='project-story-text' dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
+					</div>
 				</div>
-				<div className='visible-xs visible-sm col-md-6 inputs-mobile'><h4 className='colour-03-text'>Inputs</h4>
-					{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+				<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
+					<div className='col-md-6 inputs'><h4>Inputs</h4>
+						{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+					</div>
+					<div className='col-md-6 outputs'><h4>Outputs</h4>
+						{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+					</div>
 				</div>
-				<div className='hidden-xs hidden-sm col-md-6 outputs'><h4 className='colour-03-text'>Outputs</h4>
-					{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+				<div className='upper-padding'>
+					<div className='col-md-offset-2 col-md-8 comments'>
+						{project.adjustmentComment}
+						{project.analysisComment}
+					</div>
 				</div>
-				<div className='visible-xs visible-sm col-md-6 outputs-mobile'><h4 className='colour-03-text'>Outputs</h4>
-					{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
-				</div>
+				<Citations thing={project} />
 			</div>
-			<div className='upper-padding'>
-				<div className='col-md-offset-2 col-md-8 comments'>
-					{project.adjustmentComment}
-					{project.analysisComment}
-				</div>
-			</div>
-			<Citations thing={project} />
-		</div>
 		</div>
 	);
 };

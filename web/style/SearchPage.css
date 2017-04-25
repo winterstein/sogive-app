@@ -44,46 +44,9 @@
 .btn-showall {
   background-color: #a49f79;
   color: #ffffff;
-  width: 9vh;
-  height: 3vh;
-  border-radius: 7%;
-  font-size: 1em;
-}
-.btn-showall-mobile {
-  background-color: #a49f79;
-  color: #ffffff;
-  width: 13vh;
-  height: 5vh;
-  border-radius: 7%;
-  font-size: 1em;
 }
 .sogive-search {
   width: 100% !important;
-}
-.clear-search {
-  background-color: transparent;
-  color: grey;
-  border-radius: none;
-  border-color: transparent;
-}
-.clear-search-btn {
-  background-color: transparent;
-  color: grey;
-  border-radius: 0px;
-  border-color: transparent;
-  border-bottom: 1px solid #262741;
-  height: 8vh;
-}
-.clear-search-btn:hover,
-.clear-search-btn:active,
-.clear-search-btn:focus,
-.clear-search-btn:visited {
-  background-color: transparent;
-  color: grey;
-  border-radius: 0px;
-  border-color: transparent;
-  border-bottom: 1px solid #262741;
-  height: 8vh;
 }
 .sogive-search-box {
   border-top: none;
@@ -93,15 +56,5 @@
   border-radius: 0px !important;
   outline: 0;
   height: 8vh !important;
-  font-size: 2em !important;
-}
-.sogive-search-box-mobile {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid #262741;
-  border-radius: 0px !important;
-  outline: 0;
-  height: 8vh !important;
-  font-size: 1em !important;
+  font-size: 150% !important;
 }
