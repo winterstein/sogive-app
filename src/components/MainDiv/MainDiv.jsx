@@ -4,6 +4,8 @@ import Login from 'hooru';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
 
+// Plumbing
+import DataStore from '../../plumbing/DataStore';
 
 // Templates
 import MessageBar from '../MessageBar';
@@ -45,6 +47,11 @@ class MainDiv extends Component {
 		});
 		// And trigger it to make sure we're up to date.
 		Login.change();
+	}
+
+	componentWillMount() {
+		// poke react on change
+		DataStore.addListener(() => this.setState({}));
 	}
 
 	componentDidMount() {
