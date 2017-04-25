@@ -7,14 +7,14 @@ import { XId } from 'wwutils';
 import printer from '../utils/printer';
 // import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
-import { showLoginMenu } from './genericActions';
+import DataStore from '../plumbing/DataStore';
 // import ChartWidget from './ChartWidget';
 import Misc from './Misc';
 
 
 class DashboardPage extends Component {
 	render() {
-		const { user, openLogin, openRegister } = this.props;
+		const { user} = this.props;
 		const donations = this.state && this.state.donations;
 
 		let content;
@@ -22,7 +22,7 @@ class DashboardPage extends Component {
 		if (!user) {
 			content = (
 				<div>
-					<a href='#' onClick={openLogin}>Login</a> or <a href='#' onClick={openRegister}>register</a> to track your donations.
+					<a href='#' onClick={DataStore.setShow('LoginWidget', true)}>Login or register</a> to track your donations.
 				</div>
 			);
 		} else if (!donations) {

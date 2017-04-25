@@ -4,7 +4,7 @@ import Login from 'hooru';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
 
-
+import DataStore from '../../plumbing/DataStore';
 // Templates
 import MessageBar from '../MessageBar';
 import SoGiveNavBar from '../SoGiveNavBar/SoGiveNavBar';
@@ -17,7 +17,6 @@ import DonateToCampaignPage from '../DonateToCampaignPage';
 import CharityPage from '../CharityPage';
 
 // Actions
-import { loginChanged } from '../genericActions';
 
 
 const PAGES = {
@@ -38,13 +37,16 @@ class MainDiv extends Component {
 	constructor(props) {
 		super(props);
 		this.state = this.decodeHash(window.location.href);
+	}
+
+	componentWillMount() {
+		// redraw on change
+		DataStore.addListener((mystate) => this.setState({}));
 
 		// Set up login watcher here, at the highest level
 		Login.change(() => {
-			this.props.dispatch(loginChanged(false));
+			this.setState({});
 		});
-		// And trigger it to make sure we're up to date.
-		Login.change();
 	}
 
 	componentDidMount() {
@@ -84,7 +86,7 @@ class MainDiv extends Component {
 						<Page {...pageProps} />
 					</div>
 				</div>
-				<LoginWidget />
+				<LoginWidget logo='sogive' title='Welcome to SoGive' />
 			</div>
 		);
 	}

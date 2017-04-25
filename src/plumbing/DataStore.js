@@ -38,6 +38,20 @@ class Store {
 		return this.appstate.data[type][id];
 	}
 
+	getValue(...path) {
+		assert(_.isArray(path), path);
+		assert(this.appstate[path[0]], 
+			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use getValue()");		
+		let tip = this.appstate;
+		for(let pi=0; pi < path.length; pi++) {
+			let pkey = path[pi];			
+			let newTip = tip[pkey];
+			if ( ! newTip) return null;
+			tip = newTip;
+		}
+		return tip;
+	}
+
 	/**
 	 * Update a single path=value
 	 * @param {String[]} path 
@@ -63,14 +77,27 @@ class Store {
 			tip = newTip;
 		}
 		// update
-		DataStore.update(newState);
+		this.update(newState);
 	}
 
+	/**
+	* Set widget.thing.show
+	 * @param {String} thing The name of the widget.
+	 * @param {boolean} showing 
+	 */
 	setShow(thing, showing) {
 		assMatch(thing, String);
-		let s = {show: {}};
-		s.show[thing] = showing;
-		this.update(s);
+		this.setValue(['widget', thing, 'show'], showing);
+	}
+
+	/**
+	 * Convenience for widget.thing.show
+	 * @param {String} widgetName 
+	 * @returns {boolean} true if widget is set to show
+	 */
+	getShow(widgetName) {
+		assMatch(widgetName, String);
+		return this.getValue('widget', widgetName, 'show');
 	}
 
 	updateFromServer(res) {
@@ -131,8 +158,6 @@ DataStore.update({
 		Person: null,
 		User: null,
 	},	
-	show: {
-	},
 	widget: {},
 	misc: {
 	}

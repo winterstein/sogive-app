@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {FormControl,Checkbox,Textarea} from 'react-bootstrap';
+import DataStore from '../plumbing/DataStore';
+
 import {assert} from 'sjtest';
 import _ from 'lodash';
 //import i18n from 'easyi18n';
@@ -94,5 +97,46 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 	}
 	return null;
 };
+
+
+Misc.PropControl = ({prop,path,item, type, bg}) => {
+	if ( ! item) item = {};
+	const value = item[prop]===undefined? '' : item[prop];
+	const proppath = path.slice().concat(prop);
+	if (type==='Checkbox') {
+		return <Checkbox checked={item[prop]} onChange={e => DataStore.setValue(proppath, e.target.checked)} />;
+	}
+	if (type==='MonetaryAmount') {
+		// special case to handle x100 no-floats format
+		let v100 = (item[prop] && item[prop].value100) || 0;
+		let path2 = path.slice().concat([prop, 'value100']);
+		return <FormControl name={prop} value={v100} onChange={e => DataStore.setValue(path2, e.target.value)} />;
+	}
+	const onChange = e => DataStore.setValue(proppath, e.target.value);
+	if (type==='textarea') {
+		return <FormControl componentClass="textarea" name={prop} value={value} onChange={onChange} />;
+	}
+	if (type==='img') {
+		return (<div>
+			<FormControl type='url' name={prop} value={value} onChange={onChange} />
+			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
+			<div className='clearfix' />
+		</div>);
+	}
+	if (type==='url') {
+		return (<div>
+			<FormControl type='url' name={prop} value={value} onChange={onChange} />
+			<div className='pull-right'><Misc.SiteThumbnail url={value} /></div>
+			<div className='clearfix' />
+		</div>);
+	}
+	// normal
+	return <FormControl name={prop} value={value} onChange={onChange} />;
+};
+
+Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
+
+Misc.ImgThumbnail = ({url}) => url? <img className='logo' src={url} /> : null;
+
 
 export default Misc;

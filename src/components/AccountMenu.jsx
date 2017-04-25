@@ -5,12 +5,13 @@ import { Nav, NavItem } from 'react-bootstrap';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import LoginWidget from './LoginWidget/LoginWidget.jsx';
+import Login from 'hooru';
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
 import Misc from './Misc';
 
 const doLogout = () => {
-	// Login.logout();
+	Login.logout();
 };
 
 /*
@@ -50,12 +51,9 @@ const AccountMenu = ({user, pending, active}) => {
 
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
-	...state.login,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	doLogout: () => dispatch(logout(dispatch)),
-	showLogin: () => dispatch(showLoginMenu(true)),
 });
 
 export default connect(

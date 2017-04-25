@@ -1,5 +1,5 @@
 import React from 'react';
-import { assert } from 'sjtest';
+import { assert, assMatch } from 'sjtest';
 import Login from 'hooru';
 import {Modal} from 'react-bootstrap';
 import { XId, uid } from 'wwutils';
@@ -9,8 +9,8 @@ import ActionMan from '../../plumbing/ActionMan';
 import Misc from '../Misc';
 import C from '../../C';
 
-// FIXME!!!
-Login.ENDPOINT = 'http://local.soda.sh/hooru.json';
+// For testing
+// Login.ENDPOINT = 'http://local.soda.sh/hooru.json';
 
 /**
 	TODO:
@@ -44,6 +44,16 @@ const SocialSignin = ({verb, socialLogin}) => {
 	);
 };*/
 
+const emailLogin = (email, password) => {
+	assMatch(email, String, password, String);
+	Login.login(email, password)
+	.then(function(res) {
+		console.warn("login", res);
+		// poke React
+		DataStore.update({});	
+	});
+};
+
 
 const EmailSignin = ({verb}) => {
 	let person = DataStore.appstate.data.User.loggingIn;	
@@ -55,7 +65,7 @@ const EmailSignin = ({verb}) => {
 		}
 		let e = person.email;
 		let p = person.password;
-		ActionMan.emailLogin(e, p);
+		emailLogin(e, p);
 	};	
 
 	const buttonText = {
@@ -65,7 +75,7 @@ const EmailSignin = ({verb}) => {
 	}[verb];
 
 	// login/register
-	let path = [C.TYPES.User, 'loggingIn'];
+	let path = ['data', C.TYPES.User, 'loggingIn'];
 	return (
 		<form
 			id="loginByEmail"
@@ -121,10 +131,16 @@ const LoginError = function() {
 		See SigninScriptlet
 
 */
-const LoginWidget = ({showDialog}) => {
+const LoginWidget = ({showDialog, logo, title}) => {
+	if (showDialog === undefined) {
+		showDialog = DataStore.getShow('LoginWidget');
+		// NB: the app is shown regardless
+	}
 	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
 	if ( ! verb) verb = 'login';
-	
+
+	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to the Good-Loop Portal`;
+
 	const heading = {
 		login: 'Log In',
 		register: 'Register',
@@ -138,8 +154,8 @@ const LoginWidget = ({showDialog}) => {
 		<Modal show={showDialog} className="login-modal" onHide={() => DataStore.setShow(C.show.LoginWidget, false)}>
 			<Modal.Header closeButton>
 				<Modal.Title>
-					<Misc.Logo service="goodloop" size='large' transparent={false} />
-					Welcome {verb==='login'? '(back)' : ''} to the Good-Loop Portal
+					<Misc.Logo service={logo} size='large' transparent={false} />
+					{title}					
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -158,11 +174,11 @@ const LoginWidget = ({showDialog}) => {
 				verb === 'register' ?
 					<div>
 						Already have an account?
-						&nbsp;<a href='#' onClick={() => ActionMan.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
+						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
 					</div> :
 					<div>
 						Don&#39;t yet have an account?
-						&nbsp;<a href='#' onClick={() => ActionMan.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
+						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
 					</div>
 			}
 			</Modal.Footer>

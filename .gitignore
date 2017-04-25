@@ -6,3 +6,4 @@ bin/
 *.class
 *.log
 config/stripe.properties
+sogive.log*
