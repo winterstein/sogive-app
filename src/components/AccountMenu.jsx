@@ -3,23 +3,27 @@ import { connect } from 'react-redux';
 import { Nav, NavItem } from 'react-bootstrap';
 
 import C from '../C';
-import { showLoginMenu, logout } from './genericActions';
+import DataStore from '../plumbing/DataStore';
+import LoginWidget from './LoginWidget/LoginWidget.jsx';
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
 import Misc from './Misc';
 
+const doLogout = () => {
+	// Login.logout();
+};
 
 /*
 The top-right menu
 */
-const AccountMenu = ({user, pending, active, doLogout, showLogin}) => {
+const AccountMenu = ({user, pending, active}) => {
 	if (pending) return <Misc.Loading />;
 
 	if (!user) {
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li>
-					<a href='#' onClick={showLogin}>
+					<a href='#' onClick={() => DataStore.setShow(C.show.LoginWidget, true)}>
 						Login or Register
 					</a>
 				</li>

@@ -1,13 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { assert } from 'sjtest';
 import Login from 'hooru';
+import {Modal} from 'react-bootstrap';
 import { XId, uid } from 'wwutils';
 import Cookies from 'js-cookie';
-
+import DataStore from '../../plumbing/DataStore';
+import ActionMan from '../../plumbing/ActionMan';
 import Misc from '../Misc';
-import { updateField, showLoginMenu } from '../genericActions';
-import { emailLogin, emailRegister, socialLogin } from './LoginWidget-actions';
+import C from '../../C';
+
+// FIXME!!!
+Login.ENDPOINT = 'http://local.soda.sh/hooru.json';
 
 /**
 	TODO:
@@ -15,49 +18,45 @@ import { emailLogin, emailRegister, socialLogin } from './LoginWidget-actions';
 	- Use them in the appropriate section of the form
 */
 
-
-const SocialSignin = () => {
-	const verb = this.props.verb;
+/*
+const SocialSignin = ({verb, socialLogin}) => {
 	return (
 		<div className="social-signin">
 			<div className="form-group">
-				<button onClick={ this.socialLogin.bind(null, 'twitter') } className="btn btn-default form-control">
+				<button onClick={() => ActionMan.socialLogin('twitter')} className="btn btn-default form-control">
 					<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
 				</button>
 			</div>
 			<div className="form-group">
-				<button onClick={ this.socialLogin.bind(null, 'facebook') } className="btn btn-default form-control">
+				<button onClick={() => ActionMan.socialLogin('facebook')} className="btn btn-default form-control">
 					<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
 				</button>
 			</div>
 			<div className="form-group hidden">
-				<button onClick={ this.socialLogin.bind(null, 'instagram') } className="btn btn-default form-control">
+				<button onClick={() => ActionMan.socialLogin('instagram')} className="btn btn-default form-control">
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
-			<p><small>SoGive will never share your data, and will never act without your consent.
-				You can read our <a href='http://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
+			<p><small>Good-Loop will never share your data, and will never post to  social media without your consent.
+				You can read our <a href='https://good-loop.com/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
 		</div>
 	);
-};
+};*/
 
 
-const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
-	const passwordField = verb === 'reset' ? ('') : (
-		<div className="form-group">
-			<label htmlFor="password">Password</label>
-			<input
-				id="password_input"
-				className="form-control"
-				type="password"
-				name="password"
-				placeholder="Password"
-				value={password}
-				onChange={(event) => handleChange('password', event.target.value)}
-			/>
-		</div>
-	);
+const EmailSignin = ({verb}) => {
+	let person = DataStore.appstate.data.User.loggingIn;	
+
+	const doItFn = () => {
+		if ( ! person) {
+			Login.error = {text: "Please fill in email and password"};
+			return;
+		}
+		let e = person.email;
+		let p = person.password;
+		ActionMan.emailLogin(e, p);
+	};	
 
 	const buttonText = {
 		login: 'Log in',
@@ -66,6 +65,7 @@ const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
 	}[verb];
 
 	// login/register
+	let path = [C.TYPES.User, 'loggingIn'];
 	return (
 		<form
 			id="loginByEmail"
@@ -75,18 +75,13 @@ const EmailSignin = ({ verb, person, password, doItFn, handleChange}) => {
 			}}
 		>
 			<div className="form-group">
-				<label htmlFor="person">Email</label>
-				<input
-					id="person_input"
-					className="form-control"
-					type="email"
-					name="person"
-					placeholder="Email"
-					value={person}
-					onChange={(event) => handleChange('person', event.target.value)}
-				/>
+				<label>Email</label>
+				<Misc.PropControl type='email' path={path} item={person} prop='email' />
 			</div>
-			{ passwordField }
+			<div className="form-group">
+				<label>Password</label>
+				<Misc.PropControl type='password' path={path} item={person} prop='password' />
+			</div>
 			<div className="form-group">
 				<button type="submit" className="btn btn-default form-control" >
 					{ buttonText }
@@ -126,81 +121,54 @@ const LoginError = function() {
 		See SigninScriptlet
 
 */
-const LoginWidget = ({showDialog, verb, person, password, doEmailLogin, doEmailRegister, closeMenu, handleChange}) => {
-	if (!showDialog) {
-		return <div />;
-	}
-
+const LoginWidget = ({showDialog}) => {
+	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
+	if ( ! verb) verb = 'login';
+	
 	const heading = {
 		login: 'Log In',
 		register: 'Register',
 		reset: 'Reset Password'
 	}[verb];
-
-	const doItFn = {
-		login: doEmailLogin,
-		register: doEmailRegister,
-		reset: null,
-	}[verb];
-
+	
+				/*<div className="col-sm-6">
+							<SocialSignin verb={verb} services={null} />
+						</div>*/
 	return (
-		<div className="login-modal" onClick={closeMenu}>
-			<div className="container">
-				<div className="row">
-					<div className="col-sm-6 col-center">
-						<div className="panel panel-default" onClick={(event) => event.stopPropagation()}>
-							<div className="panel-heading">Welcome (back) to SoGive</div>
-							<div className="panel-body">
-								<Misc.Logo service="sogive" size='large' transparent={false} />
-								<h3>{heading}</h3>
-								<EmailSignin
-									verb={verb}
-									person={person}
-									password={password}
-									handleChange={handleChange}
-									doItFn={() => doItFn(person, password)}
-								/>
-								{/*
-									// Reinstate this later - put the row/column back inside the panel & restore the vertical line
-									<div className="col-sm-6">
-										<SocialSignin verb={verb} services={null} />
-									</div>
-								*/}
-								{
-									verb === 'register' ?
-										<div>
-											Already have an account?
-											&nbsp;<a href='#' onClick={() => handleChange('verb', 'login')}>Login</a>
-										</div> :
-										<div>
-											Don&#39;t yet have an account?
-											&nbsp;<a href='#' onClick={() => handleChange('verb', 'register')}>Register</a>
-										</div>
-								}
-							</div> {/* ./panel-body */}
+		<Modal show={showDialog} className="login-modal" onHide={() => DataStore.setShow(C.show.LoginWidget, false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>
+					<Misc.Logo service="goodloop" size='large' transparent={false} />
+					Welcome {verb==='login'? '(back)' : ''} to the Good-Loop Portal
+				</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<div className="container-fluid">
+					<div className="row">
+						<div className="col-sm-12">
+							<EmailSignin
+								verb={verb}
+							/>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			</Modal.Body>
+			<Modal.Footer>
+			{
+				verb === 'register' ?
+					<div>
+						Already have an account?
+						&nbsp;<a href='#' onClick={() => ActionMan.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
+					</div> :
+					<div>
+						Don&#39;t yet have an account?
+						&nbsp;<a href='#' onClick={() => ActionMan.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
+					</div>
+			}
+			</Modal.Footer>
+		</Modal>
 	);
 }; // ./LoginWidget
 
 
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-	...state.login,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-	closeMenu: () => dispatch(showLoginMenu(false)),
-	doEmailLogin: (email, password) => dispatch(emailLogin(dispatch, email, password)),
-	doEmailRegister: (email, password) => dispatch(emailRegister(dispatch, email, password)),
-	doSocialLogin: (service) => dispatch(socialLogin(dispatch, service)),
-	handleChange: (field, value) => dispatch(updateField('LOGIN_DIALOG_UPDATE_FIELD', field, value)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginWidget);
+export default LoginWidget;
