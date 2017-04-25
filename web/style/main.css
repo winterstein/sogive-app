@@ -10,9 +10,6 @@
   font-family: 'Roboto';
   src: url('../fonts/Roboto-Regular.ttf');
 }
-body {
-  font-family: 'Roboto';
-}
 .avoid-navbar {
   margin-top: 100px;
 }
@@ -27,25 +24,6 @@ body {
 .navbar-inverse .navbar-nav > .active > a:hover {
   background-color: #262741;
 }
-.btn-showall {
-  background-color: #A49F79;
-  color: #FFFFFF;
-  width: 9vh;
-  height: 3vh;
-  border-radius: 7%;
-  font-size: 1em;
-}
-.btn-showall-mobile {
-  background-color: #A49F79;
-  color: #FFFFFF;
-  width: 13vh;
-  height: 5vh;
-  border-radius: 7%;
-  font-size: 1em;
-}
-.sogive-search {
-  width: 100% !important;
-}
 .no-margin {
   margin-top: 0px;
   margin-bottom: 0px;
@@ -54,56 +32,6 @@ body {
 }
 .no-margin-bottom {
   margin-bottom: 0px;
-}
-.clear-search {
-  background-color: transparent;
-  color: grey;
-  border-radius: none;
-  border-color: transparent;
-}
-.clear-search-btn {
-  background-color: transparent;
-  color: grey;
-  border-radius: 0px;
-  border-color: transparent;
-  border-bottom: 1px solid #262741;
-  height: 8vh;
-}
-.clear-search-btn:hover,
-.clear-search-btn:active,
-.clear-search-btn:focus,
-.clear-search-btn:visited {
-  background-color: transparent;
-  color: grey;
-  border-radius: 0px;
-  border-color: transparent;
-  border-bottom: 1px solid #262741;
-  height: 8vh;
-}
-.sogive-search-box {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid #262741;
-  border-radius: 0px !important;
-  outline: 0;
-  height: 8vh !important;
-  font-size: 2em !important;
-}
-.sogive-search-box-mobile {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 1px solid #262741;
-  border-radius: 0px !important;
-  outline: 0;
-  height: 8vh !important;
-  font-size: 1em !important;
-}
-.featured-charities-header {
-  font-size: 1em;
-  color: #262741;
-  border-bottom: 2px solid #F04B47;
 }
 img.logo {
   width: 32px;
@@ -116,10 +44,6 @@ img.logo-small {
 img.logo-large {
   max-width: 64px;
   max-height: 64px;
-}
-.sogive-logo-footer {
-  width: 12vh;
-  height: auto;
 }
 .cheapverticalspace {
   height: 10em;
@@ -171,19 +95,19 @@ img.logo-large {
   margin-top: 50px;
 }
 .num-results {
-  border-bottom: 1px solid #A49F79;
+  border-bottom: 1px solid #a49f79;
   font-size: 1em;
   margin-bottom: 2vh;
 }
 .unready-results {
   margin-top: 10em;
   margin-bottom: 5em;
-  border-bottom: 1px dashed #F04B47;
+  border-bottom: 1px dashed #f04b47;
 }
 .SearchResult {
   padding-top: 2vh;
   padding-bottom: 2vh;
-  border-bottom: 1px solid #F04B47;
+  border-bottom: 1px solid #f04b47;
 }
 .FeaturedSidebar.affix-top {
   position: static;
@@ -197,6 +121,75 @@ img.logo-large {
   height: 64px;
   width: auto;
 }
+.featured-charities-header {
+  font-size: 1em;
+  color: #262741;
+  border-bottom: 2px solid #f04b47;
+}
+.btn-showall {
+  background-color: #a49f79;
+  color: #ffffff;
+  width: 9vh;
+  height: 3vh;
+  border-radius: 7%;
+  font-size: 1em;
+}
+.btn-showall-mobile {
+  background-color: #a49f79;
+  color: #ffffff;
+  width: 13vh;
+  height: 5vh;
+  border-radius: 7%;
+  font-size: 1em;
+}
+.sogive-search {
+  width: 100% !important;
+}
+.clear-search {
+  background-color: transparent;
+  color: grey;
+  border-radius: none;
+  border-color: transparent;
+}
+.clear-search-btn {
+  background-color: transparent;
+  color: grey;
+  border-radius: 0px;
+  border-color: transparent;
+  border-bottom: 1px solid #262741;
+  height: 8vh;
+}
+.clear-search-btn:hover,
+.clear-search-btn:active,
+.clear-search-btn:focus,
+.clear-search-btn:visited {
+  background-color: transparent;
+  color: grey;
+  border-radius: 0px;
+  border-color: transparent;
+  border-bottom: 1px solid #262741;
+  height: 8vh;
+}
+.sogive-search-box {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #262741;
+  border-radius: 0px !important;
+  outline: 0;
+  height: 8vh !important;
+  font-size: 2em !important;
+}
+.sogive-search-box-mobile {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #262741;
+  border-radius: 0px !important;
+  outline: 0;
+  height: 8vh !important;
+  font-size: 1em !important;
+}
 img.project-image {
   max-width: 300px;
   max-height: 300px;
@@ -206,7 +199,7 @@ img.project-image {
   height: auto;
 }
 .CharityProfile-div {
-  border-bottom: 1px solid #A49F79;
+  border-bottom: 1px solid #a49f79;
 }
 .CharityProfile {
   font-size: 1em;
@@ -228,16 +221,16 @@ img.project-image {
   margin-top: 3vh;
 }
 .donateto {
-  background-color: #A49F79;
+  background-color: #a49f79;
   font-size: 1em;
-  color: #FFFFFF;
+  color: #ffffff;
   border-bottom: 1px solid #262741;
   padding-left: 2%;
   margin: 1% auto 2%;
 }
 .charity-project-title-div {
   margin-top: 3vh;
-  border-bottom: 1px solid #A49F79;
+  border-bottom: 1px solid #a49f79;
 }
 .charity-project-div {
   margin-top: 1vh;
@@ -265,84 +258,29 @@ img.project-image {
   font-size: 85%;
   word-wrap: break-word;
 }
-.DonationForm {
+/* footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
   width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+  overflow: hidden;
 }
-.sogive-donate-btn {
-  width: 24% !important;
-  height: 7vh !important;
-  font-size: 1.5em !important;
-  line-height: 1.33 !important;
-  border-radius: 35px !important;
-  color: #FFFFFF !important;
-  background-color: #F04B47 !important;
-  border-color: transparent !important;
-}
-.sogive-donate-btn-mobile {
-  height: 7vh !important;
-  font-size: 1.5em !important;
-  line-height: 1.33 !important;
-  border-radius: 35px !important;
-  color: #FFFFFF !important;
-  background-color: #F04B47 !important;
-  border-color: transparent !important;
-}
-.amount-btn {
-  width: 30px;
-  height: 30px;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-.amount-btn.btn-primary {
-  background-color: #323257 !important;
-  border-color: #323257 !important;
-}
-.amount-btn-mobile {
-  width: 30px;
-  height: 30px;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 15px;
-}
-.amount-btn-mobile.btn-primary {
-  background-color: #323257 !important;
-  border-color: #323257 !important;
-}
-.amount-btn:focus {
-  background-color: #323257;
-}
-.btn.active {
-  background-color: #323257 !important;
-  color: #FFFFFF !important;
-}
-.giftAid {
-  border-bottom: 1px solid #F04B47;
-}
-.no-padding {
-  padding: 0 !important;
-}
-.social-media-btn {
-  border: none;
-  height: auto;
-}
-.twitter-btn {
-  color: #1DA1F3;
-}
-.twitter-btn:hover {
-  color: #1DA1F3;
-}
-.facebook-btn {
-  color: #3b5998;
-}
-.facebook-btn:hover {
-  color: #3b5998;
-}
-.mobile-text-input-box {
-  min-width: 40% !important;
-  height: 20vh !important;
+.sogive-logo-footer {
+  height: 50px;
+  margin: 5px;
+  float: left;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -378,6 +316,7 @@ img.charity-logo-mobile {
   color: #262741;
 }
 body {
+  font-family: 'Roboto';
   color: #262741;
 }
 .impact-text {

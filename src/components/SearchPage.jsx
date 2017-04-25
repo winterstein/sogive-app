@@ -35,13 +35,7 @@ export default class SearchPage extends React.Component {
 					<SearchResults results={this.state.results} query={q} />
 				</div>
 				<div className="col-xs-10 cheapverticalspace">
-				</div>
-				<div className='col-md-10 featured-charities'>
-					<p className='featured-charities-header'>
-						Featured Charities
-					{/* <FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity. When a search returns results, this should convert into a sidebar, or at least become hidden, and a sidebar should be generated. } }/> */}
-					</p>
-				</div>
+				</div>				
 			</div>
 		);
 	}
