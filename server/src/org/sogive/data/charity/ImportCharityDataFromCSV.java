@@ -113,6 +113,7 @@ public class ImportCharityDataFromCSV {
 		init();
 		File export = new File("data/stories-images.csv");
 		CSVReader csvr = new CSVReader(export, ',').setNumFields(-1);
+		
 		Printer.out(csvr.next());
 		Gson gson = new GsonBuilder()
 				.setClassProperty("@type")
@@ -182,12 +183,14 @@ public class ImportCharityDataFromCSV {
 			NGO ngo = CharityServlet.getCharity(ourid);
 			if (ngo==null) ngo = new NGO(ourid);
 			ngo.put(ngo.name, row[0]);
-			ngo.put("description", StrUtils.normalisePunctuation(desc));
-			ngo.put("englandWalesCharityRegNum", regNum);
-			ngo.setTags(row[1]);
-			ngo.put("logo", get(row, col("logo image")));
+			if ( ! Utils.isBlank(desc)) ngo.put("description", StrUtils.normalisePunctuation(desc));
+			if ( ! Utils.isBlank(regNum)) ngo.put("englandWalesCharityRegNum", regNum);
+			String tags = row[1];
+			if ( ! Utils.isBlank(tags)) ngo.setTags(tags);
+			String logo = get(row, col("logo image"));
+			if ( ! Utils.isBlank(logo)) ngo.put("logo", logo);
 			String ukbased = get(row, col("UK-based charity?"));
-			ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
+			if ( ! Utils.isBlank(ukbased)) ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
 			
 //			no donations?
 			String ad = get(row, col("accepts donations"));

@@ -25,6 +25,7 @@ import com.winterwell.bob.BuildTask;
 import com.winterwell.bob.tasks.EclipseClasspath;
 import com.winterwell.bob.tasks.GitTask;
 import com.winterwell.bob.tasks.JarTask;
+import com.winterwell.bob.tasks.ProcessTask;
 import com.winterwell.bob.tasks.RSyncTask;
 import com.winterwell.bob.tasks.RemoteTask;
 import com.winterwell.bob.tasks.SCPTask;
@@ -204,39 +205,18 @@ public class PublishSoGiveApp extends BuildTask {
 			// This jar
 			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));
 			jarTask.run();
-			jarTask.close();
-			
-			if (true) return;
-			
-			// Do the rsync!
-			String from = localLib.getAbsolutePath();
-			String dest = rsyncDest("lib");			
-			RSyncTask task = new RSyncTask(from, dest, true).setDirToDir();
-			task.run();
-			task.close();
-			System.out.println(task.getOutput());
-		}
-		{	// web
-			// Rsync code with delete=true, so we get rid of old html templates
-			// ??This is a bit wasteful, but I'm afraid of what delete might do in the more general /web/static directory ^Dan
-			RSyncTask rsyncCode = new RSyncTask(
-					new File(localWebAppDir,"web").getAbsolutePath(),
-					rsyncDest("web"), true);
-			rsyncCode.setDirToDir();
-			rsyncCode.run();
-			String out = rsyncCode.getOutput();
-			rsyncCode.close();
+			jarTask.close();			
 		}
 		
-		RemoteTask satisfynpmdependencies = new RemoteTask("winterwell@"+server, "cd /home/winterwell/sogive-app/ && npm i");
-		satisfynpmdependencies.run();
-		
-		RemoteTask webpackcompile = new RemoteTask("winterwell@"+server, "cd /home/winterwell/sogive-app/ && npm run compile");
-		webpackcompile.run();
-		
-		RemoteTask reboot = new RemoteTask("winterwell@"+server, "service sogiveapp restart");
-		reboot.run();
+		// rsync - via publish-sogiveapp.sh
+		// Bash script which does the rsync work
+		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+server);
+		pubas.run();
+		System.out.println(pubas.getError());
+		pubas.close();
+		Log.d(pubas.getCommand(), pubas.getOutput());
 	}
+	
 
 	private String rsyncDest(String dir) {
 //		if ( ! dir.endsWith("/")) dir += "/";
