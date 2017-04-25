@@ -258,6 +258,85 @@ img.project-image {
   font-size: 85%;
   word-wrap: break-word;
 }
+.DonationForm {
+  width: 100%;
+}
+.sogive-donate-btn {
+  width: 24% !important;
+  height: 7vh !important;
+  font-size: 1.5em !important;
+  line-height: 1.33 !important;
+  border-radius: 35px !important;
+  color: #ffffff !important;
+  background-color: #f04b47 !important;
+  border-color: transparent !important;
+}
+.sogive-donate-btn-mobile {
+  height: 7vh !important;
+  font-size: 1.5em !important;
+  line-height: 1.33 !important;
+  border-radius: 35px !important;
+  color: #ffffff !important;
+  background-color: #f04b47 !important;
+  border-color: transparent !important;
+}
+.amount-btn {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.amount-btn.btn-primary {
+  background-color: #323257 !important;
+  border-color: #323257 !important;
+}
+.amount-btn-mobile {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.amount-btn-mobile.btn-primary {
+  background-color: #323257 !important;
+  border-color: #323257 !important;
+}
+.amount-btn:focus {
+  background-color: #323257;
+}
+.btn.active {
+  background-color: #323257 !important;
+  color: #ffffff !important;
+}
+.giftAid {
+  border-bottom: 1px solid #f04b47;
+}
+.no-padding {
+  padding: 0 !important;
+}
+.social-media-btn {
+  border: none;
+  height: auto;
+}
+.twitter-btn {
+  color: #1DA1F3;
+}
+.twitter-btn:hover {
+  color: #1DA1F3;
+}
+.facebook-btn {
+  color: #3b5998;
+}
+.facebook-btn:hover {
+  color: #3b5998;
+}
+.mobile-text-input-box {
+  min-width: 40% !important;
+  height: 20vh !important;
+}
 /* footer styles
 -------------------------------------------------- */
 html {
