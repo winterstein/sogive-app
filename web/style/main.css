@@ -1,3 +1,11 @@
+/* Corrado's original palette */
+/* Palette Example 01
+@colour-01: #77C9D4;
+@colour-02: #57BC90;
+@colour-03: #015249;
+@colour-04: #A5A5AF;
+@colour-05: #FFFFFF;
+*/
 @font-face {
   font-family: 'Roboto';
   src: url('../fonts/Roboto-Regular.ttf');
@@ -333,7 +341,7 @@ img.project-image {
   color: #3b5998;
 }
 .mobile-text-input-box {
-  width: auto !important;
+  min-width: 40% !important;
   height: 20vh !important;
 }
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */

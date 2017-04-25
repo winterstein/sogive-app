@@ -1,3 +1,11 @@
+/* Corrado's original palette */
+/* Palette Example 01
+@colour-01: #77C9D4;
+@colour-02: #57BC90;
+@colour-03: #015249;
+@colour-04: #A5A5AF;
+@colour-05: #FFFFFF;
+*/
 .SearchResults {
   margin-top: 50px;
 }
