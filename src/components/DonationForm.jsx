@@ -50,9 +50,9 @@ class DonationForm extends React.Component {
 			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
 
-		const giftAidForm = (charity.ukBased && charity.englandWalesCharityRegNum) ? (
+		const giftAidForm = charity.uk_giftaid ? (
 			<GiftAidForm {...donationForm} handleChange={handleChange} />
-		) : '';
+		) : <small>This charity is not eligible for Gift-Aid.</small>;
 
 		return (
 			<div>

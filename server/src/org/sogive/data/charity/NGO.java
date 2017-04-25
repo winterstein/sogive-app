@@ -9,6 +9,7 @@ import java.util.function.BiPredicate;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.SimpleJson;
 
 public class NGO extends Thing<NGO> {
@@ -58,7 +59,9 @@ public class NGO extends Thing<NGO> {
 
 		if ( ! Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);
-			assert latest.size() == 1 : latest;
+			if (latest.size() != 1) {
+				Log.e("getRepProject", "Bogus project info in "+this+": More than one latest rep project! "+projects2);
+			}
 			return latest.get(0);
 		}
 		if ( ! Utils.isEmpty(overalls)) {

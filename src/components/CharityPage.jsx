@@ -54,30 +54,6 @@ class CharityPage extends React.Component {
 			return annualCost? -annualCost.value : 0;
 		});
 
-		// page pieces
-		const tags = charity.tags && (
-			<div>
-				<h4>Tags</h4>
-				{ charity.tags.split('&').map((tag) => (
-					<span key={tag}><Label>{tag.trim()}</Label> </span>
-				)) }
-			</div>
-		);
-		const turnover = charity.turnover && (
-			<p>
-				Turnover: { charity.turnover }
-			</p>
-		);
-		const employees = charity.employees && (
-			<p>
-				Employees: { charity.employees }
-			</p>
-		);
-		const website = charity.website && (
-			<p>
-				Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
-			</p>
-		);
 		// TODO not if there's only overall		
 		const projectsDiv = yessy(currentProjects)? <div><h2>Projects</h2><ProjectList projects={currentProjects} charity={charity} /></div> : null;
 		const oldProjectsDiv = yessy(oldProjects)? <div><h2>Old Projects</h2><ProjectList projects={oldProjects} charity={charity} /></div> : null;
@@ -87,26 +63,7 @@ class CharityPage extends React.Component {
 		return (
 			<div className='page CharityPage'>
 				<PageMetaInfo charity={charity} />
-				<div className='col-md-12'>
-					<div className='CharityProfile-div'>
-						<p className='CharityProfile'>Charity Profile</p>
-					</div>
-					<div className='col-md-2 charity-logo-div'>
-						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
-					</div>
-					<div className='col-md-10 charity-name-div'>
-						<h2>{charity.name}</h2>
-						<br />
-						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
-						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					</div>
-					<div className='col-md-12 charity-data-div'>
-						{ tags }
-						{ turnover }
-						{ employees }
-						{ website }
-					</div>
-				</div>
+				<CharityProfile charity={charity} />
 				<div className='upper-padding col-md-12 charity-donation-div'>
 					<p className='donateto'>Donate to { charity.name }</p>
 					<div className='col-md-12 charity-donation-form'>
@@ -123,6 +80,55 @@ class CharityPage extends React.Component {
 	}
 } // ./CharityPage
 
+
+const CharityProfile = ({charity}) => {
+	const tags = charity.tags && (
+		<div>
+			<h4>Tags</h4>
+			{ charity.tags.split('&').map((tag) => (
+				<span key={tag}><Label>{tag.trim()}</Label> </span>
+			)) }
+		</div>
+	);
+	const turnover = charity.turnover && (
+		<p>
+			Turnover: { charity.turnover }
+		</p>
+	);
+	const employees = charity.employees && (
+		<p>
+			Employees: { charity.employees }
+		</p>
+	);
+	const website = charity.url && (
+		<p>
+			Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
+		</p>
+	);
+	return (<div className='CharityProfile-div'>
+				<h4 className='CharityProfile'>Charity Profile</h4>
+				<div className='col-md-12'>
+					<div className='col-md-2 charity-logo-div'>
+						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+					</div>
+					<div className='col-md-7 charity-name-div'>
+						<h2>{charity.name}</h2>
+						<br />
+						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
+						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
+					</div>
+					<div className='col-md-3'>
+						<ProjectImage images={charity.images} />
+					</div>
+					<div className='col-md-12 charity-data-div'>
+						{ tags }
+						{ turnover }
+						{ employees }
+						{ website }
+					</div>
+				</div>
+	</div>);
+};
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;
