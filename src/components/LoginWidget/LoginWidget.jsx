@@ -44,18 +44,28 @@ const SocialSignin = ({verb, socialLogin}) => {
 	);
 };*/
 
-const emailLogin = (email, password) => {
+const emailLogin = (verb, email, password) => {
 	assMatch(email, String, password, String);
-	Login.login(email, password)
-	.then(function(res) {
-		console.warn("login", res);
-		// poke React
-		DataStore.update({});	
-	});
+	if (verb==='register') {
+		Login.register({email:email, password:password})
+			.then(function(res) {
+				console.warn("login", res);
+				// poke React
+				DataStore.update({});	
+			});
+	} else {
+		Login.login(email, password)
+		.then(function(res) {
+			console.warn("login", res);
+			// poke React
+			DataStore.update({});	
+		});
+	}
 };
 
 
 const EmailSignin = ({verb}) => {
+	// we need a place to stash form info. Maybe appstate.widget.LoginWidget.name etc would be better?
 	let person = DataStore.appstate.data.User.loggingIn;	
 
 	const doItFn = () => {
@@ -65,7 +75,7 @@ const EmailSignin = ({verb}) => {
 		}
 		let e = person.email;
 		let p = person.password;
-		emailLogin(e, p);
+		emailLogin(verb, e, p);
 	};	
 
 	const buttonText = {

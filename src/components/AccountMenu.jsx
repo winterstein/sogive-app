@@ -17,10 +17,11 @@ const doLogout = () => {
 /*
 The top-right menu
 */
-const AccountMenu = ({user, pending, active}) => {
+const AccountMenu = ({pending, active}) => {
 	if (pending) return <Misc.Loading />;
 
-	if (!user) {
+	let user = Login.getUser();
+	if ( ! user) {
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li>

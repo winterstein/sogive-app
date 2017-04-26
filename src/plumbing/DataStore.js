@@ -45,7 +45,6 @@ class Store {
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];			
-			let pkey = path[pi];
 			assert(pkey, path); // no nulls in a path			
 			let newTip = tip[pkey];
 			if ( ! newTip) return null;

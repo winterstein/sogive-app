@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { assert } from 'sjtest';
+import Login from 'hooru';
 import _ from 'lodash';
 import { XId } from 'wwutils';
 
@@ -14,15 +15,15 @@ import Misc from './Misc';
 
 class DashboardPage extends Component {
 	render() {
-		const { user} = this.props;
+		let user = Login.getUser();
 		const donations = this.state && this.state.donations;
 
 		let content;
 
-		if (!user) {
+		if ( ! user) {
 			content = (
 				<div>
-					<a href='#' onClick={DataStore.setShow('LoginWidget', true)}>Login or register</a> to track your donations.
+					<a href='#' onClick={(e) => DataStore.setShow('LoginWidget', true)}>Login or register</a> to track your donations.
 				</div>
 			);
 		} else if (!donations) {
@@ -125,8 +126,7 @@ DashTitleIcon.propTypes = {
 
 
 const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-	user: state.login.user,
+	...ownProps
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

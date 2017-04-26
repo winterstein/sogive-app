@@ -18,7 +18,8 @@ import { donate, updateForm, initDonationForm } from './DonationForm-actions';
 class DonationForm extends React.Component {
 
 	render() {
-		const { user, charity, donationForm, handleChange, initDonation, sendDonation } = this.props;
+		const {charity, donationForm, handleChange, initDonation, sendDonation } = this.props;
+		let user = Login.getUser();
 
 		// some charities dont accept donations
 		if (charity.noPublicDonations) {
@@ -280,7 +281,6 @@ const DonationList = ({donations}) => {
 const mapStateToProps = (state, ownProps) => ({
 	...ownProps,
 	donationForm: state.donationForm[ownProps.charity['@id']],
-	user: state.login.user,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
