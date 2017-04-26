@@ -45,7 +45,8 @@ class MainDiv extends Component {
 		// redraw on change
 		DataStore.addListener((mystate) => this.setState({}));
 
-		// Set up login watcher here, at the highest level
+		Login.app = 'sogive';
+		// Set up login watcher here, at the highest level		
 		Login.change(() => {
 			this.setState({});
 		});

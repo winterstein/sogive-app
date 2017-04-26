@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Nav, NavItem } from 'react-bootstrap';
 
 import C from '../C';
@@ -50,14 +49,4 @@ const AccountMenu = ({pending, active}) => {
 	);
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(AccountMenu);
+export default AccountMenu;

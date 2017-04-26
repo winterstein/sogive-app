@@ -78,7 +78,7 @@ class SearchForm extends React.Component {
 	onSubmit(e) {
 		e.preventDefault();
 		console.warn("submit",this.state);
-		this.search(this.state.q);
+		this.search(this.state.q || '');
 	}
 
 	search(query) {
@@ -116,18 +116,18 @@ class SearchForm extends React.Component {
 		return (
 			<Form onSubmit={(event) => { this.onSubmit(event); }} >
 				<FormGroup className='' bsSize='lg' controlId="formq">
-						<InputGroup bsSize='lg'>
-							<FormControl
-								className='sogive-search-box'
-								type="search"
-								value={this.state.q || ''}
-								placeholder="Keyword search"
-								onChange={(e) => this.onChange('q', e)}
-							/>
-							<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
-								<Glyphicon glyph="search" />
-							</InputGroup.Addon>
-						</InputGroup>
+					<InputGroup bsSize='lg'>
+						<FormControl
+							className='sogive-search-box'
+							type="search"
+							value={this.state.q || ''}
+							placeholder="Keyword search"
+							onChange={(e) => this.onChange('q', e)}
+						/>
+						<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
+							<Glyphicon glyph="search" />
+						</InputGroup.Addon>
+					</InputGroup>
 				</FormGroup>
 				<div className='pull-right'>
 					<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>

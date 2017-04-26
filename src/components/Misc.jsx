@@ -93,13 +93,10 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 		return (
 			<div className='impact'>
 				<p className='impact-text'>
-					<b>{peepText}<Misc.Money amount={amount} /></b>
-					<br />
-					will fund
-					<br />
-					<span className="impact-units-amount">{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</span>
-					<br />
-					{unitImpact.name || ''}
+					<span><b>{peepText}<Misc.Money amount={amount} /></b></span>
+					<span> will fund</span>
+					<span className="impact-units-amount"> {printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</span>					
+					<span className='impact-unit-name'> {unitImpact.name || ''}</span>
 				</p>
 			</div>
 		);

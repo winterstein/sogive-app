@@ -46,21 +46,20 @@ const SocialSignin = ({verb, socialLogin}) => {
 
 const emailLogin = (verb, email, password) => {
 	assMatch(email, String, password, String);
-	if (verb==='register') {
+	let call = verb==='register'?
 		Login.register({email:email, password:password})
-			.then(function(res) {
-				console.warn("login", res);
-				// poke React
-				DataStore.update({});	
-			});
-	} else {
-		Login.login(email, password)
-		.then(function(res) {
-			console.warn("login", res);
-			// poke React
+		: Login.login(email, password);
+
+	call.then(function(res) {
+		console.warn("login", res);
+		if (Login.isLoggedIn()) {
+			// close the dialog on success
+			DataStore.setShow(C.show.LoginWidget, false);
+		} else {
+			// poke React via DataStore
 			DataStore.update({});	
-		});
-	}
+		}
+	});
 };
 
 
