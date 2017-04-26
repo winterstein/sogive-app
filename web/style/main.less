@@ -1,13 +1,40 @@
 // Styling for the SoGive app
 @import "colours.less";
 
+@font-face {
+	font-family: 'Roboto';
+	src: url('../fonts/Roboto-Regular.ttf');
+}
+
+
 .avoid-navbar {
     margin-top:100px;
 }
 
 #navbar {
-	background-color: @navbarcolour;
+	background-color: @colour-03;
 }
+
+.navbar-inverse {
+	background-color: @colour-03;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
+	background-color: @colour-03;
+}
+
+
+.no-margin {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.no-margin-bottom {
+	margin-bottom: 0px;
+}
+
 
 img.logo {
 	width:32px;	
@@ -22,12 +49,21 @@ img.logo-large {
 	max-height:64px;	
 }
 
+.cheapverticalspace {
+	height: 10em;
+}
+
+.smallverticalspace {
+	height: 2em;
+}
 
 @import "animation.less";
 
 // Page specific stuff
 @import "SearchPage.less";
 @import "CharityPage.less";
+@import "Donation.less";
+@import "footer.less";
 
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -60,6 +96,24 @@ img.logo-large {
 }
 
 img.charity-logo {
-	max-width: 192px;
-	max-height: 192px;
+	width: 10vh;
+	height: auto;
+}
+
+body {
+	font-family: 'Roboto';
+	color: @colour-03;
+}
+
+.impact-text {
+	text-align: center;
+}
+
+.impact-units-amount {
+	font-size: 2.5em;
+	margin-bottom: 0;
+}
+
+.full-width {
+	width: 100% !important;
 }

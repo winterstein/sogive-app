@@ -50,22 +50,26 @@ class DonationForm extends React.Component {
 			<Button disabled title='Something is wrong with your donation'>Donate</Button>
 		);
 
-		const giftAidForm = (charity.ukBased && charity.englandWalesCharityRegNum) ? (
+		const giftAidForm = charity.uk_giftaid ? (
 			<GiftAidForm {...donationForm} handleChange={handleChange} />
-		) : '';
+		) : <small>This charity is not eligible for Gift-Aid.</small>;
 
 		return (
-			<div className='DonationForm'>
-				<DonationAmounts
-					options={[5, 10]}
-					impacts={project.impacts}
-					charity={charity}
-					project={project}
-					amount={donationForm.amount}
-					handleChange={handleChange}
-				/>
+			<div>
+				<div className='DonationForm'>
+					<DonationAmounts
+							options={[5, 10, 20]}
+							impacts={project.impacts}
+							charity={charity}
+							project={project}
+							amount={donationForm.amount}
+							handleChange={handleChange}
+						/>
+				</div>
+				<div className='col-md-12 donate-button'>
+					{ donateButton }
+				</div>
 				{ giftAidForm }
-				{ donateButton }
 				<ThankYouAndShare thanks={false} charity={charity} />
 			</div>
 		);
@@ -147,24 +151,31 @@ class ThankYouAndShare extends React.Component {
 		const header = thanks ? <h3>Thank you for donating!</h3> : '';
 
 		return (
-			<div className='ThankYouAndShare panel-success'>
-				{ header }
+			<div className='col-md-12'>
+				<div className='ThankYouAndShare panel-success'>
+					{ header }
 
-				<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
+					<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
 
-				<textarea
-					className='form-control'
-					onChange={() => { this.onChangeShareText(); }}
-					defaultValue={shareText}
-				/>
+					<textarea
+						className='form-control'
+						onChange={() => { this.onChangeShareText(); }}
+						defaultValue={shareText}
+					/>
+				</div>
+				<div className='col-md-12 social-media-buttons'>
+					<center>
+						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
+							{ /*<Misc.Logo service='twitter' /> */}
+							<i className="fa fa-twitter-square fa-4x" aria-hidden="true"></i>
+						</a>
 
-				<a className='btn btn-default' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)}>
-					<Misc.Logo service='twitter' />
-				</a>
-
-				<button className='btn btn-default' onClick={() => { this.shareOnFacebook(); }}>
-					<Misc.Logo service='facebook' />
-				</button>
+						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(); }}>
+							{ /* <Misc.Logo service='facebook' /> */}
+							<i className="fa fa-facebook-square fa-4x" aria-hidden="true"></i>
+						</a>
+					</center>
+				</div>
 			</div>
 		);
 	}
@@ -192,7 +203,9 @@ const DonationFormButton = ({onToken, amount}) => {
 				allowRememberMe
 				token={onToken}
 			>
-				<Button bsStyle="primary">Donate</Button>
+				<center>
+					<Button bsStyle="primary" className='sogive-donate-btn'>Donate</Button>
+				</center>
 			</StripeCheckout>
 		</div>
 	);
@@ -217,35 +230,44 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
 
 	return(
-		<div>
-			<div className="form-inline">
-				{damounts}
-				<InputGroup>
-					<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
-					<FormControl
-						type="number"
-						min="0"
-						step="1"
-						placeholder="Enter donation amount"
-						onChange={({ target }) => { handleChange('amount', target.value); }}
-						value={amount}
-					/>
-				</InputGroup>
-			</div>
-			<Misc.ImpactDesc unitImpact={unitImpact} amount={amount} />
+		<div className='full-width'>
+			<form>
+				<div className="form-group col-md-1 col-xs-2">
+					{damounts}
+				</div>
+				<div className="form-group col-md-8 col-xs-10">
+					<InputGroup>
+						<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
+						<FormControl
+							type="number"
+							min="0"
+							step="1"
+							placeholder="Enter donation amount"
+							onChange={({ target }) => { handleChange('amount', target.value); }}
+							value={amount}
+						/>
+					</InputGroup>
+				</div>
+				<div className="form-group col-md-2">
+					<Misc.ImpactDesc unitImpact={unitImpact} amount={amount} />
+				</div>
+			</form>
 		</div>
 	);
 };
 
 const DonationAmount = function({selected, price, handleChange}) {
 	return (
-			<Button
-				bsStyle={selected? 'primary' : null}
-				bsSize="small"
-				onClick={() => handleChange('amount', price)}
-			>
-				£{price}
-			</Button>
+			<div className=''>
+				<Button
+					bsStyle={selected? 'primary' : null}
+					bsSize="sm"
+					className='amount-btn'
+					onClick={() => handleChange('amount', price)}
+				>
+					£ {price}
+				</Button>
+			</div>
 	);
 };
 

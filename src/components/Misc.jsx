@@ -78,6 +78,7 @@ Misc.Checkbox = ({on, label, onChange}) => (
 	</div>
 );
 
+
 Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.price) {
 		// more people?
@@ -90,8 +91,16 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
 		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
 		// NB long line as easiest way to do spaces in React
 		return (
-			<div>
-				<strong>{peepText}<Misc.Money amount={amount} /></strong> will fund <strong>{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</strong> {unitImpact.name || ''}
+			<div className='impact'>
+				<p className='impact-text'>
+					<b>{peepText}<Misc.Money amount={amount} /></b>
+					<br />
+					will fund
+					<br />
+					<span className="impact-units-amount">{printer.prettyNumber(impactPerUnitMoney * amount * peeps, 2)}</span>
+					<br />
+					{unitImpact.name || ''}
+				</p>
 			</div>
 		);
 	}

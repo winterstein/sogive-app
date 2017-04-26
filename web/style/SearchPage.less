@@ -1,9 +1,97 @@
+@import "colours.less";
 
 .SearchResults {
     margin-top: 50px;
 }
 
+.num-results {
+	border-bottom: 1px solid @colour-02;
+	font-size: 1em;
+	margin-bottom: 2vh;
+}
+
+.unready-results {
+	margin-top: 10em;
+	margin-bottom: 5em;
+	border-bottom: 1px dashed @colour-01;
+}
+
 .SearchResult {
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding-top: 2vh;
+	padding-bottom: 2vh;
+	border-bottom: 1px solid @colour-01;
+}
+
+.FeaturedSidebar.affix-top {
+	position: static;
+	margin-top: 3vh;
+}
+
+.FeaturedSidebar.affix {
+	position: fixed;
+	top: 4vh;
+}
+
+.charity-logo {
+	height: 64px;
+	width: auto;
+}
+
+
+
+
+.featured-charities-header {
+	font-size: 1em;
+	color: @colour-03;
+	border-bottom: 2px solid @colour-01;
+}
+
+.featured-charities {
+}
+
+
+
+.btn-showall {
+	background-color: @colour-02;
+	color: @colour-05;
+}
+
+
+.sogive-search {
+	width: 100% !important;
+}
+
+// .clear-search {
+// 	background-color: transparent;
+// 	color: grey;
+// 	border-radius: none;
+// 	border-color: transparent;
+// }
+
+// .clear-search-btn {
+// 	background-color: transparent;
+// 	color: grey;
+// 	border-radius: 0px;
+// 	border-color: transparent;
+// 	border-bottom: 1px solid @colour-03;
+// 	height: 8vh;
+// 	&:hover, &:active, &:focus, &:visited {
+// 		background-color: transparent;
+// 		color: grey;
+// 		border-radius: 0px;
+// 		border-color: transparent;
+// 		border-bottom: 1px solid @colour-03;
+// 		height: 8vh;
+// 	}
+// }
+
+.sogive-search-box {
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px solid @colour-03;
+	border-radius: 0px !important;
+	outline: 0;
+	height: 8vh !important;
+	font-size: 150% !important;
 }

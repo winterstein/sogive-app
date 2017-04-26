@@ -54,30 +54,6 @@ class CharityPage extends React.Component {
 			return annualCost? -annualCost.value : 0;
 		});
 
-		// page pieces
-		const tags = charity.tags && (
-			<div>
-				<h4>Tags</h4>
-				{ charity.tags.split('&').map((tag) => (
-					<span key={tag}><Label>{tag.trim()}</Label> </span>
-				)) }
-			</div>
-		);
-		const turnover = charity.turnover && (
-			<p>
-				Turnover: { charity.turnover }
-			</p>
-		);
-		const employees = charity.employees && (
-			<p>
-				Employees: { charity.employees }
-			</p>
-		);
-		const website = charity.website && (
-			<p>
-				Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
-			</p>
-		);
 		// TODO not if there's only overall		
 		const projectsDiv = yessy(currentProjects)? <div><h2>Projects</h2><ProjectList projects={currentProjects} charity={charity} /></div> : null;
 		const oldProjectsDiv = yessy(oldProjects)? <div><h2>Old Projects</h2><ProjectList projects={oldProjects} charity={charity} /></div> : null;
@@ -87,28 +63,72 @@ class CharityPage extends React.Component {
 		return (
 			<div className='page CharityPage'>
 				<PageMetaInfo charity={charity} />
-				<Panel header={<h2>Charity Profile</h2>}>
-					<Image src={charity.logo} responsive thumbnail className="pull-right charity-logo" />
-					<h2>{charity.name}</h2>
-
-					<div ><small><a href={'/#charity/'+charity['@id']}>{charity.id}</a></small></div>
-					<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					{ tags }
-					{ turnover }
-					{ employees }
-					{ website }
-				</Panel>
-				<Panel bsStyle='primary' header={<h2>Donate to { charity.name }</h2>}>
-					<DonationForm charity={charity} project={project} />
-				</Panel>
-				{overallDiv}
-				{projectsDiv}
-				{oldProjectsDiv}
+				<CharityProfile charity={charity} />
+				<div className='upper-padding col-md-12 charity-donation-div'>
+					<p className='donateto'>Donate to { charity.name }</p>
+					<div className='col-md-12 charity-donation-form'>
+						<DonationForm charity={charity} project={project} />
+					</div>
+				</div>
+				<div className='charity-statistics-div'>
+					{overallDiv}
+					{projectsDiv}
+					{oldProjectsDiv}
+				</div>
 			</div>
 		);
 	}
 } // ./CharityPage
 
+
+const CharityProfile = ({charity}) => {
+	const tags = charity.tags && (
+		<div>
+			<h4>Tags</h4>
+			{ charity.tags.split('&').map((tag) => (
+				<span key={tag}><Label>{tag.trim()}</Label> </span>
+			)) }
+		</div>
+	);
+	const turnover = charity.turnover && (
+		<p>
+			Turnover: { charity.turnover }
+		</p>
+	);
+	const employees = charity.employees && (
+		<p>
+			Employees: { charity.employees }
+		</p>
+	);
+	const website = charity.url && (
+		<p>
+			Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
+		</p>
+	);
+	return (<div className='CharityProfile-div'>
+				<h4 className='CharityProfile'>Charity Profile</h4>
+				<div className='col-md-12'>
+					<div className='col-md-2 charity-logo-div'>
+						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+					</div>
+					<div className='col-md-7 charity-name-div'>
+						<h2>{charity.name}</h2>
+						<br />
+						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
+						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
+					</div>
+					<div className='col-md-3'>
+						<ProjectImage images={charity.images} />
+					</div>
+					<div className='col-md-12 charity-data-div'>
+						{ tags }
+						{ turnover }
+						{ employees }
+						{ website }
+					</div>
+				</div>
+	</div>);
+};
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;
@@ -136,28 +156,43 @@ const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (
-		<Panel header={<h3>{project.name}: {project.year}</h3>}>
-			<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
-			<ProjectImage images={project.images} />
-			<div className='inputs'><h4>Inputs</h4>
-				{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+		<div className='col-md-12 ProjectPanel'>
+			<div className='charity-project-title-div'>
+				<p className='project-name'>{project.name}: {project.year}</p>
 			</div>
-			<div className='outputs'><h4>Outputs</h4>
-				{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+			<div className='charity-project-div'>
+				<div className='image-and-story-div'>
+					<div className='col-md-2 project-image'>
+						<ProjectImage images={project.images} />
+					</div>
+					<div className='col-md-offset-1 col-md-7 project-story'>
+						<p className='project-story-text' dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
+					</div>
+				</div>
+				<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
+					<div className='col-md-6 inputs'><h4>Inputs</h4>
+						{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+					</div>
+					<div className='col-md-6 outputs'><h4>Outputs</h4>
+						{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+					</div>
+				</div>
+				<div className='upper-padding'>
+					<div className='col-md-offset-2 col-md-8 comments'>
+						{project.adjustmentComment}
+						{project.analysisComment}
+					</div>
+				</div>
+				<Citations thing={project} />
 			</div>
-			<div className='comments'>
-				{project.adjustmentComment}
-				{project.analysisComment}
-			</div>
-			<Citations thing={project} />
-		</Panel>
+		</div>
 	);
 };
 
 const ProjectImage = ({images}) => {
 	if ( ! yessy(images)) return null;
 	let image = _.isArray(images)? images[0] : images;
-	return <div><img src={image} className='project-image'/></div>;
+	return <div><center><img src={image} className='project-image'/></center></div>;
 };
 
 const Citations = ({thing}) => {
@@ -169,11 +204,11 @@ const Citations = ({thing}) => {
 		}
 		dsrc = dsrc[0];
 	}
-	return <div>Source: <Citation citation={dsrc} /></div>;	
+	return <div className='upper-padding col-md-offset-2 col-md-8'>Source: <Citation citation={dsrc} /></div>;	
 };
 const Citation = ({citation}) => {
 	if (_.isString(citation)) return <p>{citation}</p>;
-	return <a href={citation.url}>{citation.name || citation.url}</a>;
+	return <a className='citation-url' href={citation.url}>{citation.name || citation.url}</a>;
 };
 
 export default CharityPage;

@@ -7,3 +7,4 @@ bin/
 *.log
 config/stripe.properties
 sogive.log*
+*.css

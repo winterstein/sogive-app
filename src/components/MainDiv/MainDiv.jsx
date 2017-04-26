@@ -4,7 +4,9 @@ import Login from 'hooru';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
 
+// Plumbing
 import DataStore from '../../plumbing/DataStore';
+
 // Templates
 import MessageBar from '../MessageBar';
 import SoGiveNavBar from '../SoGiveNavBar/SoGiveNavBar';
@@ -47,6 +49,11 @@ class MainDiv extends Component {
 		Login.change(() => {
 			this.setState({});
 		});
+	}
+
+	componentWillMount() {
+		// poke react on change
+		DataStore.addListener(() => this.setState({}));
 	}
 
 	componentDidMount() {

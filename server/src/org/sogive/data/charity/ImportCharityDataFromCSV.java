@@ -189,14 +189,16 @@ public class ImportCharityDataFromCSV {
 			if ( ! Utils.isBlank(tags)) ngo.setTags(tags);
 			String logo = get(row, col("logo image"));
 			if ( ! Utils.isBlank(logo)) ngo.put("logo", logo);
-			String ukbased = get(row, col("UK-based charity?"));
-			if ( ! Utils.isBlank(ukbased)) ngo.put("ukBased", ukbased!=null && ukbased.toLowerCase().contains("yes"));
+			String ukbased = get(row, col("giftaidable"));
+			if ( ! Utils.isBlank(ukbased)) {
+				ngo.put("uk_giftaid", yes(ukbased));
+			}
 			
 //			no donations?
 			String ad = get(row, col("accepts donations"));
 			if ( ! Utils.isBlank(ad)) {
 				try {
-					ngo.put("noPublicDonations", ! Utils.yes(ad));
+					ngo.put("noPublicDonations", ! yes(ad));
 				} catch(Exception ex) {
 					Log.e("import", ex);
 				}
@@ -205,9 +207,9 @@ public class ImportCharityDataFromCSV {
 //			38	Representative project?	Where a charity has several projects, we may have to choose one as the representative project. For really big mega-charities, it may be necessary to have the "representative" row being an aggregate or "average" of all the projects	yes
 //			39	Is this finished/ready to use?	Is there enough data to include in the SoGive app? A judgement	Yes
 			String _ready = get(row, col("ready"));
-			boolean ready = _ready.toLowerCase().contains("yes");
+			boolean ready = yes(_ready);
 			String rep = get(row, col("representative")).toLowerCase();
-			boolean isRep = rep.toLowerCase().contains("yes");
+			boolean isRep = yes(rep);
 //			40	Confidence indicator	An indicator of the confidence we have in the data, especially the cost per impact	Low
 //			41	Comments on confidence indicator	Why?	The cost shown is based on CR UK funding 4000 researchers for a cost of £600m, minus some deductions to get to £400m. It is not clear whether this is right, for example, those 4000 researchers might include some who are partfunded by other organisations, or it may be that there are 4000 "inhouse" cruk researchers, but CRUK also funds some researchers who work externally, and some of the cruk funds are also partfunding some other researchers outside of the 4000 mentioned in the accounts. When I contacted CRUK for clarity on this, they were unable to clarify the situation
 //			42	Stories	Stories about beneficiaries (either as a link, or copied and pasted - if copied and pasted also include a source). Sometimes this is available in the annual report and accounts, but may need to look on the charity's website	
@@ -236,16 +238,25 @@ public class ImportCharityDataFromCSV {
 			Time end = Time.of(get(row, col("end date")));
 			project.setPeriod(start, end);
 			Integer year = end!=null? end.getYear() : null;
-			String dataSrc = get(row, col("source of data"));
+			String dataSrc = get(row, col("source 1"));
 			if ( ! Utils.isBlank(dataSrc)) {
 				Citation citation = new Citation(dataSrc);
 				if (year!=null) citation.put("year", year);
 				project.addOrMerge("data-src", citation);
 			}
+			String dataSrc2 = get(row, col("source 2"));
+			if ( ! Utils.isBlank(dataSrc2)) {
+				Citation citation = new Citation(dataSrc2);
+				if (year!=null) citation.put("year", year);
+				project.addOrMerge("data-src2", citation);
+			}
 			Object img = get(row, col("photo image"));
 			if (img!=null) {
 				project.put(images, img);
-			}
+				if (isRep || ! ngo.containsKey(images)) {
+					ngo.put(images, img);
+				}
+			}			
 			project.put("location", get(row, col("location")));
 			
 			// inputs
@@ -318,6 +329,11 @@ public class ImportCharityDataFromCSV {
 			cnt++;
 		}
 		return cnt;
+	}
+
+	private boolean yes(String ukbased) {
+		boolean yes = ukbased.toLowerCase().contains("yes");
+		return yes;
 	}
 
 	static final Map<String,Integer> cols = new HashMap();
