@@ -241,7 +241,8 @@ const DonationAmounts = ({options, impacts, amount, handleChange}) => {
 						<InputGroup.Addon style={{color: fgcol, backgroundColor: bgcol}}>£</InputGroup.Addon>
 						<FormControl
 							type="number"
-							min="0"
+							min="1"
+							max="100000"
 							step="1"
 							placeholder="Enter donation amount"
 							onChange={({ target }) => { handleChange('amount', target.value); }}
