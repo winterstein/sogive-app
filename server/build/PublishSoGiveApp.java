@@ -63,7 +63,7 @@ import jobs.BuildWinterwellProject;
  */
 public class PublishSoGiveApp extends BuildTask {
 
-	String server = "test.sogive.org"; // datalog.soda.sh
+	String server = "app.sogive.org"; // datalog.soda.sh
 	String remoteUser;
 	private String remoteWebAppDir;
 	private File localWebAppDir;
