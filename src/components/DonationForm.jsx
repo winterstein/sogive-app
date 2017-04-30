@@ -167,13 +167,11 @@ class ThankYouAndShare extends React.Component {
 				<div className='col-md-12 social-media-buttons'>
 					<center>
 						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
-							{ /*<Misc.Logo service='twitter' /> */}
-							<i className="fa fa-twitter-square fa-4x" aria-hidden="true"></i>
+							<Misc.Logo service='twitter' />
 						</a>
 
 						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(); }}>
-							{ /* <Misc.Logo service='facebook' /> */}
-							<i className="fa fa-facebook-square fa-4x" aria-hidden="true"></i>
+							<Misc.Logo service='facebook' />
 						</a>
 					</center>
 				</div>

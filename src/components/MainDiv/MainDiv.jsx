@@ -17,6 +17,7 @@ import SearchPage from '../SearchPage';
 import Account from '../Account';
 import DonateToCampaignPage from '../DonateToCampaignPage';
 import CharityPage from '../CharityPage';
+import EditCharityPage from '../editor/EditCharityPage';
 
 // Actions
 
@@ -26,7 +27,8 @@ const PAGES = {
 	dashboard: DashboardPage,
 	account: Account,
 	charity: CharityPage,
-	campaign: DonateToCampaignPage
+	campaign: DonateToCampaignPage,
+	edit: EditCharityPage
 };
 
 const DEFAULT_PAGE = 'search';
@@ -50,11 +52,6 @@ class MainDiv extends Component {
 		Login.change(() => {
 			this.setState({});
 		});
-	}
-
-	componentWillMount() {
-		// poke react on change
-		DataStore.addListener(() => this.setState({}));
 	}
 
 	componentDidMount() {

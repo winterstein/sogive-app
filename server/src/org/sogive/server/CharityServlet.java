@@ -18,10 +18,13 @@ import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.fields.JsonField;
+import com.winterwell.web.fields.ListField;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -47,11 +50,21 @@ public class CharityServlet {
 		if (charity==null) {
 			throw new WebEx.E404("No charity: "+id);
 		}
+		// save edits??
+		if (state.actionIs("edit")) {
+			doSaveEdit(charity);
+		}
 //		// impacts
 		doCalcImpacts(charity);
 		
 		JsonResponse output = new JsonResponse(state, charity);
 		WebUtils2.sendJson(output, state);
+	}
+
+	private void doSaveEdit(NGO charity) {
+		Map item = (Map) state.get(new JsonField("item"));
+		Log.w("TODO", "save edit "+item);
+		// load from ES, merge, save
 	}
 
 	public static NGO getCharity(String id) {

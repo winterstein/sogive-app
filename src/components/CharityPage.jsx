@@ -13,7 +13,6 @@ import Project from '../data/charity/Project';
 import Misc from './Misc';
 
 import DonationForm from './DonationForm';
-import PageMetaInfo from './PageMetaInfo';
 
 class CharityPage extends React.Component {
 
@@ -62,7 +61,6 @@ class CharityPage extends React.Component {
 		// put it together
 		return (
 			<div className='page CharityPage'>
-				<PageMetaInfo charity={charity} />
 				<CharityProfile charity={charity} />
 				<div className='upper-padding col-md-12 charity-donation-div'>
 					<p className='donateto'>Donate to { charity.name }</p>
@@ -106,6 +104,7 @@ const CharityProfile = ({charity}) => {
 		</p>
 	);
 	return (<div className='CharityProfile-div'>
+				<EditLink charity={charity} />
 				<h4 className='CharityProfile'>Charity Profile</h4>
 				<div className='col-md-12'>
 					<div className='col-md-2 charity-logo-div'>
@@ -129,6 +128,10 @@ const CharityProfile = ({charity}) => {
 				</div>
 	</div>);
 };
+
+
+// TODO only for registered editors!!!
+const EditLink = ({charity}) => <div className='pull-right'><a href={'#edit?charityId='+charity['@id']}>edit</a></div>;
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;

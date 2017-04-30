@@ -146,10 +146,7 @@ if (typeof(window) !== 'undefined') window.DataStore = DataStore;
  */
 DataStore.update({
 	data: {
-		Publisher: {},			
 		Charity: {},
-		Advert: {},
-		Advertiser: {},
 		Person: {},
 		User: {}
 	},

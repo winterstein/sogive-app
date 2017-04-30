@@ -8,6 +8,7 @@ import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
 import Login from 'hooru';
+import NGO from '../data/charity/NGO';
 
 const ServerIO = {};
 export default ServerIO;
@@ -26,7 +27,7 @@ ServerIO.search = function(query) {
 
 ServerIO.getCharity = function(charityId) {
 	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+charityId+'.json');
+	return ServerIO.load('/charity/'+escape(charityId)+'.json');
 };
 
 
@@ -108,6 +109,10 @@ ServerIO.load = function(url, params) {
 
 ServerIO.post = function(url, data) {
 	return ServerIO.load(url, {data, method:'POST'});
+};
+
+ServerIO.saveDraft = function(item) {
+	return ServerIO.post('/charity/'+escape(NGO.id(item))+'.json', item);
 };
 
 ServerIO.handleMessages = function(response) {

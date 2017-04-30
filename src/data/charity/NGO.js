@@ -11,6 +11,7 @@ export default NGO;
 NGO.isa = (ngo) => isa(ngo, 'NGO');
 NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
 NGO.name = (ngo) => isa(ngo, 'NGO') && ngo.name;
+NGO.id = (ngo) => isa(ngo, 'NGO') && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 
 NGO.getProject = (ngo) => {
