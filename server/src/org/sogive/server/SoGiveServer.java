@@ -43,6 +43,8 @@ import com.winterwell.gson.StandardAdapters;
 
 public class SoGiveServer {
 
+	public static final Time startTime = new Time();
+	
 	private static JettyLauncher jl;
 	
 	public static LogFile logFile;
