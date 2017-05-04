@@ -30,7 +30,8 @@
     "react-bootstrap": "^0.30.7",
     "react-stripe-checkout": "^2.2.5",
     "react-helmet": "^4.0.0",
-	"easy-enums": "^1.1.5"
+	"easy-enums": "^1.1.5",
+	"easyi18n": "^1.1.0"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
