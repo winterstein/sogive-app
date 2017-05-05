@@ -208,13 +208,13 @@ public class PublishSoGiveApp extends BuildTask {
 			jarTask.close();			
 		}
 		
-		// rsync - via publish-sogiveapp.sh
-		// Bash script which does the rsync work
-		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+server);
-		pubas.run();
-		System.out.println(pubas.getError());
-		pubas.close();
-		Log.d(pubas.getCommand(), pubas.getOutput());
+//		// rsync - via publish-sogiveapp.sh
+//		// Bash script which does the rsync work
+//		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+server);
+//		pubas.run();
+//		System.out.println(pubas.getError());
+//		pubas.close();
+//		Log.d(pubas.getCommand(), pubas.getOutput());
 	}
 	
 
