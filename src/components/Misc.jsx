@@ -131,7 +131,7 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
  * @param {String} text 
  */
 const trPlural = (num, text) => {
-	let isPlural = num !== 1;
+	let isPlural = Math.round(num) !== 1;
 	// Plural forms: 
 	// Normal: +s, +es (eg potatoes, boxes), y->ies (eg parties), +en (e.g. oxen)
 	// See http://www.englisch-hilfen.de/en/grammar/plural.htm, or https://en.wikipedia.org/wiki/English_plurals for the full horror.
