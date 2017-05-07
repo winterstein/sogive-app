@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.es.client.ESHttpResponse;
 import com.winterwell.es.client.GetRequestBuilder;
 import com.winterwell.es.client.GetResponse;
+import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Printer;
@@ -23,6 +27,7 @@ import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.JsonField;
 import com.winterwell.web.fields.ListField;
 import com.winterwell.web.fields.SField;
@@ -46,12 +51,13 @@ public class CharityServlet {
 	
 	public void run() throws IOException {
 		String id = state.getSlugBits(1);
-		NGO charity = getCharity(id);
+		String version = state.get("version");
+		NGO charity = getCharity(id, version);
 		if (charity==null) {
 			throw new WebEx.E404("No charity: "+id);
 		}
 		// save edits??
-		if (state.actionIs("edit")) {
+		if (state.actionIs("save")) {
 			doSaveEdit(charity);
 		}
 //		// impacts
@@ -62,21 +68,49 @@ public class CharityServlet {
 	}
 
 	private void doSaveEdit(NGO charity) {
+//		String pb = state.getPostBody();
+		XId user = state.getUserId();
 		Map item = (Map) state.get(new JsonField("item"));
-		Log.w("TODO", "save edit "+item);
+		String version = state.get("version");
+		Log.w("TODO", "save edit "+item+" ");
 		// load from ES, merge, save
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+		ESHttpClient client = new ESHttpClient(Dep.get(ESConfig.class));
+		client.debug = true;
+		String id = (String) item.get(Thing.ID);
+		assert id != null && ! id.equals("new");
+		String idx = "draft".equals(version)? config.charityDraftIndex : config.charityIndex;
+		assert version==null || "draft".equals(version) : version;
+		UpdateRequestBuilder up = client.prepareUpdate(idx, config.charityType, id);
+//		item = new ArrayMap("name", "foo"); // FIXME
+		up.setDoc(item);
+		up.setDocAsUpsert(true);
+		IESResponse resp = up.get().check();
+		System.out.println(resp);
 	}
 
-	public static NGO getCharity(String id) {
+	public static NGO getCharity(String id, String version) {
 		ESHttpClient client = new ESHttpClient(Dep.get(ESConfig.class));
 		ESHttpClient.debug = true;
 		GetRequestBuilder s = new GetRequestBuilder(client);
-		s.setIndex(SoGiveConfig.charityIndex).setType(SoGiveConfig.charityType).setId(id);
+		
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+		String idx = "draft".equals(version)? config.charityDraftIndex : config.charityIndex;
+		assert version==null || "draft".equals(version) : version;
+		
+		s.setIndex(idx).setType(SoGiveConfig.charityType).setId(id);
 		s.setSourceOnly(true);
 		GetResponse sr = s.get();
 		Exception error = sr.getError();
 		if (error!=null) {
-			if (error instanceof WebEx.E404) return null;
+			if (error instanceof WebEx.E404) {
+				// was version=draft?
+				if ("draft".equals(version)) {
+					return getCharity(id, null);
+				}
+				// 404
+				return null;
+			}
 			throw Utils.runtime(error);
 		}
 		String json = sr.getSourceAsString();

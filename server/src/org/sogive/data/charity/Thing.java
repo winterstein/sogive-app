@@ -27,6 +27,8 @@ import com.winterwell.utils.time.Time;
 public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	
 
+	public static final String ID = "@id";
+
 	/**
 	 * 
 	 * @param key
@@ -92,7 +94,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	 * @return
 	 */
 	public String getId() {
-		return (String) get("@id");
+		return (String) get(ID);
 	}
 	
 	public Thing() {

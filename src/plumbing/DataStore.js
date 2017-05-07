@@ -40,6 +40,10 @@ class Store {
 
 	getValue(...path) {
 		assert(_.isArray(path), path);
+		// If a path array was passed in, use it correctly.
+		if (path.length===1 && _.isArray(path[0])) {
+			path = path[0];
+		}
 		assert(this.appstate[path[0]], 
 			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use getValue()");		
 		let tip = this.appstate;

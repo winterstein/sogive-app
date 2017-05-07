@@ -22,7 +22,7 @@ class EditCharityPage extends React.Component {
 	componentWillMount() {
 		// fetch
 		let cid = this.props.charityId;
-		ServerIO.getCharity(cid)
+		ServerIO.getCharity(cid, 'draft')
 		.then(function(result) {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
@@ -54,6 +54,13 @@ class EditCharityPage extends React.Component {
 	}
 } // ./EditCharityPage
 
+const saveDraftFn = ({path}) => {
+	let charity = DataStore.getValue(path);
+	assert(NGO.isa(charity), charity, path);
+	ServerIO.saveCharity(charity, 'draft');
+	return true;
+};
+
 const EditField = ({item, field, type, help}) => {
 	let id = NGO.id(item);
 	let meta = (item.meta && item.meta[field]) || {};
@@ -62,7 +69,9 @@ const EditField = ({item, field, type, help}) => {
 			{field}			
 			<Misc.Col2>
 				<Misc.PropControl type={type} prop={field} 
-					path={['data',C.TYPES.Charity,id]} item={item} />
+					path={['data',C.TYPES.Charity,id]} item={item} 
+					saveFn={saveDraftFn}
+					/>
 				<div>
 					<div>
 						<Misc.Icon fa='info-circle' /> Guidance:

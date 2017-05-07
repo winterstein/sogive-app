@@ -18,7 +18,7 @@ E.g. "Loading your settings...""
 */
 Misc.Loading = ({text}) => (
 	<div>
-		<span className="glyphicon glyphicon-cd spinning" /> Loading {text || ''}...
+		<span className="glyphicon glyphicon-cog spinning" /> Loading {text || ''}...
 	</div>
 );
 

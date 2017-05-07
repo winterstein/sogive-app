@@ -25,9 +25,9 @@ ServerIO.search = function(query) {
 };
 
 
-ServerIO.getCharity = function(charityId) {
+ServerIO.getCharity = function(charityId, version) {
 	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+escape(charityId)+'.json');
+	return ServerIO.load('/charity/'+escape(charityId)+'.json', {version: version});
 };
 
 
@@ -38,6 +38,15 @@ ServerIO.donate = function(data) {
 
 ServerIO.getDonations = function() {
 	return ServerIO.load('/donation/list');
+};
+
+
+ServerIO.saveCharity = function(charity, version) {
+	assert(NGO.isa(charity), charity);
+	let params = {		
+		data: {action: 'save', item: JSON.stringify(charity), version: version},
+		method: 'PUT'};
+	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
 
 
