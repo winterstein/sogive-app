@@ -155,25 +155,28 @@ const trPlural = (num, text) => {
 
 
 /**
+ * @param saveFn {Function} You are advised to wrap this with e.g. _.debounce(myfn, 500).
+ * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
  * dflt {?Object} default value
  */
-Misc.PropControl = ({label, prop, path, item, type, bg, dflt, saveFn}) => {
-	assert( ! type || Misc.ControlTypes.has(type), type);
+Misc.PropControl = ({label, ...stuff}) => {
+	// label? show it and recurse
 	if (label) {
 		return (<div className="form-group">
 			<label>{label}</label>
-			<Misc.PropControl dflt={dflt} prop={prop} path={path} item={item} type={type} bg={bg} />
+			<Misc.PropControl {...stuff} />
 		</div>);
-	}
+	}	
+	let {prop, path, item, type, bg, dflt, saveFn} = stuff;
+	assert( ! type || Misc.ControlTypes.has(type), type);
 	if ( ! item) item = {};
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.slice().concat(prop);
-	let debouncedSaveFn = saveFn? _.debounce(saveFn, 1000) : null;
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			DataStore.setValue(proppath, e.target.checked);
-			if (debouncedSaveFn) debouncedSaveFn({path:path});		
+			if (saveFn) saveFn({path:path});		
 		};
 		return (<Checkbox checked={item[prop]} onChange={onChange} />);
 	}
@@ -187,7 +190,7 @@ Misc.PropControl = ({label, prop, path, item, type, bg, dflt, saveFn}) => {
 	}
 	const onChange = e => {
 		DataStore.setValue(proppath, e.target.value);
-		if (debouncedSaveFn) debouncedSaveFn({path:path});		
+		if (saveFn) saveFn({path:path});		
 	};
 	if (type==='textarea') {
 		return <FormControl componentClass="textarea" name={prop} value={value} onChange={onChange} />;

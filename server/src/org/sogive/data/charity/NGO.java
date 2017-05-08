@@ -41,7 +41,7 @@ public class NGO extends Thing<NGO> {
 
 	public List<Project> getProjects() {
 		// TODO this is not good :(
-		List ps = (List) get("projects");
+		List ps = list(get("projects"));
 		ps = getThings(ps, Project.class);
 		put("projects", ps);
 		return ps;

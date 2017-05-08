@@ -27,7 +27,7 @@ ServerIO.search = function(query) {
 
 ServerIO.getCharity = function(charityId, version) {
 	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+escape(charityId)+'.json', {version: version});
+	return ServerIO.load('/charity/'+escape(charityId)+'.json', {data: {version: version}});
 };
 
 
@@ -46,6 +46,22 @@ ServerIO.saveCharity = function(charity, version) {
 	let params = {		
 		data: {action: 'save', item: JSON.stringify(charity), version: version},
 		method: 'PUT'};
+	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
+};
+
+ServerIO.publish = function(charity, version) {
+	assert(NGO.isa(charity), charity);
+	let params = {		
+		data: {action: 'publish', version: version}
+	};
+	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
+};
+
+ServerIO.discardEdits = function(charity, version) {
+	assert(NGO.isa(charity), charity);
+	let params = {		
+		data: {action: 'discard-edits', version: version}
+	};
 	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
 

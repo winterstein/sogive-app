@@ -25,6 +25,10 @@ import com.winterwell.utils.time.Time;
  *
  */
 public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
+
+	protected static List list(Object object) {
+		return object==null? null : Containers.asList(object);
+	}
 	
 
 	public static final String ID = "@id";
@@ -67,7 +71,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	
 	<T extends Thing> List<T> addOrMerge(String property, T thing, BiPredicate<T,T> matcher) {
 		assert ! Utils.isBlank(property);
-		List<T> projects = (List) getThings(property, thing.getClass());
+		List<T> projects = list(getThings(property, thing.getClass()));
 		if (projects==null) {
 			projects = new ArrayList();
 			put(property, projects);
@@ -82,7 +86,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	}
 	
 	private <T extends Thing> List<T> getThings(String property, Class<T> klass) {
-		List list = (List) get(property);
+		List list = list(get(property));
 		if (list==null) return null;
 		List<T> things = getThings(list, klass);
 		put(property, things);

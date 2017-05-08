@@ -60,7 +60,7 @@ public class Project extends Thing<Project> {
 	}
 
 	public List<MonetaryAmount> getInputs() {
-		List outputs = getThings((List) get("inputs"), MonetaryAmount.class);
+		List outputs = getThings(list(get("inputs")), MonetaryAmount.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("inputs", outputs);
@@ -69,7 +69,7 @@ public class Project extends Thing<Project> {
 	}
 	
 	public List<Output> getOutputs() {
-		List outputs = getThings((List) get("outputs"), Output.class);
+		List outputs = getThings(list(get("outputs")), Output.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("outputs", outputs);
@@ -77,6 +77,7 @@ public class Project extends Thing<Project> {
 		return outputs;
 	}
 
+	
 	public void addInput(String costName, MonetaryAmount ac) {
 		ac.put("name", costName);
 		addOrMerge("inputs", ac);

@@ -1,9 +1,9 @@
 // @Flow
 import React from 'react';
 import _ from 'lodash';
-import {assert} from 'sjtest';
+import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
-import { Panel, Image, Well, Label, Grid, Row, Col } from 'react-bootstrap';
+import { Panel, Image, Well, Label, Grid, Row, Col, Accordion } from 'react-bootstrap';
 
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../plumbing/DataStore';
@@ -26,53 +26,92 @@ class EditCharityPage extends React.Component {
 		.then(function(result) {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
-			DataStore.setValue(['data', C.TYPES.Charity, cid], charity);
-		}.bind(this));
+			DataStore.setValue(['draft', C.TYPES.Charity, cid], charity);
+		});
 	}
 
 	render() {
 		let cid = this.props.charityId;
-		let charity = DataStore.getValue('data', C.TYPES.Charity, cid);
+		let charity = DataStore.getValue('draft', C.TYPES.Charity, cid);
 		if ( ! charity) {
 			return <Misc.Loading />;
-		}
+		}		
 		// put it together
 		console.log("EditCharity", charity);
 		return (
-			<div className='page EditCharityPage'>
-				<h2>Edit: {charity.name}</h2>
+			<div className='page EditCharityPage'>				
 				<Panel>
-					Charity Profile
-					<EditField item={charity} type='textarea' field='description' />
-
+					<h2>Editing: {charity.name}</h2>
+						<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
+						<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
 				</Panel>
-				<Panel>
-					Overall Finances
-				</Panel>
+				<Accordion>
+					<Panel header={<h3>Charity Profile</h3>} eventKey="1">					
+						<EditField item={charity} type='text' field='name' />
+						<EditField item={charity} type='text' field='nickname' />
+						<EditField item={charity} type='text' field='tags' />
+						<EditField item={charity} type='textarea' field='description' />
+						<EditField item={charity} type='img' field='logo' />
+						<EditField item={charity} type='img' field='logo_white' label='White-on-transparent poster logo' />
+						<EditField item={charity} type='img' field='image' label='Photo' />
+						<EditField item={charity} type='color' field='image' label='Brand colour' />
+						<EditField item={charity} type='url' field='url' label='Website' />
+					</Panel>
+					<Panel header={<h3>Overall Finances</h3>} eventKey="2">
+						<div><h3>Latest Year</h3>
+							<EditField item={charity} type='text' field='name' />	
+						</div>
+					</Panel>
+					<Panel header={<h3>Projects</h3>} eventKey="3">
+					</Panel>
+					<Panel header={<h3>References</h3>} eventKey="4">
+					</Panel>
+				</Accordion>
 			</div>
 		);
 	}
 } // ./EditCharityPage
 
-const saveDraftFn = ({path}) => {
-	let charity = DataStore.getValue(path);
-	assert(NGO.isa(charity), charity, path);
-	ServerIO.saveCharity(charity, 'draft');
-	return true;
+const publishDraftFn = _.throttle((e, charity) => {
+	ServerIO.publish(charity, 'draft');
+}, 250);
+const discardDraftFn = _.throttle((e, charity) => {
+	ServerIO.discardEdits(charity);
+}, 250);
+
+const saveDraftFn = _.debounce(
+	({path}) => {
+		let charity = DataStore.getValue(path);
+		assert(NGO.isa(charity), charity, path);
+		ServerIO.saveCharity(charity, 'draft')
+		.then((result) => {
+			let modCharity = result.cargo;
+			assert(NGO.isa(modCharity), modCharity);
+			DataStore.setValue(['draft', C.TYPES.Charity, NGO.id(modCharity)], modCharity);
+		});
+		return true;
+	}, 1000);
+
+
+const EditField = ({item, ...stuff}) => {
+	let id = NGO.id(item);
+	let path = ['draft',C.TYPES.Charity,id];
+	return <EditField2 item={item} path={path} {...stuff} />;
 };
 
-const EditField = ({item, field, type, help}) => {
-	let id = NGO.id(item);
+const EditField2 = (props) => {
+	let {item, field, type, help, label, path} = props;
+	// console.log('EditField2', props);
+	assMatch(field, String);
 	let meta = (item.meta && item.meta[field]) || {};
 	return (
-		<div>
-			{field}			
+		<div>			
 			<Misc.Col2>
-				<Misc.PropControl type={type} prop={field} 
-					path={['data',C.TYPES.Charity,id]} item={item} 
+				<Misc.PropControl label={label || field} type={type} prop={field} 
+					path={path} item={item} 
 					saveFn={saveDraftFn}
 					/>
-				<div>
+				<div className='flexbox'>
 					<div>
 						<Misc.Icon fa='info-circle' /> Guidance:
 						{help}

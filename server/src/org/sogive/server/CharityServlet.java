@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.winterwell.es.client.DeleteRequestBuilder;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.ESHttpResponse;
@@ -44,22 +45,38 @@ import org.sogive.data.charity.Thing;
 public class CharityServlet {
 
 	private final WebRequest state;
+	private SoGiveConfig config;
+	private ESHttpClient client;
+	private String id;
 
 	public CharityServlet(WebRequest state) {
 		this.state = state;
 	}
 	
 	public void run() throws IOException {
-		String id = state.getSlugBits(1);
-		String version = state.get("version");
+		id = state.getSlugBits(1);
+		String version = state.get("version");		
 		NGO charity = getCharity(id, version);
 		if (charity==null) {
 			throw new WebEx.E404("No charity: "+id);
 		}
 		// save edits??
-		if (state.actionIs("save")) {
-			doSaveEdit(charity);
+		if (state.getAction()!=null) {
+			config = Dep.get(SoGiveConfig.class);
+			client = new ESHttpClient(Dep.get(ESConfig.class));
+			client.debug = true;
+			// save edits to draft?
+			if (state.actionIs("save")) {
+				charity = doSaveEdit();
+			}
+			if (state.actionIs("publish")) {
+				charity = doPublish();
+			}
+			if (state.actionIs("discard-edits")) {
+				charity = doDiscardEdits();
+			}
 		}
+		
 //		// impacts
 		doCalcImpacts(charity);
 		
@@ -67,26 +84,52 @@ public class CharityServlet {
 		WebUtils2.sendJson(output, state);
 	}
 
-	private void doSaveEdit(NGO charity) {
+	private NGO doPublish() {
+		NGO draft = getCharity(id, "draft");
+		draft.put("modified", false);
+		// load from ES, merge, save		
+		UpdateRequestBuilder up = client.prepareUpdate(config.charityIndex, config.charityType, id);
+		up.setDoc(draft);
+		up.setDocAsUpsert(true);
+		// NB: this doesn't return the merged item :(
+		IESResponse resp = up.get().check();
+
+		// OK - delete the draft (ignoring the race condition!)
+		DeleteRequestBuilder del = client.prepareDelete(config.charityDraftIndex, config.charityType, id);
+		IESResponse ok = del.get().check();		
+
+		return draft;
+	}
+
+	private NGO doDiscardEdits() {		
+		DeleteRequestBuilder del = client.prepareDelete(config.charityDraftIndex, config.charityType, id);
+		IESResponse ok = del.get().check();		
+		return getCharity(id, null);
+	}
+
+	private NGO doSaveEdit() {
 //		String pb = state.getPostBody();
 		XId user = state.getUserId();
 		Map item = (Map) state.get(new JsonField("item"));
 		String version = state.get("version");
+		boolean isDraft = "draft".equals(version) || version==null;
+		assert isDraft : version;
+		item.put("modified", isDraft);
 		Log.w("TODO", "save edit "+item+" ");
-		// load from ES, merge, save
-		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		ESHttpClient client = new ESHttpClient(Dep.get(ESConfig.class));
-		client.debug = true;
+		// load from ES, merge, save		
 		String id = (String) item.get(Thing.ID);
-		assert id != null && ! id.equals("new");
-		String idx = "draft".equals(version)? config.charityDraftIndex : config.charityIndex;
-		assert version==null || "draft".equals(version) : version;
+		assert id != null && ! id.equals("new");		
+		String idx = isDraft? config.charityDraftIndex : config.charityIndex;		
 		UpdateRequestBuilder up = client.prepareUpdate(idx, config.charityType, id);
 //		item = new ArrayMap("name", "foo"); // FIXME
+		// This should merge against what's in the DB
 		up.setDoc(item);
 		up.setDocAsUpsert(true);
+		// NB: this doesn't return the merged item :(
 		IESResponse resp = up.get().check();
-		System.out.println(resp);
+//		Map<String, Object> item2 = resp.getParsedJson();
+		NGO mod = Thing.getThing(item, NGO.class);
+		return mod;
 	}
 
 	public static NGO getCharity(String id, String version) {

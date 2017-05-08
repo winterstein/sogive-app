@@ -151,14 +151,14 @@ if (typeof(window) !== 'undefined') window.DataStore = DataStore;
 DataStore.update({
 	data: {
 		Charity: {},
-		Person: {},
+		User: {}
+	},
+	draft: {
+		Charity: {},
 		User: {}
 	},
 	focus: {
-		Publisher: null,
-		Advertiser: null,
 		Charity: null,
-		Person: null,
 		User: null,
 	},	
 	widget: {},
