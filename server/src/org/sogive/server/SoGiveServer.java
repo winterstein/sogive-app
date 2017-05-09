@@ -28,7 +28,7 @@ import com.winterwell.datalog.ESStorage;
 import com.winterwell.datalog.IDataLog;
 import com.winterwell.datalog.IDataLogAdmin;
 import com.winterwell.datalog.IDataLogStorage;
-import com.winterwell.datalog.StatConfig;
+import com.winterwell.datalog.DataLogConfig;
 import com.winterwell.datalog.DataLogImpl;
 import com.winterwell.es.ESUtils;
 import com.winterwell.es.XIdTypeAdapter;
