@@ -41,12 +41,13 @@ class EditCharityPage extends React.Component {
 		return (
 			<div className='page EditCharityPage'>				
 				<Panel>
-					<h2>Editing: {charity.name}</h2>
+					<h2>Editing: {charity.name}</h2>					
 						<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
 						<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
 				</Panel>
 				<Accordion>
-					<Panel header={<h3>Charity Profile</h3>} eventKey="1">					
+					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
+						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' />
 						<EditField item={charity} type='text' field='nickname' />
 						<EditField item={charity} type='text' field='tags' />
