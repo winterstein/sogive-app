@@ -36,6 +36,14 @@ class EditCharityPage extends React.Component {
 		if ( ! charity) {
 			return <Misc.Loading />;
 		}		
+		// projects
+		let allprojects = charity.projects;
+		// split out overall vs projects
+		let overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
+		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
+		// sort by year
+		overalls = _.sortBy(overalls, p => - (p.year || 0) );
+
 		// put it together
 		console.log("EditCharity", charity);
 		return (
@@ -59,9 +67,7 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='url' field='url' label='Website' />
 					</Panel>
 					<Panel header={<h3>Overall Finances</h3>} eventKey="2">
-						<div><h3>Latest Year</h3>
-							<EditField item={charity} type='text' field='name' />	
-						</div>
+						<ProjectsEditor projects={overalls} />
 					</Panel>
 					<Panel header={<h3>Projects</h3>} eventKey="3">
 					</Panel>
@@ -72,6 +78,15 @@ class EditCharityPage extends React.Component {
 		);
 	}
 } // ./EditCharityPage
+
+const ProjectsEditor = ({projects}) => {
+	let rprojects = projects.map(p => <ProjectEditor key={p.name+'-'+p.year} project={p} />);
+	return <div>{rprojects}</div>;
+};
+
+const ProjectEditor = ({project}) => {
+	return <div><h4>Project Editor: {project.name}</h4><pre>{printer.str(project)}</pre></div>;
+};
 
 const publishDraftFn = _.throttle((e, charity) => {
 	ServerIO.publish(charity, 'draft');
