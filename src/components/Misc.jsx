@@ -209,11 +209,20 @@ Misc.PropControl = ({label, ...stuff}) => {
 			<div className='clearfix' />
 		</div>);
 	}
+	// date: dates that don't fit the mold yyyy-MM-dd get ignored!!
+	if (type==='date' && value && ! value.match(/dddd-dd-dd/)) {
+		let date = new Date(value);
+		let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
+		value = nvalue;
+	}
 	// normal
 	// NB: type=color should produce a colour picker :)
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} />;
 };
-Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox");
+
+const oh = (n) => n<10? '0'+n : n;
+
+Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year");
 
 Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 

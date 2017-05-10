@@ -23,7 +23,7 @@
     "jquery": "^3.1.1",
     "js-cookie": "^2.1.4",
     "chart.js": "^2.4.0",
-    "hooru": "^0.3.0",
+    "hooru": "^0.3.5",
     "sjtest": "^0.4.3",
     "react-chartjs2": "^1.1.1",
     "d3-queue": "^3.0.3",

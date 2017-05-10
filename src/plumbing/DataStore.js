@@ -22,7 +22,7 @@ class Store {
 	}
 
 	update(newState) {
-		console.log('update', newState);
+		// console.log('update', newState);
 		_.merge(this.appstate, newState);
 		this.callbacks.forEach(fn => fn(this.appstate));
 	}
@@ -66,7 +66,7 @@ class Store {
 		assert(_.isArray(path), path);
 		assert(this.appstate[path[0]], 
 			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
-		console.log('DataStore.setValue', path, value);
+		// console.log('DataStore.setValue', path, value);
 		let newState = {};
 		let tip = newState;	
 		for(let pi=0; pi < path.length; pi++) {

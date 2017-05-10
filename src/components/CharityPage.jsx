@@ -11,7 +11,7 @@ import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Misc from './Misc';
-
+import Login from 'hooru';
 import DonationForm from './DonationForm';
 
 class CharityPage extends React.Component {
@@ -131,7 +131,7 @@ const CharityProfile = ({charity}) => {
 
 
 // TODO only for registered editors!!!
-const EditLink = ({charity}) => <div className='pull-right'><a href={'#edit?charityId='+charity['@id']}>edit</a></div>;
+const EditLink = ({charity}) => Login.isLoggedIn()? <div className='pull-right'><a href={'#edit?charityId='+charity['@id']}>edit</a></div> : null;
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;

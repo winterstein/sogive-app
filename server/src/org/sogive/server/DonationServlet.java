@@ -26,6 +26,7 @@ import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
+import com.winterwell.hooru.client.Login;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.containers.ArrayMap;

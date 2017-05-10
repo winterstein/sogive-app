@@ -12,6 +12,7 @@ import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Misc from '../Misc';
+import Login from 'hooru';
 
 class EditCharityPage extends React.Component {
 
@@ -31,6 +32,9 @@ class EditCharityPage extends React.Component {
 	}
 
 	render() {
+		// if ( ! Login.isLoggedIn()) {
+		// 	return <div>Please login</div>;
+		// }
 		let cid = this.props.charityId;
 		let charity = DataStore.getValue('draft', C.TYPES.Charity, cid);
 		if ( ! charity) {
@@ -43,6 +47,7 @@ class EditCharityPage extends React.Component {
 		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
 		// sort by year
 		overalls = _.sortBy(overalls, p => - (p.year || 0) );
+		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
 		// put it together
 		console.log("EditCharity", charity);
@@ -58,18 +63,19 @@ class EditCharityPage extends React.Component {
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' />
 						<EditField item={charity} type='text' field='nickname' />
+						<EditField item={charity} type='url' field='url' label='Website' />
 						<EditField item={charity} type='text' field='tags' />
 						<EditField item={charity} type='textarea' field='description' />
 						<EditField item={charity} type='img' field='logo' />
 						<EditField item={charity} type='img' field='logo_white' label='White-on-transparent poster logo' />
 						<EditField item={charity} type='img' field='image' label='Photo' />
-						<EditField item={charity} type='color' field='image' label='Brand colour' />
-						<EditField item={charity} type='url' field='url' label='Website' />
+						<EditField item={charity} type='color' field='image' label='Brand colour' />						
 					</Panel>
 					<Panel header={<h3>Overall Finances</h3>} eventKey="2">
-						<ProjectsEditor projects={overalls} />
+						<ProjectsEditor charity={charity} projects={overalls} />
 					</Panel>
-					<Panel header={<h3>Projects</h3>} eventKey="3">
+					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="3">
+						<ProjectsEditor charity={charity} projects={projectProjects} />
 					</Panel>
 					<Panel header={<h3>References</h3>} eventKey="4">
 					</Panel>
@@ -79,13 +85,42 @@ class EditCharityPage extends React.Component {
 	}
 } // ./EditCharityPage
 
-const ProjectsEditor = ({projects}) => {
-	let rprojects = projects.map(p => <ProjectEditor key={p.name+'-'+p.year} project={p} />);
-	return <div>{rprojects}</div>;
+const ProjectsEditor = ({charity, projects}) => {
+	if (projects.length===0) {
+		return <div>No projects analysed. This is correct for charities which focus on a single overall project.</div>;	
+	}
+	let rprojects = projects.map((p,i) => <Panel key={p.name+'-'+p.year} eventKey={i+1} header={<h4>{p.name} {p.year}</h4>}><ProjectEditor charity={charity} project={p} /></Panel>);
+	return <div><Accordion>{rprojects}</Accordion></div>;
 };
 
-const ProjectEditor = ({project}) => {
-	return <div><h4>Project Editor: {project.name}</h4><pre>{printer.str(project)}</pre></div>;
+const ProjectEditor = ({charity, project}) => {	
+	return (<div>
+		<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
+		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+		<EditProjectField charity={charity} project={project} type='location' field='location' label='Location' />
+		<EditProjectField charity={charity} project={project} type='checkbox' field='ready' label='Is this data ready for use?' />
+		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?' />
+		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year' />
+		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' />
+		<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' />
+		<Misc.Col2>
+			<ProjectInputs charity={charity} project={project} />
+			<ProjectOutputs charity={charity} project={project} />
+		</Misc.Col2>
+		<ProjectImpacts charity={charity} project={project} />
+	</div>);
+};
+
+const ProjectInputs = ({charity, project}) => {
+	return <div>Inputs{printer.str(project.inputs)}</div>;
+};
+
+const ProjectOutputs = ({charity, project}) => {
+	return <div>Outputs {printer.str(project.outputs)}</div>;
+};
+
+const ProjectImpacts = ({charity, project}) => {
+	return <div>Impacts {printer.str(project.impacts)}</div>;
 };
 
 const publishDraftFn = _.throttle((e, charity) => {
@@ -95,11 +130,26 @@ const discardDraftFn = _.throttle((e, charity) => {
 	ServerIO.discardEdits(charity);
 }, 250);
 
+
+const EditField = ({item, ...stuff}) => {
+	let id = NGO.id(item);
+	let path = ['draft',C.TYPES.Charity,id];
+	return <EditField2 item={item} path={path} {...stuff} />;
+};
+
+const EditProjectField = ({charity, project, ...stuff}) => {
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	assert(pid!==-1, project);
+	let path = ['draft',C.TYPES.Charity,cid,'projects', pid];
+	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
+};
+
 const saveDraftFn = _.debounce(
-	({path}) => {
-		let charity = DataStore.getValue(path);
-		assert(NGO.isa(charity), charity, path);
-		ServerIO.saveCharity(charity, 'draft')
+	({path, parentItem}) => {
+		if ( ! parentItem) parentItem = DataStore.getValue(path);
+		assert(NGO.isa(parentItem), parentItem, path);
+		ServerIO.saveCharity(parentItem, 'draft')
 		.then((result) => {
 			let modCharity = result.cargo;
 			assert(NGO.isa(modCharity), modCharity);
@@ -108,15 +158,15 @@ const saveDraftFn = _.debounce(
 		return true;
 	}, 1000);
 
-
-const EditField = ({item, ...stuff}) => {
-	let id = NGO.id(item);
-	let path = ['draft',C.TYPES.Charity,id];
-	return <EditField2 item={item} path={path} {...stuff} />;
-};
-
 const EditField2 = (props) => {
-	let {item, field, type, help, label, path} = props;
+	let {item, field, type, help, label, path, parentItem} = props;
+	let saveDraftFnWrap = saveDraftFn;
+	if (parentItem) {
+		saveDraftFnWrap = (context) => {
+			context.parentItem = parentItem;
+			return saveDraftFn(context);
+		};
+	}
 	// console.log('EditField2', props);
 	assMatch(field, String);
 	let meta = (item.meta && item.meta[field]) || {};
@@ -125,7 +175,7 @@ const EditField2 = (props) => {
 			<Misc.Col2>
 				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
-					saveFn={saveDraftFn}
+					saveFn={saveDraftFnWrap}
 					/>
 				<div className='flexbox'>
 					<div>

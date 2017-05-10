@@ -10,7 +10,7 @@ import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
-Login.ENDPOINT = 'http://localhooru.winterwell.com/hooru.json';
+Login.ENDPOINT = 'http://hooru.winterwell.com/hooru.json';
 
 /**
 	TODO:

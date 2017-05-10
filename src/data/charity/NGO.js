@@ -7,7 +7,6 @@ import {assert} from 'sjtest';
 const NGO = {};
 export default NGO;
 
-
 NGO.isa = (ngo) => isa(ngo, 'NGO');
 NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
 NGO.name = (ngo) => isa(ngo, 'NGO') && ngo.name;
