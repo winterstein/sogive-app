@@ -2,6 +2,11 @@
 
 #Publish-SoGive-App
 
+if [[ -z $1 ]]; then
+	echo "usage: publish-sogiveapp.sh servername (eg test.sogive.org)";
+	exit -1;   
+fi
+
 TARGETSERVERS=($1)
 USER=`whoami`
 
