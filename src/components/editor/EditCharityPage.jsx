@@ -74,9 +74,9 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='color' field='color' label='Brand colour' />						
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
-						<EditField item={charity} field='noPublicDonations' type='checkbox' 
-							help="Tick yes for those rare charities that don't takle donations from the general public." />
-						<EditField item={charity} field='uk_giftaid' type='checkbox' />
+						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
+							help="Tick yes for those rare charities that don't take donations from the general public." />
+						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' />
 					</Panel>
 					<Panel header={<h3>Overall Finances</h3>} eventKey="3">
 						<ProjectsEditor charity={charity} projects={overalls} />
@@ -96,7 +96,7 @@ const ProjectsEditor = ({charity, projects}) => {
 	if (projects.length===0) {
 		return <div>No projects analysed. This is correct for charities which focus on a single overall project.</div>;	
 	}
-	let rprojects = projects.map((p,i) => <Panel key={p.name+'-'+p.year} eventKey={i+1} header={<h4>{p.name} {p.year}</h4>}><ProjectEditor charity={charity} project={p} /></Panel>);
+	let rprojects = projects.map((p,i) => <Panel key={'project_'+i} eventKey={i+1} header={<h4>{p.name} {p.year}</h4>}><ProjectEditor charity={charity} project={p} /></Panel>);
 	return <div><Accordion>{rprojects}</Accordion></div>;
 };
 
@@ -118,7 +118,7 @@ const ProjectEditor = ({charity, project}) => {
 };
 
 const ProjectInputs = ({charity, project}) => {
-	let rinputs = project.inputs.map(input => <ProjectInputEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} input={input} />);
+	let rinputs = project.inputs.map((input, i) => <ProjectInputEditor key={project.name+'-'+i} charity={charity} project={project} input={input} />);
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
@@ -131,7 +131,8 @@ const ProjectInputs = ({charity, project}) => {
 };
 
 const ProjectOutputs = ({charity, project}) => {
-	let rinputs = project.outputs.map(input => <ProjectOutputEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} output={input} />);
+	// NB: use the array index as key 'cos the other details can be edited
+	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (<div className='well'>
 		<h5>Outputs</h5>
 		<table className='table'>
@@ -144,7 +145,7 @@ const ProjectOutputs = ({charity, project}) => {
 };
 
 const ProjectImpacts = ({charity, project}) => {
-	let rinputs = project.impacts.map(input => <ProjectImpactEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} impact={input} />);
+	let rinputs = project.impacts.map(input => <ProjectImpactEditor key={project.name+'-'+input.name+'-'+input.unit} charity={charity} project={project} impact={input} />);
 	return (<div className='well'>
 		<h5>Impacts</h5>
 		<table className='table'>

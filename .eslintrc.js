@@ -8,6 +8,7 @@ module.exports = {
 	"rules": {
 		/* off because we dont agree with AirBnB's settings */
 		"arrow-body-style": "off",
+		"react/no-array-index-key": "warn",
 		"arrow-parens": "off",
 		"brace-style": "warn",
 		"react/jsx-no-target-blank": "warn",
