@@ -1,5 +1,7 @@
 package org.sogive.data.charity;
 
+import org.apache.commons.lang3.Validate;
+
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.time.Time;
@@ -32,9 +34,21 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	}
 	
 	public long getValue100() {
+		validate();
 		return ((Number) get("value100")).longValue();
 	}
 
+
+	public MonetaryAmount validate() {
+		// check v100 = 100*v
+		double v = MathUtils.toNum(get("value"));
+		long v100 = (long) MathUtils.toNum(get("value100"));
+		if (v100 != 100*v) {
+			v100 = (long) (v*100);
+			put("value100", v100);
+		}
+		return this;
+	}
 
 	public static MonetaryAmount pound(double number) {
 		return new MonetaryAmount((long) (number*100));

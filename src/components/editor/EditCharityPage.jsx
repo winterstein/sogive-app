@@ -54,7 +54,8 @@ class EditCharityPage extends React.Component {
 		return (
 			<div className='page EditCharityPage'>				
 				<Panel>
-					<h2>Editing: {charity.name}</h2>					
+					<h2>Editing: {charity.name}</h2>			
+						<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 						<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
 						<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
 				</Panel>
@@ -98,7 +99,6 @@ const ProjectEditor = ({charity, project}) => {
 		<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
 		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
 		<EditProjectField charity={charity} project={project} type='location' field='location' label='Location' />
-		<EditProjectField charity={charity} project={project} type='checkbox' field='ready' label='Is this data ready for use?' />
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?' />
 		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year' />
 		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' />
@@ -112,27 +112,115 @@ const ProjectEditor = ({charity, project}) => {
 };
 
 const ProjectInputs = ({charity, project}) => {
-	let rinputs = project.inputs.map(input => <ProjectIOEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} input={input} />);
-	return (<div>
+	let rinputs = project.inputs.map(input => <ProjectInputEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} input={input} />);
+	return (<div className='well'>
 		<h5>Inputs</h5>
-		{rinputs}
-		</div>);
-};
-
-const ProjectIOEditor = ({charity, project, input}) => {	
-	return (<div>
-		<EditProjectIOField charity={charity} project={project} input={input} field='name' label='Name' />
-		<EditProjectIOField charity={charity} project={project} input={input} type='MonetaryAmount' label='£' />
+		<table className='table'>
+			<tbody>			
+				{rinputs}
+			</tbody>
+		</table>
+		<MetaEditor item={project.inputs} />
 	</div>);
 };
 
 const ProjectOutputs = ({charity, project}) => {
-	return <div>Outputs {printer.str(project.outputs)}</div>;
+	let rinputs = project.outputs.map(input => <ProjectOutputEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} output={input} />);
+	return (<div className='well'>
+		<h5>Outputs</h5>
+		<table className='table'>
+			<tbody>			
+				{rinputs}
+			</tbody>
+		</table>
+		<MetaEditor item={project.outputs} />
+	</div>);
 };
 
 const ProjectImpacts = ({charity, project}) => {
-	return <div>Impacts {printer.str(project.impacts)}</div>;
+	let rinputs = project.impacts.map(input => <ProjectImpactEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} impact={input} />);
+	return (<div className='well'>
+		<h5>Impacts</h5>
+		<table className='table'>
+			<tbody>			
+				{rinputs}
+			</tbody>
+		</table>
+		<MetaEditor item={project.impacts} />
+	</div>);
 };
+
+const STD_INPUTS = {
+	annualCosts: "Annual costs",
+	fundraisingCosts: "Fundraising costs",
+	tradingCosts: "Trading costs",
+	incomeFromBeneficiaries: "Income from Beneficiaries"
+};
+
+const ProjectInputEditor = ({charity, project, input}) => {	
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let inputsPath = ['draft',C.TYPES.Charity,cid,'projects', pid, 'inputs'];
+	assert(DataStore.getValue(inputsPath) === project.inputs);
+	let ii = project.inputs.indexOf(input);
+	assert(ii !== -1);
+	assert(pid !== -1);
+	let saveDraftFnWrap = (context) => {
+		context.parentItem = charity;
+		return saveDraftFn(context);
+	};	
+	return (<tr>
+		<td>{STD_INPUTS[input.name] || input.name}</td>
+		<td><Misc.PropControl type='MonetaryAmount' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} /></td>
+	</tr>);
+};
+
+
+const ProjectOutputEditor = ({charity, project, output}) => {	
+	assert(charity);
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let ii = project.outputs.indexOf(output);
+	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, 'outputs', ii];
+	assert(ii !== -1);
+	assert(pid !== -1);
+	assert(DataStore.getValue(inputPath) === output);
+	let saveDraftFnWrap = (context) => {
+		context.parentItem = charity;
+		return saveDraftFn(context);
+	};	
+	return (<tr>
+		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+	</tr>);
+};
+
+
+const ProjectImpactEditor = ({charity, project, impact}) => {	
+	assert(charity);
+	let ios = 'impacts';
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let ii = project[ios].indexOf(impact);
+	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, ios, ii];
+	assert(ii !== -1);
+	assert(pid !== -1);
+	assert(DataStore.getValue(inputPath) === impact);
+	let saveDraftFnWrap = (context) => {
+		context.parentItem = charity;
+		return saveDraftFn(context);
+	};	
+	let price = 1; //impact.price
+	let costPerBeneficiary = 1 / impact.number;
+	return (<tr>
+		<td><Misc.PropControl prop='name' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
+		<td>{costPerBeneficiary} 
+			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
+	</tr>);
+};
+
+
+
 
 const publishDraftFn = _.throttle((e, charity) => {
 	ServerIO.publish(charity, 'draft');
@@ -149,13 +237,14 @@ const EditField = ({item, ...stuff}) => {
 };
 
 const EditProjectField = ({charity, project, ...stuff}) => {
+	assert(project, stuff);
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	assert(pid!==-1, project);
 	let path = ['draft',C.TYPES.Charity,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
-const EditProjectIOField = ({charity, project, input, output, ...stuff}) => {
+const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) => {
 	assert(charity && project);
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
@@ -170,7 +259,14 @@ const EditProjectIOField = ({charity, project, input, output, ...stuff}) => {
 	}
 	assert(ioi !== -1);
 	let path = ['draft',C.TYPES.Charity,cid,'projects', pid, io, ioi];
-	return <EditField2 parentItem={charity} item={input || output} path={path} {...stuff} />;
+	let item = input || output;
+	if (field==='this') { 
+		// HACK for MonetaryAmount inputs
+		path = ['draft',C.TYPES.Charity,cid,'projects', pid, io];
+		field = ioi;
+		item = project[io];
+	}
+	return <EditField2 parentItem={charity} item={item} path={path} field={field} {...stuff} />;
 };
 
 
@@ -197,8 +293,7 @@ const EditField2 = (props) => {
 		};
 	}
 	// console.log('EditField2', props);
-	assMatch(field, String);
-	let meta = (item.meta && item.meta[field]) || {};
+	assMatch(field, "String|Number");
 	return (
 		<div>			
 			<Misc.Col2>
@@ -206,27 +301,33 @@ const EditField2 = (props) => {
 					path={path} item={item} 
 					saveFn={saveDraftFnWrap}
 					/>
-				<div className='flexbox'>
-					<div>
-						<Misc.Icon fa='info-circle' /> Guidance:
-						{help}
-					</div>
-					<div>
-						<Misc.Icon fa='user' />
-						Last editor: {meta.lastEditor}
-					</div>
-					<div>
-						<Misc.Icon fa='external-link' />
-					Source: {meta.source}
-					</div>
-					<div>
-						<Misc.Icon fa='comment-o' />
-					Notes: {meta.notes}
-					</div>
-				</div>
+				<MetaEditor item={item} field={field} help={help} />
 			</Misc.Col2>
 		</div>
 	);
+};
+
+const MetaEditor = ({item, field, help, itemPath}) => {
+	assert(item, field);
+	let meta = (item.meta && item.meta[field]) || {};
+	return (<div className='flexbox'>
+		<div>
+			<Misc.Icon fa='info-circle' /> Guidance:
+			{help}
+		</div>
+		<div>
+			<Misc.Icon fa='user' />
+			Last editor: {meta.lastEditor}
+		</div>
+		<div>
+			<Misc.Icon fa='external-link' />
+		Source: {meta.source}
+		</div>
+		<div>
+			<Misc.Icon fa='comment-o' />
+		Notes: {meta.notes}
+		</div>
+	</div>);
 };
 
 export default EditCharityPage;

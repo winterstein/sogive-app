@@ -33,6 +33,10 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 
 	public static final String ID = "@id";
 
+	public SubThing validate() {
+		return (SubThing) this;
+	}
+	
 	/**
 	 * 
 	 * @param key

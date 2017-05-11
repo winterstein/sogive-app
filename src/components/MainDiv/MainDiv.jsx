@@ -9,7 +9,7 @@ import DataStore from '../../plumbing/DataStore';
 
 // Templates
 import MessageBar from '../MessageBar';
-import SoGiveNavBar from '../NavBar';
+import NavBar from '../NavBar';
 import LoginWidget from '../LoginWidget/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';

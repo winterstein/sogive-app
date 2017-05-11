@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {FormControl,Checkbox,Textarea} from 'react-bootstrap';
+import {FormControl,Checkbox,Textarea, InputGroup} from 'react-bootstrap';
 import DataStore from '../plumbing/DataStore';
 
 import {assert} from 'sjtest';
@@ -22,15 +22,15 @@ Misc.Loading = ({text}) => (
 	</div>
 );
 
-Misc.Col2 = ({children}) => (<div className='container'>
+Misc.Col2 = ({children}) => (<div className='container-fluid'>
 	<div className='row'>
 		<div className='col-md-6 col-sm-6'>{children[0]}</div><div className='col-md-6 col-sm-6'>{children[1]}</div>
 	</div>
 	</div>);
 
 const CURRENCY = {
-	"GBP": "£",
-	"USD": "$"
+	GBP: "£",
+	USD: "$"
 };
 Misc.Money = ({amount, precision}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
@@ -184,11 +184,19 @@ Misc.PropControl = ({label, ...stuff}) => {
 	}
 	if (value===undefined) value = '';
 	if (type==='MonetaryAmount') {
-		// special case to handle x100 no-floats format
-		let v100 = (item[prop] && item[prop].value100) || 0;
-		let path2 = path.slice().concat([prop, 'value100']);
-		// TODO saveFn
-		return <FormControl name={prop} value={v100} onChange={e => DataStore.setValue(path2, e.target.value)} />;
+		// special case, as this is an object.
+		// NB: leave the x100 no-floats format for the backend
+		let v = (value && value.value) || '';
+		let path2 = path.slice().concat([prop, 'value']);
+		const onChange = e => {
+			DataStore.setValue(path2, e.target.value);
+			if (saveFn) saveFn({path:path});
+		};
+		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
+		return (<InputGroup>
+					<InputGroup.Addon>{curr}</InputGroup.Addon>              
+					<FormControl name={prop} value={v} onChange={onChange} />
+				</InputGroup>);
 	}
 	const onChange = e => {
 		DataStore.setValue(proppath, e.target.value);
