@@ -84,7 +84,7 @@ class MainDiv extends Component {
 
 		return (
 			<div>
-				<SoGiveNavBar page={page} />
+				<NavBar page={page} />
 				<div className="container avoid-navbar">
 					<MessageBar />
 					<div id={page}>

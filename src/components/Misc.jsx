@@ -175,10 +175,12 @@ Misc.PropControl = ({label, ...stuff}) => {
 	const proppath = path.slice().concat(prop);
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
+			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			DataStore.setValue(proppath, e.target.checked);
 			if (saveFn) saveFn({path:path});		
 		};
-		return (<Checkbox checked={item[prop]} onChange={onChange} />);
+		if (value===undefined) value = false;
+		return (<Checkbox checked={value} onChange={onChange} />);
 	}
 	if (value===undefined) value = '';
 	if (type==='MonetaryAmount') {

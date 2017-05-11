@@ -1,10 +1,11 @@
 import React from 'react';
 import { Nav, NavItem } from 'react-bootstrap';
+import Login from 'you-again';
 
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import LoginWidget from './LoginWidget/LoginWidget.jsx';
-import Login from 'you-again';
+
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
 import Misc from './Misc';

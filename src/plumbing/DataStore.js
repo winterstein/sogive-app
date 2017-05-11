@@ -163,5 +163,9 @@ DataStore.update({
 	},	
 	widget: {},
 	misc: {
-	}
+	},
+	/** status of server requests, for displaying 'loading' spinners 
+	 * Normally: transient.$item_id.status
+	*/
+	transient: {}
 });
