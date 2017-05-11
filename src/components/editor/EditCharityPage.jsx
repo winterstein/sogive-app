@@ -150,6 +150,7 @@ const ProjectImpacts = ({charity, project}) => {
 		<h5>Impacts</h5>
 		<table className='table'>
 			<tbody>			
+				<tr><th>&nbsp;</th><th>Unit cost</th></tr>
 				{rinputs}
 			</tbody>
 		</table>
@@ -221,7 +222,7 @@ const ProjectImpactEditor = ({charity, project, impact}) => {
 	let costPerBeneficiary = 1 / impact.number;
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
-		<td>{costPerBeneficiary} 
+		<td><Misc.Money amount={costPerBeneficiary} />
 			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };
