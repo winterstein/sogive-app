@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { assert } from 'sjtest';
-import Login from 'hooru';
+import Login from 'you-again';
 import StripeCheckout from 'react-stripe-checkout';
 import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';

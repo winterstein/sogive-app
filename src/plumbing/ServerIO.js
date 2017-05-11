@@ -7,7 +7,7 @@ import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
-import Login from 'hooru';
+import Login from 'you-again';
 import NGO from '../data/charity/NGO';
 
 const ServerIO = {};

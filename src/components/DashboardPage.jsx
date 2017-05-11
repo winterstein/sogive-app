@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { assert } from 'sjtest';
-import Login from 'hooru';
+import React from 'react';
+import { assert, assMatch } from 'sjtest';
+import Login from 'you-again';
 import _ from 'lodash';
 import { XId } from 'wwutils';
 
@@ -13,7 +12,7 @@ import DataStore from '../plumbing/DataStore';
 import Misc from './Misc';
 
 
-class DashboardPage extends Component {
+class DashboardPage extends React.Component {
 	render() {
 		let user = Login.getUser();
 		const donations = this.state && this.state.donations;
@@ -111,30 +110,7 @@ const DashboardWidget = ({ children, iconClass, title }) =>
 	</div>;
 // ./DashboardWidget
 
-DashboardWidget.propTypes = {
-	children: PropTypes.element,
-	iconClass: PropTypes.string,
-	title: PropTypes.string,
-};
-
 const DashTitleIcon = ({ iconClass }) =>
 	<i className={iconClass} aria-hidden="true" />;
 
-DashTitleIcon.propTypes = {
-	iconClass: PropTypes.string,
-};
-
-
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-	openLogin: () => dispatch(showLoginMenu(true, 'login')),
-	openRegister: () => dispatch(showLoginMenu(true, 'register')),
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(DashboardPage);
+export default DashboardPage;

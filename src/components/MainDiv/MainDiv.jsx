@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Login from 'hooru';
+import Login from 'you-again';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
 
@@ -9,12 +9,12 @@ import DataStore from '../../plumbing/DataStore';
 
 // Templates
 import MessageBar from '../MessageBar';
-import SoGiveNavBar from '../SoGiveNavBar/SoGiveNavBar';
+import SoGiveNavBar from '../NavBar';
 import LoginWidget from '../LoginWidget/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
-import Account from '../Account';
+import AccountPage from '../AccountPage';
 import DonateToCampaignPage from '../DonateToCampaignPage';
 import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
@@ -25,7 +25,7 @@ import EditCharityPage from '../editor/EditCharityPage';
 const PAGES = {
 	search: SearchPage,
 	dashboard: DashboardPage,
-	account: Account,
+	account: AccountPage,
 	charity: CharityPage,
 	campaign: DonateToCampaignPage,
 	edit: EditCharityPage

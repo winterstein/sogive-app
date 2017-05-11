@@ -1,6 +1,6 @@
 import React from 'react';
 import { assert, assMatch } from 'sjtest';
-import Login from 'hooru';
+import Login from 'you-again';
 import {Modal} from 'react-bootstrap';
 import { XId, uid } from 'wwutils';
 import Cookies from 'js-cookie';
@@ -10,7 +10,7 @@ import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
-Login.ENDPOINT = 'http://hooru.winterwell.com/hooru.json';
+// Login.ENDPOINT = 'https://youagain.winterwell.com/youagain.json';
 
 /**
 	TODO:

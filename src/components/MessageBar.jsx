@@ -1,39 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest from 'sjtest'
+import SJTest from 'sjtest';
 const assert = SJTest.assert;
 import printer from '../utils/printer.js';
 import C from '../C.js';
 
 
 
-const MessageBar = React.createClass({
-	componentWillMount: function() {
+class MessageBar extends React.Component {
+	componentWillMount() {
 		// ViewManager.register(C.stateKey.messages, this, 'messages');
-	},
+	}
 
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		// ViewManager.unregister(C.stateKey.messages, this);
-	},
+	}
 
-	render: function() {
+	render() {
 		if ( ! this.state || ! this.state.messages) return <div></div>;    
 		console.log("render Messagebar", this.state.messages);
 		const messageUI = _.map(this.state.messages, 
 														(m, mi) => <MessageBarItem key={'mi'+mi} message={m} />);
 		return (<div className='messagebar'>{messageUI}</div>);
 	}
-}); // ./Messagebar
+} // ./Messagebar
 
 
-const MessageBarItem = React.createClass({
-	closeme: function() {
+class MessageBarItem extends React.Component {
+	closeme() {
 		console.warn("MessageBarItem closeme()", this);
 		this.setState({closed:true});
-	},
+	}
 
-	render: function() {
+	render() {
 		if (this.state && this.state.closed) {
 			return (<div></div>);
 		}
@@ -46,6 +46,6 @@ const MessageBarItem = React.createClass({
 			</div>
 		);
 	}
-});
+}
 
 export default MessageBar;

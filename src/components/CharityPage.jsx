@@ -11,7 +11,7 @@ import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Misc from './Misc';
-import Login from 'hooru';
+import Login from 'you-again';
 import DonationForm from './DonationForm';
 
 class CharityPage extends React.Component {

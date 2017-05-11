@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-import AccountMenu from '../AccountMenu';
+import AccountMenu from './AccountMenu';
 
-const SoGiveNavBar = ({page}) => {
+const NavBar = ({page}) => {
 	console.log('NavBar', page);
 
 	return (
@@ -47,8 +47,4 @@ const SoGiveNavBar = ({page}) => {
 };
 // ./NavBar
 
-SoGiveNavBar.propTypes = {
-	page: PropTypes.string.isRequired,
-};
-
-export default SoGiveNavBar;
+export default NavBar;

@@ -2,7 +2,7 @@
 import testServerIO from './test.ServerIO.js';
 
 import $ from 'jquery';
-// import Login from 'hooru';
+// import Login from 'you-again';
 
 $(function(){
 

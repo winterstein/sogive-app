@@ -4,7 +4,7 @@ import { Nav, NavItem } from 'react-bootstrap';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import LoginWidget from './LoginWidget/LoginWidget.jsx';
-import Login from 'hooru';
+import Login from 'you-again';
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
 import Misc from './Misc';

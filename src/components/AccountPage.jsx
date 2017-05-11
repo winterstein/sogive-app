@@ -7,9 +7,9 @@ import printer from '../utils/printer.js';
 import C from '../C.js';
 
 
-const Account = React.createClass({
+class AccountPage extends React.Component {
 
-    render: function() {
+    render() {
         return (
             <div className=''>
                 <h2>My Account</h2>
@@ -23,6 +23,6 @@ const Account = React.createClass({
         );
     }
 
-});
+}
 
-export default Account;
+export default AccountPage;
