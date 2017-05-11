@@ -64,21 +64,27 @@ class EditCharityPage extends React.Component {
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' />
 						<EditField item={charity} type='text' field='nickname' />
+						<EditField item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField item={charity} type='url' field='url' label='Website' />
 						<EditField item={charity} type='text' field='tags' />
 						<EditField item={charity} type='textarea' field='description' />
 						<EditField item={charity} type='img' field='logo' />
 						<EditField item={charity} type='img' field='logo_white' label='White-on-transparent poster logo' />
-						<EditField item={charity} type='img' field='image' label='Photo' />
-						<EditField item={charity} type='color' field='image' label='Brand colour' />						
+						<EditField item={charity} type='img' field='images' label='Photo' />
+						<EditField item={charity} type='color' field='color' label='Brand colour' />						
 					</Panel>
-					<Panel header={<h3>Overall Finances</h3>} eventKey="2">
+					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
+						<EditField item={charity} field='noPublicDonations' type='checkbox' 
+							help="Tick yes for those rare charities that don't takle donations from the general public." />
+						<EditField item={charity} field='uk_giftaid' type='checkbox' />
+					</Panel>
+					<Panel header={<h3>Overall Finances</h3>} eventKey="3">
 						<ProjectsEditor charity={charity} projects={overalls} />
 					</Panel>
-					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="3">
+					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
 						<ProjectsEditor charity={charity} projects={projectProjects} />
 					</Panel>
-					<Panel header={<h3>References</h3>} eventKey="4">
+					<Panel header={<h3>References</h3>} eventKey="5">
 					</Panel>
 				</Accordion>
 			</div>
