@@ -26,7 +26,6 @@ import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
-import com.winterwell.hooru.client.Login;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.containers.ArrayMap;
@@ -41,6 +40,7 @@ import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.DoubleField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.LongField;
+import com.winterwell.youagain.client.YouAgain;
 
 /**
  * TODO action=donate 
@@ -63,7 +63,7 @@ public class DonationServlet {
 	}
 
 	public void run() throws Exception {
-		Login.login(state);
+		YouAgain.login(state);
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
