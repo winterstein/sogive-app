@@ -112,7 +112,18 @@ const ProjectEditor = ({charity, project}) => {
 };
 
 const ProjectInputs = ({charity, project}) => {
-	return <div>Inputs{printer.str(project.inputs)}</div>;
+	let rinputs = project.inputs.map(input => <ProjectIOEditor key={project.name+'-'+input.name+' '+input.unit} charity={charity} project={project} input={input} />);
+	return (<div>
+		<h5>Inputs</h5>
+		{rinputs}
+		</div>);
+};
+
+const ProjectIOEditor = ({charity, project, input}) => {	
+	return (<div>
+		<EditProjectIOField charity={charity} project={project} input={input} field='name' label='Name' />
+		<EditProjectIOField charity={charity} project={project} input={input} type='MonetaryAmount' label='£' />
+	</div>);
 };
 
 const ProjectOutputs = ({charity, project}) => {
@@ -144,6 +155,24 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let path = ['draft',C.TYPES.Charity,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
+const EditProjectIOField = ({charity, project, input, output, ...stuff}) => {
+	assert(charity && project);
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	assert(pid!==-1, project, charity.projects);
+	let io; let ioi;
+	if (input) {
+		io='inputs';
+		ioi = project.inputs.indexOf(input);
+	} else {
+		io='outputs';
+		ioi = project.outputs.indexOf(output);
+	}
+	assert(ioi !== -1);
+	let path = ['draft',C.TYPES.Charity,cid,'projects', pid, io, ioi];
+	return <EditField2 parentItem={charity} item={input || output} path={path} {...stuff} />;
+};
+
 
 const saveDraftFn = _.debounce(
 	({path, parentItem}) => {
