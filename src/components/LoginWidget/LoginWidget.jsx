@@ -10,7 +10,7 @@ import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
-// Login.ENDPOINT = 'https://youagain.winterwell.com/youagain.json';
+// Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
 
 /**
 	TODO:
@@ -56,8 +56,8 @@ const emailLogin = (verb, email, password) => {
 			// close the dialog on success
 			DataStore.setShow(C.show.LoginWidget, false);
 		} else {
-			// poke React via DataStore
-			DataStore.update({});	
+			// poke React via DataStore (e.g. for Login.error)
+			DataStore.update({});
 		}
 	});
 };
@@ -74,8 +74,21 @@ const EmailSignin = ({verb}) => {
 		}
 		let e = person.email;
 		let p = person.password;
+		if (verb==='reset') {
+			assMatch(e, String);
+			let call = Login.reset(e)
+				.then(function(res) {
+					if (res.success) {
+						DataStore.setValue(['widget', C.show.LoginWidget, 'reset-requested'], true);
+					} else {
+						// poke React via DataStore (for Login.error)
+						DataStore.update({});
+					}
+				});
+			return;
+		}
 		emailLogin(verb, e, p);
-	};	
+	};
 
 	const buttonText = {
 		login: 'Log in',
@@ -93,31 +106,33 @@ const EmailSignin = ({verb}) => {
 				doItFn();
 			}}
 		>
+			{verb==='reset'? <p>Forgotten your password? No problem - we will email you a link to reset it.</p> : null}
 			<div className="form-group">
 				<label>Email</label>
 				<Misc.PropControl type='email' path={path} item={person} prop='email' />
 			</div>
-			<div className="form-group">
+			{verb==='reset'? null : <div className="form-group">
 				<label>Password</label>
 				<Misc.PropControl type='password' path={path} item={person} prop='password' />
-			</div>
+			</div>}
+			{verb==='reset' && DataStore.getValue('widget', C.show.LoginWidget, 'reset-requested')? <div className="alert alert-info">A password reset email has been sent out.</div> : null}
 			<div className="form-group">
 				<button type="submit" className="btn btn-default form-control" >
 					{ buttonText }
 				</button>
 			</div>
 			<LoginError />
-			{ /* <ResetLink verb={verb} setVerbReset={() => handleChange('verb', 'reset')} /> */}
+			<ResetLink verb={verb} />
 		</form>
 	);
 }; // ./EmailSignin
 
-const ResetLink = ({verb, setVerbReset}) => {
+const ResetLink = ({verb}) => {
 	if (verb === 'login') {
 		return (
 			<div className='pull-right'>
 				<small>
-					<a onClick={setVerbReset}>Forgotten password?</a>
+					<a onClick={() => DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset')}>Forgotten password?</a>
 				</small>
 			</div>
 		);

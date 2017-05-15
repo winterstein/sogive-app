@@ -62,8 +62,9 @@ class Store {
 	 * @param {String[]} path 
 	 * @param {*} value 
 	 */
+	// TODO handle setValue(pathbit, pathbit, pathbit, value) too
 	setValue(path, value) {
-		assert(_.isArray(path), path);
+		assert(_.isArray(path), path+" is not an array.");
 		assert(this.appstate[path[0]], 
 			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
