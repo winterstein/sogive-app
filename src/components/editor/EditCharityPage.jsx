@@ -339,22 +339,23 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 			<Misc.Icon fa='info-circle' title='Help notes' />
 			{help}
 		</div>
-		<div>
+		<div className='TODO'>
 			<Misc.Icon fa='user' title='Last editor' />
 			{meta.lastEditor}
 		</div>
 		<div>
-			<Misc.Icon fa='external-link' title='Information source (preferably a url)' />
-			{meta.source}
+			<MetaEditorItem icon='external-link' title='Information source (preferably a url)' 
+							meta={meta} metaPath={metaPath} 
+							itemField={field} metaField='source' type='url' />
 		</div>
 		<div>
 			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath} 
-							itemField={field} metaField='notes' />
+							itemField={field} metaField='notes' type='textarea' />
 		</div>
 	</div>);
 };
 
-const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title}) => {
+const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type}) => {
 	assert(meta && itemField && metaField && icon);
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
@@ -366,7 +367,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title}) => 
 				{ricon} 
 				<Misc.PropControl label={title} prop={metaField} 
 					path={metaPath} 
-					item={meta} type='textarea' />
+					item={meta} type={type} />
 		</div>);
 };
 
