@@ -39,38 +39,6 @@ NGO.getProject = (ngo) => {
 	return repProject;
 };
 
-// {
-// 	"donationWording" : "You enabled access to XXXX solar lights, well done!",
-// 	"images" : "Waiting for Solar Aid to send",
-// 	"stories" : "Waiting for Solar Aid to send",
-// 	"indirectImpact" : 3900000.0,
-// 	"@type" : "Project",
-// 	"stories_src" : "",
-// 	"isRep" : true,
-// 	"data-src" : "http://www.solar-aid.org/assets/Uploads/Impact-week-2015/SolarAid-IMPACT-REPORT-2015.pdf",
-// 	"fundraisingCosts" : {
-// 		"@type" : "MonetaryAmount",
-// 		"currency" : "GBP",
-// 		"value" : 324602.0
-// 	},
-// 	"annualCosts" : {
-// 		"@type" : "MonetaryAmount",
-// 		"currency" : "GBP",
-// 		"value" : 6326794.0
-// 	},
-// 	"ready" : true,
-// 	"name" : "overall",
-// 	"analyst" : "Sanjay",
-// 	"location" : "",
-// 	"directImpact" : 624443.0
-// }
-
-/*
-
-impact {price, number, output}
-
-*/
-
 NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 
 NGO.getImpacts = function(project) {

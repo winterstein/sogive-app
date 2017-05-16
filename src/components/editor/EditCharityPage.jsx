@@ -118,6 +118,9 @@ const ProjectEditor = ({charity, project}) => {
 };
 
 const ProjectInputs = ({charity, project}) => {
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
 	let rinputs = project.inputs.map((input, i) => <ProjectInputEditor key={project.name+'-'+i} charity={charity} project={project} input={input} />);
 	return (<div className='well'>
 		<h5>Inputs</h5>
@@ -126,11 +129,14 @@ const ProjectInputs = ({charity, project}) => {
 				{rinputs}
 			</tbody>
 		</table>
-		<MetaEditor item={project.inputs} />
+		<MetaEditor item={project} field='inputs_meta' itemPath={projectPath} help='Financial data' />
 	</div>);
 };
 
 const ProjectOutputs = ({charity, project}) => {
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (<div className='well'>
@@ -140,11 +146,14 @@ const ProjectOutputs = ({charity, project}) => {
 				{rinputs}
 			</tbody>
 		</table>
-		<MetaEditor item={project.outputs} />
+		<MetaEditor item={project.outputs} field='outputs_meta' itemPath={projectPath} />
 	</div>);
 };
 
 const ProjectImpacts = ({charity, project}) => {
+	let cid = NGO.id(charity);
+	let pid = charity.projects.indexOf(project);
+	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
 	let rinputs = project.impacts.map(input => <ProjectImpactEditor key={project.name+'-'+input.name+'-'+input.unit} charity={charity} project={project} impact={input} />);
 	return (<div className='well'>
 		<h5>Impacts</h5>
@@ -154,7 +163,7 @@ const ProjectImpacts = ({charity, project}) => {
 				{rinputs}
 			</tbody>
 		</table>
-		<MetaEditor item={project.impacts} />
+		<MetaEditor item={project.impacts} field='impacts_meta' itemPath={projectPath} />
 	</div>);
 };
 
@@ -226,8 +235,6 @@ const ProjectImpactEditor = ({charity, project, impact}) => {
 			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };
-
-
 
 
 const publishDraftFn = _.throttle((e, charity) => {
@@ -309,33 +316,58 @@ const EditField2 = (props) => {
 					path={path} item={item} 
 					saveFn={saveDraftFnWrap}
 					/>
-				<MetaEditor item={item} field={field} help={help} />
+				<MetaEditor item={item} itemPath={path} field={field} help={help} />
 			</Misc.Col2>
 		</div>
 	);
 };
 
 const MetaEditor = ({item, field, help, itemPath}) => {
-	assert(item, field);
-	let meta = (item.meta && item.meta[field]) || {};
+	assert(item);
+	assert(field, item);
+	assert(_.isArray(itemPath), field);
+	let meta;
+	let metaPath = itemPath.concat(['meta', field]);
+	if (_.isArray(item)) {
+		meta = {};
+		console.warn("where to put meta info from arrays?", item, field, itemPath);
+	} else {
+		meta = (item.meta && item.meta[field]) || {};
+	}
 	return (<div className='flexbox'>
 		<div>
-			<Misc.Icon fa='info-circle' /> Guidance:
+			<Misc.Icon fa='info-circle' title='Help notes' />
 			{help}
 		</div>
 		<div>
-			<Misc.Icon fa='user' />
-			Last editor: {meta.lastEditor}
+			<Misc.Icon fa='user' title='Last editor' />
+			{meta.lastEditor}
 		</div>
 		<div>
-			<Misc.Icon fa='external-link' />
-		Source: {meta.source}
+			<Misc.Icon fa='external-link' title='Information source (preferably a url)' />
+			{meta.source}
 		</div>
 		<div>
-			<Misc.Icon fa='comment-o' />
-		Notes: {meta.notes}
+			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath} 
+							itemField={field} metaField='notes' />
 		</div>
 	</div>);
+};
+
+const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title}) => {
+	assert(meta && itemField && metaField && icon);
+	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
+	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
+	if ( ! DataStore.getValue(widgetNotesPath)) {
+		return <div className='MetaEditorItem'>{ricon} {meta[metaField]}</div>;
+	}
+	// TODO saveFn={saveDraftFnWrap}
+	return (<div className='MetaEditorItem'>
+				{ricon} 
+				<Misc.PropControl label={title} prop={metaField} 
+					path={metaPath} 
+					item={meta} type='textarea' />
+		</div>);
 };
 
 export default EditCharityPage;

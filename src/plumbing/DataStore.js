@@ -72,7 +72,7 @@ class Store {
 		let tip = newState;	
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];
-			assert(pkey || pkey===0, path); // no falsy in a path - except that 0 is a valid key
+			assert(pkey || pkey===0, "falsy in path "+path.join(" -> ")); // no falsy in a path - except that 0 is a valid key
 			if (pi === path.length-1) {
 				tip[pkey] = value;
 				break;

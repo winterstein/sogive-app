@@ -157,14 +157,21 @@ public class CharityServlet {
 			throw Utils.runtime(error);
 		}
 		String json = sr.getSourceAsString();
-		Map<String, Object> jobj = sr.getParsedJson();
+		Map<String, Object> jobj = sr.getParsedJson();		
 		Object klass = jobj.get("@class");		
 		NGO charity = Thing.getThing(json, NGO.class);
+		// Huh? Odd data bug seen May 2017
+		if (Utils.isBlank(charity.getId())) {
+			charity.put(Thing.ID, id);
+		}
 		return charity;
 	}
 	
 	private void doCalcImpacts(NGO charity) {
 		List<Project> projects = charity.getProjects();
+		if (projects==null) {
+			return;
+		}
 		for (Project project : projects) {
 			List<Output> alloutputs = project.getOutputs();	
 			List<Output> outputs = Thing.getLatestYear(alloutputs);
