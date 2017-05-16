@@ -8,3 +8,4 @@ bin/
 config/stripe.properties
 sogive.log*
 *.css
+version.properties
