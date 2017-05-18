@@ -20,6 +20,9 @@ import HashMap from 'hashmap';
  */
 const recurse = function(obj, fn, seen) {
 	if ( ! obj) return;
+	if (_.isString(obj) || _.isNumber(obj) || _.isBoolean(obj)) {
+		return;
+	}
 	// no loops
 	if ( ! seen) seen = new HashMap();
 	if (seen.has(obj)) return;
@@ -28,10 +31,12 @@ const recurse = function(obj, fn, seen) {
 	let keys = Object.keys(obj);
 	keys.forEach(k => {
 		let v = obj[k];
-		let ok = fn(v, k);
-		if (ok !== false) {
-			recurse(v, fn, seen);
+		if (v===null || v===undefined) {
+			return;
 		}
+		let ok = fn(v, k);
+		if (ok === false) return;		
+		recurse(v, fn, seen);		
 	});
 };
 
@@ -76,7 +81,7 @@ class EditCharityPage extends React.Component {
 			refs.push(n.source);
 			return false;
 		});
-		let rrefs = refs.map(r => <Ref ref={r}/>);
+		let rrefs = refs.map((r,i) => <li key={'r'+i}><Ref ref={r}/></li>);
 
 		// put it together
 		console.log("EditCharity", charity);
@@ -115,7 +120,7 @@ class EditCharityPage extends React.Component {
 						<ProjectsEditor charity={charity} projects={projectProjects} />
 					</Panel>
 					<Panel header={<h3>References</h3>} eventKey="5">
-						{refs}
+						<ol>{rrefs}</ol>
 					</Panel>
 				</Accordion>
 			</div>
