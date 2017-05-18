@@ -18,6 +18,7 @@
     "chart.js": "^2.4.0",
     "d3-queue": "^3.0.3",
     "react-stripe-checkout": "^2.2.5",
+	"hashmap": "^2.1.0",
     "sjtest": "^0.4.4",
 	"you-again": "^0.4.4",
 	"easy-enums": "^1.1.5",

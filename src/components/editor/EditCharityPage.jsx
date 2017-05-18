@@ -13,6 +13,27 @@ import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Misc from '../Misc';
 import Login from 'you-again';
+import HashMap from 'hashmap';
+
+/**
+ * @param fn (value, key) -> `false` if you want to stop recursing deeper down this branch. Note: falsy will not stop recursion.
+ */
+const recurse = function(obj, fn, seen) {
+	if ( ! obj) return;
+	// no loops
+	if ( ! seen) seen = new HashMap();
+	if (seen.has(obj)) return;
+	seen.set(obj, true);
+
+	let keys = Object.keys(obj);
+	keys.forEach(k => {
+		let v = obj[k];
+		let ok = fn(v, k);
+		if (ok !== false) {
+			recurse(v, fn, seen);
+		}
+	});
+};
 
 class EditCharityPage extends React.Component {
 
@@ -48,6 +69,14 @@ class EditCharityPage extends React.Component {
 		// sort by year
 		overalls = _.sortBy(overalls, p => - (p.year || 0) );
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
+
+		let refs = [];
+		recurse(charity, n => { 
+			if ( ! n.source) return null;
+			refs.push(n.source);
+			return false;
+		});
+		let rrefs = refs.map(r => <Ref ref={r}/>);
 
 		// put it together
 		console.log("EditCharity", charity);
@@ -86,6 +115,7 @@ class EditCharityPage extends React.Component {
 						<ProjectsEditor charity={charity} projects={projectProjects} />
 					</Panel>
 					<Panel header={<h3>References</h3>} eventKey="5">
+						{refs}
 					</Panel>
 				</Accordion>
 			</div>
@@ -370,6 +400,10 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 					path={metaPath} 
 					item={meta} type={type} />
 		</div>);
+};
+
+const Ref = ({ref}) => {
+	return <div>{printer.str(ref)}</div>;
 };
 
 export default EditCharityPage;
