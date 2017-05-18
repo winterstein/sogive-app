@@ -155,11 +155,14 @@ const trPlural = (num, text) => {
 
 
 /**
+ * Input bound to DataStore
+ * 
  * @param saveFn {Function} You are advised to wrap this with e.g. _.debounce(myfn, 500).
  * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
- * @param path {String[]} The DataStore path to item
- * @param item The item being edited
+ * @param path {String[]} The DataStore path to item, e.g. [data, Charity, id]
+ * @param item The item being edited 
+ * @param prop The field being edited 
  * dflt {?Object} default value
  */
 Misc.PropControl = ({label, ...stuff}) => {
@@ -173,12 +176,16 @@ Misc.PropControl = ({label, ...stuff}) => {
 	let {prop, path, item, type, bg, dflt, saveFn} = stuff;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
+	// item ought to match what's in DataStore
 	if (item && item !== DataStore.getValue(path)) {
 		console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);
 	}
-	if ( ! item) item = {};
+	if ( ! item) {
+		item = DataStore.getValue(path) || {};
+	}
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.concat(prop);
+	// Checkbox?
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
@@ -189,6 +196,7 @@ Misc.PropControl = ({label, ...stuff}) => {
 		return (<Checkbox checked={value} onChange={onChange} />);
 	}
 	if (value===undefined) value = '';
+	// £s
 	if (type==='MonetaryAmount') {
 		// special case, as this is an object.
 		// NB: leave the x100 no-floats format for the backend
@@ -204,6 +212,7 @@ Misc.PropControl = ({label, ...stuff}) => {
 					<FormControl name={prop} value={v} onChange={onChange} />
 				</InputGroup>);
 	}
+	// text based
 	const onChange = e => {
 		DataStore.setValue(proppath, e.target.value);
 		if (saveFn) saveFn({path:path});		
@@ -245,3 +254,6 @@ Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style
 Misc.ImgThumbnail = ({url}) => url? <img className='logo' src={url} /> : null;
 
 export default Misc;
+// // TODO rejig for export {
+// 	PropControl: Misc.PropControl
+// };

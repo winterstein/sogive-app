@@ -57,6 +57,16 @@ ServerIO.publish = function(charity, version) {
 	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
 
+/**
+ * @param charity {name:String}
+ */
+ServerIO.addCharity = function(charity, version='draft') {
+	let params = {		
+		data: {action: 'add', item: JSON.stringify(charity), version: version},
+		method: 'PUT'};
+	return ServerIO.load('/charity.json', params);
+};
+
 ServerIO.discardEdits = function(charity, version) {
 	assert(NGO.isa(charity), charity);
 	let params = {		
