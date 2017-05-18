@@ -336,10 +336,10 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 		meta = (item.meta && item.meta[field]) || {};
 	}
 	return (<div className='flexbox'>
-		<div>
+		{help? <div>
 			<Misc.Icon fa='info-circle' title='Help notes' />
 			{help}
-		</div>
+		</div> : null}
 		<div className='TODO'>
 			<Misc.Icon fa='user' title='Last editor' />
 			{meta.lastEditor}
