@@ -14,6 +14,7 @@ import com.winterwell.es.client.ESHttpResponse;
 import com.winterwell.es.client.GetRequestBuilder;
 import com.winterwell.es.client.GetResponse;
 import com.winterwell.es.client.IESResponse;
+import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
@@ -44,6 +45,7 @@ import org.sogive.data.charity.Thing;
 
 public class CharityServlet {
 
+	public static final JsonField ITEM = new JsonField("item");
 	private final WebRequest state;
 	private SoGiveConfig config;
 	private ESHttpClient client;
@@ -56,7 +58,13 @@ public class CharityServlet {
 	public void run() throws IOException {
 		id = state.getSlugBits(1);
 		String version = state.get("version");		
-		NGO charity = getCharity(id, version);
+		NGO charity;
+		if (state.actionIs("add")) {
+			// add is "special" as the only request that doesn't need an id
+			charity = doAdd(version);
+		} else {
+			charity = getCharity(id, version);
+		}
 		if (charity==null) {
 			throw new WebEx.E404("No charity: "+id);
 		}
@@ -82,6 +90,30 @@ public class CharityServlet {
 		
 		JsonResponse output = new JsonResponse(state, charity);
 		WebUtils2.sendJson(output, state);
+	}
+
+	private NGO doAdd(String version) {
+		Map item = (Map) state.get(ITEM);
+		boolean isDraft = "draft".equals(version) || version==null;
+		assert isDraft : version;
+		item.put("modified", isDraft);
+		// load from ES, merge, save		
+		id = (String) item.get(Thing.ID);
+		if (id==null) { // id=null is the normal case
+			id = NGO.idFromName((String) item.get("name"));
+			item.put(NGO.ID, id);
+		}
+		assert id != null && ! id.equals("new");
+		config = Dep.get(SoGiveConfig.class);
+		client = new ESHttpClient(Dep.get(ESConfig.class));
+		client.debug = true;
+		String idx = isDraft? config.charityDraftIndex : config.charityIndex;		
+		IndexRequestBuilder up = client.prepareIndex(idx, config.charityType, id);
+		up.setBodyDoc(item);
+		IESResponse resp = up.get().check();
+//		Map<String, Object> item2 = resp.getParsedJson();
+		NGO mod = Thing.getThing(item, NGO.class);
+		return mod;
 	}
 
 	private NGO doPublish() {
@@ -110,7 +142,7 @@ public class CharityServlet {
 	private NGO doSaveEdit() {
 //		String pb = state.getPostBody();
 		XId user = state.getUserId();
-		Map item = (Map) state.get(new JsonField("item"));
+		Map item = (Map) state.get(ITEM);
 		String version = state.get("version");
 		boolean isDraft = "draft".equals(version) || version==null;
 		assert isDraft : version;

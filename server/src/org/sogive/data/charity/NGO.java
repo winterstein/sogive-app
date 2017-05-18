@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
@@ -77,6 +78,12 @@ public class NGO extends Thing<NGO> {
 	@Override
 	public String toString() {
 		return "NGO[" + getName() + ", id=" + getId() + "]";
+	}
+
+	public static String idFromName(String charityName) {
+		String id = StrUtils.toCanonical(charityName).replaceAll("\\s+", "-");
+		assert ! Utils.isBlank(id) : charityName;
+		return id;
 	}
 
 	

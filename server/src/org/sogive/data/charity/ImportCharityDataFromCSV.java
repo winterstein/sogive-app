@@ -125,7 +125,7 @@ public class ImportCharityDataFromCSV {
 			String story = StrUtils.normalisePunctuation(get(row, 1));
 			String img = get(row, 2);
 			// ignore story source
-			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
+			String ourid = NGO.idFromName(row[0]);
 			NGO ngo = CharityServlet.getCharity(ourid, null);
 			if (ngo==null) {
 				continue;
