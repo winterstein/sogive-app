@@ -39,7 +39,9 @@ public class DB {
 			
 			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(config.charityIndex, config.charityType);
 			ESType dtype = new ESType();
-			dtype.property("name", new ESType().text().fielddata(true));
+			dtype.property("name", new ESType().text()
+									// enable keyword based sorting
+									.field("raw", "keyword"));
 			dtype.property("@id", new ESType().keyword());
 			pm.setMapping(dtype);
 			IESResponse r2 = pm.get();

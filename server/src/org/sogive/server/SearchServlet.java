@@ -41,10 +41,12 @@ public class SearchServlet {
 		if ( q != null) {
 			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
 					"id", "englandWalesCharityRegNum", "name", "description", "tags")
-							.operator(Operator.AND);
+							.operator(Operator.AND);			
 			s.setQuery(qb);
 		}
-		s.addSort("@id", SortOrder.ASC);
+		// TODO test ordering.
+		s.addSort("name.raw", SortOrder.ASC);
+//		s.addSort("@id", SortOrder.ASC);
 		// TODO paging!
 		s.setSize(10000);
 		SearchResponse sr = s.get();
