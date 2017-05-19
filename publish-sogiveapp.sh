@@ -2,21 +2,10 @@
 
 #Publish-SoGive-App
 
-if [[ -z $1 ]]; then
-	echo "usage: publish-sogiveapp.sh servername (eg test.sogive.org)";
-	exit -1;   
-fi
-
 TARGETSERVERS=($1)
 USER=`whoami`
 
-# Are you sure that you want to do this?
-# echo -e "\e[31;107m ARE YOU SURE THAT YOU WANT TO PUBLISH/UPDATE THE SOGIVE-APP TO THE FOLLOWING SERVER(S)? ($TARGETSERVERS) TO CANCEL PRESS \033[0m \e[30;107m ctl + c \033[0m \e[31;107m TO CONTINUE PRESS \033[0m \e[30;107m return \033[0m"
-# read VAR
-# if [[ -z $VAR ]]; then
-# 	echo -e "Proceeding..."
-# fi
-
+# Convert Less into CSS
 echo "converting less files into CSS..."
 for file in /home/$USER/winterwell/sogive-app/web/style/*.less; do
 	if [ -e "$file" ]; then
@@ -33,21 +22,21 @@ echo "Beginning publishing process..."
 for server in ${TARGETSERVERS[*]}; do
 	echo -e "Stopping sogiveapp service on $server"
 	ssh winterwell@$server 'service sogiveapp stop'
-	echo "clearing out the old Jars..."
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/lib/*.jar'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/bin/*'
+#	echo "clearing out the old Jars..."
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/lib/*.jar'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/bin/*'
+#	echo "getting rid of old files..."
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/config/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/data/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/server/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/src/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/test/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/web/*'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/package.json'
+#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
 	echo "syncing the new Jars..."
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/tmp-lib/*.jar winterwell@$server:/home/winterwell/sogive-app/lib/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/bin/* winterwell@$server:/home/winterwell/sogive-app/bin/
-	echo "getting rid of old files..."
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/config/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/data/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/server/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/src/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/test/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/web/*'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/package.json'
-	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
 	echo "syncing everything..."
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/config/* winterwell@$server:/home/winterwell/sogive-app/config/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
