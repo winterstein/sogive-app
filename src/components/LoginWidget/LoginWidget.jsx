@@ -117,7 +117,7 @@ const EmailSignin = ({verb}) => {
 			</div>}
 			{verb==='reset' && DataStore.getValue('widget', C.show.LoginWidget, 'reset-requested')? <div className="alert alert-info">A password reset email has been sent out.</div> : null}
 			<div className="form-group">
-				<button type="submit" className="btn btn-default form-control" >
+				<button type="submit" className="btn btn-primary form-control" >
 					{ buttonText }
 				</button>
 			</div>
