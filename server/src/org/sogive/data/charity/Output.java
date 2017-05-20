@@ -19,16 +19,15 @@ public class Output extends Thing<Output> {
 	
 	/**
 	 * 
-	 * @param number How many malaria nets or nurses or kittens?
+	 * @param number How many malaria nets or nurses or kittens? Can be null for unquantified
 	 * @param type e.g. "solar-light"
-	 * @param unit e.g. year | thing
 	 */
-	public Output(double number, String type, String unit) {
+	public Output(Double number, String type) { //, String unit) {
 		put("number", number);
-		put("type", StrUtils.toCanonical(type));
+//		put("type", StrUtils.toCanonical(type));
 		put("name", type);
-		put("unit", StrUtils.toCanonical(unit));
-		assert number >= 0 : this;
+//		put("unit", StrUtils.toCanonical(unit));
+		assert number==null || number >= 0 : this;
 	}
 	
 	
@@ -50,12 +49,17 @@ public class Output extends Thing<Output> {
 	public Output scale(double fraction) {
 		// the number
 		assert fraction >= 0 : fraction+" "+this;
-		double number = getNumber();
-		number = number * fraction;
-		String type = (String) get("type");
-		String unit = (String) get("unit");
-		// TODO adjust the unit?
-		Output scaled = new Output(number, type, unit);
+		Double number = getNumber();
+		Output scaled;
+		if (number==null) {
+			scaled = new Output(null, getName());	
+		} else {
+			number = number * fraction;
+	//		String type = (String) get("type");
+	//		String unit = (String) getName();
+			// TODO adjust the unit?
+			scaled = new Output(number, getName());
+		}
 		// copy other properties, e.g. image
 		for(Map.Entry<String, Object> pv : entrySet()) {
 			if (scaled.containsKey(pv.getKey())) continue;

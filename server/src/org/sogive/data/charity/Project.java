@@ -100,6 +100,7 @@ public class Project extends Thing<Project> {
 		
 		MonetaryAmount cost = totalCosts;
 		if (cost==null) {
+			// TODO unquantified impacts without
 			// can't calc anything
 			return null;
 		}

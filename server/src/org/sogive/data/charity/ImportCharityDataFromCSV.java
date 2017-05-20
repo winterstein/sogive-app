@@ -277,7 +277,7 @@ public class ImportCharityDataFromCSV {
 				if (impact1==0) continue;
 				String impactUnit = get(row, col("impact "+i+" unit"));
 				String type1 = get(row, col("impact "+i+" unit"));
-				Output output1 = new Output(impact1, type1, "thing");
+				Output output1 = new Output(impact1, type1);
 				output1.put("order", i-1);
 				output1.setName(impactUnit);
 				output1.setPeriod(start, end);

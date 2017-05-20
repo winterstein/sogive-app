@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import {isa} from '../DataClass';
 import {assert} from 'sjtest';
+import Project from './Project';
 
 const NGO = {};
 export default NGO;
@@ -29,7 +30,7 @@ NGO.getProject = (ngo) => {
 
 	// ...or fall back.
 	if ( ! repProject) {
-		repProject = _.find(ngo.projects, p => p.name === 'overall');
+		repProject = _.find(ngo.projects, p => p.name === Project.overall);
 	}
 
 	if ( ! repProject) {

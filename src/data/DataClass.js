@@ -18,4 +18,3 @@ const isa = function(obj, typ) {
 
 
 export {isa};
-	

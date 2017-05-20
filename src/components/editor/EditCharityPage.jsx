@@ -3,17 +3,18 @@ import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
-import { Panel, Image, Well, Label, Grid, Row, Col, Accordion } from 'react-bootstrap';
+import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Glyphicon } from 'react-bootstrap';
+import Login from 'you-again';
+import HashMap from 'hashmap';
 
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../plumbing/DataStore';
+import ActionMan from '../../plumbing/ActionMan';
 import printer from '../../utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Misc from '../Misc';
-import Login from 'you-again';
-import HashMap from 'hashmap';
 
 /**
  * @param fn (value, key) -> `false` if you want to stop recursing deeper down this branch. Note: falsy will not stop recursion.
@@ -69,8 +70,8 @@ class EditCharityPage extends React.Component {
 		// projects
 		let allprojects = charity.projects;
 		// split out overall vs projects
-		let overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
-		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
+		let overalls = _.filter(allprojects, p => Project.name(p) === Project.overall);
+		let projectProjects = _.filter(allprojects, p => Project.name(p) !== Project.overall);
 		// sort by year
 		overalls = _.sortBy(overalls, p => - (p.year || 0) );
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
@@ -81,7 +82,7 @@ class EditCharityPage extends React.Component {
 			refs.push(n.source);
 			return false;
 		});
-		let rrefs = refs.map((r,i) => <li key={'r'+i}><Ref ref={r}/></li>);
+		let rrefs = refs.map((r,i) => <li key={'r'+i}><Ref reference={r}/></li>);
 
 		// put it together
 		console.log("EditCharity", charity);
@@ -114,7 +115,7 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' />
 					</Panel>
 					<Panel header={<h3>Overall Finances</h3>} eventKey="3">
-						<ProjectsEditor charity={charity} projects={overalls} />
+						<ProjectsEditor charity={charity} projects={overalls} isOverall />
 					</Panel>
 					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
 						<ProjectsEditor charity={charity} projects={projectProjects} />
@@ -128,13 +129,57 @@ class EditCharityPage extends React.Component {
 	}
 } // ./EditCharityPage
 
-const ProjectsEditor = ({charity, projects}) => {
+const ProjectsEditor = ({charity, projects, isOverall}) => {
+	assert(NGO.isa(charity));
 	if (projects.length===0) {
-		return <div>No projects analysed. This is correct for charities which focus on a single overall project.</div>;	
+		return (<div>
+			No projects analysed. This is correct for charities which focus on a single overall project.
+			<AddProject charity={charity} />
+		</div>);
 	}
 	let rprojects = projects.map((p,i) => <Panel key={'project_'+i} eventKey={i+1} header={<h4>{p.name} {p.year}</h4>}><ProjectEditor charity={charity} project={p} /></Panel>);
-	return <div><Accordion>{rprojects}</Accordion></div>;
+	return (<div>
+		<Accordion>{rprojects}</Accordion>
+		<AddProject charity={charity} isOverall={isOverall} />
+	</div>);
 };
+
+
+const AddProject = ({charity, isOverall}) => {
+	assert(NGO.isa(charity));
+	if (isOverall) {
+		return (<div className='form-inline well'>
+			<Glyphicon glyph='plus' /> &nbsp;
+			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+			&nbsp;
+			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
+				<Glyphicon glyph='plus' /> Add Year
+			</button>
+		</div>);		
+	}
+	return (<div className='form-inline'>
+		<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
+		&nbsp;
+		<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+		&nbsp;
+		<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
+			<Glyphicon glyph='plus' /> Add Project / Year
+		</button>
+	</div>);
+};
+
+const AddIO = ({list, pio, ioPath}) => {
+	assert(_.isArray(list) && _.isArray(ioPath) && pio);
+	const formPath = ['widget','AddIO', pio, 'form'];
+	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
+	return (<div className='form-inline'>
+		<Misc.PropControl prop='name' label='Name' path={formPath} />
+		<button className='btn btn-default' onClick={oc}>
+			<Glyphicon glyph='plus' />
+		</button>
+	</div>);
+};
+
 
 const ProjectEditor = ({charity, project}) => {	
 	return (<div>
@@ -180,6 +225,9 @@ const ProjectOutputs = ({charity, project}) => {
 		<table className='table'>
 			<tbody>			
 				{rinputs}
+				<tr><td colSpan={2}>
+					<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
+				</td></tr>
 			</tbody>
 		</table>
 		<MetaEditor item={project.outputs} field='outputs_meta' itemPath={projectPath} />
@@ -190,16 +238,16 @@ const ProjectImpacts = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
-	let rinputs = project.impacts.map(input => <ProjectImpactEditor key={project.name+'-'+input.name+'-'+input.unit} charity={charity} project={project} impact={input} />);
+	let rinputs = project.impacts && project.impacts.map(input => 
+		<ProjectImpactEditor key={project.name+'-'+input.name} charity={charity} project={project} impact={input} />);
 	return (<div className='well'>
 		<h5>Impacts</h5>
 		<table className='table'>
 			<tbody>			
-				<tr><th>&nbsp;</th><th>Unit cost</th></tr>
+				<tr><th>&nbsp;</th><th>Unit cost</th><td></td></tr>
 				{rinputs}
 			</tbody>
-		</table>
-		<MetaEditor item={project.impacts} field='impacts_meta' itemPath={projectPath} />
+		</table>		
 	</div>);
 };
 
@@ -267,8 +315,13 @@ const ProjectImpactEditor = ({charity, project, impact}) => {
 	let costPerBeneficiary = 1 / impact.number;
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.Money amount={costPerBeneficiary} />
-			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			<Misc.Money amount={costPerBeneficiary} />
+			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
+		</td>
+		<td>
+			<MetaEditor item={impact} field='all' itemPath={inputPath} />
+		</td>
 	</tr>);
 };
 
@@ -365,8 +418,7 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 	let meta;
 	let metaPath = itemPath.concat(['meta', field]);
 	if (_.isArray(item)) {
-		meta = {};
-		console.warn("where to put meta info from arrays?", item, field, itemPath);
+		meta = {}; // no-meta info on lists -- use a dummy field if you want it
 	} else {
 		meta = (item.meta && item.meta[field]) || {};
 	}
@@ -407,8 +459,10 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 		</div>);
 };
 
-const Ref = ({ref}) => {
-	return <div>{printer.str(ref)}</div>;
+// NB: ref is a react keyword
+const Ref = ({reference}) => {
+	return <div>{printer.str(reference)}</div>;
 };
 
 export default EditCharityPage;
+

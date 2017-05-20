@@ -17,7 +17,11 @@ class Store {
 		this.appstate = {data:{}, focus:{}, show:{}, misc:{}};
 	}
 
+	/**
+	 * It is a good idea to wrap your callback in _.debounce()
+	 */
 	addListener(callback) {
+		// add in a debounce for the callbacks??
 		this.callbacks.push(callback);
 	}
 

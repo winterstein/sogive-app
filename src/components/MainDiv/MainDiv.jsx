@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';
+import _ from 'lodash';
 
 // Plumbing
 import DataStore from '../../plumbing/DataStore';
@@ -47,7 +48,8 @@ class MainDiv extends Component {
 
 	componentWillMount() {
 		// redraw on change
-		DataStore.addListener((mystate) => this.setState({}));
+		const updateReact = _.debounce((mystate) => this.setState({}), 100);
+		DataStore.addListener(updateReact);
 
 		Login.app = 'sogive';
 		// Set up login watcher here, at the highest level		
