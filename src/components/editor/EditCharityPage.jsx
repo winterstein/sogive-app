@@ -77,11 +77,12 @@ class EditCharityPage extends React.Component {
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
 		let refs = [];
-		recurse(charity, n => { 
-			if ( ! n.source) return null;
-			refs.push(n.source);
-			return false;
-		});
+		// TODO once speed issues are resolved (just in case this is the problem)
+		// recurse(charity, n => { 
+		// 	if ( ! n.source) return null;
+		// 	refs.push(n.source);
+		// 	return false;
+		// });
 		let rrefs = refs.map((r,i) => <li key={'r'+i}><Ref reference={r}/></li>);
 
 		// put it together
