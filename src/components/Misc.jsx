@@ -176,10 +176,10 @@ Misc.PropControl = ({label, ...stuff}) => {
 	let {prop, path, item, type, bg, dflt, saveFn} = stuff;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
-	// item ought to match what's in DataStore
-	if (item && item !== DataStore.getValue(path)) {
-		console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);
-	}
+	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
+	// if (item && item !== DataStore.getValue(path)) {
+	// 	console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);
+	// }
 	if ( ! item) {
 		item = DataStore.getValue(path) || {};
 	}

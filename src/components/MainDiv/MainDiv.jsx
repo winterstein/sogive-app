@@ -48,7 +48,8 @@ class MainDiv extends Component {
 
 	componentWillMount() {
 		// redraw on change
-		const updateReact = _.debounce((mystate) => this.setState({}), 100);
+		// _.debounce( this debounce made things worse ?!
+		const updateReact = (mystate) => this.setState({}); //, 1000);
 		DataStore.addListener(updateReact);
 
 		Login.app = 'sogive';
