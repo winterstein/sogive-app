@@ -101,7 +101,8 @@ class MainDiv extends Component {
 	}
 }
 
-/* connect() with no second argument (normally mapDispatchToProps)
- * makes dispatch itself available as a prop of MainDiv
- */
-export default connect()(MainDiv);
+// /* connect() with no second argument (normally mapDispatchToProps)
+//  * makes dispatch itself available as a prop of MainDiv
+//  */
+// export default connect()(MainDiv);
+export default MainDiv;

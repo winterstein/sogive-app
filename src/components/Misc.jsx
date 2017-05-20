@@ -172,7 +172,7 @@ Misc.PropControl = ({label, ...stuff}) => {
 			<label>{label}</label>
 			<Misc.PropControl {...stuff} />
 		</div>);
-	}	
+	}
 	let {prop, path, item, type, bg, dflt, saveFn} = stuff;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
@@ -214,6 +214,7 @@ Misc.PropControl = ({label, ...stuff}) => {
 	}
 	// text based
 	const onChange = e => {
+		DataStore.setValue(proppath, e.target.value);
 		if (saveFn) saveFn({path:path});		
 	};
 	if (type==='textarea') {
