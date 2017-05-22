@@ -54,7 +54,7 @@ for server in ${TARGETSERVERS[*]}; do
 	ssh winterwell@$server 'cd /home/winterwell/sogive-app && npm i'
 	echo ""
 	echo "webpacking..."
-	ssh winterwell@$server 'cd /home/winterwell/sogive-app && npm run compile'
+	ssh winterwell@$server 'cd /home/winterwell/sogive-app && webpack'
 	echo ""
 	echo "Processing bundle.js file for ES5 compatibility"
 	ssh winterwell@$server 'mv /home/winterwell/sogive-app/web/build/js/bundle.js /home/winterwell/sogive-app/web/build/js/original.bundle.js'
