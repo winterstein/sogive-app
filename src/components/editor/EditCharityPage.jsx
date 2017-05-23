@@ -99,7 +99,7 @@ class EditCharityPage extends React.Component {
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-						<EditField item={charity} type='text' field='name' />
+						<EditField item={charity} type='text' field='name' help='This should be the official name' />
 						<EditField item={charity} type='text' field='nickname' />
 						<EditField item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField item={charity} type='url' field='url' label='Website' />
