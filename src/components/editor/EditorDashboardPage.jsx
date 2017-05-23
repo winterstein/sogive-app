@@ -33,7 +33,8 @@ const AddCharityWidget = () => {
 		return <a href={'/#edit?charityId='+escape(id)}>Edit {DataStore.getValue(['widget','AddCharityWidget','form','name'])}</a>;
 	}
 	return (<div>
-		<div className='alert alert-warning'>ALWAYS search first to check the charity isn't already in the database. 
+		<div className='alert alert-warning'>
+			ALWAYS <a href='#search'>search</a> first to check the charity isn't already in the database. 
 			Otherwise we will have ugly merge problems.</div>
 		<Misc.PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
 		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add</button>		
