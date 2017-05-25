@@ -101,14 +101,15 @@ class EditCharityPage extends React.Component {
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' help='This should be the official name' />
 						<EditField item={charity} type='text' field='nickname' />
-						<EditField item={charity} type='text' field='englandWalesCharityRegNum' />
+						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
+						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
 						<EditField item={charity} type='url' field='url' label='Website' />
 						<EditField item={charity} type='text' field='tags' />
 						<EditField item={charity} type='textarea' field='description' />
 						<EditField item={charity} type='img' field='logo' />
-						<EditField item={charity} type='img' field='logo_white' label='White-on-transparent poster logo' />
+						<EditField role='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
-						<EditField item={charity} type='color' field='color' label='Brand colour' />						
+						<EditField role='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
 						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
@@ -393,8 +394,10 @@ const saveDraftFn = _.debounce(
 		return true;
 	}, 1000);
 
-const EditField2 = (props) => {
-	let {item, field, type, help, label, path, parentItem} = props;
+const EditField2 = ({item, field, type, help, label, path, parentItem, role}) => {
+	if (role) {
+		let user = Login.getUser();
+	}
 	let saveDraftFnWrap = saveDraftFn;
 	if (parentItem) {
 		saveDraftFnWrap = (context) => {
