@@ -99,14 +99,22 @@ class EditCharityPage extends React.Component {
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-						<EditField item={charity} type='text' field='name' help='This should be the official name.' />
-						<EditField item={charity} type='text' field='displayName'
+						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
+						<EditField item={charity} type='text' field='displayName' label='Display name'
 							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. The name used should be sufficient to differentiate it from any other charity with a similar name.' />
 						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
-						<EditField item={charity} type='url' field='url' label='Website' />
-						<EditField item={charity} type='text' field='tags' />
+						<EditField item={charity} type='url' field='url' label='Website' />											
 						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
+
+						<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
+						<EditField item={charity} type='text' field='whoTags' label='Who tags' 
+							help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
+						<EditField item={charity} type='text' field='methodTags' label='How (method) tags' 
+							help='How does the charity help? E.g. "training", "medical-supplies", "grants". Please check the common tags list and use those where possible.' />
+						<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
+							help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
+
 						<EditField item={charity} type='img' field='logo' help='Enter a url for the logo image. This can often be found by googling the name of the charity with the word "logo".' />
 						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
@@ -188,8 +196,7 @@ const AddIO = ({list, pio, ioPath}) => {
 const ProjectEditor = ({charity, project}) => {	
 	return (<div>
 		<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
-		<EditProjectField charity={charity} project={project} type='location' field='location' label='Location' />
+		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />		
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
 			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
