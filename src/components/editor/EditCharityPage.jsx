@@ -99,22 +99,24 @@ class EditCharityPage extends React.Component {
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-						<EditField item={charity} type='text' field='name' help='This should be the official name' />
-						<EditField item={charity} type='text' field='nickname' />
+						<EditField item={charity} type='text' field='name' help='This should be the official name.' />
+						<EditField item={charity} type='text' field='displayName'
+							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. The name used should be sufficient to differentiate it from any other charity with a similar name.' />
 						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
 						<EditField item={charity} type='url' field='url' label='Website' />
 						<EditField item={charity} type='text' field='tags' />
-						<EditField item={charity} type='textarea' field='description' />
-						<EditField item={charity} type='img' field='logo' />
-						<EditField role='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
+						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
+						<EditField item={charity} type='img' field='logo' help='Enter a url for the logo image. This can often be found by googling the name of the charity with the word "logo".' />
+						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
-						<EditField role='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
 						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
-							help="Tick yes for those rare charities that don't take donations from the general public." />
-						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' />
+							help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
+						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' 
+							help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					</Panel>
 					<Panel header={<h3>Overall Finances</h3>} eventKey="3">
 						<ProjectsEditor charity={charity} projects={overalls} isOverall />
@@ -188,10 +190,18 @@ const ProjectEditor = ({charity, project}) => {
 		<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
 		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
 		<EditProjectField charity={charity} project={project} type='location' field='location' label='Location' />
-		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?' />
-		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year' />
-		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' />
-		<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' />
+		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
+			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
+			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
+			We aim as far as possible to estimate which project would be the recipient of the marginal extra pound. 
+			This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data) 
+			to influence the choice of representative project too.`} />
+		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
+			help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
+		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' 
+			help='Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at' />
+		<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' 
+			help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
 		<Misc.Col2>
 			<ProjectInputs charity={charity} project={project} />
 			<ProjectOutputs charity={charity} project={project} />
@@ -226,6 +236,24 @@ const ProjectOutputs = ({charity, project}) => {
 		<h5>Outputs</h5>
 		<table className='table'>
 			<tbody>			
+				<tr>
+					<th>
+						Impact units
+						<div className='help-block'>
+							These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Keep this short, preferably about 2-3 words. 5 words max.
+							<br/>
+							Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
+							E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"
+						</div>
+					</th>
+					<th>
+						Amount
+						<div className='help-block'>
+							Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
+							{project.name==='overall'? '' : "Be careful to ensure that the amount shown is relevant to this project."}
+						</div>
+					</th>
+				</tr>
 				{rinputs}
 				<tr><td colSpan={2}>
 					<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
@@ -246,7 +274,14 @@ const ProjectImpacts = ({charity, project}) => {
 		<h5>Impacts</h5>
 		<table className='table'>
 			<tbody>			
-				<tr><th>&nbsp;</th><th>Unit cost</th><th>Description</th><td>&nbsp;</td></tr>
+				<tr><th>&nbsp;</th><th>Unit cost</th>
+				<th>
+					Description 
+					<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
+						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
+					</div>
+				</th>
+				</tr>
 				{rinputs}
 			</tbody>
 		</table>
@@ -326,9 +361,6 @@ const ProjectImpactEditor = ({charity, project, impact}) => {
 		<td>
 			<Misc.PropControl prop='description' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
 		</td>
-		<td>
-			<MetaEditor item={impact} field='all' itemPath={inputPath} />
-		</td>
 	</tr>);
 };
 
@@ -394,9 +426,9 @@ const saveDraftFn = _.debounce(
 		return true;
 	}, 1000);
 
-const EditField2 = ({item, field, type, help, label, path, parentItem, role}) => {
-	if (role) {
-		let roleShare = 'group:'+role;
+const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter}) => {
+	if (userFilter) {
+		let roleShare = 'group:'+userFilter;
 		let shared = DataStore.getValue('misc', 'shares', roleShare);
 		if (shared===undefined) {
 			let req = Login.checkShare(roleShare);
@@ -445,7 +477,7 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 	return (<div className='flexbox'>
 		{help? <div>
 			<Misc.Icon fa='info-circle' title='Help notes' />
-			{help}
+			<span className='help-block'>{help}</span>
 		</div> : null}
 		<div className='TODO'>
 			<Misc.Icon fa='user' title='Last editor' />

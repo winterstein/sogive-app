@@ -165,15 +165,17 @@ const trPlural = (num, text) => {
  * @param prop The field being edited 
  * dflt {?Object} default value
  */
-Misc.PropControl = ({label, ...stuff}) => {
-	// label? show it and recurse
-	if (label) {
+Misc.PropControl = ({label, help, ...stuff}) => {
+	// label / help? show it and recurse
+	if (label || help) {
+		// Minor TODO help block id and aria-described-by property in the input
 		return (<div className="form-group">
-			<label>{label}</label>
+			{label? <label>{label}</label> : null}
 			<Misc.PropControl {...stuff} />
+			{help? <span className="help-block">{help}</span> : null}
 		</div>);
 	}
-	let {prop, path, item, type, bg, dflt, saveFn} = stuff;
+	let {prop, path, item, type, bg, dflt, saveFn, ...otherStuff} = stuff;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
 	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
@@ -193,23 +195,28 @@ Misc.PropControl = ({label, ...stuff}) => {
 			if (saveFn) saveFn({path:path});		
 		};
 		if (value===undefined) value = false;
-		return (<Checkbox checked={value} onChange={onChange} />);
+		return (<Checkbox checked={value} onChange={onChange} {...otherStuff} />);
 	}
 	if (value===undefined) value = '';
 	// £s
 	if (type==='MonetaryAmount') {
 		// special case, as this is an object.
-		// NB: leave the x100 no-floats format for the backend
-		let v = (value && value.value) || '';
+		// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
+		let v = '';
+		if (value) v = value.value;
+		if (v===undefined && value.value100) v = value.value100/100;
 		let path2 = path.concat([prop, 'value']);
+		let path100 = path.concat([prop, 'value100']);
 		const onChange = e => {
-			DataStore.setValue(path2, e.target.value);
+			let newVal = e.target.value;
+			DataStore.setValue(path2, newVal);
+			DataStore.setValue(path100, newVal*100);
 			if (saveFn) saveFn({path:path});
 		};
 		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
 		return (<InputGroup>
 					<InputGroup.Addon>{curr}</InputGroup.Addon>              
-					<FormControl name={prop} value={v} onChange={onChange} />
+					<FormControl name={prop} value={v} onChange={onChange} {...otherStuff} />
 				</InputGroup>);
 	}
 	// text based
@@ -218,18 +225,18 @@ Misc.PropControl = ({label, ...stuff}) => {
 		if (saveFn) saveFn({path:path});		
 	};
 	if (type==='textarea') {
-		return <FormControl componentClass="textarea" name={prop} value={value} onChange={onChange} />;
+		return <FormControl componentClass="textarea" name={prop} value={value} onChange={onChange} {...otherStuff} />;
 	}
 	if (type==='img') {
 		return (<div>
-			<FormControl type='url' name={prop} value={value} onChange={onChange} />
+			<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
 			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
 			<div className='clearfix' />
 		</div>);
 	}
 	if (type==='url') {
 		return (<div>
-			<FormControl type='url' name={prop} value={value} onChange={onChange} />
+			<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
 			<div className='pull-right'><Misc.SiteThumbnail url={value} /></div>
 			<div className='clearfix' />
 		</div>);
@@ -242,12 +249,12 @@ Misc.PropControl = ({label, ...stuff}) => {
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)
-	return <FormControl type={type} name={prop} value={value} onChange={onChange} />;
+	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 };
 
 const oh = (n) => n<10? '0'+n : n;
 
-Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year");
+Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year number");
 
 Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
