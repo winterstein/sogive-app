@@ -396,7 +396,18 @@ const saveDraftFn = _.debounce(
 
 const EditField2 = ({item, field, type, help, label, path, parentItem, role}) => {
 	if (role) {
-		let user = Login.getUser();
+		let roleShare = 'group:'+role;
+		let shared = DataStore.getValue('misc', 'shares', roleShare);
+		if (shared===undefined) {
+			let req = Login.checkShare(roleShare);
+			req.then(function(res) {
+				let yehorneh = res.success;
+				DataStore.setValue(['misc', 'shares', roleShare], yehorneh);
+			});
+		}
+		if ( ! shared && false) { // FIXME
+			return null;
+		}
 	}
 	let saveDraftFnWrap = saveDraftFn;
 	if (parentItem) {
