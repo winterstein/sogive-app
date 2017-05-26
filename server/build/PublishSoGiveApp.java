@@ -87,7 +87,7 @@ public class PublishSoGiveApp extends BuildTask {
 				new BuildWeb(),
 				new BuildDataLog(), // This!
 				new BuildESJavaClient(),
-				new BuildFlexiGson()
+				new BuildFlexiGson()				
 				);
 	}
 
@@ -183,6 +183,7 @@ public class PublishSoGiveApp extends BuildTask {
 				}
 				FileUtils.copy(jar, localJar);
 			}
+			
 	//		// Remove unwanted jars
 	//		for (File jar : localLib.listFiles()) {
 	//			boolean found = false;
@@ -203,7 +204,10 @@ public class PublishSoGiveApp extends BuildTask {
 					File jar = ((BuildWinterwellProject) buildTask).getJar();
 					FileUtils.copy(jar, localLib);
 				}
-			}			
+			}						
+			// plus you-again for the client
+			File yajar = new File(FileUtils.getWinterwellDir(), "code/youagain-server/lib/youagain-server.jar");
+			FileUtils.copy(yajar, localLib);
 			
 			// This jar
 			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));

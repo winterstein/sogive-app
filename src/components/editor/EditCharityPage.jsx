@@ -434,6 +434,7 @@ const saveDraftFn = _.debounce(
 	}, 1000);
 
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter}) => {
+	// some controls are not for all users
 	if (userFilter) {
 		let roleShare = 'group:'+userFilter;
 		let shared = DataStore.getValue('misc', 'shares', roleShare);
@@ -444,7 +445,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 				DataStore.setValue(['misc', 'shares', roleShare], yehorneh);
 			});
 		}
-		if ( ! shared && false) { // FIXME
+		if ( ! shared) {
 			return null;
 		}
 	}
