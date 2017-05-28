@@ -15,7 +15,12 @@ Project.year = (ngo) => isa(ngo, Project.type) && ngo.year;
 
 Project.make = function(base) {
 	let proj = {
-		inputs: [],
+		inputs: [
+			{"@type":"MonetaryAmount","name":"annualCosts","currency":"GBP"},
+			{"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
+			{"@type":"MonetaryAmount","name":"tradingCosts","currency":"GBP"},
+			{"@type":"MonetaryAmount","name":"incomeFromBeneficiaries","currency":"GBP"}
+		],
 		outputs: [],
 		impacts: []
 	};
