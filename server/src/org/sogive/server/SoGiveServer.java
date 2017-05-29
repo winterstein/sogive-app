@@ -49,6 +49,8 @@ public class SoGiveServer {
 	
 	public static LogFile logFile;
 
+	private static JettyLauncher esjl;
+
 	public static void main(String[] args) {
 		SoGiveConfig config = getConfig(new SoGiveConfig(), args);
 		StripeConfig sc = getConfig(new StripeConfig(), args); 
@@ -68,8 +70,14 @@ public class SoGiveServer {
 		jl.addServlet("/*", new MasterHttpServlet());
 		Log.i("web", "...Launching Jetty web server on port "+jl.getPort());
 		jl.run();
-
 		Log.i("Running...");
+		
+//		// Also run an ES upload server
+//		esjl = new JettyLauncher(new File("web"), config.portUpload);
+//		esjl.setup();
+//		esjl.addServlet("/*", new ESProxyServlet());
+//		Log.i("web", "...Launching ES proxy on port "+esjl.getPort());
+//		esjl.run();
 		
 		initCharityData();
 	}

@@ -10,6 +10,12 @@ public class SoGiveConfig {
 
 	public static final String donationIndex = "donation";
 	
-	public int port = 8282;	
+	public int port = 8282;
+
+//	/**
+//	 * Pretend to be an ES server on this port.
+	// Or use nginx??
+//	 */
+//	public int portUpload = 8284;	
 
 }
