@@ -102,10 +102,10 @@ class EditCharityPage extends React.Component {
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
 						<EditField item={charity} type='text' field='displayName' label='Display name'
-							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
+							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
 						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
-						<EditField item={charity} type='url' field='url' label='Website' />											
+						<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
 						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 
 						<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
@@ -116,7 +116,7 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
 							help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
 
-						<EditField item={charity} type='img' field='logo' help='Enter a url for the logo image. This can often be found by googling the name of the charity with the word "logo".' />
+						<EditField item={charity} type='img' field='logo' help='Enter a url for the logo image. To get this, first find the desired logo on the internet (e.g. from the charitys website or by googling charity name + logo). Then right click on the logo and click on "inspect element". Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. Copy and paste this URL into this field. Check the preview to make sure it's working correctly.' />
 						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
 						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
