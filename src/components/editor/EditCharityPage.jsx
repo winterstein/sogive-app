@@ -15,6 +15,7 @@ import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Misc from '../Misc';
+import Roles from '../../Roles';
 
 /**
  * @param fn (value, key) -> `false` if you want to stop recursing deeper down this branch. Note: falsy will not stop recursion.
@@ -59,9 +60,9 @@ class EditCharityPage extends React.Component {
 	}
 
 	render() {
-		// if ( ! Login.isLoggedIn()) {
-		// 	return <div>Please login</div>;
-		// }
+		if ( ! Login.isLoggedIn()) {
+			return <div>Please login</div>;
+		}
 		let cid = this.props.charityId;
 		let charity = DataStore.getValue('draft', C.TYPES.Charity, cid);
 		if ( ! charity) {
@@ -101,7 +102,7 @@ class EditCharityPage extends React.Component {
 						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
 						<EditField item={charity} type='text' field='displayName' label='Display name'
-							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. The name used should be sufficient to differentiate it from any other charity with a similar name.' />
+							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
 						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
 						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
 						<EditField item={charity} type='url' field='url' label='Website' />											
@@ -185,7 +186,7 @@ const AddIO = ({list, pio, ioPath}) => {
 	const formPath = ['widget','AddIO', pio, 'form'];
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
 	return (<div className='form-inline'>
-		<Misc.PropControl prop='name' label='Name' path={formPath} />
+		<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
 		<button className='btn btn-default' onClick={oc}>
 			<Glyphicon glyph='plus' />
 		</button>
@@ -193,10 +194,10 @@ const AddIO = ({list, pio, ioPath}) => {
 };
 
 
-const ProjectEditor = ({charity, project}) => {	
+const ProjectEditor = ({charity, project}) => {
 	return (<div>
-		<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-		<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />		
+		{project.name === Project.overall? null : <EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' /> }
+		{project.name === Project.overall? null : <EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' /> }
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
 			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
@@ -436,16 +437,7 @@ const saveDraftFn = _.debounce(
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter}) => {
 	// some controls are not for all users
 	if (userFilter) {
-		let roleShare = 'group:'+userFilter;
-		let shared = DataStore.getValue('misc', 'shares', roleShare);
-		if (shared===undefined) {
-			let req = Login.checkShare(roleShare);
-			req.then(function(res) {
-				let yehorneh = res.success;
-				DataStore.setValue(['misc', 'shares', roleShare], yehorneh);
-			});
-		}
-		if ( ! shared) {
+		if ( ! Roles.iCan(userFilter)) {
 			return null;
 		}
 	}

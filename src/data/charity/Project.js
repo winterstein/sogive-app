@@ -17,7 +17,7 @@ Project.make = function(base) {
 	let proj = {
 		inputs: [
 			{"@type":"MonetaryAmount","name":"annualCosts","currency":"GBP"},
-			{"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
+			// {"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
 			{"@type":"MonetaryAmount","name":"tradingCosts","currency":"GBP"},
 			{"@type":"MonetaryAmount","name":"incomeFromBeneficiaries","currency":"GBP"}
 		],

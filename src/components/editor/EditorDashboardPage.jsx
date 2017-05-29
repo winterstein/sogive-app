@@ -3,6 +3,7 @@ import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import _ from 'lodash';
 import { XId } from 'wwutils';
+import {Panel} from 'react-bootstrap';
 
 import printer from '../../utils/printer';
 // import C from '../C';
@@ -21,6 +22,7 @@ class EditorDashboardPage extends React.Component {
 				<h2>Editorial Dashboard</h2>
 				<h3>In development...</h3>
 				<AddCharityWidget />
+				<AddEditorWidget />
 			</div>
 		);
 	}
@@ -39,6 +41,22 @@ const AddCharityWidget = () => {
 		<Misc.PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
 		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add</button>		
 	</div>);
+};
+
+const doAddEditor = function() {
+	let email = DataStore.appstate.widget.AddEditorWidget.form.email;
+	if ( ! email) return;
+	Login.shareThing('can:publish-edits', email);
+	DataStore.setValue(['widget', 'AddEditorWidget', 'form'], {});
+};
+
+const AddEditorWidget = () => {
+	Login.shareThing();
+	return (<Panel header='<h2>Add a new Editor</h2>'>
+		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
+		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
+		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
+	</Panel>);
 };
 
 export default EditorDashboardPage;
