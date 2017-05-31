@@ -2,8 +2,43 @@
 
 #Publish-SoGive-App
 
-TARGETSERVERS=($1)
+
 USER=`whoami`
+
+if [[ -z $1 ]]; then
+	echo "usage: publish-portal.sh test|production";
+	exit -1;   
+fi
+
+##Is this a production pushout or a test pushout?
+PRODUCTIONSERVERS=(heppner.soda.sh)
+TESTSERVERS=(hugh.soda.sh)
+
+TYPEOFPUSHOUT=$1
+
+case $1 in
+	production)
+	echo "this is a PRODUCTION pushout"
+	TARGET=$PRODUCTIONSERVERS
+	;;
+	PRODUCTION)
+	echo "this is a PRODUCTION pushout"
+	TARGET=$PRODUCTIONSERVERS
+	;;
+	test)
+	echo "this is a TEST pushout"
+	TARGET=$TESTSERVERS
+	;;
+	TEST)
+	echo "this is a TEST pushout"
+	TARGET=$TESTSERVERS
+	;;
+	*)
+	echo "The script couldn't discern if this was a production or a test pushout.  EXITING..."
+	exit 1
+	;;
+esac
+
 
 # Convert Less into CSS
 echo "converting less files into CSS..."
@@ -19,7 +54,7 @@ done
 
 echo ""
 echo "Beginning publishing process..."
-for server in ${TARGETSERVERS[*]}; do
+for server in ${TARGET[*]}; do
 	echo -e "Stopping sogiveapp service on $server"
 	ssh winterwell@$server 'service sogiveapp stop'
 #	echo "clearing out the old Jars..."
