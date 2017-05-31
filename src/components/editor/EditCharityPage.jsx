@@ -116,7 +116,12 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
 							help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
 
-						<EditField item={charity} type='img' field='logo' help='Enter a url for the logo image. To get this, first find the desired logo on the internet (e.g. from the charitys website or by googling charity name + logo). Then right click on the logo and click on "inspect element". Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. Copy and paste this URL into this field. Check the preview to make sure it's working correctly.' />
+						<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+						One way to get this is to use Google Image search, then visit image, and copy the url. 
+						Or find the desired logo on the internet (e.g. from the charitys website). Then right click on the logo and click on "inspect element". 
+						Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
+						Copy and paste this URL into this field. 
+						Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
 						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
