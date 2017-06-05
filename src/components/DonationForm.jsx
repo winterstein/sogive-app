@@ -191,7 +191,7 @@ const DonationFormButton = ({onToken, amount}) => {
 	if (email) email = XId.id(email);
 	return (
 		<div>
-			<StripeCheckout name="SoGive" description="See the impact of your charity donations"
+			<StripeCheckout name="SoGive" description="Donate with impact tracking"
 				image="http://local.sogive.org/img/SoGive-Light-64px.png"
 				email={email}
 				panelLabel="Donate"
