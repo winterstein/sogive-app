@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {FormControl,Checkbox,Textarea, InputGroup} from 'react-bootstrap';
+// FormControl
+import {Checkbox,Textarea, InputGroup} from 'react-bootstrap';
 import DataStore from '../plumbing/DataStore';
 
 import {assert, assMatch} from 'sjtest';
@@ -246,6 +247,8 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 		let date = new Date(value);
 		let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
 		value = nvalue;
+		// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
+		type = 'text';
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)
@@ -259,6 +262,14 @@ Misc.ControlTypes = new Enum("img textarea text password email url color Monetar
 Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
 Misc.ImgThumbnail = ({url}) => url? <img className='logo' src={url} /> : null;
+
+/**
+ * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
+ * Plus since we're providing state handling, we don't need a full component.
+ */
+const FormControl = (props) => {
+	return <input className='form-control' {...props} />;
+};
 
 export default Misc;
 // // TODO rejig for export {

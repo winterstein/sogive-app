@@ -24,6 +24,7 @@ module.exports = {
 		"max-len": ["warn", 140],
 		"max-nested-callbacks": ["warn", 4],
 		"no-continue": "off",
+		"no-confusing-arrow": "off",
 		"no-param-reassign": "off",
 		"no-plusplus": "off",
 		"no-tabs": "off",
