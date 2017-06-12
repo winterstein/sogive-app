@@ -40,8 +40,8 @@ const SocialSignin = ({verb, socialLogin}) => {
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
-			<p><small>Good-Loop will never share your data, and will never post to  social media without your consent.
-				You can read our <a href='https://good-loop.com/privacy-policy.html' target="_new">privacy policy</a> for more information.
+			<p><small>We will never share your data, and will never post to social media without your consent.
+				You can read our <a href='https://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
 		</div>
 	);
@@ -169,7 +169,7 @@ const LoginWidget = ({showDialog, logo, title}) => {
 	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
 	if ( ! verb) verb = 'login';
 
-	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to the Good-Loop Portal`;
+	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to SoGive`;
 
 	const heading = {
 		login: 'Log In',
