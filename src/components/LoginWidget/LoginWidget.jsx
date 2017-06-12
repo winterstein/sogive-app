@@ -10,7 +10,10 @@ import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
-// Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
+if (window.location.host.indexOf('local') !== -1) {	
+	Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
+	console.warn("config", "Set you-again Login endpoint to "+Login.ENDPOINT);
+}
 
 /**
 	TODO:
@@ -128,16 +131,19 @@ const EmailSignin = ({verb}) => {
 }; // ./EmailSignin
 
 const ResetLink = ({verb}) => {
-	if (verb === 'login') {
+	if (verb !== 'login') return null;
+	const toReset = () => {
+		// clear any error from a failed login
+		Login.error = null;
+		DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset');
+	};
 		return (
 			<div className='pull-right'>
 				<small>
-					<a onClick={() => DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset')}>Forgotten password?</a>
+				<a onClick={toReset}>Forgotten password?</a>
 				</small>
 			</div>
 		);
-	}
-	return null;
 };
 
 const LoginError = function() {
