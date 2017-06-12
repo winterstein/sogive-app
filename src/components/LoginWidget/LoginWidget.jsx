@@ -18,8 +18,8 @@ import C from '../../C';
 	- Use them in the appropriate section of the form
 */
 
-/*
-const SocialSignin = ({verb, socialLogin}) => {
+
+const SocialSignin = ({verb}) => {
 	return (
 		<div className="social-signin">
 			<div className="form-group">
@@ -42,7 +42,7 @@ const SocialSignin = ({verb, socialLogin}) => {
 			</small></p>
 		</div>
 	);
-};*/
+};
 
 const emailLogin = (verb, email, password) => {
 	assMatch(email, String, password, String);
@@ -62,6 +62,9 @@ const emailLogin = (verb, email, password) => {
 	});
 };
 
+const socialLogin = () => {
+
+};
 
 const EmailSignin = ({verb}) => {
 	// we need a place to stash form info. Maybe appstate.widget.LoginWidget.name etc would be better?
