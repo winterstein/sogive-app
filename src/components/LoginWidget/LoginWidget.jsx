@@ -10,7 +10,10 @@ import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
-// Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
+if (window.location.host.indexOf('local') !== -1) {	
+	Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
+	console.warn("config", "Set you-again Login endpoint to "+Login.ENDPOINT);
+}
 
 /**
 	TODO:
@@ -37,8 +40,8 @@ const SocialSignin = ({verb}) => {
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
-			<p><small>Good-Loop will never share your data, and will never post to  social media without your consent.
-				You can read our <a href='https://good-loop.com/privacy-policy.html' target="_new">privacy policy</a> for more information.
+			<p><small>We will never share your data, and will never post to social media without your consent.
+				You can read our <a href='https://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
 		</div>
 	);
@@ -131,16 +134,19 @@ const EmailSignin = ({verb}) => {
 }; // ./EmailSignin
 
 const ResetLink = ({verb}) => {
-	if (verb === 'login') {
+	if (verb !== 'login') return null;
+	const toReset = () => {
+		// clear any error from a failed login
+		Login.error = null;
+		DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset');
+	};
 		return (
 			<div className='pull-right'>
 				<small>
-					<a onClick={() => DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset')}>Forgotten password?</a>
+				<a onClick={toReset}>Forgotten password?</a>
 				</small>
 			</div>
 		);
-	}
-	return null;
 };
 
 const LoginError = function() {
@@ -166,7 +172,7 @@ const LoginWidget = ({showDialog, logo, title}) => {
 	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
 	if ( ! verb) verb = 'login';
 
-	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to the Good-Loop Portal`;
+	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to SoGive`;
 
 	const heading = {
 		login: 'Log In',
