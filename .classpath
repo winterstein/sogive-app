@@ -15,5 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
 	<classpathentry kind="lib" path="/middleware/gson/gson-original.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/youagain-server"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.webappbase"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
