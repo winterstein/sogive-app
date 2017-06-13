@@ -62,11 +62,14 @@ import jobs.BuildWinterwellProject;
  * FIXME rsync is making sub-dirs :(
  */
 public class PublishSoGiveApp extends BuildTask {
-
-	String server =
-			"test.sogive.org";
-//			"app.sogive.org"; // datalog.soda.sh
-	
+	// 'typeOfPublish' can be set to either 'test' or 'production'
+	String typeOfPublish =
+			"test";
+//			"production";
+	// 'preClean' can be set to 'clean' in order to delete files before syncing new ones
+	String preClean =
+			"";
+	//		"clean";
 	String remoteUser;
 	private String remoteWebAppDir;
 	private File localWebAppDir;
@@ -132,11 +135,11 @@ public class PublishSoGiveApp extends BuildTask {
 		
 		// rsync the directory
 		try {
-			assert localConfigDir.isDirectory() : localConfigDir;
-			Log.d("publish","Sending config dir files: "+Printer.toString(localConfigDir.list()));
-			String remoteConfig = remoteUser+"@"+server+":"+remoteWebAppDir+"/config";
-			RSyncTask task = new RSyncTask(localConfigDir.getAbsolutePath()+"/", remoteConfig, true);
-			task.run();		
+//			assert localConfigDir.isDirectory() : localConfigDir;
+//			Log.d("publish","Sending config dir files: "+Printer.toString(localConfigDir.list()));
+//			String remoteConfig = remoteUser+"@"+typeOfPublish+":"+remoteWebAppDir+"/config";
+//			RSyncTask task = new RSyncTask(localConfigDir.getAbsolutePath()+"/", remoteConfig, true);
+//			task.run();		
 			
 		} finally {
 			// put local-props back
@@ -154,7 +157,7 @@ public class PublishSoGiveApp extends BuildTask {
 			|| !new File(localWebAppDir,"web").exists()) {
 			throw new IOException("Not in the expected directory! dir="+FileUtils.getWorkingDirectory());
 		}
-		Log.i("publish", "Publishing to "+server+":"+ remoteWebAppDir);
+		Log.i("publish", "Publishing to "+typeOfPublish+":"+ remoteWebAppDir);
 		// What's going on?
 		Environment.get().push(BobSettings.VERBOSE, true);
 
@@ -217,7 +220,7 @@ public class PublishSoGiveApp extends BuildTask {
 		
 //		// rsync - via publish-sogiveapp.sh
 //		// Bash script which does the rsync work
-		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+server);
+		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+typeOfPublish +preClean);
 		pubas.setEcho(true);
 		pubas.run();
 		System.out.println(pubas.getError());
@@ -226,10 +229,10 @@ public class PublishSoGiveApp extends BuildTask {
 	}
 	
 
-	private String rsyncDest(String dir) {
+//	private String rsyncDest(String dir) {
 //		if ( ! dir.endsWith("/")) dir += "/";
-		return remoteUser+"@"+server+ ":" + new File(remoteWebAppDir, dir).getAbsolutePath();
-	}
+//		return remoteUser+"@"+server+ ":" + new File(remoteWebAppDir, dir).getAbsolutePath();
+//	}
 
 
 }

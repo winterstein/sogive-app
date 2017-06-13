@@ -15,6 +15,7 @@ PRODUCTIONSERVERS=(heppner.soda.sh)
 TESTSERVERS=(hugh.soda.sh)
 
 TYPEOFPUSHOUT=$1
+CLEANPUBLISH=$2
 
 case $1 in
 	production)
@@ -39,6 +40,22 @@ case $1 in
 	;;
 esac
 
+case $2 in
+	clean)
+	echo "this publishing process is going to clear out the target server's directories before syncing"
+	CLEANPUBLISH='true'
+	;;
+	CLEAN)
+	echo "this publishing process is going to clear out the target server's directories before syncing"
+	CLEANPUBLISH='true'
+	;;
+	*)
+	echo "this publishing process will only overwrite old files with new versions, all other files will not be changed"
+	CLEANPUBLISH='false'
+	;;
+esac
+
+
 
 # Convert Less into CSS
 echo "converting less files into CSS..."
@@ -57,18 +74,20 @@ echo "Beginning publishing process..."
 for server in ${TARGET[*]}; do
 	echo -e "Stopping sogiveapp service on $server"
 	ssh winterwell@$server 'service sogiveapp stop'
-#	echo "clearing out the old Jars..."
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/lib/*.jar'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/bin/*'
-#	echo "getting rid of old files..."
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/config/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/data/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/server/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/src/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/test/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/web/*'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/package.json'
-#	ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
+		if [[ $CLEANPUBLISH = 'true' ]]; then
+			echo "clearing out the old Jars..."
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/lib/*.jar'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/bin/*'
+			echo "getting rid of old files..."
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/config/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/data/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/server/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/src/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/test/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/web/*'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/package.json'
+			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
+		fi
 	echo "syncing the new Jars..."
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/tmp-lib/*.jar winterwell@$server:/home/winterwell/sogive-app/lib/
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/bin/* winterwell@$server:/home/winterwell/sogive-app/bin/
