@@ -124,6 +124,7 @@ class EditCharityPage extends React.Component {
 						Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 						<EditField item={charity} type='img' field='images' label='Photo' />
+						<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
@@ -200,15 +201,19 @@ const AddIO = ({list, pio, ioPath}) => {
 
 
 const ProjectEditor = ({charity, project}) => {
+	// TODO story image and source
+	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
+	const isOverall = project.name === Project.overall;
 	return (<div>
-		{project.name === Project.overall? null : <EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' /> }
-		{project.name === Project.overall? null : <EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' /> }
+		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' /> }
+		{isOverall? null : <EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' /> }
+		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' /> }
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
 			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
 			We aim as far as possible to estimate which project would be the recipient of the marginal extra pound. 
 			This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data) 
-			to influence the choice of representative project too.`} />
+			to influence the choice of representative project too.`} />			
 		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
 			help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
 		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' 
