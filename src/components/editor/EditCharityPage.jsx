@@ -201,7 +201,7 @@ const AddIO = ({list, pio, ioPath}) => {
 
 
 const ProjectEditor = ({charity, project}) => {
-	// TODO story image and source
+	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
 	const isOverall = project.name === Project.overall;
 	return (<div>

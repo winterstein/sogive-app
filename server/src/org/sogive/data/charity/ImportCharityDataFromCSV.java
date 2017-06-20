@@ -31,6 +31,7 @@ import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVReader;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.WebUtils;
 
 import static com.winterwell.utils.containers.Containers.get;
 
@@ -231,6 +232,10 @@ public class ImportCharityDataFromCSV {
 			Project project = new Project(projectName);
 			project.put("analyst", analyst);
 			String story = get(row, col("stories"));
+			if (story!=null && WebUtils.URL_REGEX.matcher(story).matches()) {
+				Log.d("import", "skipping url story for "+projectName+" by "+analyst+" "+story);
+				story = null;
+			}
 			story = StrUtils.normalisePunctuation(story);
 			if (Utils.truthy(story)) project.put(stories, story);
 			project.put("stories_src", get(row, col("stories - source")));
