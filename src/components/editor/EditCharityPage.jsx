@@ -156,7 +156,12 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<AddProject charity={charity} />
 		</div>);
 	}
-	let rprojects = projects.map((p,i) => <Panel key={'project_'+i} eventKey={i+1} header={<h4>{p.name} {p.year}</h4>}><ProjectEditor charity={charity} project={p} /></Panel>);
+	let rprojects = projects.map((p,i) => (
+		<Panel key={'project_'+i} eventKey={i+1} 
+			header={<div><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+			<ProjectEditor charity={charity} project={p} />
+		</Panel>)
+		);
 	return (<div>
 		<Accordion>{rprojects}</Accordion>
 		<AddProject charity={charity} isOverall={isOverall} />
@@ -185,6 +190,22 @@ const AddProject = ({charity, isOverall}) => {
 			<Glyphicon glyph='plus' /> Add Project / Year
 		</button>
 	</div>);
+};
+
+
+const RemoveProject = ({charity, project}) => {
+	assert(NGO.isa(charity));
+	return (<button className='btn btn-default btn-sm pull-right' 
+				title='Delete this project!'
+				onClick={ (e) => {e.preventDefault(); removeProject({charity, project});} } 
+			>
+				<Glyphicon glyph='trash' />
+			</button>);
+};
+
+const removeProject = ({charity, project}) => {
+	// TODO a confirm step! DataStore.setShow('confirmDialog', true);
+	ActionMan.removeProject({charity, project});
 };
 
 const AddIO = ({list, pio, ioPath}) => {
@@ -388,6 +409,7 @@ const publishDraftFn = _.throttle((e, charity) => {
 }, 250);
 const discardDraftFn = _.throttle((e, charity) => {
 	ServerIO.discardEdits(charity);
+	window.location.reload();
 }, 250);
 
 

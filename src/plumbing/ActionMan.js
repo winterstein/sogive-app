@@ -34,6 +34,13 @@ const addProject = ({charity, isOverall}) => {
 	DataStore.setValue(['widget', 'AddProject', 'form'], {});
 };
 
+const removeProject = ({charity, project}) => {
+	assert(NGO.isa(charity));
+	let i = charity.projects.indexOf(project);
+	charity.projects.splice(i,1);
+	// update
+	DataStore.update();
+};
 
 const addInputOrOutput = ({list, ioPath, formPath}) => {
 	assert(_.isArray(list), list);
@@ -46,7 +53,7 @@ const addInputOrOutput = ({list, ioPath, formPath}) => {
 
 const ActionMan = {
 	addCharity,
-	addProject,
+	addProject, removeProject,
 	addInputOrOutput
 };
 

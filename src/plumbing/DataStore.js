@@ -25,9 +25,16 @@ class Store {
 		this.callbacks.push(callback);
 	}
 
+	/**
+	 * Update and trigger the on-update callbacks.
+	 * @param newState {?Object} This will do an overwrite merge with the existing state.
+	 * Can be null, which still triggers the on-update callbacks.
+	 */
 	update(newState) {
 		// console.log('update', newState);
-		_.merge(this.appstate, newState);
+		if (newState) {
+			_.merge(this.appstate, newState);
+		}
 		this.callbacks.forEach(fn => fn(this.appstate));
 	}
 

@@ -61,11 +61,8 @@ Misc.Time = ({time}) => {
 /** eg a Twitter logo */
 Misc.Logo = ({service, size, transparent}) => {
 	assert(service);
-	if (service==='twitter') {
-		return <Misc.Icon fa="twitter-square" size="4x"/>;
-	}
-	if (service==='facebook') {
-		return <Misc.Icon fa="facebook-square" size="4x"/>;
+	if (service==='twitter' || service==='facebook') {
+		return <Misc.Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} />;
 	}
 	let klass = "img-rounded logo";
 	if (size) klass += " logo-"+size;
@@ -226,7 +223,7 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 		if (saveFn) saveFn({path:path});		
 	};
 	if (type==='textarea') {
-		return <FormControl componentClass="textarea" name={prop} value={value} onChange={onChange} {...otherStuff} />;
+		return <textarea className="form-control" name={prop} onChange={onChange} {...otherStuff} value={value} />;
 	}
 	if (type==='img') {
 		return (<div>
