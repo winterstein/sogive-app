@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // FormControl
-import {Checkbox,Textarea, InputGroup} from 'react-bootstrap';
+import {Checkbox,Textarea, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 import DataStore from '../plumbing/DataStore';
 
 import {assert, assMatch} from 'sjtest';
@@ -212,8 +212,18 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 			if (saveFn) saveFn({path:path});
 		};
 		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
+		let currency;
+		let changeCurrency = otherStuff.changeCurrency || true;
+		if (changeCurrency) {
+			// TODO other currencies
+			currency = (<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(path2)} >
+          					<MenuItem key="1">{curr}</MenuItem>
+			</DropdownButton>);
+		} else {
+			currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
+		}
 		return (<InputGroup>
-					<InputGroup.Addon>{curr}</InputGroup.Addon>              
+					{currency}
 					<FormControl name={prop} value={v} onChange={onChange} {...otherStuff} />
 				</InputGroup>);
 	}

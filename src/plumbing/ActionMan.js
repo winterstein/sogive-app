@@ -44,7 +44,9 @@ const removeProject = ({charity, project}) => {
 
 const addInputOrOutput = ({list, ioPath, formPath}) => {
 	assert(_.isArray(list), list);
-	let item = DataStore.getValue(formPath);	
+	let item = DataStore.getValue(formPath);
+	// some shared state bug! Copy the form value to be safe
+	// item = Object.assign({}, item);
 	// add to the list
 	list.push(item);
 	// clear the form
