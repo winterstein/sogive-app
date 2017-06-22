@@ -103,8 +103,16 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
 						<EditField item={charity} type='text' field='displayName' label='Display name'
 							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
-						<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
-						<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
+						
+						<div className='well'>
+							<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
+							<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
+							<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
+							<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' />
+							<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' />
+							<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' />
+						</div>
+
 						<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
 						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 
