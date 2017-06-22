@@ -249,13 +249,27 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 			<div className='clearfix' />
 		</div>);
 	}
-	// date: dates that don't fit the mold yyyy-MM-dd get ignored!!
-	if (type==='date' && value && ! value.match(/dddd-dd-dd/)) {
-		let date = new Date(value);
-		let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
-		value = nvalue;
+	// date
+	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
+	//  && value && ! value.match(/dddd-dd-dd/)
+	if (type==='date') {
+		// parsing incomplete dates causes NaNs
+		// let date = new Date(value);
+		// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
+		// value = nvalue;
+		let datePreview = value? 'not a valid date' : null;
+		try {
+			let date = new Date(value);
+			datePreview = date.toLocaleDateString();
+		} catch (er) {
+			// bad date
+		}
 		// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
-		type = 'text';
+		return (<div>
+			<FormControl type='text' name={prop} value={value} onChange={onChange} {...otherStuff} />
+			<div className='pull-right'><i>{datePreview}</i></div>
+			<div className='clearfix' />
+		</div>);
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)
