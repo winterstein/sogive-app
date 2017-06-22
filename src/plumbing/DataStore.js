@@ -64,7 +64,8 @@ class Store {
 			let pkey = path[pi];			
 			assert(pkey || pkey===0, path); // no falsy in a path - except that 0 is a valid key
 			let newTip = tip[pkey];
-			if ( ! newTip) return null;
+			// Test for hard null -- falsy are valid values
+			if (newTip===null || newTip===undefined) return null;
 			tip = newTip;
 		}
 		return tip;
@@ -72,8 +73,8 @@ class Store {
 
 	/**
 	 * Update a single path=value.
-	 * Unlike update, this can set {} or null.
-	 * @param {String[]} path 
+	 * Unlike update(), this can set {} or null values.
+	 * @param {String[]} path This path will be created if it doesn't exist (except if value===null)
 	 * @param {*} value 
 	 */
 	// TODO handle setValue(pathbit, pathbit, pathbit, value) too
@@ -82,44 +83,25 @@ class Store {
 		assert(this.appstate[path[0]], 
 			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
-		if ( ! yessy(value)) {
-			// delete TODO shouldnt we use this for all set-values?
-			let tip = this.appstate;
-			for(let pi=0; pi < path.length; pi++) {
-				let pkey = path[pi];
-				if (pi === path.length-1) {
-					tip[pkey] = value;
-					break;
-				}
-				assert(pkey || pkey===0, "falsy in path "+path.join(" -> ")); // no falsy in a path - except that 0 is a valid key
-				let newTip = tip[pkey];
-				if ( ! newTip) {
-					return;
-					// newTip = tip[pkey] = {};
-				}
-				tip = newTip;
-			}
-			this.update();
-			return;
-		}
-		// normal merge update
-		let newState = {};
-		let tip = newState;	
+		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];
-			assert(pkey || pkey===0, "falsy in path "+path.join(" -> ")); // no falsy in a path - except that 0 is a valid key
 			if (pi === path.length-1) {
 				tip[pkey] = value;
 				break;
 			}
-			// When to make an array? Let's leave that for the server to worry about.
-			// Javascript is lenient on array/object for key->value access.
-			let newTip = {};
-			tip[pkey] = newTip;
+			assert(pkey || pkey===0, "falsy in path "+path.join(" -> ")); // no falsy in a path - except that 0 is a valid key
+			let newTip = tip[pkey];
+			if ( ! newTip) {
+				if (value===null) {
+					// don't make path for null values
+					return;
+				}
+				newTip = tip[pkey] = {};
+			}
 			tip = newTip;
 		}
-		// update
-		this.update(newState);
+		this.update();
 	}
 
 	/**

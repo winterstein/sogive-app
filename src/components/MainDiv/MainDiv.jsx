@@ -76,15 +76,23 @@ class MainDiv extends Component {
 	decodeHash(url) {
 		const hashIndex = url.indexOf('#');
 		const hash = (hashIndex >= 0) ? url.slice(hashIndex + 1) : '';
-		const page = hash.split('?')[0] || DEFAULT_PAGE;
+		let page = hash.split('?')[0] || DEFAULT_PAGE;
 		const pageProps = getUrlVars(hash);
+		// peel off eg publisher/myblog
+		const pageBits = page.split('/');
+		page = pageBits[0];
+		if (pageBits.length > 1) {
+			// store in DataStore focus
+			const ptype = toTitleCase(page); // hack publisher -> Publisher
+			DataStore.setValue(['focus', ptype], pageBits[1]);
+		}		
 		return { page, pageProps };
 	}
 
 	render() {
 		const { page, pageProps } = this.state;
 		assert(page, this.props);
-		const Page = PAGES[page];
+		let Page = PAGES[page];		
 		assert(Page, (page, PAGES));
 
 		return (
@@ -102,8 +110,4 @@ class MainDiv extends Component {
 	}
 }
 
-// /* connect() with no second argument (normally mapDispatchToProps)
-//  * makes dispatch itself available as a prop of MainDiv
-//  */
-// export default connect()(MainDiv);
 export default MainDiv;

@@ -6,7 +6,7 @@ module.exports = {
   output: { path: __dirname, filename: './web/build/js/bundle.js' },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx'],
   },
   module: {
     loaders: [

@@ -230,7 +230,7 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	// text based
 	const onChange = e => {
 		DataStore.setValue(proppath, e.target.value);
-		if (saveFn) saveFn({path:path});		
+		if (saveFn) saveFn({path:path});
 	};
 	if (type==='textarea') {
 		return <textarea className="form-control" name={prop} onChange={onChange} {...otherStuff} value={value} />;
@@ -245,7 +245,7 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	if (type==='url') {
 		return (<div>
 			<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
-			<div className='pull-right'><Misc.SiteThumbnail url={value} /></div>
+			<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
 			<div className='clearfix' />
 		</div>);
 	}
@@ -280,9 +280,9 @@ const oh = (n) => n<10? '0'+n : n;
 
 Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year number");
 
-Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
+// Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
-Misc.ImgThumbnail = ({url}) => url? <img className='logo' src={url} /> : null;
+Misc.ImgThumbnail = ({url}) => url? <img className='logo' style={{maxWidth:'100%'}} src={url} /> : null;
 
 /**
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
