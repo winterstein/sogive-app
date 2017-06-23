@@ -25,9 +25,9 @@ const addCharity = () => {
 const addProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity));
 	let item = DataStore.appstate.widget.AddProject.form;
-	let proj = Project.make(item);
-	// add to the charity
 	if (isOverall) item.name = Project.overall;
+	let proj = Project.make(item);
+	// add to the charity	
 	if ( ! charity.projects) charity.projects = [];
 	charity.projects.push(proj);
 	// clear the form

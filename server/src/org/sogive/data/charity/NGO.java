@@ -16,6 +16,14 @@ import com.winterwell.utils.web.SimpleJson;
 public class NGO extends Thing<NGO> {
 	private static final long serialVersionUID = 1L;
 
+	@Override
+	public NGO validate() {
+		super.validate();
+		// validate the projects
+		List<Project> projects = getProjects();
+		return this;
+	}
+	
 	public NGO(String ourid) {
 		put("@id", ourid);
 	}

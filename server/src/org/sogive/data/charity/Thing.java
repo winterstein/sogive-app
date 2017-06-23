@@ -45,6 +45,9 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 	public Double getDouble(String key) {
 		Object v = get(key);
 		if (v==null) return null;
+		if (v instanceof String && Utils.isBlank((String)v)) {
+			return null;
+		}
 		return MathUtils.toNum(v);
 	}
 
@@ -148,8 +151,9 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 			Constructor<X> deccons = klass.getDeclaredConstructor();
 //			Constructor<X> cons = klass.getConstructor();
 			deccons.setAccessible(true);
-			X thing = deccons .newInstance();
+			X thing = deccons.newInstance();
 			thing.putAll(map);
+			thing.validate();
 			return thing;
 		} catch(Exception ex) {
 			throw Utils.runtime(ex);

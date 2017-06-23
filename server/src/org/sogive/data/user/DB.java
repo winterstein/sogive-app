@@ -43,6 +43,9 @@ public class DB {
 									// enable keyword based sorting
 									.field("raw", "keyword"));
 			dtype.property("@id", new ESType().keyword());
+			dtype.property("projects", new ESType().object()
+					.property("year", new ESType().INTEGER())
+					);
 			pm.setMapping(dtype);
 			IESResponse r2 = pm.get();
 			r2.check();		

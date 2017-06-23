@@ -173,7 +173,8 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 			{help? <span className="help-block">{help}</span> : null}
 		</div>);
 	}
-	let {prop, path, item, type, bg, dflt, saveFn, ...otherStuff} = stuff;
+	let {prop, path, item, type, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
+	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
 	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
@@ -206,7 +207,7 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 		let path2 = path.concat([prop, 'value']);
 		let path100 = path.concat([prop, 'value100']);
 		const onChange = e => {
-			let newVal = e.target.value;
+			let newVal = parseFloat(e.target.value);
 			DataStore.setValue(path2, newVal);
 			DataStore.setValue(path100, newVal*100);
 			if (saveFn) saveFn({path:path});
@@ -229,7 +230,8 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	}
 	// text based
 	const onChange = e => {
-		DataStore.setValue(proppath, e.target.value);
+		let v = modelValueFromInput(e.target.value, type);
+		DataStore.setValue(proppath, v);
 		if (saveFn) saveFn({path:path});
 	};
 	if (type==='textarea') {
@@ -276,9 +278,24 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 };
 
-const oh = (n) => n<10? '0'+n : n;
-
 Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year number");
+
+/**
+ * Convert inputs (probably text) into the model's format (e.g. numerical)
+ */
+const standardModelValueFromInput = (inputValue, type) => {
+	if ( ! inputValue) return inputValue;
+	// numerical?
+	if (type==='year') {
+		return parseInt(inputValue);
+	}
+	if (type==='number') {
+		return parseFloat(inputValue);
+	}
+	return inputValue;
+};
+
+const oh = (n) => n<10? '0'+n : n;
 
 // Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 

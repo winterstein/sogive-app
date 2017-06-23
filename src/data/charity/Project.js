@@ -26,6 +26,8 @@ Project.make = function(base) {
 	};
 	proj['@type'] = Project.type;
 	proj = _.extend(proj, base);
+	// ensure year is the right type
+	proj.year = parseInt(proj.year);
 	return proj;
 };
 

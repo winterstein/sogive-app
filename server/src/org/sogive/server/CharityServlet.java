@@ -142,25 +142,27 @@ public class CharityServlet {
 	private NGO doSaveEdit() {
 //		String pb = state.getPostBody();
 		XId user = state.getUserId();
-		Map item = (Map) state.get(ITEM);
+		Map item = (Map) state.get(ITEM);		
 		String version = state.get("version");
 		boolean isDraft = "draft".equals(version) || version==null;
 		assert isDraft : version;
 		item.put("modified", isDraft);
 		Log.w("TODO", "save edit "+item+" ");
-		// load from ES, merge, save		
-		String id = (String) item.get(Thing.ID);
+		// turn it into a charity (runs some type correction)
+		NGO mod = Thing.getThing(item, NGO.class);		
+		// save update		
+		String id = (String) mod.getId();
 		assert id != null && ! id.equals("new");		
 		String idx = isDraft? config.charityDraftIndex : config.charityIndex;		
 		UpdateRequestBuilder up = client.prepareUpdate(idx, config.charityType, id);
 //		item = new ArrayMap("name", "foo"); // FIXME
 		// This should merge against what's in the DB
-		up.setDoc(item);
+		up.setDoc(mod);
 		up.setDocAsUpsert(true);
 		// NB: this doesn't return the merged item :(
 		IESResponse resp = up.get().check();
 //		Map<String, Object> item2 = resp.getParsedJson();
-		NGO mod = Thing.getThing(item, NGO.class);
+		
 		return mod;
 	}
 

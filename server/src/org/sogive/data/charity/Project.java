@@ -22,6 +22,13 @@ import com.winterwell.utils.log.Log;
  */
 public class Project extends Thing<Project> {
 
+	@Override
+	public Project validate() {
+		super.validate();
+		// this will remove any blanks
+		List<Output> outputs = getOutputs();
+		return this;
+	}
 	
 	@Override
 	public String toString() {	
@@ -69,12 +76,17 @@ public class Project extends Thing<Project> {
 	}
 	
 	public List<Output> getOutputs() {
-		List outputs = getThings(list(get("outputs")), Output.class);
+		List<Output> outputs = getThings(list(get("outputs")), Output.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("outputs", outputs);
 		}
-		return outputs;
+		// filter if no number & name
+		List<Output> outputs2 = Containers.filter(outputs, output -> Utils.or(output.getName(), output.getNumber(), output.getAmount()) != null);
+		if (outputs2.size() != outputs.size()) {
+			put("outputs", outputs2);
+		}
+		return outputs2;
 	}
 
 	

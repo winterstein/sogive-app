@@ -9,6 +9,12 @@ public class Output extends Thing<Output> {
 
 	private static final long serialVersionUID = 1L;
 	
+	@Override
+	public Output validate() {
+		super.validate();
+		return this;
+	}
+	
 	public static boolean match(Output a, Output b) {
 		if (a==b) return true;
 		if (a.getName()!=null && b.getName()!=null) {
@@ -70,6 +76,14 @@ public class Output extends Thing<Output> {
 	
 	public Double getNumber() {
 		return getDouble("number");
+	}
+	
+	/**
+	 * amount is for non-numerical descriptions of how much was output 
+	 * @return
+	 */
+	public String getAmount() {
+		return StrUtils.str(get("amount"));
 	}
 
 	public void setName(String name) {
