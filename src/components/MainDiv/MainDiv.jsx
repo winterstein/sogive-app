@@ -48,7 +48,7 @@ class MainDiv extends Component {
 
 	componentWillMount() {
 		// redraw on change
-		// _.debounce( this debounce made things worse ?!
+		// _.debounce( this debounce made things worse ?! Also: debounce state updates cause horrible bugs with text inputs
 		const updateReact = (mystate) => this.setState({}); //, 1000);
 		DataStore.addListener(updateReact);
 

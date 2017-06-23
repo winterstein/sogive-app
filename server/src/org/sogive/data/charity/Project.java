@@ -106,7 +106,7 @@ public class Project extends Thing<Project> {
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
 		MonetaryAmount totalCosts = Containers.first(inputs, ma -> "annualCosts".equals(ma.getName()));
-		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
+//		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
 		MonetaryAmount tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
 		MonetaryAmount incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
 		
@@ -134,9 +134,10 @@ public class Project extends Thing<Project> {
 		// -- which would be odd. ^Dan
 		// TODO make this a user-configurable setting.
 		// TODO test what other people think.
-		if (fundraisingCosts != null) {
-			cost = cost.minus(fundraisingCosts);
-		}
+//		if (fundraisingCosts != null) {
+//			cost = cost.minus(fundraisingCosts);
+//		}
+		
 //		assert cost.getValue() > 0 : cost+" "+this;
 		if (tradingCosts != null) {
 			cost = cost.minus(tradingCosts);
