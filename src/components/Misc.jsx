@@ -159,7 +159,7 @@ const trPlural = (num, text) => {
  * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
  * @param path {String[]} The DataStore path to item, e.g. [data, Charity, id]
- * @param item The item being edited 
+ * @param item The item being edited. Can be null, and it will be fetched by path.
  * @param prop The field being edited 
  * dflt {?Object} default value
  */
@@ -203,7 +203,10 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 		// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
 		let v = '';
 		if (value) v = value.value;
-		if (v===undefined && value.value100) v = value.value100/100;
+		if (v===undefined || v===null) {
+			if (value.value100) v = value.value100/100;
+			else v = '';
+		}
 		let path2 = path.concat([prop, 'value']);
 		let path100 = path.concat([prop, 'value100']);
 		const onChange = e => {
@@ -223,6 +226,7 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 		} else {
 			currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
 		}
+		assert(v === 0 || v || v==='', [v, value]);
 		return (<InputGroup>
 					{currency}
 					<FormControl name={prop} value={v} onChange={onChange} {...otherStuff} />

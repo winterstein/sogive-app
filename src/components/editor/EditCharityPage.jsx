@@ -99,41 +99,7 @@ class EditCharityPage extends React.Component {
 				</Panel>
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
-						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
-						<EditField item={charity} type='text' field='displayName' label='Display name'
-							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
-						
-						<div className='well'>
-							<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-							<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
-							<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
-							<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' />
-							<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' />
-							<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' />
-						</div>
-
-						<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
-						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
-
-						<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
-						<EditField item={charity} type='text' field='whoTags' label='Who tags' 
-							help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
-						<EditField item={charity} type='text' field='methodTags' label='How (method) tags' 
-							help='How does the charity help? E.g. "training", "medical-supplies", "grants". Please check the common tags list and use those where possible.' />
-						<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
-							help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
-
-						<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
-						One way to get this is to use Google Image search, then visit image, and copy the url. 
-						Or find the desired logo on the internet (e.g. from the charitys website). Then right click on the logo and click on "inspect element". 
-						Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
-						Copy and paste this URL into this field. 
-						Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
-						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
-						<EditField item={charity} type='img' field='images' label='Photo' />
-						<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
-						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+						<ProfileEditor charity={charity} />
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
 						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
@@ -155,6 +121,49 @@ class EditCharityPage extends React.Component {
 		);
 	}
 } // ./EditCharityPage
+
+
+const ProfileEditor = ({charity}) => {
+	return (<div>
+		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
+		<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
+		<EditField item={charity} type='text' field='displayName' label='Display name'
+			help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
+		
+		<div className='well'>
+			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
+			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
+			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
+			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' />
+			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' />
+			<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' />
+		</div>
+
+		<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
+		<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
+
+		<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
+		<EditField item={charity} type='text' field='whoTags' label='Who tags' 
+			help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
+		<EditField item={charity} type='text' field='methodTags' label='How (method) tags' 
+			help='How does the charity help? E.g. "training", "medical-supplies", "grants". Please check the common tags list and use those where possible.' />
+		<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
+			help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
+
+		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		One way to get this is to use Google Image search, then visit image, and copy the url. 
+		Or find the desired logo on the internet (e.g. from the charitys website). Then right click on the logo and click on "inspect element". 
+		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
+		Copy and paste this URL into this field. 
+		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
+		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
+		<EditField item={charity} type='img' field='images' label='Photo' />
+		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
+		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+	</div>);
+}; // ./ProfileEditor
+
+
 
 const ProjectsEditor = ({charity, projects, isOverall}) => {
 	assert(NGO.isa(charity));
@@ -205,7 +214,7 @@ const RemoveProject = ({charity, project}) => {
 	assert(NGO.isa(charity));
 	return (<button className='btn btn-default btn-sm pull-right' 
 				title='Delete this project!'
-				onClick={ (e) => {e.preventDefault(); removeProject({charity, project});} } 
+				onClick={ (e) => { e.preventDefault(); removeProject({charity, project}); } } 
 			>
 				<Glyphicon glyph='trash' />
 			</button>);
@@ -249,34 +258,44 @@ const ProjectEditor = ({charity, project}) => {
 			help='Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at' />
 		<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' 
 			help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
-		<Misc.Col2>
-			<ProjectInputs charity={charity} project={project} />
-			<ProjectOutputs charity={charity} project={project} />
-		</Misc.Col2>
+		
+		<ProjectInputs charity={charity} project={project} />
+		<ProjectOutputs charity={charity} project={project} />		
 		<ProjectImpacts charity={charity} project={project} />
 	</div>);
 };
 
+/**
+ * Project inputs
+ */
 const ProjectInputs = ({charity, project}) => {
+	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
-	let rinputs = project.inputs.map((input, i) => <ProjectInputEditor key={project.name+'-'+i} charity={charity} project={project} input={input} />);
+	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || {name: 'annualCosts'};	
+	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || {name: 'projectCosts'};
+	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || {name: 'tradingCosts'};
+	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || {name: "incomeFromBeneficiaries"};
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
 			<tbody>			
-				{rinputs}
+				{ ! isOverall? <ProjectInputEditor charity={charity} project={project} input={projectCosts} /> : null}
+				<ProjectInputEditor charity={charity} project={project} input={annualCosts} />
+				<ProjectInputEditor charity={charity} project={project} input={tradingCosts} />
+				<ProjectInputEditor charity={charity} project={project} input={incomeFromBeneficiaries} />
 			</tbody>
 		</table>
 		<MetaEditor item={project} field='inputs_meta' itemPath={projectPath} help='Financial data' />
 	</div>);
 };
 
+
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
+	let projectPath = ['draft', C.TYPES.Charity, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (<div className='well'>
@@ -342,21 +361,40 @@ const STD_INPUTS = {
 	incomeFromBeneficiaries: "Income from Beneficiaries"
 };
 
+/**
+ * Has two modes:
+ * In overall, inputs are always manual entry.
+ * Within a project, several inputs are auto-calculated by default.
+ */
 const ProjectInputEditor = ({charity, project, input}) => {	
+	const isOverall = project.name === Project.overall;
+	// for projects, auto-calc costs based on the % that the project makes up of the overall
+	let widgetPath = ['widget', 'ProjectInputEditor', project.name, input.name];
+	let manualEntryPath = ['widget', 'ProjectInputEditor', project.name, input.name, 'manualEntry'];
+	let manualEntry = isOverall || input.name === 'projectCosts' || DataStore.getValue(manualEntryPath);
+	let readonly = ! manualEntry;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let inputsPath = ['draft',C.TYPES.Charity,cid,'projects', pid, 'inputs'];
 	assert(DataStore.getValue(inputsPath) === project.inputs);
+	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
+	if (ii === -1) {
+		project.inputs.push(input);
+		ii = project.inputs.indexOf(input);
+	}
 	assert(ii !== -1);
 	assert(pid !== -1);
 	let saveDraftFnWrap = (context) => {
 		context.parentItem = charity;
 		return saveDraftFn(context);
-	};	
+	};
 	return (<tr>
 		<td>{STD_INPUTS[input.name] || input.name}</td>
-		<td><Misc.PropControl type='MonetaryAmount' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
+			<Misc.PropControl type='MonetaryAmount' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
+		</td>
 	</tr>);
 };
 
