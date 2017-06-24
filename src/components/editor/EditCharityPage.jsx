@@ -261,8 +261,8 @@ const ProjectEditor = ({charity, project}) => {
 		
 		<ProjectInputs charity={charity} project={project} />
 		<ProjectOutputs charity={charity} project={project} />		
-		<ProjectImpacts charity={charity} project={project} />
 	</div>);
+			// <ProjectImpacts charity={charity} project={project} />
 };
 
 /**
@@ -319,6 +319,15 @@ const ProjectOutputs = ({charity, project}) => {
 							{project.name==='overall'? '' : "Be careful to ensure that the amount shown is relevant to this project."}
 						</div>
 					</th>
+					<th>
+						Cost per beneficiary
+					</th>
+					<th>
+						Description 
+						<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
+						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
+						</div>
+					</th>
 				</tr>
 				{rinputs}
 				<tr><td colSpan={2}>
@@ -330,29 +339,29 @@ const ProjectOutputs = ({charity, project}) => {
 	</div>);
 };
 
-const ProjectImpacts = ({charity, project}) => {
-	let cid = NGO.id(charity);
-	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
-	let rinputs = project.impacts && project.impacts.map(input => 
-		<ProjectImpactEditor key={project.name+'-'+input.name} charity={charity} project={project} impact={input} />);
-	return (<div className='well'>
-		<h5>Impacts</h5>
-		<table className='table'>
-			<tbody>			
-				<tr><th>&nbsp;</th><th>Unit cost</th>
-				<th>
-					Description 
-					<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
-						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
-					</div>
-				</th>
-				</tr>
-				{rinputs}
-			</tbody>
-		</table>
-	</div>);
-};
+// const ProjectImpacts = ({charity, project}) => {
+// 	let cid = NGO.id(charity);
+// 	let pid = charity.projects.indexOf(project);
+// 	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
+// 	let rinputs = project.impacts && project.impacts.map(input => 
+// 		<ProjectImpactEditor key={project.name+'-'+input.name} charity={charity} project={project} impact={input} />);
+// 	return (<div className='well'>
+// 		<h5>Impacts</h5>
+// 		<table className='table'>
+// 			<tbody>			
+// 				<tr><th>&nbsp;</th><th>Unit cost</th>
+// 				<th>
+// 					Description 
+// 					<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
+// 						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
+// 					</div>
+// 				</th>
+// 				</tr>
+// 				{rinputs}
+// 			</tbody>
+// 		</table>
+// 	</div>);
+// };
 
 const STD_INPUTS = {
 	annualCosts: "Annual costs",
@@ -415,39 +424,40 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='description' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };
 
-
-const ProjectImpactEditor = ({charity, project, impact}) => {	
-	assert(charity);
-	let ios = 'impacts';
-	let cid = NGO.id(charity);
-	let pid = charity.projects.indexOf(project);
-	let ii = project[ios].indexOf(impact);
-	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, ios, ii];
-	assert(ii !== -1);
-	assert(pid !== -1);
-	assert(DataStore.getValue(inputPath) === impact);
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};	
-	let price = 1; //impact.price
-	let costPerBeneficiary = 1 / impact.number;
-	return (<tr>
-		<td>
-			{impact.name}
-		</td>
-		<td>
-			<Misc.Money amount={costPerBeneficiary} />
-			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
-		</td>
-		<td>
-			<Misc.PropControl prop='description' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
-		</td>
-	</tr>);
-};
+// const ProjectImpactEditor = ({charity, project, impact}) => {	
+// 	assert(charity);
+// 	let ios = 'impacts';
+// 	let cid = NGO.id(charity);
+// 	let pid = charity.projects.indexOf(project);
+// 	let ii = project[ios].indexOf(impact);
+// 	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, ios, ii];
+// 	assert(ii !== -1);
+// 	assert(pid !== -1);
+// 	assert(DataStore.getValue(inputPath) === impact);
+// 	let saveDraftFnWrap = (context) => {
+// 		context.parentItem = charity;
+// 		return saveDraftFn(context);
+// 	};	
+// 	let price = 1; //impact.price
+// 	let costPerBeneficiary = 1 / impact.number;
+// 	return (<tr>
+// 		<td>
+// 			{impact.name}
+// 		</td>
+// 		<td>
+// 			<Misc.Money amount={costPerBeneficiary} />
+// 			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
+// 		</td>
+// 		<td>
+// 			<Misc.PropControl prop='description' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
+// 		</td>
+// 	</tr>);
+// };
 
 
 const publishDraftFn = _.throttle((e, charity) => {
