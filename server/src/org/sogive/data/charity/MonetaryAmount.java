@@ -1,5 +1,7 @@
 package org.sogive.data.charity;
 
+import java.util.HashMap;
+
 import org.apache.commons.lang3.Validate;
 
 import com.winterwell.utils.MathUtils;
@@ -35,7 +37,13 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	
 	public long getValue100() {
 		validate();
-		return ((Number) get("value100")).longValue();
+		Object v100 = get("value100");
+		if (v100 instanceof Number) {
+			return ((Number) v100).longValue();
+		}
+		// default to zero
+		assert getValue()==0 : new HashMap(this);
+		return 0;
 	}
 
 

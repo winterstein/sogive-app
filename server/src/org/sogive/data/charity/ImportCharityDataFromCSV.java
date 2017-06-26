@@ -222,8 +222,11 @@ public class ImportCharityDataFromCSV {
 //			48	External assessments	Links to any external assessments	
 //			49	Assessment		C
 			
-//			String rep = get(row, col("representative")).toLowerCase();
-//			ngo.put("externalAssessments", externalAssessments);
+			String externalAssessments = get(row, col("external assessment"));
+			if ( ! Utils.isBlank(externalAssessments)) ngo.put("externalAssessments", externalAssessments);
+
+			String comms = get(row, col("communications with charity"));
+			if ( ! Utils.isBlank(comms)) ngo.put("communicationsWithCharity", comms);
 			
 			// Should projects be separate documents??
 //			3	Analyst	Add your name if you've contributed to this data collection!	Sanjay
