@@ -101,6 +101,7 @@ class Store {
 			}
 			tip = newTip;
 		}
+		// tell the listeners
 		this.update();
 	}
 

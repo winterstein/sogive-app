@@ -134,6 +134,8 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} type='img' field='images' label='Photo' />
 						<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+
+						<EditField userFilter='goodloop' item={charity} type='text' field='externalAssessments' label='External assessments' />
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
 						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 

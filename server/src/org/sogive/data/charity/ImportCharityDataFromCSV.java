@@ -221,7 +221,10 @@ public class ImportCharityDataFromCSV {
 //			47	Location of intervention	what part of the world the charity interventions are	
 //			48	External assessments	Links to any external assessments	
 //			49	Assessment		C
-						
+			
+//			String rep = get(row, col("representative")).toLowerCase();
+//			ngo.put("externalAssessments", externalAssessments);
+			
 			// Should projects be separate documents??
 //			3	Analyst	Add your name if you've contributed to this data collection!	Sanjay
 //			4	Project	This is for when a charity has multiple projects and we've split the analysis up. The Overall category is for the aggregate.	Overall
