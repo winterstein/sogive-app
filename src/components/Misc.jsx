@@ -234,8 +234,8 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	}
 	// text based
 	const onChange = e => {
-		let v = modelValueFromInput(e.target.value, type);
-		DataStore.setValue(proppath, v);
+		let mv = modelValueFromInput(e.target.value, type);
+		DataStore.setValue(proppath, mv);
 		if (saveFn) saveFn({path:path});
 	};
 	if (type==='textarea') {

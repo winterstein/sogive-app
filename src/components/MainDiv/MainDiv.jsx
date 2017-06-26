@@ -38,7 +38,7 @@ const DEFAULT_PAGE = 'search';
 
 
 /**
-		Top-level: SoGive tabs
+		Top-level: tabs
 */
 class MainDiv extends Component {
 	constructor(props) {
