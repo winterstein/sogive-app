@@ -162,10 +162,10 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 		
-		<EditField userFilter='goodloop' item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
+		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
 				help='Keeping a summary of our efforts to get information from the charity, and their responses.' />
 
-		<EditField userFilter='goodloop' item={charity} type='text' field='externalAssessments' label='External assessments' />		
+		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' />		
 	</div>);
 }; // ./ProfileEditor
 
