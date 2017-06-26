@@ -99,47 +99,7 @@ class EditCharityPage extends React.Component {
 				</Panel>
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
-<<<<<<< HEAD
-						<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-						<EditField item={charity} type='text' field='name' label='Official name' help='The official name, usually as registered with the Charity Commission.' />
-						<EditField item={charity} type='text' field='displayName' label='Display name'
-							help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
-						
-						<div className='well'>
-							<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-							<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
-							<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
-							<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' />
-							<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' />
-							<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' />
-						</div>
-
-						<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
-						<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
-
-						<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
-						<EditField item={charity} type='text' field='whoTags' label='Who tags' 
-							help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
-						<EditField item={charity} type='text' field='methodTags' label='How (method) tags' 
-							help='How does the charity help? E.g. "training", "medical-supplies", "grants". Please check the common tags list and use those where possible.' />
-						<EditField item={charity} type='text' field='goalTags' label='Why (goal/area) tags' 
-							help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
-
-						<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
-						One way to get this is to use Google Image search, then visit image, and copy the url. 
-						Or find the desired logo on the internet (e.g. from the charitys website). Then right click on the logo and click on "inspect element". 
-						Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
-						Copy and paste this URL into this field. 
-						Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
-						<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
-						<EditField item={charity} type='img' field='images' label='Photo' />
-						<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
-						<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
-
-						<EditField userFilter='goodloop' item={charity} type='text' field='externalAssessments' label='External assessments' />
-=======
 						<ProfileEditor charity={charity} />
->>>>>>> dd0d54bf96759d906e763d17e89cd64cba7ea8e2
 					</Panel>
 					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
 						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
@@ -161,6 +121,7 @@ class EditCharityPage extends React.Component {
 		);
 	}
 } // ./EditCharityPage
+
 
 
 const ProfileEditor = ({charity}) => {
@@ -200,6 +161,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='img' field='images' label='Photo' />
 		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+		<EditField userFilter='goodloop' item={charity} type='text' field='externalAssessments' label='External assessments' />		
 	</div>);
 }; // ./ProfileEditor
 
