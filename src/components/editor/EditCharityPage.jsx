@@ -159,6 +159,7 @@ const ProfileEditor = ({charity}) => {
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 		<EditField item={charity} type='img' field='images' label='Photo' />
+		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />
 		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 		
@@ -251,6 +252,7 @@ const ProjectEditor = ({charity, project}) => {
 	return (<div>
 		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' /> }
 		{isOverall? null : <EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' /> }
+		{isOverall? null : <EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' /> }
 		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' /> }
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
@@ -327,6 +329,9 @@ const ProjectOutputs = ({charity, project}) => {
 					</th>
 					<th>
 						Cost per beneficiary
+						<div className='help-block'>
+							Usually auto-calculated based on the costs and the amount. An override value can be put in here.
+						</div>
 					</th>
 					<th>
 						Description 

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // FormControl
-import {Checkbox,Textarea, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+import {Textarea, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 import DataStore from '../plumbing/DataStore';
 
 import {assert, assMatch} from 'sjtest';
@@ -84,15 +84,6 @@ Misc.Icon = ({fa, size, ...other}) => {
 	return <i className={'fa fa-'+fa + (size? ' fa-'+size : '')} aria-hidden="true" {...other}></i>;
 };
 
-// deprecated 
-Misc.Checkbox = ({on, label, onChange}) => (
-	<div className="checkbox">
-		<label>
-			<input onChange={onChange} type="checkbox" checked={on || false} /> {label}
-		</label>
-	</div>
-);
-
 
 Misc.ImpactDesc = ({unitImpact, amount}) => {
 	if (unitImpact && unitImpact.number && unitImpact.price) {
@@ -163,17 +154,18 @@ const trPlural = (num, text) => {
  * @param prop The field being edited 
  * dflt {?Object} default value
  */
-Misc.PropControl = ({label, help, ...stuff}) => {
+Misc.PropControl = ({type, label, help, ...stuff}) => {
 	// label / help? show it and recurse
-	if (label || help) {
+	// NB: Checkbox has a different html layout :( -- handled below
+	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
 		// Minor TODO help block id and aria-described-by property in the input
 		return (<div className="form-group">
 			{label? <label>{label}</label> : null}
-			<Misc.PropControl {...stuff} />
+			<Misc.PropControl type={type} {...stuff} />
 			{help? <span className="help-block">{help}</span> : null}
 		</div>);
 	}
-	let {prop, path, item, type, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
+	let {prop, path, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
@@ -186,17 +178,22 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	}
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.concat(prop);
-	// Checkbox?
+	if (value===undefined) value = '';
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			DataStore.setValue(proppath, e.target.checked);
 			if (saveFn) saveFn({path:path});		
 		};
-		if (value===undefined) value = false;
-		return (<Checkbox checked={value} onChange={onChange} {...otherStuff} />);
-	}
-	if (value===undefined) value = '';
+		// make value boolean
+		let on = value? true : false;
+		return (<div className="checkbox">
+			<label>
+				<input onChange={onChange} type="checkbox" checked={on} {...otherStuff} /> {label}
+			</label>
+			{help? <span className="help-block">{help}</span> : null}
+		</div>);
+	} // ./checkbox
 	// £s
 	if (type==='MonetaryAmount') {
 		// special case, as this is an object.
@@ -320,6 +317,7 @@ Misc.ImgThumbnail = ({url}) => url? <img className='logo' style={{maxWidth:'100%
 const FormControl = (props) => {
 	return <input className='form-control' {...props} />;
 };
+
 
 export default Misc;
 // // TODO rejig for export {
