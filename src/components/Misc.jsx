@@ -258,11 +258,12 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 	// date
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
-	if (type==='date') {
-		// parsing incomplete dates causes NaNs
-		// let date = new Date(value);
-		// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
-		// value = nvalue;
+	if (type==='date') {		
+		// Full ISO 8601? e.g. from a backend Date. Then chop the time part e.g. "2017-06-26T15:55:43.284Z" -> "2017-06-26"
+		if (typeof(value) === 'string' && value.match(/\d{4}-\d\d-\d\dT\d{2}:\d{2}.+/)) {
+			value = value.substr(0, 10);
+		}
+		// NB: parsing incomplete dates causes NaNs
 		let datePreview = value? 'not a valid date' : null;
 		try {
 			let date = new Date(value);
@@ -271,6 +272,8 @@ Misc.PropControl = ({label, help, ...stuff}) => {
 			// bad date
 		}
 		// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
+		// Encourage ISO8601 format
+		if ( ! otherStuff.placeholder) otherStuff.placeholder = 'yyyy-mm-dd, e.g. today is '+isoDate(new Date());
 		return (<div>
 			<FormControl type='text' name={prop} value={value} onChange={onChange} {...otherStuff} />
 			<div className='pull-right'><i>{datePreview}</i></div>
@@ -300,6 +303,11 @@ const standardModelValueFromInput = (inputValue, type) => {
 };
 
 const oh = (n) => n<10? '0'+n : n;
+/**
+ * @param d {Date}
+ * @returns {String}
+ */
+const isoDate = (d) => d.toISOString().replace(/T.+/, '');
 
 // Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
