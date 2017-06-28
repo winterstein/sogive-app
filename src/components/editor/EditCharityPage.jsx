@@ -6,6 +6,7 @@ import {yessy} from 'wwutils';
 import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Glyphicon } from 'react-bootstrap';
 import Login from 'you-again';
 import HashMap from 'hashmap';
+import Enum from 'easy-enums';
 
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../plumbing/DataStore';
@@ -418,6 +419,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	</tr>);
 };
 
+const CONFIDENCE_VALUES = new Enum("high medium low");
 
 const ProjectOutputEditor = ({charity, project, output}) => {	
 	assert(charity);
@@ -436,39 +438,10 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES} path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='description' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };
-
-// const ProjectImpactEditor = ({charity, project, impact}) => {	
-// 	assert(charity);
-// 	let ios = 'impacts';
-// 	let cid = NGO.id(charity);
-// 	let pid = charity.projects.indexOf(project);
-// 	let ii = project[ios].indexOf(impact);
-// 	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, ios, ii];
-// 	assert(ii !== -1);
-// 	assert(pid !== -1);
-// 	assert(DataStore.getValue(inputPath) === impact);
-// 	let saveDraftFnWrap = (context) => {
-// 		context.parentItem = charity;
-// 		return saveDraftFn(context);
-// 	};	
-// 	let price = 1; //impact.price
-// 	let costPerBeneficiary = 1 / impact.number;
-// 	return (<tr>
-// 		<td>
-// 			{impact.name}
-// 		</td>
-// 		<td>
-// 			<Misc.Money amount={costPerBeneficiary} />
-// 			<Misc.PropControl prop='costPerBeneficiary' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
-// 		</td>
-// 		<td>
-// 			<Misc.PropControl prop='description' path={inputPath} item={impact} saveFn={saveDraftFnWrap} />
-// 		</td>
-// 	</tr>);
-// };
 
 
 const publishDraftFn = _.throttle((e, charity) => {

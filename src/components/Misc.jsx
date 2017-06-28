@@ -277,12 +277,20 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 			<div className='clearfix' />
 		</div>);
 	}
+	if (type==='select') {
+		let options = otherStuff.options;
+		delete otherStuff.options;
+		let domOptions = options.map(option => <option value={option} selected={option == value}>{option}</option>);
+		return (<select className='form-control' name={prop} onChange={onChange} {...otherStuff} >
+				{domOptions}
+			</select>);
+	}
 	// normal
 	// NB: type=color should produce a colour picker :)
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 };
 
-Misc.ControlTypes = new Enum("img textarea text password email url color MonetaryAmount checkbox location date year number");
+Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox location date year number");
 
 /**
  * Convert inputs (probably text) into the model's format (e.g. numerical)
