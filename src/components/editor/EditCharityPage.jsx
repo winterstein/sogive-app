@@ -160,7 +160,7 @@ const ProfileEditor = ({charity}) => {
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
 		<EditField item={charity} type='img' field='images' label='Photo' />
-		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />
+		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
 		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 		
