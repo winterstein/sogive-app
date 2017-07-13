@@ -142,8 +142,9 @@ const ProfileEditor = ({charity}) => {
 		</div>
 
 		<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
-		<EditField item={charity} type='textarea' field='description' help='About one sentence long, or maybe two fairly short sentences. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
-
+		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='One short sentence, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
+		<EditField item={charity} type='textarea' label='Description' field='description' 
+			help='A couple of sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
 		<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
 		<EditField item={charity} type='text' field='whoTags' label='Who tags' 
 			help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
@@ -153,6 +154,7 @@ const ProfileEditor = ({charity}) => {
 			help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
 
 		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url. 
 		Or find the desired logo on the internet (e.g. from the charitys website). Then right click on the logo and click on "inspect element". 
 		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
