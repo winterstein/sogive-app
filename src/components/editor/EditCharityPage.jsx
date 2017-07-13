@@ -144,7 +144,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='url' field='url' label='Website' help='Ensure this includes the http:// bit at the start.' />											
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='One short sentence, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
-			help='A couple of sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
+			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
 		<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
 		<EditField item={charity} type='text' field='whoTags' label='Who tags' 
 			help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
