@@ -337,6 +337,18 @@ const ProjectOutputs = ({charity, project}) => {
 						</div>
 					</th>
 					<th>
+						Confidence
+						<div className='help-block'>
+						How confident are we in this cost-per-beneficiary estimate?
+
+						@Sanjay - What would be a good example of high/medium/low??
+
+							high: ??
+							medium: ??
+							low: ??
+						</div>
+					</th>
+					<th>
 						Description 
 						<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
 						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
@@ -436,11 +448,16 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		context.parentItem = charity;
 		return saveDraftFn(context);
 	};	
+	let cpb = output.costPerBeneficiary;
+	let cpbraw = output.costPerBeneficiaryRaw;
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES} path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			{cpb && cpbraw && cpb !== cpbraw? <small>Raw calculation: {cpbraw}</small> : ''}
+			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+		</td>
+		<td><Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='description' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };

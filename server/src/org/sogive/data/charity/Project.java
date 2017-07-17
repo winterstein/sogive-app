@@ -100,7 +100,14 @@ public class Project extends Thing<Project> {
 		List<Output> os = addOrMerge("outputs", ac, Output::match);
 	}
 	
-	public List<Output> getImpact(List<Output> outputs, MonetaryAmount amount) {
+	
+	/**
+	 * This calculates the impact info -- which is then stored on the Output object!
+	 * @param outputs
+	 * @param amount
+	 * @return
+	 */
+	public Object getImpact(List<Output> outputs, MonetaryAmount amount) {
 //		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
@@ -145,7 +152,7 @@ public class Project extends Thing<Project> {
 //		assert cost.getValue() > 0 : cost+" "+this;
 		
 		// What would £1 achieve?
-		List impacts = new ArrayList();
+//		List impacts = new ArrayList();
 		double unitFraction = 1.0 /  cost.getValue();
 		if (unitFraction <= 0) {
 			Log.w("data", "Negative costs?! "+cost+" "+this);
@@ -163,12 +170,12 @@ public class Project extends Thing<Project> {
 			} else {
 				// normal case
 				unitImpact = output.scale(unitFraction);
-			}			
+			}
 			unitImpact.put("price", MonetaryAmount.pound(1));
-			impacts.add(unitImpact);
+			output.put("unitImpact", unitImpact);
 		}
 		// done
-		return impacts;
+		return outputs;
 	}
 	
 	public boolean isReady() {

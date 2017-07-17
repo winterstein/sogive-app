@@ -321,15 +321,15 @@ public class ImportCharityDataFromCSV {
 			
 			ngo.addProject(project);
 			
-			// stash the impact
-			Project repProject = ngo.getRepProject();
-			if (repProject!=null) {
-				List<Output> repoutputs = repProject.getOutputs();
-				if (repoutputs!=null) {
-					List<Output> impacts = repProject.getImpact(repoutputs, MonetaryAmount.pound(1));
-					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
-				}
-			}
+//			// stash the impact
+//			Project repProject = ngo.getRepProject();
+//			if (repProject!=null) {
+//				List<Output> repoutputs = repProject.getOutputs();
+//				if (repoutputs!=null) {
+//					List<Output> impacts = repProject.getImpact(repoutputs, MonetaryAmount.pound(1));
+//					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
+//				}
+//			}
 			
 			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
 //			String json = gson.toJson(ngo);		
