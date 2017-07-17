@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.sogive.server.CharityServlet;
 import org.sogive.server.SoGiveServer;
@@ -142,7 +143,7 @@ public class ImportCharityDataFromCSV {
 //				String json = gson.toJson(ngo);		
 				pi.setDoc(ngo);
 				pi.setDocAsUpsert(true);
-				ListenableFuture<ESHttpResponse> f = pi.execute();
+				Future<ESHttpResponse> f = pi.execute();
 				f.get().check();				
 			}
 		}		
@@ -335,7 +336,7 @@ public class ImportCharityDataFromCSV {
 //			String json = gson.toJson(ngo);		
 			pi.setDoc(ngo);
 			pi.setDocAsUpsert(true);
-			ListenableFuture<ESHttpResponse> f = pi.execute();
+			Future<ESHttpResponse> f = pi.execute();
 			f.get().check();
 			cnt++;
 		}
