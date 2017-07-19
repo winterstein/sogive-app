@@ -198,9 +198,10 @@ public class CharityServlet {
 			List<Output> alloutputs = project.getOutputs();	
 			List<Output> outputs = alloutputs; //Thing.getLatestYear(alloutputs);
 			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
-			List<Output> impacts = project.getImpact(outputs, unitMoney);
-//			project.put("impacts", impacts);
-		}		
+			Object impacts = project.getImpact(outputs, unitMoney);
+//			project.put("impacts", impacts); -- No, impacts are store on outputs
+		}
+		// TODO store the rep project & impact for search
 	}
 
 }
