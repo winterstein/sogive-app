@@ -22,6 +22,7 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.data.XId;
+import com.winterwell.youagain.client.YouAgainClient;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.ESStorage;
@@ -115,14 +116,16 @@ public class SoGiveServer {
 		.create();
 		// config
 		ESConfig value = new ESConfig();
-		value.gson = gson;
+		value.setGson(gson);
 		Dep.set(ESConfig.class, value);
 		// client
 		Dep.setSupplier(ESHttpClient.class, true, 
 				() -> new ESHttpClient(Dep.get(ESConfig.class))
-				);
+				);		
 		// mappings
 		DB.init();
+		// login
+		Dep.set(YouAgainClient.class, new YouAgainClient("good-loop"));
 	}
 
 

@@ -40,7 +40,8 @@ import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.DoubleField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.LongField;
-import com.winterwell.youagain.client.YouAgain;
+import com.winterwell.youagain.client.YouAgainClient;
+
 
 /**
  * TODO action=donate 
@@ -63,7 +64,7 @@ public class DonationServlet {
 	}
 
 	public void run() throws Exception {
-		YouAgain.login(state);
+		Dep.get(YouAgainClient.class).login(state);
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
