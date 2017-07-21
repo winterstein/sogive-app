@@ -188,7 +188,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 			if (saveFn) saveFn({path:path});		
 		};
 		if (value===undefined) value = false;
-		return (<Checkbox checked={value} onChange={onChange} {...otherStuff} />);
+		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
 	}
 	if (value===undefined) value = '';
 	// £s
