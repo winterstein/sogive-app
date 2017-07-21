@@ -1,10 +1,14 @@
 
 import {assert, assMatch} from 'sjtest';
 import {deepCopy} from 'wwutils';
+import {isa} from '../DataClass';
 
 /** impact utils */
 const Output = {};
 export default Output;
+
+Output.isa = (ngo) => isa(ngo, 'Output');
+Output.assIsa = (ngo) => assert(Output.isa(ngo));
 
 /**
  * A scaled version 
@@ -16,4 +20,6 @@ Output.scaleByDonation = (output, donationAmount) => {
 	// TODO scaled by donationAmount
 	// TODO change units if necc
 	// TODO Java needs a mirror of this :(
+	console.error("scale!", impact, donationAmount);
+	return impact;
 };

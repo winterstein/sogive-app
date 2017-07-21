@@ -26,8 +26,7 @@ Project.make = function(base) {
 			{"@type":"MonetaryAmount","name":"tradingCosts","currency":"GBP"},
 			{"@type":"MonetaryAmount","name":"incomeFromBeneficiaries","currency":"GBP"}
 		],
-		outputs: [],
-		impacts: []
+		outputs: []
 	};
 	proj['@type'] = Project.type;
 	proj = _.extend(proj, base);

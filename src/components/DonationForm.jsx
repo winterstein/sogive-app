@@ -60,7 +60,7 @@ class DonationForm extends React.Component {
 				<div className='DonationForm'>
 					<DonationAmounts
 							options={[5, 10, 20]}
-							impacts={project.impacts}
+							outputs={project.outputs}
 							charity={charity}
 							project={project}
 							amount={donationForm.amount}
@@ -84,16 +84,7 @@ class ThankYouAndShare extends React.Component {
 		super(...params);
 		const { thanks, user, charity, donationForm, project} = this.props;
 
-		let impact;
-		/*
-		// Commented out because it's spitting out "NaN people helped"
-		if (project && project.impacts) {
-			const unitImpact = project.impacts[0];
-			const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
-			impact = printer.prettyNumber(impactPerUnitMoney * donationForm.amount, 2) + ' ' + unitImpact.name;
-		}
-		*/
-
+		// TODO -- see submit methodlet impacts = Output.getDonationImpact;
 		let shareText;
 		if (user && user.name) {
 			if (impact) {
@@ -211,8 +202,11 @@ const DonationFormButton = ({onToken, amount}) => {
 };
 
 
-const DonationAmounts = ({options, impacts, amount, handleChange}) => {
-	let unitImpact = impacts && impacts[0];
+/**
+ */
+const DonationAmounts = ({options, outputs, amount, handleChange}) => {
+	// FIXME switch to using outputs
+	let unitImpact;
 	let damounts = _.map(options, price => (
 		<span key={'donate_'+price}>
 			<DonationAmount

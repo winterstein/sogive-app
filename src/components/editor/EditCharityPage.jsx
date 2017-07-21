@@ -93,7 +93,7 @@ class EditCharityPage extends React.Component {
 			<div className='page EditCharityPage'>				
 				<Panel>
 					<h2>Editing: {charity.name}</h2>			
-					<p><a href={'/'+NGOcahrity.id} target='_new'>view profile page</a></p>
+					<p><a href={'/'+NGO.getId(cahrity.id} target='_new'>view profile page</a></p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
@@ -364,31 +364,7 @@ const ProjectOutputs = ({charity, project}) => {
 		</table>
 		<MetaEditor item={project.outputs} field='outputs_meta' itemPath={projectPath} />
 	</div>);
-};
-
-// const ProjectImpacts = ({charity, project}) => {
-// 	let cid = NGO.id(charity);
-// 	let pid = charity.projects.indexOf(project);
-// 	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
-// 	let rinputs = project.impacts && project.impacts.map(input => 
-// 		<ProjectImpactEditor key={project.name+'-'+input.name} charity={charity} project={project} impact={input} />);
-// 	return (<div className='well'>
-// 		<h5>Impacts</h5>
-// 		<table className='table'>
-// 			<tbody>			
-// 				<tr><th>&nbsp;</th><th>Unit cost</th>
-// 				<th>
-// 					Description 
-// 					<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
-// 						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
-// 					</div>
-// 				</th>
-// 				</tr>
-// 				{rinputs}
-// 			</tbody>
-// 		</table>
-// 	</div>);
-// };
+}; // ./ProjectOutputs()
 
 const STD_INPUTS = {
 	annualCosts: "Annual costs",

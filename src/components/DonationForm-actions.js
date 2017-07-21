@@ -19,14 +19,10 @@ export const donate = (dispatch, charity, donationForm, stripeResponse) => {
 
 	// Add impact to submitted data
 	const project = NGO.getProject(charity);
-	if (project && project.impacts) {
-		const unitImpact = project.impacts[0];
-		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
-
-		donationParams.impactCount = donationForm.amount * impactPerUnitMoney;
-		donationParams.impactUnit = unitImpact.name;
+	if (project && project.outputs) {		
+		let donationImpacts = project.outputs.map(output => Output.getDonationImpact(??));
+		donationParams.impacts = JSON.stringify(donationImpacts);
 	}
-
 
 	ServerIO.donate(donationParams)
 	.then(function(response) {
