@@ -311,7 +311,8 @@ public class ImportCharityDataFromCSV {
 						break;
 					}
 					Output outputi = outputs.get(i);
-					outputi.put("costPerBeneficiary", costPerBen);
+					MonetaryAmount costPerOut = MonetaryAmount.pound(costPerBen);
+					outputi.setCostPerOutput(costPerOut);
 				}				
 			}
 			

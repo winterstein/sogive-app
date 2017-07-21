@@ -107,7 +107,7 @@ public class Project extends Thing<Project> {
 	 * @param amount
 	 * @return
 	 */
-	public Object getImpact(List<Output> outputs, MonetaryAmount amount) {
+	public Object calcCostPerOutput(Output output) {
 //		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
 		List<MonetaryAmount> inputs = getInputs();
 		// only the latest year - but a Project is single year
@@ -151,31 +151,14 @@ public class Project extends Thing<Project> {
 		}
 //		assert cost.getValue() > 0 : cost+" "+this;
 		
-		// What would £1 achieve?
-//		List impacts = new ArrayList();
-		double unitFraction = 1.0 /  cost.getValue();
-		if (unitFraction <= 0) {
-			Log.w("data", "Negative costs?! "+cost+" "+this);
-			return null;
-		}
-		for(Output output : outputs) {
-			// override by adhoc formula
-			Object cpb = get("costPerBeneficiary");
-			Output unitImpact;
-			if (cpb!=null) {
-				double costPerBen = MathUtils.getNumber(cpb);
-				assert costPerBen > 0 : cpb;
-				unitImpact = output.scale(1); // i.e. copy
-				unitImpact.put("number", 1.0 / costPerBen);
-			} else {
-				// normal case
-				unitImpact = output.scale(unitFraction);
-			}
-			unitImpact.put("price", MonetaryAmount.pound(1));
-			output.put("unitImpact", unitImpact);
-		}
+		// Cost per output -- or is this calculated client side?
+//		Double num = output.getNumber();
+//		if (num != null) {
+//			double perOutput = cost.getValue() / num;
+//			output.setCostPerOutput(costPerOutput);
+//		}
 		// done
-		return outputs;
+		return output;
 	}
 	
 	public boolean isReady() {

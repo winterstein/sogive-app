@@ -22,6 +22,7 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.data.XId;
+import com.winterwell.youagain.client.YouAgainClient;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.ESStorage;
@@ -123,6 +124,9 @@ public class SoGiveServer {
 				);
 		// mappings
 		DB.init();
+		// login
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
 	}
 
 

@@ -11,6 +11,8 @@ public class SoGiveConfig {
 	public static final String donationIndex = "donation";
 	
 	public int port = 8282;
+	
+	public String youagainApp = "sogive";
 
 //	/**
 //	 * Pretend to be an ES server on this port.

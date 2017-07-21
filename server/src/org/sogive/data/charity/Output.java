@@ -90,5 +90,22 @@ public class Output extends Thing<Output> {
 		put("name", name);
 	}
 
+	/**
+	 * aka costPerBeneficiary
+	 * @param costPerBen
+	 */
+	public void setCostPerOutput(MonetaryAmount costPerBen) {
+		assert costPerBen.getValue() >= 0 : this;
+		put("costPerOutput", costPerBen);
+	}
+
+	/**
+	 * aka costPerBeneficiary
+	 */
+	public MonetaryAmount getCostPerOutput() {
+		MonetaryAmount cpb = (MonetaryAmount) get("costPerOutput");
+		return cpb;
+	}
+
 	
 }

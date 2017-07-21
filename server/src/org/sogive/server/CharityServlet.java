@@ -197,8 +197,10 @@ public class CharityServlet {
 		for (Project project : projects) {
 			List<Output> alloutputs = project.getOutputs();	
 			List<Output> outputs = alloutputs; //Thing.getLatestYear(alloutputs);
-			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
-			List<Output> impacts = project.getImpact(outputs, unitMoney);
+//			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
+			for (Output output : outputs) {
+				project.calcCostPerOutput(output); //Impact(outputs, unitMoney);	
+			}			
 //			project.put("impacts", impacts);
 		}		
 	}
