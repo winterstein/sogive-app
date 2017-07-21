@@ -93,7 +93,7 @@ class EditCharityPage extends React.Component {
 			<div className='page EditCharityPage'>				
 				<Panel>
 					<h2>Editing: {charity.name}</h2>			
-					<p><a href={'/'+NGO.getId(charity.id)} target='_new'>view profile page</a></p>
+					<p><a href={'/'+NGO.getId(charity)} target='_new'>view profile page</a></p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;

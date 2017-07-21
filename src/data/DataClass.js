@@ -3,6 +3,7 @@
 
 import _ from 'lodash';
 import {assert} from 'sjtest';
+import {endsWith} from 'wwutils';
 
 /**
  * assert the type!
@@ -27,3 +28,4 @@ const getType = function(item) {
 };
 
 export {isa, getType};
+	

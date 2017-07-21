@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // FormControl
-import {Textarea, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
-import DataStore from '../plumbing/DataStore';
+import {Textarea, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
+
+import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer.js';
 import C from '../C.js';
 import I18n from 'easyi18n';
@@ -178,22 +180,17 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	}
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.concat(prop);
-	if (value===undefined) value = '';
+	// Checkbox?
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			DataStore.setValue(proppath, e.target.checked);
 			if (saveFn) saveFn({path:path});		
 		};
-		// make value boolean
-		let on = value? true : false;
-		return (<div className="checkbox">
-			<label>
-				<input onChange={onChange} type="checkbox" checked={on} {...otherStuff} /> {label}
-			</label>
-			{help? <span className="help-block">{help}</span> : null}
-		</div>);
-	} // ./checkbox
+		if (value===undefined) value = false;
+		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
+	}
+	if (value===undefined) value = '';
 	// £s
 	if (type==='MonetaryAmount') {
 		// special case, as this is an object.
@@ -217,9 +214,11 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		let changeCurrency = otherStuff.changeCurrency || true;
 		if (changeCurrency) {
 			// TODO other currencies
-			currency = (<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(path2)} >
-          					<MenuItem key="1">{curr}</MenuItem>
-			</DropdownButton>);
+			currency = (
+				<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(path2)}>
+					<MenuItem key="1">{curr}</MenuItem>
+				</DropdownButton>
+			);
 		} else {
 			currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
 		}
@@ -234,7 +233,31 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		let mv = modelValueFromInput(e.target.value, type);
 		DataStore.setValue(proppath, mv);
 		if (saveFn) saveFn({path:path});
+		e.preventDefault();
+		e.stopPropagation();
 	};
+	if (type === 'arraytext') {
+		// Pretty hacky: Value stored as ["one", "two", "three"] but displayed as "one two three"
+		// Currently used for entering list of unit-variants for publisher
+		const arrayChange = e => {
+			const oldString = DataStore.getValue(proppath);
+			const newString = e.target.value;
+
+			// Split into space-separated tokens
+			let newValue = newString.split(' ');
+			// Remove falsy entries, if deleting (ie newString is substring of oldString) but not if adding
+			// allows us to go 'one' (['one']) -> "one " ('one', '') -> "one two" ('one', 'two')
+			if (oldString.indexOf(newString) >= 0) {
+				newValue = newValue.filter(val => val);
+			}
+			
+			DataStore.setValue(proppath, newValue);
+			if (saveFn) saveFn({path});
+			e.preventDefault();
+			e.stopPropagation();
+		};
+		return <FormControl type={type} name={prop} value={value.join(' ')} onChange={arrayChange} {...otherStuff} />;
+	}
 	if (type==='textarea') {
 		return <textarea className="form-control" name={prop} onChange={onChange} {...otherStuff} value={value} />;
 	}
@@ -255,12 +278,11 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	// date
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
-	if (type==='date') {		
-		// Full ISO 8601? e.g. from a backend Date. Then chop the time part e.g. "2017-06-26T15:55:43.284Z" -> "2017-06-26"
-		if (typeof(value) === 'string' && value.match(/\d{4}-\d\d-\d\dT\d{2}:\d{2}.+/)) {
-			value = value.substr(0, 10);
-		}
-		// NB: parsing incomplete dates causes NaNs
+	if (type==='date') {
+		// parsing incomplete dates causes NaNs
+		// let date = new Date(value);
+		// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
+		// value = nvalue;
 		let datePreview = value? 'not a valid date' : null;
 		try {
 			let date = new Date(value);
@@ -292,7 +314,9 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 };
 
-Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox location date year number");
+Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox"
+							+" location date year number arraytext");
+
 
 /**
  * Convert inputs (probably text) into the model's format (e.g. numerical)

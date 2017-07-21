@@ -29,7 +29,7 @@ NGO.getProject = (ngo) => {
 	NGO.isa(ngo);
 	let projects = NGO.getProjects2(ngo);
 	// Get most recent, if more than one
-	let repProject = repProjects.reduce((best, current) => {
+	let repProject = projects.reduce((best, current) => {
 		if ( ! current) return best;
 		if ( ! best) return current;
 		return best.year > current.year ? best : current;

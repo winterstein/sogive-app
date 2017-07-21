@@ -116,12 +116,12 @@ public class SoGiveServer {
 		.create();
 		// config
 		ESConfig value = new ESConfig();
-		value.gson = gson;
+		value.setGson(gson);
 		Dep.set(ESConfig.class, value);
 		// client
 		Dep.setSupplier(ESHttpClient.class, true, 
 				() -> new ESHttpClient(Dep.get(ESConfig.class))
-				);
+				);		
 		// mappings
 		DB.init();
 		// login
