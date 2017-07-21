@@ -423,15 +423,18 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		return saveDraftFn(context);
 	};	
 	let cpb = output.costPerBeneficiary;
-	let cpbraw = output.costPerBeneficiaryRaw;
+	let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output});
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td>
-			{cpb && cpbraw && cpb !== cpbraw? <small>Raw calculation: {cpbraw}</small> : ''}
+			<small>Raw calculation: {cpbraw}</small>
 			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} />
 		</td>
-		<td><Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
+				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+		</td>
 		<td><Misc.PropControl prop='description' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 	</tr>);
 };

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import {isa} from '../DataClass';
 import {assert} from 'sjtest';
 import Project from './Project';
+import Output from './Output';
 
 /**
  * Each Charity (NGO -- which is the thing.org type) has projects.
@@ -59,3 +60,11 @@ NGO.getProjects2 = (ngo) => {
 
 NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 
+/**
+ */
+NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
+	let outputCount = output.value;
+	if ( ! outputCount) return null;
+	let projectCost = Project.getTotalCost(project);
+	return outputCount / projectCost;
+};

@@ -33,9 +33,8 @@ class DonationForm extends React.Component {
 
 		assert(NGO.isa(charity), charity);
 
-		// FIXME props.project set but bogus (empty bar year)!!
 		let project = this.props.project || NGO.getProject(charity);
-		assert(project, charity);
+		// NB: no project = no data is possible
 
 		// donated?
 		if (donationForm.complete) {
@@ -87,6 +86,7 @@ class ThankYouAndShare extends React.Component {
 		// TODO -- see submit methodlet impacts = Output.getDonationImpact;
 		let shareText;
 		if (user && user.name) {
+			let impact = false; // TODO
 			if (impact) {
 				shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in?`;
 			} else {
@@ -175,9 +175,6 @@ class ThankYouAndShare extends React.Component {
  * one-click donate, or Stripe form?
  */
 const DonationFormButton = ({onToken, amount}) => {
-	if (false) {
-		return <button>Donate</button>;
-	}
 	let email = Login.getId('Email');
 	if (email) email = XId.id(email);
 	return (
