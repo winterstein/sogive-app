@@ -1,8 +1,10 @@
 package org.sogive.data.user;
 
+import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Output;
 
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.TUnit;
@@ -59,7 +61,8 @@ public class Donation {
 	 */
 	String date = new Time().toISOString();
 
-	private Map impact;
+	private List<Output> impacts;
+
 
 	public Donation(XId from, XId to, MonetaryAmount ourFee, MonetaryAmount otherFees, boolean giftAid,
 			MonetaryAmount total) {
@@ -91,8 +94,8 @@ public class Donation {
 		return "Donation[from=" + from + ", to=" + to + ", total=" + total + ", time=" + date + "]";
 	}
 
-	public void setImpact(Map impact) {
-		this.impact = impact;
+	public void setImpacts(List<Output> impacts) {
+		this.impacts = impacts;
 	}
 
 	public void setGiftAid(String name, String address, String postcode) {

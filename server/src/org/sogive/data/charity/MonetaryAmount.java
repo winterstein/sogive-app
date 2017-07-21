@@ -6,6 +6,7 @@ import org.apache.commons.lang3.Validate;
 
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.Time;
 
 public class MonetaryAmount extends Thing<MonetaryAmount> {
@@ -15,14 +16,24 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	}
 	
 	/**
-	 * 
+	 * Assume £s
 	 * @param value100 The pence / cents. This is to avoid rounding errors.
 	 */
 	public MonetaryAmount(long value100) {
 		// ISO 4217 £
-		put("currency", "GBP");
+		this(value100, "GBP");
+	}
+	
+
+	/**
+	 * 
+	 * @param value100 The pence / cents. This is to avoid rounding errors.
+	 */
+	public MonetaryAmount(long value100, String currency) {
+		put("currency", currency);
 		put("value", value100/100.0);
 		put("value100", value100);
+		assert ! Utils.isBlank(currency);
 	}
 
 
