@@ -47,6 +47,7 @@ import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.LoginDetails;
 import com.winterwell.web.email.SMTPClient;
 import com.winterwell.web.email.SimpleMessage;
+import com.winterwell.youagain.client.BuildYouAgainJavaClient;
 
 import jobs.BuildBob;
 import jobs.BuildFlexiGson;
@@ -90,6 +91,7 @@ public class PublishSoGiveApp extends BuildTask {
 				new BuildWeb(),
 				new BuildDataLog(), // This!
 				new BuildESJavaClient(),
+				new BuildYouAgainJavaClient(),
 				new BuildFlexiGson()				
 				);
 	}
