@@ -93,7 +93,7 @@ class EditCharityPage extends React.Component {
 			<div className='page EditCharityPage'>				
 				<Panel>
 					<h2>Editing: {charity.name}</h2>			
-					<p><a href={'/'+NGO.getId(charity)} target='_new'>view profile page</a></p>
+					<p><a href={'/'+NGO.id(charity)} target='_new'>view profile page</a></p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
@@ -123,7 +123,6 @@ class EditCharityPage extends React.Component {
 		);
 	}
 } // ./EditCharityPage
-
 
 
 const ProfileEditor = ({charity}) => {
@@ -173,7 +172,6 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' />		
 	</div>);
 }; // ./ProfileEditor
-
 
 
 const ProjectsEditor = ({charity, projects, isOverall}) => {
@@ -340,13 +338,12 @@ const ProjectOutputs = ({charity, project}) => {
 					<th>
 						Confidence
 						<div className='help-block'>
-						How confident are we in this cost-per-beneficiary estimate?
+						How confident are we in this cost-per-beneficiary estimate?   
 
-						@Sanjay - What would be a good example of high/medium/low??
-
-							high: ??
-							medium: ??
-							low: ??
+ - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear.   
+ - Medium - the default value.    
+ - Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
+ - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.   
 						</div>
 					</th>
 					<th>
@@ -410,7 +407,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	</tr>);
 };
 
-const CONFIDENCE_VALUES = new Enum("high medium low");
+const CONFIDENCE_VALUES = new Enum("high medium low very-low");
 
 const ProjectOutputEditor = ({charity, project, output}) => {	
 	assert(charity);
@@ -531,6 +528,10 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 	);
 };
 
+/**
+ * If bar is a primitive node, then foo.bar has meta info stored at foo.meta.bar
+ * 
+ */
 const MetaEditor = ({item, field, help, itemPath}) => {
 	assert(item);
 	assert(field, item);

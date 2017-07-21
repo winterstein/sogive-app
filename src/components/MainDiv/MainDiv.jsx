@@ -29,7 +29,6 @@ const PAGES = {
 	editordashboard: EditorDashboardPage,
 	account: AccountPage,
 	charity: CharityPage,
-	campaign: DonateToCampaignPage,
 	edit: EditCharityPage
 };
 

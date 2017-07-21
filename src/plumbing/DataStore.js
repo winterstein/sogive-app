@@ -162,7 +162,7 @@ class Store {
 	/**
 	* Set widget.thing.show
 	 * @param {String} thing The name of the widget.
-	 * @param {boolean} showing 
+	 * @param {Boolean} showing 
 	 */
 	setShow(thing, showing) {
 		assMatch(thing, String);

@@ -12,7 +12,6 @@
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "chart.js": "^2.6.0",
-    "easy-enums": "^1.1.5",
     "easyi18n": "^1.1.0",
     "eslint": "^3.19.0",
     "eslint-plugin-flowtype": "^2.35.0",
@@ -29,10 +28,11 @@
     "react-redux": "^5.0.5",
     "react-stripe-checkout": "^2.4.0",
     "redux": "^3.7.2",
-    "sjtest": "^0.4.4",
     "webpack": "^3.2.0",
+    "easy-enums": "^1.1.5",	
+	"sjtest": "^0.4.4",
     "wwutils": "^0.7.8",
-    "you-again": "^0.4.7"
+    "you-again": "^0.5.0"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
