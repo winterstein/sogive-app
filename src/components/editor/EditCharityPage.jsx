@@ -250,12 +250,16 @@ const AddIO = ({list, pio, ioPath}) => {
 const ProjectEditor = ({charity, project}) => {
 	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
-	const isOverall = project.name === Project.overall;
+	const isOverall = Project.isOverall(project);
 	return (<div>
-		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' /> }
-		{isOverall? null : <EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' /> }
-		{isOverall? null : <EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' /> }
-		{isOverall? null : <EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' /> }
+		{isOverall? null : 
+			<div>
+				<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
+				<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+				<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
+				<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
+			</div>
+		}
 		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
 			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
@@ -352,14 +356,16 @@ const ProjectOutputs = ({charity, project}) => {
 						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
 						</div>
 					</th>
+					<th>
+						Meta
+					</th>
 				</tr>
 				{rinputs}
 				<tr><td colSpan={2}>
 					<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
 				</td></tr>
 			</tbody>
-		</table>
-		<MetaEditor item={project.outputs} field='outputs_meta' itemPath={projectPath} />
+		</table>		
 	</div>);
 }; // ./ProjectOutputs()
 
@@ -409,6 +415,9 @@ const ProjectInputEditor = ({charity, project, input}) => {
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
 
+/**
+ * Edit output / impact
+ */
 const ProjectOutputEditor = ({charity, project, output}) => {	
 	assert(charity);
 	let cid = NGO.id(charity);
@@ -435,7 +444,11 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap} />
 		</td>
-		<td><Misc.PropControl prop='description' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='description' type='textarea' 
+							path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			<MetaEditor item={output} field='all' itemPath={inputPath} />
+		</td>
 	</tr>);
 };
 

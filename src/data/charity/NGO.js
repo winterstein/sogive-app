@@ -2,9 +2,10 @@
 
 import _ from 'lodash';
 import {isa} from '../DataClass';
-import {assert} from 'sjtest';
+import {assert, assMatch} from 'sjtest';
 import Project from './Project';
 import Output from './Output';
+import MonetaryAmount from './MonetaryAmount';
 
 /**
  * Each Charity (NGO -- which is the thing.org type) has projects.
@@ -61,10 +62,20 @@ NGO.getProjects2 = (ngo) => {
 NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 
 /**
+ * @return {MonetaryAmount}
  */
 NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	let outputCount = output.value;
 	if ( ! outputCount) return null;
 	let projectCost = Project.getTotalCost(project);
-	return outputCount / projectCost;
+	if ( ! projectCost) {
+		console.warn("No project cost?!", project);
+		return null;
+	}
+	MonetaryAmount.assIsa(projectCost);
+	assMatch(outputCount, Number);
+	let costPerOutput = MonetaryAmount.make(projectCost);
+	costPerOutput.value = projectCost.value / outputCount;
+	costPerOutput.value100 = Math.round(100 * costPerOutput.value);
+	return costPerOutput;
 };
