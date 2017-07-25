@@ -53,6 +53,7 @@ import jobs.BuildBob;
 import jobs.BuildFlexiGson;
 import jobs.BuildMaths;
 import jobs.BuildDataLog;
+import jobs.BuildDepot;
 import jobs.BuildUtils;
 import jobs.BuildWeb;
 import jobs.BuildWinterwellProject;
@@ -90,6 +91,7 @@ public class PublishSoGiveApp extends BuildTask {
 				new BuildBob(),
 				new BuildWeb(),
 				new BuildDataLog(), // This!
+				new BuildDepot(),
 				new BuildESJavaClient(),
 				new BuildYouAgainJavaClient(),
 				new BuildFlexiGson()				
