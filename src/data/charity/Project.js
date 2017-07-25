@@ -1,8 +1,8 @@
 /** Data model functions for the NGO data-type */
 
 import _ from 'lodash';
-import assert from 'sjtest';
-import {isa, assIsa} from '../DataClass';
+import {assert} from 'sjtest';
+import {isa} from '../DataClass';
 
 const Project = {};
 export default Project;
@@ -16,7 +16,7 @@ Project.assIsa = (p) => assert(Project.isa(p));
 Project.name = (ngo) => isa(ngo, Project.type) && ngo.name;
 Project.year = (ngo) => isa(ngo, Project.type) && ngo.year;
 
-Project.isOverall = (project) => assIsa(project) && project.name === Project.overall;
+Project.isOverall = (project) => Project.assIsa(project) && project.name === Project.overall;
 
 Project.make = function(base) {
 	let proj = {

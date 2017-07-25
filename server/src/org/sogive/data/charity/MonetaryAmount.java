@@ -47,7 +47,7 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	}
 	
 	public long getValue100() {
-		validate();
+		init();
 		Object v100 = get("value100");
 		if (v100 instanceof Number) {
 			return ((Number) v100).longValue();
@@ -58,7 +58,7 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	}
 
 
-	public MonetaryAmount validate() {
+	public void init() {
 		// check v100 = 100*v
 		double v = MathUtils.toNum(get("value"));
 		long v100 = (long) MathUtils.toNum(get("value100"));
@@ -66,7 +66,6 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 			v100 = (long) (v*100);
 			put("value100", v100);
 		}
-		return this;
 	}
 
 	public static MonetaryAmount pound(double number) {

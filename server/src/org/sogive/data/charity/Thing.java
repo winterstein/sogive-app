@@ -11,6 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import com.winterwell.depot.IInit;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.MathUtils;
@@ -24,7 +25,7 @@ import com.winterwell.utils.time.Time;
  * @author daniel
  *
  */
-public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
+public class Thing<SubThing extends Thing> extends HashMap<String,Object> implements IInit {
 
 	protected static List list(Object object) {
 		return object==null? null : Containers.asList(object);
@@ -33,8 +34,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 
 	public static final String ID = "@id";
 
-	public SubThing validate() {
-		return (SubThing) this;
+	public void init() {
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> {
 			deccons.setAccessible(true);
 			X thing = deccons.newInstance();
 			thing.putAll(map);
-			thing.validate();
+			thing.init();
 			return thing;
 		} catch(Exception ex) {
 			throw Utils.runtime(ex);

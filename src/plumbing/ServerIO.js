@@ -25,9 +25,9 @@ ServerIO.search = function(query) {
 };
 
 
-ServerIO.getCharity = function(charityId, version) {
+ServerIO.getCharity = function(charityId, status) {
 	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+escape(charityId)+'.json', {data: {version: version}});
+	return ServerIO.load('/charity/'+escape(charityId)+'.json', {data: {status: status}});
 };
 
 
@@ -41,18 +41,18 @@ ServerIO.getDonations = function() {
 };
 
 
-ServerIO.saveCharity = function(charity, version) {
+ServerIO.saveCharity = function(charity, status) {
 	assert(NGO.isa(charity), charity);
 	let params = {		
-		data: {action: 'save', item: JSON.stringify(charity), version: version},
+		data: {action: 'save', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
 	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
 
-ServerIO.publish = function(charity, version) {
+ServerIO.publish = function(charity, status) {
 	assert(NGO.isa(charity), charity);
 	let params = {		
-		data: {action: 'publish', version: version}
+		data: {action: 'publish', status: status}
 	};
 	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
@@ -60,17 +60,17 @@ ServerIO.publish = function(charity, version) {
 /**
  * @param charity {name:String}
  */
-ServerIO.addCharity = function(charity, version='draft') {
+ServerIO.addCharity = function(charity, status=C.STATUS.DRAFT) {
 	let params = {		
-		data: {action: 'add', item: JSON.stringify(charity), version: version},
+		data: {action: 'add', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
 	return ServerIO.load('/charity.json', params);
 };
 
-ServerIO.discardEdits = function(charity, version) {
+ServerIO.discardEdits = function(charity, status) {
 	assert(NGO.isa(charity), charity);
 	let params = {		
-		data: {action: 'discard-edits', version: version}
+		data: {action: 'discard-edits', status: status}
 	};
 	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
 };
@@ -98,6 +98,8 @@ ServerIO.load = function(url, params) {
 	_.values(params.data).map(
 		v => assert( ! _.isObject(v) || _.isArray(v), v)
 	);
+	// sanity check: status
+	assert( ! params.data.status || C.STATUS.has(params.data.status), params.data.status);
 	// add the base
 	if (url.substring(0,4) !== 'http' && ServerIO.base) {
 		url = ServerIO.base + url;

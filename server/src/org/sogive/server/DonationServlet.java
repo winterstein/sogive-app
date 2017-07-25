@@ -18,6 +18,7 @@ import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
 import com.stripe.model.Charge;
+import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
@@ -79,7 +80,7 @@ public class DonationServlet {
 		
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		SearchRequestBuilder s = es.prepareSearch(config.donationIndex);
+		SearchRequestBuilder s = es.prepareSearch(config.getPath(Donation.class, null, null).index());
 		if (user==null) {
 			throw new WebEx.E401(null, "No user");
 		} else {
@@ -132,7 +133,8 @@ public class DonationServlet {
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		IndexRequestBuilder pi = es.prepareIndex(config.donationIndex, "donation", donation.getId());
+		ESPath path = config.getPath(Donation.class, donation.getId(), null);
+		IndexRequestBuilder pi = es.prepareIndex(path);
 		pi.setRefresh("true");
 		pi.setOpTypeCreate(true);		
 		String json = Dep.get(Gson.class).toJson(donation);
@@ -152,7 +154,7 @@ public class DonationServlet {
 		donation.setCollected(true);
 		
 		// store in the database
-		UpdateRequestBuilder pu = es.prepareUpdate("donation", "donation", donation.getId());
+		UpdateRequestBuilder pu = es.prepareUpdate(path);
 		
 		String json3 = Dep.get(Gson.class).toJson(donation);
 		pu.setDoc(json3);

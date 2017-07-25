@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
@@ -21,6 +23,7 @@ import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig; 
 
 public class SearchServlet {
@@ -36,7 +39,10 @@ public class SearchServlet {
 	public void run() throws IOException {
 		ESHttpClient client = Dep.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
-		SearchRequestBuilder s = client.prepareSearch(Dep.get(SoGiveConfig.class).charityIndex);
+		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
+		KStatus status = KStatus.PUBLISHED;
+		ESPath path = config.getPath(NGO.class, null, status);
+		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
 		String q = state.get(Q);
 		if ( q != null) {
 			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 

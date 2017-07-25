@@ -13,6 +13,8 @@ import org.sogive.server.CharityServlet;
 import org.sogive.server.SoGiveServer;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.ESHttpResponse;
@@ -138,8 +140,8 @@ public class ImportCharityDataFromCSV {
 			}
 			if (Utils.truthy(story)) {ngo.put(stories, story); mod=true;}
 			// save
-			if (mod) {
-				UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
+			if (mod) {				
+				UpdateRequestBuilder pi = client.prepareUpdate(sgconfig.getPath(NGO.class, ourid, KStatus.PUBLISHED));
 //				String json = gson.toJson(ngo);		
 				pi.setDoc(ngo);
 				pi.setDocAsUpsert(true);
@@ -158,6 +160,7 @@ public class ImportCharityDataFromCSV {
 	private ESHttpClient client;
 
 	private List<String> HEADER_ROW;
+	private SoGiveConfig sgconfig;
 
 	public ImportCharityDataFromCSV(File export) {
 		this.csv = export;
@@ -332,8 +335,8 @@ public class ImportCharityDataFromCSV {
 //					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 //				}
 //			}
-			
-			UpdateRequestBuilder pi = client.prepareUpdate(SoGiveConfig.charityIndex, "charity", ourid);
+			ESPath path = sgconfig.getPath(NGO.class, ourid, KStatus.PUBLISHED);
+			UpdateRequestBuilder pi = client.prepareUpdate(path);
 //			String json = gson.toJson(ngo);		
 			pi.setDoc(ngo);
 			pi.setDocAsUpsert(true);
@@ -375,6 +378,7 @@ public class ImportCharityDataFromCSV {
 		}
 		ESConfig config = Dep.get(ESConfig.class);
 		client = new ESHttpClient(config);
+		sgconfig = Dep.get(SoGiveConfig.class);
 	}
 
 	private void dumpFileHeader(CSVReader csvr) {

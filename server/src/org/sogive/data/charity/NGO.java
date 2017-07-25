@@ -17,11 +17,10 @@ public class NGO extends Thing<NGO> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public NGO validate() {
-		super.validate();
+	public void init() {
+		super.init();
 		// validate the projects
 		List<Project> projects = getProjects();
-		return this;
 	}
 	
 	public NGO(String ourid) {

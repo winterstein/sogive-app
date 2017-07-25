@@ -82,8 +82,8 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			}
 			if (path.startsWith("/charity")) {
-				CharityServlet s = new CharityServlet(request);
-				s.run();
+				CharityServlet s = new CharityServlet();
+				s.process(request);
 				return;
 			}
 			if (path.startsWith("/donation")) {

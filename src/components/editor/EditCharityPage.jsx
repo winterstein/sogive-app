@@ -52,7 +52,7 @@ class EditCharityPage extends React.Component {
 	componentWillMount() {
 		// fetch
 		let cid = this.props.charityId;
-		ServerIO.getCharity(cid, 'draft')
+		ServerIO.getCharity(cid, C.STATUS.DRAFT)
 		.then(function(result) {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
@@ -454,7 +454,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 
 
 const publishDraftFn = _.throttle((e, charity) => {
-	ServerIO.publish(charity, 'draft');
+	ServerIO.publish(charity, C.STATUS.DRAFT);
 }, 250);
 const discardDraftFn = _.throttle((e, charity) => {
 	ServerIO.discardEdits(charity);
@@ -506,7 +506,7 @@ const saveDraftFn = _.debounce(
 	({path, parentItem}) => {
 		if ( ! parentItem) parentItem = DataStore.getValue(path);
 		assert(NGO.isa(parentItem), parentItem, path);
-		ServerIO.saveCharity(parentItem, 'draft')
+		ServerIO.saveCharity(parentItem, C.STATUS.DRAFT)
 		.then((result) => {
 			let modCharity = result.cargo;
 			assert(NGO.isa(modCharity), modCharity);

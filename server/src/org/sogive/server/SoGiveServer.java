@@ -114,6 +114,7 @@ public class SoGiveServer {
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 		.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
+		Dep.set(Gson.class, gson);
 		// config
 		ESConfig value = new ESConfig();
 		value.setGson(gson);

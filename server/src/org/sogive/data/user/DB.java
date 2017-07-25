@@ -4,9 +4,12 @@ import java.io.File;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 
 import com.winterwell.utils.io.SqlUtils;
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
 import com.winterwell.es.ESType;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
@@ -33,11 +36,13 @@ public class DB {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 
-		{	// charity
-			CreateIndexRequest pi = es.admin().indices().prepareCreate(config.charityIndex);
+		for(KStatus status : KStatus.main()) {
+			// charity
+			ESPath path = config.getPath(NGO.class, null, status);
+			CreateIndexRequest pi = es.admin().indices().prepareCreate(path.index());
 			IESResponse r = pi.get();
 			
-			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(config.charityIndex, config.charityType);
+			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
 			ESType dtype = new ESType();
 			dtype.property("name", new ESType().text()
 									// enable keyword based sorting
@@ -52,10 +57,11 @@ public class DB {
 		}
 		
 		// donation
-		CreateIndexRequest pi = es.admin().indices().prepareCreate(config.donationIndex);
+		ESPath path = config.getPath(Donation.class, null, null);
+		CreateIndexRequest pi = es.admin().indices().prepareCreate(path.index());
 		IESResponse r = pi.get();
 		
-		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(config.donationIndex, "donation");
+		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
 		ESType dtype = new ESType();
 		dtype.property("from", new ESType().keyword());
 		dtype.property("to", new ESType().keyword());

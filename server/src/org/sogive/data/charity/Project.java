@@ -23,11 +23,10 @@ import com.winterwell.utils.log.Log;
 public class Project extends Thing<Project> {
 
 	@Override
-	public Project validate() {
-		super.validate();
+	public void init() {
+		super.init();
 		// this will remove any blanks
 		List<Output> outputs = getOutputs();
-		return this;
 	}
 	
 	@Override
@@ -102,6 +101,8 @@ public class Project extends Thing<Project> {
 	
 	
 	/**
+	 * ??This is currently only done client side!!
+	 * 
 	 * This calculates the impact info -- which is then stored on the Output object!
 	 * @param outputs
 	 * @param amount
