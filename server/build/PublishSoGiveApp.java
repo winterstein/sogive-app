@@ -45,6 +45,7 @@ import com.winterwell.utils.io.LineReader;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.LoginDetails;
+import com.winterwell.web.app.BuildWWAppBase;
 import com.winterwell.web.email.SMTPClient;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.youagain.client.BuildYouAgainJavaClient;
@@ -93,6 +94,7 @@ public class PublishSoGiveApp extends BuildTask {
 				new BuildDataLog(), // This!
 				new BuildDepot(),
 				new BuildESJavaClient(),
+				new BuildWWAppBase(),
 				new BuildYouAgainJavaClient(),
 				new BuildFlexiGson()				
 				);
