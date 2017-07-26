@@ -102,6 +102,7 @@ public class Project extends Thing<Project> {
 	
 	/**
 	 * ??This is currently only done client side!!
+	 * TODO Do it in Project.js
 	 * 
 	 * This calculates the impact info -- which is then stored on the Output object!
 	 * @param outputs
