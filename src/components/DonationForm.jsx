@@ -101,8 +101,7 @@ class ThankYouAndShare extends React.Component {
 		};
 	}
 
-	shareOnFacebook() {
-		let url = ""+window.location;
+	shareOnFacebook({url}) {
 		FB.ui({
 			quote: this.state.shareText,
 			method: 'share',
@@ -138,9 +137,20 @@ class ThankYouAndShare extends React.Component {
 	</div>
 	*/
 
-		let url = `${window.location}`;
-
+		let lcn = window.location;
 		const header = thanks ? <h3>Thank you for donating!</h3> : '';
+		
+		let pageInfo = {
+			title: this.props.charity.name,
+			image:	'http://cdn.attackofthecute.com/September-21-2011-22-10-11-6765.jpeg', // FIXME
+			desc:	this.props.charity.description
+		};
+		// TODO copy SoDash escape fn into wwutils
+		// TODO make this line nicer
+		// TODO just send the charity ID, and load the rest server side, to give a nicer url
+		// Also window.location might contain parameters we dont want to share.
+		let url = "https://app.sogive.org/share?link="+escape(""+window.location)+"&title="+escape(pageInfo.title)+"&image="+escape(pageInfo.image)+"&desc="+escape(pageInfo.desc);
+		pageInfo.url = url;
 
 		return (
 			<div className='col-md-12'>
@@ -161,7 +171,7 @@ class ThankYouAndShare extends React.Component {
 							<Misc.Logo service='twitter' />
 						</a>
 
-						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(); }}>
+						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(pageInfo); }}>
 							<Misc.Logo service='facebook' />
 						</a>
 					</center>
