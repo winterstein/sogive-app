@@ -166,7 +166,7 @@ const ProjectPanel = ({project}) => {
 			<div className='charity-project-div'>
 				<div className='image-and-story-div'>
 					<div className='col-md-2 project-image'>
-						<ProjectImage images={project.images} />
+						<ProjectImage images={project.images || project.image} />
 					</div>
 					<div className='col-md-offset-1 col-md-7 project-story'>
 						<p className='project-story-text' dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
