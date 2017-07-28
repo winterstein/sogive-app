@@ -24,6 +24,7 @@ if (false && window.location.host.indexOf('local') !== -1) {
 
 
 const SocialSignin = ({verb, services}) => {
+	if (verb==='reset') return null;
 	return (
 		<div className="social-signin">
 			<div className={services && services.indexOf('twitter') === -1? "hidden" : "form-group"}>
