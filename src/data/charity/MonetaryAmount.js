@@ -15,6 +15,6 @@ MonetaryAmount.assIsa = (ngo) => assert(MonetaryAmount.isa(ngo));
 MonetaryAmount.make = (base = {}) => {
 	let ma = {};
 	Object.assign(ma, base);
-	ma['@Type'] = 'MonetaryAmount';
+	ma['@type'] = 'MonetaryAmount';
 	return ma;
 };

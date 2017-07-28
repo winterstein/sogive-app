@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {isa} from '../DataClass';
+import MonetaryAmount from './MonetaryAmount';
 
 const Project = {};
 export default Project;
@@ -39,4 +40,10 @@ Project.getLatest = (projects) => {
 	if ( ! projects) return null;
 	const psorted = _.sortBy(projects, Project.year);
 	return psorted[psorted.length - 1];
+};
+
+Project.getTotalCost = (project) => {
+	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);
+	const value = project.inputs.reduce((total, input) => total + (input.value || 0), 0);
+	return MonetaryAmount.make({currency, value});
 };

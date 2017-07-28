@@ -183,11 +183,13 @@ public class ImportCharityDataFromCSV {
 			if (Utils.isBlank(row[0])) continue;
 			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
 //			if ( ! ourid.contains("rnli")) continue;
-			String desc = Containers.get(row, col("desc"));
+			String summaryDesc = Containers.get(row, col("summary description"));
+			String desc = Containers.get(row, col("longer description"));
 			String regNum = Containers.get(row, col("reg num"));
 			NGO ngo = CharityServlet.getCharity(ourid, null);
 			if (ngo==null) ngo = new NGO(ourid);
 			ngo.put(ngo.name, row[0]);
+			if ( ! Utils.isBlank(summaryDesc)) ngo.put("summaryDescription", StrUtils.normalisePunctuation(summaryDesc));
 			if ( ! Utils.isBlank(desc)) ngo.put("description", StrUtils.normalisePunctuation(desc));
 			if ( ! Utils.isBlank(regNum)) ngo.put("englandWalesCharityRegNum", regNum);
 			String tags = row[1];

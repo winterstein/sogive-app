@@ -78,14 +78,19 @@ class EditCharityPage extends React.Component {
 		overalls = _.sortBy(overalls, p => - (p.year || 0) );
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
-		let refs = [];
+		let refs = {};
 		// TODO once speed issues are resolved (just in case this is the problem)
-		// recurse(charity, n => { 
-		// 	if ( ! n.source) return null;
-		// 	refs.push(n.source);
-		// 	return false;
-		// });
-		let rrefs = refs.map((r,i) => <li key={'r'+i}><Ref reference={r}/></li>);
+		recurse(charity, n => { 
+			if ( ! n.source) return null;
+			refs[n.source] = true;
+			return false;
+		});
+		// Spread operator turns refs into an array
+		const rrefs = Object.entries(refs).map(([r], i) => (
+			<li key={'r'+i}>
+				<Ref reference={r} />
+			</li>
+		));
 
 		// put it together
 		console.log("EditCharity", charity);
@@ -93,7 +98,8 @@ class EditCharityPage extends React.Component {
 			<div className='page EditCharityPage'>				
 				<Panel>
 					<h2>Editing: {charity.name}</h2>			
-					<p><a href={'/'+NGO.id(charity)} target='_new'>view profile page</a></p>
+					<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
+					<p>If you're not sure how to fill out a particular field, hover the <Glyphicon glyph='question-sign' title='question mark' /> icon for a detailed explanation.</p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
@@ -109,7 +115,7 @@ class EditCharityPage extends React.Component {
 						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' 
 							help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					</Panel>
-					<Panel header={<h3>Overall Finances</h3>} eventKey="3">
+					<Panel header={<h3>Overall</h3>} eventKey="3">
 						<ProjectsEditor charity={charity} projects={overalls} isOverall />
 					</Panel>
 					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
@@ -188,45 +194,63 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<ProjectEditor charity={charity} project={p} />
 		</Panel>)
 		);
-	return (<div>
-		<Accordion>{rprojects}</Accordion>
-		<AddProject charity={charity} isOverall={isOverall} />
-	</div>);
+	return (
+		<div>
+			<p>Please don't mark a charity as "Ready for use" before entering <strong>all</strong> known projects.</p>
+			<Accordion>{rprojects}</Accordion>
+			<AddProject charity={charity} isOverall={isOverall} />
+		</div>
+	);
 };
 
 
 const AddProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity));
 	if (isOverall) {
-		return (<div className='form-inline well'>
-			<Glyphicon glyph='plus' /> &nbsp;
+		return (
+			<div className='form-inline well'>
+				<h4>Add Year</h4>
+				<p>Create a new annual record</p>
+				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+				&nbsp;
+				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
+					<Glyphicon glyph='plus' /> Add
+				</button>
+			</div>
+		);		
+	}
+	return (
+		<div className='form-inline well'>
+			<h4>Add Project/Year</h4>
+			<p>Create a new annual project record</p>
+			<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
+			&nbsp;
 			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
-			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-				<Glyphicon glyph='plus' /> Add Year
+			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
+				<Glyphicon glyph='plus' /> Add
 			</button>
-		</div>);		
-	}
-	return (<div className='form-inline'>
-		<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
-		&nbsp;
-		<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
-		&nbsp;
-		<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
-			<Glyphicon glyph='plus' /> Add Project / Year
-		</button>
-	</div>);
+		</div>
+	);
 };
 
 
 const RemoveProject = ({charity, project}) => {
 	assert(NGO.isa(charity));
-	return (<button className='btn btn-default btn-sm pull-right' 
-				title='Delete this project!'
-				onClick={ (e) => { e.preventDefault(); removeProject({charity, project}); } } 
-			>
-				<Glyphicon glyph='trash' />
-			</button>);
+	const deleteProject = function(event) {
+		event.preventDefault();
+		if (confirm("Are you sure you want to delete this project?")) {
+			removeProject({charity, project});
+		}
+	};
+	return (
+		<button className='btn btn-default btn-sm pull-right' 
+			title='Delete this project!'
+			onClick={deleteProject}
+		>
+			<Glyphicon glyph='trash' />
+		</button>
+	);
 };
 
 const removeProject = ({charity, project}) => {
@@ -251,31 +275,33 @@ const ProjectEditor = ({charity, project}) => {
 	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
 	const isOverall = Project.isOverall(project);
-	return (<div>
-		{isOverall? null : 
-			<div>
-				<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-				<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
-				<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
-				<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
-			</div>
-		}
-		<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
-			help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
-			You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
-			We aim as far as possible to estimate which project would be the recipient of the marginal extra pound. 
-			This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data) 
-			to influence the choice of representative project too.`} />			
-		<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
-			help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
-		<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' 
-			help='Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at' />
-		<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' 
-			help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
-		
-		<ProjectInputs charity={charity} project={project} />
-		<ProjectOutputs charity={charity} project={project} />		
-	</div>);
+	return (
+		<div>
+			{isOverall? null : 
+				<div>
+					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
+					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
+					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
+				</div>
+			}
+			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
+				help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
+				You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
+				We aim as far as possible to estimate which project would be the recipient of the marginal extra pound. 
+				This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data) 
+				to influence the choice of representative project too.`} />			
+			<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
+				help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
+			<EditProjectField charity={charity} project={project} type='date' field='start' label='Year start' 
+				help='Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at' />
+			<EditProjectField charity={charity} project={project} type='date' field='end' label='Year end' 
+				help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
+			
+			<ProjectInputs charity={charity} project={project} />
+			<ProjectOutputs charity={charity} project={project} />		
+	</div>
+	);
 			// <ProjectImpacts charity={charity} project={project} />
 };
 
@@ -318,43 +344,38 @@ const ProjectOutputs = ({charity, project}) => {
 			<tbody>			
 				<tr>
 					<th>
-						Impact units
-						<div className='help-block'>
-							These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Keep this short, preferably about 2-3 words. 5 words max.
-							<br/>
-							Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
-							E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"
-						</div>
+						Impact units <Glyphicon glyph='question-sign' title={
+`These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Keep this short, preferably about 2-3 words. 5 words max.
+Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
+E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
+						/>
 					</th>
 					<th>
-						Amount
-						<div className='help-block'>
-							Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
-							{project.name==='overall'? '' : "Be careful to ensure that the amount shown is relevant to this project."}
-						</div>
+						Amount <Glyphicon glyph='question-sign' title={
+`Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
+${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
+						/>
 					</th>
 					<th>
-						Cost per beneficiary
-						<div className='help-block'>
-							Usually auto-calculated based on the costs and the amount. An override value can be put in here.
-						</div>
+						Override cost per beneficiary <Glyphicon glyph='question-sign' title={
+							`Usually auto-calculated based on the costs and the amount. An override value can be put in here.`}
+						/>
 					</th>
 					<th>
-						Confidence
-						<div className='help-block'>
-						How confident are we in this cost-per-beneficiary estimate?   
+						Confidence <Glyphicon glyph='question-sign' title={
+`How confident are we in this cost-per-beneficiary estimate?   
 
  - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear.   
  - Medium - the default value.    
  - Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
- - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.   
-						</div>
+ - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.`}
+						/>
 					</th>
 					<th>
-						Description 
-						<div className='help-block'>An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
-						This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.
-						</div>
+						Description <Glyphicon glyph='question-sign' title={
+`An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
+This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
+						/>
 					</th>
 					<th>
 						Meta
@@ -437,8 +458,8 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td>
-			<small>Raw calculation: {cpbraw}</small>
 			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
@@ -476,6 +497,7 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let path = ['draft',C.TYPES.Charity,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
+
 const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) => {
 	assert(charity && project);
 	let cid = NGO.id(charity);
@@ -537,6 +559,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
 					saveFn={saveDraftFnWrap}
+					help={help}
 					/>
 				<MetaEditor item={item} itemPath={path} field={field} help={help} />
 			</Misc.Col2>
@@ -560,10 +583,6 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 		meta = (item.meta && item.meta[field]) || {};
 	}
 	return (<div className='flexbox'>
-		{help? <div>
-			<Misc.Icon fa='info-circle' title='Help notes' />
-			<span className='help-block'>{help}</span>
-		</div> : null}
 		<div className='TODO'>
 			<Misc.Icon fa='user' title='Last editor' />
 			{meta.lastEditor}
@@ -599,6 +618,10 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 // NB: ref is a react keyword
 const Ref = ({reference}) => {
 	return <div>{printer.str(reference)}</div>;
+};
+
+const helpText = {
+
 };
 
 export default EditCharityPage;

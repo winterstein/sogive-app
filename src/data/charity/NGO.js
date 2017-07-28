@@ -65,7 +65,7 @@ NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
  * @return {MonetaryAmount}
  */
 NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
-	let outputCount = output.value;
+	let outputCount = output.number;
 	if ( ! outputCount) return null;
 	let projectCost = Project.getTotalCost(project);
 	if ( ! projectCost) {

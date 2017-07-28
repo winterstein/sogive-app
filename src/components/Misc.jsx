@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // FormControl
-import {Textarea, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+import {Textarea, Glyphicon, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 
 
 import {assert, assMatch} from 'sjtest';
@@ -161,11 +161,14 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	// NB: Checkbox has a different html layout :( -- handled below
 	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
 		// Minor TODO help block id and aria-described-by property in the input
-		return (<div className="form-group">
-			{label? <label>{label}</label> : null}
-			<Misc.PropControl type={type} {...stuff} />
-			{help? <span className="help-block">{help}</span> : null}
-		</div>);
+		const labelText = label || '';
+		const helpIcon = help ? <Glyphicon glyph='question-sign' title={help} /> : '';
+		// The label and PropControl are on the same line to preserve the whitespace in between for inline forms
+		return (
+			<div className='form-group'>
+				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label> <Misc.PropControl type={type} {...stuff} />
+			</div>
+		);
 	}
 	let {prop, path, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
@@ -286,7 +289,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		let datePreview = value? 'not a valid date' : null;
 		try {
 			let date = new Date(value);
-			datePreview = date.toLocaleDateString();
+			datePreview = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
 		} catch (er) {
 			// bad date
 		}
