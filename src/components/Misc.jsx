@@ -35,10 +35,15 @@ const CURRENCY = {
 	GBP: "£",
 	USD: "$"
 };
+/**
+ * Money span
+ * @param amount {MonetaryAmount|Number}
+ */
 Misc.Money = ({amount, precision}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
+	if ( ! amount) amount = {};
 	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
 };
 /**
