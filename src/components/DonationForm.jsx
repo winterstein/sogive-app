@@ -157,7 +157,8 @@ class ThankYouAndShare extends React.Component {
 				<div className='ThankYouAndShare panel-success'>
 					{ header }
 
-					<p>Share this on social media? We expect this will lead to 2-3 times more donations on average.</p>
+					<p>Share this on social media?<br/>
+						We expect this will lead to 2-3 times more donations on average.</p>
 
 					<textarea
 						className='form-control'
