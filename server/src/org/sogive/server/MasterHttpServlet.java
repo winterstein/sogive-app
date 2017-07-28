@@ -95,7 +95,12 @@ public class MasterHttpServlet extends HttpServlet {
 				StripeWebhookServlet s = new StripeWebhookServlet();
 				s.process(request);
 				return;
-			}			
+			}
+			if (path.startsWith("/share")) {
+				ShareServlet s = new ShareServlet();
+				s.process(request);
+				return;
+			}		
 			WebUtils2.sendError(500, "TODO", resp);
 		} catch(Throwable ex) {
 			ex.printStackTrace();
