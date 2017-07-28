@@ -188,6 +188,10 @@ class ThankYouAndShare extends React.Component {
 const DonationFormButton = ({onToken, amount}) => {
 	let email = Login.getId('Email');
 	if (email) email = XId.id(email);
+		const stripeKey = (window.location.host.startsWith('test') || window.location.host.startsWith('local')) ?
+		'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
+		: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
+		
 	return (
 		<div>
 			<StripeCheckout name="SoGive" description="Donate with impact tracking"
@@ -196,7 +200,7 @@ const DonationFormButton = ({onToken, amount}) => {
 				panelLabel="Donate"
 				amount={amount}
 				currency="GBP"
-				stripeKey="pk_live_InKkluBNjhUO4XN1QAkCPEGY"
+				stripeKey={stripeKey}
 				bitcoin
 				allowRememberMe
 				token={onToken}
