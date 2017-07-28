@@ -360,6 +360,29 @@ const FormControl = (props) => {
 	return <input className='form-control' {...props} />;
 };
 
+/**
+ * save buttons
+ * TODO auto-save on edit -- copy from sogive
+ */
+Misc.SavePublishDiscard = ({type, id}) => {
+	assert(C.TYPES.has(type));
+	assMatch(id, String);
+	let transientStatus = DataStore.getValue('transient', id, 'status');
+	let isSaving = C.STATUS.issaving(transientStatus);	
+	return (<div>
+		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.saveEdits(type, id)}>
+			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+		</button>
+		&nbsp;
+		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.publishEdits(type, id)}>
+			Publish Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+		</button>
+		&nbsp;
+		<button className='btn btn-warning' disabled={isSaving} onClick={() => ActionMan.discardEdits(type, id)}>
+			Discard Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+		</button>
+	</div>);
+};
 
 export default Misc;
 // // TODO rejig for export {
