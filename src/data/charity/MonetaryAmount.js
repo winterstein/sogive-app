@@ -11,8 +11,9 @@ MonetaryAmount.isa = (obj) => isa(obj, 'MonetaryAmount') || (obj.currency && _.i
 MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj));
 
 MonetaryAmount.make = (base = {}) => {
-	let ma = {};
+	// default to £0
+	let ma = {value:0, '@type':'MonetaryAmount'};
 	Object.assign(ma, base);
-	ma['@type'] = 'MonetaryAmount';
+	MonetaryAmount.assIsa(ma);
 	return ma;
 };

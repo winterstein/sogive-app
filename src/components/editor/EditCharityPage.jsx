@@ -15,6 +15,7 @@ import printer from '../../utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
+import MonetaryAmount from '../../data/charity/MonetaryAmount';
 import Misc from '../Misc';
 import Roles from '../../Roles';
 
@@ -371,10 +372,10 @@ const ProjectInputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || {name: 'annualCosts'};	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || {name: 'projectCosts'};
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || {name: 'tradingCosts'};
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || {name: "incomeFromBeneficiaries"};
+	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || MonetaryAmount.make({name: 'annualCosts'});	
+	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || MonetaryAmount.make({name: 'projectCosts'});
+	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || MonetaryAmount.make({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || MonetaryAmount.make({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
