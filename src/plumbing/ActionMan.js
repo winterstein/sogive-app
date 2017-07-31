@@ -4,6 +4,7 @@ import DataStore from './DataStore';
 import {assert} from 'sjtest';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
+import Citation from '../data/charity/Citation';
 import _ from 'lodash';
 
 const addCharity = () => {
@@ -53,10 +54,19 @@ const addInputOrOutput = ({list, ioPath, formPath}) => {
 	DataStore.setValue(formPath, {});
 };
 
+const addDataSource = ({list, srcPath, formPath}) => {
+	assert(_.isArray(list), list);
+	let citation = Citation.make(DataStore.getValue(formPath));
+	list.push(citation);
+	// clear the form
+	DataStore.setValue(formPath, {});
+};
+
 const ActionMan = {
 	addCharity,
 	addProject, removeProject,
-	addInputOrOutput
+	addInputOrOutput,
+	addDataSource
 };
 
 

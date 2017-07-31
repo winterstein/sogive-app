@@ -265,7 +265,7 @@ public class ImportCharityDataFromCSV {
 			if ( ! Utils.isBlank(dataSrc2)) {
 				Citation citation = new Citation(dataSrc2);
 				if (year!=null) citation.put("year", year);
-				project.addOrMerge("data-src2", citation);
+				project.addOrMerge("data-src", citation);
 			}
 			Object img = get(row, col("photo image"));
 			if (img!=null) {
@@ -273,7 +273,7 @@ public class ImportCharityDataFromCSV {
 				if (isRep || ! ngo.containsKey(images)) {
 					ngo.put(images, img);
 				}
-			}			
+			}
 			project.put("location", get(row, col("location")));
 			
 			// inputs
