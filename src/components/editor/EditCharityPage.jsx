@@ -324,7 +324,7 @@ const ProjectDataSources = ({charity, project}) => {
 	return (
 		<div className='well'>
 			<h4>Data Sources</h4>
-			{ project['data-src'].map(src => {
+			{ (project['data-src'] || []).map(src => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
