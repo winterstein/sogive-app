@@ -321,17 +321,18 @@ const ProjectDataSources = ({charity, project}) => {
 	};
 	const projIndex = charity.projects.indexOf(project);
 	const dataSrcPath = ['draft', C.TYPES.Charity, NGO.id(charity), 'projects', projIndex, 'data-src'];
+	const sourceList = project['data-src'] || [];
 	return (
 		<div className='well'>
 			<h4>Data Sources</h4>
-			{ (project['data-src'] || []).map(src => {
+			{ sourceList.map(src => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
 					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
 				);
 			}) }
-			<AddDataSource dataId={'p'+projIndex+'data-src'} list={project['data-src']} srcPath={dataSrcPath} />
+			<AddDataSource dataId={'p'+projIndex+'data-src'} list={sourceList} srcPath={dataSrcPath} />
 		</div>
 	);
 };
