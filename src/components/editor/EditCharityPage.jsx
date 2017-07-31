@@ -288,6 +288,7 @@ const ProjectEditor = ({charity, project}) => {
 			{isOverall? null : 
 				<div>
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
+					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
 					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
 					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
@@ -525,11 +526,13 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		</td>
 		<td>
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
-				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap}
+			/>
 		</td>
 		<td>
 			<Misc.PropControl prop='description' type='textarea'
-				path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+				path={inputPath} item={output} saveFn={saveDraftFnWrap}
+			/>
 		</td>
 		<td>
 			<MetaEditor item={output} field='all' itemPath={inputPath} />

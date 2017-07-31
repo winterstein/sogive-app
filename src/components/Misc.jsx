@@ -316,14 +316,19 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		</div>);
 	}
 	if (type==='select') {
-		let options = otherStuff.options;
+		const options = otherStuff.options;
+		const defaultValue = otherStuff.defaultValue;
 		delete otherStuff.options;
+		delete otherStuff.defaultValue;
+
 		assert(options, [prop, otherStuff]);
 		assert(options.map, options);
 		let domOptions = options.map(option => <option key={"option_"+option} value={option} >{option}</option>);
-		return (<select className='form-control' name={prop} value={value} onChange={onChange} {...otherStuff} >
+		return (
+			<select className='form-control' name={prop} value={value || defaultValue} onChange={onChange} {...otherStuff} >
 				{domOptions}
-			</select>);
+			</select>
+		);
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)
