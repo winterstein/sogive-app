@@ -162,7 +162,7 @@ const ProjectPanel = ({project}) => {
 		<div className='col-md-12 ProjectPanel'>
 			<div className='charity-project-title-div'>
 				<h4 className='project-name'>{project.name}: {project.year}</h4>
-				<p className='project-description'>{project.summaryDescription}</p>
+				<p className='project-description'>{project.description}</p>
 			</div>
 			<div className='charity-project-div'>
 				<div className='image-and-story-div'>
