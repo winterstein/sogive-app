@@ -200,21 +200,28 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	}
 	if (value===undefined) value = '';
 	// £s
+	// NB: This is a bit awkward code -- is there a way to factor it out nicely?? The raw vs parsed/object form annoyance feels like it could be a common case.
 	if (type==='MonetaryAmount') {
 		// special case, as this is an object.
 		// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
-		let v = '';
-		if (value) v = value.value;
-		if (v===undefined || v===null) {
-			if (value.value100) v = value.value100/100;
-			else v = '';
+		// Convert null and numbers into MA objects
+		if ( ! value || _.isString(value) || _.isNumber(value)) {
+			value = MonetaryAmount.make({value});
 		}
-		let path2 = path.concat([prop, 'value']);
-		let path100 = path.concat([prop, 'value100']);
-		const onChange = e => {
+		// prefer raw, so users can type incomplete answers!
+		let v = value.raw || value.value || (value.value100 && value.value100/100);
+		if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
+			v = '';
+		}
+		MonetaryAmount.assIsa(value);
+		// handle edits
+		const onMoneyChange = e => {
 			let newVal = parseFloat(e.target.value);
-			DataStore.setValue(path2, newVal);
-			DataStore.setValue(path100, newVal*100);
+			value.raw = e.target.value;
+			value.value = newVal;
+			value.value100 = newVal*100;
+			DataStore.setValue(proppath, value);
+			// console.warn("£", value, proppath);
 			if (saveFn) saveFn({path:path});
 		};
 		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
@@ -223,7 +230,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		if (changeCurrency) {
 			// TODO other currencies
 			currency = (
-				<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(path2)}>
+				<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(proppath)}>
 					<MenuItem key="1">{curr}</MenuItem>
 				</DropdownButton>
 			);
@@ -233,9 +240,9 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		assert(v === 0 || v || v==='', [v, value]);
 		return (<InputGroup>
 					{currency}
-					<FormControl name={prop} value={v} onChange={onChange} {...otherStuff} />
+					<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} />
 				</InputGroup>);
-	}
+	} // ./£
 	// text based
 	const onChange = e => {
 		let mv = modelValueFromInput(e.target.value, type);

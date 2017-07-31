@@ -106,16 +106,14 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 
 	@Override
-	protected JThing<NGO> doNew(WebRequest state) {
+	protected JThing<NGO> doNew(WebRequest state, String id) {
 		String json = getJson(state);
 		JThing jt = new JThing(json);
-		String id = getId(state);
-		if (id==null) { // id=null is the normal case
-			id = NGO.idFromName((String) jt.map().get("name"));
-			jt.put(NGO.ID, id);
-		}
-		assert id != null && ! id.equals("new");
+		// the ID must be made by this step
+//		String id = getId(state);
+		assert id != null && ! id.equals("new") : state;
 		NGO mod = Thing.getThing(jt.map(), NGO.class);
+		assert mod.getId().equals(id) : mod+" "+id;
 		jt.setJava(mod);
 		return jt;
 	}
