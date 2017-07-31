@@ -79,10 +79,14 @@ class EditCharityPage extends React.Component {
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
 		let refs = {};
-		// TODO once speed issues are resolved (just in case this is the problem)
-		recurse(charity, n => { 
-			if ( ! n.source) return null;
-			refs[n.source] = true;
+		recurse(charity, node => {
+			if (node.source) {
+				refs[node.source] = true;
+			} else if (node['@type'] === 'Citation' && node.url) {
+				refs[node.url] = true;
+			} else {
+				return null;
+			}
 			return false;
 		});
 		// Spread operator turns refs into an array
@@ -264,6 +268,7 @@ const AddIO = ({list, pio, ioPath}) => {
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
 	return (<div className='form-inline'>
 		<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
+		{' '}
 		<button className='btn btn-default' onClick={oc}>
 			<Glyphicon glyph='plus' />
 		</button>
@@ -275,8 +280,10 @@ const ProjectEditor = ({charity, project}) => {
 	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
 	const isOverall = Project.isOverall(project);
+
 	return (
 		<div>
+			<ProjectDataSources charity={charity} project={project} />
 			{isOverall? null : 
 				<div>
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
@@ -303,6 +310,57 @@ const ProjectEditor = ({charity, project}) => {
 	</div>
 	);
 			// <ProjectImpacts charity={charity} project={project} />
+};
+
+// See and edit the list of data-sources for this project
+const ProjectDataSources = ({charity, project}) => {
+	let saveDraftFnWrap = (context) => {
+		context.parentItem = charity;
+		return saveDraftFn(context);
+	};
+	const projIndex = charity.projects.indexOf(project);
+	const dataSrcPath = ['draft', C.TYPES.Charity, NGO.id(charity), 'projects', projIndex, 'data-src'];
+	return (
+		<div className='well'>
+			<h4>Data Sources</h4>
+			{ project['data-src'].map(src => {
+				const srcIndex = project['data-src'].indexOf(src);
+				const citationPath = dataSrcPath.concat(srcIndex);
+				return (
+					<ProjectDataSource charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
+				);
+			}) }
+			<AddDataSource dataId={'p'+projIndex+'data-src'} list={project['data-src']} srcPath={dataSrcPath} />
+		</div>
+	);
+};
+
+const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) => {
+	return (
+		<div className='row'>
+			<div className='col-md-6'>
+				<Misc.PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
+			</div>
+			<div className='col-md-6'>
+				<Misc.PropControl prop='year' label='Year' help='The year this data was published' path={citationPath} item={citation} saveFn={saveFn} />
+			</div>
+		</div>
+	);
+};
+
+const AddDataSource = ({list, dataId, srcPath}) => {
+	assert(_.isArray(list) && _.isArray(srcPath) && dataId);
+	const formPath = ['widget','AddDataSource', dataId, 'form'];
+	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
+	return (
+		<div className='form-inline'>
+			<Misc.PropControl prop='url' label='Source URL' path={formPath} />
+			{' '}
+			<button className='btn btn-default' onClick={addSourceFn}>
+				<Glyphicon glyph='plus' />
+			</button>
+		</div>
+	);
 };
 
 /**
@@ -338,56 +396,58 @@ const ProjectOutputs = ({charity, project}) => {
 	let projectPath = ['draft', C.TYPES.Charity, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
-	return (<div className='well'>
-		<h5>Outputs</h5>
-		<table className='table'>
-			<tbody>			
-				<tr>
-					<th>
-						Impact units <Glyphicon glyph='question-sign' title={
+	return (
+		<div className='well'>
+			<h5>Outputs</h5>
+			<table className='table'>
+				<tbody>			
+					<tr>
+						<th>
+							Impact units <Glyphicon glyph='question-sign' title={
 `These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
-						/>
-					</th>
-					<th>
-						Amount <Glyphicon glyph='question-sign' title={
+							/>
+						</th>
+						<th>
+							Amount <Glyphicon glyph='question-sign' title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
 ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
-						/>
-					</th>
-					<th>
-						Override cost per beneficiary <Glyphicon glyph='question-sign' title={
-							`Usually auto-calculated based on the costs and the amount. An override value can be put in here.`}
-						/>
-					</th>
-					<th>
-						Confidence <Glyphicon glyph='question-sign' title={
+							/>
+						</th>
+						<th>
+							Override cost per beneficiary <Glyphicon glyph='question-sign' title={
+								`Usually auto-calculated based on the costs and the amount. An override value can be put in here.`}
+							/>
+						</th>
+						<th>
+							Confidence <Glyphicon glyph='question-sign' title={
 `How confident are we in this cost-per-beneficiary estimate?   
 
- - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear.   
- - Medium - the default value.    
- - Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
- - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.`}
-						/>
-					</th>
-					<th>
-						Description <Glyphicon glyph='question-sign' title={
+- High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear.   
+- Medium - the default value.    
+- Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
+- Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.`}
+							/>
+						</th>
+						<th>
+							Description <Glyphicon glyph='question-sign' title={
 `An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
-						/>
-					</th>
-					<th>
-						Meta
-					</th>
-				</tr>
-				{rinputs}
-				<tr><td colSpan={2}>
-					<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
-				</td></tr>
-			</tbody>
-		</table>		
-	</div>);
+							/>
+						</th>
+						<th>
+							Meta
+						</th>
+					</tr>
+					{rinputs}
+					<tr><td colSpan={2}>
+						<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
+					</td></tr>
+				</tbody>
+			</table>		
+		</div>
+	);
 }; // ./ProjectOutputs()
 
 const STD_INPUTS = {
@@ -465,8 +525,10 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap} />
 		</td>
-		<td><Misc.PropControl prop='description' type='textarea' 
-							path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td>
+			<Misc.PropControl prop='description' type='textarea'
+				path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+		</td>
 		<td>
 			<MetaEditor item={output} field='all' itemPath={inputPath} />
 		</td>
@@ -561,7 +623,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 					saveFn={saveDraftFnWrap}
 					help={help}
 					/>
-				<MetaEditor item={item} itemPath={path} field={field} help={help} />
+				<MetaEditor item={item} itemPath={path} field={field} help={help} saveFn={saveDraftFnWrap} />
 			</Misc.Col2>
 		</div>
 	);
@@ -571,7 +633,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
  * If bar is a primitive node, then foo.bar has meta info stored at foo.meta.bar
  * 
  */
-const MetaEditor = ({item, field, help, itemPath}) => {
+const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 	assert(item);
 	assert(field, item);
 	assert(_.isArray(itemPath), field);
@@ -588,40 +650,43 @@ const MetaEditor = ({item, field, help, itemPath}) => {
 			{meta.lastEditor}
 		</div>
 		<div>
-			<MetaEditorItem icon='external-link' title='Information source (preferably a url)' 
-							meta={meta} metaPath={metaPath} 
-							itemField={field} metaField='source' type='url' />
+			<MetaEditorItem icon='external-link' title='Information source (preferably a url)'
+				meta={meta} metaPath={metaPath} 
+				itemField={field} metaField='source' type='url'
+				saveFn={saveFn}
+			/>
 		</div>
 		<div>
-			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath} 
-							itemField={field} metaField='notes' type='textarea' />
+			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath}
+				itemField={field} metaField='notes' type='textarea'
+				saveFn={saveFn}
+			/>
 		</div>
 	</div>);
 };
 
-const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type}) => {
+const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type, saveFn}) => {
 	assert(meta && itemField && metaField && icon);
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
 	if ( ! DataStore.getValue(widgetNotesPath)) {
 		return <div className='MetaEditorItem'>{ricon} {meta[metaField]}</div>;
 	}
-	// TODO saveFn={saveDraftFnWrap}
-	return (<div className='MetaEditorItem'>
-				{ricon} 
-				<Misc.PropControl label={title} prop={metaField} 
-					path={metaPath} 
-					item={meta} type={type} />
-		</div>);
+	return (
+		<div className='MetaEditorItem'>
+			{ricon} 
+			<Misc.PropControl label={title} prop={metaField}
+				path={metaPath}
+				item={meta} type={type}
+				saveFn={saveFn}
+			/>
+		</div>
+	);
 };
 
 // NB: ref is a react keyword
 const Ref = ({reference}) => {
 	return <div>{printer.str(reference)}</div>;
-};
-
-const helpText = {
-
 };
 
 export default EditCharityPage;
