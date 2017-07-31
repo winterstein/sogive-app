@@ -167,7 +167,7 @@ const ProjectPanel = ({project}) => {
 			<div className='charity-project-div'>
 				<div className='image-and-story-div'>
 					<div className='col-md-2 project-image'>
-						<ProjectImage images={project.images || project.image} />
+						<ProjectImage images={project.images || project.image} title={project.imageCaption} />
 					</div>
 					<div className='col-md-offset-1 col-md-7 project-story'>
 						<p className='project-story-text' dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} />
@@ -193,10 +193,10 @@ const ProjectPanel = ({project}) => {
 	);
 };
 
-const ProjectImage = ({images}) => {
+const ProjectImage = ({images, title}) => {
 	if ( ! yessy(images)) return null;
 	let image = _.isArray(images)? images[0] : images;
-	return <div><center><img src={image} className='project-image'/></center></div>;
+	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
 };
 
 const Citations = ({thing}) => {
