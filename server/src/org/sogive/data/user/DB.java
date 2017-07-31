@@ -39,7 +39,9 @@ public class DB {
 		for(KStatus status : KStatus.main()) {
 			// charity
 			ESPath path = config.getPath(NGO.class, null, status);
-			CreateIndexRequest pi = es.admin().indices().prepareCreate(path.index());
+			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
+			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
+			pi.setAlias(path.index());
 			IESResponse r = pi.get();
 			
 			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
@@ -58,7 +60,9 @@ public class DB {
 		
 		// donation
 		ESPath path = config.getPath(Donation.class, null, null);
-		CreateIndexRequest pi = es.admin().indices().prepareCreate(path.index());
+		String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
+		CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
+		pi.setAlias(path.index());
 		IESResponse r = pi.get();
 		
 		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
