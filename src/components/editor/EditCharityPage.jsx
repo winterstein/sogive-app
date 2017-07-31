@@ -327,7 +327,7 @@ const ProjectDataSources = ({charity, project}) => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
-					<ProjectDataSource charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
+					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
 				);
 			}) }
 			<AddDataSource dataId={'p'+projIndex+'data-src'} list={project['data-src']} srcPath={dataSrcPath} />
