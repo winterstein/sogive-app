@@ -10,8 +10,9 @@ import _ from 'lodash';
 import Enum from 'easy-enums';
 
 import DataStore from '../plumbing/DataStore';
-import printer from '../utils/printer.js';
-import C from '../C.js';
+import printer from '../utils/printer';
+import C from '../C';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
 import I18n from 'easyi18n';
 
 const Misc = {};

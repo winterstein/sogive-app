@@ -39,6 +39,9 @@ public class DB {
 		for(KStatus status : KStatus.main()) {
 			// charity
 			ESPath path = config.getPath(NGO.class, null, status);
+			if (es.admin().indices().indexExists(path.index())) {
+				continue;
+			}
 			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
 			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
 			pi.setAlias(path.index());
@@ -60,19 +63,21 @@ public class DB {
 		
 		// donation
 		ESPath path = config.getPath(Donation.class, null, null);
-		String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
-		CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
-		pi.setAlias(path.index());
-		IESResponse r = pi.get();
+		if ( ! es.admin().indices().indexExists(path.index())) {
+			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
+			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
+			pi.setAlias(path.index());
+			IESResponse r = pi.get();
 		
-		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
-		ESType dtype = new ESType();
-		dtype.property("from", new ESType().keyword());
-		dtype.property("to", new ESType().keyword());
-		dtype.property("date", new ESType().date());
-		pm.setMapping(dtype);
-		IESResponse r2 = pm.get();
-		r2.check();		
+			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
+			ESType dtype = new ESType();
+			dtype.property("from", new ESType().keyword());
+			dtype.property("to", new ESType().keyword());
+			dtype.property("date", new ESType().date());
+			pm.setMapping(dtype);
+			IESResponse r2 = pm.get();
+			r2.check();
+		}
 	}
 
 	public static Person getUser(XId id) {
