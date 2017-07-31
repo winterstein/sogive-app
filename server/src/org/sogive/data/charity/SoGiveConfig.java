@@ -27,7 +27,7 @@ public class SoGiveConfig implements IESRouter {
 		switch(ks) {
 		case PUBLISHED:
 			break;
-		case DRAFT: case PENDING: case REQUEST_PUBLISH:
+		case DRAFT: case PENDING: case REQUEST_PUBLISH: case MODIFIED:
 			index += ".draft";
 			break;
 		default:
