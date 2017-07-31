@@ -170,7 +170,7 @@ const SearchResult = ({ item }) => (
 				</Media.Left>
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>
-					<p>{item.description}</p>
+					<p>{item.summaryDescription || item.description}</p>
 					<Misc.ImpactDesc unitImpact={item.unitRepImpact} amount={10} />
 				</Media.Body>
 			</a>
