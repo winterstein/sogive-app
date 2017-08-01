@@ -86,10 +86,13 @@ class CharityPage extends React.Component {
 
 
 const CharityProfile = ({charity}) => {
-	const tags = charity.tags && (
+	const allTagsString = [charity.whyTags, charity.whoTags, charity.howTags, charity.whereTags]
+		.filter(tagArray => tagArray && tagArray.length)
+		.join(',');
+	const tags = allTagsString && (
 		<div>
 			<h4>Tags</h4>
-			{ charity.tags.split('&').map((tag) => (
+			{ allTagsString.split(',').map((tag) => (
 				<span key={tag}><Label>{tag.trim()}</Label> </span>
 			)) }
 		</div>

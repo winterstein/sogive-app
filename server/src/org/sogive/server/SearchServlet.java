@@ -46,7 +46,7 @@ public class SearchServlet {
 		String q = state.get(Q);
 		if ( q != null) {
 			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
-					"id", "englandWalesCharityRegNum", "name", "description", "tags")
+					"id", "englandWalesCharityRegNum", "name", "description", "whoTags", "whyTags", "whereTags", "howTags")
 							.operator(Operator.AND);			
 			s.setQuery(qb);
 		}
