@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -192,8 +194,27 @@ public class ImportCharityDataFromCSV {
 			if ( ! Utils.isBlank(summaryDesc)) ngo.put("summaryDescription", StrUtils.normalisePunctuation(summaryDesc));
 			if ( ! Utils.isBlank(desc)) ngo.put("description", StrUtils.normalisePunctuation(desc));
 			if ( ! Utils.isBlank(regNum)) ngo.put("englandWalesCharityRegNum", regNum);
-			String tags = row[1];
-			if ( ! Utils.isBlank(tags)) ngo.setTags(tags);
+			
+			// Process (replace " & " delimiter with ", ") and store tags
+			String tagDelimiter = "\\s*&\\s*";
+			String whyTags = Containers.get(row, col("classification why"));
+			if (! Utils.isBlank(whyTags)) {
+				ngo.put("whyTags", whyTags.replaceAll(tagDelimiter, ", "));
+			}
+			String whoTags = Containers.get(row, col("classification who"));
+			if (! Utils.isBlank(whoTags)) {
+				
+				ngo.put("whoTags", whoTags.replaceAll(tagDelimiter, ", "));
+			}
+			String howTags = Containers.get(row, col("classification how"));
+			if (! Utils.isBlank(howTags)) {
+				ngo.put("howTags", howTags.replaceAll(tagDelimiter, ", "));
+			}
+			String whereTags = Containers.get(row, col("classification where"));
+			if (! Utils.isBlank(whereTags)) {
+				ngo.put("whereTags", whereTags.replaceAll(tagDelimiter, ", "));
+			}
+			
 			String logo = get(row, col("logo image"));
 			if ( ! Utils.isBlank(logo)) ngo.put("logo", logo);
 			String ukbased = get(row, col("giftaidable"));
