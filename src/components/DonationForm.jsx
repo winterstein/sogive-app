@@ -14,6 +14,11 @@ import GiftAidForm from './GiftAidForm';
 
 import { donate, updateForm, initDonationForm } from './DonationForm-actions';
 
+/**
+ * TODO refactor this to not use Redux.
+ * 
+ * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
+ */
 
 class DonationForm extends React.Component {
 
@@ -59,7 +64,7 @@ class DonationForm extends React.Component {
 				<div className='DonationForm'>
 					<DonationAmounts
 							options={[5, 10, 20]}
-							outputs={project.outputs}
+							outputs={project && project.outputs}
 							charity={charity}
 							project={project}
 							amount={donationForm.amount}
@@ -193,7 +198,7 @@ const DonationFormButton = ({onToken, amount}) => {
 		: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 		
 	return (
-		<div>
+		<div className='stripe-checkout'>
 			<StripeCheckout name="SoGive" description="Donate with impact tracking"
 				image="http://local.sogive.org/img/SoGive-Light-64px.png"
 				email={email}
