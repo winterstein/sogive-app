@@ -8,6 +8,7 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 import Misc from './Misc.jsx';
 
+// #Minor TODO refactor to use DataStore more.
 
 export default class SearchPage extends React.Component {
 
@@ -27,8 +28,8 @@ export default class SearchPage extends React.Component {
 	}
 
 	render() {
-		// query comes from the url, via MainDiv. The form uses a state not a prop, so it can change.
-		const { q } = this.props;
+		// query comes from the url
+		let q = DataStore.getUrlValue("q");
 		return (
 			<div className='page SearchPage'>
 				<div className='col-md-12'>
@@ -83,13 +84,7 @@ class SearchForm extends React.Component {
 
 	search(query) {
 		// Put search query in URL so it's bookmarkable / shareable
-		const newHash = "#search?q="+escape(query);
-		if (window.history.pushState) {
-			window.history.pushState(null, null, newHash);
-		} else {
-			window.location.hash = newHash;
-		}
-
+		DataStore.setUrlValue("q", query);
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
 
 		ServerIO.search(query)
@@ -158,7 +153,7 @@ const SearchResultsNum = ({results, query}) => {
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
 	if (loading) return <div className='num-results'><Misc.Loading/></div>;
 	if (results.length || query) return <div className='num-results'>{results.length} results found</div>;
-	return null;
+	return <div className='num-results'></div>; // ?!
 };
 
 const SearchResult = ({ item }) => (
