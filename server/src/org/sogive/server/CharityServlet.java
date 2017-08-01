@@ -67,6 +67,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	@Override
 	protected JThing<NGO> getThingFromDB(WebRequest state) {	
 		JThing<NGO> thing = super.getThingFromDB(state);
+		if (thing==null) return null;
 		// impacts
 		doCalcImpacts(thing.java());
 		return thing;

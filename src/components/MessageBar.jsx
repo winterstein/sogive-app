@@ -6,8 +6,9 @@ const assert = SJTest.assert;
 import printer from '../utils/printer.js';
 import C from '../C.js';
 
-
-
+/**
+ * This has messages passed in via setState
+ */
 class MessageBar extends React.Component {
 	componentWillMount() {
 		// ViewManager.register(C.stateKey.messages, this, 'messages');

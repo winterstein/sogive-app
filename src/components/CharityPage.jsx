@@ -30,7 +30,13 @@ class CharityPage extends React.Component {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
 			this.setState({charity: charity});
-		}.bind(this));
+			return result;
+		}.bind(this))
+		.fail(err => {
+			// TODO nicer! use MessageBar
+			alert("There was an error loading this charity: "+JSON.stringify(err));
+			return err;
+		});
 	}
 
 	render() {
