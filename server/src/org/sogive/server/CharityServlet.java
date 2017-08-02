@@ -2,6 +2,7 @@ package org.sogive.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.gson.FlexiGson;
+import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
@@ -109,14 +111,34 @@ public class CharityServlet extends CrudServlet<NGO> {
 	@Override
 	protected JThing<NGO> doNew(WebRequest state, String id) {
 		String json = getJson(state);
-		JThing jt = new JThing(json);
-		// the ID must be made by this step
-//		String id = getId(state);
-		assert id != null && ! id.equals("new") : state;
+		Map rawMap = Gson.fromJSON(json);
+
+		// Make sure there's no ID collision!
+		NGO existsPublished = getCharity(id, KStatus.PUBLISHED);
+		NGO existsDraft = getCharity(id, KStatus.DRAFT);
+		assert existsPublished == null && existsDraft == null : state;
+		
+		// The given ID is OK: put it on the map and construct the NGO
+		rawMap.put("@id", id);
+		JThing jt = new JThing(Gson.toJSON(rawMap));
 		NGO mod = Thing.getThing(jt.map(), NGO.class);
 		assert mod.getId().equals(id) : mod+" "+id;
 		jt.setJava(mod);
 		return jt;
 	}
-
+	
+	@Override
+	protected String getId(WebRequest state) {
+		String json = getJson(state);
+		Map map = Gson.fromJSON(json);
+		if (map == null) return super.getId(state);
+		
+		String name = (String) map.get("name");
+		String id = NGO.idFromName(name);
+		if (id == null || id.isEmpty()) {
+			return super.getId(state);
+		} else {
+			return id;
+		}
+	}
 }

@@ -62,7 +62,7 @@ ServerIO.publish = function(charity, status) {
  */
 ServerIO.addCharity = function(charity, status=C.STATUS.DRAFT) {
 	let params = {		
-		data: {action: 'add', item: JSON.stringify(charity), status: status},
+		data: {action: 'new', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
 	return ServerIO.load('/charity.json', params);
 };
