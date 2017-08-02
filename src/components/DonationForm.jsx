@@ -221,15 +221,13 @@ const DonationFormButton = ({onToken, amount}) => {
 
 /**
  */
-const DonationAmounts = ({options, outputs, amount, handleChange}) => {
+const DonationAmounts = ({options, charity, project, outputs, amount, handleChange}) => {
 	// FIXME switch to using outputs
-	let unitImpact;
 	let damounts = _.map(options, price => (
 		<span key={'donate_'+price}>
 			<DonationAmount
 				price={price}
 				selected={price === amount}
-				unitImpact={unitImpact}
 				handleChange={handleChange}
 			/>
 			&nbsp;
@@ -260,7 +258,7 @@ const DonationAmounts = ({options, outputs, amount, handleChange}) => {
 					</InputGroup>
 				</div>
 				<div className="form-group col-md-2">
-					<Misc.ImpactDesc unitImpact={unitImpact} amount={amount} />
+					<Misc.ImpactDesc charity={charity} project={project} outputs={outputs} amount={amount} />
 				</div>
 			</form>
 		</div>

@@ -13,6 +13,7 @@ import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
+import NGO from '../data/charity/NGO';
 import I18n from 'easyi18n';
 
 const Misc = {};
@@ -93,20 +94,23 @@ Misc.Icon = ({fa, size, ...other}) => {
 };
 
 
-Misc.ImpactDesc = ({unitImpact, amount}) => {
-	if (unitImpact && unitImpact.number && unitImpact.price) {
+Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
+	if (outputs && outputs.length) {
+		const firstOutput = outputs[0];
 		// more people?
+
+		let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:firstOutput});
+
 		let peepText = '';
 		let peeps = 1;
-		if (unitImpact.number*amount < 0.5) {
-			peeps = 1 / (unitImpact.number * amount);
+		if (amount / cpbraw.value < 0.5) {
+			peeps = cpbraw.value / amount;
 			peepText = printer.prettyNumber(peeps, 1)+' people donating ';
 		}
-		const impactPerUnitMoney = unitImpact.number / unitImpact.price.value;
-		let impactNum = impactPerUnitMoney * amount * peeps;
-		let unitName = unitImpact.name || '';
+		let impactNum = (amount / cpbraw.value) * peeps;
+		let unitName = firstOutput.name || '';
 		// pluralise
-		unitName = trPlural(impactNum, unitName);
+		unitName = Misc.TrPlural(impactNum, unitName);
 		// NB long line as easiest way to do spaces in React
 		return (
 			<div className='impact'>
@@ -127,7 +131,7 @@ Misc.ImpactDesc = ({unitImpact, amount}) => {
  * @param {number} num 
  * @param {String} text 
  */
-const trPlural = (num, text) => {
+Misc.TrPlural = (num, text) => {
 	let isPlural = Math.round(num) !== 1;
 	// Plural forms: 
 	// Normal: +s, +es (eg potatoes, boxes), y->ies (eg parties), +en (e.g. oxen)

@@ -159,7 +159,7 @@ const ProjectList = ({projects, charity}) => {
 
 const COSTNAMES = {
 	annualCosts: "Annual costs",
-	// fundraisingCosts: "Fundraising costs",
+	fundraisingCosts: "Fundraising costs",
 	tradingCosts: "Trading costs",
 	incomeFromBeneficiaries: "Income from beneficiaries"
 };
@@ -184,10 +184,10 @@ const ProjectPanel = ({project}) => {
 				</div>
 				<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
 					<div className='col-md-6 inputs'><h4>Inputs</h4>
-						{inputs.map(output => <div key={"in_"+output.name}>{COSTNAMES[output.name] || output.name}: <Misc.Money precision={false} amount={output} /></div>)}
+						{inputs.map(input => <div key={"in_"+input.name}>{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} /></div>)}
 					</div>
 					<div className='col-md-6 outputs'><h4>Outputs</h4>
-						{outputs.map(output => <div key={"out_"+output.name}>{output.name}: {printer.prettyNumber(output.number)}</div>)}
+						{outputs.map(output => <div key={"out_"+output.name}>{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}</div>)}
 					</div>
 				</div>
 				<div className='upper-padding'>
