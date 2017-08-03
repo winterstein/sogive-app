@@ -266,8 +266,9 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		assert(options, [prop, otherStuff]);
 		assert(options.map, options);
 		let domOptions = options.map(option => <option key={"option_"+option} value={option} >{option}</option>);
+		let sv = value || defaultValue;
 		return (
-			<select className='form-control' name={prop} value={value || defaultValue} onChange={onChange} {...otherStuff} >
+			<select className='form-control' name={prop} value={sv} onChange={onChange} {...otherStuff} >
 				{domOptions}
 			</select>
 		);
