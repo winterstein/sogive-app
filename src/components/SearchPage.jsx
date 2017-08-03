@@ -6,7 +6,9 @@ import {uid, yessy} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
+import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
+import ImpactWidgetry from './ImpactWidgetry.jsx';
 
 // #Minor TODO refactor to use DataStore more.
 
@@ -156,7 +158,9 @@ const SearchResultsNum = ({results, query}) => {
 	return <div className='num-results'></div>; // ?!
 };
 
-const SearchResult = ({ item }) => (
+const SearchResult = ({ item }) => {
+	let project = NGO.getProject(item);
+	return (
 	<div className='SearchResult col-md-10' >
 		<Media>
 			<a href={`#charity?charityId=${item['@id']}`}>
@@ -166,9 +170,10 @@ const SearchResult = ({ item }) => (
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>
 					<p>{item.summaryDescription || item.description}</p>
-					<Misc.ImpactDesc unitImpact={item.unitRepImpact} amount={10} />
+					<Misc.ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={10} />
 				</Media.Body>
 			</a>
 		</Media>
 	</div>
-); //./SearchResult
+	); //./SearchResult
+};

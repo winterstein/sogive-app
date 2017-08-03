@@ -10,6 +10,7 @@ import { Button, FormControl, InputGroup } from 'react-bootstrap';
 import printer from '../utils/printer';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc';
+import ImpactWidgetry from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 
 import { donate, updateForm, initDonationForm } from './DonationForm-actions';
@@ -79,7 +80,7 @@ class DonationForm extends React.Component {
 			</div>
 		);
 	}
-}
+} // ./DonationForm
 
 
 class ThankYouAndShare extends React.Component {
