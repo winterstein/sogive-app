@@ -67,8 +67,8 @@ import jobs.BuildWinterwellProject;
 public class PublishSoGiveApp extends BuildTask {
 	// 'typeOfPublish' can be set to either 'test' or 'production'
 	String typeOfPublish =
-			"test";
-//			"production";
+//			"test";
+			"production";
 	// 'preClean' can be set to 'clean' in order to delete files before syncing new ones
 	String preClean =
 			"";
