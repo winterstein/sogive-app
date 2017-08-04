@@ -339,24 +339,23 @@ public class ImportCharityDataFromCSV {
 				String impactUnit = get(row, col("impact "+i+" unit"));
 				String type1 = get(row, col("impact "+i+" unit"));
 				Output output1 = new Output(impact1, type1);
-				if (! Utils.isBlank(confidence)) output1.put("confidence", confidence);
 				
-				// Assemble notes - we have extra info but also comments on confidence rating
-				String note1 = "";
+				// Confidence rating + reason				
+				if (! Utils.isBlank(confidence)) output1.put("confidence", confidence);
 				if (! Utils.isBlank(confidenceComment)) {
-					note1 += "Confidence comments: " + confidenceComment;
+					setNote(output1, "all", "Confidence comments: " + confidenceComment);
 				}
+				
+				// Output description
 				// Currently we don't have Extra Info 2-6, but allow that we might?
 				int extraCol = safeCol("extra info "+i);
 				if (extraCol >= 0) {
 					String extraInfo = get(row, col("extra info "+i));
 					if (! Utils.isBlank(extraInfo)) {
-						note1 += "\nExtra info: " + extraInfo;
+						output1.put("description", extraInfo);
 					}
 				}
-				if (! Utils.isBlank(note1)) {
-					setNote(output1, "all", note1);	
-				}
+
 				
 				output1.put("order", i-1);
 				output1.setName(impactUnit);
