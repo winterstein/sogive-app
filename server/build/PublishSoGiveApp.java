@@ -46,6 +46,8 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.BuildWWAppBase;
+import com.winterwell.web.app.HackyEmailer;
+import com.winterwell.web.app.PublishProjectTask;
 import com.winterwell.web.email.SMTPClient;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.youagain.client.BuildYouAgainJavaClient;
@@ -61,184 +63,20 @@ import jobs.BuildWinterwellProject;
 
 
 /**
- * copy pasta of {@link PublishDataServer}
- * FIXME rsync is making sub-dirs :(
  */
-public class PublishSoGiveApp extends BuildTask {
-	// 'typeOfPublish' can be set to either 'test' or 'production'
-	String typeOfPublish =
-			"test";
-//			"production";
-	// 'preClean' can be set to 'clean' in order to delete files before syncing new ones
-	String preClean =
-			"";
-	//		"clean";
-	String remoteUser;
-	private String remoteWebAppDir;
-	private File localWebAppDir;
+public class PublishSoGiveApp extends PublishProjectTask {
 			
 	public PublishSoGiveApp() throws Exception {
-		this.remoteUser = "winterwell";
-		this.remoteWebAppDir = "/home/winterwell/sogive-app";
-		// local
-		this.localWebAppDir = FileUtils.getWorkingDirectory();
-	}
-
-	@Override
-	public Collection<? extends BuildTask> getDependencies() {
-		return Arrays.asList(
-				new BuildUtils(),
-				new BuildMaths(),
-				new BuildBob(),
-				new BuildWeb(),
-				new BuildDataLog(), // This!
-				new BuildDepot(),
-				new BuildESJavaClient(),
-				new BuildWWAppBase(),
-				new BuildYouAgainJavaClient(),
-				new BuildFlexiGson()				
-				);
-	}
-
-	private void doUploadProperties(Object timestampCode) throws IOException {
-		// Copy up creole.properties and version.properties
-		Log.report("publish","Uploading .properties...", Level.INFO);
-		File localConfigDir = new File(localWebAppDir, "config");
-		{	// create the version properties
-			File creolePropertiesForSite = new File(localConfigDir, "version.properties");
-			Properties props = creolePropertiesForSite.exists()? FileUtils.loadProperties(creolePropertiesForSite)
-								: new Properties();
-			// set the publish time
-			props.setProperty("publishDate", ""+System.currentTimeMillis());
-			// set info on the git branch
-			String branch = GitTask.getGitBranch(null);
-			props.setProperty("branch", branch);
-			// ...and commit IDs
-			try {
-				Map<String, Object> info = GitTask.getLastCommitInfo(localWebAppDir);
-				props.setProperty("lastCommitId", (String)info.get("hash"));
-				props.setProperty("lastCommitInfo", StrUtils.compactWhitespace(XStreamUtils.serialiseToXml(info)));
-			} catch(Exception ex) {
-				// oh well;
-				Log.d("git.info", ex);
-			}
-
-			// the timestamp code
-			props.setProperty("timecode", ""+timestampCode);
-
-			// save
-			BufferedWriter w = FileUtils.getWriter(creolePropertiesForSite);
-			props.store(w, null);
-			FileUtils.close(w);
-		}
-
-		// Don't upload any local properties
-		File localProps = new File(localConfigDir, "local.properties");
-		File localPropsOff = new File(localConfigDir, "local.props.off");
-		if (localProps.exists()) {
-			FileUtils.move(localProps, localPropsOff);
-		}
-		
-		// rsync the directory
-		try {
-//			assert localConfigDir.isDirectory() : localConfigDir;
-//			Log.d("publish","Sending config dir files: "+Printer.toString(localConfigDir.list()));
-//			String remoteConfig = remoteUser+"@"+typeOfPublish+":"+remoteWebAppDir+"/config";
-//			RSyncTask task = new RSyncTask(localConfigDir.getAbsolutePath()+"/", remoteConfig, true);
-//			task.run();		
-			
-		} finally {
-			// put local-props back
-			if (localPropsOff.exists()) {
-				FileUtils.move(localPropsOff, localProps);
-			}
-		}
+		super("sogive", "/home/winterwell/sogive-app");
+		bashScript = "./publish-sogiveapp.sh";
 	}
 
 	@Override
 	protected void doTask() throws Exception {
-		// Setup file paths
-		// Check that we are running from a plausible dir:
-		if (! localWebAppDir.exists() || ! new File(localWebAppDir, "bin").isDirectory()
-			|| !new File(localWebAppDir,"web").exists()) {
-			throw new IOException("Not in the expected directory! dir="+FileUtils.getWorkingDirectory());
-		}
-		Log.i("publish", "Publishing to "+typeOfPublish+":"+ remoteWebAppDir);
-		// What's going on?
-		Environment.get().push(BobSettings.VERBOSE, true);
-
-		// TIMESTAMP code to avoid caching issues: epoch-seconds, mod 10000 to shorten it
-		String timestampCode = "" + ((System.currentTimeMillis()/1000) % 10000);
-
-		{	// copy all the properties files
-			doUploadProperties(timestampCode);
-		}
-
-		// Copy up the code		
-		// TODO copy up all the jars needed
-		{
-			EclipseClasspath ec = new EclipseClasspath(localWebAppDir);
-			Set<File> jars = ec.getCollectedLibs();
-			System.out.println(jars); // Why no mixpanel getting copied??
-			// Create local lib dir
-			File localLib = new File(localWebAppDir,"tmp-lib");
-			localLib.mkdirs();
-			assert localLib.isDirectory();
-			// Ensure desired jars are present
-			for (File jar : jars) {
-				File localJar = new File(localLib, jar.getName());
-				if (localJar.isFile() && localJar.lastModified() >= jar.lastModified()) {
-					continue;
-				}
-				FileUtils.copy(jar, localJar);
-			}
-			
-	//		// Remove unwanted jars
-	//		for (File jar : localLib.listFiles()) {
-	//			boolean found = false;
-	//			for (File jar2 : jars) {
-	//				if (jar.getName().equals(jar2.getName())) found = true;
-	//			}
-	//			if (!found) {
-	//				// This was in the lib directory, but not in the classpath
-	//				Log.w("publish", "Deleteing apparently unwanted file " + jar.getAbsolutePath());
-	//				FileUtils.delete(jar);
-	//			}
-	//		}
-			
-			// WW jars
-			Collection<? extends BuildTask> deps = getDependencies();
-			for (BuildTask buildTask : deps) {
-				if (buildTask instanceof BuildWinterwellProject) {
-					File jar = ((BuildWinterwellProject) buildTask).getJar();
-					FileUtils.copy(jar, localLib);
-				}
-			}						
-			// plus you-again for the client
-			File yajar = new File(FileUtils.getWinterwellDir(), "code/youagain-server/lib/youagain-server.jar");
-			FileUtils.copy(yajar, localLib);
-			
-			// This jar
-			JarTask jarTask = new JarTask(new File(localLib, "sogive.jar"), new File(localWebAppDir, "bin"));
-			jarTask.run();
-			jarTask.close();			
-		}
+		super.doTask();
 		
-//		// rsync - via publish-sogiveapp.sh
-//		// Bash script which does the rsync work
-		ProcessTask pubas = new ProcessTask("./publish-sogiveapp.sh "+typeOfPublish +preClean);
-		pubas.setEcho(true);
-		pubas.run();
-		System.out.println(pubas.getError());
-		pubas.close();
-//		Log.d(pubas.getCommand(), pubas.getOutput());
+		doSendEmail("daniel.winterstein@gmail.com,sanjay@sogive.org");
 	}
 	
-
-//	private String rsyncDest(String dir) {
-//		if ( ! dir.endsWith("/")) dir += "/";
-//		return remoteUser+"@"+server+ ":" + new File(remoteWebAppDir, dir).getAbsolutePath();
-//	}
-
 
 }

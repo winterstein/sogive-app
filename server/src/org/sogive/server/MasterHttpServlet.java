@@ -25,6 +25,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Range;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.web.app.FileServlet;
+import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.AField;
 import com.winterwell.web.fields.Checkbox;
@@ -98,6 +99,11 @@ public class MasterHttpServlet extends HttpServlet {
 			}
 			if (path.startsWith("/share")) {
 				ShareServlet s = new ShareServlet();
+				s.process(request);
+				return;
+			}
+			if (path.startsWith("/manifest")) {
+				ManifestServlet s = new ManifestServlet();
 				s.process(request);
 				return;
 			}		
