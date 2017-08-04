@@ -607,7 +607,7 @@ const saveDraftFn = _.debounce(
 		return true;
 	}, 1000);
 
-const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter}) => {
+const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
 	// some controls are not for all users
 	if (userFilter) {
 		if ( ! Roles.iCan(userFilter)) {
@@ -630,6 +630,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 					path={path} item={item} 
 					saveFn={saveDraftFnWrap}
 					help={help}
+					{ ...other}
 					/>
 				<MetaEditor item={item} itemPath={path} field={field} help={help} saveFn={saveDraftFnWrap} />
 			</Misc.Col2>
