@@ -121,7 +121,7 @@ class EditCharityPage extends React.Component {
 							help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					</Panel>
 					<Panel header={<h3>Overall</h3>} eventKey="3">
-						<ProjectsEditor charity={charity} projects={overalls} isOverall />
+						<ProjectsEditor isOverall charity={charity} projects={overalls} />
 					</Panel>
 					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
 						<ProjectsEditor charity={charity} projects={projectProjects} />
@@ -192,7 +192,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	if (projects.length===0) {
 		return (<div>
 			No projects analysed. This is correct for charities which focus on a single overall project.
-			<AddProject charity={charity} />
+			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
 	let rprojects = projects.map((p,i) => (
@@ -348,9 +348,6 @@ const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) =
 			<div className='col-md-6'>
 				<Misc.PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
 			</div>
-			<div className='col-md-6'>
-				<Misc.PropControl prop='year' label='Year' help='The year this data was published' path={citationPath} item={citation} saveFn={saveFn} />
-			</div>
 		</div>
 	);
 };
@@ -361,7 +358,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
 		<div className='form-inline'>
-			<Misc.PropControl prop='url' label='Source URL' path={formPath} />
+			<Misc.PropControl prop='url' label='Add Source URL' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
 				<Glyphicon glyph='plus' />

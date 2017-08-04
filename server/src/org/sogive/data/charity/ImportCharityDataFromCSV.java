@@ -181,21 +181,22 @@ public class ImportCharityDataFromCSV {
 				.create();
 		int cnt = 0;
 		for (String[] row : csvr) {
-			// the charity
-			if (Utils.isBlank(row[0])) continue;
-			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
-//			if ( ! ourid.contains("rnli")) continue;
-			String summaryDesc = Containers.get(row, col("summary description"));
-			String desc = Containers.get(row, col("longer description"));
-			String regNum = Containers.get(row, col("reg num"));
-			NGO ngo = CharityServlet.getCharity(ourid, null);
-			if (ngo==null) ngo = new NGO(ourid);
-			
 			// "Official Name" column isn't always filled - if this is the case,
 			// "Charity Name" value should be used & no alternate display-name
 			String officialName = Containers.get(row, col("official name"));
 			String charityName = Containers.get(row, col("charity name"));
 			assert (charityName != null && !charityName.isEmpty()) : row;
+			
+			String rawId = Utils.isBlank(officialName) ? charityName : officialName;
+			String ourId = StrUtils.toCanonical(rawId).replaceAll("\\s+", "-");
+
+			String summaryDesc = Containers.get(row, col("summary description"));
+			String desc = Containers.get(row, col("longer description"));
+			String regNum = Containers.get(row, col("reg num"));
+			
+			NGO ngo = CharityServlet.getCharity(ourId, null);
+			if (ngo==null) ngo = new NGO(ourId);
+			
 			if (officialName == null || officialName.isEmpty()) {
 				ngo.put(NGO.name, charityName);
 			} else {
