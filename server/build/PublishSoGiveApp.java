@@ -47,6 +47,7 @@ import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.BuildWWAppBase;
 import com.winterwell.web.app.HackyEmailer;
+import com.winterwell.web.app.KPubType;
 import com.winterwell.web.app.PublishProjectTask;
 import com.winterwell.web.email.SMTPClient;
 import com.winterwell.web.email.SimpleMessage;
@@ -69,6 +70,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 	public PublishSoGiveApp() throws Exception {
 		super("sogive", "/home/winterwell/sogive-app");
 		bashScript = "./publish-sogiveapp.sh";
+		typeOfPublish = KPubType.production;
 	}
 
 	@Override
