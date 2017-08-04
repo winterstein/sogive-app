@@ -44,6 +44,11 @@ NGO.getProject = (ngo) => {
  */
 NGO.getProjects2 = (ngo) => {
 	const { projects } = ngo;
+	if ( ! projects) {
+		// Wot no projects? Could be a new addition
+		NGO.assIsa(ngo);
+		return [];
+	}
 	assert(_.isArray(projects), ngo);
 	// Filter for ready, and never show unready
 	let readyProjects = projects.filter(p => p.ready);

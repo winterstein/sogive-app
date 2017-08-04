@@ -89,7 +89,9 @@ class SearchForm extends React.Component {
 		DataStore.setUrlValue("q", query);
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
 
-		ServerIO.search(query)
+		// hack to allow status=DRAFT
+		let status = DataStore.getUrlValue("status");
+		ServerIO.search(query, status)
 		.then(function(res) {
 			console.warn(res);
 			let charities = res.cargo.hits;
