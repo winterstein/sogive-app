@@ -269,13 +269,16 @@ const AddIO = ({list, pio, ioPath}) => {
 	assert(_.isArray(list) && _.isArray(ioPath) && pio);
 	const formPath = ['widget','AddIO', pio, 'form'];
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
-	return (<div className='form-inline'>
-		<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
-		{' '}
-		<button className='btn btn-default' onClick={oc}>
-			<Glyphicon glyph='plus' />
-		</button>
-	</div>);
+
+	return (
+		<div className='form-inline'>
+			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
+			{' '}
+			<button className='btn btn-default' onClick={oc}>
+				<Glyphicon glyph='plus' />
+			</button>
+		</div>
+	);
 };
 
 
@@ -441,12 +444,10 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>
 						</th>
-						<th>
-							Meta
-						</th>
+						<th>Meta</th>
 					</tr>
 					{rinputs}
-					<tr><td colSpan={2}>
+					<tr><td colSpan={6}>
 						<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
 					</td></tr>
 				</tbody>
@@ -456,8 +457,9 @@ This is also a good place to point if, for example, the impacts shown are an ave
 }; // ./ProjectOutputs()
 
 const STD_INPUTS = {
+	projectCosts: "Project costs",
 	annualCosts: "Annual costs",
-	// fundraisingCosts: "Fundraising costs",
+	fundraisingCosts: "Fundraising costs",
 	tradingCosts: "Trading costs",
 	incomeFromBeneficiaries: "Income from Beneficiaries"
 };
