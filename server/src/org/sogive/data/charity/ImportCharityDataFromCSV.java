@@ -188,7 +188,7 @@ public class ImportCharityDataFromCSV {
 			assert (charityName != null && !charityName.isEmpty()) : row;
 			
 			String rawId = Utils.isBlank(officialName) ? charityName : officialName;
-			String ourId = StrUtils.toCanonical(rawId).replaceAll("\\s+", "-");
+			final String ourId = StrUtils.toCanonical(rawId).replaceAll("\\s+", "-");
 
 			String summaryDesc = Containers.get(row, col("summary description"));
 			String desc = Containers.get(row, col("longer description"));
@@ -400,7 +400,7 @@ public class ImportCharityDataFromCSV {
 //					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 //				}
 //			}
-			ESPath path = sgconfig.getPath(NGO.class, ourid, KStatus.PUBLISHED);
+			ESPath path = sgconfig.getPath(NGO.class, ourId, KStatus.PUBLISHED);
 			UpdateRequestBuilder pi = client.prepareUpdate(path);
 //			String json = gson.toJson(ngo);		
 			pi.setDoc(ngo);
