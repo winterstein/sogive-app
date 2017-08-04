@@ -75,7 +75,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 	protected void doTask() throws Exception {
 		super.doTask();
 		
-		doSendEmail("daniel.winterstein@gmail.com,sanjay@sogive.org");
+		doSendEmail("daniel.winterstein@gmail.com,sanjay@sogive.org,daniel.appel.winterwell@gmail.com,roscoe@winterwell.com");
 	}
 	
 
