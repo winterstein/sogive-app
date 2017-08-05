@@ -676,6 +676,9 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	assert(meta && itemField && metaField && icon);
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
+	let v = meta[metaField];
+	// green if set
+	if (v) ricon = <span className='text-success'>{ricon}</span>;
 	if ( ! DataStore.getValue(widgetNotesPath)) {
 		return <div className='MetaEditorItem'>{ricon} {meta[metaField]}</div>;
 	}
