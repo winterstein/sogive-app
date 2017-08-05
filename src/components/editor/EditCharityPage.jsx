@@ -675,6 +675,7 @@ const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type, saveFn}) => {
 	assert(meta && itemField && metaField && icon);
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
+	// icon with click->open behaviour
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
 	let v = meta[metaField];
 	// green if set
