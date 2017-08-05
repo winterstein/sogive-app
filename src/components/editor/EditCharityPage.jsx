@@ -156,7 +156,6 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='One short sentence, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
-		<EditField item={charity} type='location' field='location' label='Location' help="Where in the world does the charity deliver?" />
 		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags' 
 			help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
 		<EditField item={charity} type='text' field='whoTags' label='Who tags' 
@@ -182,7 +181,8 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
 				help='Keeping a summary of our efforts to get information from the charity, and their responses.' />
 
-		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' />		
+		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' 
+				help='If there are 3rd party impact assessments, e.g. GiveWell, enter the links' />		
 	</div>);
 }; // ./ProfileEditor
 
