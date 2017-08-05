@@ -120,7 +120,7 @@ const CharityProfile = ({charity}) => {
 						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
 					</div>
 					<div className='col-md-7 charity-name-div'>
-						<h2>{charity.name}</h2>
+						<h2>{charity.displayName || charity.name}</h2>
 						<br />
 						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
 						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />

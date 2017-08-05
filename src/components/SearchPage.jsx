@@ -9,6 +9,7 @@ import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
 import ImpactWidgetry from './ImpactWidgetry.jsx';
+import C from '../C';
 
 // #Minor TODO refactor to use DataStore more.
 
@@ -89,7 +90,9 @@ class SearchForm extends React.Component {
 		DataStore.setUrlValue("q", query);
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
 
-		ServerIO.search(query)
+		// hack to allow status=DRAFT
+		let status = DataStore.getUrlValue("status");
+		ServerIO.search(query, status)
 		.then(function(res) {
 			console.warn(res);
 			let charities = res.cargo.hits;
@@ -160,10 +163,12 @@ const SearchResultsNum = ({results, query}) => {
 
 const SearchResult = ({ item }) => {
 	let project = NGO.getProject(item);
+	let status = item.status;
+	let page = status===C.STATUS.DRAFT? 'edit' : 'charity';
 	return (
 	<div className='SearchResult col-md-10' >
 		<Media>
-			<a href={`#charity?charityId=${item['@id']}`}>
+			<a href={'#'+page+'?charityId='+escape(NGO.id(item))}>
 				<Media.Left>
 					{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.name}`} /> : null}
 				</Media.Left>

@@ -29,7 +29,13 @@ class DonationForm extends React.Component {
 
 		// some charities dont accept donations
 		if (charity.noPublicDonations) {
-			return (<div className="DonationForm noPublicDonations">Sorry: This charity does not accept public donations.</div>);
+			const reason = charity.meta && charity.meta.noPublicDonations && charity.meta.noPublicDonations.notes;
+			return (
+				<div className="DonationForm noPublicDonations">
+					<p>Sorry: This charity does not accept public donations.</p>
+					{ reason? (<p>The stated reason is: {reason}</p>) : '' }
+				</div>
+			);
 		}
 
 		if ( ! donationForm) {

@@ -15,7 +15,6 @@ const addCharity = () => {
 	// TODO message the user!
 	ServerIO.addCharity(item)
 	.then(res => {
-		alert("Success! Charity added");
 		console.log("AddCharity", res);
 		let charity = res.cargo;
 		DataStore.setValue(['widget','AddCharityWidget','result','id'], NGO.id(charity));
@@ -57,7 +56,10 @@ const addInputOrOutput = ({list, ioPath, formPath}) => {
 const addDataSource = ({list, srcPath, formPath}) => {
 	assert(_.isArray(list), list);
 	let citation = Citation.make(DataStore.getValue(formPath));
+	
 	list.push(citation);
+	DataStore.setValue(srcPath, list);
+	
 	// clear the form
 	DataStore.setValue(formPath, {});
 };

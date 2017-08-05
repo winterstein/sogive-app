@@ -23,7 +23,7 @@ Project.make = function(base) {
 	let proj = {
 		inputs: [
 			{"@type":"MonetaryAmount","name":"annualCosts","currency":"GBP"},
-			// {"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
+			{"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
 			{"@type":"MonetaryAmount","name":"tradingCosts","currency":"GBP"},
 			{"@type":"MonetaryAmount","name":"incomeFromBeneficiaries","currency":"GBP"}
 		],
@@ -44,6 +44,13 @@ Project.getLatest = (projects) => {
 
 Project.getTotalCost = (project) => {
 	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);
-	const value = project.inputs.reduce((total, input) => total + (input.value || 0), 0);
+	const value = project.inputs.reduce((total, input) => {
+		if (deductibleInputs.indexOf(input.name) < 0) {
+			return total + (input.value || 0);
+		} 
+		return total - (input.value || 0);
+	}, 0);
 	return MonetaryAmount.make({currency, value});
 };
+
+const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];

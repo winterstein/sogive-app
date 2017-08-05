@@ -181,16 +181,29 @@ public class ImportCharityDataFromCSV {
 				.create();
 		int cnt = 0;
 		for (String[] row : csvr) {
-			// the charity
-			if (Utils.isBlank(row[0])) continue;
-			String ourid = StrUtils.toCanonical(row[0]).replaceAll("\\s+", "-");
-//			if ( ! ourid.contains("rnli")) continue;
+			// "Official Name" column isn't always filled - if this is the case,
+			// "Charity Name" value should be used & no alternate display-name
+			String officialName = Containers.get(row, col("official name"));
+			String charityName = Containers.get(row, col("charity name"));
+			assert (charityName != null && !charityName.isEmpty()) : row;
+			
+			String rawId = Utils.isBlank(officialName) ? charityName : officialName;
+			final String ourId = StrUtils.toCanonical(rawId).replaceAll("\\s+", "-");
+
 			String summaryDesc = Containers.get(row, col("summary description"));
 			String desc = Containers.get(row, col("longer description"));
 			String regNum = Containers.get(row, col("reg num"));
-			NGO ngo = CharityServlet.getCharity(ourid, null);
-			if (ngo==null) ngo = new NGO(ourid);
-			ngo.put(ngo.name, row[0]);
+			
+			NGO ngo = CharityServlet.getCharity(ourId, null);
+			if (ngo==null) ngo = new NGO(ourId);
+			
+			if (officialName == null || officialName.isEmpty()) {
+				ngo.put(NGO.name, charityName);
+			} else {
+				ngo.put(NGO.name, officialName);
+				ngo.put("displayName", charityName);
+			}
+			
 			if ( ! Utils.isBlank(summaryDesc)) ngo.put("summaryDescription", StrUtils.normalisePunctuation(summaryDesc));
 			if ( ! Utils.isBlank(desc)) ngo.put("description", StrUtils.normalisePunctuation(desc));
 			if ( ! Utils.isBlank(regNum)) ngo.put("englandWalesCharityRegNum", regNum);
@@ -227,6 +240,10 @@ public class ImportCharityDataFromCSV {
 			if ( ! Utils.isBlank(ad)) {
 				try {
 					ngo.put("noPublicDonations", ! yes(ad));
+					// A lot of non-yes fields are actually notes as to WHY no public donations
+					if (!Utils.isBlank(ad) && !"no".equalsIgnoreCase(ad)) {
+						setNote(ngo, "noPublicDonations", ad);
+					}
 				} catch(Exception ex) {
 					Log.e("import", ex);
 				}
@@ -238,6 +255,7 @@ public class ImportCharityDataFromCSV {
 			boolean ready = yes(_ready);
 			String rep = get(row, col("representative")).toLowerCase();
 			boolean isRep = yes(rep);
+			
 //			40	Confidence indicator	An indicator of the confidence we have in the data, especially the cost per impact	Low
 //			41	Comments on confidence indicator	Why?	The cost shown is based on CR UK funding 4000 researchers for a cost of £600m, minus some deductions to get to £400m. It is not clear whether this is right, for example, those 4000 researchers might include some who are partfunded by other organisations, or it may be that there are 4000 "inhouse" cruk researchers, but CRUK also funds some researchers who work externally, and some of the cruk funds are also partfunding some other researchers outside of the 4000 mentioned in the accounts. When I contacted CRUK for clarity on this, they were unable to clarify the situation
 //			42	Stories	Stories about beneficiaries (either as a link, or copied and pasted - if copied and pasted also include a source). Sometimes this is available in the annual report and accounts, but may need to look on the charity's website	
@@ -308,6 +326,12 @@ public class ImportCharityDataFromCSV {
 			}
 			project.put("inputs", inputs);
 			
+			// Confidence is attributed to project outputs, so confidence-comment should be too
+			String confidence = get(row, col("confidence indicator"));
+			// Normalise eg "Very Low" to "very-low"
+			confidence = confidence.toLowerCase().replaceAll("\\s", "-");
+			String confidenceComment = get(row, col("comments on confidence indicator"));
+						
 			// outputs
 			List<Output> outputs = new ArrayList();
 			for(int i=1; i<7; i++) {
@@ -316,6 +340,24 @@ public class ImportCharityDataFromCSV {
 				String impactUnit = get(row, col("impact "+i+" unit"));
 				String type1 = get(row, col("impact "+i+" unit"));
 				Output output1 = new Output(impact1, type1);
+				
+				// Confidence rating + reason				
+				if (! Utils.isBlank(confidence)) output1.put("confidence", confidence);
+				if (! Utils.isBlank(confidenceComment)) {
+					setNote(output1, "all", "Confidence comments: " + confidenceComment);
+				}
+				
+				// Output description
+				// Currently we don't have Extra Info 2-6, but allow that we might?
+				int extraCol = safeCol("extra info "+i);
+				if (extraCol >= 0) {
+					String extraInfo = get(row, col("extra info "+i));
+					if (! Utils.isBlank(extraInfo)) {
+						output1.put("description", extraInfo);
+					}
+				}
+
+				
 				output1.put("order", i-1);
 				output1.setName(impactUnit);
 				output1.setPeriod(start, end);
@@ -358,7 +400,7 @@ public class ImportCharityDataFromCSV {
 //					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 //				}
 //			}
-			ESPath path = sgconfig.getPath(NGO.class, ourid, KStatus.PUBLISHED);
+			ESPath path = sgconfig.getPath(NGO.class, ourId, KStatus.PUBLISHED);
 			UpdateRequestBuilder pi = client.prepareUpdate(path);
 //			String json = gson.toJson(ngo);		
 			pi.setDoc(ngo);
@@ -377,13 +419,24 @@ public class ImportCharityDataFromCSV {
 
 	static final Map<String,Integer> cols = new HashMap();
 	
+	private int safeCol(String colName) {
+		try {
+			return col(colName);
+		} catch (AssertionError ae) {
+			return -1;
+		}
+	}
+	
 	private int col(String colName) {
 		String colname = StrUtils.toCanonical(colName);
 		Integer ci = cols.get(colname);
 		if (ci==null) {
 			List<String> hs = Containers.filter(HEADER_ROW, h -> h.equals(colname));
 			if (hs.isEmpty()) hs = Containers.filter(HEADER_ROW, h -> h.contains(colname));
-			assert hs.size() == 1 : colname+" "+hs+" from "+HEADER_ROW;
+			if (hs.size() != 1) {
+				assert hs.size() == 1 : colname+" "+hs+" from "+HEADER_ROW;	
+			}
+			
 			ci = HEADER_ROW.indexOf(hs.get(0));
 			cols.put(colname, ci);			
 		}
@@ -421,8 +474,27 @@ public class ImportCharityDataFromCSV {
 //					+"\t"+eg
 					);			
 		}
-		
 	}
-
 	
+	private void setNote(Thing thing, String field, String note) {
+		setMeta(thing, field, "notes", note);
+	}
+	
+	private void setUrl(Thing thing, String field, String url) {
+		setMeta(thing, field, "url", url);
+	}
+	
+	private void setMeta(Thing thing, String field, String metaField, String metaText) {
+		Map meta = (Map) thing.get("meta");
+		if (meta == null) {
+			meta = new HashMap<String, Object>();
+			thing.put("meta", meta);
+		}
+		Map fieldMeta = (Map)meta.get(field);
+		if (fieldMeta == null) {
+			fieldMeta = new HashMap<String, Object>();
+			meta.put(field, fieldMeta);
+		}
+		fieldMeta.put(metaField, metaText);
+	}
 }
