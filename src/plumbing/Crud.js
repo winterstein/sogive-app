@@ -19,13 +19,35 @@ ActionMan.crud = (type, id, action) => {
 		assert(id==='new');
 		publisher.id = id;
 	}
-	DataStore.setValue(['transient', id, 'status'], C.STATUS.saving);
-	ServerIO.crud(type, publisher, action)
-	.then(DataStore.updateFromServer)
-	.then(() => {
+	// new item? then change the action
+	if (id===C.newId && action==='save') {
+		action = 'new';
+	}
+	// mark the widget as saving
+	DataStore.setValue(['transient', id, 'status'], C.STATUS.saving);	
+	// call the server
+	return ServerIO.crud(type, publisher, action)
+	.then(DataStore.updateFromServer.bind(DataStore))
+	.then((res) => {
+		// success :)
+		if (id===C.newId) {
+			// id change!
+			// updateFromServer should have stored the new item
+			// So just repoint the focus
+			let serverId = res.cargo.id;
+			DataStore.setFocus(type, serverId);
+		}
+		// clear the saving flag
 		DataStore.setValue(['transient', id, 'status'], C.STATUS.clean);
+		return res;
+	})
+	.fail((err) => {
+		// bleurgh
+		console.warn(err);
+		DataStore.setValue(['transient', id, 'status'], C.STATUS.dirty);
+		return err;
 	});
-};
+}; // ./crud
 
 ActionMan.saveEdits = (type, pubId) => {
 	return ActionMan.crud(type, pubId, 'save');
@@ -55,6 +77,7 @@ ServerIO.crud = function(type, item, action) {
 	// "advert"" can fall foul of adblocker!
 	if (stype==='advert') stype = 'vert';
 	if (stype==='advertiser') stype = 'vertiser';
+	// NB: load() includes handle messages
 	return ServerIO.load('/'+stype+'/'+item.id+'.json', params);
 };
 ServerIO.saveEdits = function(type, item) {

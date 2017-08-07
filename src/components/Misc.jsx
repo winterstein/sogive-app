@@ -325,7 +325,10 @@ Misc.SavePublishDiscard = ({type, id}) => {
 	assMatch(id, String);
 	let transientStatus = DataStore.getValue('transient', id, 'status');
 	let isSaving = C.STATUS.issaving(transientStatus);	
-	return (<div>
+	let item = DataStore.getData(type, id);
+	// if nothing has been edited, then we can't publish, save, or discard
+	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && ! item.modified;
+	return (<div title={item && item.status}>
 		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.saveEdits(type, id)}>
 			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
 		</button>

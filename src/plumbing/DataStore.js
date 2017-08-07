@@ -16,7 +16,11 @@ class Store {
 		// init the "canonical" categories		
 		this.appstate = {
 			data:{}, 
-			/** what are you looking at? */
+			/** 
+			 * What are you looking at? 
+			 * This is for transient focus. It is NOT for navigation parameters
+			 *  -- location and getUrlValue() are better for navigational focus.
+			*/
 			focus:{}, 
 			/** e.g. form settings */
 			widget:{}, 
@@ -28,6 +32,12 @@ class Store {
 		};
 		// init url vars
 		this.parseUrlVars(window.location);
+		// and listen to changes
+		window.addEventListener('hashchange', e => {
+			console.warn("hash change - update DataStore", window.location);
+			this.parseUrlVars(window.location);
+			return true;
+		});
 	}
 
 	/**
@@ -131,7 +141,13 @@ class Store {
 
 	/**
 	 * Update a single path=value.
+	 * 
 	 * Unlike update(), this can set {} or null values.
+	 * 
+	 * It also has a hack, where edits to [data, type, id, ...] (i.e. edits to data items) will
+	 * also set the modified flag, [data, type, id, modified] = true.
+	 * This is a total hack, but handy.
+	 * 
 	 * @param {String[]} path This path will be created if it doesn't exist (except if value===null)
 	 * @param {*} value 
 	 * @param {boolean} update Set to false to switch off sending out an update
@@ -160,6 +176,15 @@ class Store {
 			}
 			tip = newTip;
 		}
+		// HACK: update a data value => mark it as modified
+		if (path[0] === 'data' && path.length > 3 && DataStore.DATA_MODIFIED_PROPERTY) {
+			// chop path down to [data, type, id]
+			let modPath = path.slice(0, 3).concat(DataStore.DATA_MODIFIED_PROPERTY);
+			// avoid infinite loopyness
+			if ( ! _.isEqual(path, modPath)) {
+				this.setValue(modPath, true, false);
+			}
+		}
 		if (update) {
 			this.update();
 		}
@@ -185,16 +210,29 @@ class Store {
 		return this.getValue('widget', widgetName, 'show');
 	}
 
+
+	/**
+	 * Get hits from the cargo, and store them under data.type.id
+	 * @param {*} res 
+	 */
 	updateFromServer(res) {
 		console.log("updateFromServer", res);
+		if ( ! res.cargo) {			
+			return res; // return for chaining .then()
+		}
+		// must be bound to the store
+		assert(this && this.appstate, "Use with .bind(DataStore)");
 		let hits = res.cargo && res.cargo.hits;
-		if ( ! hits) return;
+		if ( ! hits && res.cargo) {			
+			hits = [res.cargo]; // just the one?
+		}
 		let itemstate = {data:{}};
 		hits.forEach(item => {
 			try {
 				let type = getType(item);
 				if ( ! type) {
-					// skip
+					// 
+					console.log("skip server object", item);
 					return;
 				}
 				assert(C.TYPES.has(type), item);
@@ -205,6 +243,9 @@ class Store {
 				}
 				if (item.id) {
 					typemap[item.id] = item;
+				} else if (item["@id"]) {
+					// bleurgh, thing.org style ids -- which are asking for trouble :(
+					typemap[item["@id"]] = item;
 				} else {
 					console.warn("No id?!", item, "from", res);
 				}
@@ -220,6 +261,8 @@ class Store {
 } // ./Store
 
 const DataStore = new Store();
+// switch on data item edits => modified flag
+DataStore.DATA_MODIFIED_PROPERTY = 'modified';
 export default DataStore;
 // accessible to debug
 if (typeof(window) !== 'undefined') window.DataStore = DataStore;

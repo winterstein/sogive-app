@@ -2,9 +2,13 @@ import React from 'react';
 
 import AccountMenu from './AccountMenu';
 
-const NavBar = ({page}) => {
-	console.log('NavBar', page);
-
+/**
+ * 
+ * @param {*} page The current page
+ */
+const NavBar = ({currentPage}) => {
+	// make the page links
+	let pageLinks = ['dashboard', 'search'].map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
 	return (
 		<nav className="navbar navbar-fixed-top navbar-inverse">
 			<div className="container">
@@ -28,17 +32,10 @@ const NavBar = ({page}) => {
 				</div>
 				<div id="navbar" className="navbar-collapse collapse">
 					<ul className="nav navbar-nav">
-						<li className={page === 'dashboard'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#dashboard">
-								My Profile
-							</a></li>
-						<li className={page === 'search'? 'active' : ''}>
-							<a className="nav-item nav-link" href="#search">
-								Search
-							</a></li>
+						{pageLinks}
 					</ul>
 					<div>
-						<AccountMenu active={page === 'account'} />
+						<AccountMenu active={currentPage === 'account'} />
 					</div>
 				</div>
 			</div>
@@ -46,5 +43,13 @@ const NavBar = ({page}) => {
 	);
 };
 // ./NavBar
+
+const NavLink = ({currentPage, targetPage}) => {
+	return (<li className={currentPage === targetPage? 'active' : ''}>
+				<a className="nav-item nav-link" href={'#'+targetPage} >
+					{targetPage}
+				</a>
+			</li>);
+};
 
 export default NavBar;
