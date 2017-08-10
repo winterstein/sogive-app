@@ -14,6 +14,7 @@ import com.winterwell.es.ESType;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.admin.CreateIndexRequest;
+import com.winterwell.es.client.admin.CreateIndexRequest.Analyzer;
 import com.winterwell.es.client.admin.PutMappingRequestBuilder;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.io.ArgsParser;
@@ -43,8 +44,14 @@ public class DB {
 				continue;
 			}
 			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
+			es.debug = true;
 			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
+			// english stopwords and stemming ??This doesn't seem to work :(
+			// ES docs are opaque on how to actually get analyzers setup :(
+//			pi.setDefaultAnalyzer(Analyzer.english);
 			pi.setAlias(path.index());
+			// TODO synonyms
+			
 			IESResponse r = pi.get();
 			
 			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
