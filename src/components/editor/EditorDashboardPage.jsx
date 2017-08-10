@@ -2,7 +2,7 @@ import React from 'react';
 import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import _ from 'lodash';
-import { XId } from 'wwutils';
+import { XId, encURI } from 'wwutils';
 import {Panel} from 'react-bootstrap';
 
 import printer from '../../utils/printer';
@@ -32,7 +32,7 @@ class EditorDashboardPage extends React.Component {
 const AddCharityWidget = () => {
 	let id = DataStore.getValue(['widget','AddCharityWidget','result','id']);
 	if (id) {
-		return <a href={'/#edit?charityId='+escape(id)}>Edit {DataStore.getValue(['widget','AddCharityWidget','form','name'])}</a>;
+		return <a href={'/#edit?charityId='+encURI(id)}>Edit {DataStore.getValue(['widget','AddCharityWidget','form','name'])}</a>;
 	}
 	return (<div>
 		<div className='alert alert-warning'>

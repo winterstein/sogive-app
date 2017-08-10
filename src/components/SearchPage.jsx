@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, Glyphicon, ControlLabel, Media, MediaLeft, MediaBody, MediaHeading, Well, InputGroup, InputGroupButton} from 'react-bootstrap';
-import {uid, yessy} from 'wwutils';
+import {uid, yessy, encURI} from 'wwutils';
 
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
@@ -168,7 +168,7 @@ const SearchResult = ({ item }) => {
 	return (
 	<div className='SearchResult col-md-10' >
 		<Media>
-			<a href={'#'+page+'?charityId='+escape(NGO.id(item))}>
+			<a href={'#'+page+'?charityId='+encURI(NGO.id(item))}>
 				<Media.Left>
 					{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.name}`} /> : null}
 				</Media.Left>

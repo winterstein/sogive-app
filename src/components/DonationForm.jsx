@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
 import StripeCheckout from 'react-stripe-checkout';
-import { uid, XId } from 'wwutils';
+import { uid, XId, encURI } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 import printer from '../utils/printer';
 import NGO from '../data/charity/NGO';
@@ -145,7 +145,7 @@ class ThankYouAndShare extends React.Component {
 		data-href={url}
 		data-layout="button_count"
 		data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
-		href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a>
+		href={"https://www.facebook.com/sharer/sharer.php?u="+encURI(url)}>Share</a>
 	</div>
 	*/
 
@@ -161,7 +161,7 @@ class ThankYouAndShare extends React.Component {
 		// TODO make this line nicer
 		// TODO just send the charity ID, and load the rest server side, to give a nicer url
 		// Also window.location might contain parameters we dont want to share.
-		let url = "https://app.sogive.org/share?link="+escape(""+window.location)+"&title="+escape(pageInfo.title)+"&image="+escape(pageInfo.image)+"&desc="+escape(pageInfo.desc);
+		let url = "https://app.sogive.org/share?link="+encURI(""+window.location)+"&title="+encURI(pageInfo.title)+"&image="+encURI(pageInfo.image)+"&desc="+encURI(pageInfo.desc);
 		pageInfo.url = url;
 
 		return (
@@ -180,7 +180,7 @@ class ThankYouAndShare extends React.Component {
 				</div>
 				<div className='col-md-12 social-media-buttons'>
 					<center>
-						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
+						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+encURI(this.state.shareText)+'&url='+encURI(url)} data-show-count="none">
 							<Misc.Logo service='twitter' />
 						</a>
 
