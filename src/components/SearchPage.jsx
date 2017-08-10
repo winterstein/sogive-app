@@ -50,11 +50,13 @@ export default class SearchPage extends React.Component {
 }
 
 const FeaturedCharities = () => null;
-/*<div> class='featured-charities''
-					<p className='featured-charities-header'>
-						Featured Charities
-					<FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity. When a search returns results, this should convert into a sidebar, or at least become hidden, and a sidebar should be generated. } }/>
-					</p> */
+/*
+<div> class='featured-charities''
+	<p className='featured-charities-header'>
+		Featured Charities
+	<FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity. When a search returns results, this should convert into a sidebar, or at least become hidden, and a sidebar should be generated. } }/>
+	</p>
+*/
 
 
 class SearchForm extends React.Component {
@@ -112,6 +114,11 @@ class SearchForm extends React.Component {
 		this.search('');
 	}
 
+	clear(e) {
+		e.preventDefault();
+		this.setState({q: ''});
+	}
+
 	render() {
 		return (
 			<Form onSubmit={(event) => { this.onSubmit(event); }} >
@@ -124,6 +131,9 @@ class SearchForm extends React.Component {
 							placeholder="Keyword search"
 							onChange={(e) => this.onChange('q', e)}
 						/>
+						<FieldClearButton onClick={(e) => this.clear(e)}>
+							<Glyphicon glyph='remove-circle' />
+						</FieldClearButton>
 						<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
 							<Glyphicon glyph="search" />
 						</InputGroup.Addon>
@@ -139,6 +149,11 @@ class SearchForm extends React.Component {
 	} // ./render
 } //./SearchForm
 
+const FieldClearButton = ({onClick, children}) => (
+	<span className='field-clear-button visible-xs-block' onClick={onClick}>
+		{children}
+	</span>
+);
 
 const SearchResults = ({ results, query }) => {
 	if ( ! results) results = [];
@@ -170,10 +185,10 @@ const SearchResult = ({ item }) => {
 		<Media>
 			<a href={'#'+page+'?charityId='+escape(NGO.id(item))}>
 				<Media.Left>
-					{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.name}`} /> : null}
+					{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.displayName || item.name}`} /> : null}
 				</Media.Left>
 				<Media.Body>
-					<Media.Heading>{item.name}</Media.Heading>
+					<Media.Heading>{item.displayName || item.name}</Media.Heading>
 					<p>{item.summaryDescription || item.description}</p>
 					<Misc.ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={10} />
 				</Media.Body>

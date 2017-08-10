@@ -3,16 +3,19 @@ import React from 'react';
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy} from 'wwutils';
-import { Panel, Image, Well, Label } from 'react-bootstrap';
+import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
+import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';
+import ImpactWidgetry from './ImpactWidgetry';
 
 class CharityPage extends React.Component {
 
@@ -30,6 +33,14 @@ class CharityPage extends React.Component {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
 			this.setState({charity: charity});
+
+			// Set default donation
+			const donationValue = DataStore.getValue(['widget','CharityPage', NGO.id(charity), 'donationAmount']);
+			if (!donationValue) {
+				const defaultDonation = MonetaryAmount.make({value: 10, currency: 'gbp'});
+				DataStore.setValue(['widget','CharityPage', NGO.id(charity), 'donationAmount'], defaultDonation);
+			}
+
 			return result;
 		}.bind(this))
 		.fail(err => {
@@ -59,30 +70,147 @@ class CharityPage extends React.Component {
 			return annualCost? -annualCost.value : 0;
 		});
 
-		// TODO not if there's only overall		
-		const projectsDiv = yessy(currentProjects)? <div><h2>Projects</h2><ProjectList projects={currentProjects} charity={charity} /></div> : null;
-		const oldProjectsDiv = yessy(oldProjects)? <div><h2>Old Projects</h2><ProjectList projects={oldProjects} charity={charity} /></div> : null;
-		const overallDiv = <ProjectPanel project={overall} charity={charity} />;		
-		const project = NGO.getProject(charity);
-		// put it together
-		return (
-			<div className='page CharityPage'>
-				<CharityProfile charity={charity} />
-				<div className='upper-padding col-md-12 charity-donation-div'>
-					<p className='donateto'>Donate to { charity.name }</p>
-					<div className='col-md-12 charity-donation-form'>
-						<DonationForm charity={charity} project={project} />
-					</div>
+		const impactColumn = (
+			<div className='col-md-7 column impact-column'>
+				<div className='header'>
+					<h1 className='charity-name'>
+						{charity.displayName || charity.name}
+					</h1>
+					<CharityTags className='why-tags' tagsString={charity.whyTags} />
+					<CharityTags className='where-tags' tagsString={charity.whereTags} />
 				</div>
-				<div className='charity-statistics-div'>
-					{overallDiv}
-					{projectsDiv}
-					{oldProjectsDiv}
+				<Tabs defaultActiveKey={1}>
+					<Tab eventKey={1} title='Impact'>
+						<CharityDonate charity={charity} />
+					</Tab>
+				</Tabs>
+			</div>
+		);
+		const spacerColumn = <div className='col-md-1' />;
+		const infoColumn = (
+			<div className='col-md-4 column info-column'>
+				<Tabs defaultActiveKey={1}>
+					<Tab eventKey={1} title='About'>
+						<CharityAbout charity={charity} />
+					</Tab>
+					<Tab eventKey={2} title='Extra Info'>
+						<CharityExtra charity={charity} />
+					</Tab>
+				</Tabs>
+			</div>
+		);
+
+		return (
+			<div>
+				<div className='top-bands'>
+					<div className='band1' />
+					<div className='band2' />
+					<div className='band3' />
+				</div>
+				<div className='charity-page row'>
+					{impactColumn}
+					{spacerColumn}
+					{infoColumn}
 				</div>
 			</div>
 		);
 	}
 } // ./CharityPage
+
+const CharityTags = ({className, tagsString}) => (
+	<h3 className={'tags ' + className}>
+		{
+			tagsString.split(/,\s*/g)
+				.map(tag => <span>{tag}</span>)
+		}
+	</h3>
+);
+
+const CharityDonate = ({charity}) => {
+	// first representative project
+	const project = NGO.getProject(charity);
+	const { outputs } = project;
+	let amount = DataStore.getValue(['widget','CharityPage', NGO.id(charity), 'donationAmount']);
+	if (!amount) {
+		amount = MonetaryAmount.make({value: 10, currency: 'gbp'});
+	}
+
+	const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
+
+	return (
+		<div className='donation-column'>
+			<div className='donation-impact'>
+				<div className='project-image'>
+					<img src={project.images} />
+				</div>
+				<div className='row'>
+					<div className='col-md-6'>
+						<div className='donation-amount'>
+							<div>
+								<Misc.PropControl type='MonetaryAmount' prop='donationAmount' path={['widget','CharityPage', NGO.id(charity)]} />
+							</div>
+							<Button className='donation-up-down'>-</Button> <Button className='donation-up-down' bsSize='large'>+</Button>
+						</div>
+						<div className='donation-input'>
+							<div className='prefix'>{impact.prefix}</div>
+							<Misc.Money amount={impact.amount} />
+							<div>will fund</div>
+						</div>
+					</div>
+					<div className='col-md-6'>
+						<div className='donation-output'>
+							<div className='output-number'>
+								{printer.prettyNumber(impact.impactNum)}
+							</div>
+							<div className='output-units'>
+								{impact.unitName}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className='donate-button'>
+					<Button bsSize='large'>donate</Button>
+				</div>
+				<div className='clearfix' />
+			</div>
+			<div className='share-social-buttons'>
+				<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
+				<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
+				<a className='share-social-email'><span className='fa fa-envelope-o' /></a>
+			</div>
+		</div>
+	);
+};
+
+const CharityAbout = ({charity}) => (
+	<div className='charity-about'>
+		<div className='images'>
+			<div className='charity-image'>
+				<img src={charity.images} />
+			</div>
+			<div className='charity-logo'>
+				<img src={charity.logo} />
+			</div>
+		</div>
+		<div className='descriptions'>
+			<p className='description-short'>
+				{charity.summaryDescription}
+			</p>
+			<p className='description-long'>
+				{charity.description}
+			</p>
+		</div>
+		<div className='url'>
+			<a href={charity.url}>{charity.url}</a>
+		</div>
+	</div>
+);
+
+const CharityExtra = ({charity}) => (
+	<div className='charity-extra'>
+		Extra info??? Other projects or ???????
+	</div>
+);
 
 
 const CharityProfile = ({charity}) => {

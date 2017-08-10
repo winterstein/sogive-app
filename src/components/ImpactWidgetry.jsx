@@ -13,6 +13,21 @@ import Misc from './Misc.jsx';
 
 
 Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
+	const { prefix, impactNum, unitName } = Misc.impactCalc({charity, project, outputs, amount});
+
+	return (
+		<div className='impact'>
+			<p className='impact-text'>
+				<span><b>{prefix}<Misc.Money amount={amount} /></b></span>
+				<span> will fund</span>
+				<span className="impact-units-amount"> {printer.prettyNumber(impactNum, 2)}</span>					
+				<span className='impact-unit-name'> {unitName}</span>
+			</p>
+		</div>
+	);
+}; //./ImpactDesc
+
+Misc.impactCalc = ({charity, project, outputs, amount}) => {
 	if ( ! outputs || ! outputs.length) {
 		return null;
 	}
@@ -25,28 +40,25 @@ Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 	if ( ! cpbraw.value) {
 		return null; // Not a quantified output?
 	}
-	let peepText = '';
-	let peeps = 1;
+	let prefix = '';
+	let people = 1;
 	if (amount / cpbraw.value < 0.75) {
-		peeps = cpbraw.value / amount;
-		peepText = printer.prettyNumber(peeps, 1)+' people donating ';
+		people = cpbraw.value / amount;
+		prefix = printer.prettyNumber(people, 1)+' people donating ';
 	}
-	let impactNum = (amount / cpbraw.value) * peeps;
+	let impactNum = (amount / cpbraw.value) * people;
 	let unitName = firstOutput.name || '';
 	// pluralise
 	unitName = Misc.TrPlural(impactNum, unitName);
-	// NB long line as easiest way to do spaces in React
-	return (
-		<div className='impact'>
-			<p className='impact-text'>
-				<span><b>{peepText}<Misc.Money amount={amount} /></b></span>
-				<span> will fund</span>
-				<span className="impact-units-amount"> {printer.prettyNumber(impactNum, 2)}</span>					
-				<span className='impact-unit-name'> {unitName}</span>
-			</p>
-		</div>
-	);
-}; //./ImpactDesc
+
+	return {
+		prefix,
+		amount,
+		impactNum,
+		unitName
+	};
+};
+
 
 /**
  * Copy pasta from I18N.js (aka easyi18n)

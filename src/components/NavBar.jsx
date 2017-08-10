@@ -8,7 +8,7 @@ const NavBar = ({page}) => {
 	return (
 		<nav className="navbar navbar-fixed-top navbar-inverse">
 			<div className="container">
-				<div className="navbar-header" title="Dashbrd">
+				<div className="navbar-header" title="Dashboard">
 					<button
 						type="button"
 						className="navbar-toggle collapsed"
@@ -23,7 +23,7 @@ const NavBar = ({page}) => {
 						<span className="icon-bar" />
 					</button>
 					<a className="" href="#dashboard">
-						<img alt="SoGive logo" style={{maxWidth:'100px',maxHeight:'50px'}} src="img/logo-white-sm.png" />
+						<img alt="SoGive logo" src="img/logo-white-sm.png" />
 					</a>
 				</div>
 				<div id="navbar" className="navbar-collapse collapse">

@@ -1,5 +1,6 @@
 // Styling for the SoGive app
 @import "colours.less";
+@import "positioning.less";
 
 @font-face {
 	font-family: 'Roboto';
@@ -11,7 +12,17 @@
 }
 
 .avoid-navbar {
-    margin-top:100px;
+    margin-top: @navbar-height;
+}
+
+.navbar-brand, .navbar-nav li a {
+    line-height: @navbar-height;
+    height: @navbar-height;
+    text-transform: lowercase;
+}
+
+.navbar-brand {
+	padding: 0;
 }
 
 #navbar {
@@ -94,13 +105,8 @@ img.logo-large {
 	justify-content: center;
 }
 
-img.charity-logo {
-	width: 10vh;
-	height: auto;
-}
-
 body {
-	font-family: 'Roboto';
+	font-family: 'Nunito Sans', sans-serif;
 	color: @colour-03;
 }
 

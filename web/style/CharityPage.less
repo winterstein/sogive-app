@@ -1,76 +1,259 @@
 @import "colours.less";
+@import "positioning.less";
 
-img.project-image {
-	max-width:100%;
-	height:auto;
-}
+#charity {
+	.column {
+		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
+		background-color: white;
 
-.charity-logo-div {
-	width: 13vh;
-	height: auto;
-	padding-top: 10px;
-}
+		ul.nav.nav-tabs {
+			border-bottom: 5px solid @charity-page-greyline;
+			.extend-content-to-sides(@bs-column-padding);
+			li {
+				margin-bottom: 0;
+				&.active {
+					a {
+						background-color: @charity-page-greybg;
+						&:after {
+							content: " ";
+							background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='20' version='1.1'><polyline fill='lightgrey' points='0,0 10,0 0,20'/></svg>");
+						}
+					}
+				}
+				a {
+					border: none;
+					border-radius: 0;
+					margin: 0;
+				}
+			}
+		}
+	}
 
-.CharityProfile-div {
-	border-bottom: 1px solid @colour-02;
-}
+	.top-bands {
+		position: fixed;
+		top: @navbar-height;
+		left: 0;
+		width: 100%;
+		.band1 {
+			background: linear-gradient(to right, #819EB7, #C1DEF2);
+			height: 30px;
+		}
+		.band2 {
+			background: linear-gradient(to right,#ACB09F, #D2D6C3);
+			height: 50px;
+		}
+		.band3 {
+			background: linear-gradient(to right, #819EB7, #C1DEF2);
+			height: 150px;
+		}
+	}
 
-.CharityProfile {
-	font-size: 1em;
-}
+	.impact-column {
+		.header {
+			background: #C1DEF2;
+			.extend-bg-to-sides(@bs-column-padding);
+			padding-top: @band-1-height;
 
-.upper-padding {
-	padding-top: 3vh;
-}
+			.charity-name {
+				background: #D2D6C3;
+				text-transform: uppercase;
+				font-weight: bold;
+				margin-top: 0;
+				.extend-bg-to-sides(@bs-column-padding);
+				line-height: @band-2-height;
+				height: @band-2-height;
+			}
+			.tags {
+				color: white;
+				text-transform: lowercase;
+				margin-top: 0;
+				margin-bottom: 0;
+				border-left: 0;
+				.extend-content-to-sides(@bs-column-padding);
 
-.upper-margin {
-	margin-top: 3vh;
-}
+				span {
+					line-height: 32px;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
 
-.donateto {
-	background-color: @colour-02;
-	font-size: 1em;
-	color: @colour-05;
-	border-bottom: 1px solid @colour-03;
-	padding-left: 2%;
-	margin: 1% auto 2%;
-}
+				&.why-tags {
+					border-left: 15px solid @why-tags;
+					span {
+						background-color: @why-tags-fade;
+					}
+				}
+				&.where-tags {
+					border-left: 15px solid @where-tags;
+					span {
+						background-color: @where-tags-fade;
+					}
+				}
 
-.charity-project-title-div {
-	margin-top: 3vh;
-	border-bottom: 1px solid @colour-02;
-}
+			}
 
-.charity-project-div {
-	margin-top: 1vh;
-}
+		}
+	}
 
-.project-name {
-	font-size: 1em;
-	color: @colour-03;
-}
+	.info-column {
+		height: 100%;
 
-.inputs-outputs {
-	border-top: 1px solid @colour-03;
-	border-bottom: 1px solid @colour-03;
-	border-left: 1px solid @colour-03;
-	border-right: 1px solid @colour-03;
-}
+		.charity-about {
+			.images {
+				position: relative;
+				height: 225px;
+				margin-left: 25px;
+				margin-right: 25px;
+				margin-bottom: 25px;
 
-.inputs {
-	border-right: 1px solid @colour-03;
-}
+				.charity-image, .charity-logo {
+					position: absolute;
+					bottom: 0;
+					border-radius: 50%;
+					border: 15px solid rgba(49, 77, 121, 0.5);
 
-.project-story-text {
-	text-align: center;
-}
+					img {
+						border-radius: 50%;
+						object-fit: cover;
+						border-color: #314D79;
+						border-style: solid;
+					}
+				}
+
+				.charity-image {
+					z-index: 10;
+					left: 0;
+					img {
+						width: 175px;
+						height: 175px;
+						border-width: 3px
+					}
+				}
+				.charity-logo {
+					z-index: 20;
+					right: 0;
+					img {
+						width: 125px;
+						height: 125px;
+						border-width: 10px;
+					}
+				}
+			}
+
+			.descriptions {
+				.description-short {
+					font-size: 120%;
+				}
+
+				.description-long {
+
+				}
+			}
+
+			.url {
+				font-size: 120%;
+				width: 100%;
+				text-align: center;
+			}
+		}
+	}
 
 
-.citation-url {
-	font-size: 85%;
-	word-wrap: break-word;
-}
+	.donation-impact {
+		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
+		height: 200px;
+		.project-image {
+			img {
+				width: 100%;
+				max-height: 500px;
+				object-fit: cover;
+			}
+		}
 
-.inputs h4, .outputs h4 {
-	color: @colour-03;
+		.donation-amount {
+			width: 200px;
+			height: 200px;
+			border-radius: 0 100% 0 0;
+			border: 5px solid @donation-amt-bg;
+			background-color: @donation-amt-bg;
+			overflow: hidden;
+			color: @donation-amt-fg;
+			input {
+				width: 60%;
+				border: none;
+				border-radius: 0;
+				background-color: @donation-amt-input-bg;
+			}
+			span.dropdown button {
+				border: none;
+				border-radius: 0;
+				background-color: @donation-amt-input-bg;
+			}
+			button.donation-up-down {
+				border: 5px solid @donation-amt-fg;
+				border-radius: 50%;
+				background-color: transparent;
+			}
+		}
+
+		.donation-input {
+			float: right;
+
+			.money {
+				font-size: 300%;
+				.amount {
+					color: @donation-number-fg;
+				}
+			}
+		}
+
+		.donation-output {
+			.output-number {
+				font-size: 300%;
+				color: @donation-number-fg;
+			}
+			.output-units {
+				font-size: 200%;
+			}
+		}
+
+		.donate-button {
+			button {
+				border: none;
+				background-color: @donation-button-bg;
+				color: white;
+				/* Slightly hacky but using spec-standard behaviour:
+				oversize radius clamped to largest non-overlapping value,
+				resulting in circle-ended "capsule" shape */
+				border-radius: 500px;
+				float: right;
+			}			
+		}
+	}
+
+	.donation-column {
+		background-color: @charity-page-greybg;
+		.share-social-buttons {
+			float: right;
+			a {
+				display: inline-block;
+				font-size: 60px;
+				width: 60px;
+				height: 60px;
+				border: none;
+				border-radius: 50%;
+				padding: 0;
+				color: white;
+				&.share-social-facebook {
+					background-color: royalblue;
+				}
+				&.share-social-twitter {
+					background-color: skyblue;
+				}
+				&.share-social-email {
+					background-color: @donation-amt-bg;
+				}
+			}
+		}
+	}
 }

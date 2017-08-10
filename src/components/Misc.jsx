@@ -45,7 +45,12 @@ Misc.Money = ({amount, precision}) => {
 		amount = {value: amount, currency:'GBP'};
 	}
 	if ( ! amount) amount = {};
-	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
+	return (
+		<span className='money'>
+			<span className='currency-symbol'>{CURRENCY[amount.currency] || ''}</span>
+			<span className='amount'>{printer.prettyNumber(amount.value)}</span>
+		</span>
+	);
 };
 /**
  * Handle a few formats, inc gson-turned-a-Time.java-object-into-json
