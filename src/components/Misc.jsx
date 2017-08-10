@@ -45,7 +45,12 @@ Misc.Money = ({amount, precision}) => {
 		amount = {value: amount, currency:'GBP'};
 	}
 	if ( ! amount) amount = {};
-	return <span>{CURRENCY[amount.currency] || ''}{printer.prettyNumber(amount.value)}</span>;
+	let snum = printer.prettyNumber(amount.value, precision);
+	// remove .0
+	if (snum.substr(snum.length-2, snum) === '.0') snum = snum.substr(0, snum.length-2);
+	// pad .1 to .10
+	if (snum.match(/\.\d$/)) snum += '0';
+	return <span>{CURRENCY[amount.currency] || ''}{snum}</span>;
 };
 /**
  * Handle a few formats, inc gson-turned-a-Time.java-object-into-json

@@ -175,7 +175,7 @@ const SearchResult = ({ item }) => {
 				<Media.Body>
 					<Media.Heading>{item.name}</Media.Heading>
 					<p>{item.summaryDescription || item.description}</p>
-					<Misc.ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={10} />
+					<Misc.ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />
 				</Media.Body>
 			</a>
 		</Media>

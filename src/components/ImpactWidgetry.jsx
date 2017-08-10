@@ -16,14 +16,24 @@ Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 	if ( ! outputs || ! outputs.length) {
 		return null;
 	}
-	if ( ! amount) {
-		return null; // avoid NaN messages
-	}
 	const firstOutput = outputs[0];
 	// more people?
 	let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:firstOutput});
 	if ( ! cpbraw.value) {
 		return null; // Not a quantified output?
+	}	
+	let unitName = firstOutput.name || '';
+	if ( ! amount) {
+		return (
+			<div className='impact'>
+				<p className='impact-text'>
+					<span><b><Misc.Money amount={cpbraw} precision={1} /></b></span>
+					<span> will fund</span>
+					<span className="impact-units-amount"> 1</span>
+					<span className='impact-unit-name'> {Misc.TrPlural(1, unitName)}</span>
+				</p>
+			</div>
+		);		
 	}
 	let peepText = '';
 	let peeps = 1;
@@ -32,17 +42,15 @@ Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 		peepText = printer.prettyNumber(peeps, 1)+' people donating ';
 	}
 	let impactNum = (amount / cpbraw.value) * peeps;
-	let unitName = firstOutput.name || '';
 	// pluralise
-	unitName = Misc.TrPlural(impactNum, unitName);
-	// NB long line as easiest way to do spaces in React
+	let plunitName = Misc.TrPlural(impactNum, unitName);	
 	return (
 		<div className='impact'>
 			<p className='impact-text'>
 				<span><b>{peepText}<Misc.Money amount={amount} /></b></span>
 				<span> will fund</span>
 				<span className="impact-units-amount"> {printer.prettyNumber(impactNum, 2)}</span>					
-				<span className='impact-unit-name'> {unitName}</span>
+				<span className='impact-unit-name'> {plunitName}</span>
 			</p>
 		</div>
 	);
