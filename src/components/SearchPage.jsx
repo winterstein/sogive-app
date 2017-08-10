@@ -11,7 +11,7 @@ import Misc from './Misc.jsx';
 import ImpactWidgetry from './ImpactWidgetry.jsx';
 import C from '../C';
 
-// #Minor TODO refactor to use DataStore more.
+// #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
 
 export default class SearchPage extends React.Component {
 
@@ -180,5 +180,5 @@ const SearchResult = ({ item }) => {
 			</a>
 		</Media>
 	</div>
-	); //./SearchResult
-};
+	);
+}; //./SearchResult
