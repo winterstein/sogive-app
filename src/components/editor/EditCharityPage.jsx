@@ -126,7 +126,10 @@ class EditCharityPage extends React.Component {
 					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
 						<ProjectsEditor charity={charity} projects={projectProjects} />
 					</Panel>
-					<Panel header={<h3>References</h3>} eventKey="5">
+					<Panel header={<h3>Editorial</h3>} eventKey="5">
+						<EditorialEditor charity={charity} />
+					</Panel>
+					<Panel header={<h3>References</h3>} eventKey="6">
 						<ol>{rrefs}</ol>
 					</Panel>
 				</Accordion>
@@ -134,6 +137,19 @@ class EditCharityPage extends React.Component {
 		);
 	}
 } // ./EditCharityPage
+
+
+const EditorialEditor = ({charity}) => {
+	let rec = charity.recommended;
+	return (<div>					
+			<EditField item={charity} type='checkbox' field='recommend'
+				label='Recommended High-Impact Charity'
+				help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
+			<EditField item={charity} type='textarea' field='recommendation' 
+				label='Recommendation Comment ' disabled={ ! rec}
+				help="A sentence or two on why SoGive recommends this charity." />
+		</div>);
+};
 
 
 const ProfileEditor = ({charity}) => {
