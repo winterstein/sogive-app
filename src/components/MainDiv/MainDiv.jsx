@@ -19,6 +19,7 @@ import AccountPage from '../AccountPage';
 import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
 import EditorDashboardPage from '../editor/EditorDashboardPage';
+import ExchangeRatesPage from '../editor/ExchangeRatesPage';
 
 // Actions
 
@@ -29,7 +30,8 @@ const PAGES = {
 	editordashboard: EditorDashboardPage,
 	account: AccountPage,
 	charity: CharityPage,
-	edit: EditCharityPage
+	edit: EditCharityPage,
+	exchangeRates: ExchangeRatesPage,
 };
 
 const DEFAULT_PAGE = 'search';
