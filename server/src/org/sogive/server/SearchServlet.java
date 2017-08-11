@@ -11,6 +11,7 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils2;
@@ -48,9 +49,18 @@ public class SearchServlet {
 		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
 		String q = state.get(Q);
 		if ( q != null) {
-			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
-					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
-							.operator(Operator.AND);			
+			// Do we want this to handle e.g. accents??
+			// Can ES do it instead??
+			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
+			q = StrUtils.toCanonical(q);			
+			// this will query _all
+			QueryBuilder qb = QueryBuilders.simpleQueryStringQuery(q)
+								.defaultOperator(Operator.AND);
+			
+			// NB: this required all terms in one field, which felt wrong
+//			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
+//					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
+//							.operator(Operator.AND);			
 			s.setQuery(qb);
 		}
 		// TODO test ordering.

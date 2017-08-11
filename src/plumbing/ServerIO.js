@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
+import {encURI} from 'wwutils';
 import C from '../C.js';
 
 import Login from 'you-again';
@@ -28,7 +29,7 @@ ServerIO.search = function(q, status) {
 
 ServerIO.getCharity = function(charityId, status) {
 	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+escape(charityId)+'.json', {data: {status: status}});
+	return ServerIO.load('/charity/'+encURI(charityId)+'.json', {data: {status: status}});
 };
 
 
@@ -47,7 +48,7 @@ ServerIO.saveCharity = function(charity, status) {
 	let params = {		
 		data: {action: 'save', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
-	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
+	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
 ServerIO.publish = function(charity, status) {
@@ -55,7 +56,7 @@ ServerIO.publish = function(charity, status) {
 	let params = {		
 		data: {action: 'publish', status: status}
 	};
-	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
+	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
 /**
@@ -73,7 +74,7 @@ ServerIO.discardEdits = function(charity, status) {
 	let params = {		
 		data: {action: 'discard-edits', status: status}
 	};
-	return ServerIO.load('/charity/'+escape(NGO.id(charity))+'.json', params);
+	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
 
@@ -150,7 +151,7 @@ ServerIO.post = function(url, data) {
 };
 
 ServerIO.saveDraft = function(item) {
-	return ServerIO.post('/charity/'+escape(NGO.id(item))+'.json', item);
+	return ServerIO.post('/charity/'+encURI(NGO.id(item))+'.json', item);
 };
 
 ServerIO.handleMessages = function(response) {

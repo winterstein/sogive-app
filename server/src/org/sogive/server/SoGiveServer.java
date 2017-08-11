@@ -104,8 +104,7 @@ public class SoGiveServer {
 	}
 
 	private static void init() {
-		// gson
-		GsonBuilder gb;
+		// gson		
 		Gson gson = new FlexiGsonBuilder()
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())

@@ -45,10 +45,15 @@ Misc.Money = ({amount, precision}) => {
 		amount = {value: amount, currency:'GBP'};
 	}
 	if ( ! amount) amount = {};
+	let snum = printer.prettyNumber(amount.value, precision);
+	// remove .0
+	if (snum.substr(snum.length-2, snum) === '.0') snum = snum.substr(0, snum.length-2);
+	// pad .1 to .10
+	if (snum.match(/\.\d$/)) snum += '0';
 	return (
 		<span className='money'>
 			<span className='currency-symbol'>{CURRENCY[amount.currency] || ''}</span>
-			<span className='amount'>{printer.prettyNumber(amount.value)}</span>
+			<span className='amount'>{snum}</span>
 		</span>
 	);
 };
@@ -330,7 +335,10 @@ Misc.SavePublishDiscard = ({type, id}) => {
 	assMatch(id, String);
 	let transientStatus = DataStore.getValue('transient', id, 'status');
 	let isSaving = C.STATUS.issaving(transientStatus);	
-	return (<div>
+	let item = DataStore.getData(type, id);
+	// if nothing has been edited, then we can't publish, save, or discard
+	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && ! item.modified;
+	return (<div title={item && item.status}>
 		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.saveEdits(type, id)}>
 			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
 		</button>

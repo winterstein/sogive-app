@@ -11,7 +11,9 @@ import NGO from '../data/charity/NGO';
 
 import Misc from './Misc.jsx';
 
-
+/**
+ * @param amount {?Number} The £ to donate
+ */
 Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 	const { prefix, impactNum, unitName } = Misc.impactCalc({charity, project, outputs, amount});
 
