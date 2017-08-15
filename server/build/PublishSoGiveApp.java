@@ -71,6 +71,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 		super("sogive", "/home/winterwell/sogive-app");
 		bashScript = "./publish-sogiveapp.sh";
 		typeOfPublish = KPubType.production;
+//		codePart = "backend";
 	}
 
 	@Override
