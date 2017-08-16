@@ -1,19 +1,21 @@
 // @Flow
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
 import StripeCheckout from 'react-stripe-checkout';
-import { uid, XId, encURI } from 'wwutils';
+import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
-import printer from '../utils/printer';
-import NGO from '../data/charity/NGO';
-import Misc from './Misc';
-import ImpactWidgetry from './ImpactWidgetry.jsx';
-import GiftAidForm from './GiftAidForm';
 
-import { donate, updateForm, initDonationForm } from './DonationForm-actions';
+import printer from '../utils/printer';
+import ActionMan from '../plumbing/ActionMan';
+import DataStore from '../plumbing/DataStore';
+import NGO from '../data/charity/NGO';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
+
+import Misc from './Misc';
+import ImpactWidgetry from './ImpactWidgetry';
+import GiftAidForm from './GiftAidForm';
 
 /**
  * TODO refactor this to not use Redux.
@@ -21,11 +23,79 @@ import { donate, updateForm, initDonationForm } from './DonationForm-actions';
  * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
  */
 
-class DonationForm extends React.Component {
+
+const initialFormData = {
+	amount: MonetaryAmount.make({value: 10, currency: 'gbp'}),
+	giftAid: false,
+	giftAidTaxpayer: false,
+	giftAidOwnMoney: false,
+	giftAidNoCompensation: false,
+	name: '',
+	address: '',
+	postcode: '',
+	pending: false,
+	complete: false,
+};
+
+const donationReady = (formData) => (
+	// have to be donating something
+	(
+		formData.amount &&
+		formData.amount.value > 0
+	) &&
+	// if gift-aiding, must have checked all confirmations & supplied name/address
+	(
+		!formData.giftAid ||
+		(
+			formData.giftAidTaxpayer &&
+			formData.giftAidOwnMoney &&
+			formData.giftAidNoCompensation &&
+			(formData.name.trim().length > 0) &&
+			(formData.address.trim().length > 0) &&
+			(formData.postcode.trim().length > 0)
+		)
+	)
+);
+
+// The +/- buttons don't just work linearly - bigger numbers = bigger jumps
+const donationIncrements = {
+	20: 1,
+	50: 5,
+	200: 10,
+	500: 50,
+	2000: 100,
+	5000: 500,
+	20000: 1000,
+	50000: 5000,
+	Infinity: 10000,
+};
+
+class DonationForm extends Component {
+
+	componentWillMount() {
+		const charity = this.props.charity;
+		// Set default donation amount etc.
+		DataStore.setValue(['widget','DonationForm', NGO.id(charity)], initialFormData);
+	}
+
+
+	// Bump the donation up or down by a "reasonable" amount for current value
+	// ...and round it to a clean multiple of the increment used
+	incrementDonation(amount, sign, charity) {
+		const incrementKey = Object.keys(donationIncrements)
+		.sort((a, b) => a - b)
+		.find((key) => sign > 0 ? key > amount : key >= amount); // so that £20+ goes to £25, £20- goes to £19
+		const increment = donationIncrements[incrementKey];
+		const rawValue = amount + (increment * Math.sign(sign));
+		const value = Math.max(increment * Math.round(rawValue / increment), 1);
+		const newAmount = MonetaryAmount.make({ value, currency: 'gbp' });
+		DataStore.setValue(['widget','DonationForm', NGO.id(charity), 'amount'], newAmount);
+	}
+
 
 	render() {
-		const {charity, donationForm, handleChange, initDonation, sendDonation } = this.props;
-		let user = Login.getUser();
+		const {charity} = this.props;
+		assert(NGO.isa(charity), charity);
 
 		// some charities dont accept donations
 		if (charity.noPublicDonations) {
@@ -38,58 +108,97 @@ class DonationForm extends React.Component {
 			);
 		}
 
-		if ( ! donationForm) {
-			initDonation();
+		const project = NGO.getProject(charity);
+		const { outputs } = project;
+		// NB: no project = no data is possible
+		const user = Login.getUser();
+		const formPath = ['widget','DonationForm', NGO.id(charity)];
+
+		const formData = DataStore.getValue(formPath);
+		const { amount } = formData;
+		
+		const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
+
+		if ( ! formData) {
 			return <div />;
 		}
 
-		assert(NGO.isa(charity), charity);
-
-		let project = this.props.project || NGO.getProject(charity);
-		// NB: no project = no data is possible
-
 		// donated?
-		if (donationForm.complete) {
-			return (<ThankYouAndShare thanks user={user} charity={charity} donationForm={donationForm} project={project} />);
+		if (formData.complete) {
+			return (<ThankYouAndShare thanks user={user} charity={charity} donationForm={formData} project={project} />);
 		}
 
-		const donateButton = donationForm.ready ? (
+		const donateButton = donationReady(formData) ? (
 			<DonationFormButton
-				amount={Math.floor(donationForm.amount * 100)}
-				onToken={(stripeResponse) => { sendDonation(charity, donationForm, stripeResponse); }}
+				amount={Math.floor(formData.amount * 100)}
+				onToken={(stripeResponse) => { ActionMan.donate({charity, formPath, formData, stripeResponse}); }}
 			/>
 		) : (
-			<Button disabled title='Something is wrong with your donation'>Donate</Button>
+			<Button disabled title={`Please check your donation amount and, if you want to add Gift Aid, make sure you've filled out every field in the form.`} >Donate</Button>
 		);
 
 		const giftAidForm = charity.uk_giftaid ? (
-			<GiftAidForm {...donationForm} handleChange={handleChange} />
+			<GiftAidForm formPath={formPath} />
 		) : <small>This charity is not eligible for Gift-Aid.</small>;
 
+		/*
 		return (
 			<div>
-				<div className='DonationForm'>
-					<DonationAmounts
-							options={[5, 10, 20]}
-							outputs={project && project.outputs}
-							charity={charity}
-							project={project}
-							amount={donationForm.amount}
-							handleChange={handleChange}
-						/>
+				<ThankYouAndShare thanks={false} charity={charity} />
+			</div>
+		);*/
+
+		const donationDown = () => this.incrementDonation(formData.amount.value, -1, charity);
+		const donationUp = () => this.incrementDonation(formData.amount.value, 1, charity);
+
+		return (
+			<div className='donation-impact'>
+				<div className='project-image'>
+					<img src={project.images} />
 				</div>
-				<div className='col-md-12 donate-button'>
+				<div className='row'>
+					<div className='col-md-6'>
+						<div className='donation-amount'>
+							<div className='amount-input'>
+								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} />
+							</div>
+							<div className='amount-buttons'>
+								<button onClick={donationDown} className='donation-down'>-</button>
+								{' '}
+								<button onClick={donationUp} className='donation-up'>+</button>
+								</div>
+						</div>
+						<div className='donation-input'>
+							<div className='prefix'>{impact.prefix}</div>
+							<Misc.Money amount={impact.amount} />
+							<div>will fund</div>
+						</div>
+					</div>
+					<div className='col-md-6'>
+						<div className='donation-output'>
+							<div className='output-number'>
+								{printer.prettyNumber(impact.impactNum)}
+							</div>
+							<div className='output-units'>
+								{impact.unitName}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className='gift-aid'>
+					{giftAidForm}
+				</div>
+				<div className='donate-button'>
 					{ donateButton }
 				</div>
-				{ giftAidForm }
-				<ThankYouAndShare thanks={false} charity={charity} />
+				<div className='clearfix' />
 			</div>
 		);
 	}
 } // ./DonationForm
 
 
-class ThankYouAndShare extends React.Component {
+class ThankYouAndShare extends Component {
 
 	constructor(...params) {
 		super(...params);
@@ -145,7 +254,7 @@ class ThankYouAndShare extends React.Component {
 		data-href={url}
 		data-layout="button_count"
 		data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
-		href={"https://www.facebook.com/sharer/sharer.php?u="+encURI(url)}>Share</a>
+		href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a>
 	</div>
 	*/
 
@@ -161,7 +270,7 @@ class ThankYouAndShare extends React.Component {
 		// TODO make this line nicer
 		// TODO just send the charity ID, and load the rest server side, to give a nicer url
 		// Also window.location might contain parameters we dont want to share.
-		let url = "https://app.sogive.org/share?link="+encURI(""+window.location)+"&title="+encURI(pageInfo.title)+"&image="+encURI(pageInfo.image)+"&desc="+encURI(pageInfo.desc);
+		let url = "https://app.sogive.org/share?link="+escape(""+window.location)+"&title="+escape(pageInfo.title)+"&image="+escape(pageInfo.image)+"&desc="+escape(pageInfo.desc);
 		pageInfo.url = url;
 
 		return (
@@ -180,7 +289,7 @@ class ThankYouAndShare extends React.Component {
 				</div>
 				<div className='col-md-12 social-media-buttons'>
 					<center>
-						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+encURI(this.state.shareText)+'&url='+encURI(url)} data-show-count="none">
+						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
 							<Misc.Logo service='twitter' />
 						</a>
 
@@ -218,7 +327,7 @@ const DonationFormButton = ({onToken, amount}) => {
 				token={onToken}
 			>
 				<center>
-					<Button bsStyle="primary" className='sogive-donate-btn'>Donate</Button>
+					<Button bsSize="large">donate</Button>
 				</center>
 			</StripeCheckout>
 		</div>
@@ -293,18 +402,4 @@ const DonationList = ({donations}) => {
 	return <ul>{ddivs}</ul>;
 };
 
-const mapStateToProps = (state, ownProps) => ({
-	...ownProps,
-	donationForm: state.donationForm[ownProps.charity['@id']],
-});
-
-const mapDispatchToProps = (dispatch, ownProps) => ({
-	handleChange: (field, value) => dispatch(updateForm(ownProps.charity['@id'], field, value)),
-	sendDonation: (charity, donationForm, stripeResponse) => dispatch(donate(dispatch, charity, donationForm, stripeResponse)),
-	initDonation: () => dispatch(initDonationForm(ownProps.charity['@id'])),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DonationForm);
+export default DonationForm;

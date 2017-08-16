@@ -33,14 +33,6 @@ class CharityPage extends React.Component {
 			let charity = result.cargo;
 			assert(NGO.isa(charity), charity);
 			this.setState({charity: charity});
-
-			// Set default donation
-			const donationValue = DataStore.getValue(['widget','CharityPage', NGO.id(charity), 'donationAmount']);
-			if (!donationValue) {
-				const defaultDonation = MonetaryAmount.make({value: 10, currency: 'gbp'});
-				DataStore.setValue(['widget','CharityPage', NGO.id(charity), 'donationAmount'], defaultDonation);
-			}
-
 			return result;
 		}.bind(this))
 		.fail(err => {
@@ -60,7 +52,7 @@ class CharityPage extends React.Component {
 		const overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
 		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
 		// latest only
-		const overall = Project.getLatest(overalls);	
+		const overall = Project.getLatest(overalls);
 		const year = overall? overall.year : 0;
 		let oldProjects = _.filter(projectProjects, p => p.year !== overall.year);
 		let currentProjects = _.filter(projectProjects, p => p.year === overall.year);
@@ -71,24 +63,25 @@ class CharityPage extends React.Component {
 		});
 
 		const impactColumn = (
-			<div className='col-md-7 column impact-column'>
+			<div className='col-md-7 col-xs-12 column impact-column'>
 				<div className='header'>
 					<h1 className='charity-name'>
-						{charity.displayName || charity.name}
+						{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 					</h1>
 					<CharityTags className='why-tags' tagsString={charity.whyTags} />
 					<CharityTags className='where-tags' tagsString={charity.whereTags} />
 				</div>
 				<Tabs defaultActiveKey={1}>
-					<Tab eventKey={1} title='Impact'>
+					<Tab eventKey={1} title='Donate'>
 						<CharityDonate charity={charity} />
 					</Tab>
 				</Tabs>
 			</div>
 		);
-		const spacerColumn = <div className='col-md-1' />;
+		const spacerColumn = <div className='col-md-1 hidden-xs' />;
 		const infoColumn = (
-			<div className='col-md-4 column info-column'>
+			<div className='col-md-4 col-xs-12 column info-column'>
+				<div className='header'>&nbsp;</div>
 				<Tabs defaultActiveKey={1}>
 					<Tab eventKey={1} title='About'>
 						<CharityAbout charity={charity} />
@@ -117,70 +110,28 @@ class CharityPage extends React.Component {
 	}
 } // ./CharityPage
 
+
 const CharityTags = ({className, tagsString}) => (
 	<h3 className={'tags ' + className}>
 		{
 			tagsString.split(/,\s*/g)
-				.map(tag => <span>{tag}</span>)
+				.map(tag => <span key={tag}>{tag} </span>)
 		}
 	</h3>
 );
 
-const CharityDonate = ({charity}) => {
-	// first representative project
-	const project = NGO.getProject(charity);
-	const { outputs } = project;
-	let amount = DataStore.getValue(['widget','CharityPage', NGO.id(charity), 'donationAmount']);
-	if (!amount) {
-		amount = MonetaryAmount.make({value: 10, currency: 'gbp'});
-	}
 
-	const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
-
-	return (
-		<div className='donation-column'>
-			<div className='donation-impact'>
-				<div className='project-image'>
-					<img src={project.images} />
-				</div>
-				<div className='row'>
-					<div className='col-md-6'>
-						<div className='donation-amount'>
-							<div>
-								<Misc.PropControl type='MonetaryAmount' prop='donationAmount' path={['widget','CharityPage', NGO.id(charity)]} />
-							</div>
-							<Button className='donation-up-down'>-</Button> <Button className='donation-up-down' bsSize='large'>+</Button>
-						</div>
-						<div className='donation-input'>
-							<div className='prefix'>{impact.prefix}</div>
-							<Misc.Money amount={impact.amount} />
-							<div>will fund</div>
-						</div>
-					</div>
-					<div className='col-md-6'>
-						<div className='donation-output'>
-							<div className='output-number'>
-								{printer.prettyNumber(impact.impactNum)}
-							</div>
-							<div className='output-units'>
-								{impact.unitName}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className='donate-button'>
-					<Button bsSize='large'>donate</Button>
-				</div>
-				<div className='clearfix' />
-			</div>
-			<div className='share-social-buttons'>
-				<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
-				<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
-				<a className='share-social-email'><span className='fa fa-envelope-o' /></a>
-			</div>
+const CharityDonate = ({charity}) => (
+	<div className='donation-column'>
+		<DonationForm charity={charity} />
+		<div className='share-social-buttons'>
+			<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
+			<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
+			<a className='share-social-email'><span className='fa fa-envelope-o' /></a>
 		</div>
-	);
-};
+	</div>
+);
+
 
 const CharityAbout = ({charity}) => (
 	<div className='charity-about'>
@@ -206,11 +157,77 @@ const CharityAbout = ({charity}) => (
 	</div>
 );
 
-const CharityExtra = ({charity}) => (
-	<div className='charity-extra'>
-		Extra info??? Other projects or ???????
-	</div>
-);
+const CharityExtra = ({charity}) => {
+	if (!charity || !charity.projects || !charity.projects.length) return null;
+	const projectsByYear = {};
+	(charity.projects).forEach(project => {
+		const projectsForYear = projectsByYear[project.year] || [];
+		if (project.name && project.name.toLocaleLowerCase() === 'overall') {
+			projectsForYear.unshift(project);
+		} else {
+			projectsForYear.push(project);
+		}
+		projectsByYear[project.year] = projectsForYear;
+	});
+
+	const yearDivs = Object.keys(projectsByYear).sort().map(year => (
+		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
+	));
+	return (
+		<div className='charity-extra'>
+			{yearDivs}
+		</div>
+	);
+};
+
+const CharityExtraYear = ({year, projects}) => {
+	if (!year || !projects || !projects.length) return null;
+	const projectDivs = projects.map(
+		project => <CharityExtraProject key={project.name} project={project} />
+	);
+	return (
+		<div>
+			<h2>{year}</h2>
+			{projectDivs}
+		</div>
+	);
+};
+
+const CharityExtraProject = ({project}) => {
+	if (!project) return;
+	const {inputs, outputs} = project;
+	const stories = project.stories ? (
+		<p className='project-stories'>
+			<span className='quote fa fa-quote-left' /> <span dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} /> <span className='quote fa fa-quote-right' />
+		</p>
+	) : null;
+
+	return (
+		<div className='extra-project'>
+			<h3 className='project-name'>{project.name}</h3>
+			<img className='project-image' src={project.images} />
+			{ stories }
+			<div className='project-io'>
+				<div className='project-inputs'>
+					<h4>Inputs</h4>
+					{ inputs.filter(input => input.value > 0).map(input => (
+						<div key={"in_"+input.name}>
+							{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} />
+						</div>
+					)) }
+				</div>
+				<div className='project-outputs'>
+					<h4>Outputs</h4>
+					{ outputs.map(output => (
+						<div key={"out_"+output.name}>
+							{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
+						</div>
+					)) }
+				</div>
+			</div>
+		</div>
+	);
+};
 
 
 const CharityProfile = ({charity}) => {

@@ -4,6 +4,8 @@ import DataStore from './DataStore';
 import {assert} from 'sjtest';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 import _ from 'lodash';
 
@@ -64,11 +66,51 @@ const addDataSource = ({list, srcPath, formPath}) => {
 	DataStore.setValue(formPath, {});
 };
 
+const donate = ({charity, formPath, formData, stripeResponse}) => {
+	const donationParams = {
+		action: 'donate',
+		charityId: NGO.id(charity),
+		currency: formData.amount.currency,
+		value: formData.amount.value,
+		value100: Math.floor(formData.amount.value * 100),
+		giftAid: formData.giftAid,
+		name: formData.name,
+		address: formData.address,
+		postcode: formData.postcode,
+		stripeToken: stripeResponse.id,
+		stripeTokenType: stripeResponse.type,
+		stripeEmail: stripeResponse.email,
+	};
+	MonetaryAmount.assIsa(donationParams);
+
+	// Add impact to submitted data
+	const project = NGO.getProject(charity);
+	if (project && project.outputs) {		
+		let donationImpacts = project.outputs.map(output => Output.scaleByDonation(output, donationParams));
+		donationParams.impacts = JSON.stringify(donationImpacts);
+	}
+
+	ServerIO.donate(donationParams)
+	.then(function(response) {
+		DataStore.setValue(formPath, {
+			...formData,
+			pending: false,
+			complete: true,
+		});
+	}, function(error) {});
+
+	DataStore.setValue(formPath, {
+		...formData,
+		pending: true,
+	});
+};
+
 const ActionMan = {
 	addCharity,
 	addProject, removeProject,
 	addInputOrOutput,
-	addDataSource
+	addDataSource,
+	donate
 };
 
 

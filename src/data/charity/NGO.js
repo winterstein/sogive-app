@@ -70,6 +70,11 @@ NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
  * @return {MonetaryAmount}
  */
 NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
+	// Is an override present? Forget calculation and just return that.
+	if (output && MonetaryAmount.isa(output.costPerBeneficiary)) {
+		return output.costPerBeneficiary;
+	}
+
 	let outputCount = output.number;
 	if ( ! outputCount) return null;
 	let projectCost = Project.getTotalCost(project);

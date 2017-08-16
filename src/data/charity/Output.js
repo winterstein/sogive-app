@@ -1,6 +1,6 @@
 
 import {assert, assMatch} from 'sjtest';
-import {deepCopy} from 'wwutils';
+import _ from 'lodash';
 import {isa} from '../DataClass';
 
 /** impact utils */
@@ -16,7 +16,7 @@ Output.assIsa = (ngo) => assert(Output.isa(ngo));
  */
 Output.scaleByDonation = (output, donationAmount) => {
 	// deep copy
-	let impact = deepCopy(output);
+	let impact = _.cloneDeep(output);
 	// TODO scaled by donationAmount
 	// TODO change units if necc
 	// TODO Java needs a mirror of this :(

@@ -7,7 +7,7 @@ const MonetaryAmount = {};
 export default MonetaryAmount;
 
 // duck type: needs currency & value
-MonetaryAmount.isa = (obj) => isa(obj, 'MonetaryAmount') || (obj.currency && _.isNumber(obj.value));
+MonetaryAmount.isa = (obj) => isa(obj, 'MonetaryAmount') || (obj && obj.currency && _.isNumber(obj.value));
 MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj));
 
 MonetaryAmount.make = (base = {}) => {

@@ -33,15 +33,19 @@ Misc.impactCalc = ({charity, project, outputs, amount}) => {
 	if ( ! outputs || ! outputs.length) {
 		return null;
 	}
-	if ( ! amount) {
-		return null; // avoid NaN messages
-	}
 	const firstOutput = outputs[0];
 	// more people?
 	let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:firstOutput});
 	if (!cpbraw || !cpbraw.value) {
 		return null; // Not a quantified output?
 	}
+	const unitName = firstOutput.name || '';
+
+	// No amount? Just show unit cost, then.
+	if (!amount) {
+		return { prefix: '', amount: cpbraw, impactNum: 1, unitName: Misc.TrPlural(1, unitName) };
+	}
+
 	let prefix = '';
 	let people = 1;
 	if (amount / cpbraw.value < 0.75) {
@@ -49,16 +53,11 @@ Misc.impactCalc = ({charity, project, outputs, amount}) => {
 		prefix = printer.prettyNumber(people, 1)+' people donating ';
 	}
 	let impactNum = (amount / cpbraw.value) * people;
-	let unitName = firstOutput.name || '';
-	// pluralise
-	unitName = Misc.TrPlural(impactNum, unitName);
 
-	return {
-		prefix,
-		amount,
-		impactNum,
-		unitName
-	};
+	// Pluralise unit name correctly
+	const plunitName = Misc.TrPlural(impactNum, unitName);
+
+	return { prefix, amount, impactNum, unitName: plunitName };
 };
 
 

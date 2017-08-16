@@ -36,15 +36,15 @@
 		width: 100%;
 		.band1 {
 			background: linear-gradient(to right, #819EB7, #C1DEF2);
-			height: 30px;
+			height: @band-1-height;
 		}
 		.band2 {
 			background: linear-gradient(to right,#ACB09F, #D2D6C3);
-			height: 50px;
+			height: @band-2-height;
 		}
 		.band3 {
 			background: linear-gradient(to right, #819EB7, #C1DEF2);
-			height: 150px;
+			height: @band-3-height;
 		}
 	}
 
@@ -55,13 +55,12 @@
 			padding-top: @band-1-height;
 
 			.charity-name {
-				background: #D2D6C3;
+				background-color: #D2D6C3;
 				text-transform: uppercase;
 				font-weight: bold;
 				margin-top: 0;
 				.extend-bg-to-sides(@bs-column-padding);
 				line-height: @band-2-height;
-				height: @band-2-height;
 			}
 			.tags {
 				color: white;
@@ -73,8 +72,6 @@
 
 				span {
 					line-height: 32px;
-					padding-left: 5px;
-					padding-right: 5px;
 				}
 
 				&.why-tags {
@@ -97,6 +94,16 @@
 
 	.info-column {
 		height: 100%;
+		
+		.header {
+			.extend-bg-to-sides(@bs-column-padding);
+			background-color: #D2D6C3;
+			border-style: solid;
+			border-top-color: #C1DEF2;
+			border-bottom-color: #C1DEF2;
+			border-width: @band-1-height 0 @band-3-height 0;
+			line-height: @band-2-height;
+		}
 
 		.charity-about {
 			.images {
@@ -156,12 +163,24 @@
 				text-align: center;
 			}
 		}
+
+		.charity-extra {
+			.extra-project {
+				img.project-image {
+					width: 100%;
+				}
+				.project-stories{
+					.quote {
+						color: @donation-number-fg;
+					}
+				}
+			}
+		}
 	}
 
 
 	.donation-impact {
 		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
-		height: 200px;
 		.project-image {
 			img {
 				width: 100%;
@@ -171,15 +190,19 @@
 		}
 
 		.donation-amount {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
 			width: 200px;
 			height: 200px;
 			border-radius: 0 100% 0 0;
 			border: 5px solid @donation-amt-bg;
+			border-bottom: none;
+			border-left: none;
 			background-color: @donation-amt-bg;
 			overflow: hidden;
 			color: @donation-amt-fg;
 			input {
-				width: 60%;
 				border: none;
 				border-radius: 0;
 				background-color: @donation-amt-input-bg;
@@ -189,15 +212,38 @@
 				border-radius: 0;
 				background-color: @donation-amt-input-bg;
 			}
-			button.donation-up-down {
-				border: 5px solid @donation-amt-fg;
-				border-radius: 50%;
-				background-color: transparent;
+			.amount-buttons {
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+				padding: 10px;
+
+				button {
+					border: 5px solid @donation-amt-fg;
+					border-radius: 50%;
+					background-color: transparent;
+					&:focus {
+						outline: none;
+					}
+
+					&.donation-up {
+						height: 60px;
+						width: 60px;
+					}
+					&.donation-down {
+						height: 50px;
+						width: 50px;
+					}
+				}
 			}
+			
 		}
 
 		.donation-input {
-			float: right;
+			position: absolute;
+			top: 0;
+			right: 0;
+			text-align: right;
 
 			.money {
 				font-size: 300%;
@@ -219,6 +265,9 @@
 
 		.donate-button {
 			button {
+				&:focus {
+					outline: none;
+				}
 				border: none;
 				background-color: @donation-button-bg;
 				color: white;
