@@ -15,7 +15,10 @@ import Misc from './Misc.jsx';
  * @param amount {?Number} The £ to donate
  */
 Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
-	const { prefix, impactNum, unitName } = Misc.impactCalc({charity, project, outputs, amount});
+	const impact = Misc.impactCalc({charity, project, outputs, amount});
+	if (!impact) return null;
+
+	const { prefix, impactNum, unitName } = impact;
 
 	return (
 		<div className='impact'>
