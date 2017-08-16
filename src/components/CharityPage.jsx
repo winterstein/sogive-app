@@ -111,7 +111,7 @@ class CharityPage extends React.Component {
 } // ./CharityPage
 
 
-const CharityTags = ({className, tagsString}) => (
+const CharityTags = ({className, tagsString = ''}) => (
 	<h3 className={'tags ' + className}>
 		{
 			tagsString.split(/,\s*/g)
@@ -133,29 +133,46 @@ const CharityDonate = ({charity}) => (
 );
 
 
-const CharityAbout = ({charity}) => (
-	<div className='charity-about'>
-		<div className='images'>
-			<div className='charity-image'>
-				<img src={charity.images} />
+const CharityAbout = ({charity}) => {
+	const turnover = charity.turnover && (
+		<p>
+			Turnover: { charity.turnover }
+		</p>
+	);
+	const employees = charity.employees && (
+		<p>
+			Employees: { charity.employees }
+		</p>
+	);
+	const website = charity.url && (
+		<p>
+			Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
+		</p>
+	);
+	return (
+		<div className='charity-about'>
+			<div className='images'>
+				<div className='charity-image'>
+					<img src={charity.images} />
+				</div>
+				<div className='charity-logo'>
+					<img src={charity.logo} />
+				</div>
 			</div>
-			<div className='charity-logo'>
-				<img src={charity.logo} />
+			<div className='descriptions'>
+				<p className='description-short'>
+					{charity.summaryDescription}
+				</p>
+				<p className='description-long'>
+					{charity.description}
+				</p>
 			</div>
-		</div>
-		<div className='descriptions'>
-			<p className='description-short'>
-				{charity.summaryDescription}
-			</p>
-			<p className='description-long'>
-				{charity.description}
-			</p>
-		</div>
-		<div className='url'>
-			<a href={charity.url}>{charity.url}</a>
-		</div>
-	</div>
-);
+			<div className='url'>
+				<a href={charity.url}>{charity.url}</a>
+			</div>
+		</div>	
+	);
+};
 
 const CharityExtra = ({charity}) => {
 	if (!charity || !charity.projects || !charity.projects.length) return null;
@@ -196,11 +213,12 @@ const CharityExtraYear = ({year, projects}) => {
 const CharityExtraProject = ({project}) => {
 	if (!project) return;
 	const {inputs, outputs} = project;
-	const stories = project.stories ? (
+
+	const stories = project.stories && (
 		<p className='project-stories'>
 			<span className='quote fa fa-quote-left' /> <span dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} /> <span className='quote fa fa-quote-right' />
 		</p>
-	) : null;
+	);
 
 	return (
 		<div className='extra-project'>

@@ -18,15 +18,13 @@ Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 	const impact = Misc.impactCalc({charity, project, outputs, amount});
 	if (!impact) return null;
 
-	const { prefix, impactNum, unitName } = impact;
-
 	return (
 		<div className='impact'>
 			<p className='impact-text'>
-				<span><b>{prefix}<Misc.Money amount={amount} /></b></span>
+				<span><b>{impact.prefix}<Misc.Money amount={impact.amount} /></b></span>
 				<span> will fund</span>
-				<span className="impact-units-amount"> {printer.prettyNumber(impactNum, 2)}</span>					
-				<span className='impact-unit-name'> {unitName}</span>
+				<span className="impact-units-amount"> {printer.prettyNumber(impact.impactNum, 2)}</span>					
+				<span className='impact-unit-name'> {impact.unitName}</span>
 			</p>
 		</div>
 	);
