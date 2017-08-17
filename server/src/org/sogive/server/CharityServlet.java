@@ -82,9 +82,9 @@ public class CharityServlet extends CrudServlet<NGO> {
 
 	public static NGO getCharity(String id, KStatus status) {		
 		ESPath path = Dep.get(SoGiveConfig.class).getPath(NGO.class, id, status);
-		Map<String, Object> got = AppUtils.get(path);
+		NGO got = AppUtils.get(path, NGO.class);
 		if (got==null) return null;
-		return new JThing<NGO>().setMap(got).setType(NGO.class).java();
+		return got; //new JThing<NGO>().setType(NGO.class).setJava(got).java();
 	}
 	
 	@Override
