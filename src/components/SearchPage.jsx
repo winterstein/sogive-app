@@ -157,7 +157,9 @@ const FieldClearButton = ({onClick, children}) => (
 
 const SearchResults = ({ results, query }) => {
 	if ( ! results) results = [];
-	const ready = _.filter(results, c => _.find(c.projects, 'ready') );
+	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
+	// TODO adjust the DB to have ready always on the charity
+	const ready = _.filter(results, c => c.ready || _.find(c.projects, 'ready') );
 	const unready = _.filter(results, r => ready.indexOf(r) === -1);
 	const hu = unready.length? <div className='unready-results col-md-10'><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null;
 	return (
