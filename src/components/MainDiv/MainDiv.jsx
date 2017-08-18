@@ -112,7 +112,7 @@ class MainDiv extends Component {
 						<Page {...pageProps} />
 					</div>
 				</div>
-				<LoginWidget logo='sogive' title='Welcome to SoGive' />
+				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
 			</div>
 		);
 	}

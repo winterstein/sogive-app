@@ -14,13 +14,17 @@ import {endsWith} from 'wwutils';
  */
 
 /**
- * assert the type!
+ * check the type!
  */
 const isa = function(obj, typ) {
 	if (!_.isObject(obj) || obj.length) return false;
 	return obj['@type'] === typ;
 };
 
+/**
+ * Uses schema.org or gson class to get the type.
+ * Or null
+ */
 const getType = function(item) {
 	// schema.org type?
 	let type = item['@type'];

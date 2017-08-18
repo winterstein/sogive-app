@@ -34,7 +34,7 @@ class Store {
 		this.parseUrlVars(window.location);
 		// and listen to changes
 		window.addEventListener('hashchange', e => {
-			console.warn("hash change - update DataStore", window.location);
+			// console.warn("hash change - update DataStore", window.location);
 			this.parseUrlVars(window.location);
 			return true;
 		});
@@ -59,7 +59,7 @@ class Store {
 		if (path.length > 2) location.slug = path[1];
 		if (path.length > 3) location.subslug = path[2];		
 		location.params = params;
-		this.update({location});
+		this.setValue(['location'], location);
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Store {
 		newParams[key] = value;
 		modifyHash(null, newParams);
 		// update the datastore
-		DataStore.setValue(['location', 'params', key], value);
+		this.setValue(['location', 'params', key], value);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class Store {
 	 */
 	getUrlValue(key) {
 		assMatch(key, String);
-		return DataStore.getValue(['location', 'params', key]);
+		return this.getValue(['location', 'params', key]);
 	}
 
 	/**
@@ -111,12 +111,14 @@ class Store {
 	/**
 	 * Convenience for getting from the data sub-node (as opposed to e.g. focus or misc) of the state tree.
 	 * type, id
+	 * Warning: This does NOT load data from the server.
 	 * @returns a "data-item", such as a person or document, or undefined.
 	 */
 	getData(type, id) {
 		assert(C.TYPES.has(type));
-		assert(id, type);
-		return this.appstate.data[type][id];
+		assert(id, "No id?! getData "+type);
+		let item = this.appstate.data[type][id];
+		return item;
 	}
 
 	getValue(...path) {
@@ -145,11 +147,11 @@ class Store {
 	 * Unlike update(), this can set {} or null values.
 	 * 
 	 * It also has a hack, where edits to [data, type, id, ...] (i.e. edits to data items) will
-	 * also set the modified flag, [data, type, id, modified] = true.
+	 * also set the modified flag, [transient, type, id, localStatus] = dirty.
 	 * This is a total hack, but handy.
 	 * 
 	 * @param {String[]} path This path will be created if it doesn't exist (except if value===null)
-	 * @param {*} value 
+	 * @param {*} value The new value. Can be null to null-out a value.
 	 * @param {boolean} update Set to false to switch off sending out an update
 	 */
 	// TODO handle setValue(pathbit, pathbit, pathbit, value) too
@@ -180,15 +182,41 @@ class Store {
 		if (path[0] === 'data' && path.length > 3 && DataStore.DATA_MODIFIED_PROPERTY) {
 			// chop path down to [data, type, id]
 			let modPath = path.slice(0, 3).concat(DataStore.DATA_MODIFIED_PROPERTY);
+			modPath[0] = 'transient';
 			// avoid infinite loopyness
 			if ( ! _.isEqual(path, modPath)) {
-				this.setValue(modPath, true, false);
+				this.setValue(modPath, C.STATUS.dirty, false);
 			}
 		}
 		if (update) {
 			this.update();
 		}
 	}
+
+	/**
+	 * Has a data item been modified since loading?
+	 * @param {*} type 
+	 * @param {*} id 
+	 * @return "dirty", "clean", etc. -- see C.STATUS
+	 */
+	getLocalEditsStatus(type, id) {
+		assert(C.TYPES.has(type));
+		assert(id, "No id?! getData "+type);
+		return this.getValue('transient', type, id, DataStore.DATA_MODIFIED_PROPERTY);
+	}
+	/**
+	 * Has a data item been modified since loading?
+	 * @param {*} type 
+	 * @param {*} id 
+	 * @return "dirty", "clean", etc. -- see C.STATUS
+	 */
+	setLocalEditsStatus(type, id, status) {
+		assert(C.TYPES.has(type));
+		assert(C.STATUS.has(status));
+		assert(id, "No id?! getData "+type);
+		return this.setValue(['transient', type, id, DataStore.DATA_MODIFIED_PROPERTY], status);
+	}
+
 
 	/**
 	* Set widget.thing.show
@@ -210,6 +238,23 @@ class Store {
 		return this.getValue('widget', widgetName, 'show');
 	}
 
+	/**
+	* Set focus.type Largely @deprecated by url-values (which give deep-linking)
+	 * @param {?String} id
+	 */
+	setFocus(type, id) {
+		assert(C.TYPES.has(type));
+		assert( ! id || _.isString(id), id);
+		this.setValue(['focus', type], id);
+	}
+
+	/**
+	 * Largely @deprecated by url-values (which give deep-linking)
+	 */
+	getFocus(type) {
+		assert(C.TYPES.has(type));
+		return this.getValue('focus', type);
+	}
 
 	/**
 	 * Get hits from the cargo, and store them under data.type.id
@@ -262,7 +307,7 @@ class Store {
 
 const DataStore = new Store();
 // switch on data item edits => modified flag
-DataStore.DATA_MODIFIED_PROPERTY = 'modified';
+DataStore.DATA_MODIFIED_PROPERTY = 'localStatus';
 export default DataStore;
 // accessible to debug
 if (typeof(window) !== 'undefined') window.DataStore = DataStore;

@@ -10,6 +10,8 @@ import _ from 'lodash';
 import Enum from 'easy-enums';
 
 import DataStore from '../plumbing/DataStore';
+import ActionMan from '../plumbing/ActionMan';
+import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
@@ -86,8 +88,8 @@ Misc.Logo = ({service, size, transparent}) => {
 	if (size) klass += " logo-"+size;
 	let file = '/img/'+service+'-logo.svg';
 	if (service === 'instagram') file = '/img/'+service+'-logo.png';
-	if (service === 'sogive') {
-		file = '/img/logo.png';
+	if (service === C.app.service) {
+		file = C.app.logo;
 		if (transparent === false) file = '/img/SoGive-Light-70px.png';
 	}
 	return (
@@ -162,7 +164,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 			value = MonetaryAmount.make({value});
 		}
 		// prefer raw, so users can type incomplete answers!
-		let v = value.raw || value.value || (value.value100 && value.value100/100);
+		let v = value.raw || value.value;
 		if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
 			v = '';
 		}
@@ -172,7 +174,6 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 			let newVal = parseFloat(e.target.value);
 			value.raw = e.target.value;
 			value.value = newVal;
-			value.value100 = newVal*100;
 			DataStore.setValue(proppath, value);
 			// console.warn("£", value, proppath);
 			if (saveFn) saveFn({path:path});
@@ -275,7 +276,16 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 
 		assert(options, [prop, otherStuff]);
 		assert(options.map, options);
-		let domOptions = options.map(option => <option key={"option_"+option} value={option} >{option}</option>);
+		// Make an option -> nice label function
+		// the labels prop can be a map or a function
+		let labels = otherStuff.labels;
+		delete otherStuff.labels;		
+		let labeller = v => v;
+		if (labels) {
+			labeller = _.isFunction(labels)? labels : v => labels[v] || v;
+		}
+		// make the options html
+		let domOptions = options.map(option => <option key={"option_"+option} value={option} >{labeller(option)}</option>);
 		let sv = value || defaultValue;
 		return (
 			<select className='form-control' name={prop} value={sv} onChange={onChange} {...otherStuff} >
@@ -326,6 +336,13 @@ const FormControl = (props) => {
 	return <input className='form-control' {...props} />;
 };
 
+// a debounced auto-save function
+const saveDraftFn = _.debounce(
+	({type, id}) => {
+		ActionMan.saveEdits(type, id);
+		return true;
+	}, 1000);
+
 /**
  * save buttons
  * TODO auto-save on edit -- copy from sogive
@@ -333,22 +350,31 @@ const FormControl = (props) => {
 Misc.SavePublishDiscard = ({type, id}) => {
 	assert(C.TYPES.has(type));
 	assMatch(id, String);
-	let transientStatus = DataStore.getValue('transient', id, 'status');
-	let isSaving = C.STATUS.issaving(transientStatus);	
+	let localStatus = DataStore.getLocalEditsStatus(type, id);
+	let isSaving = C.STATUS.issaving(localStatus);	
 	let item = DataStore.getData(type, id);
+	// request a save?
+	if (C.STATUS.isdirty(localStatus) && ! isSaving) {
+		saveDraftFn({type,id});
+	}
 	// if nothing has been edited, then we can't publish, save, or discard
-	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && ! item.modified;
+	// NB: modified is a persistent marker, managed by the server, for draft != published
+	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && C.STATUS.isclean(localStatus) && ! item.modified;
 	return (<div title={item && item.status}>
-		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.saveEdits(type, id)}>
+		<button className='btn btn-default' disabled={isSaving || C.STATUS.isclean(localStatus)} onClick={() => ActionMan.saveEdits(type, id)}>
 			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
 		</button>
 		&nbsp;
-		<button className='btn btn-primary' disabled={isSaving} onClick={() => ActionMan.publishEdits(type, id)}>
+		<button className='btn btn-primary' disabled={isSaving || noEdits} onClick={() => ActionMan.publishEdits(type, id)}>
 			Publish Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
 		</button>
 		&nbsp;
-		<button className='btn btn-warning' disabled={isSaving} onClick={() => ActionMan.discardEdits(type, id)}>
+		<button className='btn btn-warning' disabled={isSaving || noEdits} onClick={() => ActionMan.discardEdits(type, id)}>
 			Discard Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+		</button>
+		&nbsp;
+		<button className='btn btn-danger' disabled={isSaving} onClick={() => ActionMan.delete(type, id)} >
+			Delete {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
 		</button>
 	</div>);
 };
