@@ -12,7 +12,7 @@ window.C = C;
 C.app = {
 	name: "SoGive",
 	service: "sogive",
-	logo: "/img/SoGive-Light-70x70.png"
+	logo: "/img/SoGive-Light-70px.png"
 };
 
 /**

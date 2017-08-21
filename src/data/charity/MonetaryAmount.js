@@ -6,8 +6,13 @@ import {isa} from '../DataClass';
 const MonetaryAmount = {};
 export default MonetaryAmount;
 
-// duck type: needs currency & value
-MonetaryAmount.isa = (obj) => isa(obj, 'MonetaryAmount') || (obj && obj.currency && _.isNumber(obj.value));
+// ref: https://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
+function isNumeric(value) {
+  return ! isNaN(value - parseFloat(value));
+}
+
+// duck type: needs a value
+MonetaryAmount.isa = (obj) => isa(obj, 'MonetaryAmount') || (obj && isNumeric(obj.value));
 MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj));
 
 MonetaryAmount.make = (base = {}) => {
@@ -17,3 +22,4 @@ MonetaryAmount.make = (base = {}) => {
 	MonetaryAmount.assIsa(ma);
 	return ma;
 };
+

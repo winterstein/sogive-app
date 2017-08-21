@@ -39,14 +39,14 @@ const CURRENCY = {
 	USD: "$"
 };
 /**
- * Money span
+ * Money span, falsy displays as 0
  * @param amount {MonetaryAmount|Number}
  */
 Misc.Money = ({amount, precision}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
-	if ( ! amount) amount = {};
+	if ( ! amount) amount = {value: 0};
 	let snum = printer.prettyNumber(amount.value, precision);
 	// remove .0
 	if (snum.substr(snum.length-2, snum) === '.0') snum = snum.substr(0, snum.length-2);
@@ -184,7 +184,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		if (changeCurrency) {
 			// TODO other currencies
 			currency = (
-				<DropdownButton title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(proppath)}>
+				<DropdownButton disabled={otherStuff.disabled} title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(proppath)}>
 					<MenuItem key="1">{curr}</MenuItem>
 				</DropdownButton>
 			);
