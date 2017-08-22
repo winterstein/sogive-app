@@ -25,10 +25,13 @@ NGO.id = (ngo) => isa(ngo, 'NGO') && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 
 /**
- * @return {Project} the representative project
+ * @return {?Project} the representative project, or null if the charity is not ready.
  */
 NGO.getProject = (ngo) => {
-	NGO.isa(ngo);
+	NGO.assIsa(ngo);
+	if ( ! NGO.isReady(ngo)) {
+		return null;
+	}
 	let projects = NGO.getProjects2(ngo);
 	// Get most recent, if more than one
 	let repProject = projects.reduce((best, current) => {
@@ -37,6 +40,20 @@ NGO.getProject = (ngo) => {
 		return best.year > current.year ? best : current;
 	}, null);
 	return repProject;
+};
+
+NGO.isReady = (ngo) => {
+	NGO.assIsa(ngo);
+	if (ngo.ready) return true;
+	// HACK: handle older data, where ready was per-project
+	// TODO upgrade the data
+	if (ngo.ready === false) return false;
+	if (ngo.projects) {
+		if (ngo.projects.filter(p => p.ready).length) {
+			return true;
+		}
+	}
+	return false;
 };
 
 /**
@@ -50,8 +67,8 @@ NGO.getProjects2 = (ngo) => {
 		return [];
 	}
 	assert(_.isArray(projects), ngo);
-	// Filter for ready, and never show unready
-	let readyProjects = projects.filter(p => p.ready);
+	// We used to filter for ready, and never show unready. However ready/unready is now set at the charity level
+	let readyProjects = projects; //.filter(p => p.ready);
 
 	// Representative and ready for use?
 	const repProjects = readyProjects.filter(p => p.isRep);

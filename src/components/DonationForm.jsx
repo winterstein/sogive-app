@@ -109,19 +109,18 @@ class DonationForm extends Component {
 		}
 
 		const project = NGO.getProject(charity);
-		const { outputs } = project;
 		// NB: no project = no data is possible
+		if ( ! project) {
+			return <div />;
+		}
+		const { outputs } = project;
 		const user = Login.getUser();
 		const formPath = ['widget','DonationForm', NGO.id(charity)];
 
-		const formData = DataStore.getValue(formPath);
+		const formData = DataStore.getValue(formPath) || {};
 		const { amount } = formData;
 		
 		const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
-
-		if ( ! formData) {
-			return <div />;
-		}
 
 		// donated?
 		if (formData.complete) {

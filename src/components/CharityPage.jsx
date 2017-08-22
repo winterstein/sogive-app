@@ -71,11 +71,7 @@ class CharityPage extends React.Component {
 					<CharityTags className='why-tags' tagsString={charity.whyTags} />
 					<CharityTags className='where-tags' tagsString={charity.whereTags} />
 				</div>
-				<Tabs defaultActiveKey={1}>
-					<Tab eventKey={1} title='Donate'>
-						<CharityDonate charity={charity} />
-					</Tab>
-				</Tabs>
+				<CharityDonate charity={charity} />
 			</div>
 		);
 		const spacerColumn = <div className='col-md-1 hidden-xs' />;
