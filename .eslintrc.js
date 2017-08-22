@@ -13,6 +13,7 @@ module.exports = {
 		"arrow-parens": "off",
 		"brace-style": "warn",
 		"react/jsx-no-target-blank": "warn",
+		"no-return-assign": "off",
 		"camelcase": "off", // we use camelCase, but we also break it in places, e.g. myFn2_subFn()
 		"class-methods-use-this": "off",
 		"comma-dangle": "off",

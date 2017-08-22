@@ -108,6 +108,9 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			}		
 			WebUtils2.sendError(500, "TODO", resp);
+		} catch (WebEx ex) {
+			Log.e("error", ex);
+			WebUtils2.sendError(ex.code, ex.getMessage()+"\n\n------\n"+Printer.toString(ex, true), resp);
 		} catch(Throwable ex) {
 			ex.printStackTrace();
 			Log.e("error", ex);

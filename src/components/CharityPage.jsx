@@ -34,12 +34,7 @@ class CharityPage extends React.Component {
 			assert(NGO.isa(charity), charity);
 			this.setState({charity: charity});
 			return result;
-		}.bind(this))
-		.fail(err => {
-			// TODO nicer! use MessageBar
-			alert("There was an error loading this charity: "+JSON.stringify(err));
-			return err;
-		});
+		}.bind(this));
 	}
 
 	render() {
@@ -78,7 +73,7 @@ class CharityPage extends React.Component {
 		const infoColumn = (
 			<div className='col-md-4 col-xs-12 column info-column'>
 				<div className='header'>&nbsp;</div>
-				<Tabs defaultActiveKey={1}>
+				<Tabs defaultActiveKey={1} id='rhsTabs'>
 					<Tab eventKey={1} title='About'>
 						<CharityAbout charity={charity} />
 					</Tab>

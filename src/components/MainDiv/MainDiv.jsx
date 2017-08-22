@@ -81,6 +81,7 @@ class MainDiv extends Component {
 	}
 
 	decodeHash(url) {
+		// TODO use DataStore instead
 		const hashIndex = url.indexOf('#');
 		const hash = (hashIndex >= 0) ? url.slice(hashIndex + 1) : '';
 		let page = hash.split('?')[0] || DEFAULT_PAGE;
@@ -88,7 +89,7 @@ class MainDiv extends Component {
 		// peel off eg publisher/myblog
 		const pageBits = page.split('/');
 		page = pageBits[0];
-		if (pageBits.length > 1) {
+		if (pageBits.length > 1) { // TODO use DataStore instead
 			// store in DataStore focus
 			const ptype = toTitleCase(page); // hack publisher -> Publisher
 			DataStore.setValue(['focus', ptype], pageBits[1]);
@@ -97,16 +98,19 @@ class MainDiv extends Component {
 	}
 
 	render() {
+		let path = DataStore.getValue('location', 'path');		
 		const { page, pageProps } = this.state;
+		console.log("TODO page from path?", path, page);
 		assert(page, this.props);
 		let Page = PAGES[page];		
 		assert(Page, (page, PAGES));
 
+		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
 		return (
 			<div>
 				<NavBar page={page} />
 				<div className="container avoid-navbar">
-					<MessageBar />
+					<MessageBar messages={msgs} />
 					<div id={page}>
 						<Page {...pageProps} />
 					</div>

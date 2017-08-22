@@ -43,6 +43,8 @@ class Store {
 	/**
 	 * Keep navigation state in the url, after the hash, so we have shareable urls.
 	 * To set a nav variable, use setUrlValue(key, value);
+	 * 
+	 * Stored as location: { path: String[], params: {key: value} }
 	 */
 	parseUrlVars(url) {		
 		let {path, params} = parseHash();
