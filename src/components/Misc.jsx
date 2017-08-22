@@ -199,7 +199,8 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	} // ./£
 	// text based
 	const onChange = e => {
-		let mv = modelValueFromInput(e.target.value, type);
+		console.log("event", e, e.type);
+		let mv = modelValueFromInput(e.target.value, type, e.type);
 		DataStore.setValue(proppath, mv);
 		if (saveFn) saveFn({path:path});
 		e.preventDefault();
@@ -239,7 +240,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	}
 	if (type==='url') {
 		return (<div>
-			<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
+			<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
 			<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
 			<div className='clearfix' />
 		</div>);
@@ -304,8 +305,9 @@ Misc.ControlTypes = new Enum("img textarea text select password email url color 
 
 /**
  * Convert inputs (probably text) into the model's format (e.g. numerical)
+ * @param eventType "change"|"blur" More aggressive edits should only be done on "blur"
  */
-const standardModelValueFromInput = (inputValue, type) => {
+const standardModelValueFromInput = (inputValue, type, eventType) => {
 	if ( ! inputValue) return inputValue;
 	// numerical?
 	if (type==='year') {
@@ -314,8 +316,15 @@ const standardModelValueFromInput = (inputValue, type) => {
 	if (type==='number') {
 		return parseFloat(inputValue);
 	}
+	// add in https:// if missing
+	if (type==='url' && eventType==='blur') {
+		if (inputValue.indexOf('://') === -1 && inputValue[0] !== '/' && 'http'.substr(0, inputValue.length) !== inputValue.substr(0,4)) {
+			inputValue = 'https://'+inputValue;
+		}
+	}
 	return inputValue;
 };
+
 
 const oh = (n) => n<10? '0'+n : n;
 /**

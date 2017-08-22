@@ -159,14 +159,13 @@ const SearchResults = ({ results, query }) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
-	const ready = _.filter(results, c => c.ready || _.find(c.projects, 'ready') );
-	const unready = _.filter(results, r => ready.indexOf(r) === -1);
-	const hu = unready.length? <div className='unready-results col-md-10'><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null;
+	const ready = _.filter(results, NGO.isReady);
+	const unready = _.filter(results, r => ! NGO.isReady(r) );
 	return (
 		<div className='SearchResults'>
 			<SearchResultsNum results={results} query={query} />
 			{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
-			{hu}
+			{unready.length? <div className='unready-results col-md-10'><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null}
 			{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
 		</div>);
 }; //./SearchResults

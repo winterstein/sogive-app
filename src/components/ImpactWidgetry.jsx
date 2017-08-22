@@ -8,6 +8,7 @@ import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import NGO from '../data/charity/NGO';
+import Project from '../data/charity/Project';
 
 import Misc from './Misc.jsx';
 
@@ -26,6 +27,7 @@ Misc.ImpactDesc = ({charity, project, outputs, amount}) => {
 				<span className="impact-units-amount"> {printer.prettyNumber(impact.impactNum, 2)}</span>					
 				<span className='impact-unit-name'> {impact.unitName}</span>
 			</p>
+			{ Project.isOverall(project)? null : <small className='details'>{project.name}</small> }
 		</div>
 	);
 }; //./ImpactDesc
