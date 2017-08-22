@@ -25,7 +25,7 @@ const AccountMenu = ({pending, active}) => {
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li>
-					<a href={window.location} onClick={() => DataStore.setShow(C.show.LoginWidget, true)}>
+					<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow(C.show.LoginWidget, true); } } >
 						Login or Register
 					</a>
 				</li>
