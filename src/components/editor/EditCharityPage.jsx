@@ -104,7 +104,7 @@ class EditCharityPage extends React.Component {
 				<Panel>
 					<h2>Editing: {charity.name}</h2>			
 					<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-					<p>If you're not sure how to fill out a particular field, hover the <Glyphicon glyph='question-sign' title='question mark' /> icon for a detailed explanation.</p>
+					<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> &nbsp;
@@ -161,26 +161,27 @@ const ProfileEditor = ({charity}) => {
 		
 		<div className='well'>
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' />
-			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' />
-			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' />
-			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' />
-			<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' />
+			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
+			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
+			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
+			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but it's not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
+			<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
 		<EditField item={charity} type='url' field='url' label='Website' />
 		<EditField item={charity} type='url' field='wikipedia' label='Wikipedia page' />
-		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='One short sentence, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
+		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
+		<div>
+			<p>The tags are used for the charity search process. A list of common tags is here: https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E</p>
+		</div>
 		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags' 
-			help='What does this charity directly tackle? E.g. "education" or "tackling-poverty". Please check the common tags list and use those where possible.' />
-		<EditField item={charity} type='text' field='whoTags' label='Who tags' 
-			help='What range of people does this charity directly help? E.g. "children". Leave blank for anyone. Please check the common tags list and use those where possible.' />
+			help='What is this charity's cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
 		<EditField item={charity} type='text' field='howTags' label='How (method) tags' 
-			help='How does the charity help? E.g. "training", "medical-supplies", "grants". Please check the common tags list and use those where possible.' />
+			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to "Research", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated. ' />
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
-			help='In which countries or areas does the charity give aid?' />
+			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
 		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
@@ -190,13 +191,15 @@ const ProfileEditor = ({charity}) => {
 		Copy and paste this URL into this field. 
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
-		<EditField item={charity} type='img' field='images' label='Photo' />
+		<EditField item={charity} type='img' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
+		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
+		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
-		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
+		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary. We haven't worked out a rule about whether the story and the photo need to relate to each other.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 		
 		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
-				help='Keeping a summary of our efforts to get information from the charity, and their responses.' />
+				help='Keeping a summary of our efforts to get information from the charity, and their responses. Include dates of messages sent.' />
 
 		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' 
 				help='If there are 3rd party impact assessments, e.g. GiveWell, enter the links' />		
@@ -445,7 +448,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							Confidence <Glyphicon glyph='question-sign' title={
 `How confident are we in this cost-per-beneficiary estimate?   
 
-- High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear.   
+- High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.   
 - Medium - the default value.    
 - Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
 - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.`}
