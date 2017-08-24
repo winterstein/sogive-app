@@ -202,7 +202,7 @@ const CharityExtraYear = ({year, projects}) => {
 };
 
 const CharityExtraProject = ({project}) => {
-	if ( ! project) return;
+	if ( ! project) return null;
 	const {inputs, outputs} = project;
 
 	const stories = project.stories && (
@@ -219,19 +219,19 @@ const CharityExtraProject = ({project}) => {
 			<div className='project-io'>
 				<div className='project-inputs'>
 					<h4>Inputs</h4>
-					{ inputs.filter(input => input.value > 0).map(input => (
+					{ inputs? inputs.filter(input => input.value > 0).map(input => (
 						<div key={"in_"+input.name}>
 							{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} />
 						</div>
-					)) }
+					)) : null }
 				</div>
 				<div className='project-outputs'>
 					<h4>Outputs</h4>
-					{ outputs.map(output => (
+					{ outputs? outputs.map(output => (
 						<div key={"out_"+output.name}>
 							{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
 						</div>
-					)) }
+					)) : null }
 				</div>
 			</div>
 		</div>
@@ -319,6 +319,7 @@ const COSTNAMES = {
 };
 
 const ProjectPanel = ({project}) => {
+	Project.assIsa(project);
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (
