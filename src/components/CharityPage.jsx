@@ -120,7 +120,7 @@ const CharityDonate = ({charity}) => (
 			<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
 			<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
 			<a className='share-social-email' 
-				href={'mailto:?subject='+encURI(charity.name+" shared from SoGive")+'&body='+encURI(window.location)}
+				href={'mailto:?subject='+encURI(charity.name+" shared via SoGive")+'&body='+encURI(window.location)}
 				><span className='fa fa-envelope-o' />
 			</a>
 		</div>
@@ -206,7 +206,7 @@ const CharityExtraYear = ({year, projects}) => {
 };
 
 const CharityExtraProject = ({project}) => {
-	if (!project) return;
+	if ( ! project) return;
 	const {inputs, outputs} = project;
 
 	const stories = project.stories && (
@@ -218,7 +218,7 @@ const CharityExtraProject = ({project}) => {
 	return (
 		<div className='extra-project'>
 			<h3 className='project-name'>{project.name}</h3>
-			<img className='project-image' src={project.images} />
+			<img className='project-image' src={project.images} alt='project' />
 			{ stories }
 			<div className='project-io'>
 				<div className='project-inputs'>
