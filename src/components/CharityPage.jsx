@@ -105,6 +105,8 @@ class CharityPage extends React.Component {
 
 
 const CharityTags = ({className, tagsString = ''}) => (
+	// should tags be lower-cased??
+	// TODO <a href={'/#search?q=tag:'+encURI(tag)}> -- needs server-side support
 	<h3 className={'tags ' + className}>
 		{
 			tagsString.split(/,\s*/g)
