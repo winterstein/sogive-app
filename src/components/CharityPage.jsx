@@ -1,5 +1,6 @@
 // @Flow
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy} from 'wwutils';
@@ -151,11 +152,11 @@ const CharityAbout = ({charity}) => {
 				</div>
 			</div>
 			<div className='descriptions'>
-				<p className='description-short'>
-					{charity.summaryDescription}
-				</p>
+				<div className='description-short'>
+					<ReactMarkdown source={charity.summaryDescription} />
+				</div>
 				<p className='description-long'>
-					{charity.description}
+					<ReactMarkdown source={charity.description} />					
 				</p>
 			</div>
 			<div className='url'>

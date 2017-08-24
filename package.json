@@ -26,6 +26,7 @@
     "react-chartjs2": "^1.1.2",
     "react-dom": "^15.6.1",
     "react-stripe-checkout": "^2.4.0",
+	"react-markdown": "^2.5.0",
     "webpack": "^3.2.0",
     "easy-enums": "^1.1.5",
     "sjtest": "^0.4.4",
