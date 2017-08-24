@@ -17,6 +17,7 @@ import Misc from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';
 import ImpactWidgetry from './ImpactWidgetry';
+import SocialShare from './SocialShare';
 
 class CharityPage extends React.Component {
 
@@ -116,14 +117,7 @@ const CharityTags = ({className, tagsString = ''}) => (
 const CharityDonate = ({charity}) => (
 	<div className='donation-column'>
 		<DonationForm charity={charity} />
-		<div className='share-social-buttons'>
-			<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
-			<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
-			<a className='share-social-email' 
-				href={'mailto:?subject='+encURI(charity.name+" shared via SoGive")+'&body='+encURI(window.location)}
-				><span className='fa fa-envelope-o' />
-			</a>
-		</div>
+		<SocialShare charity={charity} />
 	</div>
 );
 
