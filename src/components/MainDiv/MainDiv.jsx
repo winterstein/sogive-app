@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Login from 'you-again';
 import { assert } from 'sjtest';
 import { getUrlVars } from 'wwutils';

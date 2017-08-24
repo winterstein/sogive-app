@@ -161,10 +161,10 @@ const ProfileEditor = ({charity}) => {
 		
 		<div className='well'>
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
-			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity's website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but it's not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
+			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
+			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
+			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
+			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
 			<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
@@ -177,7 +177,7 @@ const ProfileEditor = ({charity}) => {
 			<p>The tags are used for the charity search process. A list of common tags is here: https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E</p>
 		</div>
 		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags' 
-			help='What is this charity's cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
+			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
 		<EditField item={charity} type='text' field='howTags' label='How (method) tags' 
 			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to "Research", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated. ' />
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
@@ -195,7 +195,8 @@ const ProfileEditor = ({charity}) => {
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
-		<EditField item={charity} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary. We haven't worked out a rule about whether the story and the photo need to relate to each other.' />
+		<EditField item={charity} type='textarea' field='stories' label='Story' 
+			help='A story from this project, e.g. about a beneficiary. We havent worked out a rule about whether the story and the photo need to relate to each other.' />
 		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
 		
 		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
@@ -315,7 +316,8 @@ const ProjectEditor = ({charity, project}) => {
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
 					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
-					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' help='A story from this project, e.g. about a beneficiary.' />
+					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
+						help='A story from this project, e.g. about a beneficiary.' />
 				</div>
 			)}
 			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'

@@ -279,7 +279,7 @@ class ThankYouAndShare extends Component {
 
 					<p>Share this on social media?<br/>
 						We expect this will lead to 2-3 times more donations on average.</p>
-
+					
 					<textarea
 						className='form-control'
 						onChange={() => { this.onChangeShareText(); }}

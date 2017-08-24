@@ -3,7 +3,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import _ from 'lodash';
 import {assert} from 'sjtest';
-import {yessy} from 'wwutils';
+import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
@@ -119,7 +119,10 @@ const CharityDonate = ({charity}) => (
 		<div className='share-social-buttons'>
 			<a className='share-social-twitter'><span className='fa fa-twitter' /></a>
 			<a className='share-social-facebook'><span className='fa fa-facebook' /></a>
-			<a className='share-social-email'><span className='fa fa-envelope-o' /></a>
+			<a className='share-social-email' 
+				href={'mailto:?subject='+encURI(charity.name+" shared from SoGive")+'&body='+encURI(window.location)}
+				><span className='fa fa-envelope-o' />
+			</a>
 		</div>
 	</div>
 );
@@ -145,18 +148,18 @@ const CharityAbout = ({charity}) => {
 		<div className='charity-about'>
 			<div className='images'>
 				<div className='charity-image'>
-					<img src={charity.images} />
+					<img src={charity.images} alt='Charity' />
 				</div>
 				<div className='charity-logo'>
-					<img src={charity.logo} />
+					<img src={charity.logo} alt='Charity logo' />
 				</div>
 			</div>
 			<div className='descriptions'>
 				<div className='description-short'>
-					<ReactMarkdown source={charity.summaryDescription} />
+					{charity.summaryDescription? <ReactMarkdown source={charity.summaryDescription} /> : null}
 				</div>
 				<p className='description-long'>
-					<ReactMarkdown source={charity.description} />					
+					{charity.description? <ReactMarkdown source={charity.description} /> : null}
 				</p>
 			</div>
 			<div className='url'>
