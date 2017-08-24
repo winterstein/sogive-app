@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
-import {encURI} from 'wwutils';
+import {XId, encURI} from 'wwutils';
 import C from '../C.js';
 
 import Login from 'you-again';

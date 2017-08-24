@@ -98,9 +98,10 @@ Misc.Logo = ({service, size, transparent}) => {
 }; // ./Logo
 
 /**
- * Font-Awesome icons
+ * Font-Awesome or Glyphicon icons
  */
-Misc.Icon = ({fa, size, ...other}) => {
+Misc.Icon = ({glyph, fa, size, ...other}) => {
+	if (glyph) return <span className={'glyphicon glyphicon-'+glyph + (size? ' fa-'+size : '')} aria-hidden="true" {...other}></span>;
 	return <i className={'fa fa-'+fa + (size? ' fa-'+size : '')} aria-hidden="true" {...other}></i>;
 };
 
@@ -341,8 +342,9 @@ Misc.ImgThumbnail = ({url}) => url? <img className='logo' style={{maxWidth:'100%
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
  * Plus since we're providing state handling, we don't need a full component.
  */
-const FormControl = (props) => {
-	return <input className='form-control' {...props} />;
+const FormControl = ({value, ...otherProps}) => {
+	if (value===null || value===undefined) value = '';
+	return <input className='form-control' value={value} {...otherProps} />;
 };
 
 // a debounced auto-save function
@@ -351,6 +353,22 @@ const saveDraftFn = _.debounce(
 		ActionMan.saveEdits(type, id);
 		return true;
 	}, 1000);
+
+
+/**
+ * Just a convenience for a Bootstrap panel
+ */
+Misc.Card = ({title, icon, children}) => {
+	return (<div className="panel panel-default">
+		<div className="panel-heading">
+			<h3 className="panel-title">{icon? <Misc.Icon fa={icon} /> : null} {title || ''}</h3>
+		</div>
+		<div className="panel-body">
+			{children}
+		</div>
+	</div>);
+};
+
 
 /**
  * save buttons

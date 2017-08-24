@@ -7,6 +7,14 @@ export default C;
 window.C = C;
 
 /**
+ * hack: local, test, or ''
+ */
+C.SERVER_TYPE = ''; // production
+if (window.location.host.indexOf("test")===0) C.SERVER_TYPE = 'test';
+else if (window.location.host.indexOf("local")===0) C.SERVER_TYPE = 'local';
+// local servers dont have https
+C.HTTPS = C.SERVER_TYPE==='local'? 'http' : 'https';
+/**
  * app config
  */
 C.app = {

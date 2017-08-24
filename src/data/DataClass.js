@@ -18,7 +18,7 @@ import {endsWith} from 'wwutils';
  */
 const isa = function(obj, typ) {
 	if (!_.isObject(obj) || obj.length) return false;
-	return obj['@type'] === typ;
+	return getType(obj) === typ;
 };
 
 /**
@@ -29,6 +29,7 @@ const getType = function(item) {
 	// schema.org type?
 	let type = item['@type'];
 	if (type) return type;
+	// Java class from FlexiGson?
 	let klass = item['@class'];
 	if ( ! klass) return null;
 	type = klass.substr(klass.lastIndexOf('.')+1);
