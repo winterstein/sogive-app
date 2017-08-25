@@ -50,7 +50,7 @@ class MainDiv extends Component {
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
 
-		Login.app = 'sogive';
+		Login.app = C.app.service;
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
 			// ?? should we store and check for "Login was attempted" to guard this??

@@ -28,17 +28,17 @@ const SocialSignin = ({verb, services}) => {
 	return (
 		<div className="social-signin">
 			<div className={services && services.indexOf('twitter') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('twitter')} className="btn btn-default form-control">
+				<button onClick={() => socialLogin('twitter')} className="btn btn-default">
 					<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
 				</button>
 			</div>
 			<div className={services && services.indexOf('facebook') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('facebook')} className="btn btn-default form-control">
+				<button onClick={() => socialLogin('facebook')} className="btn btn-default">
 					<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
 				</button>
 			</div>
 			<div className="form-group hidden">
-				<button onClick={() => socialLogin('instagram')} className="btn btn-default form-control">
+				<button onClick={() => socialLogin('instagram')} className="btn btn-default">
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>

@@ -82,7 +82,7 @@ Misc.Time = ({time}) => {
 Misc.Logo = ({service, size, transparent}) => {
 	assert(service);
 	if (service==='twitter' || service==='facebook') {
-		return <Misc.Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} />;
+		return <span className={'color-'+service}><Misc.Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} /></span>;
 	}
 	let klass = "img-rounded logo";
 	if (size) klass += " logo-"+size;
