@@ -1,3 +1,10 @@
 {
-	"workbench.colorTheme": "Solarized Light"
+	"workbench.colorTheme": "Solarized Light",
+
+	"background.enabled": true,
+	"background.useDefault": true,
+	"background.customImages": [
+		"http://sogive.org/img/evening-sunflowers-2k.jpg"
+	]
+	
 }
