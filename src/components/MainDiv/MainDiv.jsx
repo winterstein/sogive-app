@@ -22,7 +22,6 @@ import ExchangeRatesPage from '../editor/ExchangeRatesPage';
 
 // Actions
 
-
 const PAGES = {
 	search: SearchPage,
 	dashboard: DashboardPage,

@@ -33,6 +33,9 @@ export default class SearchPage extends React.Component {
 	render() {
 		// query comes from the url
 		let q = DataStore.getUrlValue("q");
+		if (q==='ERROR') { // HACK
+			throw new Error("Argh!");
+		}
 		return (
 			<div className='page SearchPage'>
 				<div className='col-md-12'>
