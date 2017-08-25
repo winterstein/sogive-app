@@ -25,6 +25,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Range;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.web.app.FileServlet;
+import com.winterwell.web.app.LogServlet;
 import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.AField;
@@ -106,7 +107,12 @@ public class MasterHttpServlet extends HttpServlet {
 				ManifestServlet s = new ManifestServlet();
 				s.process(request);
 				return;
-			}		
+			}
+			if (path.startsWith("/log")) {
+				LogServlet s = new LogServlet();
+				s.process(request);
+				return;
+			}	
 			WebUtils2.sendError(500, "TODO", resp);
 		} catch (WebEx ex) {
 			Log.e("error", ex);
