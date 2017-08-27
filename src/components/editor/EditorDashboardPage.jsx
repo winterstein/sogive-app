@@ -46,6 +46,7 @@ const AddCharityWidget = () => {
 const doAddEditor = function() {
 	let email = DataStore.appstate.widget.AddEditorWidget.form.email;
 	if ( ! email) return;
+	Login.shareThing('group:editors', email);
 	Login.shareThing('can:publish-edits', email);
 	DataStore.setValue(['widget', 'AddEditorWidget', 'form'], {});
 };
