@@ -2,8 +2,26 @@
 import Login from 'you-again';
 import DataStore from './plumbing/DataStore';
 import {assMatch} from 'sjtest';
+import C from './C';
 
 // TODO switch from storing can:x to role:x with app-defined cans
+
+/**
+ * @returns {PromiseValue<String[]>}
+ */
+const getRoles = () => {
+	let shared = DataStore.fetch(['misc', 'roles', Login.getId()],
+		() => {
+			let req = Login.getSharedWith({prefix:"role:*"});
+			req.then(function(res) {
+				let shares = res.cargo;
+				let roles = shares.filter(s => s.substr(0,5)==='role:').map(s => s.substr(5));
+				return roles;
+			});
+		}
+	);
+	return shared;
+};
 
 /**
  * Can the current user do this?
@@ -11,20 +29,29 @@ import {assMatch} from 'sjtest';
  */
 const iCan = (capability) => {
 	assMatch(capability, String);
-	let roleShare = 'can:'+capability;
-	let shared = DataStore.getValue(['misc', 'shares', roleShare]);
-	if (shared===undefined || shared===null) {
-		let req = Login.checkShare(roleShare);
-		req.then(function(res) {
-			let yehorneh = res.success;
-			DataStore.setValue(['misc', 'shares', roleShare], yehorneh);
-		});
+	let proles = getRoles();
+	if ( ! proles.value) return null;
+	for(let i=0; i<proles.value.length; i++) {
+		let cans = cans4role[proles.value[i]];
+		if (cans.indexOf(capability) !== -1) return true;
 	}
-	return shared;
+	return false;
+};
+
+const cans4role = {};
+
+const define = (role, cans) => {
+	assMatch(role, String, cans, "String[]");
+	cans4role[role] = cans;	
 };
 
 const Roles = {
-	iCan
+	iCan,
+	define,
+	getRoles
 };
 
 export default Roles;
+
+// setup roles
+define(C.ROLES.editor, [C.CAN.publish]);

@@ -107,7 +107,7 @@ class EditCharityPage extends React.Component {
 					<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-					{Roles.iCan(C.ROLES.publish)? 
+					{Roles.iCan(C.CAN.publish)? 
 						<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
 						: <div><button disabled>Publish</button><br/><small>Please ask a senior editor</small></div>
 					}
