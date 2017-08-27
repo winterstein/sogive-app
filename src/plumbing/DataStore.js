@@ -303,6 +303,30 @@ class Store {
 		});
 		this.update(itemstate);
 		return res;
+	} //./updateFromServer()
+
+
+	/**
+	 * get local, or fetch by calling fetchFn (but only once). 
+	 * Does not call update here and now, so it can be used inside a React render().
+	 * @returns {?value, promise}
+	 */
+	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
+		let item = this.getValue(path);
+		if (item) return {value, Promise.resolve(value)};
+		// only ask once
+		const fpath = ['transient', 'promise'].concat(path);
+		let promise = this.getValue(fpath);
+		if (promise) return {promise};	
+		promise = fetchFn()
+			.then(res => {
+				// this.setValue(fpath, null, false); No repeats?!
+				this.setValue(path, res);
+				// DataStore.updateFromServer(res);
+				return res;
+			});		
+		this.setValue(fpath, promise, false);
+		return {promise};
 	}
 
 } // ./Store
