@@ -52,7 +52,6 @@ const doAddEditor = function() {
 };
 
 const AddEditorWidget = () => {
-	Login.shareThing();
 	return (<Panel header={<h2>Add a new Editor</h2>} >
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
 		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
