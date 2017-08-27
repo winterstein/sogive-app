@@ -3,6 +3,8 @@ import Login from 'you-again';
 import DataStore from './plumbing/DataStore';
 import {assMatch} from 'sjtest';
 
+// TODO switch from storing can:x to role:x with app-defined cans
+
 /**
  * Can the current user do this?
  * @returns {Boolean} WARNING: false if the data is loading by ajax! This will then set DataStore and trigger an update.
