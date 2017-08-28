@@ -122,6 +122,7 @@ ServerIO.load = function(url, params) {
 	params.url = url;
 	// send cookies
 	params.xhrFields = {withCredentials: true};
+	params.data.withCredentials = true; // let the server know this is a with-credentials call
 	// add auth
 	if (Login.isLoggedIn()) {
 		params.data.as = Login.getId();

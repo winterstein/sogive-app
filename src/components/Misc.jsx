@@ -388,20 +388,21 @@ Misc.SavePublishDiscard = ({type, id}) => {
 	// NB: modified is a persistent marker, managed by the server, for draft != published
 	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && C.STATUS.isclean(localStatus) && ! item.modified;
 	return (<div title={item && item.status}>
+		<div><small>Status: {item && item.status}, Modified: {localStatus} {isSaving? "saving...":null}</small></div>
 		<button className='btn btn-default' disabled={isSaving || C.STATUS.isclean(localStatus)} onClick={() => ActionMan.saveEdits(type, id)}>
-			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
 		</button>
 		&nbsp;
 		<button className='btn btn-primary' disabled={isSaving || noEdits} onClick={() => ActionMan.publishEdits(type, id)}>
-			Publish Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+			Publish Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
 		</button>
 		&nbsp;
 		<button className='btn btn-warning' disabled={isSaving || noEdits} onClick={() => ActionMan.discardEdits(type, id)}>
-			Discard Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+			Discard Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
 		</button>
 		&nbsp;
 		<button className='btn btn-danger' disabled={isSaving} onClick={() => ActionMan.delete(type, id)} >
-			Delete {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : null}
+			Delete {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
 		</button>
 	</div>);
 };
