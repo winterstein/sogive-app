@@ -13,9 +13,9 @@ const getRoles = () => {
 	let shared = DataStore.fetch(['misc', 'roles', Login.getId()],
 		() => {
 			let req = Login.getSharedWith({prefix:"role:*"});
-			req.then(function(res) {
+			return req.then(function(res) {
 				let shares = res.cargo;
-				let roles = shares.filter(s => s.substr(0,5)==='role:').map(s => s.substr(5));
+				let roles = shares.filter(s => s.item && s.item.substr(0,5)==='role:').map(s => s.item.substr(5));
 				return roles;
 			});
 		}

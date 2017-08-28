@@ -4,6 +4,7 @@ import _ from 'lodash';
 import {getType} from '../data/DataClass';
 import {assert,assMatch} from 'sjtest';
 import {yessy, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
+import PV from 'promise-value';
 
 /**
  * Hold data in a simple json tree, and provide some utility methods to update it - and to attach a listener.
@@ -315,18 +316,19 @@ class Store {
 		let item = this.getValue(path);
 		if (item) return {value:item, promise:Promise.resolve(item)};
 		// only ask once
-		const fpath = ['transient', 'promise'].concat(path);
-		let promise = this.getValue(fpath);
-		if (promise) return {promise};	
-		promise = fetchFn()
-			.then(res => {
-				// this.setValue(fpath, null, false); No repeats?!
-				this.setValue(path, res);
-				// DataStore.updateFromServer(res);
-				return res;
-			});		
-		this.setValue(fpath, promise, false);
-		return {promise};
+		const fpath = ['transient', 'PromiseValue'].concat(path);
+		let pv = this.getValue(fpath);
+		if (pv) return pv;	
+		let promise = fetchFn();
+		pv = PV(promise);
+		pv.promise.then(res => {
+			// this.setValue(fpath, null, false); No repeats?!
+			this.setValue(path, res);
+			// DataStore.updateFromServer(res);
+			return res;
+		});	
+		this.setValue(fpath, pv, false);
+		return pv;
 	}
 
 } // ./Store
