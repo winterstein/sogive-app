@@ -184,10 +184,10 @@ const ProjectPanel = ({project}) => {
 				</div>
 				<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
 					<div className='col-md-6 inputs'><h4>Inputs</h4>
-						{inputs.map(input => <div key={"in_"+input.name}>{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} /></div>)}
+						{inputs.map(input => <div key={"in_"+input.name}>{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input || 0} /></div>)}
 					</div>
 					<div className='col-md-6 outputs'><h4>Outputs</h4>
-						{outputs.map(output => <div key={"out_"+output.name}>{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}</div>)}
+						{outputs.map(output => <div key={"out_"+output.name}>{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number || 0)}</div>)}
 					</div>
 				</div>
 				<div className='upper-padding'>
