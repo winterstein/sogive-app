@@ -41,7 +41,8 @@ const iCan = (capability) => {
 const cans4role = {};
 
 const define = (role, cans) => {
-	assMatch(role, String, cans, "String[]");
+	assMatch(role, String);
+	assMatch(cans, "String[]");
 	cans4role[role] = cans;	
 };
 
@@ -55,3 +56,4 @@ export default Roles;
 
 // setup roles
 define(C.ROLES.editor, [C.CAN.publish]);
+define(C.ROLES.admin, C.CAN.values);
