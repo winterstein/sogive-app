@@ -15,6 +15,7 @@ import LoginWidget from '../LoginWidget/LoginWidget';
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
 import AccountPage from '../AccountPage';
+import AboutPage from '../AboutPage';
 import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
 import EditorDashboardPage from '../editor/EditorDashboardPage';
@@ -30,6 +31,7 @@ const PAGES = {
 	charity: CharityPage,
 	edit: EditCharityPage,
 	exchangeRates: ExchangeRatesPage,
+	about: AboutPage
 };
 
 const DEFAULT_PAGE = 'search';

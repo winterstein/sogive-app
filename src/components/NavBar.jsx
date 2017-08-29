@@ -8,7 +8,7 @@ import AccountMenu from './AccountMenu';
  */
 const NavBar = ({currentPage}) => {
 	// make the page links
-	let pageLinks = ['dashboard', 'search'].map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
+	let pageLinks = ['dashboard', 'search', 'about'].map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
 	return (
 		<nav className="navbar navbar-fixed-top navbar-inverse">
 			<div className="container">
