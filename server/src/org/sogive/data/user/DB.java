@@ -18,7 +18,6 @@ import com.winterwell.es.client.admin.CreateIndexRequest.Analyzer;
 import com.winterwell.es.client.admin.PutMappingRequestBuilder;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.io.ArgsParser;
-import com.winterwell.utils.io.DBUtils.DBOptions;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.data.XId;
 
