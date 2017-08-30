@@ -4,7 +4,7 @@ import Login from 'you-again';
 
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
-import LoginWidget from './LoginWidget/LoginWidget.jsx';
+import {LoginLink} from './LoginWidget/LoginWidget.jsx';
 
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
@@ -25,9 +25,7 @@ const AccountMenu = ({pending, active}) => {
 		return (
 			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 				<li>
-					<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow(C.show.LoginWidget, true); } } >
-						Login or Register
-					</a>
+					<LoginLink />
 				</li>
 			</ul>
 		);

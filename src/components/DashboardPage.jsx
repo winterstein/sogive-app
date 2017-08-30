@@ -10,6 +10,7 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 // import ChartWidget from './ChartWidget';
 import Misc from './Misc';
+import {LoginLink} from './LoginWidget/LoginWidget';
 
 
 class DashboardPage extends React.Component {
@@ -20,12 +21,14 @@ class DashboardPage extends React.Component {
 		let content;
 
 		if ( ! user) {
-			content = (
-				<div>
-					<a href='#' onClick={(e) => DataStore.setShow('LoginWidget', true)}>Login or register</a> to track your donations.
+			return (
+				<div className="page DashboardPage">
+					<h2>My Dashboard</h2>
+					<div><LoginLink title='Login or Register' /> to track your donations</div>
 				</div>
 			);
-		} else if (!donations) {
+		}
+		if (!donations) {
 			ServerIO.getDonations()
 			.then(function(result) {
 				let dons = result.cargo.hits;
@@ -44,12 +47,6 @@ class DashboardPage extends React.Component {
 		return (
 			<div className="page DashboardPage">
 				<h2>My Dashboard</h2>
-				<h3>In development...</h3>
-				<p>Thank you for joining SoGive at this early stage.
-					This is our first release, and there's still lots of work to do.
-					By the way, we release all our code as open-source. If you would
-					like to contribute to building SoGive, please get in touch.
-				</p>
 				{ content }
 			</div>
 		);
@@ -100,14 +97,14 @@ const Donation = ({donation}) => {
 
 
 const DashboardWidget = ({ children, iconClass, title }) =>
-	<div className="panel panel-default">
+	(<div className="panel panel-default">
 		<div className="panel-heading">
 			<h3 className="panel-title"><DashTitleIcon iconClass={iconClass} /> {title || ''}</h3>
 		</div>
 		<div className="panel-body">
 			{children}
 		</div>
-	</div>;
+</div>);
 // ./DashboardWidget
 
 const DashTitleIcon = ({ iconClass }) =>

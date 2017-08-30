@@ -22,6 +22,11 @@ if (false && window.location.host.indexOf('local') !== -1) {
 	- Use them in the appropriate section of the form
 */
 
+const LoginLink = () => {
+	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow(C.show.LoginWidget, true); } } >
+		Login or Register
+	</a>);
+};
 
 const SocialSignin = ({verb, services}) => {
 	if (verb==='reset') return null;
@@ -238,3 +243,4 @@ const LoginWidget = ({showDialog, logo, title}) => {
 
 
 export default LoginWidget;
+export {LoginLink};

@@ -37,6 +37,7 @@ import com.winterwell.utils.io.CSVReader;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils;
+import com.winterwell.web.app.AppUtils;
 
 import static com.winterwell.utils.containers.Containers.get;
 
@@ -449,7 +450,7 @@ public class ImportCharityDataFromCSV {
 		// hack for import w/o server start
 		if ( ! Dep.has(ESConfig.class)) {
 			ESConfig esc = new ESConfig();
-			esc = SoGiveServer.getConfig(esc, new String[0]);
+			esc = AppUtils.getConfig("sogive", esc, new String[0]);
 			Dep.set(ESConfig.class, esc);
 		}
 		ESConfig config = Dep.get(ESConfig.class);
