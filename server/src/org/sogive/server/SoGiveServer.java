@@ -11,6 +11,8 @@ import org.sogive.server.payment.StripePlugin;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.ArgsParser;
+import com.winterwell.utils.io.ConfigBuilder;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.LogFile;
 import com.winterwell.utils.time.Dt;
@@ -19,8 +21,10 @@ import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.WebEx;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.JettyLauncher;
+import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.data.XId;
 import com.winterwell.youagain.client.YouAgainClient;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -53,8 +57,8 @@ public class SoGiveServer {
 	private static JettyLauncher esjl;
 
 	public static void main(String[] args) {
-		SoGiveConfig config = getConfig(new SoGiveConfig(), args);
-		StripeConfig sc = getConfig(new StripeConfig(), args); 
+		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), args);
+		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), args); 
 		Log.d("stripe.config", FlexiGson.toJSON(sc));
 		Log.d("stripe.config.key", StripePlugin.secretKey());
 		
@@ -83,16 +87,6 @@ public class SoGiveServer {
 		initCharityData();
 	}
 
-	public static <X> X getConfig(X config, String[] args) {
-		config = ArgsParser.getConfig(config, args, new File("config/sogive.properties"), null);
-		String thingy = config.getClass().getSimpleName().toLowerCase().replace("config", "");
-		config = ArgsParser.getConfig(config, args, new File("config/"+thingy+".properties"), null);
-		config = ArgsParser.getConfig(config, args, new File("config/"+WebUtils2.hostname()+".properties"), null);
-		Dep.set((Class)config.getClass(), config);
-		assert config != null;
-		return config;
-
-	}
 
 	private static void initCharityData() {
 		try {
