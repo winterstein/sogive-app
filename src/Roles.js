@@ -14,7 +14,11 @@ const getRoles = () => {
 		() => {
 			let req = Login.getSharedWith({prefix:"role:*"});
 			return req.then(function(res) {
-				let shares = res.cargo;
+				if ( ! res.success) {
+					console.error(res);
+					return null;
+				}
+				let shares = res.cargo;				
 				let roles = shares.filter(s => s.item && s.item.substr(0,5)==='role:').map(s => s.item.substr(5));
 				return roles;
 			});

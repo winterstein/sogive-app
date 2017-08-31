@@ -20,7 +20,8 @@ C.HTTPS = C.SERVER_TYPE==='local'? 'http' : 'https';
 C.app = {
 	name: "SoGive",
 	service: "sogive",
-	logo: "/img/SoGive-Light-70px.png"
+	logo: "/img/SoGive-Light-70px.png",
+	facebookAppId: "1847521215521290"
 };
 
 /**
