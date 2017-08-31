@@ -191,7 +191,7 @@ const CharityExtra = ({charity}) => {
 const CharityExtraYear = ({year, projects}) => {
 	if (!year || !projects || !projects.length) return null;
 	const projectDivs = projects.map(
-		project => <CharityExtraProject key={project.name} project={project} />
+		project => <CharityExtraProject key={project.name} project={project} showTitle={projects.length > 1} />
 	);
 	return (
 		<div>
@@ -201,7 +201,7 @@ const CharityExtraYear = ({year, projects}) => {
 	);
 };
 
-const CharityExtraProject = ({project}) => {
+const CharityExtraProject = ({project, showTitle}) => {
 	if ( ! project) return null;
 	const {inputs, outputs} = project;
 
@@ -213,7 +213,7 @@ const CharityExtraProject = ({project}) => {
 
 	return (
 		<div className='extra-project'>
-			<h3 className='project-name'>{project.name}</h3>
+			{showTitle? <h3 className='project-name'>{project.name}</h3> : null}
 			<img className='project-image' src={project.images} alt='project' />
 			{ stories }
 			<div className='project-io'>
