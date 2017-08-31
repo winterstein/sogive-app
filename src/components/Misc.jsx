@@ -181,7 +181,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		};
 		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
 		let currency;
-		let changeCurrency = otherStuff.changeCurrency || true;
+		let changeCurrency = otherStuff.changeCurrency !== false;
 		if (changeCurrency) {
 			// TODO other currencies
 			currency = (

@@ -125,7 +125,7 @@
 
 					img {
 						border-radius: 50%;
-						object-fit: cover;
+						object-fit: contain;
 						border-color: #314D79;
 						border-style: solid;
 					}
@@ -184,91 +184,127 @@
 
 
 	.donation-impact {
+		background-color: white;
 		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
+
+		/* Appear in front of the social share buttons */
+		position: relative;
+    z-index: 10;
+
 		.project-image {
 			img {
 				width: 100%;
 				max-height: 500px;
 				min-height: 50px;
-				object-fit: contain;
+				object-fit: cover;
 			}
 		}
 
-		.donation-amount {
-			display: flex;
-			flex-direction: column;
-			justify-content: flex-end;
-			width: 200px;
+		.donation-buttons {
+			position: absolute;
+			width: 150px;
 			height: 200px;
-			border-radius: 0 100% 0 0;
-			border: 5px solid @donation-amt-bg;
-			border-bottom: none;
-			border-left: none;
-			background-color: @donation-amt-bg;
-			overflow: hidden;
 			color: @donation-amt-fg;
-			input {
-				border: none;
-				border-radius: 0;
-				background-color: @donation-amt-input-bg;
-			}
-			span.dropdown button {
-				border: none;
-				border-radius: 0;
-				background-color: @donation-amt-input-bg;
-			}
-			.amount-buttons {
-				display: flex;
-				justify-content: space-around;
-				align-items: center;
-				padding: 10px;
+			/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
+			z-index: 10;
 
-				button {
-					border: 5px solid @donation-amt-fg;
-					border-radius: 50%;
-					background-color: transparent;
-					&:focus {
-						outline: none;
-					}
+			img.donation-sun {
+				height: 200px;
+				position: absolute;
+			}
 
-					&.donation-up {
-						height: 60px;
-						width: 60px;
-					}
-					&.donation-down {
-						height: 50px;
-						width: 50px;
-					}
+			button.donation-up, button.donation-down {
+				position: absolute;
+				border: 5px solid @donation-amt-fg;
+				border-radius: 50%;
+				background-color: transparent;
+				height: 60px;
+				width: 60px;
+				font-size: 60px;
+				line-height: 30px;
+				font-weight: bold;
+				&:focus {
+					outline: none;
 				}
 			}
-			
+
+			button.donation-up {
+				top: 50px;
+				left: 10px;
+			}
+
+			button.donation-down {
+				top: 120px;
+				left: 55px;
+			}
+		}
+
+		.donation-input, .donation-output {
+			height: 200px;
+			background-color: white;
 		}
 
 		.donation-input {
-			position: absolute;
-			top: 0;
-			right: 0;
 			text-align: right;
 
-			.money {
-				font-size: 300%;
-				.amount {
-					color: @donation-number-fg;
+			.prefix {
+				font-size: 1.2em;
+			}
+
+			.will-fund {
+				font-size: 2em;
+			}
+
+			.amount-input {
+				.input-group .input-group-addon {
+					padding-left: 100px;
+					z-index: 9; /* Must appear behind the sun graphic */
+				}
+				.form-control, .input-group-addon {
+					background-color: #FDE8BA;
+					border: none;
+					border-radius: 0;
+					box-shadow: none;
+					font-size: 1.4em;
+					height: inherit;
+					z-index: 11; /* Must appear in front of the sun graphic */
 				}
 			}
 		}
 
+		/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 		.donation-output {
+			margin-left: -30px;
+			padding-left: 75px;
+
+			.donation-arrow-right {
+				position: absolute;
+				left: -15px;
+				height: 200px;
+			}
+
 			.output-number {
 				font-size: 300%;
 				color: @donation-number-fg;
 			}
+
 			.output-units {
 				font-size: 200%;
 			}
 		}
 
+		/* The wide down-arrow decoration flowing from the output column to the donate button */
+		.donation-arrow-down {
+			width: 100%;
+		}
+
+		.gift-aid {
+			width: 75%;
+			float: left;
+		}
+
 		.donate-button {
+			margin-right: 55px;
 			button {
 				&:focus {
 					outline: none;
@@ -289,15 +325,21 @@
 		background-color: @charity-page-greybg;
 		.share-social-buttons {
 			float: right;
+			z-index: 9; /* Tuck under the donation-impact div */
+			height: 75px; /* Make room for the "pop down on hover" effect */
 			a {
+				/* Space them out and tuck them up under the column bottom */
+				margin: -10px 5px 5px 5px;
 				display: inline-block;
-				font-size: 60px;
+				font-size: 40px;
+				line-height: 60px;
 				width: 60px;
 				height: 60px;
 				border: none;
 				border-radius: 50%;
 				padding: 0;
 				color: white;
+				text-align: center;
 				&.share-social-facebook {
 					background-color: royalblue;
 				}
@@ -307,6 +349,10 @@
 				&.share-social-email {
 					background-color: @donation-amt-bg;
 				}
+				&:hover {
+					transform: translateY(15px);
+				}
+				transition: transform 0.25s ease;
 			}
 		}
 	}

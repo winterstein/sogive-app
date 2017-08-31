@@ -30,7 +30,7 @@ const GiftAidForm = ({ formPath }) => {
 	) : '';
 
 	return (
-		<div className='upper-margin col-md-12 giftAid'>
+		<div className='col-xs-12 gift-aid'>
 			<Misc.PropControl prop='giftAid' label='Yes, add Gift Aid' path={formPath} type='checkbox' />
 			{ giftAidChecks }
 			<small><a target='_blank' href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>

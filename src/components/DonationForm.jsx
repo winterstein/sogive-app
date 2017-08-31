@@ -133,7 +133,7 @@ class DonationForm extends Component {
 				onToken={(stripeResponse) => { ActionMan.donate({charity, formPath, formData, stripeResponse}); }}
 			/>
 		) : (
-			<Button disabled title={`Please check your donation amount and, if you want to add Gift Aid, make sure you've filled out every field in the form.`} >Donate</Button>
+			<Button disabled bsSize='large' title={`Please check your donation amount and, if you want to add Gift Aid, make sure you've filled out every field in the form.`} >donate</Button>
 		);
 
 		const giftAidForm = charity.uk_giftaid ? (
@@ -156,25 +156,25 @@ class DonationForm extends Component {
 					<img src={project.images} />
 				</div>
 				<div className='row'>
-					<div className='col-md-6'>
-						<div className='donation-amount'>
-							<div className='amount-input'>
-								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} />
-							</div>
-							<div className='amount-buttons'>
-								<button onClick={donationDown} className='donation-down'>-</button>
-								{' '}
-								<button onClick={donationUp} className='donation-up'>+</button>
-								</div>
+					<div className='col-xs-5'>
+						<div className='donation-buttons'>
+							<img className='donation-sun' src='/img/donation-bg.svg' />
+							<button onClick={donationUp} className='donation-up'>+</button>
+							{' '}
+							<button onClick={donationDown} className='donation-down'>-</button>
 						</div>
 						<div className='donation-input'>
 							<div className='prefix'>{impact.prefix}</div>
-							<Misc.Money amount={impact.amount} />
-							<div>will fund</div>
+							<div className='amount-input'>
+								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} changeCurrency={false} />
+							</div>
+							<div className='will-fund'>will fund</div>
+							<img src="/img/donation-hand.png" />
 						</div>
 					</div>
-					<div className='col-md-6'>
+					<div className='col-xs-7'>
 						<div className='donation-output'>
+							<img className='donation-arrow-right' src='/img/donation-arrow-right.svg' />
 							<div className='output-number'>
 								{printer.prettyNumber(impact.impactNum)}
 							</div>
@@ -184,9 +184,8 @@ class DonationForm extends Component {
 						</div>
 					</div>
 				</div>
-				<div className='gift-aid'>
-					{giftAidForm}
-				</div>
+				<img className='donation-arrow-down' src='/img/donation-arrow-down.svg' />
+				{giftAidForm}
 				<div className='donate-button'>
 					{ donateButton }
 				</div>
