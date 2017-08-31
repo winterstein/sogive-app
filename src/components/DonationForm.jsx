@@ -16,6 +16,7 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
 import ImpactWidgetry from './ImpactWidgetry';
 import GiftAidForm from './GiftAidForm';
+import SocialShare from './SocialShare.jsx';
 
 /**
  * TODO refactor this to not use Redux.
@@ -123,7 +124,7 @@ class DonationForm extends Component {
 		const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
 
 		// donated?
-		if (formData.complete) {
+		if (formData.complete || DataStore.getUrlValue('forceState') === 'tq') {
 			return (<ThankYouAndShare thanks user={user} charity={charity} donationForm={formData} project={project} />);
 		}
 
@@ -153,7 +154,7 @@ class DonationForm extends Component {
 		return (
 			<div className='donation-impact'>
 				<div className='project-image'>
-					<img src={project.images} />
+					<img src={project.images} alt='' />
 				</div>
 				<div className='row'>
 					<div className='col-xs-5'>
@@ -196,110 +197,34 @@ class DonationForm extends Component {
 } // ./DonationForm
 
 
-class ThankYouAndShare extends Component {
+const ThankYouAndShare = ({thanks, user, charity, donationForm, project}) => {
 
-	constructor(...params) {
-		super(...params);
-		const { thanks, user, charity, donationForm, project} = this.props;
-
-		// TODO -- see submit methodlet impacts = Output.getDonationImpact;
-		let shareText;
-		if (user && user.name) {
-			let impact = false; // TODO
-			if (impact) {
-				shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in?`;
-			} else {
-				shareText = `${charity.name} and SoGive thank ${user.name} for their donation - why not join in?`;
-			}
+	// TODO -- see submit methodlet impacts = Output.getDonationImpact;
+	let shareText = `Help to fund ${charity.name} and see the impact of your donations on SoGive:`;
+	if (user && user.name) {
+		let impact = false; // TODO
+		if (impact) {
+			shareText = `${charity.name} and SoGive thank ${user.name} for helping to fund ${impact} - why not join in?`;
 		} else {
-			shareText = `Help to fund ${charity.name} and see the impact of your donations on SoGive:`;
+			shareText = `${charity.name} and SoGive thank ${user.name} for their donation - why not join in?`;
 		}
-
-		this.state = {
-			shareText,
-		};
 	}
 
-	shareOnFacebook({url}) {
-		FB.ui({
-			quote: this.state.shareText,
-			method: 'share',
-			href: url,
-			},
-			// callback
-			function(response) {
-				console.log("FB", response);
-				if (response && response.error_message) {
-					console.error('Error while posting.');
-					return;
-				}
-				// foo
-			}
-		);
-	}
+	const header = thanks ? <h3>Thank you for donating!</h3> : '';
 
-	onChangeShareText(event) {
-		event.preventDefault();
-		console.log("event", event);
-		this.setState({shareText: event.target.value});
-	}
+	// NB: the charity page has share buttons on it already -- lets not have x2
 
-	render() {
-		const { thanks } = this.props;
-		const { shareText } = this.state;
-	/*
-	<div className="fb-share-button"
-		data-href={url}
-		data-layout="button_count"
-		data-size="large" data-mobile-iframe="true"><a className="fb-xfbml-parse-ignore" target="_blank"
-		href={"https://www.facebook.com/sharer/sharer.php?u="+escape(url)}>Share</a>
-	</div>
-	*/
+	return (
+		<div className='col-md-12'>
+			<div className='ThankYouAndShare panel-success'>
+				{ header }
 
-		let lcn = window.location;
-		const header = thanks ? <h3>Thank you for donating!</h3> : '';
-		
-		let pageInfo = {
-			title: this.props.charity.name,
-			image:	'http://cdn.attackofthecute.com/September-21-2011-22-10-11-6765.jpeg', // FIXME
-			desc:	this.props.charity.description
-		};
-		// TODO copy SoDash escape fn into wwutils
-		// TODO make this line nicer
-		// TODO just send the charity ID, and load the rest server side, to give a nicer url
-		// Also window.location might contain parameters we dont want to share.
-		let url = "https://app.sogive.org/share?link="+escape(""+window.location)+"&title="+escape(pageInfo.title)+"&image="+escape(pageInfo.image)+"&desc="+escape(pageInfo.desc);
-		pageInfo.url = url;
-
-		return (
-			<div className='col-md-12'>
-				<div className='ThankYouAndShare panel-success'>
-					{ header }
-
-					<p>Share this on social media?<br/>
-						We expect this will lead to 2-3 times more donations on average.</p>
-					
-					<textarea
-						className='form-control'
-						onChange={() => { this.onChangeShareText(); }}
-						defaultValue={shareText}
-					/>
-				</div>
-				<div className='col-md-12 social-media-buttons'>
-					<center>
-						<a className='btn twitter-btn' href={'https://twitter.com/intent/tweet?text='+escape(this.state.shareText)+'&url='+escape(url)} data-show-count="none">
-							<Misc.Logo service='twitter' />
-						</a>
-
-						<a className='btn facebook-btn' onClick={() => { this.shareOnFacebook(pageInfo); }}>
-							<Misc.Logo service='facebook' />
-						</a>
-					</center>
-				</div>
+				<p>Share this on social media?<br/>
+					We expect this will lead to 2-3 times more donations on average.</p>								
 			</div>
-		);
-	}
-} // ./ThankYouAndShare
+		</div>
+	);
+}; // ./ThankYouAndShare
 
 /**
  * one-click donate, or Stripe form?

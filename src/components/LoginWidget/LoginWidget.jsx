@@ -56,19 +56,9 @@ const SocialSignin = ({verb, services}) => {
 
 
 const socialLogin = (service) => {
-	Login.auth(service, Login.app);
+	Login.auth(service, C.app.facebookAppId);
 	// auth doesnt return a future, so rely on Login's change listener
 	// to close stuff.
-	// .then(function(res) {
-	// 	console.warn("socialLogin", res);
-	// 	if (Login.isLoggedIn()) {
-	// 		// close the dialog on success
-	// 		DataStore.setShow(C.show.LoginWidget, false);
-	// 	} else {
-	// 		// poke React via DataStore (e.g. for Login.error)
-	// 		DataStore.update({});
-	// 	}
-	// });	
 }; // ./socialLogin
 
 
