@@ -124,7 +124,7 @@ class DonationForm extends Component {
 		const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
 
 		// donated?
-		if (formData.complete) {
+		if (formData.complete || DataStore.getUrlValue('forceState') === 'tq') {
 			return (<ThankYouAndShare thanks user={user} charity={charity} donationForm={formData} project={project} />);
 		}
 
@@ -213,15 +213,15 @@ const ThankYouAndShare = ({thanks, user, charity, donationForm, project}) => {
 
 	const header = thanks ? <h3>Thank you for donating!</h3> : '';
 
+	// NB: the charity page has share buttons on it already -- lets not have x2
+
 	return (
 		<div className='col-md-12'>
 			<div className='ThankYouAndShare panel-success'>
 				{ header }
 
 				<p>Share this on social media?<br/>
-					We expect this will lead to 2-3 times more donations on average.</p>
-				
-				<SocialShare shareText={shareText} />
+					We expect this will lead to 2-3 times more donations on average.</p>								
 			</div>
 		</div>
 	);

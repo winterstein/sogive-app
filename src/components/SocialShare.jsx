@@ -64,7 +64,6 @@ const SocialShare = ({charity, donation, shareText}) => {
 	if ( ! shareText) {
 		shareText = NGO.summaryDescription(charity) || charity.name;
 	}
-	console.warn("charity", charity);
 	let lcn = ""+window.location;
 	let pageInfo = {
 		title: charity.name,
