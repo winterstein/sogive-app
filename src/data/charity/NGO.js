@@ -20,9 +20,11 @@ export default NGO;
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
 NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
-NGO.name = (ngo) => isa(ngo, 'NGO') && ngo.name;
-NGO.id = (ngo) => isa(ngo, 'NGO') && ngo['@id']; // thing.org id field
+NGO.name = (ngo) => NGO.assIsa(ngo) && ngo.name;
+NGO.id = (ngo) => NGO.assIsa(ngo) && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
+NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
+NGO.summaryDescription = (ngo) => ngo.summaryDescription;
 
 /**
  * @return {?Project} the representative project, or null if the charity is not ready.

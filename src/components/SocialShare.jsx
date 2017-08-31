@@ -15,42 +15,39 @@ import Project from '../data/charity/Project';
 import Misc from './Misc.jsx';
 
 
-const shareOnFacebook = ({url, shareText}) => {
+const shareOnFacebook = ({url, shareText, take2}) => {
 	if (window.FB) {
 		FB.ui({
 			quote: shareText,
 			method: 'share',
 			href: url,
-			},
-			// callback
-			function(response) {
-				console.log("FB", response);
-				if (response && response.error_message) {
-					console.error('Error while posting.');
-					return;
-				}
-				// foo
+		},
+		// callback
+		function(response) {
+			console.log("FB", response);
+			if (response && response.error_message) {
+				console.error('Error while posting.');
+				return;
 			}
-		);
+			// foo
+		});
 		return;
 	}
+	if (take2) {
+		throw new Error("Could not load Facebook");
+	}
+	// Load FB
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId            : appId,
+			appId            : C.app.facebookAppId,
 			autoLogAppEvents : false,
 			xfbml            : false,
 			version          : 'v2.9',
 			status           : true // auto-check login
 		});
-		// FB.AppEvents.logPageView();
-		FB.getLoginStatus(function(response) {
-			console.warn("FB.getLoginStatus", response);
-			if (response.status === 'connected') {
-				doFBLogin_connected(response);
-			} else {
-				doFBLogin();
-			}
-		}); // ./login status
+		// now try
+		take2 = true;
+		shareOnFacebook({url, shareText, take2});
 	};
 	(function(d, s, id){
 		let fjs = d.getElementsByTagName(s)[0];
@@ -65,14 +62,14 @@ const shareOnFacebook = ({url, shareText}) => {
 
 const SocialShare = ({charity, donation, shareText}) => {
 	if ( ! shareText) {
-		shareText = "Donate to "+charity.name;
+		shareText = NGO.summaryDescription(charity) || charity.name;
 	}
 	console.warn("charity", charity);
 	let lcn = ""+window.location;
 	let pageInfo = {
 		title: charity.name,
-		image: 'http://cdn.attackofthecute.com/September-21-2011-22-10-11-6765.jpeg', // FIXME
-		desc:	charity.description,
+		image: NGO.image(charity),
+		desc:	NGO.summaryDescription(charity),
 		shareText: shareText
 	};
 	// TODO make this line nicer
@@ -84,12 +81,14 @@ const SocialShare = ({charity, donation, shareText}) => {
 	return (
 		<div className='share-social-buttons'>
 			<a className='share-social-twitter' 
-				href={'https://twitter.com/intent/tweet?text='+encURI(shareText)+'&url='+encURI(url)} data-show-count="none"> >
+				href={'https://twitter.com/intent/tweet?text='+encURI(shareText)+'&url='+encURI(url)} data-show-count="none">
 				<span className='fa fa-twitter' />
 			</a>
 			<a className='share-social-facebook' onClick={e => shareOnFacebook(pageInfo)}><span className='fa fa-facebook' /></a>
 			<a className='share-social-email' 
-				href={'mailto:?subject='+encURI(charity.name+" shared via SoGive")+'&body='+encURI(window.location)} >
+				href={'mailto:?subject='+encURI(charity.name+" shared via SoGive")+'&body='+encURI(window.location)} 
+				target='_blank'
+			>
 				<span className='fa fa-envelope-o' />
 			</a>
 		</div>);

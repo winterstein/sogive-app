@@ -144,7 +144,7 @@ const CharityAbout = ({charity}) => {
 		<div className='charity-about'>
 			<div className='images'>
 				<div className='charity-image'>
-					<img src={charity.images} alt='Charity' />
+					<img src={NGO.image(charity)} alt='Charity' />
 				</div>
 				<div className='charity-logo'>
 					<img src={charity.logo} alt='Charity logo' />

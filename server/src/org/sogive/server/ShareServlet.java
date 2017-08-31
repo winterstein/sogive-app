@@ -5,6 +5,7 @@ import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebPage;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.fields.Checkbox;
 
 /**
  * Provide the header info for Facebook share (and a redirect to the actual page).
@@ -65,7 +66,9 @@ public class ShareServlet implements IServlet {
 //		<meta itemprop="image" content="http://www.example.com/image.jpg">
 		
 		// redirect
-		page.append("<script>window.location='"+link+"';</script>");
+		if ( ! state.get(new Checkbox("debug"))) {
+			page.append("<script>window.location='"+link+"';</script>");			
+		}
 //		page.addStylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 		page.append("<div class='container'><a href='"+link+"'><p>Redirecting to your page...</p><div class='well'>"+"<h2>"+title+"</h2><p>"+desc+"</p><img src='"+image+"'></div></a></div>");
 		
