@@ -301,7 +301,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 };
 
 Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox"
-							+" location date year number arraytext");
+							+" location date year number arraytext address postcode");
 
 
 /**

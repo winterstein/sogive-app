@@ -22,9 +22,9 @@ const GiftAidForm = ({ formPath }) => {
 			<Misc.PropControl prop='giftAidOwnMoney' label={giftAidOwnMoneyLabel} path={formPath} type='checkbox' />
 			<Misc.PropControl prop='giftAidNoCompensation' label={giftAidNoCompensationLabel} path={formPath} type='checkbox' />
 			<p>Please provide the following details to enable your selected charity to process Gift Aid.</p>
-			<Misc.PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='checkbox' />
-			<Misc.PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='checkbox' />
-			<Misc.PropControl prop='text' label='Postcode' placeholder='Enter your postcode' path={formPath} type='checkbox' />
+			<Misc.PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='text' />
+			<Misc.PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='address' />
+			<Misc.PropControl prop='text' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
 			<small>I understand that my name and address may be shared with the charity for processing Gift Aid.</small>
 		</FormGroup>
 	) : '';
@@ -32,10 +32,10 @@ const GiftAidForm = ({ formPath }) => {
 	return (
 		<div className='upper-margin col-md-12 giftAid'>
 			<Misc.PropControl prop='giftAid' label='Yes, add Gift Aid' path={formPath} type='checkbox' />
+			{ giftAidChecks }
 			<small><a target='_blank' href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
 				Find out more about Gift Aid
-			</a></small>
-			{ giftAidChecks }
+			</a></small>			
 		</div>
 	);
 };
