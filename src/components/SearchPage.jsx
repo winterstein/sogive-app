@@ -124,7 +124,7 @@ class SearchForm extends React.Component {
 
 	render() {
 		return (
-			<Form onSubmit={(event) => { this.onSubmit(event); }} >
+			<div className='SearchForm'><Form onSubmit={(event) => { this.onSubmit(event); }} >
 				<FormGroup className='' bsSize='lg' controlId="formq">
 					<InputGroup bsSize='lg'>
 						<FormControl
@@ -147,7 +147,7 @@ class SearchForm extends React.Component {
 						Show All
 					</Button>
 				</div>
-			</Form>
+			</Form></div>
 		);
 	} // ./render
 } //./SearchForm
