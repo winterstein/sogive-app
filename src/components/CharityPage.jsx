@@ -216,7 +216,7 @@ const CharityExtraYear = ({year, projects}) => {
 	);
 	return (
 		<div>
-			<h2>{year}</h2>
+			{ isNaN(year) ? '' : <h2>{year}</h2> }
 			{projectDivs}
 		</div>
 	);
