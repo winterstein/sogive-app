@@ -192,6 +192,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		} else {
 			currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
 		}
+		delete otherStuff.changeCurrency;
 		assert(v === 0 || v || v==='', [v, value]);
 		return (<InputGroup>
 					{currency}

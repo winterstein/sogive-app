@@ -174,7 +174,7 @@ const CharityExtra = ({charity}) => {
 	const projectsByYear = {};
 	(charity.projects).forEach(project => {
 		const projectsForYear = projectsByYear[project.year] || [];
-		if (project.name && project.name.toLocaleLowerCase() === 'overall') {
+		if (Project.isOverall(project)) {
 			projectsForYear.unshift(project);
 		} else {
 			projectsForYear.push(project);
@@ -198,14 +198,14 @@ const Citations = ({citations}) => (
 	<div className='citations'>
 		<h3>Sources</h3>
 		<ol>
-			{citations.map(ref => <Cite citation={ref}/>)}
+			{citations.map((ref,i) => <Cite i={i} key={i} citation={ref}/>)}
 		</ol>
 	</div>
 );
 
-const Cite = ({citation}) => {
+const Cite = ({citation, i}) => {
 	return (<li>
-		<a href={citation.url} target='_blank'>{JSON.stringify(citation)}</a>
+		<a href={citation.url} target='_blank'>{citation.url}</a>
 	</li>);
 };
 

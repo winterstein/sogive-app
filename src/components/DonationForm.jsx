@@ -117,7 +117,11 @@ class DonationForm extends Component {
 		const formData = DataStore.getValue(formPath) || {};
 		const { amount } = formData;
 		
-		const impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
+		let impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
+		if ( ! impact) {
+			console.warn("No impact?!", project, outputs, amount);			
+			impact = {unitName: NGO.displayName(charity) };
+		}
 
 		// donated?
 		if (formData.complete || DataStore.getUrlValue('forceState') === 'tq') {
@@ -172,9 +176,9 @@ class DonationForm extends Component {
 					<div className='col-xs-7'>
 						<div className='donation-output'>
 							<img className='donation-arrow-right' src='/img/donation-arrow-right.svg' alt="" />
-							<div className='output-number'>
+							{impact.impactNum? <div className='output-number'>
 								{printer.prettyNumber(impact.impactNum)}
-							</div>
+							</div> : null}
 							<div className='output-units'>
 								{impact.unitName}
 							</div>

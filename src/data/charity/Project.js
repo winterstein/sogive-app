@@ -17,7 +17,7 @@ Project.assIsa = (p) => assert(Project.isa(p));
 Project.name = (ngo) => isa(ngo, Project.type) && ngo.name;
 Project.year = (ngo) => isa(ngo, Project.type) && ngo.year;
 
-Project.isOverall = (project) => Project.assIsa(project) && project.name === Project.overall;
+Project.isOverall = (project) => Project.assIsa(project) && project.name && project.name.toLowerCase() === Project.overall;
 
 Project.make = function(base) {
 	let proj = {
