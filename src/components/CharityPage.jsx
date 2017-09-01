@@ -226,11 +226,20 @@ const CharityExtraProject = ({project, showTitle}) => {
 	if ( ! project) return null;
 	const {inputs, outputs} = project;
 
-	const stories = project.stories && (
-		<p className='project-stories'>
-			<span className='quote fa fa-quote-left' /> <span dangerouslySetInnerHTML={{ __html: printer.textToHtml(project.stories) }} /> <span className='quote fa fa-quote-right' />
-		</p>
-	);
+	/* Markdown swallows single line breaks - but normal people processing text don't expect this!
+	Using a regex to normalise all strings of CRs to \n\n before sending to printer so the story formatting behaves more intuitively for now. */
+	let stories = '';
+	if (project.stories && project.stories.replace) {
+		window.story = project.stories;
+
+		const storiesProcessed = project.stories.replace(/\n+/g, '\n\n');
+		stories = (
+			<p className='project-stories'>
+				<span className='quote fa fa-quote-left' /> <span dangerouslySetInnerHTML={{ __html: printer.textToHtml(storiesProcessed) }} /> <span className='quote fa fa-quote-right' />
+			</p>
+		);
+	}
+
 
 	return (
 		<div className='extra-project'>
