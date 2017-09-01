@@ -7,34 +7,48 @@
 		background-color: white;
 
 		ul.nav.nav-tabs {
-			border-bottom: 5px solid @charity-page-greyline;
 			.extend-content-to-sides(@bs-column-padding);
+			background-color: @charity-page-greyline;
+			border: none;
 			li {
 				margin-bottom: 0;
 
-				/* Override Bootstrap bg colours */
+				/* Override Bootstrap bg colours & bring active tab to front */
 				background-color: transparent;
+				z-index: 9;
 				&.active {
 					background-color: transparent;
+					z-index: 10;
 				}
 
 
 				a, &.active a {
+					/* Remove blue border when clicked */
+					&:active {
+						border: none;
+						outline: none;
+					}
+
 					border: none;
 					border-radius: 0;
 					margin: 0;
 					z-index: 9;
+					padding-bottom: 0;
+					font-weight: bold;
+					/* Remove bootstrap background */
+					background-color: transparent;
 					/* Fancy tab shape */
 					&:before {
 						content: ''; 
 						position: absolute;
-						top: -15px; right: 0; bottom: 0; left: 0;
+						top: -5px; right: 0; bottom: 0; left: 0;
 						transform: perspective(110px) rotateX(30deg);
 						transform-origin: bottom;
 						margin-left: -10px;
-						margin-right: -10px;
+						margin-right: -10px;	
 					}
 				}
+
 				a:before {
 					background-color: @charity-page-greyline;
 					z-index: -1;
@@ -71,12 +85,14 @@
 			background: #C1DEF2;
 			.extend-bg-to-sides(@bs-column-padding);
 			padding-top: @band-1-height;
+			margin-bottom: 50px;
 
 			.charity-name {
 				background-color: #D2D6C3;
 				text-transform: uppercase;
 				font-weight: bold;
 				margin-top: 0;
+				margin-bottom: 0;
 				.extend-bg-to-sides(@bs-column-padding);
 				line-height: @band-2-height;
 			}
@@ -127,18 +143,33 @@
 			border-bottom-color: #C1DEF2;
 			border-width: @band-1-height 0 @band-3-height 0;
 			line-height: @band-2-height;
+			margin-bottom: 50px;
 		}
 
-		.nav-tabs li {
-			background-color:white;
+		.nav-tabs {
+			li {
+				background-color:white;
+				&.active {
+					background-color: @charity-page-greybg;
+				}
+			}
+			font-size: 2em;
 		}
-		.nav-tabs li.active {
+
+		.tab-content {
+			.extend-bg-to-sides(@bs-column-padding);
 			background-color: @charity-page-greybg;
 		}
+
 
 		
 		h2, h3 {
 			border-bottom: 1px solid white;
+		}
+
+		.charity-about, .charity-extra {
+			/* Prevent margin collapse with first element so bg colour extends to top */
+			overflow: auto;
 		}
 
 		.charity-about {
@@ -243,6 +274,11 @@
 			}
 		}
 
+		/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
+		.left-column, .right-column {
+			height: 200px;
+		}
+
 		.donation-buttons {
 			position: absolute;
 			width: 150px;
@@ -258,6 +294,7 @@
 
 			button.donation-up, button.donation-down {
 				position: absolute;
+				padding: 0;
 				border: 5px solid @donation-amt-fg;
 				border-radius: 50%;
 				background-color: transparent;
@@ -284,11 +321,13 @@
 
 		.donation-input, .donation-output {
 			height: 200px;
-			background-color: white;
 		}
 
 		.donation-input {
 			text-align: right;
+			position: absolute;
+			z-index: 9;
+			padding-right: 50px;
 
 			.prefix {
 				font-size: 1.2em;
@@ -318,19 +357,22 @@
 					z-index: 11; /* Must appear in front of the sun graphic */
 				}
 			}
+
+			.donation-hand {
+				position: absolute;
+				left: 100px;
+			}
+		}
+
+		.donation-arrow-right {
+			position: absolute;
+			top: 0;
+			right: -25px;
+			height: 200px;
 		}
 
 		/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 		.donation-output {
-			margin-left: -30px;
-			padding-left: 75px;
-
-			.donation-arrow-right {
-				position: absolute;
-				left: -15px;
-				height: 200px;
-			}
-
 			.output-number {
 				font-size: 300%;
 				color: @donation-number-fg;

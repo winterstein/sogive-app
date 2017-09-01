@@ -15,7 +15,10 @@
    height="350"
    viewBox="0 0 150 350"
    sodipodi:docname="donation-arrow-right.svg"
-   inkscape:version="0.92.1 r15371">
+   inkscape:version="0.92.1 r15371"
+   inkscape:export-filename="/home/roscoe/winterwell/sogive-app/web/img/donation-arrow-right.png"
+   inkscape:export-xdpi="192"
+   inkscape:export-ydpi="192">
   <metadata
      id="metadata4989">
     <rdf:RDF>
@@ -34,10 +37,10 @@
        style="color-interpolation-filters:sRGB"
        inkscape:label="Drop Shadow"
        id="filter5736"
-       x="0.5"
-       y="0.21000000000000005"
-       height="0.51000000000000001"
-       width="0.75">
+       x="0.37999999999999989"
+       y="0.17000000000000001"
+       height="0.6100000000000001"
+       width="0.89000000000000012">
       <feFlood
          flood-opacity="0.247059"
          flood-color="rgb(0,0,0)"

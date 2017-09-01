@@ -15,7 +15,10 @@
    height="100"
    viewBox="0 0 1300 100"
    sodipodi:docname="donation-arrow-down.svg"
-   inkscape:version="0.92.1 r15371">
+   inkscape:version="0.92.1 r15371"
+   inkscape:export-filename="/home/roscoe/winterwell/sogive-app/web/img/donation-arrow-down.png"
+   inkscape:export-xdpi="110.4"
+   inkscape:export-ydpi="110.4">
   <metadata
      id="metadata5848">
     <rdf:RDF>
@@ -34,10 +37,10 @@
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
        id="filter6408"
-       x="0.079999999999999988"
-       y="0.75000000000000044"
-       width="0.74999999999999956"
-       height="0.5">
+       x="0.029999999999999985"
+       y="0.65000000000000036"
+       width="0.84999999999999964"
+       height="0.68000000000000016">
       <feFlood
          flood-opacity="0.247059"
          flood-color="rgb(0,0,0)"
@@ -81,8 +84,8 @@
      id="namedview5844"
      showgrid="false"
      inkscape:zoom="0.69409255"
-     inkscape:cx="792.01118"
-     inkscape:cy="282.93039"
+     inkscape:cx="711.88533"
+     inkscape:cy="73.826229"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"

@@ -243,8 +243,8 @@ const CharityExtraProject = ({project, showTitle}) => {
 
 	return (
 		<div className='extra-project'>
-			{showTitle? <h3 className='project-name'>{project.name}</h3> : null}
-			<img className='project-image' src={project.images} alt='project' />
+			{ showTitle ? <h3 className='project-name'>{project.name}</h3> : null }
+			{ project.images ? <img className='project-image' src={project.images} alt='project' /> : null }
 			{ stories }
 			<div className='project-io'>
 				<div className='project-inputs'>
