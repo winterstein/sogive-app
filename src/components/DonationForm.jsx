@@ -162,7 +162,7 @@ class DonationForm extends Component {
 					<img src={project.images} alt='' />
 				</div>
 				<div className='row'>
-					<div className='col-sm-6'>
+					<div className='col-sm-6 left-column'>
 						<div className='donation-buttons'>
 							<img className='donation-sun' src='/img/donation-bg.svg' alt="" />
 							<button onClick={donationUp} className='donation-up'>+</button>
@@ -179,7 +179,7 @@ class DonationForm extends Component {
 						</div>
 						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
 					</div>
-					<div className='col-sm-6'>
+					<div className='col-sm-6 right-column'>
 						<div className='donation-output'>
 							{impact.impactNum? <div className='output-number'>
 								{printer.prettyNumber(impact.impactNum, 2)}

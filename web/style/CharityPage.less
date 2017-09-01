@@ -274,6 +274,11 @@
 			}
 		}
 
+		/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
+		.left-column, .right-column {
+			height: 200px;
+		}
+
 		.donation-buttons {
 			position: absolute;
 			width: 150px;
