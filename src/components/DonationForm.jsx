@@ -177,7 +177,7 @@ class DonationForm extends Component {
 						<div className='donation-output'>
 							<img className='donation-arrow-right' src='/img/donation-arrow-right.svg' alt="" />
 							{impact.impactNum? <div className='output-number'>
-								{printer.prettyNumber(impact.impactNum)}
+								{printer.prettyNumber(impact.impactNum, 2)}
 							</div> : null}
 							<div className='output-units'>
 								{impact.unitName}
