@@ -55,14 +55,15 @@ const donationReady = (formData) => {
 };
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps
+// Amount up to {key} => increment of {value}
 const donationIncrements = {
-	20: 1,
+	10: 1,
 	50: 5,
-	200: 10,
+	100: 10,
 	500: 50,
-	2000: 100,
+	1000: 100,
 	5000: 500,
-	20000: 1000,
+	10000: 1000,
 	50000: 5000,
 	Infinity: 10000,
 };
@@ -139,7 +140,11 @@ class DonationForm extends Component {
 
 		const giftAidForm = charity.uk_giftaid ? (
 			<GiftAidForm formPath={formPath} />
-		) : <small>This charity is not eligible for Gift-Aid.</small>;
+		) : (
+			<div className='col-xs-12 gift-aid'>
+				<small >This charity is not eligible for Gift-Aid.</small>
+			</div>
+		);
 
 		/*
 		return (
@@ -165,7 +170,7 @@ class DonationForm extends Component {
 							<button onClick={donationDown} className='donation-down'>-</button>
 						</div>
 						<div className='donation-input'>
-							<div className='prefix'>{impact.prefix}</div>
+							<div className='prefix'>{impact.prefix || '\u00A0'}</div> {/* nbsp if no prefix so the line still has height */}
 							<div className='amount-input'>
 								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
@@ -186,9 +191,11 @@ class DonationForm extends Component {
 					</div>
 				</div>
 				<img className='donation-arrow-down' src='/img/donation-arrow-down.png' alt=""/>
-				{giftAidForm}
-				<div className='donate-button'>
-					{ donateButton }
+				<div className='below-arrow'>
+					{giftAidForm}
+					<div className='donate-button'>
+						{ donateButton }
+					</div>
 				</div>
 				<div className='clearfix' />
 			</div>

@@ -273,15 +273,20 @@
 
 			.amount-input {
 				.input-group .input-group-addon {
-					padding-left: 100px;
+					padding-left: 120px;
 					z-index: 9; /* Must appear behind the sun graphic */
+					padding-right: 0;
+				}
+				.input-group .form-control {
+					padding-left: 0;
+					color: @donation-number-fg
 				}
 				.form-control, .input-group-addon {
-					background-color: #FDE8BA;
+					background-color: @donation-amt-input-bg;
 					border: none;
 					border-radius: 0;
 					box-shadow: none;
-					font-size: 1.4em;
+					font-size: 2.5em;
 					height: inherit;
 					z-index: 11; /* Must appear in front of the sun graphic */
 				}
@@ -312,6 +317,11 @@
 		/* The wide down-arrow decoration flowing from the output column to the donate button */
 		.donation-arrow-down {
 			width: 100%;
+			position: absolute;
+		}
+
+		.below-arrow {
+			margin-top: 15px;
 		}
 
 		.gift-aid {
@@ -320,7 +330,8 @@
 		}
 
 		.donate-button {
-			margin-right: 55px;
+			margin-right: 32px;
+
 			button {
 				&:focus {
 					outline: none;
@@ -328,16 +339,21 @@
 				border: none;
 				background-color: @donation-button-bg;
 				color: white;
+				font-size: 1.75em;
+				padding-left: 1.25em;
+				padding-right: 1.25em;
 				/* Slightly hacky but using spec-standard behaviour:
 				oversize radius clamped to largest non-overlapping value,
 				resulting in circle-ended "capsule" shape */
 				border-radius: 500px;
 				float: right;
+				margin-bottom: 10px;
 			}			
 		}
 	}
 
 	.donation-column {
 		background-color: @charity-page-greybg;
+		margin-top: 15px;
 	}
 }
