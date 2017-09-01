@@ -24,7 +24,7 @@ const GiftAidForm = ({ formPath }) => {
 			<p>Please provide the following details to enable your selected charity to process Gift Aid.</p>
 			<Misc.PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='text' />
 			<Misc.PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='address' />
-			<Misc.PropControl prop='text' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
+			<Misc.PropControl prop='postcode' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
 			<small>I understand that my name and address may be shared with the charity for processing Gift Aid.</small>
 		</FormGroup>
 	) : '';
@@ -33,7 +33,7 @@ const GiftAidForm = ({ formPath }) => {
 		<div className='col-xs-12 gift-aid'>
 			<Misc.PropControl prop='giftAid' label='Yes, add Gift Aid' path={formPath} type='checkbox' />
 			{ giftAidChecks }
-			<small><a target='_blank' href='https://www.cafonline.org/my-personal-giving/plan-your-giving/individual-giving-account/how-does-it-work/gift-aid'>
+			<small><a target='_blank' href='https://www.gov.uk/donating-to-charity/gift-aid'>
 				Find out more about Gift Aid
 			</a></small>			
 		</div>

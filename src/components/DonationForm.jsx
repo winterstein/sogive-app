@@ -38,25 +38,21 @@ const initialFormData = {
 	complete: false,
 };
 
-const donationReady = (formData) => (
+const donationReady = (formData) => {
+	console.warn("donationReady", formData);
 	// have to be donating something
-	(
-		formData.amount &&
-		formData.amount.value > 0
-	) &&
+	if ( ! formData.amount || formData.amount.value <= 0) return false;
+	if ( ! formData.giftAid) return true;
 	// if gift-aiding, must have checked all confirmations & supplied name/address
-	(
-		!formData.giftAid ||
-		(
+	return (
 			formData.giftAidTaxpayer &&
 			formData.giftAidOwnMoney &&
 			formData.giftAidNoCompensation &&
 			(formData.name.trim().length > 0) &&
 			(formData.address.trim().length > 0) &&
 			(formData.postcode.trim().length > 0)
-		)
-	)
-);
+		);	
+};
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps
 const donationIncrements = {
@@ -159,7 +155,7 @@ class DonationForm extends Component {
 				<div className='row'>
 					<div className='col-xs-5'>
 						<div className='donation-buttons'>
-							<img className='donation-sun' src='/img/donation-bg.svg' />
+							<img className='donation-sun' src='/img/donation-bg.svg' alt="" />
 							<button onClick={donationUp} className='donation-up'>+</button>
 							{' '}
 							<button onClick={donationDown} className='donation-down'>-</button>
@@ -170,12 +166,12 @@ class DonationForm extends Component {
 								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>will fund</div>
-							<img src="/img/donation-hand.png" />
+							<img src="/img/donation-hand.png" alt="" />
 						</div>
 					</div>
 					<div className='col-xs-7'>
 						<div className='donation-output'>
-							<img className='donation-arrow-right' src='/img/donation-arrow-right.svg' />
+							<img className='donation-arrow-right' src='/img/donation-arrow-right.svg' alt="" />
 							<div className='output-number'>
 								{printer.prettyNumber(impact.impactNum)}
 							</div>
@@ -185,7 +181,7 @@ class DonationForm extends Component {
 						</div>
 					</div>
 				</div>
-				<img className='donation-arrow-down' src='/img/donation-arrow-down.svg' />
+				<img className='donation-arrow-down' src='/img/donation-arrow-down.svg' alt="" />
 				{giftAidForm}
 				<div className='donate-button'>
 					{ donateButton }
@@ -238,8 +234,9 @@ const DonationFormButton = ({onToken, amount}) => {
 		
 	return (
 		<div className='stripe-checkout'>
-			<StripeCheckout name="SoGive" description="Donate with impact tracking"
-				image="http://local.sogive.org/img/SoGive-Light-64px.png"
+			<StripeCheckout name="SoGive" 
+				description="Donate with impact tracking"
+				image="https://app.sogive.org/img/SoGive-Light-64px.png"
 				email={email}
 				panelLabel="Donate"
 				amount={amount}
