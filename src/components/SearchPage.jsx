@@ -8,7 +8,7 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Misc from './Misc.jsx';
-import ImpactWidgetry from './ImpactWidgetry.jsx';
+import {ImpactDesc, impactCalc} from './ImpactWidgetry.jsx';
 import C from '../C';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
@@ -194,7 +194,7 @@ const SearchResult = ({ item }) => {
 				<Media.Body>
 					<Media.Heading>{item.displayName || item.name}</Media.Heading>
 					<p>{item.summaryDescription || item.description}</p>
-					<Misc.ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />
+					<ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />
 				</Media.Body>
 			</a>
 		</Media>

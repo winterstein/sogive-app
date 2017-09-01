@@ -14,7 +14,7 @@ import NGO from '../data/charity/NGO';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 
 import Misc from './Misc';
-import ImpactWidgetry from './ImpactWidgetry';
+import {impactCalc} from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare.jsx';
 
@@ -118,7 +118,7 @@ class DonationForm extends Component {
 		const formData = DataStore.getValue(formPath) || {};
 		const { amount } = formData;
 		
-		let impact = Misc.impactCalc({charity, project, outputs, amount: amount.value});
+		let impact = impactCalc({charity, project, outputs, amount: amount.value});
 		if ( ! impact) {
 			console.warn("No impact?!", project, outputs, amount);			
 			impact = {unitName: NGO.displayName(charity) };
