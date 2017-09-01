@@ -32,8 +32,8 @@ public class ShareServlet implements IServlet {
 		// build page info
 		String title = state.get("title"); // Maximum length 60-70 characters
 		if (title==null) title = "My Title :)";
-		String image = state.get("img");
-		if (image==null) image = "https://wi-images.condecdn.net/image/jOZ1xYp2vVz/crop/405";
+		String image = state.get("image");
+//		if (image==null) image = "https://wi-images.condecdn.net/image/jOZ1xYp2vVz/crop/405";
 		String desc = Utils.or(state.get("desc"), "Good stuff, oh yes."); // 155 chars??
 		page.setTitle(title);		
 //		<meta name="description" content="Page description. No longer than 155 characters." />
