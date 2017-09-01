@@ -50,7 +50,9 @@ module.exports = {
 		"padded-blocks": "warn",
 		/* broken - seems to cause errors in linting */
 		"no-multi-assign": "off",
+		"react/jsx-max-props-per-line": "warn",
 		/* off because the warnings are more noise than signal i.e. we might switch them on sometime*/
+		"jsx-a11y/alt-text": "warn",
 		"comma-spacing": "off",
 		"consistent-return": "off",
 		"import/extensions": "warn",

@@ -6,6 +6,8 @@ import {assert, assMatch} from 'sjtest';
 import Project from './Project';
 import Output from './Output';
 import MonetaryAmount from './MonetaryAmount';
+import HashMap from 'hashmap';
+import Citation from './Citation';
 
 /**
  * Each Charity (NGO -- which is the thing.org type) has projects.
@@ -20,12 +22,20 @@ export default NGO;
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
 NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
+/**
+ * Mostly you should use #displayName()!
+ */
 NGO.name = (ngo) => NGO.assIsa(ngo) && ngo.name;
+NGO.displayName = (ngo) => ngo.displayName || ngo.name || NGO.id(ngo);
 NGO.id = (ngo) => NGO.assIsa(ngo) && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
-
+NGO.registrationNumbers = (ngo) => {
+	// TODO OSCR, companies house
+	if (ngo.englandWalesCharityRegNum) return [{regulator:'Charity Commission', id:ngo.englandWalesCharityRegNum}];
+	return [];
+};
 /**
  * @return {?Project} the representative project, or null if the charity is not ready.
  */
@@ -107,4 +117,48 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	costPerOutput.value = projectCost.value / outputCount;
 	costPerOutput.value100 = Math.round(100 * costPerOutput.value);
 	return costPerOutput;
+};
+
+/**
+ * @returns {Citation[]} all the citations found
+ */
+NGO.getCitations = (charity) => {
+	let refs = [];
+	recurse(charity, node => {
+		if (node['@type'] === 'Citation') {
+			refs.push(node);
+		} else if (node.source) {
+			console.warn("converting to citation", node);
+			refs.push(Citation.make(node));
+		}
+	});
+	refs = _.uniq(refs);
+	return refs;
+};
+
+/**
+ * @param fn (value, key) -> `false` if you want to stop recursing deeper down this branch. Note: falsy will not stop recursion.
+ * @returns nothing -- operates via side-effects
+ */
+const recurse = function(obj, fn, seen) {
+	if ( ! obj) return;
+	if (_.isString(obj) || _.isNumber(obj) || _.isBoolean(obj)) {
+		return;
+	}
+	// no loops
+	if ( ! seen) seen = new HashMap();
+	if (seen.has(obj)) return;
+	seen.set(obj, true);
+
+	let keys = Object.keys(obj);
+	keys.forEach(k => {
+		let v = obj[k];
+		if (v===null || v===undefined) {
+			return;
+		}
+		let ok = fn(v, k);
+		if (ok !== false) {
+			recurse(v, fn, seen);
+		}
+	});
 };

@@ -5,7 +5,6 @@ import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
 import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Glyphicon } from 'react-bootstrap';
 import Login from 'you-again';
-import HashMap from 'hashmap';
 import Enum from 'easy-enums';
 
 import ServerIO from '../../plumbing/ServerIO';
@@ -19,30 +18,6 @@ import MonetaryAmount from '../../data/charity/MonetaryAmount';
 import Misc from '../Misc';
 import Roles from '../../Roles';
 
-/**
- * @param fn (value, key) -> `false` if you want to stop recursing deeper down this branch. Note: falsy will not stop recursion.
- */
-const recurse = function(obj, fn, seen) {
-	if ( ! obj) return;
-	if (_.isString(obj) || _.isNumber(obj) || _.isBoolean(obj)) {
-		return;
-	}
-	// no loops
-	if ( ! seen) seen = new HashMap();
-	if (seen.has(obj)) return;
-	seen.set(obj, true);
-
-	let keys = Object.keys(obj);
-	keys.forEach(k => {
-		let v = obj[k];
-		if (v===null || v===undefined) {
-			return;
-		}
-		let ok = fn(v, k);
-		if (ok === false) return;		
-		recurse(v, fn, seen);		
-	});
-};
 
 class EditCharityPage extends React.Component {
 
@@ -79,19 +54,8 @@ class EditCharityPage extends React.Component {
 		overalls = _.sortBy(overalls, p => - (p.year || 0) );
 		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
-		let refs = {};
-		recurse(charity, node => {
-			if (node.source) {
-				refs[node.source] = true;
-			} else if (node['@type'] === 'Citation' && node.url) {
-				refs[node.url] = true;
-			} else {
-				return null;
-			}
-			return false;
-		});
-		// Spread operator turns refs into an array
-		const rrefs = Object.entries(refs).map(([r], i) => (
+		let refs = NGO.getCitations(charity);
+		const rrefs = refs.map((r, i) => (
 			<li key={'r'+i}>
 				<Ref reference={r} />
 			</li>

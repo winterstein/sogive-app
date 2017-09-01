@@ -142,13 +142,14 @@ const CharityAbout = ({charity}) => {
 	);
 	return (
 		<div className='charity-about'>
+			{NGO.name(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.name(charity)}</h4> : null}
 			<div className='images'>
-				<div className='charity-image'>
+				{NGO.image(charity)? <div className='charity-image'>
 					<img src={NGO.image(charity)} alt='Charity' />
-				</div>
-				<div className='charity-logo'>
+				</div> : null}
+				{charity.logo? <div className='charity-logo'>
 					<img src={charity.logo} alt='Charity logo' />
-				</div>
+				</div> : null}
 			</div>
 			<div className='descriptions'>
 				<div className='description-short'>
@@ -160,6 +161,9 @@ const CharityAbout = ({charity}) => {
 			</div>
 			<div className='url'>
 				<a href={charity.url}>{charity.url}</a>
+			</div>
+			<div className='official-details'>
+				{NGO.registrationNumbers(charity).map(reg => <small>{reg.regulator}: {reg.id}</small>)}				
 			</div>
 		</div>	
 	);
@@ -181,11 +185,28 @@ const CharityExtra = ({charity}) => {
 	const yearDivs = Object.keys(projectsByYear).sort().map(year => (
 		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
 	));
+	let refs = NGO.getCitations(charity);
 	return (
 		<div className='charity-extra'>
 			{yearDivs}
+			{refs.length? <Citations citations={refs} /> : null}
 		</div>
 	);
+};
+
+const Citations = ({citations}) => (
+	<div className='citations'>
+		<h3>Sources</h3>
+		<ol>
+			{citations.map(ref => <Cite citation={ref}/>)}
+		</ol>
+	</div>
+);
+
+const Cite = ({citation}) => {
+	return (<li>
+		<a href={citation.url} target='_blank'>{JSON.stringify(citation)}</a>
+	</li>);
 };
 
 const CharityExtraYear = ({year, projects}) => {
@@ -361,22 +382,6 @@ const ProjectImage = ({images, title}) => {
 	if ( ! yessy(images)) return null;
 	let image = _.isArray(images)? images[0] : images;
 	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
-};
-
-const Citations = ({thing}) => {
-	let dsrc = thing['data-src'];
-	if ( ! dsrc) return null;
-	if (_.isArray(dsrc)) {
-		if (dsrc.length > 1) {
-			return <div>Sources:<ul>{dsrc.map(ds => <Citation citation={ds} />)}</ul></div>;
-		}
-		dsrc = dsrc[0];
-	}
-	return <div className='upper-padding col-md-offset-2 col-md-8'>Source: <Citation citation={dsrc} /></div>;	
-};
-const Citation = ({citation}) => {
-	if (_.isString(citation)) return <p>{citation}</p>;
-	return <a className='citation-url' href={citation.url}>{citation.name || citation.url}</a>;
 };
 
 export default CharityPage;

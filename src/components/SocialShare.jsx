@@ -62,11 +62,11 @@ const shareOnFacebook = ({url, shareText, take2}) => {
 
 const SocialShare = ({charity, donation, shareText}) => {
 	if ( ! shareText) {
-		shareText = NGO.summaryDescription(charity) || charity.name;
+		shareText = NGO.summaryDescription(charity) || NGO.displayName(charity);
 	}
 	let lcn = ""+window.location;
 	let pageInfo = {
-		title: charity.name,
+		title: NGO.displayName(charity),
 		image: NGO.image(charity),
 		desc:	NGO.summaryDescription(charity),
 		shareText: shareText
@@ -85,7 +85,7 @@ const SocialShare = ({charity, donation, shareText}) => {
 			</a>
 			<a className='share-social-facebook' onClick={e => shareOnFacebook(pageInfo)}><span className='fa fa-facebook' /></a>
 			<a className='share-social-email' 
-				href={'mailto:?subject='+encURI(charity.name+" shared via SoGive")+'&body='+encURI(window.location)} 
+				href={'mailto:?subject='+encURI(NGO.displayName(charity)+" shared via SoGive")+'&body='+encURI(window.location)} 
 				target='_blank'
 			>
 				<span className='fa fa-envelope-o' />
