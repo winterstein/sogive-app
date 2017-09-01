@@ -162,7 +162,7 @@ class DonationForm extends Component {
 					<img src={project.images} alt='' />
 				</div>
 				<div className='row'>
-					<div className='col-sm-5'>
+					<div className='col-sm-6'>
 						<div className='donation-buttons'>
 							<img className='donation-sun' src='/img/donation-bg.svg' alt="" />
 							<button onClick={donationUp} className='donation-up'>+</button>
@@ -175,12 +175,12 @@ class DonationForm extends Component {
 								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget','DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>will fund</div>
-							<img src="/img/donation-hand.png" alt="" />
+							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
 						</div>
+						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
 					</div>
-					<div className='col-sm-7'>
+					<div className='col-sm-6'>
 						<div className='donation-output'>
-							<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
 							{impact.impactNum? <div className='output-number'>
 								{printer.prettyNumber(impact.impactNum, 2)}
 							</div> : null}

@@ -9,6 +9,7 @@
 		ul.nav.nav-tabs {
 			.extend-content-to-sides(@bs-column-padding);
 			background-color: @charity-page-greyline;
+			border: none;
 			li {
 				margin-bottom: 0;
 
@@ -22,6 +23,12 @@
 
 
 				a, &.active a {
+					/* Remove blue border when clicked */
+					&:active {
+						border: none;
+						outline: none;
+					}
+
 					border: none;
 					border-radius: 0;
 					margin: 0;
@@ -160,13 +167,15 @@
 			border-bottom: 1px solid white;
 		}
 
+		.charity-about, .charity-extra {
+			/* Prevent margin collapse with first element so bg colour extends to top */
+			overflow: auto;
+		}
+
 		.charity-about {
 			@circles-width: 320px;
 			@big-circle: (@circles-width * 0.6545);
 			@small-circle: (@circles-width * 0.4727);
-
-			/* Prevent margin collapse with images div so bg colour extends to top */
-			overflow: auto;
 
 			.images {
 				position: relative;
@@ -307,11 +316,13 @@
 
 		.donation-input, .donation-output {
 			height: 200px;
-			background-color: white;
 		}
 
 		.donation-input {
 			text-align: right;
+			position: absolute;
+			z-index: 9;
+			padding-right: 50px;
 
 			.prefix {
 				font-size: 1.2em;
@@ -341,19 +352,22 @@
 					z-index: 11; /* Must appear in front of the sun graphic */
 				}
 			}
+
+			.donation-hand {
+				position: absolute;
+				left: 100px;
+			}
+		}
+
+		.donation-arrow-right {
+			position: absolute;
+			top: 0;
+			right: -25px;
+			height: 200px;
 		}
 
 		/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 		.donation-output {
-			margin-left: -30px;
-			padding-left: 75px;
-
-			.donation-arrow-right {
-				position: absolute;
-				left: -15px;
-				height: 200px;
-			}
-
 			.output-number {
 				font-size: 300%;
 				color: @donation-number-fg;
