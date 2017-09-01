@@ -16,7 +16,7 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';
-import ImpactWidgetry from './ImpactWidgetry';
+import {impactCalc} from './ImpactWidgetry.jsx';
 import SocialShare from './SocialShare';
 
 class CharityPage extends React.Component {
