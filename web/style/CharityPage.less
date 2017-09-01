@@ -94,11 +94,13 @@
 			}
 
 		}
-	}
+	} // ./.impact-column
 
 	.info-column {
 		height: 100%;
-		
+		/* hide long urls */
+		overflow-x: hidden;
+
 		.header {
 			.extend-bg-to-sides(@bs-column-padding);
 			background-color: #D2D6C3;
@@ -120,7 +122,6 @@
 		h2, h3 {
 			border-bottom: 1px solid white;
 		}
-
 
 		.charity-about {
 			.images {
