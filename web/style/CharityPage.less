@@ -11,19 +11,37 @@
 			.extend-content-to-sides(@bs-column-padding);
 			li {
 				margin-bottom: 0;
+
+				/* Override Bootstrap bg colours */
+				background-color: transparent;
 				&.active {
-					a {
-						background-color: @charity-page-greybg;
-						&:after {
-							content: " ";
-							background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='20' version='1.1'><polyline fill='lightgrey' points='0,0 10,0 0,20'/></svg>");
-						}
-					}
+					background-color: transparent;
 				}
-				a {
+
+
+				a, &.active a {
 					border: none;
 					border-radius: 0;
 					margin: 0;
+					z-index: 9;
+					/* Fancy tab shape */
+					&:before {
+						content: ''; 
+						position: absolute;
+						top: -15px; right: 0; bottom: 0; left: 0;
+						transform: perspective(110px) rotateX(30deg);
+						transform-origin: bottom;
+						margin-left: -10px;
+						margin-right: -10px;
+					}
+				}
+				a:before {
+					background-color: @charity-page-greyline;
+					z-index: -1;
+				}
+				&.active a:before {
+					background-color: @charity-page-greybg;
+					z-index: -2;
 				}
 			}
 		}
@@ -124,43 +142,52 @@
 		}
 
 		.charity-about {
+			@circles-width: 320px;
+			@big-circle: (@circles-width * 0.6545);
+			@small-circle: (@circles-width * 0.4727);
+
 			.images {
 				position: relative;
 				height: 225px;
-				margin-left: 25px;
-				margin-right: 25px;
-				margin-bottom: 25px;
+				width: @circles-width;
+				margin: 40px auto;
 
 				.charity-image, .charity-logo {
 					position: absolute;
 					bottom: 0;
-					border-radius: 50%;
-					border: 15px solid rgba(49, 77, 121, 0.5);
+					background-size: contain;
+					display: flex;
+					justify-content: center;
+					align-items: center;
 
 					img {
 						border-radius: 50%;
 						object-fit: contain;
-						border-color: #314D79;
-						border-style: solid;
+						background-color: white;
 					}
 				}
 
+				
 				.charity-image {
 					z-index: 10;
 					left: 0;
+					background-image: url(/img/circle-bg-left.svg);
+					height: @big-circle;
+					width: @big-circle;
 					img {
-						width: 175px;
-						height: 175px;
-						border-width: 3px
+						height: 85%;
+						width: 85%;
 					}
 				}
 				.charity-logo {
 					z-index: 20;
 					right: 0;
+					background-image: url(/img/circle-bg-right.svg);
+					height: @small-circle;
+					width: @small-circle;
 					img {
-						width: 125px;
-						height: 125px;
-						border-width: 10px;
+						width: 70%;
+						height: 70%;
 					}
 				}
 			}

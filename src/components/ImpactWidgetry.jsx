@@ -16,7 +16,7 @@ import Misc from './Misc.jsx';
  * @param amount {?Number} The £ to donate
  */
 const ImpactDesc = ({charity, project, outputs, amount}) => {
-	const impact = Misc.impactCalc({charity, project, outputs, amount});
+	const impact = impactCalc({charity, project, outputs, amount});
 	if (!impact) return null;
 
 	return (
@@ -92,4 +92,4 @@ Misc.TrPlural = (num, text) => {
 	return text;
 };
 
-export {ImpactDesc, impactCalc}
+export {ImpactDesc, impactCalc};
