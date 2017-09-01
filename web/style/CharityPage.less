@@ -7,15 +7,17 @@
 		background-color: white;
 
 		ul.nav.nav-tabs {
-			border-bottom: 5px solid @charity-page-greyline;
 			.extend-content-to-sides(@bs-column-padding);
+			background-color: @charity-page-greyline;
 			li {
 				margin-bottom: 0;
 
-				/* Override Bootstrap bg colours */
+				/* Override Bootstrap bg colours & bring active tab to front */
 				background-color: transparent;
+				z-index: 9;
 				&.active {
 					background-color: transparent;
+					z-index: 10;
 				}
 
 
@@ -24,17 +26,22 @@
 					border-radius: 0;
 					margin: 0;
 					z-index: 9;
+					padding-bottom: 0;
+					font-weight: bold;
+					/* Remove bootstrap background */
+					background-color: transparent;
 					/* Fancy tab shape */
 					&:before {
 						content: ''; 
 						position: absolute;
-						top: -15px; right: 0; bottom: 0; left: 0;
+						top: -5px; right: 0; bottom: 0; left: 0;
 						transform: perspective(110px) rotateX(30deg);
 						transform-origin: bottom;
 						margin-left: -10px;
-						margin-right: -10px;
+						margin-right: -10px;	
 					}
 				}
+
 				a:before {
 					background-color: @charity-page-greyline;
 					z-index: -1;
@@ -71,12 +78,14 @@
 			background: #C1DEF2;
 			.extend-bg-to-sides(@bs-column-padding);
 			padding-top: @band-1-height;
+			margin-bottom: 50px;
 
 			.charity-name {
 				background-color: #D2D6C3;
 				text-transform: uppercase;
 				font-weight: bold;
 				margin-top: 0;
+				margin-bottom: 0;
 				.extend-bg-to-sides(@bs-column-padding);
 				line-height: @band-2-height;
 			}
@@ -127,14 +136,24 @@
 			border-bottom-color: #C1DEF2;
 			border-width: @band-1-height 0 @band-3-height 0;
 			line-height: @band-2-height;
+			margin-bottom: 50px;
 		}
 
-		.nav-tabs li {
-			background-color:white;
+		.nav-tabs {
+			li {
+				background-color:white;
+				&.active {
+					background-color: @charity-page-greybg;
+				}
+			}
+			font-size: 2em;
 		}
-		.nav-tabs li.active {
+
+		.tab-content {
+			.extend-bg-to-sides(@bs-column-padding);
 			background-color: @charity-page-greybg;
 		}
+
 
 		
 		h2, h3 {
@@ -145,6 +164,9 @@
 			@circles-width: 320px;
 			@big-circle: (@circles-width * 0.6545);
 			@small-circle: (@circles-width * 0.4727);
+
+			/* Prevent margin collapse with images div so bg colour extends to top */
+			overflow: auto;
 
 			.images {
 				position: relative;
