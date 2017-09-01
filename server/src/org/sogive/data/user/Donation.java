@@ -67,8 +67,8 @@ public class Donation {
 	public Donation(XId from, XId to, MonetaryAmount ourFee, MonetaryAmount otherFees, boolean giftAid,
 			MonetaryAmount total) {
 		Utils.check4null(from, to, total);
-		this.from = from.toJSONString();
-		this.to = to.toJSONString();
+		this.from = from.toString();
+		this.to = to.toString();
 		this.ourFee = ourFee;
 		this.otherFees = otherFees;
 		this.giftAid = giftAid;
