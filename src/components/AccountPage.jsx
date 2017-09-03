@@ -11,14 +11,16 @@ import GiftAidForm from './GiftAidForm';
 
 const AccountPage = () => {
 	let proles =Roles.getRoles();
+	// TODO link into My-Loop, and vice-versa
+	// TODO store gift aid settings
+			// 	<Misc.Card title='Gift Aid'>
+			// 	<GiftAidForm />
+			// </Misc.Card>
 	return (
 		<div className=''>
 			<h2>My Account</h2>
 			<Misc.Card title='Login'>
 				ID: {Login.getId()}
-			</Misc.Card>
-			<Misc.Card title='Gift Aid'>
-				<GiftAidForm />
 			</Misc.Card>
 			<Misc.Card title='Roles'>
 				<p>Roles determine what you can do. E.g. only editors can publish changes.</p>
