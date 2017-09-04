@@ -77,6 +77,7 @@ class EditCharityPage extends React.Component {
 					}
 					&nbsp;
 					<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
+					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
 				</Panel>
 				<Accordion>
 					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
@@ -532,11 +533,13 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 
 
 const publishDraftFn = _.throttle((e, charity) => {
-	ServerIO.publish(charity, C.STATUS.DRAFT);
+	return ActionMan.publish(C.TYPES.Charity, NGO.id(charity));
 }, 250);
 const discardDraftFn = _.throttle((e, charity) => {
-	ServerIO.discardEdits(charity);
-	window.location.reload();
+	return ActionMan.discardEdits(C.TYPES.Charity, NGO.id(charity));
+}, 250);
+const deleteFn = _.throttle((e, charity) => {
+	return ActionMan.delete(C.TYPES.Charity, NGO.id(charity));
 }, 250);
 
 
