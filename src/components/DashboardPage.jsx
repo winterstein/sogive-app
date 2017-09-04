@@ -37,9 +37,16 @@ class DashboardPage extends React.Component {
 			content = <Misc.Loading />;
 		} else {
 			content = (
-				<DashboardWidget title="Donation History">
-					<DonationList donations={this.state.donations} />
-				</DashboardWidget>
+				<div>
+					<DashboardWidget title="Donation History">
+						<DonationList donations={this.state.donations} />
+					</DashboardWidget>
+					{donations.length? null : 
+						<DashboardWidget title='Welcome to SoGive'>
+							Get started by <a href='/#search'>searching</a> for a charity.
+						</DashboardWidget>
+					}
+				</div>
 			);
 		}
 

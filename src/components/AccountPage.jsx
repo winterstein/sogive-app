@@ -7,9 +7,15 @@ import printer from '../utils/printer.js';
 import C from '../C';
 import Roles from '../Roles';
 import Misc from './Misc';
+import GiftAidForm from './GiftAidForm';
 
 const AccountPage = () => {
 	let proles =Roles.getRoles();
+	// TODO link into My-Loop, and vice-versa
+	// TODO store gift aid settings
+			// 	<Misc.Card title='Gift Aid'>
+			// 	<GiftAidForm />
+			// </Misc.Card>
 	return (
 		<div className=''>
 			<h2>My Account</h2>
