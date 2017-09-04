@@ -512,7 +512,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td>
-			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} />
+			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>

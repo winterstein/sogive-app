@@ -38,7 +38,7 @@ const impactCalc = ({charity, project, outputs, amount}) => {
 	}
 	const firstOutput = outputs[0];
 	// more people?
-	let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:firstOutput});
+	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:firstOutput});
 	if (!cpbraw || !cpbraw.value) {
 		return null; // Not a quantified output?
 	}

@@ -98,12 +98,18 @@ NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 /**
  * @return {MonetaryAmount}
  */
-NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
+NGO.costPerBeneficiary = ({charity, project, output}) => {
 	// Is an override present? Forget calculation and just return that.
 	if (output && MonetaryAmount.isa(output.costPerBeneficiary)) {
 		return output.costPerBeneficiary;
 	}
+	return NGO.costPerBeneficiaryCalc({charity, project, output});
+};
 
+/**
+ * This ignores the override (if set)
+ */
+NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {	
 	let outputCount = output.number;
 	if ( ! outputCount) return null;
 	let projectCost = Project.getTotalCost(project);
