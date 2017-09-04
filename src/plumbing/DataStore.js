@@ -310,6 +310,9 @@ class Store {
 	/**
 	 * get local, or fetch by calling fetchFn (but only once). 
 	 * Does not call update here and now, so it can be used inside a React render().
+	 * @param path {String[]}
+	 * @param fetchFn {Function} () -> Promise/value, which will be wrapped using promise-value PV()
+	 * fetchFn MUST return the value for path, or a promise for it. It should NOT set DataStore itself.
 	 * @returns {?value, promise}
 	 */
 	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
@@ -346,7 +349,8 @@ if (typeof(window) !== 'undefined') window.DataStore = DataStore;
 DataStore.update({
 	data: {
 		Charity: {},
-		User: {}
+		User: {},
+		Donation: {}
 	},
 	draft: {
 		Charity: {},

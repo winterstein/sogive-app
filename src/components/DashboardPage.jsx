@@ -13,52 +13,53 @@ import Misc from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';
 
 
-class DashboardPage extends React.Component {
-	render() {
-		let user = Login.getUser();
-		const donations = this.state && this.state.donations;
+const DashboardPage = () => {
+	let user = Login.getUser();
+	const pv = DataStore.fetch(['data','Donation'],	
+		() => {
+			return ServerIO.getDonations()
+				.then(function(result) {
+					let dons = result.cargo.hits;
+					return dons;
+				});
+		});
+	const donations = pv.value;
 
-		let content;
+	let content;
 
-		if ( ! user) {
-			return (
-				<div className="page DashboardPage">
-					<h2>My Dashboard</h2>
-					<div><LoginLink title='Login or Register' /> to track your donations</div>
-				</div>
-			);
-		}
-		if (!donations) {
-			ServerIO.getDonations()
-			.then(function(result) {
-				let dons = result.cargo.hits;
-				this.setState({donations: dons});
-			}.bind(this));
-			content = <Misc.Loading />;
-		} else {
-			content = (
-				<div>
-					<DashboardWidget title="Donation History">
-						<DonationList donations={this.state.donations} />
-					</DashboardWidget>
-					{donations.length? null : 
-						<DashboardWidget title='Welcome to SoGive'>
-							Get started by <a href='/#search'>searching</a> for a charity.
-						</DashboardWidget>
-					}
-				</div>
-			);
-		}
-
-		// display...
+	if ( ! user) {
 		return (
 			<div className="page DashboardPage">
 				<h2>My Dashboard</h2>
-				{ content }
+				<div><LoginLink title='Login or Register' /> to track your donations</div>
 			</div>
 		);
 	}
-} // ./DashboardPage
+	if ( ! donations) {		
+		content = <Misc.Loading />;
+	} else {
+		content = (
+			<div>
+				<DashboardWidget title="Donation History">
+					<DonationList donations={donations} />
+				</DashboardWidget>
+				{donations.length? null : 
+					<DashboardWidget title='Welcome to SoGive'>
+						Get started by <a href='/#search'>searching</a> for a charity.
+					</DashboardWidget>
+				}
+			</div>
+		);
+	}
+
+	// display...
+	return (
+		<div className="page DashboardPage">
+			<h2>My Dashboard</h2>
+			{ content }
+		</div>
+	);
+}; // ./DashboardPage
 
 
 const DonationList = ({donations}) => {

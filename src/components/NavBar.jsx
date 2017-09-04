@@ -2,6 +2,9 @@ import React from 'react';
 
 import AccountMenu from './AccountMenu';
 
+// BUG the navbar does not toggle closed :(
+// And the react-bootstrap version of this with Navbar, NavItem seems to have bugs in NavItem's handling of clicks :'(
+
 /**
  * 
  * @param {*} page The current page
