@@ -39,4 +39,4 @@ C.KStatus = new Enum('DRAFT PUBLISHED MODIFIED REQUEST_PUBLISH PENDING ARCHIVED 
 C.STATUS = new Enum("DRAFT PUBLISHED");
 
 C.ROLES = new Enum("editor admin");
-C.CAN = new Enum("edit publish admin");
+C.CAN = new Enum("edit publish admin recordExternalDonations");

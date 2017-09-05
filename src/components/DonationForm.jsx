@@ -7,6 +7,8 @@ import StripeCheckout from 'react-stripe-checkout';
 import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
+import C from '../C';
+import Roles from '../Roles';
 import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../plumbing/DataStore';
@@ -137,15 +139,6 @@ class DonationForm extends Component {
 		) : (
 			<Button disabled bsSize='large' title={`Please check your donation amount and, if you want to add Gift Aid, make sure you've filled out every field in the form.`} >donate</Button>
 		);
-
-		const giftAidForm = charity.uk_giftaid ? (
-			<GiftAidForm formPath={formPath} />
-		) : (
-			<div className='col-xs-12 gift-aid'>
-				<small >This charity is not eligible for Gift-Aid.</small>
-			</div>
-		);
-
 		/*
 		return (
 			<div>
@@ -192,9 +185,10 @@ class DonationForm extends Component {
 				</div>
 				<img className='donation-arrow-down' src='/img/donation-arrow-down.png' alt=""/>
 				<div className='below-arrow'>
-					{giftAidForm}
+					{charity.uk_giftaid ? <GiftAidForm formPath={formPath} /> : <div className='col-xs-12 gift-aid'><small >This charity is not eligible for Gift-Aid.</small></div>}
 					<div className='donate-button'>
 						{ donateButton }
+						{Roles.iCan(C.CAN.recordExternalDonations)? <RecordExternalDonation charity={charity} /> : null}
 					</div>
 				</div>
 				<div className='clearfix' />
@@ -331,6 +325,13 @@ const DonationAmount = function({selected, price, handleChange}) {
 const DonationList = ({donations}) => {
 	let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
 	return <ul>{ddivs}</ul>;
+};
+
+const RecordExternalDonation = ({charity}) => {
+return (<div>
+	<button>TODO Add External Donation</button>
+	<button>TODO Add Volunteering Time</button>
+	</div>);
 };
 
 export default DonationForm;
