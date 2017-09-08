@@ -65,7 +65,7 @@ public class DonationServlet {
 	}
 
 	public void run() throws Exception {
-		Dep.get(YouAgainClient.class).login(state);
+		Dep.get(YouAgainClient.class).getAuthTokens(state);
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
