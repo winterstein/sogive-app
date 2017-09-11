@@ -161,15 +161,15 @@
 			background-color: @charity-page-greybg;
 		}
 
-
-		
 		h2, h3 {
 			border-bottom: 1px solid white;
 		}
 
 		.charity-about, .charity-extra {
 			/* Prevent margin collapse with first element so bg colour extends to top */
-			overflow: auto;
+			overflow-y: auto; 
+			// overflow-x:auto leads to an unwanted scrollbar on narrow screens e.g. seen here on linux desktop http://local.sogive.org/#charity?charityId=voluntary-service-overseas-vso
+			overflow-x: hidden;
 		}
 
 		.charity-about {

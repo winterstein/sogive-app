@@ -19,89 +19,72 @@ import DonationForm from './DonationForm';
 import {impactCalc} from './ImpactWidgetry.jsx';
 import SocialShare from './SocialShare';
 
-class CharityPage extends React.Component {
-
-	constructor(...params) {
-		super(...params);
-		this.state = {
-		};
+const CharityPage = () => {
+	// fetch data
+	let cid = DataStore.getUrlValue('charityId');
+	let {value:charity} = DataStore.fetch(['data', C.TYPES.Charity, cid], 
+		() => ServerIO.getCharity(cid).then(result => result.cargo)
+	);
+	if ( ! charity) {
+		return <Misc.Loading />;
 	}
+	// let allprojects = charity.projects || [];
+	// split out overall vs projects
+	// const overalls = _.filter(allprojects, Project.isOverall);
+	// let projectProjects = _.filter(allprojects, p => ! Project.isOverall(p) );
+	// latest only
+	// const overall = Project.getLatest(overalls);
+	// const year = overall? overall.year : 0;
+	// let oldProjects = _.filter(projectProjects, p => p.year !== year);
+	// let currentProjects = _.filter(projectProjects, p => p.year === year);
+	// // sort by cost, biggest first
+	// currentProjects = _.sortBy(currentProjects, p => {
+	// 	let annualCost = _.find(p.inputs, pi => pi.name==='annualCosts');
+	// 	return annualCost? -annualCost.value : 0;
+	// });
 
-	componentWillMount() {
-		// fetch
-		let cid = this.props.charityId;
-		ServerIO.getCharity(cid)
-		.then(function(result) {
-			let charity = result.cargo;
-			assert(NGO.isa(charity), charity);
-			this.setState({charity: charity});
-			return result;
-		}.bind(this));
-	}
-
-	render() {
-		const charity = this.state.charity;
-		if ( ! charity) {
-			return <Misc.Loading />;
-		}
-		let allprojects = charity.projects;
-		// split out overall vs projects
-		const overalls = _.filter(allprojects, p => Project.name(p) === 'overall');
-		let projectProjects = _.filter(allprojects, p => Project.name(p) !== 'overall');
-		// latest only
-		const overall = Project.getLatest(overalls);
-		const year = overall? overall.year : 0;
-		let oldProjects = _.filter(projectProjects, p => p.year !== overall.year);
-		let currentProjects = _.filter(projectProjects, p => p.year === overall.year);
-		// sort by cost, biggest first
-		currentProjects = _.sortBy(currentProjects, p => {
-			let annualCost = _.find(p.inputs, pi => pi.name==='annualCosts');
-			return annualCost? -annualCost.value : 0;
-		});
-
-		const impactColumn = (
-			<div className='col-md-7 col-xs-12 column impact-column'>
-				<div className='header'>
-					<h1 className='charity-name'>
-						{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
-					</h1>
-					<CharityTags className='why-tags' tagsString={charity.whyTags} />
-					<CharityTags className='where-tags' tagsString={charity.whereTags} />
-				</div>
-				<CharityDonate charity={charity} />
+	const impactColumn = (
+		<div className='col-md-7 col-xs-12 column impact-column'>
+			<div className='header'>
+				<h1 className='charity-name'>
+					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
+				</h1>
+				<CharityTags className='why-tags' tagsString={charity.whyTags} />
+				<CharityTags className='where-tags' tagsString={charity.whereTags} />
 			</div>
-		);
-		const spacerColumn = <div className='col-md-1 hidden-xs' />;
-		const infoColumn = (
-			<div className='col-md-4 col-xs-12 column info-column'>
-				<div className='header'>&nbsp;</div>
-				<Tabs defaultActiveKey={1} id='rhsTabs'>
-					<Tab eventKey={1} title='About'>
-						<CharityAbout charity={charity} />
-					</Tab>
-					<Tab eventKey={2} title='Extra Info'>
-						<CharityExtra charity={charity} />
-					</Tab>
-				</Tabs>
-			</div>
-		);
+			<CharityDonate charity={charity} />
+		</div>
+	);
+	const spacerColumn = <div className='col-md-1 hidden-xs' />;
+	const infoColumn = (
+		<div className='col-md-4 col-xs-12 column info-column'>
+			<div className='header'>&nbsp;</div>
+			<Tabs defaultActiveKey={1} id='rhsTabs'>
+				<Tab eventKey={1} title='About'>
+					<CharityAbout charity={charity} />
+				</Tab>
+				<Tab eventKey={2} title='Extra Info'>
+					<CharityExtra charity={charity} />
+				</Tab>
+			</Tabs>
+		</div>
+	);
 
-		return (
-			<div>
-				<div className='top-bands'>
-					<div className='band1' />
-					<div className='band2' />
-					<div className='band3' />
-				</div>
-				<div className='charity-page row'>
-					{impactColumn}
-					{spacerColumn}
-					{infoColumn}
-				</div>
+	return (
+		<div>
+			<div className='top-bands'>
+				<div className='band1' />
+				<div className='band2' />
+				<div className='band3' />
 			</div>
-		);
-	}
-} // ./CharityPage
+			<div className='charity-page row'>
+				{impactColumn}
+				{spacerColumn}
+				{infoColumn}
+			</div>
+		</div>
+	);
+}; // ./CharityPage
 
 
 const CharityTags = ({className, tagsString = ''}) => (
@@ -125,21 +108,16 @@ const CharityDonate = ({charity}) => (
 
 
 const CharityAbout = ({charity}) => {
-	const turnover = charity.turnover && (
-		<p>
-			Turnover: { charity.turnover }
-		</p>
-	);
-	const employees = charity.employees && (
-		<p>
-			Employees: { charity.employees }
-		</p>
-	);
-	const website = charity.url && (
-		<p>
-			Website: <a href={charity.url} target='_blank' rel="noopener noreferrer">{charity.url}</a>
-		</p>
-	);
+	// const turnover = charity.turnover && (
+	// 	<p>
+	// 		Turnover: { charity.turnover }
+	// 	</p>
+	// );
+	// const employees = charity.employees && (
+	// 	<p>
+	// 		Employees: { charity.employees }
+	// 	</p>
+	// );
 	return (
 		<div className='charity-about'>
 			{NGO.name(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.name(charity)}</h4> : null}
@@ -160,12 +138,12 @@ const CharityAbout = ({charity}) => {
 				</p>
 			</div>
 			<div className='url'>
-				<a href={charity.url}>{charity.url}</a>
+				<a href={charity.url} target='_blank'>{charity.url}</a>
 			</div>
 			<div className='official-details'>
-				{NGO.registrationNumbers(charity).map(reg => <small>{reg.regulator}: {reg.id}</small>)}				
+				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}				
 			</div>
-		</div>	
+		</div>
 	);
 };
 
