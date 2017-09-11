@@ -106,21 +106,21 @@ class DonationForm extends Component {
 			);
 		}
 
-		const project = NGO.getProject(charity);
-		// NB: no project = no data is possible
-		if ( ! project) {
-			return <div />;
-		}
-		const { outputs } = project;
-		const user = Login.getUser();
-		const formPath = ['widget','DonationForm', NGO.id(charity)];
-
+		// donation info
+		const formPath = ['widget','DonationForm', NGO.id(charity)];		
 		const formData = DataStore.getValue(formPath) || {};
 		const { amount } = formData;
-		
-		let impact = impactCalc({charity, project, outputs, amount: amount.value});
-		if ( ! impact) {
-			console.warn("No impact?!", project, outputs, amount);			
+		const user = Login.getUser();
+
+		// impact info
+		const project = NGO.getProject(charity);
+		// NB: no project = no impact data, but you can still donate
+		let impact;
+		if (project) {
+			const { outputs } = project;						
+			impact = impactCalc({charity, project, outputs, amount: amount.value});			
+		}
+		if ( ! impact) {			
 			impact = {unitName: NGO.displayName(charity) };
 		}
 
@@ -146,20 +146,13 @@ class DonationForm extends Component {
 			</div>
 		);
 
-		/*
-		return (
-			<div>
-				<ThankYouAndShare thanks={false} charity={charity} />
-			</div>
-		);*/
-
 		const donationDown = () => this.incrementDonation(formData.amount.value, -1, charity);
 		const donationUp = () => this.incrementDonation(formData.amount.value, 1, charity);
 
 		return (
 			<div className='donation-impact'>
 				<div className='project-image'>
-					<img src={project.images} alt='' />
+					<img src={project && project.images} alt='' />
 				</div>
 				<div className='row'>
 					<div className='col-sm-6 left-column'>
