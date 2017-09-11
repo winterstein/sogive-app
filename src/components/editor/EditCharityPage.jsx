@@ -17,107 +17,95 @@ import Project from '../../data/charity/Project';
 import MonetaryAmount from '../../data/charity/MonetaryAmount';
 import Misc from '../Misc';
 import Roles from '../../Roles';
+import {LoginLink} from '../LoginWidget/LoginWidget';
 
-
-class EditCharityPage extends React.Component {
-
-	constructor(...params) {
-		super(...params);
+const EditCharityPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginLink />;
+	}
+	// fetch data
+	let cid = DataStore.getUrlValue('charityId');
+	let {value:charity} = DataStore.fetch(['draft', C.TYPES.Charity, cid], 
+		() => ServerIO.getCharity(cid, C.STATUS.DRAFT).then(result => result.cargo)
+	);
+	if ( ! charity) {
+		return <Misc.Loading />;
 	}
 
-	componentWillMount() {
-		// fetch
-		let cid = this.props.charityId;
-		ServerIO.getCharity(cid, C.STATUS.DRAFT)
-		.then(function(result) {
-			let charity = result.cargo;
-			assert(NGO.isa(charity), charity);
-			DataStore.setValue(['draft', C.TYPES.Charity, cid], charity);
-		});
-	}
+	// projects
+	let allprojects = charity.projects || [];
+	// split out overall vs projects
+	let overalls = _.filter(allprojects, p => Project.name(p) === Project.overall);
+	let projectProjects = _.filter(allprojects, p => Project.name(p) !== Project.overall);
+	// sort by year
+	overalls = _.sortBy(overalls, p => - (p.year || 0) );
+	projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
-	render() {
-		if ( ! Login.isLoggedIn()) {
-			return <div>Please login</div>;
-		}
-		let cid = this.props.charityId;
-		let charity = DataStore.getValue('draft', C.TYPES.Charity, cid);
-		if ( ! charity) {
-			return <Misc.Loading />;
-		}		
-		// projects
-		let allprojects = charity.projects;
-		// split out overall vs projects
-		let overalls = _.filter(allprojects, p => Project.name(p) === Project.overall);
-		let projectProjects = _.filter(allprojects, p => Project.name(p) !== Project.overall);
-		// sort by year
-		overalls = _.sortBy(overalls, p => - (p.year || 0) );
-		projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
+	let refs = NGO.getCitations(charity);
+	const rrefs = refs.map((r, i) => (
+		<li key={'r'+i}>
+			<Ref reference={r} />
+		</li>
+	));
 
-		let refs = NGO.getCitations(charity);
-		const rrefs = refs.map((r, i) => (
-			<li key={'r'+i}>
-				<Ref reference={r} />
-			</li>
-		));
-
-		// put it together
-		console.log("EditCharity", charity);
-		return (
-			<div className='page EditCharityPage'>				
-				<Panel>
-					<h2>Editing: {charity.name}</h2>			
-					<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-					<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
-					<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
-					<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-					{Roles.iCan(C.CAN.publish)? 
-						<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
-						: <div><button className='btn btn-primary' disabled>Publish</button><br /><small>Please ask a senior editor</small></div>
-					}
-					&nbsp;
-					<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
-					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
+	// put it together
+	console.log("EditCharity", charity);
+	return (
+		<div className='page EditCharityPage'>				
+			<Panel>
+				<h2>Editing: {charity.name}</h2>			
+				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
+				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
+				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
+				{Roles.iCan(C.CAN.publish)? 
+					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
+					: <div><button className='btn btn-primary' disabled>Publish</button><br /><small>Please ask a senior editor</small></div>
+				}
+				&nbsp;
+				<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
+				<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
+			</Panel>
+			<Accordion>
+				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
+					<ProfileEditor charity={charity} />
 				</Panel>
-				<Accordion>
-					<Panel header={<h3>Charity Profile</h3>} eventKey="1">
-						<ProfileEditor charity={charity} />
-					</Panel>
-					<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
-						<EditField item={charity} field='noPublicDonations' label='No public donations' type='checkbox' 
-							help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
-						<EditField item={charity} field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' 
-							help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
-					</Panel>
-					<Panel header={<h3>Overall</h3>} eventKey="3">
-						<ProjectsEditor isOverall charity={charity} projects={overalls} />
-					</Panel>
-					<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
-						<ProjectsEditor charity={charity} projects={projectProjects} />
-					</Panel>
-					<Panel header={<h3>Editorial</h3>} eventKey="5">
-						<EditorialEditor charity={charity} />
-					</Panel>
-					<Panel header={<h3>References</h3>} eventKey="6">
-						<ol>{rrefs}</ol>
-					</Panel>
-				</Accordion>
-			</div>
-		);
-	}
-} // ./EditCharityPage
+				<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
+					<EditField item={charity} 
+						field='noPublicDonations' label='No public donations' type='checkbox' 
+						help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
+					<EditField item={charity} 
+						field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' 
+						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
+				</Panel>
+				<Panel header={<h3>Overall</h3>} eventKey="3">
+					<ProjectsEditor isOverall charity={charity} projects={overalls} />
+				</Panel>
+				<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
+					<ProjectsEditor charity={charity} projects={projectProjects} />
+				</Panel>
+				<Panel header={<h3>Editorial</h3>} eventKey="5">
+					<EditorialEditor charity={charity} />
+				</Panel>
+				<Panel header={<h3>References</h3>} eventKey="6">
+					<ol>{rrefs}</ol>
+				</Panel>
+			</Accordion>
+		</div>
+	);
+}; // ./EditCharityPage
 
 
 const EditorialEditor = ({charity}) => {
 	let rec = charity.recommended;
 	return (<div>					
-			<EditField item={charity} type='checkbox' field='recommend'
-				label='Recommended High-Impact Charity'
-				help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
-			<EditField item={charity} type='textarea' field='recommendation' 
-				label='Recommendation Comment ' disabled={ ! rec}
-				help="A sentence or two on why SoGive recommends this charity." />
-		</div>);
+		<EditField item={charity} type='checkbox' field='recommend'
+			label='Recommended High-Impact Charity'
+			help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
+		<EditField item={charity} type='textarea' field='recommendation' 
+			label='Recommendation Comment ' disabled={ ! rec}
+			help="A sentence or two on why SoGive recommends this charity." />
+	</div>);
 };
 
 

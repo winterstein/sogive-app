@@ -11,7 +11,7 @@ import C from '../../C';
 
 // Login.setup('good-loop', 'facebook', '1847521215521290');
 // For testing
-if (window.location.host.indexOf('local') !== -1) {	
+if (false && window.location.host.indexOf('local') !== -1) {	
 	Login.ENDPOINT = 'http://localyouagain.winterwell.com/youagain.json';
 	console.warn("config", "Set you-again Login endpoint to "+Login.ENDPOINT);
 }
