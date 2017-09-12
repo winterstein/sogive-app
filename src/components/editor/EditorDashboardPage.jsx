@@ -34,13 +34,13 @@ const AddCharityWidget = () => {
 	if (id) {
 		return <a href={'/#edit?charityId='+encURI(id)}>Edit {DataStore.getValue(['widget','AddCharityWidget','form','name'])}</a>;
 	}
-	return (<div>
+	return (<Misc.Card title='Add Charity'>
 		<div className='alert alert-warning'>
 			ALWAYS <a href='#search'>search</a> first to check the charity isn't already in the database. 
 			Otherwise we will have ugly merge problems.</div>
 		<Misc.PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
-		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add</button>		
-	</div>);
+		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add Charity</button>
+	</Misc.Card>);
 };
 
 const doAddEditor = function() {
@@ -51,11 +51,11 @@ const doAddEditor = function() {
 };
 
 const AddEditorWidget = () => {
-	return (<Panel header={<h2>Add a new Editor</h2>} >
+	return (<Misc.Card title='Add a new Editor' >
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
 		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
-	</Panel>);
+	</Misc.Card>);
 };
 
 export default EditorDashboardPage;
