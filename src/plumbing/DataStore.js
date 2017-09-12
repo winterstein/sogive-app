@@ -82,7 +82,8 @@ class Store {
 	}
 
 	/**
-	 * Convenience for appstate.location.params.key. This is to match setUrlValue.
+	 * Get a parameter setting from the url. Convenience for appstate.location.params.key. This is to match setUrlValue.
+	 * See also getValue('location','path') for the path.
 	 * @param {String} key 
 	 */
 	getUrlValue(key) {
@@ -131,7 +132,7 @@ class Store {
 			path = path[0];
 		}
 		assert(this.appstate[path[0]], 
-			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use getValue()");		
+			path[0]+" is not a json element in appstate - As a safety check against errors, the root element must already exist to use getValue()");		
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];			
@@ -323,6 +324,7 @@ class Store {
 		let pv = this.getValue(fpath);
 		if (pv) return pv;	
 		let promise = fetchFn();
+		assert(promise!==undefined, "fetchFn passed to DataStore.fetch() should return a promise or a value. Got: undefined. Missing return statement?");
 		pv = PV(promise);
 		pv.promise.then(res => {
 			// this.setValue(fpath, null, false); No repeats?!

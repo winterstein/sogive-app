@@ -38,7 +38,7 @@ public class DB {
 
 		for(KStatus status : KStatus.main()) {
 			// charity
-			ESPath path = config.getPath(NGO.class, null, status);
+			ESPath path = config.getPath(null, NGO.class, null, status);
 			if (es.admin().indices().indexExists(path.index())) {
 				continue;
 			}
@@ -68,7 +68,7 @@ public class DB {
 		}
 		
 		// donation
-		ESPath path = config.getPath(Donation.class, null, null);
+		ESPath path = config.getPath(null, Donation.class, null, null);
 		if ( ! es.admin().indices().indexExists(path.index())) {
 			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
 			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);

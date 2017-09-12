@@ -45,7 +45,7 @@ public class SearchServlet {
 		ESHttpClient.debug = true;
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
-		ESPath path = config.getPath(NGO.class, null, status);
+		ESPath path = config.getPath(null, NGO.class, null, status);
 		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
 		String q = state.get(Q);
 		if ( q != null) {

@@ -144,7 +144,7 @@ public class ImportCharityDataFromCSV {
 			if (Utils.truthy(story)) {ngo.put(stories, story); mod=true;}
 			// save
 			if (mod) {				
-				UpdateRequestBuilder pi = client.prepareUpdate(sgconfig.getPath(NGO.class, ourid, KStatus.PUBLISHED));
+				UpdateRequestBuilder pi = client.prepareUpdate(sgconfig.getPath(null, NGO.class, ourid, KStatus.PUBLISHED));
 //				String json = gson.toJson(ngo);		
 				pi.setDoc(ngo);
 				pi.setDocAsUpsert(true);
@@ -401,7 +401,7 @@ public class ImportCharityDataFromCSV {
 //					if ( ! Utils.isEmpty(impacts)) ngo.put("unitRepImpact", impacts.get(0));
 //				}
 //			}
-			ESPath path = sgconfig.getPath(NGO.class, ourId, KStatus.PUBLISHED);
+			ESPath path = sgconfig.getPath(null, NGO.class, ourId, KStatus.PUBLISHED);
 			UpdateRequestBuilder pi = client.prepareUpdate(path);
 //			String json = gson.toJson(ngo);		
 			pi.setDoc(ngo);

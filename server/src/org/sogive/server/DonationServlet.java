@@ -80,7 +80,7 @@ public class DonationServlet {
 		
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		SearchRequestBuilder s = es.prepareSearch(config.getPath(Donation.class, null, null).index());
+		SearchRequestBuilder s = es.prepareSearch(config.getPath(null, Donation.class, null, null).index());
 		if (user==null) {
 			throw new WebEx.E401(null, "No user");
 		} else {
@@ -133,7 +133,7 @@ public class DonationServlet {
 		// Store in the database (acts as a form of lock)
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		ESPath path = config.getPath(Donation.class, donation.getId(), null);
+		ESPath path = config.getPath(null, Donation.class, donation.getId(), null);
 		IndexRequestBuilder pi = es.prepareIndex(path);
 		pi.setRefresh("true");
 		pi.setOpTypeCreate(true);		

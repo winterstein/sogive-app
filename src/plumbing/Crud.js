@@ -33,7 +33,7 @@ ActionMan.crud = (type, id, action) => {
 	.then(DataStore.updateFromServer.bind(DataStore))
 	.then((res) => {
 		// success :)
-		const navtype = type;
+		const navtype = (C.navParam4type? C.navParam4type[type] : null) || type;
 		if (action==='delete') {
 			DataStore.setUrlValue(navtype, null);
 		} else if (id===C.newId) {

@@ -19,7 +19,7 @@ public class SoGiveConfig implements IESRouter {
 	public String youagainApp = "sogive";
 
 	@Override
-	public ESPath getPath(Class type, String id, Object status) {
+	public ESPath getPath(String dataspaceIsIgnored, Class type, String id, Object status) {
 		String stype = type==NGO.class? "charity" : type.getSimpleName().toLowerCase();
 		String index = stype;
 		KStatus ks = (KStatus) status;

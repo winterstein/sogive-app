@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-// FormControl
-import {Textarea, Glyphicon, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+// FormControl removed in favour of basic <inputs> while debugging input lag
+import {Glyphicon, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
+import {setHash} from 'wwutils';
 
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
@@ -109,7 +109,7 @@ Misc.Icon = ({glyph, fa, size, ...other}) => {
 /**
  * Input bound to DataStore
  * 
- * @param saveFn {Function} You are advised to wrap this with e.g. _.debounce(myfn, 500).
+ * @param saveFn {Function} {path, value} You are advised to wrap this with e.g. _.debounce(myfn, 500).
  * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
  * @param path {String[]} The DataStore path to item, e.g. [data, Charity, id]
@@ -117,7 +117,7 @@ Misc.Icon = ({glyph, fa, size, ...other}) => {
  * @param prop The field being edited 
  * dflt {?Object} default value
  */
-Misc.PropControl = ({type, label, help, ...stuff}) => {
+Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	// label / help? show it and recurse
 	// NB: Checkbox has a different html layout :( -- handled below
 	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
@@ -149,7 +149,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			DataStore.setValue(proppath, e.target.checked);
-			if (saveFn) saveFn({path:path});		
+			if (saveFn) saveFn({path:path, value:e.target && e.target.checked});		
 		};
 		if (value===undefined) value = false;
 		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
@@ -177,7 +177,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 			value.value = newVal;
 			DataStore.setValue(proppath, value);
 			// console.warn("£", value, proppath);
-			if (saveFn) saveFn({path:path});
+			if (saveFn) saveFn({path, value});
 		};
 		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
 		let currency;
@@ -202,9 +202,11 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	// text based
 	const onChange = e => {
 		console.log("event", e, e.type);
+		// TODO a debounced property for "do ajax stuff" to hook into. HACK blur = do ajax stuff
+		DataStore.setValue(['transient', 'doFetch'], e.type==='blur');	
 		let mv = modelValueFromInput(e.target.value, type, e.type);
 		DataStore.setValue(proppath, mv);
-		if (saveFn) saveFn({path:path});
+		if (saveFn) saveFn({path:path, value:mv});
 		e.preventDefault();
 		e.stopPropagation();
 	};
@@ -232,6 +234,25 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 	}
 	if (type==='textarea') {
 		return <textarea className="form-control" name={prop} onChange={onChange} {...otherStuff} value={value} />;
+	}
+	if (type==='json') {
+		let spath = ['transient'].concat(proppath);
+		let svalue = DataStore.getValue(spath) || JSON.stringify(value);
+		const onJsonChange = e => {
+			console.log("event", e.target && e.target.value, e, e.type);
+			DataStore.setValue(spath, e.target.value);
+			try {				
+				let vnew = JSON.parse(e.target.value);
+				DataStore.setValue(proppath, vnew);
+				if (saveFn) saveFn({path:path});
+			} catch(err) {
+				console.warn(err);
+				// TODO show error feedback
+			}			
+			e.preventDefault();
+			e.stopPropagation();
+		};
+		return <textarea className="form-control" name={prop} onChange={onJsonChange} {...otherStuff} value={svalue} />;
 	}
 	if (type==='img') {
 		return (<div>
@@ -292,6 +313,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 		let sv = value || defaultValue;
 		return (
 			<select className='form-control' name={prop} value={sv} onChange={onChange} {...otherStuff} >
+				{sv? null : <option></option>}
 				{domOptions}
 			</select>
 		);
@@ -302,7 +324,7 @@ Misc.PropControl = ({type, label, help, ...stuff}) => {
 };
 
 Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox"
-							+" location date year number arraytext address postcode");
+							+" location date year number arraytext address postcode json");
 
 
 /**
@@ -370,6 +392,18 @@ Misc.Card = ({title, icon, children}) => {
 	</div>);
 };
 
+/**
+ * on click, set the hash to #hash
+ * The child elements is what gets displayed inside an a tag (so the user could control-click or save the link)
+ * Use-case: for making navigation links & buttons where we use deep-linking urls.
+ */
+Misc.RestItem = ({hash, children}) => {
+	assert(hash);
+	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
+	return (<a className='RestItem' href={'#'+hash} onClick={clicked} >
+			{children}
+		</a>);
+};
 
 /**
  * save buttons

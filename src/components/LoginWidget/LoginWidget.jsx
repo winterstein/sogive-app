@@ -62,7 +62,7 @@ const socialLogin = (service) => {
 }; // ./socialLogin
 
 
-const emailLogin = (verb, email, password) => {
+const emailLogin = ({verb, app, email, password}) => {
 	assMatch(email, String, password, String);
 	let call = verb==='register'?
 		Login.register({email:email, password:password})
@@ -105,7 +105,7 @@ const EmailSignin = ({verb}) => {
 				});
 			return;
 		}
-		emailLogin(verb, e, p);
+		emailLogin({verb, ...person});
 	};
 
 	const buttonText = {

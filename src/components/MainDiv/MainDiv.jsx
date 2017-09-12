@@ -62,12 +62,10 @@ class MainDiv extends Component {
 		});
 	}
 
-
 	render() {
-		let path = DataStore.getValue('location', 'path');
-		let page = path[0] || DEFAULT_PAGE; //const { page, pageProps } = this.state;
-		// console.log("TODO page from path?", path, page);
-		// assert(page, this.props);
+		let path = DataStore.getValue('location', 'path');		
+		let page = (path && path[0]) || DEFAULT_PAGE;
+		assert(page);
 		let Page = PAGES[page];		
 		assert(Page, page);
 
