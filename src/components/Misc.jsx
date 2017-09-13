@@ -194,9 +194,11 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		}
 		delete otherStuff.changeCurrency;
 		assert(v === 0 || v || v==='', [v, value]);
+		// make sure all characters are visible
+		let minWidth = ((""+v).length / 1.5)+"em";
 		return (<InputGroup>
 					{currency}
-					<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} />
+					<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} style={{minWidth}}/>
 				</InputGroup>);
 	} // ./£
 	// text based
