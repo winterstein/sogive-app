@@ -6,6 +6,8 @@ import {assert,assMatch} from 'sjtest';
 import {yessy, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
 import PV from 'promise-value';
 
+import md5 from 'md5';
+
 /**
  * Hold data in a simple json tree, and provide some utility methods to update it - and to attach a listener.
  * E.g. in a top-of-the-app React container, you might do `DataStore.addListener((mystate) => this.setState(mystate));`
@@ -29,7 +31,11 @@ class Store {
 			 * nav state, stored in the url (this gives nice shareable deep-linking urls)
 			 */
 			location:{}, 
-			misc:{}
+			misc:{},
+			/** This is for search results and other lists
+			 * This should only store the DataStore paths, as an index into the other nodes.
+			 */
+			list: {},
 		};
 		// init url vars
 		this.parseUrlVars(window.location);

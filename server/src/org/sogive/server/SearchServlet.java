@@ -20,6 +20,7 @@ import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.EnumField;
+import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -63,11 +64,23 @@ public class SearchServlet {
 //							.operator(Operator.AND);			
 			s.setQuery(qb);
 		}
-		// TODO test ordering.
+		// Order by name
 		s.addSort("name.raw", SortOrder.ASC);
 //		s.addSort("@id", SortOrder.ASC);
-		// TODO paging!
-		s.setSize(10000);
+		
+		// Paging
+		// TODO also support search after https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-search-after.html
+		int pageSize = state.get(new IntField("numres").setMax(1000), 5);
+		int from = state.get(new IntField("from"), 0);
+		if (from==0) {
+			int page = state.get(new IntField("page"), 0);
+			if (page!=0) {
+				from = page*pageSize;
+			}
+		}
+		s.setSize(pageSize);
+		s.setFrom(from);
+		
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();

@@ -34,9 +34,9 @@ window.ServerIO = ServerIO;
  * @param query {!String} query string
  * @param status {?KStatus} optional to request draft
  */
-ServerIO.search = function(q, status) {
+ServerIO.search = function({q, status, page}) {
 	assert(_.isString(q), q);
-	return ServerIO.load('/search.json', {data: {q, status}} );
+	return ServerIO.load('/search.json', {data: {q, status, page}} );
 };
 
 

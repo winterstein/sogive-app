@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { assert } from 'sjtest';
+import { assert, assMatch } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, Glyphicon, ControlLabel, Media, MediaLeft, MediaBody, MediaHeading, Well, InputGroup, InputGroupButton} from 'react-bootstrap';
 import {uid, yessy, encURI} from 'wwutils';
 
@@ -11,46 +11,49 @@ import Misc from './Misc.jsx';
 import {ImpactDesc, impactCalc} from './ImpactWidgetry.jsx';
 import C from '../C';
 
-// #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
-
-export default class SearchPage extends React.Component {
-
-	constructor(...params) {
-		super(...params);
-		this.state = {
-			results: []
-		};
+const SearchPage = () => {
+	// query comes from the url
+	let q = DataStore.getUrlValue("q");
+	if (q==='ERROR') { // HACK
+		throw new Error("Argh!");
 	}
-
-	setResults(results, total) {
-		assert(_.isArray(results));
-		this.setState({
-			results: results,
-			total: total
+	let page = DataStore.getUrlValue("page");
+	let status = DataStore.getUrlValue("status");
+	// fetch the data
+	let searchParams = {q, page, status};
+	let {value} = DataStore.fetchWithFilters(searchParams, () => {
+		ServerIO.search(searchParams)
+		.then(res => {
+			console.warn(res);
+			if ( ! res.success) return;
+			let cargo = res.cargo;
+			let paths = cargo.map(r => {
+				NGO.getId();
+			});
+			console.warn(paths);
+			return paths;
 		});
+	});
+	let results = null;
+	if (value) {
+		assMatch(value, "String[]");
+		results = DataStore.getValues(value);
 	}
-
-	render() {
-		// query comes from the url
-		let q = DataStore.getUrlValue("q");
-		if (q==='ERROR') { // HACK
-			throw new Error("Argh!");
-		}
-		return (
-			<div className='page SearchPage'>
-				<div className='col-md-12'>
-					<SearchForm query={q} setResults={this.setResults.bind(this)}/>
-				</div>
-				<div className='col-md-12'>
-					<SearchResults results={this.state.results} query={q} />
-				</div>
-				<div className='col-md-10'>
-					<FeaturedCharities />
-				</div>
+	return (
+		<div className='page SearchPage'>
+			<div className='col-md-12'>
+				<SearchForm query={q} />
 			</div>
-		);
-	}
-}
+			<div className='col-md-12'>
+				<SearchResults results={results} query={q} />
+			</div>
+			<div className='col-md-10'>
+				<FeaturedCharities />
+			</div>
+		</div>
+	);
+};
+export default SearchPage;
 
 const FeaturedCharities = () => null;
 /*
@@ -62,99 +65,37 @@ const FeaturedCharities = () => null;
 */
 
 
-class SearchForm extends React.Component {
-	constructor(...params) {
-		super(...params);
-		this.state = {
-			q: this.props.query,
-		};
-	}
+const SearchForm = ({q}) => {
+	return (
+		<div className='SearchForm'><Form onSubmit={(event) => { this.onSubmit(event); }} >
+			<FormGroup className='' bsSize='lg' controlId="formq">
+				<InputGroup bsSize='lg'>
+					<FormControl
+						className='sogive-search-box'
+						type="search"
+						value={this.state.q || ''}
+						placeholder="Keyword search"
+						onChange={(e) => this.onChange('q', e)}
+					/>
+					<FieldClearButton />						
+					<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
+						<Glyphicon glyph="search" />
+					</InputGroup.Addon>
+				</InputGroup>
+			</FormGroup>
+			<div className='pull-right'>
+				<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>
+					Show All
+				</Button>
+			</div>
+		</Form></div>
+	);	
+}; //./SearchForm
 
-	componentDidMount() {
-		if (this.state.q) {
-			this.search(this.state.q);
-		}
-	}
-
-	onChange(name, e) {
-		e.preventDefault();
-		let newValue = e.target.value;
-		let newState = {};
-		newState[name] = newValue;
-		this.setState(newState);
-	}
-
-	onSubmit(e) {
-		e.preventDefault();
-		console.warn("submit",this.state);
-		this.search(this.state.q || '');
-	}
-
-	search(query) {
-		// Put search query in URL so it's bookmarkable / shareable
-		DataStore.setUrlValue("q", query);
-		DataStore.setValue(['widget', 'Search', 'loading'], true);
-
-		// hack to allow status=DRAFT
-		let status = DataStore.getUrlValue("status");
-		ServerIO.search(query, status)
-		.then(function(res) {
-			console.warn(res);
-			let charities = res.cargo.hits;
-			let total = res.cargo.total;
-			DataStore.setValue(['widget', 'Search', 'loading'], false);
-			// DataStore.setValue([], { TODO
-			// 	charities: charities,
-			// 	total: total
-			// });
-			this.props.setResults(charities, total);
-		}.bind(this));
-	}
-
-	showAll(e) {
-		e.preventDefault();
-		this.setState({q: ''});
-		this.search('');
-	}
-
-	clear(e) {
-		e.preventDefault();
-		this.setState({q: ''});
-	}
-
-	render() {
-		return (
-			<div className='SearchForm'><Form onSubmit={(event) => { this.onSubmit(event); }} >
-				<FormGroup className='' bsSize='lg' controlId="formq">
-					<InputGroup bsSize='lg'>
-						<FormControl
-							className='sogive-search-box'
-							type="search"
-							value={this.state.q || ''}
-							placeholder="Keyword search"
-							onChange={(e) => this.onChange('q', e)}
-						/>
-						<FieldClearButton onClick={(e) => this.clear(e)}>
-							<Glyphicon glyph='remove-circle' />
-						</FieldClearButton>
-						<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
-							<Glyphicon glyph="search" />
-						</InputGroup.Addon>
-					</InputGroup>
-				</FormGroup>
-				<div className='pull-right'>
-					<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>
-						Show All
-					</Button>
-				</div>
-			</Form></div>
-		);
-	} // ./render
-} //./SearchForm
-
-const FieldClearButton = ({onClick, children}) => (
-	<span className='field-clear-button visible-xs-block' onClick={onClick}>
-		{children}
+const FieldClearButton = () => (
+	<span className='field-clear-button visible-xs-block' 
+		onClick={e => {e.preventDefault(); DataStore.setUrlValue('q', '');}} >
+		<Glyphicon glyph='remove-circle' />
 	</span>
 );
 
