@@ -114,13 +114,15 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			}	
 			WebUtils2.sendError(500, "TODO", resp);
-		} catch (WebEx ex) {
-			Log.e("error", ex);
-			WebUtils2.sendError(ex.code, ex.getMessage()+"\n\n------\n"+Printer.toString(ex, true), resp);
 		} catch(Throwable ex) {
-			ex.printStackTrace();
-			Log.e("error", ex);
-			WebUtils2.sendError(500, "Server Error: "+ex, resp);
+			WebEx wex = WebUtils2.runtime(ex);
+			if (wex.code >= 500) {
+				// log as severe
+				Log.e(Utils.or(wex.getCause(), wex).getClass().getSimpleName(), wex);
+			} else {
+				Log.i(wex.getClass().getSimpleName(), wex);
+			}
+			WebUtils2.sendError(wex.code, wex.getMessage(), resp);
 		} finally {
 			WebRequest.close(req, resp);
 		}
