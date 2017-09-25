@@ -25,7 +25,7 @@
     "webpack": "^3.2.0",
     "easy-enums": "^1.1.5",
     "sjtest": "^0.4.4",
-    "wwutils": "^0.8.0",
+    "wwutils": "^0.8.2",
     "you-again": "^0.5.1",
     "promise-value": "^1.0.2"
   },

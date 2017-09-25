@@ -20,6 +20,7 @@ import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.EnumField;
+import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
@@ -39,6 +40,8 @@ public class SearchServlet {
 	}
 
 	public static final SField Q = new SField("q");
+	public static final IntField SIZE = new IntField("size");
+	public static final IntField FROM = new IntField("from");
 	
 	public void run() throws IOException {
 		ESHttpClient client = Dep.get(ESHttpClient.class);
@@ -67,7 +70,9 @@ public class SearchServlet {
 		s.addSort("name.raw", SortOrder.ASC);
 //		s.addSort("@id", SortOrder.ASC);
 		// TODO paging!
-		s.setSize(10000);
+		
+		s.setSize(state.get(SIZE, 20));
+		s.setFrom(state.get(FROM, 0));
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
 		List<Map> hits = sr.getHits();
