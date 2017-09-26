@@ -10,7 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.web"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/elasticsearch"/>
 	<classpathentry kind="lib" path="/middleware/stripe/stripe-java.jar" sourcepath="/middleware/stripe/stripe-java-2.8.0.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
 	<classpathentry kind="lib" path="/middleware/gson/gson-original.jar"/>
