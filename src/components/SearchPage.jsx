@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { assert } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, Glyphicon, Media, InputGroup} from 'react-bootstrap';
 import {uid, encURI, parseHash, modifyHash} from 'wwutils';
+import Login from 'you-again';
 
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
@@ -52,6 +53,7 @@ export default class SearchPage extends React.Component {
 				</div>
 				<div className='col-md-12'>
 					<SearchPager total={this.state.total} from={from} />
+					<DownloadLink />
 				</div>
 				<div className='col-md-10'>
 					<FeaturedCharities />
@@ -246,6 +248,21 @@ const SearchPager = ({total, from = 0}) => {
 	});
 
 	return <div>{pageLinks}</div>;
+};
+
+const DownloadLink = () => {
+	if ( ! Login.isLoggedIn()) return null;
+	const locn = ""+window.location;
+	const qi = locn.indexOf('?');
+	const qry = qi === -1? '' : locn.substr(qi+1);
+	return (
+		<a className='pull-right' 
+			title='Download these reults in .csv (spreadsheet) format'
+			href={'/search.csv?'+qry} 
+			target='_new'>
+			<Glyphicon glyph='download-alt' /> csv
+		</a>
+	);
 };
 
 const SearchResult = ({ item }) => {
