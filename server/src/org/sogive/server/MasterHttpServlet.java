@@ -79,8 +79,8 @@ public class MasterHttpServlet extends HttpServlet {
 			Log.d("servlet", request);
 			String path = request.getRequestPath();
 			if (path.startsWith("/search")) {
-				SearchServlet s = new SearchServlet(request);
-				s.run();
+				SearchServlet s = new SearchServlet();
+				s.process(request);
 				return;
 			}
 			if (path.startsWith("/charity")) {
