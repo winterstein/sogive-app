@@ -19,6 +19,7 @@ import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.CSVWriter;
+import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.ajax.JsonResponse;
@@ -113,12 +114,29 @@ public class SearchServlet implements IServlet {
 		CSVWriter w = new CSVWriter(sout, new CSVSpec());
 
 		// what headers??
+		// TODO proper recursive
 		ObjectDistribution<String> headers = new ObjectDistribution();
 		for (Map<String,Object> hit : hits2) {
 			hit.keySet().forEach(key -> {
 				Object v = hit.get(key);
-				if (v instanceof Map || v instanceof List) return;
-				headers.count(key);	
+				if (v instanceof Map) {
+					Map subhit = (Map) v;
+					subhit.keySet().forEach(subkey -> {
+						Object sv = subhit.get(subkey);
+						if (sv instanceof Map || sv instanceof List) return;
+						headers.count(key+"."+subkey);	
+					});
+				} else if (v instanceof List) {
+					List subhit = (List) v;
+					for(int i=0; i<subhit.size(); i++) {
+						Object sv = subhit.get(i);
+						if (sv instanceof Map || sv instanceof List) return;
+						headers.count(key+"."+i);	
+					};
+				} else {
+					// a simple value
+					headers.count(key);
+				}
 			});
 		}
 		// prune
@@ -136,7 +154,10 @@ public class SearchServlet implements IServlet {
 		// write
 		w.write(hs);
 		for (Map hit : hits2) {
-			List<Object> line = Containers.apply(hs, h -> hit.get(h));
+			List<Object> line = Containers.apply(hs, h -> {
+				String[] p = h.split("\\.");
+				return SimpleJson.get(hit, p);
+			});
 			w.write(line);
 		}
 		w.close();
