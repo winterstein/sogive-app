@@ -48,6 +48,7 @@ module.exports = {
 		"space-unary-ops": "off",
 		"spaced-comment": "off",
 		"padded-blocks": "warn",
+		"no-trailing-spaces": "off",
 		/* broken - seems to cause errors in linting */
 		"no-multi-assign": "off",
 		"react/jsx-max-props-per-line": "warn",
@@ -64,7 +65,6 @@ module.exports = {
 		"key-spacing": "off",
 		"keyword-spacing": "off",
 		"no-extra-bind": "warn",
-		"no-trailing-spaces": "warn",
 		"no-use-before-define": "warn",
 		"object-curly-spacing": "off",
 		"object-property-newline": "off",

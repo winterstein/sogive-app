@@ -67,9 +67,10 @@ const impactCalc = ({charity, project, outputs, amount}) => {
 /**
  * Copy pasta from I18N.js (aka easyi18n)
  * @param {number} num 
- * @param {String} text 
+ * @param {String} text Can be undefined (returns undefined)
  */
 Misc.TrPlural = (num, text) => {
+	if ( ! text) return text;
 	let isPlural = Math.round(num) !== 1;
 	// Plural forms: 
 	// Normal: +s, +es (eg potatoes, boxes), y->ies (eg parties), +en (e.g. oxen)

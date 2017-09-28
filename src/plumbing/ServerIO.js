@@ -199,3 +199,8 @@ ServerIO.addDefaultParams = function(params) {
 	if ( ! params.data) params.data = {};
 	return params;
 };
+
+ServerIO.importDataSet = function(dataset) {
+	assert(_.isString(dataset));
+	return ServerIO.load('/import.json', {data: {dataset}} );
+};

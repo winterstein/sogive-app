@@ -56,11 +56,9 @@ public class SoGiveServer {
 
 	private static JettyLauncher esjl;
 
+	private static boolean initFlag;
+
 	public static void main(String[] args) {
-		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), args);
-		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), args); 
-		Log.d("stripe.config", FlexiGson.toJSON(sc));
-		Log.d("stripe.config.key", StripePlugin.secretKey());
 		
 		logFile = new LogFile(new File("sogive.log"))
 					// keep 8 weeks of 1 week log files ??revise this??
@@ -68,7 +66,8 @@ public class SoGiveServer {
 		
 		Log.i("Go!");
 		// storage layer (eg ES)
-		init();
+		SoGiveConfig config = init();
+		
 		assert jl==null;
 		jl = new JettyLauncher(new File("web"), config.port);
 		jl.setup();
@@ -97,7 +96,13 @@ public class SoGiveServer {
 		}
 	}
 
-	private static void init() {
+	public synchronized static SoGiveConfig init() {
+		if (initFlag) return Dep.get(SoGiveConfig.class);		
+		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), null);
+		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), null); 
+		Log.d("stripe.config", FlexiGson.toJSON(sc));
+		Log.d("stripe.config.key", StripePlugin.secretKey());
+
 		// gson		
 		Gson gson = new FlexiGsonBuilder()
 		.setLenientReader(true)
@@ -119,8 +124,10 @@ public class SoGiveServer {
 		// mappings
 		DB.init();
 		// login
-		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+//		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
+		initFlag = true;
+		return config;
 	}
 
 

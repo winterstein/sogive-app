@@ -23,6 +23,7 @@ class EditorDashboardPage extends React.Component {
 				<h3>In development...</h3>
 				<AddCharityWidget />
 				<AddEditorWidget />
+				<ImportDataWidget />
 			</div>
 		);
 	}
@@ -57,5 +58,16 @@ const AddEditorWidget = () => {
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
 	</Misc.Card>);
 };
+
+const ImportDataWidget = () => {
+	return (<Misc.Card title='Import Data Set' >		
+		
+		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('OSCR')}>Import OSCR Data</button>
+
+		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('oldSpreadsheet')}>Import Old Spreadsheet Data</button>
+
+	</Misc.Card>);
+};
+
 
 export default EditorDashboardPage;

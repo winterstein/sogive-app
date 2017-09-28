@@ -31,6 +31,7 @@ public class NGO extends Thing<NGO> {
 		
 	}
 	
+	
 	public void setTags(String tags) {
 		put("tags", tags); // TODO split. Notes say & but not sure the data follows that				
 	}
