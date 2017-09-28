@@ -1,4 +1,6 @@
 # sogive-app
+
+[![Join the chat at https://gitter.im/sogive/Lobby](https://badges.gitter.im/sogive/Lobby.svg)](https://gitter.im/sogive/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 The SoGive user app - See your impact.
 
 Try it out: <https://app.sogive.org>
