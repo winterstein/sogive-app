@@ -121,14 +121,7 @@ const CharityAbout = ({charity}) => {
 	return (
 		<div className='charity-about'>
 			{NGO.name(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.name(charity)}</h4> : null}
-			<div className='images'>
-				{NGO.image(charity)? <div className='charity-image'>
-					<img src={NGO.image(charity)} alt='Charity' />
-				</div> : null}
-				{charity.logo? <div className='charity-logo'>
-					<img src={charity.logo} alt='Charity logo' />
-				</div> : null}
-			</div>
+			<CharityAboutImage charity={charity} />
 			<div className='descriptions'>
 				<div className='description-short'>
 					{charity.summaryDescription? <ReactMarkdown source={charity.summaryDescription} /> : null}
@@ -145,6 +138,17 @@ const CharityAbout = ({charity}) => {
 			</div>
 		</div>
 	);
+};
+const CharityAboutImage = ({charity}) => {
+	if ( ! NGO.image(charity) && ! charity.logo) return null;
+	return (<div className='images'>
+		{NGO.image(charity)? <div className='charity-image'>
+			<img src={NGO.image(charity)} alt='Charity' />
+		</div> : null}
+		{charity.logo? <div className='charity-logo'>
+			<img src={charity.logo} alt='Charity logo' />
+		</div> : null}
+	</div>);
 };
 
 const CharityExtra = ({charity}) => {
