@@ -38,6 +38,21 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> implem
 	}
 	
 	/**
+	 * Remove on null. Treats blank "" value as null
+	 */
+	@Override
+	public Object put(String key, Object value) {
+		if (value instanceof String && Utils.isBlank((String)value)) {
+			value = null;
+		}
+		if (value == null) {
+			return remove(key);
+		}
+		return super.put(key, value);
+	}
+
+	
+	/**
 	 * 
 	 * @param key
 	 * @return null if unset

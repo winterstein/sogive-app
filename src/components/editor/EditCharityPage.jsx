@@ -116,8 +116,10 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='displayName' label='Display name'
 			help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
 		
-		<EditField label='Parent charity' item={charity} type='text' 
+		<EditField label='Parent charity ID' item={charity} type='text' 
 			field='parentCharity' help='Usually blank. The ID of the parent charity, if there is one. Preferably the SoGive ID, but a registration number is OK.' />
+		<EditField label='Parent charity name' item={charity} type='text' 
+			field='parentCharityName' help='Usually blank. The name of the parent charity, if there is one.' />
 
 		<div className='well'>
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
