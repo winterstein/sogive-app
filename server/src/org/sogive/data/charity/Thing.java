@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 
 import com.winterwell.depot.IInit;
 import com.winterwell.gson.FlexiGson;
+import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.ReflectionUtils;
@@ -155,7 +156,7 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> implem
 	
 	public static <X extends Thing> X getThing(Object obj, Class<X> klass) {
 		if (obj instanceof Thing) return (X) obj;
-		FlexiGson gson = Dep.get(FlexiGson.class);
+		Gson gson = Dep.get(Gson.class);
 		if (obj instanceof String) {			
 			Object map = gson.fromJson((String)obj);
 			assert ! (map instanceof String) : map;
