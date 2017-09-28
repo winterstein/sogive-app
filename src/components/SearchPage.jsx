@@ -283,7 +283,10 @@ const SearchResult = ({ item }) => {
 			<div className='impact-detail'>
 				1 unit of impact will be brought about by this amount of donation
 			</div>
-			<a href={charityUrl} className='read-more'>Read more<img className='read-more-caret' src='/img/read-more-caret.svg' /></a>
+			<a href={charityUrl} className='read-more'>
+				Read more
+				<img className='read-more-caret' src='/img/read-more-caret.svg' />
+			</a>
 		</div>
 	) : null;
 	
@@ -418,12 +421,20 @@ const PageLink = ({pageNum, title, children}) => {
 	);
 };
 
-
-const DownloadLink = () => {
-	if ( ! Login.isLoggedIn()) return null;
+const DownloadLink = ({total}) => {
+	let noCos = false;
+	if ( ! Login.isLoggedIn()) noCos = "not logged in";
+	if ( ! total) noCos = "no results";
 	const locn = ""+window.location;
 	const qi = locn.indexOf('?');
 	const qry = qi === -1? '' : locn.substr(qi+1);
+	if (noCos) {
+		return (
+			<span className='pull-right' 
+				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}>
+				<Glyphicon glyph='download-alt' /> csv
+			</span>);	
+	}
 	return (
 		<a className='pull-right' 
 			title='Download these reults in .csv (spreadsheet) format'

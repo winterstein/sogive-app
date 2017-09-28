@@ -45,7 +45,7 @@ import com.winterwell.web.app.AppUtils;
 
 public class ImportOSCRData {
 
-	private static final String OSCR_REG = "scotlandCharityRegNum";
+	public static final String OSCR_REG = "scotlandCharityRegNum";
 
 	public static void main(String[] args) {		
 		

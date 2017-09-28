@@ -103,6 +103,7 @@ public class SoGiveServer {
 		.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
 		Dep.set(Gson.class, gson);
+				
 		// config
 		ESConfig value = new ESConfig();
 		value.setGson(gson);
