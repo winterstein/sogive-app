@@ -27,6 +27,8 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig; 
@@ -67,6 +69,8 @@ public class SearchServlet {
 			s.setQuery(qb);
 		}
 		// TODO test ordering.
+		SortBuilder recSort = SortBuilders.fieldSort("recommend").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
+		s.addSort(recSort);
 		s.addSort("name.raw", SortOrder.ASC);
 //		s.addSort("@id", SortOrder.ASC);
 		// TODO paging!

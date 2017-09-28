@@ -167,11 +167,13 @@ class SearchForm extends React.Component {
 	} // ./render
 } //./SearchForm
 
+
 const FieldClearButton = ({onClick, children}) => (
 	<span className='field-clear-button visible-xs-block' onClick={onClick}>
 		{children}
 	</span>
 );
+
 
 const SearchResults = ({ results, total, query }) => {
 	if ( ! results) results = [];
@@ -182,11 +184,20 @@ const SearchResults = ({ results, total, query }) => {
 	return (
 		<div className='SearchResults'>
 			<SearchResultsNum results={results} total={total} query={query} />
-			{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
-			{unready.length? <div className='unready-results col-md-10'><h3>Analysis in progress</h3>SoGive is working to collect data and model the impact of every UK charity -- all 200,000.</div> : null}
-			{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
-		</div>);
+			<div className='results-list'>
+				{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
+				{ unready.length ? (
+					<div className='unready-results row'>
+						<h3>Analysis in progress</h3>
+						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
+					</div>
+				) : null}
+				{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
+			</div>
+		</div>
+	);
 }; //./SearchResults
+
 
 const SearchResultsNum = ({results, total, query}) => {
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
@@ -194,6 +205,101 @@ const SearchResultsNum = ({results, total, query}) => {
 	if (results.length || query) return <div className='num-results'>{total} results found</div>;
 	return <div className='num-results' />; // ?!
 };
+
+// The +/- buttons don't just work linearly - bigger numbers = bigger jumps
+// Amount up to {key} => increment of {value}
+const donationIncrements = {
+	10: 1,
+	50: 5,
+	100: 10,
+	500: 50,
+	1000: 100,
+	5000: 500,
+	10000: 1000,
+	50000: 5000,
+	Infinity: 10000,
+};
+
+
+const SearchResult = ({ item }) => {
+	let project = NGO.getProject(item);
+	let status = item.status;
+	let page = status===C.STATUS.DRAFT? 'edit' : 'charity';
+
+	// The donation picker needs to store its value
+	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
+	// const impactDesc = <ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />;
+	const impact = impactCalc({charity: item, project, outputs: project && project.outputs, amount: false});
+	// Need to use impactCalc again
+
+	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
+	const charityName = item.displayName || item.name || '';
+	let charityDesc = item.summaryDescription || item.description || '';
+	let commonPrefixLength = 0;
+	for (let i = 0; i < charityName.length && i < charityDesc.length; i++) {
+		if (charityName[i] === charityDesc[i]) {
+			commonPrefixLength = i + 1;
+		} else {
+			break;
+		}
+	}
+	if (commonPrefixLength >= 3) {
+		charityDesc = charityDesc.slice(commonPrefixLength).trim();
+	}
+
+	const recommendedTab = item.recommended ? (
+		<span className='recommended-tab'>Recommended Charity</span>
+	) : null;
+
+	const impactAmountEntry = impact ? (
+		<div className='amount col-md-1'>
+			<Misc.Money amount={impact.amount} />
+		</div>
+	) : null;
+
+	const impactExplanation = impact ? (
+		<div className='impact col-md-6'>
+			<div className='impact-summary'>
+				<h3>Impact Summary:</h3>
+				will fund <span className='impactCount'>{impact.impactNum}</span> {impact.unitName}
+			</div>
+			<div className='impact-detail'>
+				1 unit of impact will be brought about by this amount of donation
+			</div>
+			<a className='read-more'>
+				Read more
+			</a>
+		</div>
+	) : null;
+	
+	const noImpact = !impact ? (
+		<div className='noImpact col-md-7'>
+			We don't have impact data!
+		</div>
+	) : null;
+
+	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
+	return (
+		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
+			{recommendedTab}
+			<a href={charityUrl} className='logo col-md-2'>
+				{item.logo? (
+					<img className='charity-logo' src={item.logo} alt={`Logo for ${charityName}`} />
+				) : (
+					<div className='charity-logo-placeholder'>{charityName}</div>
+				)}
+			</a>
+			<a href={charityUrl} className='text-summary col-md-3'>
+				<span className='name'>{charityName}</span>
+				<span className='description'>{charityDesc}</span>
+			</a>
+			{impactAmountEntry}
+			{impactExplanation}
+			{noImpact}
+		</div>
+	);
+}; //./SearchResult
+
 
 const SearchPager = ({total, from = 0}) => {
 	const pageCount = Math.ceil(total / RESULTS_PER_PAGE);
@@ -247,25 +353,3 @@ const SearchPager = ({total, from = 0}) => {
 
 	return <div>{pageLinks}</div>;
 };
-
-const SearchResult = ({ item }) => {
-	let project = NGO.getProject(item);
-	let status = item.status;
-	let page = status===C.STATUS.DRAFT? 'edit' : 'charity';
-	return (
-		<div className='SearchResult col-md-10' >
-			<Media>
-				<a href={'#'+page+'?charityId='+encURI(NGO.id(item))}>
-					<Media.Left>
-						{item.logo? <img className='charity-logo' src={item.logo} alt={`Logo for ${item.displayName || item.name}`} /> : null}
-					</Media.Left>
-					<Media.Body>
-						<Media.Heading>{item.displayName || item.name}</Media.Heading>
-						<p>{item.summaryDescription || item.description}</p>
-						<ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />
-					</Media.Body>
-				</a>
-			</Media>
-		</div>
-	);
-}; //./SearchResult
