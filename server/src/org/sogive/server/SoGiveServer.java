@@ -83,18 +83,8 @@ public class SoGiveServer {
 //		Log.i("web", "...Launching ES proxy on port "+esjl.getPort());
 //		esjl.run();
 		
-		initCharityData();
 	}
 
-
-	private static void initCharityData() {
-		try {
-			File export = new File("data/charities.csv");
-			new ImportCharityDataFromCSV(export).run();
-		} catch(Throwable ex) {
-			Log.e("init", ex);
-		}
-	}
 
 	public synchronized static SoGiveConfig init() {
 		if (initFlag) return Dep.get(SoGiveConfig.class);		

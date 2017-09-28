@@ -48,13 +48,21 @@ public class ImportOSCRData {
 	private static final String OSCR_REG = "scotlandCharityRegNum";
 
 	public static void main(String[] args) {		
+		
+		SoGiveServer.init();
+		
+		new ImportOSCRData().run();
+	}
+
+	private volatile boolean running;
+
+	public synchronized void run() {
+		running = true;
 		Desc<File> desc = getDesc();
 		Depot.getDefault().setErrorPolicy(KErrorPolicy.ASK);
 		File file = Depot.getDefault().get(desc);
 		System.out.println(file);
-		
-		SoGiveServer.init();
-		
+
 		BufferedReader r = FileUtils.getZIPReader(file);
 		CSVReader reader = new CSVReader(r, new CSVSpec());
 		int cnt = 0;
@@ -93,9 +101,10 @@ public class ImportOSCRData {
 				// TODO merge?!				
 			}
 			cnt++;
-			if (cnt>10) break;
+//			if (cnt>10) break;
 		}
 		reader.close();
+		running = false;
 	}
 
 	private static void doCreateCharity(NGO ngo, String[] row) {
@@ -134,6 +143,10 @@ public class ImportOSCRData {
 		desc.put("src", "oscr");
 		desc.put("year", 2017);
 		return desc;
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 	
 }

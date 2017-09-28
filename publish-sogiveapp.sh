@@ -89,19 +89,19 @@ for server in ${TARGET[*]}; do
 			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
 		fi
 	echo "syncing the new Jars..."
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/tmp-lib/*.jar winterwell@$server:/home/winterwell/sogive-app/lib/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/tmp-lib/* winterwell@$server:/home/winterwell/sogive-app/lib/
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/bin/* winterwell@$server:/home/winterwell/sogive-app/bin/
 	echo "syncing everything..."
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/config/* winterwell@$server:/home/winterwell/sogive-app/config/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/server/* winterwell@$server:/home/winterwell/sogive-app/server/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/config/* winterwell@$server:/home/winterwell/sogive-app/config/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/server/* winterwell@$server:/home/winterwell/sogive-app/server/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/test/* winterwell@$server:/home/winterwell/sogive-app/test/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/web/* winterwell@$server:/home/winterwell/sogive-app/web/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/package.json winterwell@$server:/home/winterwell/sogive-app/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/webpack* winterwell@$server:/home/winterwell/sogive-app/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/* winterwell@$server:/home/winterwell/sogive-app/web/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/package.json winterwell@$server:/home/winterwell/sogive-app/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/webpack* winterwell@$server:/home/winterwell/sogive-app/
 # @DA could you doc this line - thanks ^DW
-	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/.babelrc winterwell@$server:/home/winterwell/sogive-app/web/build/js/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/.babelrc winterwell@$server:/home/winterwell/sogive-app/web/build/js/
 	echo "done syncing"
 	echo ""
 	echo "satisfying NPM dependencies..."
