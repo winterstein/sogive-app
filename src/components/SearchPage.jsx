@@ -56,7 +56,7 @@ export default class SearchPage extends React.Component {
 			searchPager = (
 				<div className='col-md-12'>
 					<SearchPager total={this.state.total} from={from} />
-					<DownloadLink />
+					<DownloadLink total={this.state.total} />
 				</div>
 			);
 		}
@@ -370,11 +370,20 @@ const SearchPager = ({total, from = 0}) => {
 };
 
 
-const DownloadLink = () => {
-	if ( ! Login.isLoggedIn()) return null;
+const DownloadLink = ({total}) => {
+	let noCos = false;
+	if ( ! Login.isLoggedIn()) noCos = "not logged in";
+	if ( ! total) noCos = "no results";
 	const locn = ""+window.location;
 	const qi = locn.indexOf('?');
 	const qry = qi === -1? '' : locn.substr(qi+1);
+	if (noCos) {
+		return (
+			<span className='pull-right' 
+				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}>
+				<Glyphicon glyph='download-alt' /> csv
+			</span>);	
+	}
 	return (
 		<a className='pull-right' 
 			title='Download these reults in .csv (spreadsheet) format'

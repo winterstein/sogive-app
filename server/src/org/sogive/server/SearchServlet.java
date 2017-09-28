@@ -40,7 +40,8 @@ import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.charity.SoGiveConfig; 
+import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.data.loader.ImportOSCRData; 
 
 public class SearchServlet implements IServlet {
 
@@ -121,40 +122,29 @@ public class SearchServlet implements IServlet {
 		// TODO proper recursive
 		ObjectDistribution<String> headers = new ObjectDistribution();
 		for (Map<String,Object> hit : hits2) {
-			hit.keySet().forEach(key -> {
-				Object v = hit.get(key);
-				if (v instanceof Map) {
-					Map subhit = (Map) v;
-					subhit.keySet().forEach(subkey -> {
-						Object sv = subhit.get(subkey);
-						if (sv instanceof Map || sv instanceof List) return;
-						headers.count(key+"."+subkey);	
-					});
-				} else if (v instanceof List) {
-					List subhit = (List) v;
-					for(int i=0; i<subhit.size(); i++) {
-						Object sv = subhit.get(i);
-						if (sv instanceof Map || sv instanceof List) return;
-						headers.count(key+"."+i);	
-					};
-				} else {
-					// a simple value
-					headers.count(key);
-				}
-			});
+			getHeaders(hit, new ArrayList(), headers);
 		}
 		// prune
 		if (hits2.size() >= 1) {
-			int min = Math.min(hits2.size(), 4);
-			headers.pruneBelow(min);
+			int min = (int) (hits2.size() * 0.2);
+			if (min>0) headers.pruneBelow(min);
 		}
 		// sort
 		ArrayList<String> hs = new ArrayList(headers.keySet());
-		hs.remove("name"); hs.remove("@id");
+		// all the level 1 headers
+		List<String> level1 = Containers.filter(hs, h -> ! h.contains("."));
+		hs.removeAll(level1);
 		Collections.sort(hs);
-		hs.add(0, "@id");
-		hs.add(0, "name");
-		hs.remove("@type");
+		Collections.sort(level1);		
+		// start with ID, name
+		level1.remove("name");
+		level1.remove("@id");
+		Collections.reverse(level1);
+		level1.add("name");
+		level1.add("@id");		
+		level1.forEach(h -> hs.add(0, h));
+		hs.removeIf(h -> h.contains("@type") || h.contains("value100"));
+		
 		// write
 		w.write(hs);
 		for (Map hit : hits2) {
@@ -169,6 +159,32 @@ public class SearchServlet implements IServlet {
 		String csv = sout.toString();
 		state.getResponse().setContentType(WebUtils.MIME_TYPE_CSV); // + utf8??
 		WebUtils2.sendText(csv, state.getResponse());
+	}
+
+	private void getHeaders(Object hit, ArrayList path, ObjectDistribution<String> headers) {
+		if (hit instanceof Map) {
+			Map<String,Object> hmap = (Map<String, Object>) hit;
+			hmap.keySet().forEach(key -> {
+				Object v = hmap.get(key);
+				ArrayList path2 = new ArrayList(path);
+				path2.add(key);
+				getHeaders(v, path2, headers);
+			});
+			return;
+		}
+		if (hit instanceof List) {
+			List subhit = (List) hit;
+			for(int i=0; i<subhit.size(); i++) {
+				Object sv = subhit.get(i);
+				ArrayList path2 = new ArrayList(path);
+				path2.add(i);
+				getHeaders(sv, path2, headers);
+			};
+			return;
+		}
+		// as is
+		if (path.isEmpty()) return;
+		headers.count(StrUtils.join(path, "."));
 	}
 
 
