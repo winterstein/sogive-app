@@ -88,7 +88,15 @@
 		}
 	}
 	.amount {
-
+		display: flex;
+    flex-direction: column;
+    justify-content: center;
+		font-size: 200%;
+		.money {
+			.amount {
+				color: #df9232;
+			}
+		}
 	}
 	.impact {
 		.impact-summary {
@@ -98,6 +106,7 @@
 			}
 			h3 {
 				text-decoration: underline;
+				margin: 0.5em;
 			}
 			border-bottom: 1px solid #df9232;
 		}
@@ -105,7 +114,13 @@
 
 		}
 		.read-more {
-
+			position: absolute;
+			bottom: 0.5em;
+			right: 0.5em;
+			text-transform: lowercase;
+			font-size: 120%;
+			background-color: #eec694;
+			padding: 0.25em 7em 0.25em 0.5em;
 		}
 	}
 }

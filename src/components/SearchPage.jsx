@@ -43,18 +43,31 @@ export default class SearchPage extends React.Component {
 		if (q==='ERROR') { // HACK
 			throw new Error("Argh!");
 		}
+
+		let searchResults = null;
+		let searchPager = null;
+		// Show results box if (a) a query was entered (so we get "No Results") or (b) there were results (so Show All works)
+		if (this.state.q || this.state.total) {
+			searchResults = (
+				<div className='col-md-12'>
+					<SearchResults results={this.state.results} total={this.state.total} query={q} />
+				</div>
+			);
+			searchPager = (
+				<div className='col-md-12'>
+					<SearchPager total={this.state.total} from={from} />
+					<DownloadLink />
+				</div>
+			);
+		}
+
 		return (
 			<div className='page SearchPage'>
 				<div className='col-md-12'>
 					<SearchForm query={q} from={from} status={status} setResults={this.setResults.bind(this)}/>
 				</div>
-				<div className='col-md-12'>
-					<SearchResults results={this.state.results} total={this.state.total} query={q} />
-				</div>
-				<div className='col-md-12'>
-					<SearchPager total={this.state.total} from={from} />
-					<DownloadLink />
-				</div>
+				{searchResults}
+				{searchPager}
 				<div className='col-md-10'>
 					<FeaturedCharities />
 				</div>
@@ -263,7 +276,7 @@ const SearchResult = ({ item }) => {
 		<div className='impact col-md-6'>
 			<div className='impact-summary'>
 				<h3>Impact Summary:</h3>
-				will fund <span className='impactCount'>{impact.impactNum}</span> {impact.unitName}
+				will fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
 			</div>
 			<div className='impact-detail'>
 				1 unit of impact will be brought about by this amount of donation
