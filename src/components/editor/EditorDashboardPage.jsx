@@ -61,7 +61,7 @@ const AddEditorWidget = () => {
 
 const ImportDataWidget = () => {
 	return (<Misc.Card title='Import Data Set' >		
-		
+		<p>Do NOT repeat click these.</p>
 		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('OSCR')}>Import OSCR Data</button>
 
 		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('oldSpreadsheet')}>Import Old Spreadsheet Data</button>
