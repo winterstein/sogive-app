@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="3.6253569mm"
+   height="4.8458557mm"
+   viewBox="0 0 3.6253569 4.8458557"
+   version="1.1"
+   id="svg5744"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="read-more-caret.svg">
+  <defs
+     id="defs5738" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="15.458967"
+     inkscape:cy="-3.6363308"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="832"
+     inkscape:window-height="429"
+     inkscape:window-x="550"
+     inkscape:window-y="300"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5741">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-106.27868,-133.51083)">
+    <path
+       style="fill:#3f4151;stroke-width:0.26458332"
+       inkscape:connector-curvature="0"
+       id="path394-3"
+       d="m 106.28397,133.68413 c 0.17198,-0.2196 0.20108,-0.22489 0.47361,-0.0476 l 1.778,1.15887 c 0.37041,0.24077 0.74083,0.4789 1.1086,0.72232 a 0.45772917,0.45772917 0 0 1 0,0.8255 q -1.47902,0.96308 -2.96333,1.92087 c -0.0423,0.0265 -0.0794,0.0608 -0.12171,0.0926 h -0.13758 a 0.17197917,0.17197917 0 0 1 -0.13759,-0.13758 v -0.1376 a 1.3520208,1.3520208 0 0 1 0.26458,-0.40746 c 0.40746,-0.51065 0.79375,-1.02658 1.20915,-1.53988 0.14817,-0.18785 0.14817,-0.20902 0,-0.39687 q -0.62706,-0.81492 -1.26206,-1.62719 a 1.8335625,1.8335625 0 0 1 -0.21696,-0.32279 z"
+       class="cls-8" />
+  </g>
+</svg>

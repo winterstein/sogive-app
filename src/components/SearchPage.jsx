@@ -50,13 +50,7 @@ export default class SearchPage extends React.Component {
 		if (this.state.q || this.state.total) {
 			searchResults = (
 				<div className='col-md-12'>
-					<SearchResults results={this.state.results} total={this.state.total} query={q} />
-				</div>
-			);
-			searchPager = (
-				<div className='col-md-12'>
-					<SearchPager total={this.state.total} from={from} />
-					<DownloadLink total={this.state.total} />
+					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} />
 				</div>
 			);
 		}
@@ -190,7 +184,7 @@ const FieldClearButton = ({onClick, children}) => (
 );
 
 
-const SearchResults = ({ results, total, query }) => {
+const SearchResults = ({ results, total, query, from }) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -198,6 +192,7 @@ const SearchResults = ({ results, total, query }) => {
 	const unready = _.filter(results, r => ! NGO.isReady(r) );
 	return (
 		<div className='SearchResults'>
+			<div className='top-tab'>Results for &ldquo;{query}&rdquo;</div>
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
@@ -208,6 +203,10 @@ const SearchResults = ({ results, total, query }) => {
 					</div>
 				) : null}
 				{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
+				<SearchPager total={total} from={from} />
+			</div>
+			<div className='col-md-12'>
+				<DownloadLink />
 			</div>
 		</div>
 	);
@@ -217,7 +216,7 @@ const SearchResults = ({ results, total, query }) => {
 const SearchResultsNum = ({results, total, query}) => {
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
 	if (loading) return <div className='num-results'><Misc.Loading /></div>;
-	if (results.length || query) return <div className='num-results'>{total} results found</div>;
+	if (results.length || query) return <div className='num-results'>{total} charities found</div>;
 	return <div className='num-results' />; // ?!
 };
 
@@ -240,6 +239,7 @@ const SearchResult = ({ item }) => {
 	let project = NGO.getProject(item);
 	let status = item.status;
 	let page = status===C.STATUS.DRAFT? 'edit' : 'charity';
+	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
 
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
@@ -262,13 +262,15 @@ const SearchResult = ({ item }) => {
 		charityDesc = charityDesc.slice(commonPrefixLength).trim();
 	}
 
-	const recommendedTab = item.recommended ? (
-		<span className='recommended-tab'>Recommended Charity</span>
+	const recommendedTab = item.recommend ? (
+		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
 	) : null;
 
 	const impactAmountEntry = impact ? (
-		<div className='amount col-md-1'>
+		<div className='amount-picker col-md-1'>
+			<img className='change-donation-amount' src='/img/donation-amount-up.svg' />
 			<Misc.Money amount={impact.amount} />
+			<img className='change-donation-amount' src='/img/donation-amount-down.svg' />
 		</div>
 	) : null;
 
@@ -281,8 +283,9 @@ const SearchResult = ({ item }) => {
 			<div className='impact-detail'>
 				1 unit of impact will be brought about by this amount of donation
 			</div>
-			<a className='read-more'>
+			<a href={charityUrl} className='read-more'>
 				Read more
+				<img className='read-more-caret' src='/img/read-more-caret.svg' />
 			</a>
 		</div>
 	) : null;
@@ -293,9 +296,9 @@ const SearchResult = ({ item }) => {
 		</div>
 	) : null;
 
-	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
+	
 	return (
-		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
+		<div className={`SearchResult row ${item.recommend ? 'recommended' : ''}`} >
 			{recommendedTab}
 			<a href={charityUrl} className='logo col-md-2'>
 				{item.logo? (
@@ -349,26 +352,74 @@ const SearchPager = ({total, from = 0}) => {
 			pageNumbers.push(i);
 		}
 	}
+
 	const pageLinks = pageNumbers.map((pageNum, index) => {
 		if (Number.isInteger(pageNum)) {
 			if (pageNum === thisPage) {
-				return <span key={`search-page-${pageNum}`}>{pageNum}</span>;
+				return <span key={`search-page-${pageNum}`} className='pager-button current-page' title={`Viewing page ${pageNum}`}>{pageNum}</span>;
 			}
-			const newFrom = (pageNum - 1) * RESULTS_PER_PAGE;
-			const newHash = modifyHash(null, {from: newFrom}, true);
-			const goToPage = (event) => {
-				DataStore.setUrlValue('from', newFrom);
-				event.stopPropagation();
-				event.preventDefault();
-			};
-			return <a href={window.location.pathname + newHash} onClick={goToPage} key={`search-page-${pageNum}`}>{pageNum}</a>;
+			return <PageLink key={`search-page-${pageNum}`} pageNum={pageNum} />;
 		}
-		return <span key={`search-page-gap-${index}`}>{pageNum}</span>;
+		return <span key={`search-page-gap-${index}`} className='pager-button no-page'>{pageNum}</span>;
 	});
 
-	return <div>{pageLinks}</div>;
+	if (thisPage > 1) {
+		pageLinks.unshift(
+			<PageLink key={`search-page-prev`} pageNum={thisPage - 1} title='Previous page'>
+				&lt;
+			</PageLink>
+		);
+	}
+	if (thisPage > 2) {
+		pageLinks.unshift(
+			<PageLink key={`search-page-first`} pageNum={1} title='First page'>
+				&lt;&lt;
+			</PageLink>
+		);
+	}
+	if (pageCount - thisPage > 0) {
+		pageLinks.push(
+			<PageLink key={`search-page-next`} pageNum={thisPage + 1} title='Next page'>
+				&gt;
+			</PageLink>
+		);
+	}
+	if (pageCount - thisPage > 1) {
+		pageLinks.push(
+			<PageLink key={`search-page-last`} pageNum={pageCount} title='Last page'>
+				&gt;&gt;
+			</PageLink>
+		);
+	}
+
+
+	return (
+		<div className='search-pager'>
+			{pageLinks}
+		</div>
+	);
 };
 
+const PageLink = ({pageNum, title, children}) => {
+	const newFrom = (pageNum - 1) * RESULTS_PER_PAGE;
+	const newHash = modifyHash(null, {from: newFrom}, true);
+	const goToPage = (event) => {
+		DataStore.setUrlValue('from', newFrom);
+		event.stopPropagation();
+		event.preventDefault();
+	};
+	
+	return (
+		<a 
+			href={window.location.pathname + newHash}
+			className='pager-button'
+			onClick={goToPage}
+			title={title || `Go to page ${pageNum}`}
+		>
+			{children || pageNum}
+		</a>
+	);
+};
 
 const DownloadLink = ({total}) => {
 	let noCos = false;
