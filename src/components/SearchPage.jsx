@@ -120,12 +120,14 @@ class SearchForm extends React.Component {
 	onSubmit(e) {
 		e.preventDefault();
 		console.warn("submit",this.state);
-		this.search(this.state.q || '', this.props.status, this.props.from);
+		this.search(this.state.q || '', this.props.status, 0);
 	}
 
 	search(query, status, from, recommended) {
 		// Put search query in URL so it's bookmarkable / shareable
 		DataStore.setUrlValue("q", query);
+		DataStore.setUrlValue("from", from);
+		
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
 		const all = !recommended && !query;
 
