@@ -16,6 +16,7 @@ import C from '../C';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
 
+const MAX_RESULTS = 10000;
 const RESULTS_PER_PAGE = 20;
 const MAX_PAGES = 10;
 
@@ -358,7 +359,7 @@ const SearchResult = ({ item }) => {
 
 
 const SearchPager = ({total, from = 0}) => {
-	const pageCount = Math.ceil(total / RESULTS_PER_PAGE);
+	const pageCount = Math.min(Math.ceil(total / RESULTS_PER_PAGE), MAX_RESULTS / RESULTS_PER_PAGE);
 	const thisPage = Math.ceil((from / RESULTS_PER_PAGE) + 1);
 	const pageNumbers = [];
 	if (pageCount > MAX_PAGES) {
