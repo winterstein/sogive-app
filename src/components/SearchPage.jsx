@@ -280,7 +280,7 @@ const SearchResult = ({ item }) => {
 	) : null;
 
 	const impactAmountEntry = impact ? (
-		<div className={`amount-picker col-md-1 col-xs-2 ${impact.amount.value >= 10000? 'long-amount' : ''}`}>
+		<div className={`amount-picker col-md-1 hidden-xs ${impact.amount.value >= 10000? 'long-amount' : ''}`}>
 			<img className='change-donation-amount' title='Increase donation' src='/img/donation-amount-up.svg' onClick={() => changeTarget(1)}/>
 			<Misc.Money amount={impact.amount} precision={2} />
 			<img className='change-donation-amount' title='Decrease donation' src='/img/donation-amount-down.svg' onClick={() => changeTarget(-1)}/>
@@ -288,7 +288,7 @@ const SearchResult = ({ item }) => {
 	) : null;
 
 	const impactExplanation = impact ? (
-		<div className='impact col-md-5 col-xs-10'>
+		<div className='impact col-md-5 hidden-xs'>
 			<div className='impact-summary'>
 				<h3>Impact Summary</h3>
 				will fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
@@ -304,7 +304,7 @@ const SearchResult = ({ item }) => {
 	) : null;
 	
 	const noImpact = !impact ? (
-		<div className='noImpact col-md-6 col-xs-12'>
+		<div className='noImpact col-md-6 hidden-xs'>
 			Impact information is not available for this charity.
 		</div>
 	) : null;
