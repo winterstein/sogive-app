@@ -55,7 +55,10 @@ public class NGO extends Thing<NGO> {
 		put("projects", ps);
 		return ps;
 	}
-
+	
+	public boolean isReady() {
+		return Utils.truthy(get("ready"));
+	}
 	
 	public Project getRepProject() {
 		List<Project> projects = getProjects();
