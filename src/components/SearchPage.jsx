@@ -2,15 +2,16 @@
 import React from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
-import {Button, Form, FormGroup, FormControl, Glyphicon, Media, InputGroup} from 'react-bootstrap';
-import {uid, encURI, parseHash, modifyHash} from 'wwutils';
+import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
+import {uid, encURI, modifyHash} from 'wwutils';
 import Login from 'you-again';
 
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
-import {ImpactDesc, impactCalc} from './ImpactWidgetry';
+import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
@@ -27,11 +28,12 @@ export default class SearchPage extends React.Component {
 		};
 	}
 
-	setResults(results, total) {
+	setResults(results, total, from) {
 		assert(_.isArray(results));
 		this.setState({
 			results: results,
-			total: total
+			total: total,
+			from: from,
 		});
 	}
 
@@ -131,7 +133,7 @@ class SearchForm extends React.Component {
 				// 	charities: charities,
 				// 	total: total
 				// });
-				this.props.setResults(charities, total);
+				this.props.setResults(charities, total, from || 0);
 			}.bind(this));
 	}
 
@@ -190,9 +192,15 @@ const SearchResults = ({ results, total, query, from }) => {
 	// TODO adjust the DB to have ready always on the charity
 	const ready = _.filter(results, NGO.isReady);
 	const unready = _.filter(results, r => ! NGO.isReady(r) );
+	const resultsForText = query ? (
+		`Results for “${query}”`
+	) : (
+		`Showing all charities`
+	);
+
 	return (
 		<div className='SearchResults'>
-			<div className='top-tab'>Results for &ldquo;{query}&rdquo;</div>
+			<div className='top-tab'>{resultsForText}</div>
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
@@ -220,18 +228,14 @@ const SearchResultsNum = ({results, total, query}) => {
 	return <div className='num-results' />; // ?!
 };
 
-// The +/- buttons don't just work linearly - bigger numbers = bigger jumps
-// Amount up to {key} => increment of {value}
-const donationIncrements = {
-	10: 1,
-	50: 5,
-	100: 10,
-	500: 50,
-	1000: 100,
-	5000: 500,
-	10000: 1000,
-	50000: 5000,
-	Infinity: 10000,
+const ellipsize = (string, length) => {
+	if (string && string.length) {
+		if (string.length < length) {
+			return string;
+		}
+		return string.slice(0, length) + '…';
+	}
+	return '';
 };
 
 
@@ -241,11 +245,17 @@ const SearchResult = ({ item }) => {
 	let page = C.KStatus.isDRAFT(status)? 'edit' : 'charity';
 	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
 
+	// We need to make impact calculations so we can say e.g. "£1 will find X units of impact"
+	// We also need to store the suggested donation amount so the user can tweak it on the fly with buttons
+	let targetCount = DataStore.getValue(['widget','SearchResults', NGO.id(item), 'targetCount']);
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
-	// const impactDesc = <ImpactDesc charity={item} project={project} outputs={project && project.outputs} amount={false} />;
-	const impact = impactCalc({charity: item, project, outputs: project && project.outputs, amount: false});
-	// Need to use impactCalc again
+	const impact = impactCalc({charity: item, project, outputs: project && project.outputs, amount: false, targetCount: targetCount || 1});
+
+	// onClick methods for the donation up/down buttons (don't allow target-count less than 1)
+	const changeTarget = change => {
+		DataStore.setValue(['widget','SearchResults', NGO.id(item), 'targetCount'], Math.max((targetCount || 1) + change, 1));
+	};
 
 	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
 	const charityName = item.displayName || item.name || '';
@@ -267,21 +277,21 @@ const SearchResult = ({ item }) => {
 	) : null;
 
 	const impactAmountEntry = impact ? (
-		<div className='amount-picker col-md-1'>
-			<img className='change-donation-amount' src='/img/donation-amount-up.svg' />
-			<Misc.Money amount={impact.amount} />
-			<img className='change-donation-amount' src='/img/donation-amount-down.svg' />
+		<div className='amount-picker col-md-1 col-xs-2'>
+			<img className='change-donation-amount' title='Increase donation' src='/img/donation-amount-up.svg' onClick={() => changeTarget(1)}/>
+			<Misc.Money amount={impact.amount} precision={2} />
+			<img className='change-donation-amount' title='Decrease donation' src='/img/donation-amount-down.svg' onClick={() => changeTarget(-1)}/>
 		</div>
 	) : null;
 
 	const impactExplanation = impact ? (
-		<div className='impact col-md-6'>
+		<div className='impact col-md-5 col-xs-10'>
 			<div className='impact-summary'>
-				<h3>Impact Summary:</h3>
+				<h3>Impact Summary</h3>
 				will fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
 			</div>
 			<div className='impact-detail'>
-				1 unit of impact will be brought about by this amount of donation
+				{ellipsize(impact.description, 140)}
 			</div>
 			<a href={charityUrl} className='read-more'>
 				Read more
@@ -291,8 +301,8 @@ const SearchResult = ({ item }) => {
 	) : null;
 	
 	const noImpact = !impact ? (
-		<div className='noImpact col-md-7'>
-			We don't have impact data!
+		<div className='noImpact col-md-6 col-xs-12'>
+			Impact information is not available for this charity.
 		</div>
 	) : null;
 
@@ -300,16 +310,16 @@ const SearchResult = ({ item }) => {
 	return (
 		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
 			{recommendedTab}
-			<a href={charityUrl} className='logo col-md-2'>
+			<a href={charityUrl} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
 					<img className='charity-logo' src={item.logo} alt={`Logo for ${charityName}`} />
 				) : (
 					<div className='charity-logo-placeholder'>{charityName}</div>
 				)}
 			</a>
-			<a href={charityUrl} className='text-summary col-md-3'>
+			<a href={charityUrl} className='text-summary col-md-4 col-xs-8'>
 				<span className='name'>{charityName}</span>
-				<span className='description'>{charityDesc}</span>
+				<span className='description'>{ellipsize(charityDesc, 200)}</span>
 			</a>
 			{impactAmountEntry}
 			{impactExplanation}
@@ -444,5 +454,3 @@ const DownloadLink = ({total}) => {
 		</a>
 	);
 };
-
-

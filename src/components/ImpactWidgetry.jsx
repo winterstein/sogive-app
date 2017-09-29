@@ -32,7 +32,7 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 	);
 }; //./ImpactDesc
 
-const impactCalc = ({charity, project, outputs, amount}) => {
+const impactCalc = ({charity, project, outputs, amount, targetCount}) => {
 	if ( ! outputs || ! outputs.length) {
 		return null;
 	}
@@ -44,23 +44,29 @@ const impactCalc = ({charity, project, outputs, amount}) => {
 	}
 	const unitName = firstOutput.name || '';
 
+	// Requested a particular impact count? (ie "cost of helping 3 people")
+	if (targetCount) {
+		const cost = MonetaryAmount.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
+		return { prefix: '', amount: cost, impactNum: targetCount, unitName: Misc.TrPlural(targetCount, unitName), description: firstOutput.description };
+	}
+
 	// No amount? Just show unit cost, then.
 	if (!amount) {
-		return { prefix: '', amount: cpbraw, impactNum: 1, unitName: Misc.TrPlural(1, unitName) };
+		return { prefix: '', amount: cpbraw, impactNum: 1, unitName: Misc.TrPlural(1, unitName), description: firstOutput.description };
 	}
 
 	let prefix = '';
 	let people = 1;
 	if (amount / cpbraw.value < 0.75) {
 		people = cpbraw.value / amount;
-		prefix = printer.prettyNumber(people, 1)+' people donating ';
+		prefix = printer.prettyNumber(people, 1) + ' people donating ';
 	}
 	let impactNum = (amount / cpbraw.value) * people;
 
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(impactNum, unitName);
 
-	return { prefix, amount, impactNum, unitName: plunitName };
+	return { prefix, amount, impactNum, unitName: plunitName, description: firstOutput.description};
 };
 
 

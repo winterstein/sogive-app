@@ -12,6 +12,7 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.gson.Gson;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
@@ -28,6 +29,7 @@ import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.app.WebRequest.KResponseType;
+import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
@@ -51,6 +53,8 @@ public class SearchServlet implements IServlet {
 	public static final SField Q = new SField("q");
 	public static final IntField SIZE = new IntField("size");
 	public static final IntField FROM = new IntField("from");
+	public static final BoolField RECOMMENDED = new BoolField("recommended");
+	public static final BoolField FIXREADY = new BoolField("fixready");
 	/**
 	 * What will ES allow without scrolling??
 	 */
@@ -63,7 +67,36 @@ public class SearchServlet implements IServlet {
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
 		ESPath path = config.getPath(null, NGO.class, null, status);
 		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
+		
 		String q = state.get(Q);
+		boolean showRecommended = state.get(RECOMMENDED, false);
+		boolean fixReady = state.get(FIXREADY, false);
+		
+		if (fixReady) {
+			SearchResponse sr = s.get();
+			List<Map> hits = sr.getHits();
+			for (Map hit : hits) {
+				Map charity = (Map) hit.get("_source");
+				boolean charityReady = false;
+				
+				List<Map> projects = (List<Map>) ((Map)charity).get("projects");
+				if (projects == null) continue;
+				for (Map project : projects) {
+					Object ready = project.get("ready");
+					if (ready != null && (Boolean.TRUE.equals(ready) || "true".equals(ready))) {
+						charityReady = true;
+						break;
+					}
+				}
+				
+				if (charityReady) {
+					charity.put("ready", true);
+					
+					
+				}
+			}
+		}
+		
 		if ( q != null) {
 			// Do we want this to handle e.g. accents??
 			// Can ES do it instead??
@@ -78,10 +111,17 @@ public class SearchServlet implements IServlet {
 //					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
 //							.operator(Operator.AND);			
 			s.setQuery(qb);
+		} else if (showRecommended) {
+			QueryBuilder qb = QueryBuilders.termQuery("recommended", "true");
+			s.setQuery(qb);
 		}
 		// TODO test ordering.
+		// Show recommended charities before all other results
 		SortBuilder recSort = SortBuilders.fieldSort("recommended").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
 		s.addSort(recSort);
+		// Prioritise charities marked "ready for use"
+		SortBuilder readySort = SortBuilders.fieldSort("ready").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
+		s.addSort(readySort);
 		s.addSort("name.raw", SortOrder.ASC);
 //		s.addSort("@id", SortOrder.ASC);
 		// TODO paging!
