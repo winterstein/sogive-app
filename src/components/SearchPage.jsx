@@ -374,7 +374,7 @@ const SearchPager = ({total, from = 0}) => {
 			pageNumbers.push('…');
 			pageNumbers.push(pageCount);
 		} else if (thisPage >= pageCount - 3) {
-			pageNumbers.push('1');
+			pageNumbers.push(1);
 			pageNumbers.push('…');
 			for (let i = thisPage - 2; i <= pageCount; i++) {
 				pageNumbers.push(i);
