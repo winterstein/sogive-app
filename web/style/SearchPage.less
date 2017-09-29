@@ -37,8 +37,7 @@
 }
 
 .unready-results {
-	margin-top: 10em;
-	margin-bottom: 5em;
+	margin: 1em;
 	border-bottom: 1px dashed @colour-01;
 }
 
@@ -92,6 +91,7 @@
 	.logo {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		text-align: center;
 
 		.charity-logo {
@@ -101,10 +101,14 @@
 		}
 		.charity-logo-placeholder {
 			font-size: 175%;
+			&.long-name {
+				font-size: 150%;
+			}
 		}
 	}
 	.text-summary {
 		background-color: #e5e5e5;
+		padding: 0.5em;
 		.name {
 			color: #df9232;
 			margin-right: 0.3em;
@@ -118,7 +122,10 @@
     flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		font-size: 200%;
+		font-size: 175%;
+		&.long-amount .money {
+			font-size: 80%;
+		}
 		.money {
 			.amount {
 				color: #df9232;
@@ -145,9 +152,11 @@
 
 		}
 		.read-more {
-			position: absolute;
+			float: right;
+			position: relative;
 			bottom: 0.5em;
 			right: 0.5em;
+			margin-top: 0.5em;
 			text-transform: lowercase;
 			font-size: 120%;
 			background-color: #eec694;
@@ -235,8 +244,40 @@
 .field-clear-button {
 	position: absolute;
 	right: 60px;
-	top: 14px;
+	top: 10px;
 	color: grey;
 	z-index: 10;
 	font-size: 2em;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	.SearchForm {
+		margin-left: -2em;
+		margin-right: 1em;
+		padding: 1em;
+	}
+	.SearchResults {
+		margin-left: -2em;
+		margin-right: 1em;
+		padding: 0em;
+
+		.num-results {
+			margin-left: 2em;
+		}
+
+		.results-list {
+			padding: 1em;
+		}
+
+		.SearchResult {
+			.charity-logo-placeholder {
+				font-size: 100%;
+				&.long-name {
+					font-size: 100%;
+				}
+			}
+		}
+	}
+
 }
