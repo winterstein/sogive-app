@@ -37,6 +37,18 @@ const getType = function(item) {
 };
 
 /**
+ * Prefers a plain .id but also supports schema.org @id.
+ * null returns null
+ */
+const getId = (item) => {
+	if ( ! item) return null;
+	if (item.id && item['@id'] && item.id !== item['@id']) {
+		console.warn("conflicting id/@id item ids "+item.id+" vs "+item['@id'], item);
+	}
+	return item.id || item['@id'];
+};
+
+/**
  * access functions for source, help, notes??
  */
 const Meta = {};
@@ -57,5 +69,5 @@ Meta.get = (obj, fieldName) => {
 	return {};
 };
 
-export {isa, getType, Meta};
+export {isa, getType, getId, Meta};
 	

@@ -238,7 +238,7 @@ const donationIncrements = {
 const SearchResult = ({ item }) => {
 	let project = NGO.getProject(item);
 	let status = item.status;
-	let page = status===C.STATUS.DRAFT? 'edit' : 'charity';
+	let page = C.KStatus.isDRAFT(status)? 'edit' : 'charity';
 	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
 
 	// The donation picker needs to store its value

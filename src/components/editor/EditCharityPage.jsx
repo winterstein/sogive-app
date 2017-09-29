@@ -18,6 +18,7 @@ import MonetaryAmount from '../../data/charity/MonetaryAmount';
 import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
+import Crud from '../../plumbing/Crud'; //publish
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -25,8 +26,8 @@ const EditCharityPage = () => {
 	}
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(['draft', C.TYPES.Charity, cid], 
-		() => ServerIO.getCharity(cid, C.STATUS.DRAFT).then(result => result.cargo)
+	let {value:charity} = DataStore.fetch(['draft', C.TYPES.NGO, cid], 
+		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);
 	if ( ! charity) {
 		return <Misc.Loading />;
@@ -311,7 +312,7 @@ const ProjectDataSources = ({charity, project}) => {
 		return saveDraftFn(context);
 	};
 	const projIndex = charity.projects.indexOf(project);
-	const dataSrcPath = ['draft', C.TYPES.Charity, NGO.id(charity), 'projects', projIndex, 'data-src'];
+	const dataSrcPath = ['draft', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
 	const sourceList = project['data-src'] || [];
 	return (
 		<div className='well'>
@@ -360,7 +361,7 @@ const ProjectInputs = ({charity, project}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft',C.TYPES.Charity, cid, 'projects', pid];
+	let projectPath = ['draft',C.TYPES.NGO, cid, 'projects', pid];
 	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || MonetaryAmount.make({name: 'annualCosts'});	
 	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || MonetaryAmount.make({name: 'projectCosts'});
 	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || MonetaryAmount.make({name: 'tradingCosts'});
@@ -383,7 +384,7 @@ const ProjectInputs = ({charity, project}) => {
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft', C.TYPES.Charity, cid, 'projects', pid];
+	let projectPath = ['draft', C.TYPES.NGO, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (
@@ -460,7 +461,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let readonly = ! manualEntry;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let inputsPath = ['draft',C.TYPES.Charity,cid,'projects', pid, 'inputs'];
+	let inputsPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
 	assert(DataStore.getValue(inputsPath) === project.inputs);
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
@@ -493,7 +494,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
-	let inputPath = ['draft',C.TYPES.Charity,cid,'projects', pid, 'outputs', ii];
+	let inputPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
 	assert(ii !== -1);
 	assert(pid !== -1);
 	assert(DataStore.getValue(inputPath) === output);
@@ -528,19 +529,19 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 
 
 const publishDraftFn = _.throttle((e, charity) => {
-	return ActionMan.publish(C.TYPES.Charity, NGO.id(charity));
+	return ActionMan.publishEdits(C.TYPES.NGO, NGO.id(charity), charity);
 }, 250);
 const discardDraftFn = _.throttle((e, charity) => {
-	return ActionMan.discardEdits(C.TYPES.Charity, NGO.id(charity));
+	return ActionMan.discardEdits(C.TYPES.NGO, NGO.id(charity));
 }, 250);
 const deleteFn = _.throttle((e, charity) => {
-	return ActionMan.delete(C.TYPES.Charity, NGO.id(charity));
+	return ActionMan.delete(C.TYPES.NGO, NGO.id(charity));
 }, 250);
 
 
 const EditField = ({item, ...stuff}) => {
 	let id = NGO.id(item);
-	let path = ['draft',C.TYPES.Charity,id];
+	let path = ['draft',C.TYPES.NGO,id];
 	return <EditField2 item={item} path={path} {...stuff} />;
 };
 
@@ -549,7 +550,7 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	assert(pid!==-1, project);
-	let path = ['draft',C.TYPES.Charity,cid,'projects', pid];
+	let path = ['draft',C.TYPES.NGO,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
@@ -567,11 +568,11 @@ const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) 
 		ioi = project.outputs.indexOf(output);
 	}
 	assert(ioi !== -1);
-	let path = ['draft',C.TYPES.Charity,cid,'projects', pid, io, ioi];
+	let path = ['draft',C.TYPES.NGO,cid,'projects', pid, io, ioi];
 	let item = input || output;
 	if (field==='this') { 
 		// HACK for MonetaryAmount inputs
-		path = ['draft',C.TYPES.Charity,cid,'projects', pid, io];
+		path = ['draft',C.TYPES.NGO,cid,'projects', pid, io];
 		field = ioi;
 		item = project[io];
 	}
@@ -583,11 +584,11 @@ const saveDraftFn = _.debounce(
 	({path, parentItem}) => {
 		if ( ! parentItem) parentItem = DataStore.getValue(path);
 		assert(NGO.isa(parentItem), parentItem, path);
-		ServerIO.saveCharity(parentItem, C.STATUS.DRAFT)
+		ServerIO.saveCharity(parentItem, C.KStatus.$DRAFT())
 		.then((result) => {
 			let modCharity = result.cargo;
 			assert(NGO.isa(modCharity), modCharity);
-			DataStore.setValue(['draft', C.TYPES.Charity, NGO.id(modCharity)], modCharity);
+			DataStore.setValue(['draft', C.TYPES.NGO, NGO.id(modCharity)], modCharity);
 		});
 		return true;
 	}, 1000);

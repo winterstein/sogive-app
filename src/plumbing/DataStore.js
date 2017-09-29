@@ -350,16 +350,16 @@ if (typeof(window) !== 'undefined') window.DataStore = DataStore;
  */
 DataStore.update({
 	data: {
-		Charity: {},
+		NGO: {},
 		User: {},
 		Donation: {}
 	},
 	draft: {
-		Charity: {},
+		NGO: {},
 		User: {}
 	},
 	focus: {
-		Charity: null,
+		NGO: null,
 		User: null,
 	},	
 	widget: {},

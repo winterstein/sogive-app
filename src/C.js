@@ -29,14 +29,14 @@ C.app = {
  */
 C.newId = 'new';
 
-C.TYPES = new Enum("Charity User Donation Project");
+C.TYPES = new Enum("NGO User Donation Project");
 
 /** dialogs you can show/hide.*/
 C.show = new Enum('LoginWidget');
 
 C.KStatus = new Enum('DRAFT PUBLISHED MODIFIED REQUEST_PUBLISH PENDING ARCHIVED TRASH');
 
-C.STATUS = new Enum("DRAFT PUBLISHED");
+C.STATUS = new Enum('loading clean dirty saving');
 
 C.ROLES = new Enum("editor admin");
 C.CAN = new Enum("edit publish admin");

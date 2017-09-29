@@ -22,7 +22,7 @@ import SocialShare from './SocialShare';
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(['data', C.TYPES.Charity, cid], 
+	let {value:charity} = DataStore.fetch(['data', C.TYPES.$NGO(), cid], 
 		() => ServerIO.getCharity(cid).then(result => result.cargo)
 	);
 	if ( ! charity) {

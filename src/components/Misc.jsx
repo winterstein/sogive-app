@@ -112,7 +112,7 @@ Misc.Icon = ({glyph, fa, size, ...other}) => {
  * @param saveFn {Function} {path, value} You are advised to wrap this with e.g. _.debounce(myfn, 500).
  * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
- * @param path {String[]} The DataStore path to item, e.g. [data, Charity, id]
+ * @param path {String[]} The DataStore path to item, e.g. [data, NGO, id]
  * @param item The item being edited. Can be null, and it will be fetched by path.
  * @param prop The field being edited 
  * dflt {?Object} default value
@@ -135,6 +135,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
 	assert( ! type || Misc.ControlTypes.has(type), type);
 	assert(_.isArray(path), path);
+	assert(path.indexOf(null)===-1 && path.indexOf(undefined)===-1, path);
 	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
 	// if (item && item !== DataStore.getValue(path)) {
 	// 	console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);

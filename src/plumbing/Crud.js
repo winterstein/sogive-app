@@ -5,8 +5,9 @@ import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 import DataStore from './DataStore';
+import {getId} from '../data/DataClass';
 import Login from 'you-again';
-import {XId} from 'wwutils';
+import {XId, encURI} from 'wwutils';
 
 import ServerIO from './ServerIO';
 import ActionMan from './ActionMan';
@@ -14,13 +15,13 @@ import ActionMan from './ActionMan';
 /**
  * @returns Promise
  */
-ActionMan.crud = (type, id, action) => {
+ActionMan.crud = (type, id, action, item) => {
 	assMatch(id, String);
 	assert(C.TYPES.has(type), type);
-	let publisher = DataStore.getData(type, id);
-	if ( ! publisher.id) {
-		assert(id==='new');
-		publisher.id = id;
+	if ( ! item) item = DataStore.getData(type, id);
+	if ( ! getId(item)) {
+		assert(id==='new', id);
+		item.id = id;
 	}
 	// new item? then change the action
 	if (id===C.newId && action==='save') {
@@ -29,7 +30,7 @@ ActionMan.crud = (type, id, action) => {
 	// mark the widget as saving
 	DataStore.setLocalEditsStatus(type, id, C.STATUS.saving);
 	// call the server
-	return ServerIO.crud(type, publisher, action)
+	return ServerIO.crud(type, item, action)
 	.then(DataStore.updateFromServer.bind(DataStore))
 	.then((res) => {
 		// success :)
@@ -40,7 +41,7 @@ ActionMan.crud = (type, id, action) => {
 			// id change!
 			// updateFromServer should have stored the new item
 			// So just repoint the focus
-			let serverId = res.cargo.id;
+			let serverId = getId(res.cargo);
 			DataStore.setFocus(type, serverId); // deprecated			
 			DataStore.setUrlValue(navtype, serverId);
 		}
@@ -56,12 +57,12 @@ ActionMan.crud = (type, id, action) => {
 	});
 }; // ./crud
 
-ActionMan.saveEdits = (type, pubId) => {
-	return ActionMan.crud(type, pubId, 'save');
+ActionMan.saveEdits = (type, pubId, item) => {
+	return ActionMan.crud(type, pubId, 'save', item);
 };
 
-ActionMan.publishEdits = (type, pubId) => {
-	return ActionMan.crud(type, pubId, 'publish');	
+ActionMan.publishEdits = (type, pubId, item) => {
+	return ActionMan.crud(type, pubId, 'publish', item);	
 };
 
 ActionMan.discardEdits = (type, pubId) => {
@@ -81,7 +82,7 @@ ActionMan.delete = (type, pubId) => {
 
 ServerIO.crud = function(type, item, action) {	
 	assert(C.TYPES.has(type), type);
-	assert(item && item.id, item);
+	assert(item && getId(item), item);
 	let params = {
 		method: 'POST',
 		data: {
@@ -98,7 +99,7 @@ ServerIO.crud = function(type, item, action) {
 	if (stype==='advert') stype = 'vert';
 	if (stype==='advertiser') stype = 'vertiser';
 	// NB: load() includes handle messages
-	return ServerIO.load('/'+stype+'/'+item.id+'.json', params);
+	return ServerIO.load('/'+encURI(stype)+'/'+encURI(getId(item))+'.json', params);
 };
 ServerIO.saveEdits = function(type, item) {
 	return ServerIO.crud(type, item, 'save');

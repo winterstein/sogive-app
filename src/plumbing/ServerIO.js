@@ -75,7 +75,7 @@ ServerIO.publish = function(charity, status) {
 /**
  * @param charity {name:String}
  */
-ServerIO.addCharity = function(charity, status=C.STATUS.DRAFT) {
+ServerIO.addCharity = function(charity, status=C.KStatus.DRAFT) {
 	let params = {		
 		data: {action: 'new', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
@@ -114,7 +114,7 @@ ServerIO.load = function(url, params) {
 		v => assert( ! _.isObject(v) || _.isArray(v), v)
 	);
 	// sanity check: status
-	assert( ! params.data.status || C.STATUS.has(params.data.status), params.data.status);
+	assert( ! params.data.status || C.KStatus.has(params.data.status), params.data.status);
 	// add the base
 	if (url.substring(0,4) !== 'http' && ServerIO.base) {
 		url = ServerIO.base + url;
