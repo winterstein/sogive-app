@@ -268,16 +268,19 @@ const SearchResult = ({ item }) => {
 			break;
 		}
 	}
+	
 	if (commonPrefixLength >= 3) {
 		charityDesc = charityDesc.slice(commonPrefixLength).trim();
 	}
+	// Some elements need to be shrunk down if they're too long
+	const longName = charityName.length > 25;
 
 	const recommendedTab = item.recommended ? (
 		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
 	) : null;
 
 	const impactAmountEntry = impact ? (
-		<div className='amount-picker col-md-1 col-xs-2'>
+		<div className={`amount-picker col-md-1 col-xs-2 ${impact.amount.value >= 10000? 'long-amount' : ''}`}>
 			<img className='change-donation-amount' title='Increase donation' src='/img/donation-amount-up.svg' onClick={() => changeTarget(1)}/>
 			<Misc.Money amount={impact.amount} precision={2} />
 			<img className='change-donation-amount' title='Decrease donation' src='/img/donation-amount-down.svg' onClick={() => changeTarget(-1)}/>
@@ -314,7 +317,7 @@ const SearchResult = ({ item }) => {
 				{item.logo? (
 					<img className='charity-logo' src={item.logo} alt={`Logo for ${charityName}`} />
 				) : (
-					<div className='charity-logo-placeholder'>{charityName}</div>
+					<div className={`charity-logo-placeholder ${longName? 'long-name' : ''}`}>{charityName}</div>
 				)}
 			</a>
 			<a href={charityUrl} className='text-summary col-md-4 col-xs-8'>
