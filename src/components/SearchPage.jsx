@@ -206,7 +206,7 @@ const SearchResults = ({ results, total, query, from }) => {
 				<SearchPager total={total} from={from} />
 			</div>
 			<div className='col-md-12'>
-				<DownloadLink />
+				<DownloadLink total={total} />
 			</div>
 		</div>
 	);

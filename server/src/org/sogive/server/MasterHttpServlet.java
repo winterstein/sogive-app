@@ -119,7 +119,7 @@ public class MasterHttpServlet extends HttpServlet {
 				s.process(request);
 				return;
 			}	
-			WebUtils2.sendError(500, "TODO", resp);
+			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
 			WebEx wex = WebUtils2.runtime(ex);
 			if (wex.code >= 500) {

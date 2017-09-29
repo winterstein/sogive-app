@@ -95,7 +95,9 @@ ServerIO.crud = function(type, item, action) {
 		params.data.name = item.name; // pass on the name so server can pick a nice id if action=new
 	}
 	let stype = type.toLowerCase();
-	// "advert"" can fall foul of adblocker!
+	// NGO = charity
+	if (stype==='ngo') stype = 'charity';
+	// "advert"" can fall foul of adblocker!	
 	if (stype==='advert') stype = 'vert';
 	if (stype==='advertiser') stype = 'vertiser';
 	// NB: load() includes handle messages
