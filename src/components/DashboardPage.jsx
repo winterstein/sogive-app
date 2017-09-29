@@ -15,14 +15,14 @@ import {LoginLink} from './LoginWidget/LoginWidget';
 
 const DashboardPage = () => {
 	let user = Login.getUser();
-	const pv = DataStore.fetch(['data','Donation'],	
+	const pv = user? DataStore.fetch(['data','Donation'],	
 		() => {
 			return ServerIO.getDonations()
 				.then(function(result) {
 					let dons = result.cargo.hits;
 					return dons;
 				});
-		});
+		}) : {};
 	const donations = pv.value;
 
 	let content;
@@ -35,7 +35,7 @@ const DashboardPage = () => {
 			</div>
 		);
 	}
-	if ( ! donations) {		
+	if ( ! donations && ! pv.error) {		
 		content = <Misc.Loading />;
 	} else {
 		content = (
