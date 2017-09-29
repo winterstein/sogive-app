@@ -219,9 +219,14 @@ const SearchResults = ({ results, total, query, from, all, recommended}) => {
 		resultsForText = `Results for “${query}”`;
 	}
 
+	const recommendedNote = recommended ? (
+		<div className='recommended-note'>These recommendations are based on analysis of impact data</div>
+	) : null;
+
 	return (
 		<div className='SearchResults'>
 			<div className='top-tab'>{resultsForText}</div>
+			{recommendedNote}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
