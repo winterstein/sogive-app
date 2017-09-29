@@ -379,7 +379,7 @@ const DownloadLink = ({total}) => {
 	const qry = qi === -1? '' : locn.substr(qi+1);
 	if (noCos) {
 		return (
-			<span className='pull-right' 
+			<span className='pull-right text-secondary' 
 				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}>
 				<Glyphicon glyph='download-alt' /> csv
 			</span>);	
