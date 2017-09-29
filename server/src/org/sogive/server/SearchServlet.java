@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
@@ -16,6 +17,7 @@ import com.winterwell.gson.Gson;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVSpec;
@@ -77,13 +79,14 @@ public class SearchServlet implements IServlet {
 			List<Map> hits = sr.getHits();
 			for (Map hit : hits) {
 				Map charity = (Map) hit.get("_source");
-				boolean charityReady = false;
+				boolean charityReady = Utils.yes(charity.get("ready"));
+				if (charityReady) continue;
 				
 				List<Map> projects = (List<Map>) ((Map)charity).get("projects");
 				if (projects == null) continue;
 				for (Map project : projects) {
 					Object ready = project.get("ready");
-					if (ready != null && (Boolean.TRUE.equals(ready) || "true".equals(ready))) {
+					if (ready != null && Utils.yes(ready)) {
 						charityReady = true;
 						break;
 					}
@@ -91,8 +94,11 @@ public class SearchServlet implements IServlet {
 				
 				if (charityReady) {
 					charity.put("ready", true);
-					
-					
+					JThing<NGO> item = new JThing();
+					item.setMap(charity);
+					AppUtils.doSaveEdit(config.getPath(NGO.class, (String) charity.get("@id"), KStatus.DRAFT), item, state);
+					AppUtils.doPublish(item, config.getPath(NGO.class, (String) charity.get("@id"), KStatus.DRAFT),
+							config.getPath(NGO.class, (String) charity.get("@id"), KStatus.PUBLISHED));
 				}
 			}
 		}
