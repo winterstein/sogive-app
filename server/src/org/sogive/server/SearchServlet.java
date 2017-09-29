@@ -101,7 +101,7 @@ public class SearchServlet implements IServlet {
 			// Do we want this to handle e.g. accents??
 			// Can ES do it instead??
 			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
-			q = StrUtils.toCanonical(q);			
+			q = StrUtils.toCanonical(q);
 			// this will query _all
 			QueryBuilder qb = QueryBuilders.simpleQueryStringQuery(q)
 								.defaultOperator(Operator.AND);
@@ -115,6 +115,7 @@ public class SearchServlet implements IServlet {
 			QueryBuilder qb = QueryBuilders.termQuery("recommended", "true");
 			s.setQuery(qb);
 		}
+		
 		// TODO test ordering.
 		// Show recommended charities before all other results
 		SortBuilder recSort = SortBuilders.fieldSort("recommended").order(SortOrder.DESC).missing("_last").unmappedType("boolean");

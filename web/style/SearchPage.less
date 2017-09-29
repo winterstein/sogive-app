@@ -138,13 +138,13 @@
 	}
 	.impact {
 		.impact-summary {
-			h3, .impact-count {
+			h3, .impact-count, .money .amount {
 				color: #df9232;
 				font-size: 120%;
 			}
 			h3 {
 				text-decoration: underline;
-				margin: 0.5em;
+				margin: 0.5em 0 0.25em 0;
 			}
 			border-bottom: 1px solid #df9232;
 		}
@@ -182,13 +182,13 @@
 
 .SearchForm {
 	background: linear-gradient(to right, #f9ce6e, #dd912f);
-	height: 10em;
 	box-shadow: 0px 5px 10px 0px rgba(221,145,47, 0.5);
-	padding: 50px;
+	padding: 2em 5em;
 }
 
 .search-pager {
 	text-align: center;
+	line-height: 3em;
 	.pager-button {
 		width: 2em;
 		height: 2em;
@@ -254,12 +254,12 @@
 @media only screen and (max-width : 768px) {
 	.SearchForm {
 		margin-left: -2em;
-		margin-right: 1em;
+		margin-right: -2em;
 		padding: 1em;
 	}
 	.SearchResults {
 		margin-left: -2em;
-		margin-right: 1em;
+		margin-right: -2em;
 		padding: 0em;
 
 		.num-results {

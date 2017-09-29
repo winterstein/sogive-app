@@ -28,12 +28,14 @@ export default class SearchPage extends React.Component {
 		};
 	}
 
-	setResults(results, total, from) {
+	setResults(results, total, from, all, recommended) {
 		assert(_.isArray(results));
 		this.setState({
 			results: results,
 			total: total,
 			from: from,
+			all: all,
+			recommended: recommended,
 		});
 	}
 
@@ -48,11 +50,11 @@ export default class SearchPage extends React.Component {
 
 		let searchResults = null;
 		let searchPager = null;
-		// Show results box if (a) a query was entered (so we get "No Results") or (b) there were results (so Show All works)
-		if (this.state.q || this.state.total) {
+		// Show results box if a query was entered (so we get "No Results")
+		if (q) {
 			searchResults = (
 				<div className='col-md-12'>
-					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} />
+					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} all={this.state.all} recommended={this.state.recommended} />
 				</div>
 			);
 		}
@@ -87,12 +89,15 @@ class SearchForm extends React.Component {
 		super(...params);
 		this.state = {
 			q: this.props.query,
+			recommended: !this.props.query, // No query on creation = grab the recommended charities
 		};
 	}
 
 	componentDidMount() {
 		if (this.state.q) {
 			this.search(this.state.q);
+		} else if (this.state.recommended) {
+			this.search('', null, null, true); // Give us all recommended charities
 		}
 	}
 
@@ -117,13 +122,14 @@ class SearchForm extends React.Component {
 		this.search(this.state.q || '', this.props.status, this.props.from);
 	}
 
-	search(query, status, from) {
+	search(query, status, from, recommended) {
 		// Put search query in URL so it's bookmarkable / shareable
 		DataStore.setUrlValue("q", query);
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
+		const all = !recommended && !query;
 
 		// hack to allow status=DRAFT
-		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status})
+		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
 			.then(function(res) {
 				console.warn(res);
 				let charities = res.cargo.hits;
@@ -133,8 +139,10 @@ class SearchForm extends React.Component {
 				// 	charities: charities,
 				// 	total: total
 				// });
-				this.props.setResults(charities, total, from || 0);
+				this.props.setResults(charities, total, from || 0, all, recommended);
+				this.setState({recommended: false});
 			}.bind(this));
+
 	}
 
 	showAll(e) {
@@ -147,6 +155,16 @@ class SearchForm extends React.Component {
 		e.preventDefault();
 		this.setState({q: ''});
 	}
+
+	/*
+	const showAllButton = (
+		<div className='pull-right'>
+			<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>
+				Show All
+			</Button>
+		</div>
+	);
+	*/
 
 	render() {
 		return (
@@ -168,11 +186,7 @@ class SearchForm extends React.Component {
 						</InputGroup.Addon>
 					</InputGroup>
 				</FormGroup>
-				<div className='pull-right'>
-					<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>
-						Show All
-					</Button>
-				</div>
+				{/*showAllButton*/}
 			</Form></div>
 		);
 	} // ./render
@@ -186,17 +200,21 @@ const FieldClearButton = ({onClick, children}) => (
 );
 
 
-const SearchResults = ({ results, total, query, from }) => {
+const SearchResults = ({ results, total, query, from, all, recommended}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
 	const ready = _.filter(results, NGO.isReady);
 	const unready = _.filter(results, r => ! NGO.isReady(r) );
-	const resultsForText = query ? (
-		`Results for “${query}”`
-	) : (
-		`Showing all charities`
-	);
+
+	let resultsForText = '';
+	if (all) {
+		resultsForText = 'Showing all charities';
+	} else if (recommended) {
+		resultsForText = 'Showing recommended charities';
+	} else {
+		resultsForText = `Results for “${query}”`;
+	}
 
 	return (
 		<div className='SearchResults'>
@@ -224,7 +242,10 @@ const SearchResults = ({ results, total, query, from }) => {
 const SearchResultsNum = ({results, total, query}) => {
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
 	if (loading) return <div className='num-results'><Misc.Loading /></div>;
-	if (results.length || query) return <div className='num-results'>{total} charities found</div>;
+	if (results.length || query) {
+		const plural = total !== 1 ? 'charities found' : 'charity found';
+		return <div className='num-results'>{total} {plural}</div>;
+	}
 	return <div className='num-results' />; // ?!
 };
 
@@ -252,10 +273,7 @@ const SearchResult = ({ item }) => {
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
 	const impact = impactCalc({charity: item, project, outputs: project && project.outputs, amount: false, targetCount: targetCount || 1});
 
-	// onClick methods for the donation up/down buttons (don't allow target-count less than 1)
-	const changeTarget = change => {
-		DataStore.setValue(['widget','SearchResults', NGO.id(item), 'targetCount'], Math.max((targetCount || 1) + change, 1));
-	};
+
 
 	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
 	const charityName = item.displayName || item.name || '';
@@ -278,7 +296,13 @@ const SearchResult = ({ item }) => {
 	const recommendedTab = item.recommended ? (
 		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
 	) : null;
-
+	
+	/*
+	// Variable donations in search results have officially been deemed Too Confusing
+		// onClick methods for the donation up/down buttons (don't allow target-count less than 1)
+	const changeTarget = change => {
+		DataStore.setValue(['widget','SearchResults', NGO.id(item), 'targetCount'], Math.max((targetCount || 1) + change, 1));
+	};
 	const impactAmountEntry = impact ? (
 		<div className={`amount-picker col-md-1 hidden-xs ${impact.amount.value >= 10000? 'long-amount' : ''}`}>
 			<img className='change-donation-amount' title='Increase donation' src='/img/donation-amount-up.svg' onClick={() => changeTarget(1)}/>
@@ -286,12 +310,13 @@ const SearchResult = ({ item }) => {
 			<img className='change-donation-amount' title='Decrease donation' src='/img/donation-amount-down.svg' onClick={() => changeTarget(-1)}/>
 		</div>
 	) : null;
+	*/
 
 	const impactExplanation = impact ? (
-		<div className='impact col-md-5 hidden-xs'>
+		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<h3>Impact Summary</h3>
-				will fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
+				<Misc.Money amount={impact.amount} precision={2} /> may fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
@@ -322,9 +347,9 @@ const SearchResult = ({ item }) => {
 			</a>
 			<a href={charityUrl} className='text-summary col-md-4 col-xs-8'>
 				<span className='name'>{charityName}</span>
-				<span className='description'>{ellipsize(charityDesc, 200)}</span>
+				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
-			{impactAmountEntry}
+			{/*impactAmountEntry*/}
 			{impactExplanation}
 			{noImpact}
 		</div>
