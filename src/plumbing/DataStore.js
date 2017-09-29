@@ -318,7 +318,9 @@ class Store {
 	 */
 	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
 		let item = this.getValue(path);
-		if (item) return {value:item, promise:Promise.resolve(item)};
+		if (yessy(item)) {
+			return {value:item, promise:Promise.resolve(item)};
+		}
 		// only ask once
 		const fpath = ['transient', 'PromiseValue'].concat(path);
 		let pv = this.getValue(fpath);
