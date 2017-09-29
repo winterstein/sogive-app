@@ -52,7 +52,7 @@ export default class SearchPage extends React.Component {
 		let searchResults = null;
 		let searchPager = null;
 		// Show results box if a query was entered (so we get "No Results")
-		if (q) {
+		if (q || this.state.recommended) {
 			searchResults = (
 				<div className='col-md-12'>
 					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} all={this.state.all} recommended={this.state.recommended} />
