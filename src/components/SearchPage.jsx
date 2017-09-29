@@ -262,7 +262,7 @@ const SearchResult = ({ item }) => {
 		charityDesc = charityDesc.slice(commonPrefixLength).trim();
 	}
 
-	const recommendedTab = item.recommend ? (
+	const recommendedTab = item.recommended ? (
 		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
 	) : null;
 
@@ -298,7 +298,7 @@ const SearchResult = ({ item }) => {
 
 	
 	return (
-		<div className={`SearchResult row ${item.recommend ? 'recommended' : ''}`} >
+		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
 			{recommendedTab}
 			<a href={charityUrl} className='logo col-md-2'>
 				{item.logo? (
