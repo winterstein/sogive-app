@@ -99,7 +99,7 @@ const EditCharityPage = () => {
 const EditorialEditor = ({charity}) => {
 	let rec = charity.recommended;
 	return (<div>					
-		<EditField item={charity} type='checkbox' field='recommend'
+		<EditField item={charity} type='checkbox' field='recommended'
 			label='Recommended High-Impact Charity'
 			help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
 		<EditField item={charity} type='textarea' field='recommendation' 

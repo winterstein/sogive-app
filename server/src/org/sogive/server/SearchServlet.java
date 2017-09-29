@@ -80,7 +80,7 @@ public class SearchServlet implements IServlet {
 			s.setQuery(qb);
 		}
 		// TODO test ordering.
-		SortBuilder recSort = SortBuilders.fieldSort("recommend").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
+		SortBuilder recSort = SortBuilders.fieldSort("recommended").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
 		s.addSort(recSort);
 		s.addSort("name.raw", SortOrder.ASC);
 //		s.addSort("@id", SortOrder.ASC);
