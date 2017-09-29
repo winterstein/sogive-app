@@ -65,7 +65,10 @@ const EditCharityPage = () => {
 				}
 				&nbsp;
 				<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
-				<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
+				{Roles.iCan(C.CAN.publish)? 
+					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
+					: null
+				}
 			</Panel>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
