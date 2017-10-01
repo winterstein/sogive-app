@@ -3,6 +3,7 @@ import Login from 'you-again';
 import DataStore from './plumbing/DataStore';
 import {assMatch} from 'sjtest';
 import C from './C';
+import pv from 'promise-value';
 
 // TODO switch from storing can:x to role:x with app-defined cans
 
@@ -29,17 +30,32 @@ const getRoles = () => {
 
 /**
  * Can the current user do this?
- * @returns {Boolean} WARNING: false if the data is loading by ajax! This will then set DataStore and trigger an update.
+ * Will fetch by ajax if unset.
+ * 
+ * Example:
+ * ```
+ * 	let {promise,value} = Roles.iCan('eat:sweets');
+ * 	if (value) { eat sweets }
+ * 	else if (value === false) { no sweets }
+ * 	else { waiting on ajax }	
+ * ```
+ * 
+ * @returns {PromiseValue<Boolean>}
  */
 const iCan = (capability) => {
 	assMatch(capability, String);
 	let proles = getRoles();
-	if ( ! proles.value) return null;
-	for(let i=0; i<proles.value.length; i++) {
-		let cans = cans4role[proles.value[i]];
-		if (cans.indexOf(capability) !== -1) return true;
+	if (proles.value) {
+		for(let i=0; i<proles.value.length; i++) {
+			let cans = cans4role[proles.value[i]];
+			if (cans.indexOf(capability) !== -1) return pv(true);
+		}
+		return pv(false);
 	}
-	return false;
+	// ajax...
+	return proles.promise.then(
+		res => iCan(capability)
+	);
 };
 
 const cans4role = {};

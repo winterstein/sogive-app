@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -11,7 +11,6 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "chart.js": "^2.6.0",
-    "easyi18n": "^1.1.0",
     "hashmap": "^2.1.0",
     "jquery": "^3.2.1",
     "js-cookie": "^2.1.4",
@@ -23,8 +22,10 @@
     "react-stripe-checkout": "^2.4.0",
     "react-markdown": "^2.5.0",
     "webpack": "^3.2.0",
+    "md5": "^2.2.1",
     "easy-enums": "^1.1.5",
     "sjtest": "^0.4.4",
+    "easyi18n": "^1.1.0",
     "wwutils": "^0.8.2",
     "you-again": "^0.5.1",
     "promise-value": "^1.0.5"
