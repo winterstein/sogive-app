@@ -90,8 +90,8 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			}
 			if (path.startsWith("/donation")) {
-				DonationServlet s = new DonationServlet(request);
-				s.run();
+				DonationServlet s = new DonationServlet();
+				s.process(request);
 				return;
 			}
 			if (path.startsWith("/stripe/webhook")) {

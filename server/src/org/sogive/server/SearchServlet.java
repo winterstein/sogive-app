@@ -35,6 +35,8 @@ import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
+import com.winterwell.youagain.client.AuthToken;
+import com.winterwell.youagain.client.YouAgainClient;
 
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
@@ -63,6 +65,11 @@ public class SearchServlet implements IServlet {
 	private static final int MAX_RESULTS = 10000;
 	
 	public void process(WebRequest state) throws Exception {
+		
+		YouAgainClient ya = Dep.get(YouAgainClient.class);
+List<AuthToken> a = ya.getAuthTokens(state);
+	System.out.println(a);
+		
 		ESHttpClient client = Dep.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 

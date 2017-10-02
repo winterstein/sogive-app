@@ -35,6 +35,7 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
+import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 import com.winterwell.web.fields.Checkbox;
@@ -56,15 +57,15 @@ import com.winterwell.youagain.client.YouAgainClient;
  * @author daniel
  *
  */
-public class DonationServlet {
+public class DonationServlet implements IServlet {
 
 	private WebRequest state;
 
-	public DonationServlet(WebRequest request) {
-		this.state = request;
+	public DonationServlet() {
 	}
 
-	public void run() throws Exception {
+	public void process(WebRequest state) throws Exception {
+		this.state = state;
 		Dep.get(YouAgainClient.class).getAuthTokens(state);
 		if (state.actionIs("donate")) {
 			doMakeDonation();
@@ -165,4 +166,6 @@ public class DonationServlet {
 		JsonResponse output = new JsonResponse(state, dobj);
 		WebUtils2.sendJson(output, state);
 	}
+
+	
 }
