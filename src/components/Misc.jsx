@@ -54,7 +54,7 @@ Misc.Money = ({amount, precision}) => {
 	if (snum.match(/\.\d$/)) snum += '0';
 	return (
 		<span className='money'>
-			<span className='currency-symbol'>{CURRENCY[amount.currency] || ''}</span>
+			<span className='currency-symbol'>{CURRENCY[amount.currency || 'GBP']}</span>
 			<span className='amount'>{snum}</span>
 		</span>
 	);
