@@ -110,7 +110,7 @@
 		background-color: #e5e5e5;
 		padding: 0.5em;
 		.name {
-			color: #df9232;
+			color: @bold-text-colour;
 			margin-right: 0.3em;
 		}
 		.description, .description:hover {
@@ -128,7 +128,7 @@
 		}
 		.money {
 			.amount {
-				color: #df9232;
+				color: @bold-text-colour;
 			}
 		}
 		.change-donation-amount {
@@ -138,15 +138,17 @@
 	}
 	.impact {
 		.impact-summary {
-			h3, .impact-count, .money .amount {
-				color: #df9232;
+			.impact-count, .money .amount {
+				color: @bold-text-colour;
 				font-size: 120%;
 			}
 			h3 {
-				text-decoration: underline;
+				color: @bold-text-colour;
+				// no size boost -- we want the impact content stronger than the header.
+				// text-decoration: underline;
 				margin: 0.5em 0 0.25em 0;
 			}
-			border-bottom: 1px solid #df9232;
+			border-bottom: 1px solid @bold-text-colour;
 		}
 		.impact-detail {
 
