@@ -19,7 +19,7 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	// NB: source & line num are not much use in a minified file
 	let msg = error? ""+error+"\n\n"+error.stack : ""+messageOrEvent;
 	$.ajax('/log', {data: {
-		msg: window.location+' '+msg,
+		msg: window.location+' '+msg+' user-id: '+Login.getId(), // NB: browser type (user agent) will be sent as a header
 		type: "error"
 	}});
 });

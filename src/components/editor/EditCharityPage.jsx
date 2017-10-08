@@ -201,7 +201,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 
 
 const AddProject = ({charity, isOverall}) => {
-	assert(NGO.isa(charity));
+	assert(NGO.isa(charity), "EditCharityPage.AddProject");
 	if (isOverall) {
 		return (
 			<div className='form-inline well'>
@@ -232,7 +232,7 @@ const AddProject = ({charity, isOverall}) => {
 
 
 const RemoveProject = ({charity, project}) => {
-	assert(NGO.isa(charity));
+	assert(NGO.isa(charity), "EditCharityPage.RemoveProject");
 	const deleteProject = function(event) {
 		event.preventDefault();
 		if (confirm("Are you sure you want to delete this project?")) {
@@ -255,7 +255,7 @@ const removeProject = ({charity, project}) => {
 };
 
 const AddIO = ({list, pio, ioPath}) => {
-	assert(_.isArray(list) && _.isArray(ioPath) && pio);
+	assert(_.isArray(list) && _.isArray(ioPath) && pio, "EditCharityPage.AddIO");
 	const formPath = ['widget','AddIO', pio, 'form'];
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
 
@@ -343,7 +343,7 @@ const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) =
 };
 
 const AddDataSource = ({list, dataId, srcPath}) => {
-	assert(_.isArray(list) && _.isArray(srcPath) && dataId);
+	assert(_.isArray(list) && _.isArray(srcPath) && dataId, "EditCharityPage.AddDataSource");
 	const formPath = ['widget','AddDataSource', dataId, 'form'];
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
@@ -465,15 +465,15 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let inputsPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
-	assert(DataStore.getValue(inputsPath) === project.inputs);
+	assert(DataStore.getValue(inputsPath) === project.inputs, "EditCharityPage.ProjectInputEditor");
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
 	if (ii === -1) {
 		project.inputs.push(input);
 		ii = project.inputs.indexOf(input);
 	}
-	assert(ii !== -1);
-	assert(pid !== -1);
+	assert(ii !== -1, "EditCharityPage.ProjectInputEditor");
+	assert(pid !== -1, "EditCharityPage.ProjectInputEditor");
 	let saveDraftFnWrap = (context) => {
 		context.parentItem = charity;
 		return saveDraftFn(context);
@@ -493,13 +493,13 @@ const CONFIDENCE_VALUES = new Enum("high medium low very-low");
  * Edit output / impact
  */
 const ProjectOutputEditor = ({charity, project, output}) => {	
-	assert(charity);
+	assert(charity, "EditCharityPage.ProjectOutputEditor");
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
 	let inputPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
-	assert(ii !== -1);
-	assert(pid !== -1);
+	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor");
+	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor");
 	assert(DataStore.getValue(inputPath) === output);
 	let saveDraftFnWrap = (context) => {
 		context.parentItem = charity;
@@ -549,19 +549,19 @@ const EditField = ({item, ...stuff}) => {
 };
 
 const EditProjectField = ({charity, project, ...stuff}) => {
-	assert(project, stuff);
+	assert(project, "EditCharityPage.EditProjectField: "+stuff);
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	assert(pid!==-1, project);
+	assert(pid!==-1, "EditCharityPage.EditProjectField: "+project);
 	let path = ['draft',C.TYPES.NGO,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
 const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) => {
-	assert(charity && project);
+	assert(charity && project, "EditCharityPage.EditProjectIOField");
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	assert(pid!==-1, project, charity.projects);
+	assert(pid!==-1, project, "EditCharityPage.EditProjectIOField: "+charity.projects);
 	let io; let ioi;
 	if (input) {
 		io='inputs';
@@ -570,7 +570,7 @@ const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) 
 		io='outputs';
 		ioi = project.outputs.indexOf(output);
 	}
-	assert(ioi !== -1);
+	assert(ioi !== -1, "EditCharityPage.EditProjectIOField");
 	let path = ['draft',C.TYPES.NGO,cid,'projects', pid, io, ioi];
 	let item = input || output;
 	if (field==='this') { 
@@ -586,11 +586,11 @@ const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) 
 const saveDraftFn = _.debounce(
 	({path, parentItem}) => {
 		if ( ! parentItem) parentItem = DataStore.getValue(path);
-		assert(NGO.isa(parentItem), parentItem, path);
+		assert(NGO.isa(parentItem), "EditCharityPage.saveDraftFn: ! isa: "+parentItem, path);
 		ServerIO.saveCharity(parentItem, C.KStatus.$DRAFT())
 		.then((result) => {
 			let modCharity = result.cargo;
-			assert(NGO.isa(modCharity), modCharity);
+			assert(NGO.isa(modCharity), "EditCharityPage.saveDraftFn: "+modCharity);
 			DataStore.setValue(['draft', C.TYPES.NGO, NGO.id(modCharity)], modCharity);
 		});
 		return true;
@@ -632,9 +632,9 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
  * 
  */
 const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
-	assert(item);
-	assert(field, item);
-	assert(_.isArray(itemPath), field);
+	assert(item, "EditCharityPage.MetaEditor");
+	assert(field, "EditCharityPage.MetaEditor: "+item);
+	assert(_.isArray(itemPath), "EditCharityPage.MetaEditor: "+field);
 	let meta;
 	let metaPath = itemPath.concat(['meta', field]);
 	if (_.isArray(item)) {
@@ -664,7 +664,7 @@ const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 };
 
 const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type, saveFn}) => {
-	assert(meta && itemField && metaField && icon);
+	assert(meta && itemField && metaField && icon, "EditCharityPage.MetaEditorItem");
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
 	// icon with click->open behaviour
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;

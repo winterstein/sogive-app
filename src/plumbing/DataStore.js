@@ -119,24 +119,24 @@ class Store {
 	 * @returns a "data-item", such as a person or document, or undefined.
 	 */
 	getData(type, id) {
-		assert(C.TYPES.has(type));
-		assert(id, "No id?! getData "+type);
+		assert(C.TYPES.has(type), "DataStore.getData");
+		assert(id, "DataStore.getData - No id?! getData "+type);
 		let item = this.appstate.data[type][id];
 		return item;
 	}
 
 	getValue(...path) {
-		assert(_.isArray(path), path);
+		assert(_.isArray(path), "DataStore.getValue - "+path);
 		// If a path array was passed in, use it correctly.
 		if (path.length===1 && _.isArray(path[0])) {
 			path = path[0];
 		}
 		assert(this.appstate[path[0]], 
-			path[0]+" is not a json element in appstate - As a safety check against errors, the root element must already exist to use getValue()");		
+			"DataStore.getValue: "+path[0]+" is not a json element in appstate - As a safety check against errors, the root element must already exist to use getValue()");		
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];			
-			assert(pkey || pkey===0, path); // no falsy in a path - except that 0 is a valid key
+			assert(pkey || pkey===0, "DataStore.getValue: "+path); // no falsy in a path - except that 0 is a valid key
 			let newTip = tip[pkey];
 			// Test for hard null -- falsy are valid values
 			if (newTip===null || newTip===undefined) return null;
@@ -160,9 +160,9 @@ class Store {
 	 */
 	// TODO handle setValue(pathbit, pathbit, pathbit, value) too
 	setValue(path, value, update = true) {
-		assert(_.isArray(path), path+" is not an array.");
+		assert(_.isArray(path), "DataStore.setValue: "+path+" is not an array.");
 		assert(this.appstate[path[0]], 
-			path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
+			"DataStore.setValue: "+path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
@@ -204,8 +204,8 @@ class Store {
 	 * @return "dirty", "clean", etc. -- see C.STATUS
 	 */
 	getLocalEditsStatus(type, id) {
-		assert(C.TYPES.has(type));
-		assert(id, "No id?! getData "+type);
+		assert(C.TYPES.has(type), "DataStore.getLocalEditsStatus");
+		assert(id, "DataStore.getLocalEditsStatus: No id?! getData "+type);
 		return this.getValue('transient', type, id, DataStore.DATA_MODIFIED_PROPERTY);
 	}
 	/**
@@ -217,7 +217,7 @@ class Store {
 	setLocalEditsStatus(type, id, status) {
 		assert(C.TYPES.has(type));
 		assert(C.STATUS.has(status));
-		assert(id, "No id?! getData "+type);
+		assert(id, "DataStore.setLocalEditsStatus: No id?! getData "+type);
 		return this.setValue(['transient', type, id, DataStore.DATA_MODIFIED_PROPERTY], status);
 	}
 
@@ -247,8 +247,8 @@ class Store {
 	 * @param {?String} id
 	 */
 	setFocus(type, id) {
-		assert(C.TYPES.has(type));
-		assert( ! id || _.isString(id), id);
+		assert(C.TYPES.has(type), "DataStore.setFocus");
+		assert( ! id || _.isString(id), "DataStore.setFocus: "+id);
 		this.setValue(['focus', type], id);
 	}
 
@@ -256,7 +256,7 @@ class Store {
 	 * Largely @deprecated by url-values (which give deep-linking)
 	 */
 	getFocus(type) {
-		assert(C.TYPES.has(type));
+		assert(C.TYPES.has(type), "DataStore.getFocus");
 		return this.getValue('focus', type);
 	}
 
@@ -270,7 +270,7 @@ class Store {
 			return res; // return for chaining .then()
 		}
 		// must be bound to the store
-		assert(this && this.appstate, "Use with .bind(DataStore)");
+		assert(this && this.appstate, "DataStore.updateFromServer: Use with .bind(DataStore)");
 		let hits = res.cargo && res.cargo.hits;
 		if ( ! hits && res.cargo) {			
 			hits = [res.cargo]; // just the one?
@@ -284,7 +284,7 @@ class Store {
 					console.log("skip server object", item);
 					return;
 				}
-				assert(C.TYPES.has(type), item);
+				assert(C.TYPES.has(type), "DataStore.updateFromServer: "+item);
 				let typemap = itemstate.data[type];
 				if ( ! typemap) {
 					typemap = {};
