@@ -19,6 +19,7 @@ import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
 
 /**
@@ -29,6 +30,7 @@ import com.winterwell.utils.time.Time;
 public class Thing<SubThing extends Thing> extends HashMap<String,Object> implements IInit {
 
 	protected static List list(Object object) {
+//		Containers.list(object) ??
 		return object==null? null : Containers.asList(object);
 	}
 	
@@ -150,11 +152,15 @@ public class Thing<SubThing extends Thing> extends HashMap<String,Object> implem
 
 	public static <X extends Thing> List<X> getThings(List list, Class<X> klass) {
 		if (list==null) return null;
-		List<X> things = Containers.apply(list, obj -> getThing(obj, klass));
+		List<X> things = Containers.apply(Containers.filterNulls(list), obj -> getThing(obj, klass));
 		return things;
 	}
 	
 	public static <X extends Thing> X getThing(Object obj, Class<X> klass) {
+		if (obj==null) {
+			Log.w("Thing", "null inpput = null for "+klass+" at "+ReflectionUtils.getSomeStack(12));
+			return null;
+		}
 		if (obj instanceof Thing) return (X) obj;
 		Gson gson = Dep.get(Gson.class);
 		if (obj instanceof String) {			
