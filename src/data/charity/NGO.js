@@ -44,13 +44,14 @@ NGO.getProject = (ngo) => {
 	if ( ! NGO.isReady(ngo)) {
 		return null;
 	}
-	let projects = NGO.getProjects2(ngo);
+	let projects = NGO.getProjects2(ngo);	
 	// Get most recent, if more than one
 	let repProject = projects.reduce((best, current) => {
 		if ( ! current) return best;
 		if ( ! best) return current;
 		return best.year > current.year ? best : current;
 	}, null);
+	console.log("getProject", repProject, "from", projects);
 	return repProject;
 };
 
@@ -69,6 +70,7 @@ NGO.isReady = (ngo) => {
 };
 
 /**
+ * Prefer: representative, then overall, then any
  * @return {Project[]}
  */
 NGO.getProjects2 = (ngo) => {
