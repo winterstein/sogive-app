@@ -48,6 +48,8 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.loader.ImportOSCRData; 
+// Just imported to log progress of fixReady!
+import com.winterwell.utils.log.Log;
 
 public class SearchServlet implements IServlet {
 
@@ -77,35 +79,52 @@ List<AuthToken> a = ya.getAuthTokens(state);
 		ESPath path = config.getPath(null, NGO.class, null, status);
 		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
 		
+		
 		String q = state.get(Q);
 		boolean showRecommended = state.get(RECOMMENDED, false);
 		boolean fixReady = state.get(FIXREADY, false);
 		
 		if (fixReady) {
+			s.setSize(MAX_RESULTS);
 			SearchResponse sr = s.get();
 			List<Map> hits = sr.getHits();
+			Log.d("fixReady", "Found " + hits.size() + "charities to update");
 			for (Map hit : hits) {
 				Map charity = (Map) hit.get("_source");
+				
+				Object _id = charity.get("@id");
+				Object _ready = charity.get("ready");
+				Log.d("fixReady", "Charity " + _id + " has ready value " + _ready);
+				
 				boolean charityReady = Utils.yes(charity.get("ready"));
 				if (charityReady) continue;
 				
+				Log.d("fixReady", "Ready value is not truthy, retrieving projects");
 				List<Map> projects = (List<Map>) ((Map)charity).get("projects");
 				if (projects == null) continue;
+				
+				Log.d("fixReady", "Charity has " + projects.size() + " projects, checking them");
+				
 				for (Map project : projects) {
 					Object ready = project.get("ready");
 					if (ready != null && Utils.yes(ready)) {
 						charityReady = true;
+						Log.d("fixReady", "Found ready project!");
 						break;
 					}
+					Log.d("fixReady", "Project not ready");
 				}
 				
 				if (charityReady) {
+					Log.d("fixReady", "Now marking charity as ready!");
 					charity.put("ready", true);
 					JThing<NGO> item = new JThing();
 					item.setMap(charity);
 					AppUtils.doSaveEdit(config.getPath(NGO.class, (String) charity.get("@id"), KStatus.DRAFT), item, state);
 					AppUtils.doPublish(item, config.getPath(NGO.class, (String) charity.get("@id"), KStatus.DRAFT),
 							config.getPath(NGO.class, (String) charity.get("@id"), KStatus.PUBLISHED));
+				} else {
+					Log.d("fixReady", "Charity had no ready projects, not marking as ready.");
 				}
 			}
 		}
