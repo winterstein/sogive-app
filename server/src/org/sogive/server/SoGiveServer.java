@@ -21,8 +21,10 @@ import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.utils.web.XStreamUtils;
 import com.winterwell.web.WebEx;
+import com.winterwell.web.app.AMain;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.FileServlet;
+import com.winterwell.web.app.HttpServletWrapper;
 import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.data.XId;
@@ -36,6 +38,7 @@ import com.winterwell.datalog.IDataLogStorage;
 import com.winterwell.datalog.DataLogConfig;
 import com.winterwell.datalog.DataLogImpl;
 import com.winterwell.es.ESUtils;
+import com.winterwell.es.IESRouter;
 import com.winterwell.es.XIdTypeAdapter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
@@ -46,48 +49,40 @@ import com.winterwell.gson.GsonBuilder;
 import com.winterwell.gson.KLoopPolicy;
 import com.winterwell.gson.StandardAdapters;
 
-public class SoGiveServer {
-
-	public static final Time startTime = new Time();
+public class SoGiveServer extends AMain<SoGiveConfig> {
 	
-	private static JettyLauncher jl;
-	
-	public static LogFile logFile;
+	private static SoGiveServer main;
 
-	private static JettyLauncher esjl;
-
-	private static boolean initFlag;
 
 	public static void main(String[] args) {
-		
+		main = new SoGiveServer();
+
 		logFile = new LogFile(new File("sogive.log"))
 					// keep 8 weeks of 1 week log files ??revise this??
 					.setLogRotation(TUnit.WEEK.dt, 8);
 		
-		Log.i("Go!");
-		// storage layer (eg ES)
-		SoGiveConfig config = init();
-		
+		main.doMain(args);		
+	}
+	
+	@Override
+	protected int getPort() {
+		return config.port;
+	}
+	
+	@Override
+	protected void addJettyServlets(JettyLauncher jl) {		
 		assert jl==null;
-		jl = new JettyLauncher(new File("web"), config.port);
-		jl.setup();
+		jl.addServlet("/event", new HttpServletWrapper(EventServlet::new).setDebug(true));
+		jl.addServlet("/basket", new HttpServletWrapper(BasketServlet::new).setDebug(true));
+		jl.addServlet("/team", new HttpServletWrapper(TeamServlet::new).setDebug(true));
+		jl.addServlet("/register", new HttpServletWrapper(RegisterServlet::new).setDebug(true));
+		jl.addServlet("/fundraise", new HttpServletWrapper(FundraiseServlet::new).setDebug(true));
 		jl.addServlet("/*", new MasterHttpServlet());
-		Log.i("web", "...Launching Jetty web server on port "+jl.getPort());
-		jl.run();
-		Log.i("Running...");
-		
-//		// Also run an ES upload server
-//		esjl = new JettyLauncher(new File("web"), config.portUpload);
-//		esjl.setup();
-//		esjl.addServlet("/*", new ESProxyServlet());
-//		Log.i("web", "...Launching ES proxy on port "+esjl.getPort());
-//		esjl.run();
-		
 	}
 
-
-	public synchronized static SoGiveConfig init() {
-		if (initFlag) return Dep.get(SoGiveConfig.class);		
+	@Override
+	public SoGiveConfig initConfig(String[] args) {		
+		if (initFlag) return Dep.get(SoGiveConfig.class);
 		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), null);
 		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), null); 
 		Log.d("stripe.config", FlexiGson.toJSON(sc));
@@ -111,13 +106,14 @@ public class SoGiveServer {
 		// client
 		Dep.setSupplier(ESHttpClient.class, true, 
 				() -> new ESHttpClient(Dep.get(ESConfig.class))
-				);		
+				);
+		// ES router
+		Dep.set(IESRouter.class, config);
 		// mappings
 		DB.init();
 		// login
 //		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
-		initFlag = true;
 		return config;
 	}
 

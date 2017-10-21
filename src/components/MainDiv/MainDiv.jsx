@@ -20,10 +20,16 @@ import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
 import EditorDashboardPage from '../editor/EditorDashboardPage';
 import ExchangeRatesPage from '../editor/ExchangeRatesPage';
+import FundRaiserPage from '../FundRaiserPage';
+import EditEventPage from '../editor/EditEventPage';
+import RegisterPage from '../RegisterPage';
 
 // Actions
 
 const PAGES = {
+	editEvent: EditEventPage,
+	register: RegisterPage,
+	fundraiser: FundRaiserPage,
 	search: SearchPage,
 	dashboard: DashboardPage,
 	editordashboard: EditorDashboardPage,

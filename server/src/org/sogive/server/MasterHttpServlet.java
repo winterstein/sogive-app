@@ -79,6 +79,7 @@ public class MasterHttpServlet extends HttpServlet {
 			WebRequest request = new WebRequest(null, req, resp);
 			Log.d("servlet", request);
 			String path = request.getRequestPath();
+			String[] pathBits = path.split("/");
 			if (path.startsWith("/search")) {
 				SearchServlet s = new SearchServlet();
 				s.process(request);
@@ -118,7 +119,7 @@ public class MasterHttpServlet extends HttpServlet {
 				IServlet s = new ImportDataServlet();
 				s.process(request);
 				return;
-			}	
+			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
 			WebEx wex = WebUtils2.runtime(ex);
