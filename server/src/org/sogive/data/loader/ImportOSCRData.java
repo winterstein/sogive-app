@@ -49,7 +49,7 @@ public class ImportOSCRData {
 
 	public static void main(String[] args) {		
 		
-		SoGiveServer.init();
+		new SoGiveServer().init();
 		
 		new ImportOSCRData().run();
 	}
