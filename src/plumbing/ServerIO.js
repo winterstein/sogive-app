@@ -30,6 +30,7 @@ export default ServerIO;
 // for debug
 window.ServerIO = ServerIO;
 
+
 /**
  * @param query {!String} query string
  * @param status {?KStatus} optional to request draft
@@ -41,8 +42,7 @@ ServerIO.search = function({q, from, size, status, recommended}) {
 
 
 ServerIO.getCharity = function(charityId, status) {
-	assMatch(charityId, String);
-	return ServerIO.load('/charity/'+encURI(charityId)+'.json', {data: {status: status}});
+	return ServerIO.getDataItem({type: C.TYPES.NGO, id: charityId, status: status});
 };
 
 

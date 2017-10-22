@@ -360,6 +360,9 @@ DataStore.update({
 		NGO: {},
 		User: {}
 	},
+	list: {
+
+	},
 	focus: {
 		NGO: null,
 		User: null,

@@ -80,6 +80,17 @@ ActionMan.delete = (type, pubId) => {
 	});
 };
 
+// ServerIO //
+const servlet4type = (type) => {
+	let stype = type.toLowerCase();
+	// NGO = charity
+	if (stype==='ngo') stype = 'charity';
+	// "advert"" can fall foul of adblocker!	
+	if (stype==='advert') stype = 'vert';
+	if (stype==='advertiser') stype = 'vertiser';
+	return stype;
+};
+
 ServerIO.crud = function(type, item, action) {	
 	assert(C.TYPES.has(type), type);
 	assert(item && getId(item), item);
@@ -94,14 +105,9 @@ ServerIO.crud = function(type, item, action) {
 	if (action==='new') {
 		params.data.name = item.name; // pass on the name so server can pick a nice id if action=new
 	}
-	let stype = type.toLowerCase();
-	// NGO = charity
-	if (stype==='ngo') stype = 'charity';
-	// "advert"" can fall foul of adblocker!	
-	if (stype==='advert') stype = 'vert';
-	if (stype==='advertiser') stype = 'vertiser';
+	let stype = servlet4type(type);
 	// NB: load() includes handle messages
-	return ServerIO.load('/'+encURI(stype)+'/'+encURI(getId(item))+'.json', params);
+	return ServerIO.load('/'+stype+'/'+encURI(getId(item))+'.json', params);
 };
 ServerIO.saveEdits = function(type, item) {
 	return ServerIO.crud(type, item, 'save');
@@ -111,6 +117,20 @@ ServerIO.publishEdits = function(type, item) {
 };
 ServerIO.discardEdits = function(type, item) {
 	return ServerIO.crud(type, item, 'discard-edits');
+};
+/**
+ * get an item from the backend -- does not save it into DataStore
+ */
+ServerIO.getDataItem = function({type, id, status}) {
+	assert(C.TYPES.has(type), 'ServerIO - bad type: '+type);
+	assMatch(id, String);
+	const params = {data: {status}};
+	return ServerIO.load('/'+servlet4type(type)+'/'+encURI(id)+'.json', params);
+};
+ActionMan.getDataItem = ({type, id, status}) => {
+	return DataStore.fetch(['data', type, id], () => {
+		return ServerIO.getDataItem({type, id, status});
+	});
 };
 
 const CRUD = {	

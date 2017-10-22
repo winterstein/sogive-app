@@ -1,6 +1,8 @@
 import React from 'react';
 
 import AccountMenu from './AccountMenu';
+import C from '../C';
+import Roles from '../Roles';
 
 // BUG the navbar does not toggle closed :(
 // And the react-bootstrap version of this with Navbar, NavItem seems to have bugs in NavItem's handling of clicks :'(
@@ -12,8 +14,13 @@ import AccountMenu from './AccountMenu';
  * @param {*} page The current page
  */
 const NavBar = ({currentPage}) => {
+	// which pages?
+	let pages = ['dashboard', 'search', 'event', 'fundraise'];
+	if (Roles.iCan(C.CAN.editEvent).value) {
+		pages.append('editEvent');		
+	}
 	// make the page links
-	let pageLinks = ['dashboard', 'search'].map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
+	let pageLinks = pages.map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
 	return (
 		<nav className="navbar navbar-fixed-top navbar-inverse">
 			<div className="container">

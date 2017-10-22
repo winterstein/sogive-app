@@ -71,7 +71,6 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	
 	@Override
 	protected void addJettyServlets(JettyLauncher jl) {		
-		assert jl==null;
 		jl.addServlet("/event", new HttpServletWrapper(EventServlet::new).setDebug(true));
 		jl.addServlet("/basket", new HttpServletWrapper(BasketServlet::new).setDebug(true));
 		jl.addServlet("/team", new HttpServletWrapper(TeamServlet::new).setDebug(true));

@@ -60,7 +60,7 @@ const iCan = (capability) => {
 
 const cans4role = {};
 
-const define = (role, cans) => {
+const defineRole = (role, cans) => {
 	assMatch(role, String);
 	assMatch(cans, "String[]");
 	cans4role[role] = cans;	
@@ -68,12 +68,12 @@ const define = (role, cans) => {
 
 const Roles = {
 	iCan,
-	define,
+	defineRole,
 	getRoles
 };
 
 export default Roles;
 
 // setup roles
-define(C.ROLES.editor, [C.CAN.publish]);
-define(C.ROLES.admin, C.CAN.values);
+defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
+defineRole(C.ROLES.admin, C.CAN.values);
