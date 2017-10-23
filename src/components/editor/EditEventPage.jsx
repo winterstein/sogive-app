@@ -68,7 +68,7 @@ const EventEditor = ({id}) => {
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={JSON.stringify(tt)} path={path.concat(['ticketTypes', i])} ticketType={tt} />) 
+				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} />) 
 				: <p>No tickets yet!</p>
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
@@ -79,9 +79,9 @@ const EventEditor = ({id}) => {
 };
 
 const TicketTypeEditor = ({ticketType, path}) => {
-	return (<div>{printer.str(ticketType)}
+	return (<div className='well'>{printer.str(ticketType)}
 		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' />
-</div>);
+	</div>);
 };
 
 export default EditEventPage;
