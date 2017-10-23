@@ -384,10 +384,10 @@ const saveDraftFn = _.debounce(
 /**
  * Just a convenience for a Bootstrap panel
  */
-Misc.Card = ({title, icon, children}) => {
+Misc.Card = ({title, glyph, icon, children}) => {
 	return (<div className="panel panel-default">
 		<div className="panel-heading">
-			<h3 className="panel-title">{icon? <Misc.Icon fa={icon} /> : null} {title || ''}</h3>
+			<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} {title || ''}</h3>
 		</div>
 		<div className="panel-body">
 			{children}

@@ -12,6 +12,7 @@ import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId} from '../../data/DataClass';
+import Ticket from '../../data/charity/Ticket';
 import ListLoad from '../ListLoad';
 
 const EditEventPage = () => {
@@ -31,7 +32,7 @@ const EditEventPage = () => {
 	};
 	return (<div>
 		<button className='btn btn-default' onClick={create}><Misc.Icon glyph='plus' /> Create</button>
-		<h2>Pick an Event</h2>
+		<h2>Edit an Event</h2>
 		<ListLoad type={type} />
 	</div>);
 };
@@ -44,10 +45,17 @@ const EventEditor = ({id}) => {
 	}
 	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
+
+	const addTicketType = () => {
+		const tt = Ticket.make({}, item.id);
+		item.ticketTypes = (item.ticketTypes || []).concat(tt);
+		DataStore.update();
+	};
+	const path = ['data', type, id];
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
 		<small>ID: {id}</small>
-		<Misc.PropControl path={['data', type, id]} prop='name' item={item} label='Event Name' />
+		<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
 		<Misc.PropControl path={['data', type, id]} prop='date' item={item} label='Event Date' type='date' />
 		
@@ -55,13 +63,25 @@ const EventEditor = ({id}) => {
 
 		<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
 
-		TODO ticket types
-
 		<Misc.PropControl path={['data', type, id]} prop='img' item={item} label='Square Logo Image' type='img' />
 		<Misc.PropControl path={['data', type, id]} prop='imgBanner' item={item} label='Banner Image' type='img' />
 
+		<Misc.Card title='Ticket Types' icon='ticket'>
+			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
+				<TicketTypeEditor key={JSON.stringify(tt)} path={path.concat(['ticketTypes', i])} ticketType={tt} />) 
+				: <p>No tickets yet!</p>
+			}
+			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
+
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
+};
+
+const TicketTypeEditor = ({ticketType, path}) => {
+	return (<div>{printer.str(ticketType)}
+		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' />
+</div>);
 };
 
 export default EditEventPage;
