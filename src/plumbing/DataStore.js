@@ -125,6 +125,12 @@ class Store {
 		return item;
 	}
 
+	setData(item, update = true) {
+		assert(item && item['@type'] && item.id);
+		assert(C.TYPES.has(item['@type']) && this.appstate.data[item['@type']]);
+		this.setValue(['data', item['@type'], item.id], item, update);
+	}
+
 	getValue(...path) {
 		assert(_.isArray(path), "DataStore.getValue - "+path);
 		// If a path array was passed in, use it correctly.

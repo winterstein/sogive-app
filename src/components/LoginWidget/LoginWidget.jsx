@@ -30,20 +30,23 @@ const LoginLink = () => {
 
 const SocialSignin = ({verb, services}) => {
 	if (verb==='reset') return null;
+	if ( ! services) {
+		return null; 
+	}
 	return (
 		<div className="social-signin">
-			<div className={services && services.indexOf('twitter') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('twitter')} className="btn btn-default">
+			<div className={services.indexOf('twitter') === -1? "hidden" : "form-group"}>
+				<button onClick={() => socialLogin('twitter')} className="btn btn-default signin">
 					<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
 				</button>
 			</div>
-			<div className={services && services.indexOf('facebook') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('facebook')} className="btn btn-default">
+			<div className={services.indexOf('facebook') === -1? "hidden" : "form-group"}>
+				<button onClick={() => socialLogin('facebook')} className="btn btn-default signin">
 					<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
 				</button>
 			</div>
-			<div className="form-group hidden">
-				<button onClick={() => socialLogin('instagram')} className="btn btn-default">
+			<div className={services.indexOf('instagram') === -1? "hidden" : "form-group"}>
+				<button onClick={() => socialLogin('instagram')} className="btn btn-default signin">
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
@@ -176,11 +179,12 @@ const LoginError = function() {
 		See SigninScriptlet
 
 */
-const LoginWidget = ({showDialog, logo, title}) => {
+const LoginWidget = ({showDialog, logo, title, services}) => {
 	if (showDialog === undefined) {
 		showDialog = DataStore.getShow('LoginWidget');
 		// NB: the app is shown regardless
 	}
+	if ( ! services) services = ['twitter', 'facebook'];
 	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
 	if ( ! verb) verb = 'login';
 
@@ -209,7 +213,7 @@ const LoginWidget = ({showDialog, logo, title}) => {
 							/>
 						</div>
 						<div className="col-sm-6">
-							<SocialSignin verb={verb} services={['facebook']} />
+							<SocialSignin verb={verb} services={services} />
 						</div>
 					</div>
 				</div>

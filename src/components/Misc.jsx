@@ -1,7 +1,7 @@
 import React from 'react';
 
 // FormControl removed in favour of basic <inputs> while debugging input lag
-import {Glyphicon, Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+import { Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 
 
 import {assert, assMatch} from 'sjtest';
@@ -80,8 +80,8 @@ Misc.Time = ({time}) => {
 
 /** eg a Twitter logo */
 Misc.Logo = ({service, size, transparent}) => {
-	assert(service);
-	if (service==='twitter' || service==='facebook') {
+	assert(service, 'Misc.Logo');
+	if (service==='twitter' || service==='facebook'|| service==='instagram') {
 		return <span className={'color-'+service}><Misc.Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} /></span>;
 	}
 	let klass = "img-rounded logo";
@@ -133,9 +133,9 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	}
 	let {prop, path, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
-	assert( ! type || Misc.ControlTypes.has(type), type);
-	assert(_.isArray(path), path);
-	assert(path.indexOf(null)===-1 && path.indexOf(undefined)===-1, path);
+	assert( ! type || Misc.ControlTypes.has(type), 'Misc.PropControl: '+type);
+	assert(_.isArray(path), 'Misc.PropControl: not an array:'+path);
+	assert(path.indexOf(null)===-1 && path.indexOf(undefined)===-1, 'Misc.PropControl: null in path '+path);
 	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
 	// if (item && item !== DataStore.getValue(path)) {
 	// 	console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);
@@ -301,8 +301,8 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		delete otherStuff.options;
 		delete otherStuff.defaultValue;
 
-		assert(options, [prop, otherStuff]);
-		assert(options.map, options);
+		assert(options, 'Misc.PropControl: no options for select '+[prop, otherStuff]);
+		assert(options.map, 'Misc.PropControl: options not an array '+options);
 		// Make an option -> nice label function
 		// the labels prop can be a map or a function
 		let labels = otherStuff.labels;
@@ -401,7 +401,7 @@ Misc.Card = ({title, glyph, icon, children}) => {
  * Use-case: for making navigation links & buttons where we use deep-linking urls.
  */
 Misc.RestItem = ({hash, children}) => {
-	assert(hash);
+	assert(hash, 'Misc.RestItem');
 	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
 	return (<a className='RestItem' href={'#'+hash} onClick={clicked} >
 			{children}
@@ -413,7 +413,7 @@ Misc.RestItem = ({hash, children}) => {
  * TODO auto-save on edit -- copy from sogive
  */
 Misc.SavePublishDiscard = ({type, id}) => {
-	assert(C.TYPES.has(type));
+	assert(C.TYPES.has(type), 'Misc.SavePublishDiscard');
 	assMatch(id, String);
 	let localStatus = DataStore.getLocalEditsStatus(type, id);
 	let isSaving = C.STATUS.issaving(localStatus);	
