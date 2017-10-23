@@ -43,6 +43,7 @@ import com.winterwell.web.fields.DoubleField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.JsonField;
 import com.winterwell.web.fields.LongField;
+import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
 
 /**
@@ -66,7 +67,8 @@ public class DonationServlet implements IServlet {
 
 	public void process(WebRequest state) throws Exception {
 		this.state = state;
-		Dep.get(YouAgainClient.class).getAuthTokens(state);
+		List<AuthToken> tokens = Dep.get(YouAgainClient.class).getAuthTokens(state);
+		// TODO check tokens match action
 		if (state.actionIs("donate")) {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {

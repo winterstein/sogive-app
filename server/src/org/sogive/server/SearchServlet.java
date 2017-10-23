@@ -66,12 +66,7 @@ public class SearchServlet implements IServlet {
 	 */
 	private static final int MAX_RESULTS = 10000;
 	
-	public void process(WebRequest state) throws Exception {
-		
-		YouAgainClient ya = Dep.get(YouAgainClient.class);
-List<AuthToken> a = ya.getAuthTokens(state);
-	System.out.println(a);
-		
+	public void process(WebRequest state) throws Exception {		
 		ESHttpClient client = Dep.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 

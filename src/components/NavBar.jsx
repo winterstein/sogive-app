@@ -16,9 +16,6 @@ import Roles from '../Roles';
 const NavBar = ({currentPage}) => {
 	// which pages?
 	let pages = ['dashboard', 'search', 'event', 'fundraise'];
-	if (Roles.iCan(C.CAN.editEvent).value) {
-		pages.append('editEvent');		
-	}
 	// make the page links
 	let pageLinks = pages.map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
 	return (
