@@ -118,6 +118,9 @@ const CharityAbout = ({charity}) => {
 	// 		Employees: { charity.employees }
 	// 	</p>
 	// );
+	// Safety: in case the url is e.g. wwww.mysite.com (no http)
+	let churl = charity.url;
+	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
 	return (
 		<div className='charity-about'>
 			{NGO.name(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.name(charity)}</h4> : null}
@@ -131,7 +134,7 @@ const CharityAbout = ({charity}) => {
 				</p>
 			</div>
 			<div className='url'>
-				<a href={charity.url} target='_blank'>{charity.url}</a>
+				<a href={churl} target='_blank'>{charity.url}</a>
 			</div>
 			<div className='official-details'>
 				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}				
