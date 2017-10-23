@@ -118,7 +118,7 @@ const CharityAbout = ({charity}) => {
 	// 		Employees: { charity.employees }
 	// 	</p>
 	// );
-	// Safety: in case the url is e.g. wwww.mysite.com (no http)
+	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
 	return (
