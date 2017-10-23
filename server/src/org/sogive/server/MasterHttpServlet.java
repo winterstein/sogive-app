@@ -25,6 +25,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Range;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.web.app.FileServlet;
+import com.winterwell.web.app.HttpServletWrapper;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.LogServlet;
 import com.winterwell.web.app.ManifestServlet;
@@ -80,56 +81,57 @@ public class MasterHttpServlet extends HttpServlet {
 			Log.d("servlet", request);
 			String path = request.getRequestPath();
 			String[] pathBits = path.split("/");
-			if (path.startsWith("/search")) {
-				SearchServlet s = new SearchServlet();
+			String servletName = FileUtils.getBasename(pathBits[1]);
+			IServlet s;
+			switch(servletName) {
+			case "search":
+				s = new SearchServlet();
+				s.process(request);
+				return;			
+			case "charity":
+				s = new CharityServlet();
+				s.process(request);
+				return;			
+			case "donation":
+				s = new DonationServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/charity")) {
-				CharityServlet s = new CharityServlet();
+			case "stripe":
+				s = new StripeWebhookServlet();
+				s.process(request);
+				return;			
+			case "share":
+				s = new ShareServlet();
+				s.process(request);
+				return;				
+			case "log":
+				s = new LogServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/donation")) {
-				DonationServlet s = new DonationServlet();
+			case "import":
+				s = new ImportDataServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/stripe/webhook")) {
-				StripeWebhookServlet s = new StripeWebhookServlet();
+			case "event":
+				s = new EventServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/share")) {
-				ShareServlet s = new ShareServlet();
+			case "basket":
+				s = new BasketServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/manifest")) {
-				ManifestServlet s = new ManifestServlet();
+			case "register":
+				s = new RegisterServlet();
 				s.process(request);
 				return;
-			}
-			if (path.startsWith("/log")) {
-				LogServlet s = new LogServlet();
-				s.process(request);
-				return;
-			}
-			if (path.startsWith("/import")) {
-				IServlet s = new ImportDataServlet();
+			case "fundraise":
+				s = new FundraiseServlet();
 				s.process(request);
 				return;
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
-			WebEx wex = WebUtils2.runtime(ex);
-			if (wex.code >= 500) {
-				// log as severe
-				Log.e(Utils.or(wex.getCause(), wex).getClass().getSimpleName(), wex);
-			} else {
-				Log.i(wex.getClass().getSimpleName(), wex);
-			}
-			WebUtils2.sendError(wex.code, wex.getMessage(), resp);
+			HttpServletWrapper.doCatch(ex, resp);
 		} finally {
 			WebRequest.close(req, resp);
 		}

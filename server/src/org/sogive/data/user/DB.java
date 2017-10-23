@@ -12,6 +12,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.data.commercial.Basket;
+import org.sogive.data.commercial.Event;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
@@ -31,6 +33,7 @@ import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.log.Log;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
 /**
@@ -44,27 +47,18 @@ import com.winterwell.web.data.XId;
  */
 public class DB {
 
+	private static final Class[] DBCLASSES = new Class[] {NGO.class, Person.class, Team.class, Event.class, Basket.class, Donation.class};
+
 	public static void init() {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 
+		AppUtils.initESIndices(KStatus.main(), DBCLASSES);
+		
+		// charity mapping
 		for(KStatus status : KStatus.main()) {
 			// charity
-			ESPath path = config.getPath(null, NGO.class, null, status);
-			if (es.admin().indices().indexExists(path.index())) {
-				continue;
-			}
-			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
-			es.debug = true;
-			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
-			// english stopwords and stemming ??This doesn't seem to work :(
-			// ES docs are opaque on how to actually get analyzers setup :(
-//			pi.setDefaultAnalyzer(Analyzer.english);
-			pi.setAlias(path.index());
-			// TODO synonyms
-			
-			IESResponse r = pi.get();
-			
+			ESPath path = config.getPath(null, NGO.class, null, status);			
 			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
 			ESType dtype = new ESType();
 			dtype.property("name", new ESType().text()
@@ -81,21 +75,14 @@ public class DB {
 		
 		// donation
 		ESPath path = config.getPath(null, Donation.class, null, null);
-		if ( ! es.admin().indices().indexExists(path.index())) {
-			String baseIndex = path.index()+"_"+es.getConfig().getIndexAliasVersion();
-			CreateIndexRequest pi = es.admin().indices().prepareCreate(baseIndex);
-			pi.setAlias(path.index());
-			IESResponse r = pi.get();
-		
-			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
-			ESType dtype = new ESType();
-			dtype.property("from", new ESType().keyword());
-			dtype.property("to", new ESType().keyword());
-			dtype.property("date", new ESType().date());
-			pm.setMapping(dtype);
-			IESResponse r2 = pm.get();
-			r2.check();
-		}
+		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
+		ESType dtype = new ESType();
+		dtype.property("from", new ESType().keyword());
+		dtype.property("to", new ESType().keyword());
+		dtype.property("date", new ESType().date());
+		pm.setMapping(dtype);
+		IESResponse r2 = pm.get();
+		r2.check();				
 	}
 
 	public static Person getUser(XId id) {

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
-import {modifyHash, encURI} from 'wwutils';
+import {modifyHash, encURI, uid} from 'wwutils';
 import C from '../C';
 import Roles from '../Roles';
 import Misc from './Misc';
@@ -19,23 +19,28 @@ const EventPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 	if (eventId) return <Event id={eventId} />;
-	return <ListLoad type={C.TYPES.Event} />;
+	let type = C.TYPES.Event;
+	return (<div>
+		<h2>Pick an Event</h2>
+		<ListLoad type={type} />
+		<div><a href='#editEvent'>Create / edit events</a></div>
+	</div>);
 };
 
 const Event = ({id}) => {
-	let pEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:id});
+	let type = C.TYPES.Event;
+	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT});
 	if ( ! pEvent.value) {
 		return <Misc.Loading />;
 	}
-	console.warn("pEvent", pEvent.value);
+	let item = pEvent.value;
 	return (<div>
-		<h2>Event {id} </h2>
-		TODO {""+pEvent.value}
-		name
-		date
-		ticket types
-		images: logo, banner, background
-		<Misc.SavePublishDiscard type={C.TYPES.Event} id={id} />
+		<h2>{item.name || 'Event '+id} </h2>		
+		<small>ID: {id}</small>		
+		<img src={item.img} className='img-thumbnail' alt='event logo' />
+		<div>
+			{item.description}
+		</div>
 	</div>);
 };
 

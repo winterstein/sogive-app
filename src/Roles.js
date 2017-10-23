@@ -11,6 +11,9 @@ import pv from 'promise-value';
  * @returns {PromiseValue<String[]>}
  */
 const getRoles = () => {
+	if ( ! Login.isLoggedIn()) {
+		return pv([]);
+	}
 	let shared = DataStore.fetch(['misc', 'roles', Login.getId()],
 		() => {
 			let req = Login.getSharedWith({prefix:"role:*"});

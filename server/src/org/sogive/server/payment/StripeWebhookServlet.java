@@ -1,6 +1,7 @@
 package org.sogive.server.payment;
 
 import com.winterwell.utils.log.Log;
+import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.stripe.model.Event;
 import com.stripe.net.APIResource;
@@ -10,7 +11,7 @@ import com.stripe.net.APIResource;
  * @author daniel
  *
  */
-public class StripeWebhookServlet {
+public class StripeWebhookServlet implements IServlet {
 
 	private WebRequest state;
 

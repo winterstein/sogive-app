@@ -329,6 +329,11 @@ class Store {
 		assert(promise!==undefined, "fetchFn passed to DataStore.fetch() should return a promise or a value. Got: undefined. Missing return statement?");
 		pv = PV(promise);
 		pv.promise.then(res => {
+			// HACK unwrap cargo
+			if (res.cargo) {
+				console.log("unwrapping cargo to store at "+path, res);
+				res = res.cargo;
+			}
 			// this.setValue(fpath, null, false); No repeats?!
 			this.setValue(path, res);
 			// DataStore.updateFromServer(res);
