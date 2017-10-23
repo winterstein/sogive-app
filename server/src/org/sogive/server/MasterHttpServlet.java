@@ -124,8 +124,8 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new RegisterServlet();
 				s.process(request);
 				return;
-			case "fundraise":
-				s = new FundraiseServlet();
+			case "fundraiser":
+				s = new FundraiserServlet();
 				s.process(request);
 				return;
 			}			
