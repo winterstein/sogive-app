@@ -133,6 +133,14 @@ ActionMan.getDataItem = ({type, id, status}) => {
 	});
 };
 
+ServerIO.getDonationDraft = ({to}) => {
+	return ServerIO.load('/donation/get-draft.json', {to});
+};
+
+ActionMan.getDonationDraft = ({to}) => {
+	return ServerIO.getDonationDraft({to});
+};
+
 const CRUD = {	
 };
 export default CRUD;

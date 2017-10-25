@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
@@ -17,7 +18,9 @@ import org.sogive.data.user.DB;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
+import com.stripe.exception.APIException;
 import com.stripe.model.Charge;
+import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
@@ -28,6 +31,7 @@ import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Key;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
@@ -35,6 +39,7 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
+import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
@@ -58,14 +63,15 @@ import com.winterwell.youagain.client.YouAgainClient;
  * @author daniel
  *
  */
-public class DonationServlet implements IServlet {
+public class DonationServlet extends CrudServlet {
 
 	private WebRequest state;
 
 	public DonationServlet() {
+		super(Donation.class)
 	}
 
-	public void process(WebRequest state) throws Exception {
+	public void process(WebRequest state) throws IOException {
 		this.state = state;
 		List<AuthToken> tokens = Dep.get(YouAgainClient.class).getAuthTokens(state);
 		// TODO check tokens match action
@@ -73,6 +79,8 @@ public class DonationServlet implements IServlet {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
 			doList();
+		} else if (state.getSlug()!=null && state.getSlug().contains("getDraft")) {
+			doGetDraft();
 		} else {
 			throw new WebEx(400, "What did you want?");
 		}
@@ -102,8 +110,39 @@ public class DonationServlet implements IServlet {
 				));
 		WebUtils2.sendJson(output, state);
 	}
+	
+	private void doGetDraft() throws IOException {
+		XId user = state.getUserId();
+		XId target = state.get(new Key<XId>("target"));
+		
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SoGiveConfig config = Dep.get(SoGiveConfig.class);
+		SearchRequestBuilder s = es.prepareSearch(config.getPath(null, Donation.class, null, KStatus.DRAFT).index());
+		
+		if (user == null) {
+			throw new WebEx.E401(null, "No user");
+		} else if (target == null) {
+			throw new WebEx.E401(null, "No target");
+		} else {
+			BoolQueryBuilder qb = QueryBuilders.boolQuery()
+				.must(QueryBuilders.termQuery("from", user.toString()))
+				.must(QueryBuilders.termQuery("to", target.toString()));
+			s.setQuery(qb);
+		}
+		
+		s.setSize(1);
+		SearchResponse sr = s.get();
+		List<Map> hits = sr.getHits();
+		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
+		long total = sr.getTotal();
+		if (total > 0) {
+			Map draft = hits2.get(0);
+			WebUtils2.sendJson(new JsonResponse(state, draft), state);	
+		}
+		WebUtils2.sendJson(new JsonResponse(state), state);
+	}
 
-	private void doMakeDonation() throws Exception {
+	private void doMakeDonation() throws IOException {
 		XId user = state.getUserId();
 		String email = state.get("stripeEmail");
 		if (user==null && email!=null) {
@@ -150,23 +189,27 @@ public class DonationServlet implements IServlet {
 		String ikey = donation.getId();
 		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money
-		Charge charge = StripePlugin.collect(donation, sa, userObj, ikey);
-		
-		Log.d("stripe", charge);
-		donation.setPaymentId(charge.getId());
-		donation.setCollected(true);
-		
-		// store in the database
-		UpdateRequestBuilder pu = es.prepareUpdate(path);
-		
-		String json3 = Dep.get(Gson.class).toJson(donation);
-		pu.setDoc(json3);
-		IESResponse resAfter = pu.get().check();
-		String json4 = res.getJson();		
-				
-		Object dobj = JSON.parse(json3);		
-		JsonResponse output = new JsonResponse(state, dobj);
-		WebUtils2.sendJson(output, state);
+		// TODO Less half-assed handling of Stripe exceptions
+		try {
+			Charge charge = StripePlugin.collect(donation, sa, userObj, ikey);
+			Log.d("stripe", charge);
+			donation.setPaymentId(charge.getId());
+			donation.setCollected(true);
+			
+			// store in the database
+			UpdateRequestBuilder pu = es.prepareUpdate(path);
+			
+			String json3 = Dep.get(Gson.class).toJson(donation);
+			pu.setDoc(json3);
+			IESResponse resAfter = pu.get().check();
+			String json4 = res.getJson();		
+					
+			Object dobj = JSON.parse(json3);		
+			JsonResponse output = new JsonResponse(state, dobj);
+			WebUtils2.sendJson(output, state);
+		} catch(Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	

@@ -21,6 +21,7 @@ import EditCharityPage from '../editor/EditCharityPage';
 import EditorDashboardPage from '../editor/EditorDashboardPage';
 import ExchangeRatesPage from '../editor/ExchangeRatesPage';
 import FundRaiserPage from '../FundRaiserPage';
+import EditFundRaiserPage from '../editor/EditFundRaiserPage';
 import EditEventPage from '../editor/EditEventPage';
 import EventPage from '../EventPage';
 import RegisterPage from '../RegisterPage';
@@ -32,6 +33,7 @@ const PAGES = {
 	editEvent: EditEventPage,
 	register: RegisterPage,
 	fundraiser: FundRaiserPage,
+	editFundraiser: EditFundRaiserPage,
 	search: SearchPage,
 	dashboard: DashboardPage,
 	editordashboard: EditorDashboardPage,

@@ -28,11 +28,13 @@ Misc.Loading = ({text}) => (
 	</div>
 );
 
-Misc.Col2 = ({children}) => (<div className='container-fluid'>
-	<div className='row'>
-		<div className='col-md-6 col-sm-6'>{children[0]}</div><div className='col-md-6 col-sm-6'>{children[1]}</div>
+Misc.Col2 = ({children}) => (
+	<div className='container-fluid'>
+		<div className='row'>
+			<div className='col-md-6 col-sm-6'>{children[0]}</div><div className='col-md-6 col-sm-6'>{children[1]}</div>
+		</div>
 	</div>
-	</div>);
+);
 
 const CURRENCY = {
 	GBP: "£",
@@ -329,6 +331,15 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox"
 							+" location date year number arraytext address postcode json");
 
+/**
+ * A button which sets a DataStore address to a specific value
+ */
+Misc.SetButton = ({path, value, children, className}) => {
+	assert(path && path.length);
+	const doSet = () => DataStore.setValue(path, value);
+	return <span className={className} onClick={doSet}>{children}</span>;
+};
+
 
 /**
  * Convert inputs (probably text) into the model's format (e.g. numerical)
@@ -403,9 +414,11 @@ Misc.Card = ({title, glyph, icon, children}) => {
 Misc.RestItem = ({hash, children}) => {
 	assert(hash, 'Misc.RestItem');
 	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
-	return (<a className='RestItem' href={'#'+hash} onClick={clicked} >
+	return (
+		<a className='RestItem' href={'#'+hash} onClick={clicked} >
 			{children}
-		</a>);
+		</a>
+	);
 };
 
 /**

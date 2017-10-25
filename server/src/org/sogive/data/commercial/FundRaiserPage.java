@@ -11,5 +11,6 @@ import com.winterwell.data.AThing;
  *
  */
 public class FundRaiserPage extends AThing {
-
+	String event;
+	String owner;
 }
