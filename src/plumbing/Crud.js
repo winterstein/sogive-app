@@ -134,7 +134,7 @@ ActionMan.getDataItem = ({type, id, status}) => {
 };
 
 ServerIO.getDonationDraft = ({to}) => {
-	return ServerIO.load('/donation/get-draft.json', {to});
+	return ServerIO.load('/donation/getDraft.json', {data: {to}});
 };
 
 ActionMan.getDonationDraft = ({to}) => {

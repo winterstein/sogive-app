@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
-import StripeCheckout from 'react-stripe-checkout';
 import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup, Tabs, Tab } from 'react-bootstrap';
 
 import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
 
+import C from '../C';
 import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../plumbing/DataStore';
@@ -56,6 +56,7 @@ const detailsOK = ({name, address, postcode}) => (
 	name.trim().length > 0 && address.trim().length > 0 && postcode.trim().length > 0
 );
 
+// Message can't be "bad", payment is final stage so can only be incomplete
 const messageOK = (formData) => true;
 
 const paymentOK = (formData) => true;
@@ -65,33 +66,27 @@ const stagesOK = (formData) => [
 	giftAidOK(formData),
 	detailsOK(formData),
 	messageOK(formData),
-	paymentOK(formData), // Payment can't be "bad"
+	paymentOK(formData),
 ];
 
 
 const DonationForm = ({item}) => {
-
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
-	if ( ! pDonation.value) {
-		return <Misc.Loading />;
-	}
+	let donationDraft = pDonation.value;
 
-	const formPath = ['widget', 'NewDonationForm', 'fart'];
-	let formValues = DataStore.getValue(formPath);
-	if (!formValues) {
-		DataStore.setValue(formPath, initialFormData, false);
-		formValues = DataStore.getValue(formPath);
+	const formPath = ['widget', 'NewDonationForm', item.id];
+	if (!donationDraft) {
+		donationDraft = initialFormData;
 	}
+	DataStore.setValue(formPath, donationDraft, false);
 
 	const stagePath = [...formPath, 'currentStage'];
-
-
 
 	return (
 		<div className='lightbox'>
 			<Misc.Card title='GIMME YOUR MONEY'>
-				<Tabs activeKey={formValues.currentStage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
+				<Tabs activeKey={donationDraft.currentStage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
 					<Tab eventKey={1} title='Amount'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
 							<AmountSection formPath={formPath} />
@@ -227,7 +222,7 @@ class StripeThingsClass extends Component {
 					<PostalCodeElement placeholder='AB1 2CD' />
 				</div>
 				<h3>Payment button</h3>
-				<div className='form-control'>
+				<div className=''>
 					{
 						this.state.canMakePayment ? 
 							<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />

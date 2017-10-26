@@ -22,7 +22,7 @@ const ListLoad = ({type, status, servlet, ListItem}) => {
 	// Downside: new events dont get auto-added to lists
 	// Upside: clearer
 	let items = DataStore.fetch(['list', type, 'all'], () => {
-		return ServerIO.load('/event/list.json', {data: {status}} )
+		return ServerIO.load(`/${servlet}/list.json`, {data: {status}} )
 			.then((res) => {
 				// console.warn(res);
 				return res.cargo.hits;

@@ -113,7 +113,7 @@ public class DonationServlet extends CrudServlet {
 	
 	private void doGetDraft() throws IOException {
 		XId user = state.getUserId();
-		XId target = state.get(new Key<XId>("target"));
+		String target = state.get("to");
 		
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
@@ -126,7 +126,7 @@ public class DonationServlet extends CrudServlet {
 		} else {
 			BoolQueryBuilder qb = QueryBuilders.boolQuery()
 				.must(QueryBuilders.termQuery("from", user.toString()))
-				.must(QueryBuilders.termQuery("to", target.toString()));
+				.must(QueryBuilders.termQuery("to", target));
 			s.setQuery(qb);
 		}
 		

@@ -18,7 +18,7 @@ const FundRaiserPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	if (frId) return <FundRaiser id={frId} />;
-	let type = C.TYPES.Event;
+	let type = C.TYPES.FundRaiser;
 
 	// which event?	
 
