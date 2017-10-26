@@ -68,7 +68,7 @@ public class DonationServlet extends CrudServlet {
 	private WebRequest state;
 
 	public DonationServlet() {
-		super(Donation.class)
+		super(Donation.class);
 	}
 
 	public void process(WebRequest state) throws IOException {
