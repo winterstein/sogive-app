@@ -425,7 +425,7 @@ Misc.RestItem = ({hash, children}) => {
  * save buttons
  * TODO auto-save on edit -- copy from sogive
  */
-Misc.SavePublishDiscard = ({type, id}) => {
+Misc.SavePublishDiscard = ({type, id, hidden }) => {
 	assert(C.TYPES.has(type), 'Misc.SavePublishDiscard');
 	assMatch(id, String);
 	let localStatus = DataStore.getLocalEditsStatus(type, id);
@@ -438,6 +438,10 @@ Misc.SavePublishDiscard = ({type, id}) => {
 	// if nothing has been edited, then we can't publish, save, or discard
 	// NB: modified is a persistent marker, managed by the server, for draft != published
 	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && C.STATUS.isclean(localStatus) && ! item.modified;
+
+	// Sometimes we just want to autosave drafts!
+	if (hidden) return <span />;
+
 	return (<div title={item && item.status}>
 		<div><small>Status: {item && item.status}, Modified: {localStatus} {isSaving? "saving...":null}</small></div>
 		<button className='btn btn-default' disabled={isSaving || C.STATUS.isclean(localStatus)} onClick={() => ActionMan.saveEdits(type, id)}>

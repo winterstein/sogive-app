@@ -31,15 +31,16 @@ const stripeKey = (window.location.host.startsWith('test') || window.location.ho
 
 
 const initialFormData = {
+	id: uid(),
 	amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
 	coverCosts: true,
 	giftAid: false,
 	giftAidTaxpayer: false,
 	giftAidOwnMoney: false,
 	giftAidNoCompensation: false,
-	name: '',
-	address: '',
-	postcode: '',
+	donorName: '',
+	donorAddress: '',
+	donorPostcode: '',
 	message: '',
 	pending: false,
 	complete: false,
@@ -74,14 +75,20 @@ const DonationForm = ({item}) => {
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
 	let donationDraft = pDonation.value;
+	console.log('********* pDonation', pDonation);
 
-	const formPath = ['widget', 'NewDonationForm', item.id];
 	if (!donationDraft) {
-		donationDraft = initialFormData;
+		donationDraft = {
+			...initialFormData,
+			from: Login.getId(),
+			to: item.id,
+		};
 	}
-	DataStore.setValue(formPath, donationDraft, false);
 
-	const stagePath = [...formPath, 'currentStage'];
+	const path = ['data', type, donationDraft.id];
+	DataStore.setValue(path, donationDraft, false);
+
+	const stagePath = [...path, 'currentStage'];
 
 	return (
 		<div className='lightbox'>
@@ -89,31 +96,32 @@ const DonationForm = ({item}) => {
 				<Tabs activeKey={donationDraft.currentStage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
 					<Tab eventKey={1} title='Amount'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
-							<AmountSection formPath={formPath} />
+							<AmountSection path={path} />
 						</SectionWrapper>
 					</Tab>
 					<Tab eventKey={2} title='Gift Aid'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={2}>
-							<GiftAidSection formPath={formPath} />
+							<GiftAidSection path={path} />
 						</SectionWrapper>
 					</Tab>
 					<Tab eventKey={3} title='Details'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={3}>
-							<DetailsSection formPath={formPath} />
+							<DetailsSection path={path} />
 						</SectionWrapper>
 					</Tab>
 					<Tab eventKey={4} title='Message'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={4}>
-							<MessageSection formPath={formPath} />
+							<MessageSection path={path} />
 						</SectionWrapper>
 					</Tab>
 					<Tab eventKey={5} title='Payment'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={5} isLast>
-							<PaymentSection formPath={formPath} />
+							<PaymentSection path={path} />
 						</SectionWrapper>
 					</Tab>
 				</Tabs>
 			</Misc.Card>
+			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</div>
 	);
 }; // ./DonationForm
@@ -130,37 +138,37 @@ const SectionWrapper = ({stagePath, sectionNumber, children, isFirst, isLast}) =
 };
 
 
-const AmountSection = ({formPath}) => (
+const AmountSection = ({path}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='amount' path={formPath} type='MonetaryAmount' label='Donation' />
-		<Misc.PropControl prop='coverCosts' path={formPath} type='checkbox' label='Cover processing costs' />
+		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />
+		<Misc.PropControl prop='coverCosts' path={path} type='checkbox' label='Cover processing costs' />
 	</div>
 );
 
-const GiftAidSection = ({formPath}) => (
+const GiftAidSection = ({path}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='giftAid' path={formPath} type='checkbox' label='Add Gift Aid' />
-		<Misc.PropControl prop='giftAidTaxpayer' label={`I'm a taxpayer`} path={formPath} type='checkbox' />
-		<Misc.PropControl prop='giftAidOwnMoney' label={`This is my money`} path={formPath} type='checkbox' />
-		<Misc.PropControl prop='giftAidNoCompensation' label={`Nobody's paying me to do this`} path={formPath} type='checkbox' />
+		<Misc.PropControl prop='giftAid' path={path} type='checkbox' label='Add Gift Aid' />
+		<Misc.PropControl prop='giftAidTaxpayer' label={`I'm a taxpayer`} path={path} type='checkbox' />
+		<Misc.PropControl prop='giftAidOwnMoney' label={`This is my money`} path={path} type='checkbox' />
+		<Misc.PropControl prop='giftAidNoCompensation' label={`Nobody's paying me to do this`} path={path} type='checkbox' />
 	</div>
 );
 
-const DetailsSection = ({formPath}) => (
+const DetailsSection = ({path}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='text' />
-		<Misc.PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='address' />
-		<Misc.PropControl prop='postcode' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
+		<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
+		<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
+		<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
 	</div>
 );
 
-const MessageSection = ({formPath}) => (
+const MessageSection = ({path}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='message' label='Message' placeholder='Do you have a message for $FUNDRAISER?' path={formPath} type='text' />
+		<Misc.PropControl prop='message' label='Message' placeholder='Do you have a message for $FUNDRAISER?' path={path} type='text' />
 	</div>
 );
 
-const PaymentSection = ({formPath}) => {
+const PaymentSection = ({path}) => {
 	return (
 		<div className='section donation-amount'>
 			<StripeProvider apiKey={stripeKey}>
@@ -202,7 +210,15 @@ class StripeThingsClass extends Component {
 		};
 	}
 
+	handleSubmit(event) {
+
+	}
+
 	render() {
+		if (this.state.canMakePayment) {
+			return (<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />);
+		} 
+
 		return (
 			<div>
 				<h3>Card number</h3>
@@ -221,16 +237,9 @@ class StripeThingsClass extends Component {
 				<div className='form-control'>
 					<PostalCodeElement placeholder='AB1 2CD' />
 				</div>
-				<h3>Payment button</h3>
-				<div className=''>
-					{
-						this.state.canMakePayment ? 
-							<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />
-							: `Can't make payment yet`
-					}
-				</div>
 			</div>
 		);
+
 	}
 }
 

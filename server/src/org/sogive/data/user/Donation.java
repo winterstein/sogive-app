@@ -53,6 +53,10 @@ public class Donation {
 	MonetaryAmount otherFees;
 
 	boolean giftAid;
+	boolean giftAidTaxpayer;
+	boolean giftAidOwnMoney;
+	boolean giftAidNoCompensation;
+	
 	
 	MonetaryAmount total;
 

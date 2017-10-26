@@ -81,9 +81,8 @@ public class DonationServlet extends CrudServlet {
 			doList();
 		} else if (state.getSlug()!=null && state.getSlug().contains("getDraft")) {
 			doGetDraft();
-		} else {
-			throw new WebEx(400, "What did you want?");
 		}
+		super.process(state);
 	}
 
 	private void doList() throws IOException {
@@ -113,7 +112,7 @@ public class DonationServlet extends CrudServlet {
 	
 	private void doGetDraft() throws IOException {
 		XId user = state.getUserId();
-		String target = state.get("to");
+		String to = state.get("to");
 		
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
@@ -121,16 +120,16 @@ public class DonationServlet extends CrudServlet {
 		
 		if (user == null) {
 			throw new WebEx.E401(null, "No user");
-		} else if (target == null) {
+		} else if (to == null) {
 			throw new WebEx.E401(null, "No target");
 		} else {
 			BoolQueryBuilder qb = QueryBuilders.boolQuery()
 				.must(QueryBuilders.termQuery("from", user.toString()))
-				.must(QueryBuilders.termQuery("to", target));
+				.must(QueryBuilders.termQuery("to", to));
 			s.setQuery(qb);
 		}
 		
-		s.setSize(1);
+		s.setSize(100);
 		SearchResponse sr = s.get();
 		List<Map> hits = sr.getHits();
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
@@ -139,7 +138,9 @@ public class DonationServlet extends CrudServlet {
 			Map draft = hits2.get(0);
 			WebUtils2.sendJson(new JsonResponse(state, draft), state);	
 		}
-		WebUtils2.sendJson(new JsonResponse(state), state);
+		JsonResponse noResults = new JsonResponse(state);
+		noResults.setSuccess(false);
+		WebUtils2.sendJson(noResults, state);
 	}
 
 	private void doMakeDonation() throws IOException {
