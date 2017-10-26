@@ -71,22 +71,22 @@ public class DonationServlet extends CrudServlet {
 		super(Donation.class);
 	}
 
-	public void process(WebRequest state) throws IOException {
-		this.state = state;
+	public void process(WebRequest state) throws Exception {
+		this.state = state;		
 		List<AuthToken> tokens = Dep.get(YouAgainClient.class).getAuthTokens(state);
 		// TODO check tokens match action
-		if (state.actionIs("donate")) {
+		assert ! state.actionIs("publish") : "use donate "+state;
+		if (state.actionIs("donate")) { // TODO make this action=publish??
 			doMakeDonation();
-		} else if (state.getSlug()!=null && state.getSlug().contains("list")) {
-			doList();
 		} else if (state.getSlug()!=null && state.getSlug().contains("getDraft")) {
 			doGetDraft();
-		} else {
-			throw new WebEx(400, "What did you want?");
 		}
+		// crud + list
+		super.process(state);
 	}
-
-	private void doList() throws IOException {
+	
+	@Override
+	protected void doList(WebRequest state) throws IOException {
 		XId user = state.getUserId();
 		
 		ESHttpClient es = Dep.get(ESHttpClient.class);
@@ -95,6 +95,7 @@ public class DonationServlet extends CrudServlet {
 		if (user==null) {
 			throw new WebEx.E401(null, "No user");
 		} else {
+			// TODO refactor so this method adds a query to the super method
 			TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
 			s.setQuery(qb);
 		}
