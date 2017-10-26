@@ -76,7 +76,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 	
 	@Override
-	public void process(WebRequest state) throws Exception {
+	public void process(WebRequest state) throws IOException {
 		super.process(state);
 	}
 
