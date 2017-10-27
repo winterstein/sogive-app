@@ -31,6 +31,7 @@ import com.winterwell.es.client.admin.PutMappingRequestBuilder;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.AppUtils;
@@ -73,16 +74,15 @@ public class DB {
 			r2.check();		
 		}
 		
-		// donation
-		ESPath path = config.getPath(null, Donation.class, null, null);
-		PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
-		ESType dtype = new ESType();
-		dtype.property("from", new ESType().keyword());
-		dtype.property("to", new ESType().keyword());
-		dtype.property("date", new ESType().date());
-		pm.setMapping(dtype);
-		IESResponse r2 = pm.get();
-		r2.check();				
+		// mappings
+		AppUtils.initESMappings(KStatus.main(), DBCLASSES,
+				new ArrayMap(
+					Donation.class,
+						new ESType()
+							.property("from", new ESType().keyword())
+							.property("to", new ESType().keyword())
+							.property("date", new ESType().date())						
+				));
 	}
 
 	public static Person getUser(XId id) {
