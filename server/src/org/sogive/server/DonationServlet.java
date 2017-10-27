@@ -72,7 +72,7 @@ public class DonationServlet extends CrudServlet {
 	}
 
 	public void process(WebRequest state) throws Exception {
-		this.state = state;		
+		this.state = state;
 		List<AuthToken> tokens = Dep.get(YouAgainClient.class).getAuthTokens(state);
 		// TODO check tokens match action
 		assert ! state.actionIs("publish") : "use donate "+state;
