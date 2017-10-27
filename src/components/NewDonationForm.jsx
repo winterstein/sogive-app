@@ -82,12 +82,14 @@ const DonationForm = ({item}) => {
 		widgetState = initialWidgetState;
 		DataStore.setValue(widgetPath, widgetState, false);
 	}
+	const donateButton = (
+		<span className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+			Donate
+		</span>
+	);
+
 	if (!widgetState.open) {
-		return (
-			<span className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
-				Donate
-			</span>
-		);
+		return donateButton;
 	}
 
 	let type = C.TYPES.Donation;
@@ -107,42 +109,47 @@ const DonationForm = ({item}) => {
 	
 	const stagePath = [...widgetPath, 'stage'];
 
-	const closeLightbox = (
-		<span className='glyphicon glyphicon-remove pull-right' onClick={() =>DataStore.setValue([...widgetPath, 'open'], false)}/>
+	const closeLightbox = () => DataStore.setValue([...widgetPath, 'open'], false);
+	
+	const closeButton = (
+		<span className='glyphicon glyphicon-remove pull-right' onClick={closeLightbox}/>
 	);
 
 	return (
-		<div className='lightbox'>
-			<Misc.Card title='GIMME YOUR MONEY' titleChildren={closeLightbox}>
-				<Tabs activeKey={donationDraft.currentStage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
-					<Tab eventKey={1} title='Amount'>
-						<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
-							<AmountSection path={path} />
-						</SectionWrapper>
-					</Tab>
-					<Tab eventKey={2} title='Gift Aid'>
-						<SectionWrapper stagePath={stagePath} sectionNumber={2}>
-							<GiftAidSection path={path} />
-						</SectionWrapper>
-					</Tab>
-					<Tab eventKey={3} title='Details'>
-						<SectionWrapper stagePath={stagePath} sectionNumber={3}>
-							<DetailsSection path={path} />
-						</SectionWrapper>
-					</Tab>
-					<Tab eventKey={4} title='Message'>
-						<SectionWrapper stagePath={stagePath} sectionNumber={4}>
-							<MessageSection path={path} />
-						</SectionWrapper>
-					</Tab>
-					<Tab eventKey={5} title='Payment'>
-						<SectionWrapper stagePath={stagePath} sectionNumber={5} isLast>
-							<PaymentSection path={path} />
-						</SectionWrapper>
-					</Tab>
-				</Tabs>
-			</Misc.Card>
-			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
+		<div>
+			{donateButton}
+			<div className='lightbox' onClick={closeLightbox}>
+				<Misc.Card title='GIMME YOUR MONEY' titleChildren={closeButton} onClick={e => e.stopPropagation()}>
+					<Tabs activeKey={widgetState.stage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
+						<Tab eventKey={1} title='Amount'>
+							<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
+								<AmountSection path={path} />
+							</SectionWrapper>
+						</Tab>
+						<Tab eventKey={2} title='Gift Aid'>
+							<SectionWrapper stagePath={stagePath} sectionNumber={2}>
+								<GiftAidSection path={path} />
+							</SectionWrapper>
+						</Tab>
+						<Tab eventKey={3} title='Details'>
+							<SectionWrapper stagePath={stagePath} sectionNumber={3}>
+								<DetailsSection path={path} />
+							</SectionWrapper>
+						</Tab>
+						<Tab eventKey={4} title='Message'>
+							<SectionWrapper stagePath={stagePath} sectionNumber={4}>
+								<MessageSection path={path} />
+							</SectionWrapper>
+						</Tab>
+						<Tab eventKey={5} title='Payment'>
+							<SectionWrapper stagePath={stagePath} sectionNumber={5} isLast>
+								<PaymentSection path={path} />
+							</SectionWrapper>
+						</Tab>
+					</Tabs>
+				</Misc.Card>
+				<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
+			</div>
 		</div>
 	);
 }; // ./DonationForm

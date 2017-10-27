@@ -336,7 +336,10 @@ Misc.ControlTypes = new Enum("img textarea text select password email url color 
  */
 Misc.SetButton = ({path, value, children, className}) => {
 	assert(path && path.length);
-	const doSet = () => DataStore.setValue(path, value);
+	const doSet = () => {
+		DataStore.setValue(path, value);
+	};
+	console.log('**** SetButton', path, value)
 	return <span className={className} onClick={doSet}>{children}</span>;
 };
 
@@ -395,16 +398,18 @@ const saveDraftFn = _.debounce(
 /**
  * Just a convenience for a Bootstrap panel
  */
-Misc.Card = ({title, glyph, icon, children, titleChildren}) => {
-	return (<div className="panel panel-default">
-		<div className="panel-heading">
-			<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} {title || ''}</h3>
-			{ titleChildren }
+Misc.Card = ({title, glyph, icon, children, titleChildren, ...props}) => {
+	return (
+		<div className="panel panel-default" {...props}>
+			<div className="panel-heading">
+				<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} {title || ''}</h3>
+				{ titleChildren }
+			</div>
+			<div className="panel-body">
+				{children}
+			</div>
 		</div>
-		<div className="panel-body">
-			{children}
-		</div>
-	</div>);
+	);
 };
 
 /**
