@@ -44,7 +44,11 @@ const initialFormData = {
 	message: '',
 	pending: false,
 	complete: false,
-	currentStage: 1,
+};
+
+const initialWidgetState = {
+	open: false,
+	stage: 1,
 };
 
 const amountOK = ({amount}) => amount && amount.value >= 1.0;
@@ -72,10 +76,23 @@ const stagesOK = (formData) => [
 
 
 const DonationForm = ({item}) => {
+	const widgetPath = ['widget', 'NewDonationForm', item.id];
+	let widgetState = DataStore.getValue(widgetPath);
+	if (!widgetState) {
+		widgetState = initialWidgetState;
+		DataStore.setValue(widgetPath, widgetState, false);
+	}
+	if (!widgetState.open) {
+		return (
+			<span className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+				Donate
+			</span>
+		);
+	}
+
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
 	let donationDraft = pDonation.value;
-	console.log('********* pDonation', pDonation);
 
 	if (!donationDraft) {
 		donationDraft = {
@@ -87,12 +104,16 @@ const DonationForm = ({item}) => {
 
 	const path = ['data', type, donationDraft.id];
 	DataStore.setValue(path, donationDraft, false);
+	
+	const stagePath = [...widgetPath, 'stage'];
 
-	const stagePath = [...path, 'currentStage'];
+	const closeLightbox = (
+		<span className='glyphicon glyphicon-remove pull-right' onClick={() =>DataStore.setValue([...widgetPath, 'open'], false)}/>
+	);
 
 	return (
 		<div className='lightbox'>
-			<Misc.Card title='GIMME YOUR MONEY'>
+			<Misc.Card title='GIMME YOUR MONEY' titleChildren={closeLightbox}>
 				<Tabs activeKey={donationDraft.currentStage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
 					<Tab eventKey={1} title='Amount'>
 						<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
@@ -127,8 +148,16 @@ const DonationForm = ({item}) => {
 }; // ./DonationForm
 
 const SectionWrapper = ({stagePath, sectionNumber, children, isFirst, isLast}) => {
-	const prevLink = isFirst ? '' : <Misc.SetButton path={stagePath} value={sectionNumber - 1}>Previous</Misc.SetButton>;
-	const nextLink = isLast ? '' : <Misc.SetButton path={stagePath} value={sectionNumber + 1}>Next</Misc.SetButton>;
+	const prevLink = isFirst ? '' : (
+		<Misc.SetButton path={stagePath} value={sectionNumber - 1} className='btn btn-default pull-left'>
+			Previous
+		</Misc.SetButton>
+	);
+	const nextLink = isLast ? '' : (
+		<Misc.SetButton path={stagePath} value={sectionNumber + 1} className='btn btn-default pull-right'>
+			Next
+		</Misc.SetButton>
+	);
 	return (
 		<div className='section'>
 			{ children }
