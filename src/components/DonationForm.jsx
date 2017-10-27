@@ -321,7 +321,7 @@ const DonationAmount = function ({selected, price, handleChange}) {
 
 
 const DonationList = ({donations}) => {
-	let ddivs = _.map(donations, d => <li key={uid()}>{d}</li>);
+	let ddivs = _.map(donations, d => <li key={d.id || JSON.stringify(d)}>{d}</li>);
 	return <ul>{ddivs}</ul>;
 };
 

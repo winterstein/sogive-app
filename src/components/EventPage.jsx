@@ -11,7 +11,7 @@ import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import ActionMan from '../plumbing/ActionMan';
-import {getType, getId} from '../data/DataClass';
+import {getType, getId, nonce} from '../data/DataClass';
 import ListLoad from './ListLoad';
 
 const EventPage = () => {
@@ -39,7 +39,7 @@ const Event = ({id}) => {
 	let servlet = 'editFundraiser';
 	let createFundraiser = () => {
 		// make an id
-		const frid = uid();
+		const frid = nonce();
 
 		// poke a new blank into DataStore
 		DataStore.setValue(['data', C.TYPES.FundRaiser, frid], {id: frid, event: id});

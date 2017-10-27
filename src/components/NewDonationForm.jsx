@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
-import { uid, XId } from 'wwutils';
+import {XId } from 'wwutils';
+
 import { Button, FormControl, InputGroup, Tabs, Tab } from 'react-bootstrap';
 
 import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
@@ -19,6 +20,7 @@ import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare.jsx';
+import {nonce} from '../data/DataClass';
 
 /**
  * 
@@ -31,7 +33,7 @@ const stripeKey = (window.location.host.startsWith('test') || window.location.ho
 
 
 const initialFormData = {
-	id: uid(),
+	id: nonce(),
 	amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
 	coverCosts: true,
 	giftAid: false,

@@ -80,6 +80,7 @@ public class DonationServlet extends CrudServlet {
 			doMakeDonation();
 		} else if (state.getSlug()!=null && state.getSlug().contains("getDraft")) {
 			doGetDraft();
+			return;
 		}
 		// crud + list
 		super.process(state);

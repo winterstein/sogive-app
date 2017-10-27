@@ -13,6 +13,7 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
 import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
+import {getId} from '../data/DataClass';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
 
@@ -229,14 +230,14 @@ const SearchResults = ({ results, total, query, from, all, recommended}) => {
 			{recommendedNote}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
-				{ _.map(ready, item => <SearchResult key={uid()} item={item} />) }
+				{ _.map(ready, item => <SearchResult key={getId(item)} item={item} />) }
 				{ unready.length ? (
 					<div className='unready-results row'>
 						<h3>Analysis in progress</h3>
 						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
 					</div>
 				) : null}
-				{ _.map(unready, item => <SearchResult key={uid()} item={item} />) }
+				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} />) }
 				<SearchPager total={total} from={from} />
 			</div>
 			<div className='col-md-12'>

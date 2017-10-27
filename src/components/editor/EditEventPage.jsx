@@ -4,14 +4,14 @@ import ReactDOM from 'react-dom';
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
 import printer from '../../utils/printer.js';
-import {modifyHash, uid} from 'wwutils';
+import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../Roles';
 import Misc from '../Misc';
 import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
-import {getType, getId} from '../../data/DataClass';
+import {getType, getId, nonce} from '../../data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import ListLoad from '../ListLoad';
 
@@ -24,7 +24,7 @@ const EditEventPage = () => {
 	let servlet = path[0];
 	let create = () => {
 		// make an id
-		let id = uid();
+		let id = nonce();
 		// poke a new blank into DataStore
 		DataStore.setValue(['data', type, id], {id});
 		// set the id
