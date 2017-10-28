@@ -20,7 +20,7 @@ import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare.jsx';
-import {nonce} from '../data/DataClass';
+import {nonce,getType} from '../data/DataClass';
 
 /**
  * 
@@ -59,6 +59,9 @@ const giftAidOK = ({giftAid, giftAidTaxpayer, giftAidOwnMoney, giftAidNoCompensa
 	!giftAid || (giftAidTaxpayer && giftAidOwnMoney && giftAidNoCompensation)
 );
 
+/** 
+ * Minor todo: address & postcode can be optional, unless you have gift aid
+*/
 const detailsOK = ({name, address, postcode}) => (
 	name.trim().length > 0 && address.trim().length > 0 && postcode.trim().length > 0
 );
@@ -76,8 +79,12 @@ const stagesOK = (formData) => [
 	paymentOK(formData),
 ];
 
-
+/**
+ * item:
+ */
 const DonationForm = ({item}) => {
+	assert(C.TYPES.isFundraiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
+		"NewDonationForm - type "+getType(item));
 	const widgetPath = ['widget', 'NewDonationForm', item.id];
 	let widgetState = DataStore.getValue(widgetPath);
 	if (!widgetState) {
@@ -89,11 +96,12 @@ const DonationForm = ({item}) => {
 			Donate
 		</span>
 	);
-
+	// not open? just show the button
 	if (!widgetState.open) {
 		return donateButton;
 	}
 
+	// get/make the draft donation
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
 	let donationDraft = pDonation.value;
@@ -117,6 +125,7 @@ const DonationForm = ({item}) => {
 		<span className='glyphicon glyphicon-remove pull-right' onClick={closeLightbox}/>
 	);
 
+	// TODO use bootstrap dialog classes for the lightbox?? c.f. LoginWidget.jsx ^Dan
 	return (
 		<div>
 			{donateButton}
@@ -218,7 +227,9 @@ const PaymentSection = ({path}) => {
 	);
 };
 
-	
+/**
+ * Stripe widgets manage their own state
+ */	
 class StripeThingsClass extends Component {
 	constructor(props) {
 		super(props);
@@ -243,6 +254,7 @@ class StripeThingsClass extends Component {
 		});
  
 		this.state = {
+			// @Roscoe what does this test for?? is this testing for the built-in payment API?
 			canMakePayment: false,
 			paymentRequest,
 		};
@@ -277,9 +289,8 @@ class StripeThingsClass extends Component {
 				</div>
 			</div>
 		);
-
-	}
-}
+	} // ./render()
+} // ./StripeThingsClass
 
 const StripeThings = injectStripe(StripeThingsClass);
 

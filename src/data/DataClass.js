@@ -70,14 +70,14 @@ Meta.get = (obj, fieldName) => {
 };
 
 /**
- * 
+ * nonce vs uid? nonce is shorter (which is nice) and it avoids -s (which upset ES searches if type!=keyword)
  * @param {*} n 
  * @returns random url-safe nonce of the requested length.
  * 
  * Let's see:
  * 60^6 ~ 50 bn
  * But the birthday paradox gives n^2 pairings, so consider n^2 for likelihood of a clash.
- * For n = 1000 items, this is safe. For n = 1m items, 6 bits isn't enough - add a timestamp to avoid the all-to-all pairings.
+ * For n = 1000 items, this is safe. For n = 1m items, 6 chars isn't enough - add a timestamp to avoid the all-to-all pairings.
  */
 const nonce = (n=6) => {
 	const s = [];
