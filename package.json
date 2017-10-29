@@ -29,7 +29,7 @@
     "sjtest": "^0.4.4",	
     "wwutils": "^0.8.2",
     "you-again": "^0.5.2",
-    "promise-value": "^1.0.6"
+    "promise-value": "^1.0.7"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
