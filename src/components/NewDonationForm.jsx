@@ -105,8 +105,14 @@ const DonationForm = ({item}) => {
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
 	let donationDraft = pDonation.value;
-
 	if (!donationDraft) {
+		// if the promise is running, wait for it before making a new draft
+		if ( ! pDonation.resolved) {
+			return donateButton;
+			// TODO if they click whilst the promise is running (unlikely)
+			// display a spinner
+		}
+		// make a new draft donation
 		donationDraft = {
 			...initialFormData,
 			from: Login.getId(),
@@ -116,6 +122,8 @@ const DonationForm = ({item}) => {
 
 	const path = ['data', type, donationDraft.id];
 	DataStore.setValue(path, donationDraft, false);
+	// also store it where the fetch will find it
+	DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);
 	
 	const stagePath = [...widgetPath, 'stage'];
 

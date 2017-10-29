@@ -134,11 +134,15 @@ ActionMan.getDataItem = ({type, id, status}) => {
 };
 
 ServerIO.getDonationDraft = ({to}) => {
+	assMatch(to, String);
 	return ServerIO.load('/donation/getDraft.json', {data: {to}});
 };
 
 ActionMan.getDonationDraft = ({to}) => {
-	return ServerIO.getDonationDraft({to});
+	// use a pseudo id to keep it in the local DataStore
+	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
+		return ServerIO.getDonationDraft({to});
+	});	
 };
 
 const CRUD = {	
