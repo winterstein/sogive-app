@@ -53,9 +53,17 @@ const NavBar = ({currentPage}) => {
 };
 // ./NavBar
 
+const navClick = (e) => {
+	// close the menu in mobile mode
+	let openMobileMenu = $('#navbar.collapse.in');
+	if (openMobileMenu.length) {
+		console.warn("better close it!")
+		$('button.navbar-toggle').click();
+	}
+};
 const NavLink = ({currentPage, targetPage}) => {
 	return (<li className={currentPage === targetPage? 'active' : ''}>
-				<a className="nav-item nav-link" href={'#'+targetPage} >
+				<a className="nav-item nav-link" href={'#'+targetPage} onClick={navClick} >
 					{targetPage}
 				</a>
 			</li>);
