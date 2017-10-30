@@ -11,6 +11,7 @@ import GiftAidForm from './GiftAidForm';
 
 const AccountPage = () => {
 	let proles =Roles.getRoles();
+	let roles = proles.value;
 	// TODO link into My-Loop, and vice-versa
 	// TODO store gift aid settings
 			// 	<Misc.Card title='Gift Aid'>
@@ -24,7 +25,8 @@ const AccountPage = () => {
 			</Misc.Card>
 			<Misc.Card title='Roles'>
 				<p>Roles determine what you can do. E.g. only editors can publish changes.</p>
-				{proles.value? proles.value.map(role => <RoleLine key={role} role={role} />) : <Misc.Loading />}
+				{proles.resolved? <p>No role</p> : <Misc.Loading />}
+				{roles? roles.map(role => <RoleLine key={role} role={role} />) : null}				
 			</Misc.Card>
 		</div>
 	);

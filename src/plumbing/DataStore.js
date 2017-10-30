@@ -210,7 +210,7 @@ class Store {
 	 * @return "dirty", "clean", etc. -- see C.STATUS
 	 */
 	getLocalEditsStatus(type, id) {
-		assert(C.TYPES.has(type), "DataStore.getLocalEditsStatus");
+		assert(C.TYPES.has(type), "DataStore.getLocalEditsStatus "+type);
 		assert(id, "DataStore.getLocalEditsStatus: No id?! getData "+type);
 		return this.getValue('transient', type, id, DataStore.DATA_MODIFIED_PROPERTY);
 	}
@@ -320,34 +320,41 @@ class Store {
 	 * @param path {String[]}
 	 * @param fetchFn {Function} () -> Promise/value, which will be wrapped using promise-value PV()
 	 * fetchFn MUST return the value for path, or a promise for it. It should NOT set DataStore itself.
-	 * @returns {?value, promise}
+	 * As a convenience hack, this method will extract `cargo` from fetchFn's return, so it can be used
+	 * that bit more easily with Winterwell's "standard" json api back-end.
+	 * @returns {?value, promise} (see promise-value.js)
 	 */
 	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
 		let item = this.getValue(path);
 		if (yessy(item)) {
-			return {value:item, promise:Promise.resolve(item)};
+			return PV(item);
 		}
 		// only ask once
 		const fpath = ['transient', 'PromiseValue'].concat(path);
 		let pv = this.getValue(fpath);
 		if (pv) return pv;	
-		let promise = fetchFn();
-		assert(promise!==undefined, "fetchFn passed to DataStore.fetch() should return a promise or a value. Got: undefined. Missing return statement?");
-		pv = PV(promise);
-		pv.promise.then(res => {
+		let promiseOrValue = fetchFn();
+		assert(promiseOrValue!==undefined, "fetchFn passed to DataStore.fetch() should return a promise or a value. Got: undefined. Missing return statement?");
+		// Use PV to standardise the output from fetchFn()
+		let pvPromiseOrValue = PV(promiseOrValue);
+		// process the result async
+		let promiseWithCargoUnwrapAndSet = pvPromiseOrValue.promise.then(res => {
 			// HACK unwrap cargo
+			// TODO let's make unwrap a configurable setting
 			if (res.cargo) {
 				console.log("unwrapping cargo to store at "+path, res);
 				res = res.cargo;
 			}
-			// this.setValue(fpath, null, false); No repeats?!
-			this.setValue(path, res);
+			// set the DataStore
+			this.setValue(path, res); // this should trigger an update (typically a React render update)
 			// DataStore.updateFromServer(res);
 			return res;
 		});	
+		// wrap this promise as a PV
+		pv = PV(promiseWithCargoUnwrapAndSet);
 		this.setValue(fpath, pv, false);
 		return pv;
-	}
+	} // ./fetch()
 
 } // ./Store
 
