@@ -14,7 +14,7 @@ import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
-import org.sogive.data.user.DB;
+import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
@@ -189,7 +189,7 @@ public class DonationServlet extends CrudServlet {
 		String json2 = res.getJson();
 		
 		// check we haven't done before: done by the op_type=create
-		Person userObj = DB.getUser(user);
+		Person userObj = DBSoGive.getUser(user);
 		String ikey = donation.getId();
 		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money

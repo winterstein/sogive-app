@@ -10,7 +10,7 @@ import Roles from '../Roles';
 import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
-import {getType, getId} from '../data/DataClass';
+import {getType, getId, nonce} from '../data/DataClass';
 
 /**
  * Provide a list of items of a given type.
@@ -19,32 +19,33 @@ import {getType, getId} from '../data/DataClass';
  * 
  * 	const path = DataStore.getValue(['location','path']);
  * 	const itemId = path[1];
- *  let item = itemId? ActionMan.getDataItem(itemId) : null;
+ *  let pvItem = itemId? ActionMan.getDataItem(itemId) : null;
  * 
  * 
  * @param status {?String} e.g. "Draft"
  * @param servlet {?String} e.g. "publisher" Normally unset, and taken from the url.
  * @param ListItem {?React component} if set, replaces DefaultListItem
  */
-const ListLoad = ({type, status, servlet, ListItem}) => {
+const ListLoad = ({type, status, servlet, navpage, q, ListItem}) => {
 	assert(C.TYPES.has(type), "ListLoad - odd type " + type);
 	assert(!status || C.KStatus.has(status), "ListLoad - odd status " + status);
 	let path = DataStore.getValue(['location','path']);
 	let id = path[1];
 	if (id) return null;
 	if ( ! servlet) servlet = DataStore.getValue('location', 'path')[0]; //type.toLowerCase();
+	if ( ! navpage) navpage = servlet;
 	// store the lists in a separate bit of appstate
 	// from data. 
 	// Downside: new events dont get auto-added to lists
 	// Upside: clearer
 	let pvItems = DataStore.fetch(['list', type, 'all'], () => {
-		return ServerIO.load(`/${servlet}/list.json`, {data: {status}} )
+		return ServerIO.load(`/${servlet}/list.json`, { data: { status, q } })
 			.then((res) => {
 				// console.warn(res);
 				return res.cargo.hits;
 			});
 	});
-	if ( ! pvItems.value) {
+	if ( ! pvItems.resolved) {
 		return (
 			<Misc.Loading text={type.toLowerCase()+'s'} />
 		);
@@ -53,28 +54,35 @@ const ListLoad = ({type, status, servlet, ListItem}) => {
 		ListItem = DefaultListItem;
 	}
 	console.warn("items", pvItems.value);
+	const listItems = pvItems.value.map(item => (
+		<ListItem key={getId(item) || JSON.stringify(item)} 
+			type={type} servlet={servlet} navpage={navpage} item={item} onPick={onPick} />)
+	);
 	return (<div>
 		{pvItems.value.length === 0 ? 'No results found' : null}
-		{pvItems.value.map(item => <ListItem key={getId(item) || JSON.stringify(item)} 
-										type={type} servlet={servlet} item={item} onPick={onPick} />)}
+		{listItems}
 	</div>);
 };
 
-const onPick = ({event,servlet,id}) => {
+const onPick = ({event, navpage, id}) => {
 	if (event) {
 		event.stopPropagation();
 		event.preventDefault();
 	}
-	modifyHash([servlet, id]);
+	modifyHash([navpage, id]);
 };
 
-const DefaultListItem = ({type, servlet, item}) => {	
+const DefaultListItem = ({type, servlet, navpage, item}) => {
+	if ( ! navpage) navpage = servlet;
 	const id = getId(item);
 	const itemUrl = modifyHash([servlet, id], null, true);
+	let checkedPath = ['widget', 'ListLoad', type, 'checked'];
 	return (
-		<div className={'ListItem btn btn-default status-'+item.status}>
+		<div className='ListItemWrapper'>
+			<div className='pull-left'><Misc.PropControl title='TODO mass actions' path={checkedPath} type='checkbox' prop={id} /></div>
 			<a 	href={itemUrl} 
-				onClick={ event => onPick({event, servlet, id}) }
+				onClick={event => onPick({ event, navpage, id })}
+				className={'ListItem btn btn-default status-'+item.status}
 			>
 				{C.KStatus.isPUBLISHED(item.status)? <span className='text-success'><Misc.Icon glyph='tick' /></span> : item.status} 
 				{item.name || id}<br/>
@@ -84,4 +92,30 @@ const DefaultListItem = ({type, servlet, item}) => {
 	);
 };
 
+/**
+ * Make a local blank, and set the nav url
+ * Does not save (Crud will probably do that once you make an edit)
+ */
+const createBlank = ({type, navpage, base}) => {
+	// make an id
+	let id = nonce(8);
+	// poke a new blank into DataStore
+	if ( ! base) base = {};
+	assert( ! getId(base), "ListLoad - createBlank "+type);
+	base.id = id;
+	DataStore.setValue(['data', type, id], base);
+	// set the id
+	onPick({navpage, id});
+};
+
+const CreateButton = ({type, navpage, base}) => {
+	if ( ! navpage) navpage = DataStore.getValue('location', 'path')[0];
+	return (
+		<button className='btn btn-default' onClick={() => createBlank({type,navpage,base})}>
+			<Misc.Icon glyph='plus' /> Create
+		</button>
+	);
+};
+
+export {CreateButton};
 export default ListLoad;

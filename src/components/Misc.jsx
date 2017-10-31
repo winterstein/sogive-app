@@ -15,7 +15,7 @@ import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
-import I18n from 'easyi18n';
+// import I18n from 'easyi18n';
 
 const Misc = {};
 

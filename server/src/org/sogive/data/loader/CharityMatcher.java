@@ -7,7 +7,7 @@ import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.user.DB;
+import org.sogive.data.user.DBSoGive;
 
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
@@ -24,7 +24,7 @@ public class CharityMatcher {
 		ObjectDistribution<NGO> od = new ObjectDistribution<>();
 		// TODO search the DB by name, ID
 		// by ID?
-		List<NGO> charity = DB.getCharityById(ngo);
+		List<NGO> charity = DBSoGive.getCharityById(ngo);
 		if (charity != null && ! charity.isEmpty()) {
 			od.train(charity);
 			return od;

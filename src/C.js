@@ -38,5 +38,7 @@ C.KStatus = new Enum('DRAFT PUBLISHED MODIFIED REQUEST_PUBLISH PENDING ARCHIVED 
 
 C.STATUS = new Enum('loading clean dirty saving');
 
+C.CRUDACTION = new Enum('new save publish discard-edits delete');
+
 C.ROLES = new Enum("editor admin");
 C.CAN = new Enum("edit publish admin editEvent");

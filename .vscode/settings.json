@@ -2,5 +2,5 @@
 	"workbench.colorTheme": "Solarized Light",
 	"workbench.colorCustomizations": {
 		"editor.selectionBackground": "#99ff99"
-	},
+	}
 }

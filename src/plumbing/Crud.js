@@ -18,6 +18,7 @@ import ActionMan from './ActionMan';
 ActionMan.crud = (type, id, action, item) => {
 	assMatch(id, String);
 	assert(C.TYPES.has(type), type);
+	assert(C.CRUDACTION.has(action), type);
 	if ( ! item) item = DataStore.getData(type, id);
 	if ( ! getId(item)) {
 		assert(id==='new', id);
@@ -31,30 +32,30 @@ ActionMan.crud = (type, id, action, item) => {
 	DataStore.setLocalEditsStatus(type, id, C.STATUS.saving);
 	// call the server
 	return ServerIO.crud(type, item, action)
-	.then(DataStore.updateFromServer.bind(DataStore))
-	.then((res) => {
-		// success :)
-		const navtype = (C.navParam4type? C.navParam4type[type] : null) || type;
-		if (action==='delete') {
-			DataStore.setUrlValue(navtype, null);
-		} else if (id===C.newId) {
-			// id change!
-			// updateFromServer should have stored the new item
-			// So just repoint the focus
-			let serverId = getId(res.cargo);
-			DataStore.setFocus(type, serverId); // deprecated			
-			DataStore.setUrlValue(navtype, serverId);
-		}
-		// clear the saving flag
-		DataStore.setLocalEditsStatus(type, id, C.STATUS.clean);
-		return res;
-	})
-	.fail((err) => {
-		// bleurgh
-		console.warn(err);
-		DataStore.setLocalEditsStatus(type, id, C.STATUS.dirty);
-		return err;
-	});
+		.then(DataStore.updateFromServer.bind(DataStore))
+		.then((res) => {
+			// success :)
+			const navtype = (C.navParam4type? C.navParam4type[type] : null) || type;
+			if (action==='delete') {
+				DataStore.setUrlValue(navtype, null);
+			} else if (id===C.newId) {
+				// id change!
+				// updateFromServer should have stored the new item
+				// So just repoint the focus
+				let serverId = getId(res.cargo);
+				DataStore.setFocus(type, serverId); // deprecated			
+				DataStore.setUrlValue(navtype, serverId);
+			}
+			// clear the saving flag
+			DataStore.setLocalEditsStatus(type, id, C.STATUS.clean);
+			return res;
+		})
+		.fail((err) => {
+			// bleurgh
+			console.warn(err);
+			DataStore.setLocalEditsStatus(type, id, C.STATUS.dirty);
+			return err;
+		});
 }; // ./crud
 
 ActionMan.saveEdits = (type, pubId, item) => {
@@ -94,6 +95,7 @@ const servlet4type = (type) => {
 ServerIO.crud = function(type, item, action) {	
 	assert(C.TYPES.has(type), type);
 	assert(item && getId(item), item);
+	assert(C.CRUDACTION.has(action), type);
 	let params = {
 		method: 'POST',
 		data: {
@@ -122,12 +124,14 @@ ServerIO.discardEdits = function(type, item) {
  * get an item from the backend -- does not save it into DataStore
  */
 ServerIO.getDataItem = function({type, id, status}) {
-	assert(C.TYPES.has(type), 'ServerIO - bad type: '+type);
+	assert(C.TYPES.has(type), 'Crud.js - ServerIO - bad type: '+type);
 	assMatch(id, String);
 	const params = {data: {status}};
 	return ServerIO.load('/'+servlet4type(type)+'/'+encURI(id)+'.json', params);
 };
 ActionMan.getDataItem = ({type, id, status}) => {
+	assert(C.TYPES.has(type), 'Crud.js - ActionMan - bad type: '+type);
+	assMatch(id, String);
 	return DataStore.fetch(['data', type, id], () => {
 		return ServerIO.getDataItem({type, id, status});
 	});

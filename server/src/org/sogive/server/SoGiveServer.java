@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.user.DB;
+import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 
@@ -105,7 +105,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		// ES router
 		Dep.set(IESRouter.class, config);
 		// mappings
-		DB.init();
+		DBSoGive.init();
 		// login
 //		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));

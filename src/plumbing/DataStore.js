@@ -199,6 +199,7 @@ class Store {
 			}
 		}
 		if (update) {
+			console.log("setValue -> update", path, value);
 			this.update();
 		}
 	}
@@ -326,32 +327,41 @@ class Store {
 	 */
 	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
 		let item = this.getValue(path);
-		if (yessy(item)) {
+		if (item!==null && item!==undefined) { 
+			// Note: falsy or an empty list/object is counted as valid. It will not trigger a fresh load
 			return PV(item);
 		}
 		// only ask once
 		const fpath = ['transient', 'PromiseValue'].concat(path);
-		let pv = this.getValue(fpath);
-		if (pv) return pv;	
+		const prevpv = this.getValue(fpath);
+		if (prevpv) return prevpv;	
 		let promiseOrValue = fetchFn();
 		assert(promiseOrValue!==undefined, "fetchFn passed to DataStore.fetch() should return a promise or a value. Got: undefined. Missing return statement?");
 		// Use PV to standardise the output from fetchFn()
 		let pvPromiseOrValue = PV(promiseOrValue);
 		// process the result async
-		let promiseWithCargoUnwrapAndSet = pvPromiseOrValue.promise.then(res => {
+		let promiseWithCargoUnwrap = pvPromiseOrValue.promise.then(res => {
 			// HACK unwrap cargo
 			// TODO let's make unwrap a configurable setting
 			if (res.cargo) {
 				console.log("unwrapping cargo to store at "+path, res);
 				res = res.cargo;
-			}
-			// set the DataStore
-			this.setValue(path, res); // this should trigger an update (typically a React render update)
-			// DataStore.updateFromServer(res);
+			}			
 			return res;
-		});	
+		}).fail(err => {
+			// what if anything to do here??
+			console.warn("DataStore fetch fail", path, err);
+			return err;
+		});
 		// wrap this promise as a PV
-		pv = PV(promiseWithCargoUnwrapAndSet);
+		const pv = PV(promiseWithCargoUnwrap);
+		pv.promise.then(res => {
+			// set the DataStore
+			// This is done after the cargo-unwrap PV has resolved. So any calls to fetch() during render will get a resolved PV
+			// even if res is null.
+			this.setValue(path, res); // this should trigger an update (typically a React render update)
+			return res;
+		});
 		this.setValue(fpath, pv, false);
 		return pv;
 	} // ./fetch()

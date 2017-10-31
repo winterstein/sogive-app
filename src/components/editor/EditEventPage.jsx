@@ -13,25 +13,20 @@ import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../data/DataClass';
 import Ticket from '../../data/charity/Ticket';
-import ListLoad from '../ListLoad';
+import ListLoad, {CreateButton} from '../ListLoad';
 
 const EditEventPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return <div className='alert alert-warning'><h3>Please login</h3></div>;
+	}
 	// which event?	
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 	if (eventId) return <EventEditor id={eventId} />;
 	let type = C.TYPES.Event;
 	let servlet = path[0];
-	let create = () => {
-		// make an id
-		let id = nonce();
-		// poke a new blank into DataStore
-		DataStore.setValue(['data', type, id], {id});
-		// set the id
-		modifyHash([servlet, id]);
-	};
 	return (<div>
-		<button className='btn btn-default' onClick={create}><Misc.Icon glyph='plus' /> Create</button>
+		<CreateButton type={type} />
 		<h2>Edit an Event</h2>
 		<ListLoad type={type} />
 	</div>);

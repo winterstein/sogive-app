@@ -4,11 +4,6 @@ import AccountMenu from './AccountMenu';
 import C from '../C';
 import Roles from '../Roles';
 
-// BUG the navbar does not toggle closed :(
-// And the react-bootstrap version of this with Navbar, NavItem seems to have bugs in NavItem's handling of clicks :'(
-// ...yep, react-bootstrap's navbar has been broken for a year https://github.com/react-bootstrap/react-bootstrap/issues/2365
-// Best solve ourselves
-
 /**
  * 
  * @param {*} page The current page
@@ -53,6 +48,10 @@ const NavBar = ({currentPage}) => {
 };
 // ./NavBar
 
+
+// NB: the react-bootstrap version of this with Navbar, NavItem seems to have bugs in NavItem's handling of clicks :'(
+// ...yep, react-bootstrap's navbar has been broken for a year https://github.com/react-bootstrap/react-bootstrap/issues/2365
+// So we solve ourselves, with a custom on-click
 const navClick = (e) => {
 	// close the menu in mobile mode
 	let openMobileMenu = $('#navbar.collapse.in');

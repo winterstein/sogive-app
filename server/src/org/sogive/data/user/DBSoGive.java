@@ -14,6 +14,7 @@ import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
+import org.sogive.data.commercial.FundRaiserPage;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
@@ -46,9 +47,11 @@ import com.winterwell.web.data.XId;
  * @author daniel
  *
  */
-public class DB {
+public class DBSoGive {
 
-	private static final Class[] DBCLASSES = new Class[] {NGO.class, Person.class, Team.class, Event.class, Basket.class, Donation.class};
+	private static final Class[] DBCLASSES = new Class[] {
+			NGO.class, Person.class, Team.class, Event.class, FundRaiserPage.class,
+			Basket.class, Donation.class};
 
 	public static void init() {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
