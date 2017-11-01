@@ -67,7 +67,8 @@ public class SearchServlet implements IServlet {
 	 */
 	private static final int MAX_RESULTS = 10000;
 	
-	public void process(WebRequest state) throws Exception {		
+	public void process(WebRequest state) throws Exception {
+		WebUtils2.CORS(state, false);
 		ESHttpClient client = Dep.get(ESHttpClient.class);
 		ESHttpClient.debug = true;
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
