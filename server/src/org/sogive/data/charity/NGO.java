@@ -1,6 +1,7 @@
 package org.sogive.data.charity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,17 @@ public class NGO extends Thing<NGO> {
 		super.init();
 		// validate the projects
 		List<Project> projects = getProjects();
+		// suggest for autocomplete
+		List<String> names = Containers.filterNulls(Arrays.asList(
+				getName(), getDisplayName(), getId()
+				));
+		put("suggest", names);
 	}
 	
+	public String getDisplayName() {
+		return (String) get("displayName");
+	}
+
 	public NGO(String ourid) {
 		put("@id", ourid);
 	}

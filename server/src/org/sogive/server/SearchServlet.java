@@ -13,6 +13,7 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.gson.Gson;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
@@ -124,7 +125,7 @@ public class SearchServlet implements IServlet {
 			}
 		}
 		
-		if ( q != null) {
+		if ( q != null) {			
 			// Do we want this to handle e.g. accents??
 			// Can ES do it instead??
 			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
@@ -138,7 +139,14 @@ public class SearchServlet implements IServlet {
 //					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
 //							.operator(Operator.AND);			
 			s.setQuery(qb);
-		} else if (showRecommended) {
+		}
+		// prefix search for auto-complete
+		String prefix = state.get("prefix");
+		if (prefix != null) {
+			s.addSuggester(Suggesters.autocomplete("suggest", prefix));
+		}
+		// else ?? ^DW 
+		if (showRecommended) {
 			QueryBuilder qb = QueryBuilders.termQuery("recommended", "true");
 			s.setQuery(qb);
 		}
@@ -161,7 +169,7 @@ public class SearchServlet implements IServlet {
 		s.setFrom(state.get(FROM, 0));
 		SearchResponse sr = s.get();
 		Map<String, Object> jobj = sr.getParsedJson();
-		List<Map> hits = sr.getHits();
+		List<Map> hits = prefix==null? sr.getHits() : sr.getSuggesterHits("autocomplete");
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
 		
 //		Collections.sort(arg0);
@@ -171,7 +179,6 @@ public class SearchServlet implements IServlet {
 			doSendCsv(state, hits2);
 			return;
 		}
-		
 		
 		long total = sr.getTotal();
 		JsonResponse output = new JsonResponse(state, new ArrayMap(

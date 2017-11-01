@@ -60,26 +60,18 @@ public class DBSoGive {
 		AppUtils.initESIndices(KStatus.main(), DBCLASSES);
 		
 		// charity mapping
-		for(KStatus status : KStatus.main()) {
-			// charity
-			ESPath path = config.getPath(null, NGO.class, null, status);			
-			PutMappingRequestBuilder pm = es.admin().indices().preparePutMapping(path.index(), path.type);
-			ESType dtype = new ESType();
-			dtype.property("name", new ESType().text()
-									// enable keyword based sorting
-									.field("raw", "keyword"));
-			dtype.property("@id", new ESType().keyword());
-			dtype.property("projects", new ESType().object()
-					.property("year", new ESType().INTEGER())
-					);
-			pm.setMapping(dtype);
-			IESResponse r2 = pm.get();
-			r2.check();		
-		}
-		
+		ESType charitymapping = new ESType()
+				.property("projects", new ESType().object()
+						.property("year", new ESType().INTEGER())
+						)
+				.property("suggest", new ESType().completion());	
+
 		// mappings
 		AppUtils.initESMappings(KStatus.main(), DBCLASSES,
 				new ArrayMap(
+					
+					NGO.class, charitymapping,
+						
 					Donation.class,
 						new ESType()
 							.property("from", new ESType().keyword())

@@ -12,6 +12,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import com.winterwell.depot.IInit;
+import com.winterwell.depot.ILifeCycle;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -27,7 +28,9 @@ import com.winterwell.utils.time.Time;
  * @author daniel
  *
  */
-public class Thing<SubThing extends Thing> extends HashMap<String,Object> implements IInit {
+public class Thing<SubThing extends Thing> extends HashMap<String,Object> 
+implements IInit 
+{
 
 	protected static List list(Object object) {
 //		Containers.list(object) ??

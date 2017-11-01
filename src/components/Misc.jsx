@@ -125,7 +125,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
 		// Minor TODO help block id and aria-described-by property in the input
 		const labelText = label || '';
-		const helpIcon = help ? <Glyphicon glyph='question-sign' title={help} /> : '';
+		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : '';
 		// The label and PropControl are on the same line to preserve the whitespace in between for inline forms
 		return (
 			<div className='form-group'>
@@ -333,13 +333,20 @@ Misc.ControlTypes = new Enum("img textarea text select password email url color 
 
 /**
  * A button which sets a DataStore address to a specific value
+ * 
+ * e.g.
+ * <SetButton path={['widget','page']} value='2'>Next</SetButton>
+ * is roughly equivalent to
+ * <div onClick={() => DataStore.setValue(['widget','page'], 2)}>Next</div>
+ * 
+ * ??maybe phase this out in favour of just the direct use?? ^DW
  */
 Misc.SetButton = ({path, value, children, className}) => {
 	assert(path && path.length);
 	const doSet = () => {
 		DataStore.setValue(path, value);
 	};
-	console.log('**** SetButton', path, value)
+	console.log('**** SetButton', path, value);
 	return <span className={className} onClick={doSet}>{children}</span>;
 };
 
