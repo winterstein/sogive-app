@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest, {assert} from 'sjtest';
+import SJTest, { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import {modifyHash} from 'wwutils';
@@ -26,7 +26,7 @@ import {getType, getId, nonce} from '../data/DataClass';
  * @param servlet {?String} e.g. "publisher" Normally unset, and taken from the url.
  * @param ListItem {?React component} if set, replaces DefaultListItem
  */
-const ListLoad = ({type, status, servlet, navpage, q, ListItem}) => {
+const ListLoad = ({type, status, servlet, navpage, q, ListItem, checkboxes}) => {
 	assert(C.TYPES.has(type), "ListLoad - odd type " + type);
 	assert(!status || C.KStatus.has(status), "ListLoad - odd status " + status);
 	let path = DataStore.getValue(['location','path']);
@@ -34,6 +34,12 @@ const ListLoad = ({type, status, servlet, navpage, q, ListItem}) => {
 	if (id) return null;
 	if ( ! servlet) servlet = DataStore.getValue('location', 'path')[0]; //type.toLowerCase();
 	if ( ! navpage) navpage = servlet;
+	if ( ! servlet) {
+		console.warn("ListLoad - no servlet? type="+type);
+		return null;
+	}
+	assMatch(servlet, String);
+	assMatch(navpage, String);
 	// store the lists in a separate bit of appstate
 	// from data. 
 	// Downside: new events dont get auto-added to lists
@@ -56,7 +62,12 @@ const ListLoad = ({type, status, servlet, navpage, q, ListItem}) => {
 	console.warn("items", pvItems.value);
 	const listItems = pvItems.value.map(item => (
 		<ListItem key={getId(item) || JSON.stringify(item)} 
-			type={type} servlet={servlet} navpage={navpage} item={item} onPick={onPick} />)
+			type={type} 
+			servlet={servlet} 
+			navpage={navpage} 
+			item={item} 
+			onPick={onPick} 
+			checkboxes={checkboxes} />)
 	);
 	return (<div>
 		{pvItems.value.length === 0 ? 'No results found' : null}
@@ -72,14 +83,17 @@ const onPick = ({event, navpage, id}) => {
 	modifyHash([navpage, id]);
 };
 
-const DefaultListItem = ({type, servlet, navpage, item}) => {
+/**
+ * These can be clicked or control-clicked :(
+ */
+const DefaultListItem = ({type, servlet, navpage, item, checkboxes}) => {
 	if ( ! navpage) navpage = servlet;
 	const id = getId(item);
 	const itemUrl = modifyHash([servlet, id], null, true);
 	let checkedPath = ['widget', 'ListLoad', type, 'checked'];
 	return (
 		<div className='ListItemWrapper'>
-			<div className='pull-left'><Misc.PropControl title='TODO mass actions' path={checkedPath} type='checkbox' prop={id} /></div>
+			{checkboxes? <div className='pull-left'><Misc.PropControl title='TODO mass actions' path={checkedPath} type='checkbox' prop={id} /></div> : null}
 			<a 	href={itemUrl} 
 				onClick={event => onPick({ event, navpage, id })}
 				className={'ListItem btn btn-default status-'+item.status}
