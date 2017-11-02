@@ -28,7 +28,7 @@ const EditEventPage = () => {
 	return (<div>
 		<CreateButton type={type} />
 		<h2>Edit an Event</h2>
-		<ListLoad type={type} />
+		<ListLoad type={type} servlet='event' navpage='editEvent' />
 	</div>);
 };
 
@@ -41,6 +41,7 @@ const EventEditor = ({id}) => {
 	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
 
+	console.warn("tt", item.ticketTypes);
 	const addTicketType = () => {
 		const tt = Ticket.make({}, item.id);
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
