@@ -13,6 +13,7 @@ import ServerIO from '../plumbing/ServerIO';
 import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../data/DataClass';
 import ListLoad from './ListLoad';
+import FundRaiser from '../data/charity/FundRaiser';
 
 const EventPage = () => {
 	// which event?	
@@ -40,9 +41,10 @@ const Event = ({id}) => {
 	let createFundraiser = () => {
 		// make an id
 		const frid = nonce();
+		const fundraiser = FundRaiser.make({ id: frid, event: id});
 
 		// poke a new blank into DataStore
-		DataStore.setValue(['data', C.TYPES.FundRaiser, frid], {id: frid, event: id});
+		DataStore.setValue(['data', C.TYPES.FundRaiser, frid], fundraiser);
 		// set the id
 		modifyHash([servlet, frid]);
 	};

@@ -5,7 +5,7 @@ import { assert } from 'sjtest';
 import Login from 'you-again';
 import {XId } from 'wwutils';
 
-import { Button, FormControl, InputGroup, Tabs, Tab } from 'react-bootstrap';
+import { Button, FormControl, InputGroup, Tabs, Tab, Modal } from 'react-bootstrap';
 
 import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
 
@@ -14,12 +14,10 @@ import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
+import Donation from '../data/charity/Donation';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 
 import Misc from './Misc';
-import { impactCalc } from './ImpactWidgetry.jsx';
-import GiftAidForm from './GiftAidForm';
-import SocialShare from './SocialShare.jsx';
 import {nonce,getType} from '../data/DataClass';
 
 /**
@@ -27,13 +25,15 @@ import {nonce,getType} from '../data/DataClass';
  * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
  */
 
-const stripeKey = (window.location.host.startsWith('test') || window.location.host.startsWith('local')) ?
-		'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
-		: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
+// falsy value for SERVER_TYPE = production
+const stripeKey = (C.SERVER_TYPE) ?
+	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
+	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
 
-const initialFormData = {
+const initialFormData = Donation.make({
 	id: nonce(),
+	from: Login.getId(),
 	amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
 	coverCosts: true,
 	giftAid: false,
@@ -46,7 +46,7 @@ const initialFormData = {
 	message: '',
 	pending: false,
 	complete: false,
-};
+});
 
 const initialWidgetState = {
 	open: false,
@@ -83,8 +83,11 @@ const stagesOK = (formData) => [
  * item:
  */
 const DonationForm = ({item}) => {
-	assert(C.TYPES.isFundraiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
+	/*
+	// Restore once we resolve this issue where Things keep losing their types
+	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
 		"NewDonationForm - type "+getType(item));
+	*/
 	const widgetPath = ['widget', 'NewDonationForm', item.id];
 	let widgetState = DataStore.getValue(widgetPath);
 	if (!widgetState) {
@@ -92,14 +95,10 @@ const DonationForm = ({item}) => {
 		DataStore.setValue(widgetPath, widgetState, false);
 	}
 	const donateButton = (
-		<span className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
 			Donate
-		</span>
+		</button>
 	);
-	// not open? just show the button
-	if (!widgetState.open) {
-		return donateButton;
-	}
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
@@ -115,9 +114,13 @@ const DonationForm = ({item}) => {
 		// make a new draft donation
 		donationDraft = {
 			...initialFormData,
-			from: Login.getId(),
 			to: item.id,
 		};
+	}
+
+	// not open? just show the button
+	if (!widgetState.open) {
+		return donateButton;
 	}
 
 	const path = ['data', type, donationDraft.id];
@@ -128,69 +131,57 @@ const DonationForm = ({item}) => {
 	const stagePath = [...widgetPath, 'stage'];
 
 	const closeLightbox = () => DataStore.setValue([...widgetPath, 'open'], false);
+
+	const { stage } = widgetState;
+	const isFirst = stage <= 1;
+	const isLast = stage >= 5;
 	
-	const closeButton = (
-		<span className='glyphicon glyphicon-remove pull-right' onClick={closeLightbox}/>
+	const prevLink = isFirst ? '' : (
+		<Misc.SetButton path={stagePath} value={stage - 1} className='btn btn-default pull-left'>
+			Previous
+		</Misc.SetButton>
+	);
+	const nextLink = isLast ? '' : (
+		<Misc.SetButton path={stagePath} value={stage + 1} className='btn btn-default pull-right'>
+			Next
+		</Misc.SetButton>
 	);
 
 	// TODO use bootstrap dialog classes for the lightbox?? c.f. LoginWidget.jsx ^Dan
 	return (
 		<div>
 			{donateButton}
-			<div className='lightbox' onClick={closeLightbox}>
-				<Misc.Card title='GIMME YOUR MONEY' titleChildren={closeButton} onClick={e => e.stopPropagation()}>
-					<Tabs activeKey={widgetState.stage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
+			<Modal show={widgetState.open} className="donate-modal" onHide={closeLightbox}>
+				<Modal.Header closeButton >
+					<Modal.Title>GIMME YOUR MONEY</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Tabs activeKey={stage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
 						<Tab eventKey={1} title='Amount'>
-							<SectionWrapper stagePath={stagePath} sectionNumber={1} isFirst>
-								<AmountSection path={path} />
-							</SectionWrapper>
+							<AmountSection path={path} />
 						</Tab>
 						<Tab eventKey={2} title='Gift Aid'>
-							<SectionWrapper stagePath={stagePath} sectionNumber={2}>
-								<GiftAidSection path={path} />
-							</SectionWrapper>
+							<GiftAidSection path={path} />
 						</Tab>
 						<Tab eventKey={3} title='Details'>
-							<SectionWrapper stagePath={stagePath} sectionNumber={3}>
-								<DetailsSection path={path} />
-							</SectionWrapper>
+							<DetailsSection path={path} />
 						</Tab>
 						<Tab eventKey={4} title='Message'>
-							<SectionWrapper stagePath={stagePath} sectionNumber={4}>
-								<MessageSection path={path} />
-							</SectionWrapper>
+							<MessageSection path={path} />
 						</Tab>
 						<Tab eventKey={5} title='Payment'>
-							<SectionWrapper stagePath={stagePath} sectionNumber={5} isLast>
-								<PaymentSection path={path} />
-							</SectionWrapper>
+							<PaymentSection path={path} />
 						</Tab>
 					</Tabs>
-				</Misc.Card>
+				</Modal.Body>
+				<Modal.Footer>
+					{prevLink} {nextLink}
+				</Modal.Footer>
 				<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
-			</div>
+			</Modal>
 		</div>
 	);
 }; // ./DonationForm
-
-const SectionWrapper = ({stagePath, sectionNumber, children, isFirst, isLast}) => {
-	const prevLink = isFirst ? '' : (
-		<Misc.SetButton path={stagePath} value={sectionNumber - 1} className='btn btn-default pull-left'>
-			Previous
-		</Misc.SetButton>
-	);
-	const nextLink = isLast ? '' : (
-		<Misc.SetButton path={stagePath} value={sectionNumber + 1} className='btn btn-default pull-right'>
-			Next
-		</Misc.SetButton>
-	);
-	return (
-		<div className='section'>
-			{ children }
-			{ prevLink } { nextLink }
-		</div>
-	);
-};
 
 
 const AmountSection = ({path}) => (
@@ -242,6 +233,15 @@ class StripeThingsClass extends Component {
 	constructor(props) {
 		super(props);
 
+		/* We might be able to forgo the rigmarole of collecting
+		+ submitting CC data ourselves, if the browser supports
+		the generic Payments API or has Google Wallet / Apple Pay
+		integration. Stripe gives us a pre-rolled button which
+		extracts a Stripe payment token from these services.
+		Here, we check if it's available - in render(), if it is,
+		we skip showing the form and just present a flashy "Pay"
+		button. */
+		
 		const paymentRequest = props.stripe.paymentRequest({
 			country: 'GB',
 			currency: 'gbp',
@@ -262,7 +262,6 @@ class StripeThingsClass extends Component {
 		});
  
 		this.state = {
-			// @Roscoe what does this test for?? is this testing for the built-in payment API?
 			canMakePayment: false,
 			paymentRequest,
 		};

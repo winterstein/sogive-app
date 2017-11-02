@@ -141,9 +141,7 @@ public class DonationServlet extends CrudServlet {
 			Map draft = hits2.get(0);
 			WebUtils2.sendJson(new JsonResponse(state, draft), state);	
 		}
-		JsonResponse noResults = new JsonResponse(state);
-		noResults.setSuccess(false);
-		WebUtils2.sendJson(noResults, state);
+		WebUtils2.sendError(404, "No draft donation from "+ user.toString() +" to "+ to +" found.", state.getResponse());
 	}
 
 	private void doMakeDonation() throws IOException {

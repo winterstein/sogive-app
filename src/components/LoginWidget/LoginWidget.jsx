@@ -219,17 +219,19 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
-			{
-				verb === 'register' ?
-					<div>
-						Already have an account?
-						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
-					</div> :
-					<div>
-						Don&#39;t yet have an account?
-						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
-					</div>
-			}
+				{
+					verb === 'register' ? (
+						<div>
+							Already have an account?
+							&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
+						</div>
+					) : (
+						<div>
+							Don&#39;t yet have an account?
+							&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
+						</div>
+					)
+				}
 			</Modal.Footer>
 		</Modal>
 	);
