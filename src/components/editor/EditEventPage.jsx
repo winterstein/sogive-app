@@ -38,15 +38,14 @@ const EventEditor = ({id}) => {
 	if ( ! pEvent.value) {
 		return <Misc.Loading />;
 	}
-	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
 
-	console.warn("tt", item.ticketTypes);
 	const addTicketType = () => {
 		const tt = Ticket.make({}, item.id);
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
 		DataStore.update();
 	};
+
 	const path = ['data', type, id];
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
@@ -64,7 +63,7 @@ const EventEditor = ({id}) => {
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} />) 
+				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} />) 
 				: <p>No tickets yet!</p>
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
@@ -74,9 +73,16 @@ const EventEditor = ({id}) => {
 	</div>);
 };
 
-const TicketTypeEditor = ({ticketType, path}) => {
+const TicketTypeEditor = ({ticketType, path, event}) => {
+	const removeTicketType = () => {
+		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
+		DataStore.update();
+	};
 	return (<div className='well'>{printer.str(ticketType)}
-		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' />
+		<small>{ticketType.id}</small>
+		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' />
+		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
+		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash'/></button>
 	</div>);
 };
 

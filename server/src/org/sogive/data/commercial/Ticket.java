@@ -4,7 +4,7 @@ import org.sogive.data.charity.MonetaryAmount;
 
 import com.winterwell.data.AThing;
 
-public class Product extends AThing {
+public class Ticket extends AThing {
 
 	MonetaryAmount price;
 

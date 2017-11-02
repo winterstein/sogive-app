@@ -74,7 +74,11 @@ class MainDiv extends Component {
 
 	render() {
 		let path = DataStore.getValue('location', 'path');		
-		let page = (path && path[0]) || DEFAULT_PAGE;
+		let page = (path && path[0]);
+		if ( ! page) {
+			modifyHash([DEFAULT_PAGE]);
+			return null;
+		}
 		assert(page);
 		let Page = PAGES[page];		
 		assert(Page, page);

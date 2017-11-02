@@ -60,9 +60,27 @@ const Event = ({id}) => {
 			<div>
 				{item.description}
 			</div>
+
+			<Register event={item} />
+
 			<button className='btn btn-default' onClick={createFundraiser}><Misc.Icon glyph='plus' />Create Fundraiser For This Event</button>
 		</div>
 	);
+};
+
+const Register = ({event}) => {
+	if ( ! event.ticketTypes) {
+		return <p>Register: Define some ticket types!</p>;
+	}
+	return (<Misc.Card title='Register'>
+		{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} />)}
+	</Misc.Card>);
+};
+
+const RegisterTicket = ({event,ticketType}) => {
+	return (<a href={'#register/'+getId(event)+'/'+getId(ticketType)} className='btn btn-default'>
+		{ticketType.name} <Misc.Money amount={ticketType.price} />
+	</a>);
 };
 
 export default EventPage;

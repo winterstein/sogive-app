@@ -8,6 +8,7 @@ import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
 import {setHash} from 'wwutils';
+import PV from 'promise-value';
 
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
@@ -15,7 +16,9 @@ import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
+import {getType, getId} from '../data/DataClass';
 
 const Misc = {};
 
@@ -161,48 +164,8 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	// £s
 	// NB: This is a bit awkward code -- is there a way to factor it out nicely?? The raw vs parsed/object form annoyance feels like it could be a common case.
 	if (type==='MonetaryAmount') {
-		// special case, as this is an object.
-		// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
-		// Convert null and numbers into MA objects
-		if ( ! value || _.isString(value) || _.isNumber(value)) {
-			value = MonetaryAmount.make({value});
-		}
-		// prefer raw, so users can type incomplete answers!
-		let v = value.raw || value.value;
-		if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
-			v = '';
-		}
-		MonetaryAmount.assIsa(value);
-		// handle edits
-		const onMoneyChange = e => {
-			let newVal = parseFloat(e.target.value);
-			value.raw = e.target.value;
-			value.value = newVal;
-			DataStore.setValue(proppath, value);
-			// console.warn("£", value, proppath);
-			if (saveFn) saveFn({path, value});
-		};
-		let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
-		let currency;
-		let changeCurrency = otherStuff.changeCurrency !== false;
-		if (changeCurrency) {
-			// TODO other currencies
-			currency = (
-				<DropdownButton disabled={otherStuff.disabled} title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(proppath)}>
-					<MenuItem key="1">{curr}</MenuItem>
-				</DropdownButton>
-			);
-		} else {
-			currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
-		}
-		delete otherStuff.changeCurrency;
-		assert(v === 0 || v || v==='', [v, value]);
-		// make sure all characters are visible
-		let minWidth = ((""+v).length / 1.5)+"em";
-		return (<InputGroup>
-					{currency}
-					<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} style={{minWidth}}/>
-				</InputGroup>);
+		let acprops ={prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
+		return <PropControlMonetaryAmount {...acprops} />;
 	} // ./£
 	// text based
 	const onChange = e => {
@@ -323,13 +286,113 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 			</select>
 		);
 	}
+	if (type==='autocomplete') {
+		let acprops ={prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
+		return <PropControlAutocomplete {...acprops} />;
+	}
 	// normal
 	// NB: type=color should produce a colour picker :)
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
-};
+}; //./PropControl
 
-Misc.ControlTypes = new Enum("img textarea text select password email url color MonetaryAmount checkbox"
+Misc.ControlTypes = new Enum("img textarea text select autocomplete password email url color MonetaryAmount checkbox"
 							+" location date year number arraytext address postcode json");
+const PropControlMonetaryAmount = ({prop, value, path, proppath, 
+									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
+		// special case, as this is an object.
+	// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
+	// Convert null and numbers into MA objects
+	if ( ! value || _.isString(value) || _.isNumber(value)) {
+		value = MonetaryAmount.make({value});
+	}
+	// prefer raw, so users can type incomplete answers!
+	let v = value.raw || value.value;
+	if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
+		v = '';
+	}
+	MonetaryAmount.assIsa(value);
+	// handle edits
+	const onMoneyChange = e => {
+		let newVal = parseFloat(e.target.value);
+		value.raw = e.target.value;
+		value.value = newVal;
+		DataStore.setValue(proppath, value);
+		// console.warn("£", value, proppath);
+		if (saveFn) saveFn({path, value});
+	};
+	let curr = CURRENCY[value && value.currency] || <span>&pound;</span>;
+	let currency;
+	let changeCurrency = otherStuff.changeCurrency !== false;
+	if (changeCurrency) {
+		// TODO other currencies
+		currency = (
+			<DropdownButton disabled={otherStuff.disabled} title={curr} componentClass={InputGroup.Button} id={'input-dropdown-addon-'+JSON.stringify(proppath)}>
+				<MenuItem key="1">{curr}</MenuItem>
+			</DropdownButton>
+		);
+	} else {
+		currency = <InputGroup.Addon>{curr}</InputGroup.Addon>;
+	}
+	delete otherStuff.changeCurrency;
+	assert(v === 0 || v || v==='', [v, value]);
+	// make sure all characters are visible
+	let minWidth = ((""+v).length / 1.5)+"em";
+	return (<InputGroup>
+		{currency}
+		<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} style={{minWidth}}/>
+	</InputGroup>);
+}; // ./£
+
+
+/**
+ * wraps the reactjs autocomplete widget
+ */
+const PropControlAutocomplete = ({prop, value, options, getItemValue, renderItem, path, proppath, 
+									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
+	// a place to store the working state of this widget
+	let widgetPath = ['widget', 'autocomplete'].concat(path);
+	if ( ! getItemValue) getItemValue = s => s;
+	if ( ! renderItem) renderItem = a => printer.str(a);
+	const type='autocomplete';
+	let items = _.isArray(options)? options : DataStore.getValue(widgetPath) || [];
+	// NB: typing sends e = an event, clicking an autocomplete sends e = a value
+	const onChange2 = (e, optItem) => {
+		console.log("event", e, e.type, optItem);
+		// TODO a debounced property for "do ajax stuff" to hook into. HACK blur = do ajax stuff
+		DataStore.setValue(['transient', 'doFetch'], e.type==='blur');	
+		// typing sneds an event, clicking an autocomplete sends a value
+		const val = e.target? e.target.value : e;
+		let mv = modelValueFromInput(val, type, e.type);
+		DataStore.setValue(proppath, mv);
+		if (saveFn) saveFn({path:path, value:mv});
+		// e.preventDefault();
+		// e.stopPropagation();
+	};
+	const onChange = (e, optItem) => {
+		onChange2(e, optItem);
+		if ( ! e.target.value) return;
+		if ( ! _.isFunction(options)) return;
+		let optionsOutput = options(e.target.value);
+		let pvo = PV(optionsOutput);
+		pvo.promise.then(oo => {
+			DataStore.setValue(widgetPath, oo);
+			// also save the info in data
+			oo.forEach(opt => getType(opt) && getId(opt)? DataStore.setValue(['data',getType(opt), getId(opt)], opt) : null);
+		});
+		// NB: no action on fail - the user just doesn't get autocomplete		
+	};
+
+	return (<Autocomplete 
+		inputProps={{className: otherStuff.className || 'form-control'}}
+		getItemValue={getItemValue}
+		items={items}
+		renderItem={renderItem}
+		value={value}
+		onChange={onChange}
+		onSelect={onChange2} 
+  />);
+}; //./autocomplete
+
 
 /**
  * A button which sets a DataStore address to a specific value
@@ -394,12 +457,12 @@ const FormControl = ({value, ...otherProps}) => {
 	return <input className='form-control' value={value} {...otherProps} />;
 };
 
-// a debounced auto-save function
+/** Hack: a debounced auto-save function for the save/publish widget */
 const saveDraftFn = _.debounce(
 	({type, id}) => {
 		ActionMan.saveEdits(type, id);
 		return true;
-	}, 1000);
+	}, 5000);
 
 
 /**
@@ -419,20 +482,18 @@ Misc.Card = ({title, glyph, icon, children, titleChildren, ...props}) => {
 	);
 };
 
-/**
- * on click, set the hash to #hash
- * The child elements is what gets displayed inside an a tag (so the user could control-click or save the link)
- * Use-case: for making navigation links & buttons where we use deep-linking urls.
- */
-Misc.RestItem = ({hash, children}) => {
-	assert(hash, 'Misc.RestItem');
-	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
-	return (
-		<a className='RestItem' href={'#'+hash} onClick={clicked} >
-			{children}
-		</a>
-	);
-};
+// /** replaced by ListLoad
+//  * on click, set the hash to #hash
+//  * The child elements is what gets displayed inside an a tag (so the user could control-click or save the link)
+//  * Use-case: for making navigation links & buttons where we use deep-linking urls.
+//  */
+// Misc.RestItem = ({hash, children}) => {
+// 	assert(hash, 'Misc.RestItem');
+// 	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
+// 	return (<a className='RestItem' href={'#'+hash} onClick={clicked} >
+// 			{children}
+// 		</a>);
+// };
 
 /**
  * save buttons

@@ -19,6 +19,7 @@
     "react-bootstrap": "^0.31.1",
     "react-chartjs2": "^1.1.2",
     "react-dom": "^15.6.1",
+	"react-autocomplete": "^1.7.2",
     "react-markdown": "^2.5.0",
     "react-stripe-checkout": "^2.4.0",
     "react-stripe-elements": "^1.2.0",
@@ -27,7 +28,7 @@
     "easyi18n": "^1.1.0",
     "sjtest": "^0.4.4",
     "wwutils": "^0.8.2",
-    "you-again": "^0.5.2",
+    "you-again": "^0.6.0",
     "promise-value": "^1.0.8"
   },
   "scripts": {

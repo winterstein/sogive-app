@@ -1,7 +1,7 @@
 
 import C from '../C.js';
 import _ from 'lodash';
-import {getType} from '../data/DataClass';
+import {getId, getType} from '../data/DataClass';
 import {assert,assMatch} from 'sjtest';
 import {yessy, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
 import PV from 'promise-value';
@@ -170,10 +170,18 @@ class Store {
 		assert(this.appstate[path[0]], 
 			"DataStore.setValue: "+path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
+		const oldVal = this.getValue(path);
+		if (oldVal === value) {
+			// not working for the NGO case?! 'cos fresh fetches from sogive?
+			// FIXME what about in place edits? where oldVal===value, but we did edit value, so a call to update() is wanted??
+			console.log("setValue no-op", path, value, "NB: beware of in-place edits");
+			return;
+		}
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];
 			if (pi === path.length-1) {
+				// Set it!
 				tip[pkey] = value;
 				break;
 			}
@@ -191,11 +199,10 @@ class Store {
 		// HACK: update a data value => mark it as modified
 		if (path[0] === 'data' && path.length > 3 && DataStore.DATA_MODIFIED_PROPERTY) {
 			// chop path down to [data, type, id]
-			let modPath = path.slice(0, 3).concat(DataStore.DATA_MODIFIED_PROPERTY);
-			modPath[0] = 'transient';
-			// avoid infinite loopyness
-			if ( ! _.isEqual(path, modPath)) {
-				this.setValue(modPath, C.STATUS.dirty, false);
+			let itemPath = path.slice(0, 3);
+			let item = this.getValue(itemPath);
+			if (getType(item) && getId(item)) {
+				this.setLocalEditsStatus(getType(item), getId(item), C.STATUS.dirty, false);
 			}
 		}
 		if (update) {
@@ -221,11 +228,12 @@ class Store {
 	 * @param {*} id 
 	 * @return "dirty", "clean", etc. -- see C.STATUS
 	 */
-	setLocalEditsStatus(type, id, status) {
+	setLocalEditsStatus(type, id, status, update=true) {
 		assert(C.TYPES.has(type));
 		assert(C.STATUS.has(status));
 		assert(id, "DataStore.setLocalEditsStatus: No id?! getData "+type);
-		return this.setValue(['transient', type, id, DataStore.DATA_MODIFIED_PROPERTY], status);
+		if ( ! DataStore.DATA_MODIFIED_PROPERTY) return null;
+		return this.setValue(['transient', type, id, DataStore.DATA_MODIFIED_PROPERTY], status, update);
 	}
 
 
