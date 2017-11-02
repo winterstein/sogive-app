@@ -13,5 +13,4 @@ public class EventServlet extends CrudServlet<Event> implements IServlet {
 		super(Event.class);
 	}
 
-
 }

@@ -90,7 +90,8 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-		.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL)
+		.setClassProperty("@type")
+		.setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
 		Dep.set(Gson.class, gson);
 				
