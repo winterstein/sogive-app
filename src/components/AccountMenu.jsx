@@ -41,6 +41,8 @@ const AccountMenu = ({pending, active}) => {
 				<ul className="dropdown-menu">
 					<li><a href="#account">Account</a></li>
 					<li role="separator" className="divider" />
+					<li><button onClick={() => DataStore.setValue(['widget', 'Basket', 'open'], true)} >Basket</button></li>
+					<li role="separator" className="divider" />
 					<li><a href="#dashboard" onClick={() => doLogout()}>Log out</a></li>
 				</ul>
 			</li>

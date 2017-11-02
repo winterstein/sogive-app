@@ -11,6 +11,7 @@ import C from '../../C';
 import MessageBar from '../MessageBar';
 import NavBar from '../NavBar';
 import LoginWidget from '../LoginWidget/LoginWidget';
+import Basket from '../Basket';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
@@ -90,6 +91,7 @@ class MainDiv extends Component {
 					</div>
 				</div>
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
+				<Basket />
 			</div>
 		);
 	}

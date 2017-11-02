@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
+import { modifyHash, encURI, uid } from 'wwutils';
+import { Button, Well } from 'react-bootstrap';
+
 import printer from '../utils/printer.js';
-import {modifyHash, encURI, uid} from 'wwutils';
 import C from '../C';
 import Roles from '../Roles';
 import Misc from './Misc';
@@ -62,8 +64,32 @@ const Event = ({id}) => {
 			<div>
 				{item.description}
 			</div>
+			<Tickets event={item} />
 			<button className='btn btn-default' onClick={createFundraiser}><Misc.Icon glyph='plus' />Create Fundraiser For This Event</button>
 		</div>
+	);
+};
+
+
+const Tickets = ({event}) => {
+	const types = event.ticketTypes || [];
+	const typeElements = types.map((type) => <TicketType product={type} />);
+
+	return (
+		<div>
+			{typeElements}
+		</div>
+	);
+};
+
+
+const TicketType = ({product}) => {
+	return (
+		<Well bsSize='small'>
+			<h3>{product.name}</h3>
+			<p>{product.description}</p>
+			<Button onClick={() => ActionMan.modifyBasket({id: product.id, qty: 1})}>Add to Basket</Button>
+		</Well>
 	);
 };
 

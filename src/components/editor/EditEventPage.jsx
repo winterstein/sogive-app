@@ -75,9 +75,13 @@ const EventEditor = ({id}) => {
 };
 
 const TicketTypeEditor = ({ticketType, path}) => {
-	return (<div className='well'>{printer.str(ticketType)}
-		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' />
-	</div>);
+	return (
+		<div className='well'>{printer.str(ticketType)}
+			<Misc.PropControl type='text' item={ticketType} path={path} prop='name' label='Name' />
+			<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
+			<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
+		</div>
+	);
 };
 
 export default EditEventPage;

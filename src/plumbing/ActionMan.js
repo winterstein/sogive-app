@@ -105,12 +105,32 @@ const donate = ({charity, formPath, formData, stripeResponse}) => {
 	});
 };
 
+const modifyBasket = ({id, qty}) => {
+	assert(id && typeof(id) === 'string');
+	assert(qty === Math.round(qty)); // Integer quantities please
+
+	const path = ['widget', 'Basket', 'contents'];
+	const contents = DataStore.getValue(path);
+	const qtyInBasket = contents[id] || 0;
+	const newQty = qtyInBasket + qty;
+	const newContents = {
+		...contents,
+		[id]: newQty,
+	};
+	if (newQty === 0) {
+		newContents.delete(id);		
+	}
+
+	DataStore.setValue(path, newContents);
+};
+
 const ActionMan = {
 	addCharity,
 	addProject, removeProject,
 	addInputOrOutput,
 	addDataSource,
-	donate
+	donate,
+	modifyBasket,
 };
 
 

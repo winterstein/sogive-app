@@ -15,8 +15,9 @@ Ticket.assIsa = (p) => assert(Ticket.isa(p));
 Ticket.name = (ngo) => Ticket.assIsa(ngo) && ngo.name;
 
 Ticket.make = (base, baseId) => {
-	assMatch(baseId, String)
+	assMatch(baseId, String);
 	return {
-		id: baseId+'.'+Math.floor(Math.random()*1000000)
+		id: baseId+'.'+Math.floor(Math.random()*1000000),
+		price: MonetaryAmount.make(),
 	};
 };

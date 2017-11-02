@@ -29,7 +29,7 @@ C.app = {
  */
 C.newId = 'new';
 
-C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Basket");
+C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Product Basket");
 
 /** dialogs you can show/hide.*/
 C.show = new Enum('LoginWidget');
