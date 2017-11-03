@@ -1,9 +1,11 @@
 
 import Login from 'you-again';
+import {assert} from 'sjtest';
+import PV from 'promise-value';
+import _ from 'lodash';
+
 import ServerIO from './ServerIO';
 import DataStore from './DataStore';
-import {assert} from 'sjtest';
-
 import {getId, getType} from '../data/DataClass';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
@@ -11,9 +13,7 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
-import _ from 'lodash';
 import C from '../C';
-import PV from 'promise-value';
 
 
 const addCharity = () => {
@@ -120,9 +120,9 @@ const getBasketPV = (uxid) => {
 	if ( ! uxid) {
 		uxid = Login.getId() || Login.getTempId();		
 	}
-	const bid = 'for'+uxid;
+	const bid = 'for:'+uxid;
 	// FIXME we want to say "dont show errors from this"
-	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid});
+	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket
 	let pGetMake = pvbasket.promise.fail(err => {
@@ -133,6 +133,7 @@ const getBasketPV = (uxid) => {
 	});
 	return PV(pGetMake);
 };
+
 const addToBasket = (basket, item) => {
 	console.log("addFromBasket",basket, item);
 	assert(item, basket);
@@ -143,6 +144,7 @@ const addToBasket = (basket, item) => {
 	DataStore.update();
 	return basket;
 };
+
 const removeFromBasket = (basket, item) => {
 	console.log("removeFromBasket",basket, item);
 	assert(item);
@@ -150,6 +152,14 @@ const removeFromBasket = (basket, item) => {
 	basket.items = basket.items.filter(itm => getId(itm) !== getId(item));
 	DataStore.update();
 	return basket;
+};
+
+const getBasketPath = (uxid) => {
+	if ( ! uxid) {
+		uxid = Login.getId() || Login.getTempId();		
+	}
+	const bid = 'for:'+uxid;
+	return ['data', C.TYPES.Basket, bid];
 };
 
 const ActionMan = {
@@ -160,7 +170,8 @@ const ActionMan = {
 	donate,
 	getBasketPV,
 	addToBasket, 
-	removeFromBasket
+	removeFromBasket,
+	getBasketPath,
 };
 
 export default ActionMan;

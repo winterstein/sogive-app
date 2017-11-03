@@ -84,7 +84,8 @@ const TicketTypeEditor = ({ticketType, path, event}) => {
 		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' />
 		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
-		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash'/></button>
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='eg Walker' />
+		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };
 

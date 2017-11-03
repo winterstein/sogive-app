@@ -8,7 +8,7 @@ export default MonetaryAmount;
 
 // ref: https://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
 const isNumeric = value => {
-  return ! isNaN(value - parseFloat(value));
+	return ! isNaN(value - parseFloat(value));
 };
 
 // duck type: needs a value
@@ -26,4 +26,3 @@ MonetaryAmount.make = (base = {}) => {
 	MonetaryAmount.assIsa(item);
 	return item;
 };
-

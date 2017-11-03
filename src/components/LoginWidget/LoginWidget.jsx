@@ -236,8 +236,8 @@ const SwitchVerb = ({verb}) => {
 	</div>);
 };
 
-const LoginWidgetGuts = ({services}) => {
-	let verb = DataStore.getValue(verbPath) || 'login';
+const LoginWidgetGuts = ({services, verb}) => {
+	if (!verb) verb = DataStore.getValue(verbPath) || 'login';
 	return (<div className="container-fluid">
 		<div className="row">
 			<div className="col-sm-6">

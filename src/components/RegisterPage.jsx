@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Tabs, Tab } from 'react-bootstrap';
+import { Well, Button, Tabs, Tab, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
@@ -9,19 +9,19 @@ import printer from '../utils/printer.js';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
-import {getId, getType} from '../data/DataClass';
+import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
-import {SearchResults} from './SearchPage';
+import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
-import {LoginWidgetEmbed} from './LoginWidget/LoginWidget';
+import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 
 /**
  * Sign up for an event!
  */
 const RegisterPage = () => {
-	let eventId = DataStore.getValue('location','path')[1];
+	let eventId = DataStore.getValue('location', 'path')[1];
 	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId});
 	if ( ! pvEvent.value) return <Misc.Loading />;
 	const event = pvEvent.value;
@@ -29,10 +29,44 @@ const RegisterPage = () => {
 	const wspath = ['widget', 'RegisterPage', eventId];
 	const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = wspath.concat('stage');
-	let stage = widgetState.stage;
+	const stage = widgetState.stage;
 
-	let pvbasket = ActionMan.getBasketPV();
-	let basket = pvbasket.value;	
+	const pvbasket = ActionMan.getBasketPV();
+	const basket = pvbasket.value;
+	
+	const basketPath = ActionMan.getBasketPath();
+
+
+	// Sort all tickets in basket & list in format:
+	// Ticket Type A
+	// - Attendee 1
+	// - Attendee 2
+	// Ticket Type B
+	// - Attendee 1
+	const attendees = basket ? (
+		Basket.getItems(basket).sort((a, b) => a.name > b.name)
+			.map((ticket, ti, tickets) => {
+				const ticketPath = [...basketPath, 'items', ti];
+
+				const prevTicket = (ti === 0) ? null : tickets[ti-1];
+				if (!prevTicket || prevTicket.id !== ticket.id) {
+					ticket.number = 1;
+				} else if (prevTicket && prevTicket.number && prevTicket.id === ticket.id) {
+					ticket.number = prevTicket.number + 1;
+				}
+				const header = (ticket.number === 1) ? (
+					<h3>{ticket.name}</h3>
+				) : null;
+
+				return (
+					<div>
+						{header}
+						<AttendeeDetails key={ti} ticket={ticket} i={ti} path={ticketPath} />
+					</div>
+				);
+			})
+	) : null;
+
 	return (
 		<div className=''>
 			<h2>Register &amp; get tickets for {event.name}</h2>
@@ -49,9 +83,7 @@ const RegisterPage = () => {
 					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={3} title='Your Details'>
-					{basket? Basket.getItems(basket).map((ticket, ti) => <WalkerDetails key={ti} ticket={ticket} i={ti} />) : null}
-					for each ticket if several
-					with a checkbox to say "same address as lead"					
+					{attendees}
 					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={4} title='Your Charity'>					
@@ -100,22 +132,44 @@ const RegisterTicket = ({event,ticketType,basket}) => {
 
 const RegisterOrLoginTab = () => {
 	if (Login.isLoggedIn()) {
-		return (<div>
-			<Misc.Icon glyph='tick' className='text-success' />
-			Logged in as {Login.getId()}
-		</div>);
+		return (
+			<div>
+				<Misc.Icon glyph='tick' className='text-success' />
+				<p>You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
+				<p>Not you? <Button bsSize='small' onClick={() => Login.logout()}>Log out</Button></p>
+				
+			</div>
+		);
 	}
-	return (<div>
-		<p>Please register to create an account.</p>
-		<LoginWidgetEmbed services={['twitter']} />
-	</div>);
+	return (
+		<div>
+			<p>Please login or register your account.</p>
+			<LoginWidgetEmbed services={['twitter']} />
+		</div>
+	);
 };
 
-const WalkerDetails = ({i, ticket}) => {
-	return (<div> <div>Walker <span>{i+1}</span></div>
-	{i>0? <p>[] Same as first walker</p> : null}
-		ticket - name, email, address of the walker
-	</div>);
+const AttendeeDetails = ({i, ticket, path}) => {
+	const noun = ticket.attendeeNoun || 'Attendee';
+	const sameAddressAsFirst = i > 0 ? (
+		<Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' />
+	) : null;
+
+	const isSame = DataStore.getValue([...path, 'sameAsFirst']);
+
+	const address = isSame ? null : (
+		<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
+	);
+
+	return (
+		<Well>
+			<h4>{noun} <span>{i+1}</span></h4>
+			<Misc.PropControl type='text' path={path} prop='attendeeName' label={`${noun} Name`} />
+			<Misc.PropControl type='text' path={path} prop='attendeeEmail' label='Email' />
+			{ sameAddressAsFirst }
+			{ address }
+		</Well>
+	);
 };
 
 const CharityChoiceTab = ({basket}) => {
