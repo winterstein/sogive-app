@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
-import { getUrlVars } from 'wwutils';
+import { getUrlVars, toTitleCase, modifyHash } from 'wwutils';
 import _ from 'lodash';
 
 // Plumbing
 import DataStore from '../../plumbing/DataStore';
+import Roles from '../../Roles';
+import CRUD from '../../plumbing/Crud';
 import C from '../../C';
 // Templates
 import MessageBar from '../MessageBar';
@@ -75,7 +77,11 @@ class MainDiv extends Component {
 
 	render() {
 		let path = DataStore.getValue('location', 'path');		
-		let page = (path && path[0]) || DEFAULT_PAGE;
+		let page = (path && path[0]);
+		if ( ! page) {
+			modifyHash([DEFAULT_PAGE]);
+			return null;
+		}
 		assert(page);
 		let Page = PAGES[page];		
 		assert(Page, page);

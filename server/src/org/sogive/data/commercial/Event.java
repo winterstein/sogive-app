@@ -14,6 +14,6 @@ import com.winterwell.data.AThing;
  */
 public class Event extends AThing {
 	
-	List<Product> ticketTypes;
+	List<Ticket> ticketTypes;
 	
 }

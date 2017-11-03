@@ -29,7 +29,7 @@ const EditEventPage = () => {
 	return (<div>
 		<CreateButton type={type} />
 		<h2>Edit an Event</h2>
-		<ListLoad type={type} />
+		<ListLoad type={type} servlet='event' navpage='editEvent' />
 	</div>);
 };
 
@@ -39,7 +39,6 @@ const EventEditor = ({id}) => {
 	if ( ! pEvent.value) {
 		return <Misc.Loading />;
 	}
-	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
 
 	const addTicketType = () => {
@@ -47,6 +46,7 @@ const EventEditor = ({id}) => {
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
 		DataStore.update();
 	};
+
 	const path = ['data', type, id];
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
@@ -64,7 +64,7 @@ const EventEditor = ({id}) => {
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} />) 
+				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} />) 
 				: <p>No tickets yet!</p>
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
@@ -74,14 +74,18 @@ const EventEditor = ({id}) => {
 	</div>);
 };
 
-const TicketTypeEditor = ({ticketType, path}) => {
-	return (
-		<div className='well'>{printer.str(ticketType)}
-			<Misc.PropControl type='text' item={ticketType} path={path} prop='name' label='Name' />
-			<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
-			<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
-		</div>
-	);
+const TicketTypeEditor = ({ticketType, path, event}) => {
+	const removeTicketType = () => {
+		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
+		DataStore.update();
+	};
+	return (<div className='well'>
+		<small>{ticketType.id}</small>
+		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' />
+		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
+		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash'/></button>
+	</div>);
 };
 
 export default EditEventPage;

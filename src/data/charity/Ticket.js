@@ -1,7 +1,7 @@
 
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa, nonce} from '../DataClass';
 import {uid} from 'wwutils';
 import MonetaryAmount from './MonetaryAmount';
 
@@ -17,7 +17,7 @@ Ticket.name = (ngo) => Ticket.assIsa(ngo) && ngo.name;
 Ticket.make = (base, baseId) => {
 	assMatch(baseId, String);
 	return {
-		id: baseId+'.'+Math.floor(Math.random()*1000000),
+		id: baseId+'.'+nonce(),
 		price: MonetaryAmount.make(),
 	};
 };

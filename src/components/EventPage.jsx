@@ -64,33 +64,21 @@ const Event = ({id}) => {
 			<div>
 				{item.description}
 			</div>
-			<Tickets event={item} />
+
+			<Register event={item} />
+
+			<hr/>
+			<p>Dev only</p>
 			<button className='btn btn-default' onClick={createFundraiser}><Misc.Icon glyph='plus' />Create Fundraiser For This Event</button>
 		</div>
 	);
 };
 
-
-const Tickets = ({event}) => {
-	const types = event.ticketTypes || [];
-	const typeElements = types.map((type) => <TicketType product={type} />);
-
-	return (
-		<div>
-			{typeElements}
-		</div>
-	);
+const Register = ({event}) => {
+	assert(event);
+	// just a big CTA
+	return (<a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a>);
 };
 
-
-const TicketType = ({product}) => {
-	return (
-		<Well bsSize='small'>
-			<h3>{product.name}</h3>
-			<p>{product.description}</p>
-			<Button onClick={() => ActionMan.modifyBasket({id: product.id, qty: 1})}>Add to Basket</Button>
-		</Well>
-	);
-};
 
 export default EventPage;

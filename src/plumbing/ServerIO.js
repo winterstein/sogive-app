@@ -163,25 +163,14 @@ ServerIO.load = function(url, params) {
 					msg.text = msg.text.substr(0, i);
 				}
 				// bleurgh - a frameworky dependency
-				addMessage(msg);
+			Messaging.notifyUser(msg);
 				return response;
 			}.bind(this));
 	return defrd;
 };
 
-const addMessage = (msg) => {
-	console.log("addMessage", msg);
-	let msgs = DataStore.getValue('misc', 'messages-for-user') || {};
-	msgs[msg.id] = msg;
-	DataStore.setValue(['misc', 'messages-for-user'], msgs);				
-};
-
 ServerIO.post = function(url, data) {
 	return ServerIO.load(url, {data, method:'POST'});
-};
-
-ServerIO.saveDraft = function(item) {
-	return ServerIO.post('/charity/'+encURI(NGO.id(item))+'.json', item);
 };
 
 ServerIO.handleMessages = function(response) {

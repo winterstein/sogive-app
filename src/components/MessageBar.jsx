@@ -11,7 +11,7 @@ import C from '../C.js';
 const MessageBar = ({messages}) => {
 	if ( ! messages || messages.length===0) return <div></div>;
 	const messageUI = messages.map( (m, mi) => <MessageBarItem key={'mi'+mi} message={m} /> );
-	return (<div className='messagebar'>{messageUI}</div>);
+	return (<div className='MessageBar container'>{messageUI}</div>);
 }; // ./Messagebar
 
 

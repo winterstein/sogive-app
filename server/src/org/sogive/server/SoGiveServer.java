@@ -3,6 +3,7 @@ package org.sogive.server;
 import java.io.File;
 
 import org.sogive.data.charity.ImportCharityDataFromCSV;
+import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.StripeConfig;
@@ -90,7 +91,9 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-		.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL)
+		.setClassProperty(null) //"@type")
+//		.setClassMapping("MonetaryAmount", MonetaryAmount.class)
+		.setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
 		Dep.set(Gson.class, gson);
 				
