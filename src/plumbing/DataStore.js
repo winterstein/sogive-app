@@ -125,10 +125,13 @@ class Store {
 		return item;
 	}
 
+	/**
+	 * 
+	 */
 	setData(item, update = true) {
-		assert(item && item['@type'] && item.id);
-		assert(C.TYPES.has(item['@type']) && this.appstate.data[item['@type']]);
-		this.setValue(['data', item['@type'], item.id], item, update);
+		assert(item && getType(item) && getId(item));
+		assert(C.TYPES.has(getType(item)), item);
+		this.setValue(['data', getType(item), getId(item)], item, update);
 	}
 
 	getValue(...path) {
@@ -162,19 +165,20 @@ class Store {
 	 * 
 	 * @param {String[]} path This path will be created if it doesn't exist (except if value===null)
 	 * @param {*} value The new value. Can be null to null-out a value.
-	 * @param {boolean} update Set to false to switch off sending out an update
+	 * @param {boolean} update Set to false to switch off sending out an update. Set to true to force an update even if it looks like a no-op.
+	 * undefined is true-without-force
 	 */
 	// TODO handle setValue(pathbit, pathbit, pathbit, value) too
-	setValue(path, value, update = true) {
+	setValue(path, value, update) {
 		assert(_.isArray(path), "DataStore.setValue: "+path+" is not an array.");
 		assert(this.appstate[path[0]], 
 			"DataStore.setValue: "+path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
 		const oldVal = this.getValue(path);
-		if (oldVal === value) {
+		if (oldVal === value && update !== true) {
 			// not working for the NGO case?! 'cos fresh fetches from sogive?
 			// FIXME what about in place edits? where oldVal===value, but we did edit value, so a call to update() is wanted??
-			console.log("setValue no-op", path, value, "NB: beware of in-place edits");
+			console.log("setValue no-op", path, value, "NB: beware of in-place edits - use update=true to force an update");
 			return;
 		}
 		let tip = this.appstate;
@@ -205,7 +209,7 @@ class Store {
 				this.setLocalEditsStatus(getType(item), getId(item), C.STATUS.dirty, false);
 			}
 		}
-		if (update) {
+		if (update !== false) {
 			console.log("setValue -> update", path, value);
 			this.update();
 		}
@@ -296,7 +300,7 @@ class Store {
 				let type = getType(item);
 				if ( ! type) {
 					// 
-					console.log("skip server object", item);
+					console.log("skip server object w/o type", item);
 					return;
 				}
 				assert(C.TYPES.has(type), "DataStore.updateFromServer: "+item);

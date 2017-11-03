@@ -19,18 +19,16 @@ The top-right menu
 */
 const AccountMenu = ({pending, active}) => {
 	if (pending) return <Misc.Loading />;
-
-	let user = Login.getUser();
-	if ( ! user) {
-		return (
-			<ul id='top-right-menu' className="nav navbar-nav navbar-right">
-				<li>
-					<LoginLink />
-				</li>
-			</ul>
-		);
+	if ( ! Login.isLoggedIn()) {
+		return (<ul id='top-right-menu' className="nav navbar-nav navbar-right">
+			<li>
+				<LoginLink />
+			</li>
+		</ul>);
 	}
-
+	let user = Login.getUser();
+					// <li role="separator" className="divider" />
+					// <li><button onClick={() => DataStore.setValue(['widget', 'Basket', 'open'], true)} >Basket</button></li>
 	return (
 		<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 			<li className={'dropdown' + (active? ' active' : '')}>
@@ -40,8 +38,6 @@ const AccountMenu = ({pending, active}) => {
 				</a>
 				<ul className="dropdown-menu">
 					<li><a href="#account">Account</a></li>
-					<li role="separator" className="divider" />
-					<li><button onClick={() => DataStore.setValue(['widget', 'Basket', 'open'], true)} >Basket</button></li>
 					<li role="separator" className="divider" />
 					<li><a href="#dashboard" onClick={() => doLogout()}>Log out</a></li>
 				</ul>

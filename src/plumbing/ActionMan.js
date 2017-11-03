@@ -1,13 +1,20 @@
 
+import Login from 'you-again';
 import ServerIO from './ServerIO';
 import DataStore from './DataStore';
 import {assert} from 'sjtest';
+
+import {getId, getType} from '../data/DataClass';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 import _ from 'lodash';
+import C from '../C';
+import PV from 'promise-value';
+
 
 const addCharity = () => {
 	// TODO search the database for potential matches, and confirm with the user
@@ -105,23 +112,44 @@ const donate = ({charity, formPath, formData, stripeResponse}) => {
 	});
 };
 
-const modifyBasket = ({id, qty}) => {
-	assert(id && typeof(id) === 'string');
-	assert(qty === Math.round(qty)); // Integer quantities please
 
-	const path = ['widget', 'Basket', 'contents'];
-	const contents = DataStore.getValue(path);
-	const qtyInBasket = contents[id] || 0;
-	const newQty = qtyInBasket + qty;
-	const newContents = {
-		...contents,
-		[id]: newQty,
-	};
-	if (newQty === 0) {
-		newContents.delete(id);		
+/**
+ * id=for{user.id}, becuase a user only has one basket
+ */
+const getBasketPV = (uxid) => {
+	if ( ! uxid) {
+		uxid = Login.getId() || Login.getTempId();		
 	}
-
-	DataStore.setValue(path, newContents);
+	const bid = 'for'+uxid;
+	// FIXME we want to say "dont show errors from this"
+	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid});
+	if (pvbasket.value) return pvbasket;
+	// loading - or maybe we have to make a new basket
+	let pGetMake = pvbasket.promise.fail(err => {
+		console.log("make a new basket");
+		let basket = {'@type': Basket.type, id: bid};
+		DataStore.setData(basket);
+		return basket;
+	});
+	return PV(pGetMake);
+};
+const addToBasket = (basket, item) => {
+	console.log("addFromBasket",basket, item);
+	assert(item, basket);
+	Basket.assIsa(basket);
+	assert(item.id, item); // need an ID
+	item = _.cloneDeep(item); // copy so we can modify
+	basket.items = (basket.items || []).concat(item);
+	DataStore.update();
+	return basket;
+};
+const removeFromBasket = (basket, item) => {
+	console.log("removeFromBasket",basket, item);
+	assert(item);
+	Basket.assIsa(basket);
+	basket.items = basket.items.filter(itm => getId(itm) !== getId(item));
+	DataStore.update();
+	return basket;
 };
 
 const ActionMan = {
@@ -130,8 +158,9 @@ const ActionMan = {
 	addInputOrOutput,
 	addDataSource,
 	donate,
-	modifyBasket,
+	getBasketPV,
+	addToBasket, 
+	removeFromBasket
 };
-
 
 export default ActionMan;

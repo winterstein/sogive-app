@@ -139,10 +139,6 @@ class SearchForm extends React.Component {
 				let charities = res.cargo.hits;
 				let total = res.cargo.total;
 				DataStore.setValue(['widget', 'Search', 'loading'], false);
-				// DataStore.setValue([], { TODO
-				// 	charities: charities,
-				// 	total: total
-				// });
 				this.props.setResults(charities, total, from || 0, all, recommended);
 				this.setState({recommended: false});
 			}.bind(this));
@@ -491,3 +487,5 @@ const DownloadLink = ({total}) => {
 		</a>
 	);
 };
+
+export {SearchResults};

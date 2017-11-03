@@ -105,9 +105,15 @@ Misc.Logo = ({service, size, transparent}) => {
 /**
  * Font-Awesome or Glyphicon icons
  */
-Misc.Icon = ({glyph, fa, size, ...other}) => {
-	if (glyph) return <span className={'glyphicon glyphicon-'+glyph + (size? ' fa-'+size : '')} aria-hidden="true" {...other}></span>;
-	return <i className={'fa fa-'+fa + (size? ' fa-'+size : '')} aria-hidden="true" {...other}></i>;
+Misc.Icon = ({glyph, fa, size, className, ...other}) => {	
+	if (glyph) {
+		return (<span className={'glyphicon glyphicon-'+glyph
+								+ (size? ' fa-'+size : '')
+								+ (className? ' '+className : '')} 
+					aria-hidden="true" {...other} />);
+	}
+	return (<i className={'fa fa-'+fa + (size? ' fa-'+size : '') + (className? ' '+className : '') } 
+				aria-hidden="true" {...other} />);
 };
 
 
@@ -310,13 +316,13 @@ const PropControlMonetaryAmount = ({prop, value, path, proppath,
 	if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
 		v = '';
 	}
-	MonetaryAmount.assIsa(value);
+	//MonetaryAmount.assIsa(value); // type can be blank
 	// handle edits
 	const onMoneyChange = e => {
 		let newVal = parseFloat(e.target.value);
 		value.raw = e.target.value;
 		value.value = newVal;
-		DataStore.setValue(proppath, value);
+		DataStore.setValue(proppath, value, true);
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});
 	};

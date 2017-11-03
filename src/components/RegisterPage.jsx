@@ -9,11 +9,17 @@ import printer from '../utils/printer.js';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
+import {getId, getType} from '../data/DataClass';
+import Basket from '../data/Basket';
+import {SearchResults} from './SearchPage';
 import Roles from '../Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import {LoginWidgetEmbed} from './LoginWidget/LoginWidget';
 
+/**
+ * Sign up for an event!
+ */
 const RegisterPage = () => {
 	let eventId = DataStore.getValue('location','path')[1];
 	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId});
@@ -23,42 +29,114 @@ const RegisterPage = () => {
 	const wspath = ['widget', 'RegisterPage', eventId];
 	const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = wspath.concat('stage');
-	const basket = DataStore.getValue('data', C.TYPES.Basket) || {};
+	let stage = widgetState.stage;
+
+	let pvbasket = ActionMan.getBasketPV();
+	let basket = pvbasket.value;	
 	return (
 		<div className=''>
 			<h2>Register &amp; get tickets for {event.name}</h2>
-			TODO a multi-part form
-			<Tabs activeKey={widgetState.stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
+			
+			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
+
+			<Tabs activeKey={stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
 				<Tab eventKey={1} title='Ticket(s)'>					
-					{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} />)}
+					{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
+					<NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={2} title='Register'>
-					<p>Please register to create an account.</p>
-					<LoginWidgetEmbed services={['twitter']} />
+					<RegisterOrLoginTab />
+					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={3} title='Your Details'>
+					{basket? Basket.getItems(basket).map((ticket, ti) => <WalkerDetails key={ti} ticket={ticket} i={ti} />) : null}
 					for each ticket if several
-					with a checkbox to say "same address as lead"
+					with a checkbox to say "same address as lead"					
+					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={4} title='Your Charity'>					
+					<CharityChoiceTab basket={basket} />
+					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={5} title='Checkout'>					
+					<PreviousTab stagePath={stagePath} />
 				</Tab>
-				<Tab eventKey={6} title='COnfirmation'>					
+				<Tab eventKey={6} title='Confirmation'>	
+					ticket list, receipt, print button
+					CTA(s) to go to your shiny new fundraising page(s)
 				</Tab>
 			</Tabs>
 		</div>
 	);
 };
 
+const NextTab = ({stagePath}) => {
+	return (<button onClick={() => {
+		let n = DataStore.getValue(stagePath) + 1;
+		DataStore.setValue(stagePath, n);
+	}} >Next</button>);
+};
+const PreviousTab = ({stagePath}) => {
+	return (<button onClick={() => {
+		let n = DataStore.getValue(stagePath) - 1;
+		DataStore.setValue(stagePath, n);
+	}} >Previous</button>);
+};
 
-
-const RegisterTicket = ({event,ticketType}) => {
-	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis
+const RegisterTicket = ({event,ticketType,basket}) => {
+	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
+	let tickets = basket? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
 	return (<div>		
-		<button onClick={() => ActionMan.modifyBasket({id: ticketType.id, qty: 1})}>
+		<button onClick={() => ActionMan.addToBasket(basket, ticketType)} disabled={ ! basket }>
 			{ticketType.name} <Misc.Money amount={ticketType.price} />
 		</button>
+		{tickets.length? 
+			<div>{tickets.length} <button title='Cancel a ticket' onClick={() => ActionMan.removeFromBasket(basket, tickets[tickets.length-1])} >
+				<Misc.Icon glyph='minus' />
+			</button></div> 
+			: null}
 	</div>);
 };
+
+const RegisterOrLoginTab = () => {
+	if (Login.isLoggedIn()) {
+		return (<div>
+			<Misc.Icon glyph='tick' className='text-success' />
+			Logged in as {Login.getId()}
+		</div>);
+	}
+	return (<div>
+		<p>Please register to create an account.</p>
+		<LoginWidgetEmbed services={['twitter']} />
+	</div>);
+};
+
+const WalkerDetails = ({i, ticket}) => {
+	return (<div> <div>Walker <span>{i+1}</span></div>
+	{i>0? <p>[] Same as first walker</p> : null}
+		ticket - name, email, address of the walker
+	</div>);
+};
+
+const CharityChoiceTab = ({basket}) => {
+	if ( ! basket) return null;
+	// const pvCharities = DataStore.fetch([], () => {
+	// 		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
+	// 		.then(function(res) {
+	// 		})
+	// 	}
+	// );
+		// results={charities} total={total} from={from} query={q} 
+		// all={this.state.all} recommended={recommended}
+
+	return (<div>
+		<p>Please choose a charity to support.</p>		
+		<Misc.PropControl path={['data',C.TYPES.Basket, getId(basket)]} prop='charity' label='My Charity' />
+
+		Let's reuse SearchResults 
+
+		show some recommended charities
+	</div>);
+};
+
 export default RegisterPage;
