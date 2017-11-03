@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {isa} from '../DataClass';
-import C from '../C';
+import C from '../../C';
 
 /** impact utils */
 const MonetaryAmount = {};

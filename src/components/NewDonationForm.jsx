@@ -5,7 +5,7 @@ import { assert } from 'sjtest';
 import Login from 'you-again';
 import {XId } from 'wwutils';
 
-import { Button, FormControl, InputGroup, Tabs, Tab } from 'react-bootstrap';
+import {InputGroup, Tabs, Tab } from 'react-bootstrap';
 
 import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
 
@@ -194,6 +194,7 @@ const SectionWrapper = ({stagePath, sectionNumber, children, isFirst, isLast}) =
 
 
 const AmountSection = ({path}) => (
+	// TODO replace coverCosts checkbox with a slider for optional donation to cover our costs
 	<div className='section donation-amount'>
 		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />
 		<Misc.PropControl prop='coverCosts' path={path} type='checkbox' label='Cover processing costs' />
@@ -210,6 +211,7 @@ const GiftAidSection = ({path}) => (
 );
 
 const DetailsSection = ({path}) => (
+	// TODO do we have the user's details stored?
 	<div className='section donation-amount'>
 		<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
 		<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />

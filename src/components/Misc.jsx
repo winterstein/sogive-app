@@ -16,7 +16,7 @@ import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
-import Autocomplete from 'react-autocomplete';
+// import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId} from '../data/DataClass';
 
@@ -393,6 +393,7 @@ const PropControlAutocomplete = ({prop, value, options, getItemValue, renderItem
   />);
 }; //./autocomplete
 
+const Autocomplete = () => <div>FIXME npm i</div>;
 
 /**
  * A button which sets a DataStore address to a specific value
