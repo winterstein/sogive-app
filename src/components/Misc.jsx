@@ -410,7 +410,6 @@ Misc.SetButton = ({path, value, children, className}) => {
 	const doSet = () => {
 		DataStore.setValue(path, value);
 	};
-	console.log('**** SetButton', path, value);
 	return <span className={className} onClick={doSet}>{children}</span>;
 };
 

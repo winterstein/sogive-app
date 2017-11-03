@@ -228,12 +228,11 @@ const SwitchVerb = ({verb}) => {
 	if ( ! verb) verb = DataStore.getValue(verbPath);
 	if (verb === 'register') {
 		return (<div>
-					Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
+			Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
 		</div>);
 	}
 	return (<div>
-		Don&#39;t yet have an account?
-	&nbsp;<a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
+		Don&#39;t yet have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
 	</div>);
 };
 

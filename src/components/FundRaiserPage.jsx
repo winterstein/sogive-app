@@ -29,7 +29,6 @@ const FundRaiserPage = () => {
 			<div><a href='#editEvent'>Create / edit events</a></div>
 		</div>
 	);
-
 };
 
 

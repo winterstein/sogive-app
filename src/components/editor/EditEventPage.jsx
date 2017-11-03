@@ -13,6 +13,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../data/DataClass';
 import Ticket from '../../data/charity/Ticket';
+import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../ListLoad';
 
 const EditEventPage = () => {
