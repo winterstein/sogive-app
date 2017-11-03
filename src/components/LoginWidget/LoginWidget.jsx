@@ -2,7 +2,7 @@ import React from 'react';
 import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import {Modal} from 'react-bootstrap';
-import { XId, uid } from 'wwutils';
+import { XId, uid, stopEvent } from 'wwutils';
 import Cookies from 'js-cookie';
 import DataStore from '../../plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
@@ -148,12 +148,14 @@ const EmailSignin = ({verb}) => {
 	);
 }; // ./EmailSignin
 
+const verbPath = ['widget',C.show.LoginWidget,'verb'];
+
 const ResetLink = ({verb}) => {
 	if (verb !== 'login') return null;
 	const toReset = () => {
 		// clear any error from a failed login
 		Login.error = null;
-		DataStore.setValue(['widget',C.show.LoginWidget,'verb'], 'reset');
+		DataStore.setValue(verbPath, 'reset');
 	};
 	return (
 		<div className='pull-right'>
@@ -185,8 +187,7 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 		// NB: the app is shown regardless
 	}
 	if ( ! services) services = ['twitter', 'facebook'];
-	let verb = DataStore.appstate.widget && DataStore.appstate.widget.LoginWidget && DataStore.appstate.widget.LoginWidget.verb;
-	if ( ! verb) verb = 'login';
+	let verb = DataStore.getValue(verbPath) || 'login';
 
 	if ( ! title) title = `Welcome ${verb==='login'? '(back)' : ''} to {C.app.name}`;
 
@@ -205,36 +206,53 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<div className="container-fluid">
-					<div className="row">
-						<div className="col-sm-6">
-							<EmailSignin
-								verb={verb}
-							/>
-						</div>
-						<div className="col-sm-6">
-							<SocialSignin verb={verb} services={services} />
-						</div>
-					</div>
-				</div>
+				<LoginWidgetGuts services={services} />
 			</Modal.Body>
 			<Modal.Footer>
-			{
-				verb === 'register' ?
-					<div>
-						Already have an account?
-						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'login')} >Login</a>
-					</div> :
-					<div>
-						Don&#39;t yet have an account?
-						&nbsp;<a href='#' onClick={() => DataStore.setValue(['widget','LoginWidget','verb'], 'register')} >Register</a>
-					</div>
-			}
+				<SwitchVerb />
 			</Modal.Footer>
 		</Modal>
 	);
 }; // ./LoginWidget
 
 
+const LoginWidgetEmbed = ({services, verb}) => {
+	if ( ! verb) verb = DataStore.getValue(verbPath) || 'register';
+	return (<div>
+		<LoginWidgetGuts services={services} verb={verb} />
+		<SwitchVerb verb={verb} />
+	</div>);
+};
+
+const SwitchVerb = ({verb}) => {
+	if ( ! verb) verb = DataStore.getValue(verbPath);
+	if (verb === 'register') {
+		return (<div>
+					Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
+		</div>);
+	}
+	return (<div>
+		Don&#39;t yet have an account?
+	&nbsp;<a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
+	</div>);
+};
+
+const LoginWidgetGuts = ({services}) => {
+	let verb = DataStore.getValue(verbPath) || 'login';
+	return (<div className="container-fluid">
+		<div className="row">
+			<div className="col-sm-6">
+				<EmailSignin
+					verb={verb}
+				/>
+			</div>
+			<div className="col-sm-6">
+				<SocialSignin verb={verb} services={services} />
+			</div>
+		</div>
+	</div>);
+};
+
+
 export default LoginWidget;
-export {LoginLink};
+export {LoginLink, LoginWidgetEmbed};

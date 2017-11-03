@@ -12,18 +12,18 @@ import ActionMan from '../plumbing/ActionMan';
 import Roles from '../Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
-import LoginWidget from './LoginWidget/LoginWidget';
+import {LoginWidgetEmbed} from './LoginWidget/LoginWidget';
 
 const RegisterPage = () => {
 	let eventId = DataStore.getValue('location','path')[1];
 	let ticketTypeId = DataStore.getValue('location','path')[2];
 
-	const pvEvent = ActionMan.getDataItem({type:C.Types.Event, id:eventId});
+	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId});
 	if ( ! pvEvent.value) return <Misc.Loading />;
 	const event = pvEvent.value;
 
 	const wspath = ['widget', 'RegisterPage', eventId];
-	const widgetState = DataStore.getValue(wspath);
+	const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = wspath.concat('stage');
 	return (
 		<div className=''>
@@ -34,18 +34,19 @@ const RegisterPage = () => {
 					allow multiple tickets
 					if ticketTypeId start with 1 of that type
 				</Tab>
-				<Tab eventKey={1} title='Login'>
-					<LoginWidget />
+				<Tab eventKey={2} title='Register'>
+					<p>Please register to create an account.</p>
+					<LoginWidgetEmbed services={['twitter']} />
 				</Tab>
-				<Tab eventKey={1} title='Your Details'>					
+				<Tab eventKey={3} title='Your Details'>					
 					for each ticket if several
 					with a checkbox to say "same address as lead"
 				</Tab>
-				<Tab eventKey={1} title='Your Charity'>					
+				<Tab eventKey={4} title='Your Charity'>					
 				</Tab>
-				<Tab eventKey={1} title='Checkout'>					
+				<Tab eventKey={5} title='Checkout'>					
 				</Tab>
-				<Tab eventKey={1} title='COnfirmation'>					
+				<Tab eventKey={6} title='COnfirmation'>					
 				</Tab>
 			</Tabs>
 		</div>
