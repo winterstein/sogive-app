@@ -54,6 +54,7 @@ public class DBSoGive {
 			Basket.class, Donation.class};
 
 	public static void init() {
+		assert(Dep.has(Gson.class));
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 

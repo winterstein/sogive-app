@@ -12,4 +12,11 @@ public class BasketServlet extends CrudServlet<Basket> {
 		super(Basket.class);
 	}
 
+	@Override
+	protected void doSecurityCheck(WebRequest state) throws SecurityException {
+//		super.doSecurityCheck(state);
+		// can work without auth
+		// TODO low-level safety against editing someone else's basket
+	}
+	
 }

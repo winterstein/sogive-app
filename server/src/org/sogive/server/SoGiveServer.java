@@ -31,6 +31,8 @@ import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.data.XId;
 import com.winterwell.youagain.client.YouAgainClient;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.winterwell.data.AThing;
+import com.winterwell.data.AThingAdapter;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.ESStorage;
 import com.winterwell.datalog.IDataLog;
@@ -89,6 +91,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
+		.registerTypeAdapter(AThing.class, new AThingAdapter())
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 		.setClassProperty(null) //"@type")

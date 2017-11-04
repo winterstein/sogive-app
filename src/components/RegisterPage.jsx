@@ -29,43 +29,16 @@ const RegisterPage = () => {
 	const wspath = ['widget', 'RegisterPage', eventId];
 	const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = wspath.concat('stage');
-	const stage = widgetState.stage;
+	let stage = widgetState.stage;
+	if (stage===0) { // start on 1
+		stage = 1;
+		DataStore.setValue(stagePath, stage, false);
+	}
 
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
 	
 	const basketPath = ActionMan.getBasketPath();
-
-
-	// Sort all tickets in basket & list in format:
-	// Ticket Type A
-	// - Attendee 1
-	// - Attendee 2
-	// Ticket Type B
-	// - Attendee 1
-	const attendees = basket ? (
-		Basket.getItems(basket).sort((a, b) => a.name > b.name)
-			.map((ticket, ti, tickets) => {
-				const ticketPath = [...basketPath, 'items', ti];
-
-				const prevTicket = (ti === 0) ? null : tickets[ti-1];
-				if (!prevTicket || prevTicket.id !== ticket.id) {
-					ticket.number = 1;
-				} else if (prevTicket && prevTicket.number && prevTicket.id === ticket.id) {
-					ticket.number = prevTicket.number + 1;
-				}
-				const header = (ticket.number === 1) ? (
-					<h3>{ticket.name}</h3>
-				) : null;
-
-				return (
-					<div>
-						{header}
-						<AttendeeDetails key={ti} ticket={ticket} i={ti} path={ticketPath} />
-					</div>
-				);
-			})
-	) : null;
 
 	return (
 		<div className=''>
@@ -83,7 +56,7 @@ const RegisterPage = () => {
 					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={3} title='Your Details'>
-					{attendees}
+					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={4} title='Your Charity'>					
@@ -147,6 +120,40 @@ const RegisterOrLoginTab = () => {
 			<LoginWidgetEmbed services={['twitter']} />
 		</div>
 	);
+};
+
+
+const WalkerDetailsTab = ({basket, basketPath}) => {
+	if ( ! basket) return null;
+	assert(basketPath);
+	// Sort all tickets in basket & list in format:
+	// Ticket Type A
+	// - Attendee 1
+	// - Attendee 2
+	// Ticket Type B
+	// - Attendee 1
+	let items = Basket.getItems(basket).sort((a, b) => a.name > b.name);
+	let wdetails = items.map((ticket, ti, tickets) => {
+		const ticketPath = [...basketPath, 'items', ti];
+
+		const prevTicket = (ti === 0) ? null : tickets[ti-1];
+		if (!prevTicket || prevTicket.id !== ticket.id) {
+			ticket.number = 1;
+		} else if (prevTicket && prevTicket.number && prevTicket.id === ticket.id) {
+			ticket.number = prevTicket.number + 1;
+		}
+		const header = (ticket.number === 1) ? (
+			<h3>{ticket.name}</h3>
+		) : null;
+
+		return (
+			<div key={ti}>
+				{header}
+				<AttendeeDetails ticket={ticket} i={ti} path={ticketPath} />
+			</div>
+		);
+	});
+	return <div>{wdetails}</div>;
 };
 
 const AttendeeDetails = ({i, ticket, path}) => {
