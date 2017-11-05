@@ -13,6 +13,7 @@ import NGO from '../data/charity/NGO';
 
 // Try to avoid using this for modularity!
 import DataStore from './DataStore';
+import Messaging, {notifyUser} from './Messaging';
 
 // Error Logging - but only the first error
 window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
@@ -163,7 +164,7 @@ ServerIO.load = function(url, params) {
 					msg.text = msg.text.substr(0, i);
 				}
 				// bleurgh - a frameworky dependency
-			Messaging.notifyUser(msg);
+			notifyUser(msg);
 				return response;
 			}.bind(this));
 	return defrd;
@@ -179,7 +180,7 @@ ServerIO.handleMessages = function(response) {
 	if ( ! newMessages || newMessages.length===0) {
 		return response;
 	}
-	newMessages.forEach(msg => addMessage(msg));
+	newMessages.forEach(msg => notifyUser(msg));
 	return response;
 };
 

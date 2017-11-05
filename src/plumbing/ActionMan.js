@@ -1,8 +1,10 @@
 
+import {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import {assert} from 'sjtest';
 import PV from 'promise-value';
 import _ from 'lodash';
+
+import C from '../C';
 
 import ServerIO from './ServerIO';
 import DataStore from './DataStore';
@@ -13,7 +15,7 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
-import C from '../C';
+
 
 
 const addCharity = () => {
