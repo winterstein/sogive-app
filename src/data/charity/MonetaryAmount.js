@@ -22,7 +22,7 @@ const isNumeric = value => {
 
 // duck type: needs a value
 MonetaryAmount.isa = (obj) => isa(obj, C.TYPES.MonetaryAmount) || (obj && isNumeric(obj.value));
-MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj));
+MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj), "MonetaryAmount.js - "+obj);
 
 MonetaryAmount.make = (base = {}) => {
 	const item = {

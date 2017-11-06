@@ -14,7 +14,7 @@ function isNumeric(value) {
 
 // duck type: needs a value
 Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
-Donation.assIsa = (obj) => assert(Donation.isa(obj));
+Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not "+obj);
 
 Donation.make = (base = {}) => {
 	let ma = {

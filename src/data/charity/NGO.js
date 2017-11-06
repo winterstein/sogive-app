@@ -21,7 +21,7 @@ const NGO = {};
 export default NGO;
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
-NGO.assIsa = (ngo) => assert(NGO.isa(ngo));
+NGO.assIsa = (ngo) => assert(NGO.isa(ngo), "NGO.js - "+obj);
 /**
  * Mostly you should use #displayName()!
  */

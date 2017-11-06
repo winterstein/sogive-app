@@ -50,8 +50,10 @@ import com.winterwell.web.data.XId;
 public class DBSoGive {
 
 	private static final Class[] DBCLASSES = new Class[] {
-			NGO.class, Person.class, Team.class, Event.class, FundRaiserPage.class,
-			Basket.class, Donation.class};
+			NGO.class, 
+//			Person.class, Team.class, Event.class, FundRaiserPage.class,
+//			Basket.class, Donation.class
+			};
 
 	public static void init() {
 		assert(Dep.has(Gson.class));
@@ -61,6 +63,14 @@ public class DBSoGive {
 		AppUtils.initESIndices(KStatus.main(), DBCLASSES);
 		
 		// charity mapping
+		
+//		dtype.property("name", new ESType().text()
+//				// enable keyword based sorting
+//				.field("raw", "keyword"));
+//dtype.property("@id", new ESType().keyword());
+//dtype.property("projects", new ESType().object()
+//.property("year", new ESType().INTEGER())
+//);		
 		ESType charitymapping = new ESType()
 				.property("projects", new ESType().object()
 						.property("year", new ESType().INTEGER())
