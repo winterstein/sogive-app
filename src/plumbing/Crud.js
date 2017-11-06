@@ -129,6 +129,9 @@ ServerIO.discardEdits = function(type, item) {
  */
 ServerIO.getDataItem = function({type, id, status}) {
 	assert(C.TYPES.has(type), 'Crud.js - ServerIO - bad type: '+type);
+	if ( ! status) {
+		console.warn("Crud.js - ServerIO.getDataItem: no status - this is unwise! Editor pages should specify DRAFT. type: "+type+" id: "+id);
+	}
 	assMatch(id, String);
 	const params = {data: {status}};
 	return ServerIO.load('/'+servlet4type(type)+'/'+encURI(id)+'.json', params);

@@ -15,14 +15,15 @@ public class BasketTest {
 		sg.init();
 		
 		Basket basket = new Basket();
+		basket.name = "foo";
 		
 		JThing jb = new JThing().setJava(basket);
 		
-		String json = jb.string();
+		String json = jb.string();		
 		
 		System.out.println(json);
 		
-		fail("Not yet implemented");
+		assert json.contains("Basket") : json;		
 	}
 
 }
