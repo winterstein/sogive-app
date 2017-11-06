@@ -8,7 +8,7 @@ export default FundRaiser;
 
 // duck type: needs a value
 FundRaiser.isa = (obj) => isa(obj, C.TYPES.FundRaiser);
-FundRaiser.assIsa = (obj) => assert(FundRaiser.isa(obj));
+FundRaiser.assIsa = (obj) => assert(FundRaiser.isa(obj), "FundRaiser.js "+obj);
 
 FundRaiser.make = (base = {}) => {
 	let ma = {

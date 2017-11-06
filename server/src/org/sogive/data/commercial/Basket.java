@@ -7,6 +7,5 @@ import org.sogive.data.charity.NGO;
 import com.winterwell.data.AThing;
 
 public class Basket extends AThing {
-	List<Ticket> tickets;
-	NGO charity;
+	List<Ticket> items;
 }

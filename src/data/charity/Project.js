@@ -13,7 +13,7 @@ Project.type = 'Project';
 
 
 Project.isa = (ngo) => isa(ngo, Project.type);
-Project.assIsa = (p) => assert(Project.isa(p));
+Project.assIsa = (p) => assert(Project.isa(p), "Project.js - "+p);
 Project.name = (ngo) => isa(ngo, Project.type) && ngo.name;
 Project.year = (ngo) => isa(ngo, Project.type) && ngo.year;
 

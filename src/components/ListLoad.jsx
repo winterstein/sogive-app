@@ -117,6 +117,7 @@ const createBlank = ({type, navpage, base}) => {
 	if ( ! base) base = {};
 	assert( ! getId(base), "ListLoad - createBlank "+type);
 	base.id = id;
+	base['@type'] = type;
 	DataStore.setValue(['data', type, id], base);
 	// set the id
 	onPick({navpage, id});

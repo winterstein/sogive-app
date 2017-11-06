@@ -8,7 +8,7 @@ export default Basket;
 Basket.type = C.TYPES.Basket;
 
 Basket.isa = (obj) => isa(obj, Basket.type);
-Basket.assIsa = (obj) => assert(Basket.isa(obj));
+Basket.assIsa = (obj) => assert(Basket.isa(obj), "Basket.js - not "+obj);
 
 Basket.getItems = (basket) => {
 	return basket.items || [];
