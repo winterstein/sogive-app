@@ -6,14 +6,13 @@ import java.util.Map;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.Output;
 
+import com.winterwell.data.AThing;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.data.XId;
 
-public class Donation {
-
-	String id;
+public class Donation extends AThing {
 
 	String from;
 	
@@ -92,6 +91,19 @@ public class Donation {
 	public void setCollected(boolean b) {
 		this.collected = b;
 	}
+	
+	/**
+	 * from - who provided this. There can be multiple sources
+	 *  - e.g. if a bot infers the data, then both bot and original source should be listed here.
+	 *  
+	 * NB: see Claim.java in profiler
+	 */
+	XId[] f;
+	
+	/**
+	 * The app that created this - e.g. sogive or goodloop.
+	 */
+	String a;
 
 	@Override
 	public String toString() {
