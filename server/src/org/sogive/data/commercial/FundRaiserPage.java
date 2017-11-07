@@ -18,5 +18,6 @@ public class FundRaiserPage extends AThing {
 	String description;
 	MonetaryAmount target;
 	MonetaryAmount donated;
+	Integer donationCount;
 	NGO charity;
 }

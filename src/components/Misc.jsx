@@ -303,6 +303,8 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 
 Misc.ControlTypes = new Enum("img textarea text select autocomplete password email url color MonetaryAmount checkbox"
 							+" location date year number arraytext address postcode json");
+
+
 const PropControlMonetaryAmount = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
 		// special case, as this is an object.
@@ -348,6 +350,58 @@ const PropControlMonetaryAmount = ({prop, value, path, proppath,
 		<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} style={{minWidth}}/>
 	</InputGroup>);
 }; // ./£
+
+
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+const WEEK = 7 * DAY;
+const YEAR = 365 * DAY;
+
+Misc.RelativeDate = ({date, ...rest}) => {
+	const dateObj = new Date(date);
+	const now = new Date();
+
+	let diff = now.getTime() - dateObj.getTime();
+	let relation = diff > 0 ? 'ago' : 'in the future';
+	diff = Math.abs(diff);
+	const absoluteDate = dateObj.toLocaleString('en-GB');
+	let count = 'less than one';
+	let counter = 'second';
+
+	const calcCount = (divisor) => Math.round(diff / divisor);
+
+	if (diff > YEAR) {
+		count = calcCount(YEAR);
+		counter = 'year';
+	} else if (diff > 4 * WEEK) {
+		// months is fiddly, so let Date handle it
+		count = (now.getMonth() - dateObj.getMonth()) + (12 * (now.getYear() - dateObj.getYear()));
+		counter = 'month';	
+	} else if (diff > WEEK) {
+		count = calcCount(WEEK);
+		counter = 'week';
+	} else if (diff > DAY) {
+		count = calcCount(DAY);
+		counter = 'day';
+	} else if (diff > HOUR) {
+		count = calcCount(HOUR);
+		counter = 'hour';
+	} else if (diff > MINUTE) {
+		count = calcCount(MINUTE);
+		counter = 'minute';
+	} else if (diff > SECOND) {
+		count = calcCount(SECOND);
+		counter = 'second';
+	}
+
+	if (count > 1) {
+		counter += 's';
+	}
+
+	return <span title={absoluteDate} {...rest}>{count} {counter} {relation}</span>;
+};
 
 
 /**

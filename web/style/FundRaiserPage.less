@@ -1,0 +1,124 @@
+@import "positioning.less";
+@import "colours.less";
+
+#FundRaiserPage {
+	.event-banner {
+		.extend-content-to-sides(@bs-column-padding);
+
+		img {
+			width: 100%;
+		}
+	}
+
+	.title-bar {
+		background: linear-gradient(to right, #696a76, #aeafb5);
+		color: white;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	.vitals {
+		height: 350px;
+		background: linear-gradient(to bottom, #3f4151 0% , #3f4151 50%, white 50%, white 100%);
+
+		.user-event-photo {
+			position: relative;
+			top: 50px;
+			height: 250px;
+			width: 250px;
+			background-image: url('/img/circle-bg-left.svg');
+			background-size: contain;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: auto;
+			img {
+				height: 80%;
+				border-radius: 50%;
+				object-fit: cover;
+				background-color: white;
+			}
+		}
+
+		.donation-progress {
+			height: 100%;
+
+			.progress-graph {
+				height: 50%;
+				text-align: center;
+				color: white;
+
+				.target {
+					color: @bold-text-colour;
+				}
+
+				.bar-container {
+					.progress-pointer, .donation-progress-bar {
+						display: inline-block;
+					}
+					.progress-pointer {
+						transform: translateY(-23%);
+						font-size: 1.5em;
+						font-weight: bold;
+						color: @progress-bar-done;
+						margin: auto -6px;
+					}
+					.donation-progress-bar {
+						height: 150px;
+						width: 50px;
+						.remaining {
+							background-color: white;
+						}
+						.done {
+							background-color: @progress-bar-done;
+						}
+					}
+				}
+			}
+			.progress-details {
+				height: 50%;
+			}
+		}
+	}
+
+	.me {
+		.avatar {
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			float: left;
+		}
+	}
+
+	.charity-info {
+		.charity-logo {
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			float: left;
+		}
+	}
+
+	.supporters {
+		list-style-type: none;
+		.supporter {
+			position: relative;
+			.supporter-photo {
+				width: 75px;
+				height: 75px;
+				border-radius: 50%;
+				float: left;
+			}
+			.donation-date {
+				position: absolute;
+				top: 0;
+				right: 0;
+				color: @donation-date;
+			}
+			.amount-donated {
+				font-size: 2em;
+			}
+		}
+
+	}
+}
