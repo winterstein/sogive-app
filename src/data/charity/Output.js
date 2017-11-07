@@ -8,7 +8,7 @@ const Output = {};
 export default Output;
 
 Output.isa = (ngo) => isa(ngo, 'Output');
-Output.assIsa = (ngo) => assert(Output.isa(ngo));
+Output.assIsa = (ngo) => assert(Output.isa(ngo), "Output.js - "+ngo);
 
 /**
  * A scaled version 

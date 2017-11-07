@@ -43,8 +43,6 @@ const RegisterPage = () => {
 	return (
 		<div className=''>
 			<h2>Register &amp; get tickets for {event.name}</h2>
-			
-			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 
 			<Tabs activeKey={stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
 				<Tab eventKey={1} title='Ticket(s)'>					
@@ -71,6 +69,9 @@ const RegisterPage = () => {
 					CTA(s) to go to your shiny new fundraising page(s)
 				</Tab>
 			</Tabs>
+
+			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} /> : null}
+
 		</div>
 	);
 };

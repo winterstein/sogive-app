@@ -90,11 +90,11 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		Gson gson = new FlexiGsonBuilder()
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
-		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
-		.registerTypeAdapter(AThing.class, new AThingAdapter())
+		.registerTypeAdapter(XId.class, new XIdTypeAdapter())	
+//		.registerTypeHierarchyAdapter(AThing.class, new AThingAdapter())		
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-		.setClassProperty(null) //"@type")
+//		.setClassProperty(null) // NB: "@type" would conflict, so use the @class default
 //		.setClassMapping("MonetaryAmount", MonetaryAmount.class)
 		.setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
