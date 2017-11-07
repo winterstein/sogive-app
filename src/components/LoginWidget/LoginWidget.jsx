@@ -22,6 +22,8 @@ if ((window.location+"").indexOf('login=local') !== -1) {
 	- Use them in the appropriate section of the form
 */
 
+const STATUS_PATH = ['widget', C.show.LoginWidget, 'status'];
+
 const LoginLink = () => {
 	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow(C.show.LoginWidget, true); } } >
 		Login or Register
@@ -70,9 +72,12 @@ const emailLogin = ({verb, app, email, password}) => {
 	let call = verb==='register'?
 		Login.register({email:email, password:password})
 		: Login.login(email, password);
+	
+	DataStore.setValue(STATUS_PATH, C.STATUS.loading);
 
 	call.then(function(res) {
 		console.warn("login", res);
+		DataStore.setValue(STATUS_PATH, C.STATUS.clean);
 		if (Login.isLoggedIn()) {
 			// close the dialog on success
 			DataStore.setShow(C.show.LoginWidget, false);
@@ -80,9 +85,10 @@ const emailLogin = ({verb, app, email, password}) => {
 			// poke React via DataStore (e.g. for Login.error)
 			DataStore.update({});
 		}
+	}, err => {
+		DataStore.setValue(STATUS_PATH, C.STATUS.clean);
 	});
 };
-
 
 const EmailSignin = ({verb}) => {
 	// we need a place to stash form info. Maybe appstate.widget.LoginWidget.name etc would be better?
@@ -119,6 +125,7 @@ const EmailSignin = ({verb}) => {
 
 	// login/register
 	let path = ['data', C.TYPES.User, 'loggingIn'];
+	let status = DataStore.getValue(STATUS_PATH);
 	return (
 		<form
 			id="loginByEmail"
@@ -138,7 +145,7 @@ const EmailSignin = ({verb}) => {
 			</div>}
 			{verb==='reset' && DataStore.getValue('widget', C.show.LoginWidget, 'reset-requested')? <div className="alert alert-info">A password reset email has been sent out.</div> : null}
 			<div className="form-group">
-				<button type="submit" className="btn btn-primary form-control" >
+				<button type="submit" className="btn btn-primary form-control" disabled={C.STATUS.isloading(status)}>
 					{ buttonText }
 				</button>
 			</div>
