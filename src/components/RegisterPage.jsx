@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Well, Button, Tabs, Tab, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
+import {XId} from 'wwutils';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import C from '../C';
@@ -127,6 +128,7 @@ const RegisterOrLoginTab = () => {
 const WalkerDetailsTab = ({basket, basketPath}) => {
 	if ( ! basket) return null;
 	assert(basketPath);
+	// ??do we want to sort?? Probably the first item is the ticket for the current user.
 	// Sort all tickets in basket & list in format:
 	// Ticket Type A
 	// - Attendee 1
@@ -158,6 +160,7 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 };
 
 const AttendeeDetails = ({i, ticket, path}) => {
+	assert(DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
 	const sameAddressAsFirst = i > 0 ? (
 		<Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' />
@@ -168,12 +171,19 @@ const AttendeeDetails = ({i, ticket, path}) => {
 	const address = isSame ? null : (
 		<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
 	);
-
+	// first ticket - fill in from user details
+	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn()) {
+		const user = Login.getUser();
+		ticket.attendeeName = user.name;
+		if (XId.service(user.xid) === 'email') ticket.attendeeEmail = XId.id(user.xid);
+		console.log("set name,email from Login", ticket, user.xid);
+		DataStore.setValue(path, ticket, false);
+	}
 	return (
 		<Well>
 			<h4>{noun} <span>{i+1}</span></h4>
-			<Misc.PropControl type='text' path={path} prop='attendeeName' label={`${noun} Name`} />
-			<Misc.PropControl type='text' path={path} prop='attendeeEmail' label='Email' />
+			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
+			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 			{ sameAddressAsFirst }
 			{ address }
 		</Well>
