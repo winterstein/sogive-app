@@ -1,5 +1,7 @@
 package org.sogive.data.commercial;
 
+import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.NGO;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.AThing;
@@ -14,4 +16,7 @@ public class FundRaiserPage extends AThing {
 	String event;
 	String owner;
 	String description;
+	MonetaryAmount target;
+	MonetaryAmount donated;
+	NGO charity;
 }
