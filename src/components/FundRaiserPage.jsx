@@ -109,84 +109,87 @@ const FundRaiser = ({id}) => {
 	];
 
 	return (
-		<Grid id='FundRaiserPage'>
-			<Row>
-				<Col md={12} className='event-banner'>
-					<img alt={`Banner for ${item.name}`} src={item.banner} />
-				</Col>
-			</Row>
-			<Row className='title-bar'>
-				<Col md={12}>
-					<h2>{item.owner.name}&apos;s {item.name} {(new Date(item.date)).toLocaleString('en-GB')}</h2>
-				</Col>
-			</Row>
-			<Row className='vitals'>
-				<Col md={6}>
-					<div className='user-event-photo'>
-						<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.photo} />
-					</div>
-				</Col>
-				<Col md={6} className='donation-progress'>
-					<div className='progress-graph'>
-						<div className='target'>Target: <Misc.Money amount={item.target} /></div>
-						<div className='bar-container'>
-							<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
-								<Misc.Money amount={item.donated} />
-								<Glyphicon glyph='triangle-right' />
-							</div>
-							<div className='donation-progress-bar'>
-								<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-								<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
-							</div>
-							<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-								<Glyphicon glyph='triangle-left' />
-								{Math.round(donatedPercent)}%
+		<div>
+			<div id='fundraiser-bg' />
+			<Grid id='FundRaiserPage'>
+				<Row>
+					<Col md={12} className='event-banner'>
+						<img alt={`Banner for ${item.name}`} src={item.banner} />
+					</Col>
+				</Row>
+				<Row className='title-bar'>
+					<Col md={12}>
+						<h2>{item.owner.name}&apos;s {item.name} {(new Date(item.date)).toLocaleString('en-GB')}</h2>
+					</Col>
+				</Row>
+				<Row className='vitals'>
+					<Col md={6}>
+						<div className='user-event-photo'>
+							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.photo} />
+						</div>
+					</Col>
+					<Col md={6} className='donation-progress'>
+						<div className='progress-graph'>
+							<div className='target'>Target: <Misc.Money amount={item.target} /></div>
+							<div className='bar-container'>
+								<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+									<Misc.Money amount={item.donated} />
+									<Glyphicon glyph='triangle-right' />
+								</div>
+								<div className='donation-progress-bar'>
+									<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+									<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+								</div>
+								<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+									<Glyphicon glyph='triangle-left' />
+									{Math.round(donatedPercent)}%
+								</div>
 							</div>
 						</div>
-					</div>
-					<div className='progress-details'>
-						<div className='details-input'>
-							<div className='amount'>£768</div>
-							raised of <Misc.Money amount={item.target} /> by {supporters.length} supporters
-						</div>
-						<div className='details-output'>
-							<div className='first-impact'>
-								<span className='amount'>99 people</span> turned into frogs by witches
+						<div className='progress-details'>
+							<div className='details-input'>
+								<div className='amount'>£768</div>
+								raised of <Misc.Money amount={item.target} /> by {supporters.length} supporters
 							</div>
-							<div className='second-impact'>
-								<span className='amount'>25</span> local ponds repopulated with friendly amphibians
+							<div className='details-output'>
+								<div className='first-impact'>
+									<span className='amount'>99 people</span> turned into frogs by witches
+								</div>
+								<div className='second-impact'>
+									<span className='amount'>25</span> local ponds repopulated with friendly amphibians
+								</div>
 							</div>
+							<NewDonationForm item={item} />
 						</div>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={6} className='me'>
+						<h3>Who I am:</h3>
+						<img className='avatar' alt={`Avatar for ${item.owner.name}`} src={item.owner.photo} />
+						<p>{item.owner.description}</p>
+					</Col>
+					<Col md={6} className='charity-info'>
+						<h3>The Charity:</h3>
+						<img className='charity-logo' alt={`Logo for ${'Placeholder Charity'}`} src='http://www.halotrust.org/images/SiteLogo.svg' />
+						<p>The Halo Trust is being used as a placeholder while we decide how precisely to structure the data model behind fundraiser pages.</p>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={6}>
+						<h3>Story:</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis pulvinar magna, sed porta ex. Duis rhoncus eros tempor turpis efficitur, ut dignissim sapien suscipit. Vestibulum suscipit aliquet mauris. Nam volutpat pellentesque ligula, a interdum velit malesuada at. Nulla dictum nisl sit amet leo cursus euismod. Nunc ullamcorper metus eu lectus pellentesque, ac vestibulum augue mollis. Vivamus a euismod massa. Nullam rhoncus justo dui, id sollicitudin purus placerat vel.</p>
+						<p>In vel est odio. Fusce felis leo, molestie eget iaculis ac, tincidunt quis velit. Nam quis ligula consectetur, fermentum lacus ac, euismod ante. Aenean non neque nisi. Morbi leo nibh, pulvinar at sapien ac, vulputate aliquet odio. Curabitur at egestas dolor, eu consectetur lorem. In lectus nibh, auctor at sapien at, lobortis egestas metus. Vivamus orci libero, hendrerit et ligula nec, tempus posuere augue. Quisque ultricies ante a mi imperdiet, sed bibendum justo fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi feugiat pellentesque ligula, eget finibus orci sagittis vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean tincidunt faucibus velit a iaculis. Pellentesque volutpat dui a ipsum tincidunt, ut iaculis nunc hendrerit.</p>
+						<p>Vivamus ut odio accumsan, convallis sapien a, egestas enim. Nam congue arcu nisl, quis porta risus iaculis ac. Cras at scelerisque neque, sed commodo justo. Maecenas vitae pulvinar nunc. Nullam aliquet, magna ut facilisis interdum, velit est semper urna, ac sodales orci nunc eget mauris. Sed molestie elit nunc, vel tincidunt nunc aliquam sit amet. Praesent fringilla justo id nunc porta tempor. Morbi ipsum sapien, placerat sit amet ullamcorper eu, lacinia non velit. Integer dapibus sodales ligula vitae egestas. Integer sagittis elit consectetur ex commodo faucibus. Suspendisse massa magna, tincidunt ac dignissim et, faucibus sed orci. Vivamus lectus risus, dapibus at purus quis, dignissim facilisis nulla. Etiam ac commodo augue, sed lacinia lorem. Nam orci elit, volutpat in nunc sit amet, bibendum aliquet est. In mollis diam mi.</p>
+					</Col>
+					<Col md={6}>
+						<h3>Supporters:</h3>
+						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />
 						<NewDonationForm item={item} />
-					</div>
-				</Col>
-			</Row>
-			<Row>
-				<Col md={6} className='me'>
-					<h3>Who I am:</h3>
-					<img className='avatar' alt={`Avatar for ${item.owner.name}`} src={item.owner.photo} />
-					<p>{item.owner.description}</p>
-				</Col>
-				<Col md={6} className='charity-info'>
-					<h3>The Charity:</h3>
-					<img className='charity-logo' alt={`Logo for ${'Placeholder Charity'}`} src='http://www.halotrust.org/images/SiteLogo.svg' />
-					<p>The Halo Trust is being used as a placeholder while we decide how precisely to structure the data model behind fundraiser pages.</p>
-				</Col>
-			</Row>
-			<Row>
-				<Col md={6}>
-					<h3>Story:</h3>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis pulvinar magna, sed porta ex. Duis rhoncus eros tempor turpis efficitur, ut dignissim sapien suscipit. Vestibulum suscipit aliquet mauris. Nam volutpat pellentesque ligula, a interdum velit malesuada at. Nulla dictum nisl sit amet leo cursus euismod. Nunc ullamcorper metus eu lectus pellentesque, ac vestibulum augue mollis. Vivamus a euismod massa. Nullam rhoncus justo dui, id sollicitudin purus placerat vel.</p>
-					<p>In vel est odio. Fusce felis leo, molestie eget iaculis ac, tincidunt quis velit. Nam quis ligula consectetur, fermentum lacus ac, euismod ante. Aenean non neque nisi. Morbi leo nibh, pulvinar at sapien ac, vulputate aliquet odio. Curabitur at egestas dolor, eu consectetur lorem. In lectus nibh, auctor at sapien at, lobortis egestas metus. Vivamus orci libero, hendrerit et ligula nec, tempus posuere augue. Quisque ultricies ante a mi imperdiet, sed bibendum justo fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi feugiat pellentesque ligula, eget finibus orci sagittis vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean tincidunt faucibus velit a iaculis. Pellentesque volutpat dui a ipsum tincidunt, ut iaculis nunc hendrerit.</p>
-					<p>Vivamus ut odio accumsan, convallis sapien a, egestas enim. Nam congue arcu nisl, quis porta risus iaculis ac. Cras at scelerisque neque, sed commodo justo. Maecenas vitae pulvinar nunc. Nullam aliquet, magna ut facilisis interdum, velit est semper urna, ac sodales orci nunc eget mauris. Sed molestie elit nunc, vel tincidunt nunc aliquam sit amet. Praesent fringilla justo id nunc porta tempor. Morbi ipsum sapien, placerat sit amet ullamcorper eu, lacinia non velit. Integer dapibus sodales ligula vitae egestas. Integer sagittis elit consectetur ex commodo faucibus. Suspendisse massa magna, tincidunt ac dignissim et, faucibus sed orci. Vivamus lectus risus, dapibus at purus quis, dignissim facilisis nulla. Etiam ac commodo augue, sed lacinia lorem. Nam orci elit, volutpat in nunc sit amet, bibendum aliquet est. In mollis diam mi.</p>
-				</Col>
-				<Col md={6}>
-					<h3>Supporters:</h3>
-					<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />
-					<NewDonationForm item={item} />
-				</Col>
-			</Row>
-		</Grid>
+					</Col>
+				</Row>
+			</Grid>
+		</div>
 	);
 };
 

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
 import {XId } from 'wwutils';
-import { Tabs, Tab, Modal } from 'react-bootstrap';
+import { Tabs, Tab, Modal, Button } from 'react-bootstrap';
 
 import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
 
@@ -77,6 +77,9 @@ const stagesOK = (formData) => [
 	messageOK(formData),
 	paymentOK(formData),
 ];
+
+
+
 
 /**
  * item:
@@ -166,7 +169,7 @@ const DonationForm = ({item}) => {
 							<DetailsSection path={path} />
 						</Tab>
 						<Tab eventKey={4} title='Message'>
-							<MessageSection path={path} />
+							<MessageSection path={path} item={item} />
 						</Tab>
 						<Tab eventKey={5} title='Payment'>
 							<PaymentSection path={path} />
@@ -209,9 +212,9 @@ const DetailsSection = ({path}) => (
 	</div>
 );
 
-const MessageSection = ({path}) => (
+const MessageSection = ({path, item}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='message' label='Message' placeholder='Do you have a message for $FUNDRAISER?' path={path} type='text' />
+		<Misc.PropControl prop='message' label='Message' placeholder={`Do you have a message for ${item.owner.name}?`} path={path} type='text' />
 	</div>
 );
 
@@ -269,7 +272,25 @@ class StripeThingsClass extends Component {
 	}
 
 	handleSubmit(event) {
+		// Don't submit and cause a pageload!
+		event.preventDefault();
+	
+		// the below is copy-pasted from the react-stripe-elements docs
+		// ...for some doubtless ridiculous reason "this" is null when handleSubmit is invoked?
 
+		// Within the context of `Elements`, this call to createToken knows which Element to
+		// tokenize, since there's only one in this group.
+		this.props.stripe.createToken({name: 'Jenny Rosen'}).then(({token}) => {
+			console.log('Received Stripe token:', token);
+		});
+	
+		// However, this line of code will do the same thing:
+		// this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
+
+		// end copy-pasted code
+		
+		/* here's what we do with the token when we have it in the old donation widget! */
+		/*onToken={(stripeResponse) => { ActionMan.donate({ charity, formPath, formData, stripeResponse }); } }*/
 	}
 
 	render() {
@@ -278,7 +299,7 @@ class StripeThingsClass extends Component {
 		} 
 
 		return (
-			<div>
+			<form onSubmit={this.handleSubmit}>
 				<h3>Card number</h3>
 				<div className='form-control'>
 					<CardNumberElement placeholder='0000 0000 0000 0000' />
@@ -295,7 +316,8 @@ class StripeThingsClass extends Component {
 				<div className='form-control'>
 					<PostalCodeElement placeholder='AB1 2CD' />
 				</div>
-			</div>
+				<Button type='submit'>Submit Payment</Button>
+			</form>
 		);
 	} // ./render()
 } // ./StripeThingsClass
