@@ -122,7 +122,7 @@ const getBasketPV = (uxid) => {
 	if ( ! uxid) {
 		uxid = Login.getId() || Login.getTempId();		
 	}
-	const bid = 'for_'+uxid;
+	const bid = Basket.idForUxid(uxid);
 	// FIXME we want to say "dont show errors from this"
 	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT});
 	if (pvbasket.value) return pvbasket;
@@ -160,7 +160,7 @@ const getBasketPath = (uxid) => {
 	if ( ! uxid) {
 		uxid = Login.getId() || Login.getTempId();		
 	}
-	const bid = 'for:'+uxid;
+	const bid = Basket.idForUxid(uxid);
 	return ['data', C.TYPES.Basket, bid];
 };
 

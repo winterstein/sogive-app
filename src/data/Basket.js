@@ -16,6 +16,9 @@ Basket.type = C.TYPES.Basket;
 Basket.isa = (obj) => isa(obj, Basket.type);
 Basket.assIsa = (obj) => assert(Basket.isa(obj), "Basket.js - not "+obj);
 
+Basket.idForUxid = (uxid) => "for_"+uxid;
+
+
 /**
  * @returns {!Object[]}
  */
