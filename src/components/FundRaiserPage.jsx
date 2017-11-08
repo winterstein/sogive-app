@@ -163,7 +163,6 @@ const FundRaiser = ({id}) => {
 						</div>
 					</Col>
 				</Row>
-				<div className='clear' />
 				<Row>
 					<Col md={6} className='me'>
 						<h3>Who I am:</h3>
