@@ -85,6 +85,7 @@ const stagesOK = (formData) => [
  * item:
  */
 const DonationForm = ({item}) => {
+	assert(item.id, "DonationForm", item);
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 

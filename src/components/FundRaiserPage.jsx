@@ -45,7 +45,7 @@ const FundRaiser = ({id}) => {
 	if ( ! pEvent.resolved) {
 		return <Misc.Loading />;
 	}
-	let item = pEvent.value;
+	let item = pEvent.value || {};
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';
