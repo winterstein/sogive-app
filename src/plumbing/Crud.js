@@ -148,18 +148,6 @@ ActionMan.getDataItem = ({type, id, status, ...other}) => {
 	});
 };
 
-ServerIO.getDonationDraft = ({to, swallow}) => {
-	assMatch(to, String);
-	return ServerIO.load('/donation/getDraft.json', {data: {to}, swallow});
-};
-
-ActionMan.getDonationDraft = ({to}) => {
-	// use a pseudo id to keep it in the local DataStore
-	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
-		return ServerIO.getDonationDraft({to, swallow:true});
-	});
-};
-
 const CRUD = {	
 };
 export default CRUD;

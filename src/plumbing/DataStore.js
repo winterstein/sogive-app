@@ -354,7 +354,7 @@ class Store {
 		let promiseWithCargoUnwrap = pvPromiseOrValue.promise.then(res => {
 			// HACK unwrap cargo
 			// TODO let's make unwrap a configurable setting
-			if (res.cargo) {
+			if (res && res.cargo) {
 				console.log("unwrapping cargo to store at "+path, res);
 				res = res.cargo;
 			}			

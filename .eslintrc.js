@@ -35,6 +35,7 @@ module.exports = {
 		"no-useless-constructor": "warn",
 		"no-useless-return": "off",
 		"prefer-template": "off",
+		"jsx-a11y/img-redundant-alt": "warn",
 		"quote-props": "warn",
 		"react/jsx-closing-bracket-location": "warn",
 		"react/jsx-first-prop-new-line": "off",

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.eclipse.jetty.util.ajax.JSON;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
@@ -20,6 +21,7 @@ import org.sogive.server.payment.StripePlugin;
 
 import com.stripe.exception.APIException;
 import com.stripe.model.Charge;
+import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
@@ -65,126 +67,46 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class DonationServlet extends CrudServlet {
 
-	private WebRequest state;
-
 	public DonationServlet() {
 		super(Donation.class);
 	}
 
 	public void process(WebRequest state) throws Exception {
-		this.state = state;
-		List<AuthToken> tokens = Dep.get(YouAgainClient.class).getAuthTokens(state);
-		// TODO check tokens match action
-		assert ! state.actionIs("publish") : "use donate "+state;
-		if (state.actionIs("donate")) { // TODO make this action=publish??
-			doMakeDonation();
-		} else if (state.getSlug()!=null && state.getSlug().contains("getDraft")) {
-			doGetDraft();
-			return;
-		}
 		// crud + list
 		super.process(state);
 	}
 	
-	@Override
-	protected void doList(WebRequest state) throws IOException {
-		XId user = state.getUserId();
+	
 		
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		SearchRequestBuilder s = es.prepareSearch(config.getPath(null, Donation.class, null, null).index());
-		if (user==null) {
-			throw new WebEx.E401(null, "No user");
-		} else {
-			// TODO refactor so this method adds a query to the super method
-			TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
-			s.setQuery(qb);
-		}
-		// TODO paging!
-		s.setSize(100);
-		SearchResponse sr = s.get();
-		List<Map> hits = sr.getHits();
-		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
-		long total = sr.getTotal();
-		JsonResponse output = new JsonResponse(state, new ArrayMap(
-				"hits", hits2,
-				"total", total
-				));
-		WebUtils2.sendJson(output, state);
+	@Override
+	protected QueryBuilder doList2_query(WebRequest state) {
+		XId user = state.getUserId();
+		if (user==null) return null;
+		TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
+		
+		String to = state.get("to");
+		if (to==null) return qb;
+		
+		// would ?q=to:id work just as well??
+		QueryBuilder tq = QueryBuilders.termQuery("to", user.toString());;
+		
+		BoolQueryBuilder qb2 = QueryBuilders.boolQuery().must(qb).must(tq);
+		return qb2;
 	}
 	
-	private void doGetDraft() throws IOException {
-		XId user = state.getUserId();
-		String to = state.get("to");
-		
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		SearchRequestBuilder s = es.prepareSearch(config.getPath(null, Donation.class, null, KStatus.DRAFT).index());
-		
-		if (user == null) {
-			throw new WebEx.E401(null, "No user");
-		} else if (to == null) {
-			throw new WebEx.E401(null, "No target");
-		} else {
-			BoolQueryBuilder qb = QueryBuilders.boolQuery()
-				.must(QueryBuilders.termQuery("from", user.toString()))
-				.must(QueryBuilders.termQuery("to", to));
-			s.setQuery(qb);
-		}
-		
-		s.setSize(1);
-		SearchResponse sr = s.get();
-		List<Map> hits = sr.getHits();
-		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
-		long total = sr.getTotal();
-		if (total > 0) {
-			Map draft = hits2.get(0);
-			WebUtils2.sendJson(new JsonResponse(state, draft), state);	
-		}
-		WebUtils2.sendError(404, "No draft donation from "+ user.toString() +" to "+ to +" found.", state.getResponse());
-	}
-
-	private void doMakeDonation() throws IOException {
+	@Override
+	protected JThing doPublish(WebRequest state) {
 		XId user = state.getUserId();
 		String email = state.get("stripeEmail");
 		if (user==null && email!=null) {
 			user = new XId(email, "Email");
 		}
-		
-		// TODO use crud instead!
-		
-		XId charity = new XId(state.get("charityId"), "sogive");
-		String currency = state.get("currency");
-		Long value100 = state.get(new LongField("value100"));
-		MonetaryAmount ourFee= null;
-		MonetaryAmount otherFees= null;
-		boolean giftAid = state.get(new Checkbox("giftAid"));
-		MonetaryAmount total= new MonetaryAmount(value100, currency);
-		Donation donation = new Donation(user, charity, total);
-		
-		// TODO add fees
-		
-		// the impacts
-		List impacts = (List) state.get(new JsonField("impacts"));
-		if (impacts != null) {
-			donation.setImpacts(impacts);
-		}
-		
-		// Store in the database (acts as a form of lock)
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SoGiveConfig config = Dep.get(SoGiveConfig.class);
-		ESPath path = config.getPath(null, Donation.class, donation.getId(), null);
-		IndexRequestBuilder pi = es.prepareIndex(path);
-		pi.setRefresh("true");
-		pi.setOpTypeCreate(true);		
-		String json = Dep.get(Gson.class).toJson(donation);
-		pi.setBodyJson(json);
-		IESResponse res = pi.get().check();
-		String json2 = res.getJson();
-		
-		// check we haven't done before: done by the op_type=create
-		Person userObj = DBSoGive.getUser(user);
+		// make/save Donation
+		super.doSave(state);
+		Donation donation = (Donation) jthing.java();
+		// take payment
 		String ikey = donation.getId();
+		Person userObj = DBSoGive.getUser(user);
 		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money
 		// TODO Less half-assed handling of Stripe exceptions
@@ -195,16 +117,12 @@ public class DonationServlet extends CrudServlet {
 			donation.setCollected(true);
 			
 			// store in the database
-			UpdateRequestBuilder pu = es.prepareUpdate(path);
-			
-			String json3 = Dep.get(Gson.class).toJson(donation);
-			pu.setDoc(json3);
-			IESResponse resAfter = pu.get().check();
-			String json4 = res.getJson();		
-					
-			Object dobj = JSON.parse(json3);		
-			JsonResponse output = new JsonResponse(state, dobj);
-			WebUtils2.sendJson(output, state);
+			super.doPublish(state);
+			// FIXME
+//			pi.setRefresh("true");
+//			pi.setOpTypeCreate(true);				
+			// check we haven't done before: done by the op_type=create
+			return jthing;
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}

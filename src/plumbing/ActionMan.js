@@ -169,12 +169,32 @@ const getBasketPath = (uxid) => {
 	return ['data', C.TYPES.Basket, bid];
 };
 
+
+ServerIO.getDonationDraft = ({to, swallow}) => {
+	assMatch(to, String);
+	return ServerIO.load('/donation/list.json', {data: {to}, swallow});
+};
+
+const getDonationDraft = ({to}) => {
+	// use a pseudo id to keep it in the local DataStore
+	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
+		return ServerIO.getDonationDraft({to, swallow:true})
+		.then(res => {
+			console.warn("getDonationDraft", res, 'NB: take cargo.0');
+			let cargo = res.cargo;			
+		return (cargo.hits && cargo.hits[0]) || null;
+		});
+	});
+};
+
+
 const ActionMan = {
 	addCharity,
 	addProject, removeProject,
 	addInputOrOutput,
 	addDataSource,
 	donate,
+	getDonationDraft,
 	getBasketPV,
 	addToBasket, 
 	removeFromBasket,

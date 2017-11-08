@@ -13,6 +13,7 @@ import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
+import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 
@@ -82,10 +83,11 @@ const stagesOK = (formData) => [
 
 
 /**
- * item:
+ * item: a FundRaiser or NGO
  */
 const DonationForm = ({item}) => {
 	assert(item.id, "DonationForm", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item), item);
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
@@ -107,7 +109,7 @@ const DonationForm = ({item}) => {
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({to: item.id});
 	let donationDraft = pDonation.value;
-	if (!donationDraft) {
+	if ( ! donationDraft) {
 		// if the promise is running, wait for it before making a new draft
 		if ( ! pDonation.resolved) {
 			return donateButton;
@@ -118,6 +120,7 @@ const DonationForm = ({item}) => {
 		donationDraft = {
 			...initialFormData,
 			to: item.id,
+			// TODO via and fundRaiser
 		};
 	}
 

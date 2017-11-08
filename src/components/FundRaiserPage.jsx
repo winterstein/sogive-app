@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SJTest, {assert} from 'sjtest';
+import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import { Clearfix, Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
 
@@ -12,18 +12,18 @@ import ActionMan from '../plumbing/ActionMan';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import C from '../C';
 import Roles from '../Roles';
-
+import FundRaiser from '../data/charity/FundRaiser';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm from './NewDonationForm';
 import ListLoad from './ListLoad';
 
 
-const FundRaiserPage = () => {
+const FundRaiserTop = () => {
 	// which event?	
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
-	if (frId) return <FundRaiser id={frId} />;
+	if (frId) return <FundRaiserPage id={frId} />;
 	let type = C.TYPES.FundRaiser;
 
 	// which event?	
@@ -38,14 +38,15 @@ const FundRaiserPage = () => {
 };
 
 
-const FundRaiser = ({id}) => {
+const FundRaiserPage = ({id}) => {
 	let type = C.TYPES.FundRaiser;
+	assMatch(type, String);
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
 	// console.warn(pEvent);
 	// if ( ! pEvent.resolved) {
 	// 	return <Misc.Loading />;
 	// }
-	let item = pEvent.value || {id};
+	let item = pEvent.value || FundRaiser.make({id, event:'fooEvent'});
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';
@@ -227,4 +228,4 @@ const OldFundraiserPage = ({item, id}) => (
 	</div>
 );
 
-export default FundRaiserPage;
+export default FundRaiserTop;
