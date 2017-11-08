@@ -39,19 +39,6 @@ const Event = ({id}) => {
 	let type = C.TYPES.Event;
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT});
 
-	let servlet = 'editFundraiser';
-	let createFundraiser = () => {
-		// make an id
-		const frid = nonce();
-		const fundraiser = FundRaiser.make({ id: frid, event: id});
-
-		// poke a new blank into DataStore
-		DataStore.setValue(['data', C.TYPES.FundRaiser, frid], fundraiser);
-		// set the id
-		modifyHash([servlet, frid]);
-	};
-
-
 	if ( ! pEvent.value) {
 		return <Misc.Loading />;
 	}
@@ -67,9 +54,6 @@ const Event = ({id}) => {
 
 			<Register event={item} />
 
-			<hr/>
-			<p>Dev only</p>
-			<button className='btn btn-default' onClick={createFundraiser}><Misc.Icon glyph='plus' />Create Fundraiser For This Event</button>
 		</div>
 	);
 };

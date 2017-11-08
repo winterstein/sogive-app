@@ -11,7 +11,7 @@ import {XId, encURI} from 'wwutils';
 
 import ServerIO from './ServerIO';
 import ActionMan from './ActionMan';
-import Messaging from './Messaging';
+import {notifyUser} from './Messaging';
 
 /**
  * @returns Promise
@@ -55,7 +55,7 @@ ActionMan.crud = (type, id, action, item) => {
 			// bleurgh
 			console.warn(err);
 		// TODO factor out message code
-		Messaging.notifyUser(new Error(action+" failed: "+(err && err.responseText)));
+		notifyUser(new Error(action+" failed: "+(err && err.responseText)));
 		// mark the object as dirty
 			DataStore.setLocalEditsStatus(type, id, C.STATUS.dirty);
 			return err;

@@ -12,7 +12,7 @@ Event.assIsa = (obj) => assert(Event.isa(obj), "Event.js - not "+obj);
 
 Event.make = (base = {}) => {
 	let ma = {
-		'@type': C.TYPES.FundRaiser,
+		'@type': C.TYPES.Event,
 		...base
 	};
 	Event.assIsa(ma);

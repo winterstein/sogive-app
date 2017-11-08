@@ -40,9 +40,9 @@ const FundRaiserPage = () => {
 
 const FundRaiser = ({id}) => {
 	let type = C.TYPES.FundRaiser;
-	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT});
-
-	if ( ! pEvent.value) {
+	let pEvent = ActionMan.getDataItem({type:type, id:id}); //, status:C.KStatus.PUBLISHED});
+	console.warn(pEvent);
+	if ( ! pEvent.resolved) {
 		return <Misc.Loading />;
 	}
 	let item = pEvent.value;
@@ -59,11 +59,11 @@ const FundRaiser = ({id}) => {
 
 	item.owner = {
 		name: 'Patrick',
-		photo: 'https://www.famousbirthdays.com/headshots/patrick-stewart-5.jpg',
+		img: 'https://www.famousbirthdays.com/headshots/patrick-stewart-5.jpg',
 		description: `I plan to walk one hundred thousand miles, or die trying. I do not care about charity; only about punishing my feet, which I perceive to have wronged me.`,
 	};
 
-	item.photo = 'https://www.looktothestars.org/photo/11291-patrick-stewart-and-ginger/story_wide-1491424139.jpg';
+	item.img = 'https://www.looktothestars.org/photo/11291-patrick-stewart-and-ginger/story_wide-1491424139.jpg';
 
 	const supporters = [
 		{
@@ -71,7 +71,7 @@ const FundRaiser = ({id}) => {
 			amount: MonetaryAmount.make({value: 10}),
 			donorName: 'Berk Herkson',
 			id: 'berkherkson@winterwell.com',
-			photo: 'http://bogleech.com/trapdoor/td-berk.jpg',
+			img: 'http://bogleech.com/trapdoor/td-berk.jpg',
 			message: 'I\'m Berk!',
 		},
 		{
@@ -79,7 +79,7 @@ const FundRaiser = ({id}) => {
 			amount: MonetaryAmount.make({value: 5}),
 			donorName: 'Spoon McGuffin',
 			id: 'spoon@winterwell.com',
-			photo: 'http://www.geminieventrentals.com/wp-content/uploads/2015/01/King-Spoon-500x500.jpg',
+			img: 'http://www.geminieventrentals.com/wp-content/uploads/2015/01/King-Spoon-500x500.jpg',
 			message: 'Thank you, Sir Patrick. You have made the world a better place for spoons and witches.',
 		},
 		{
@@ -87,7 +87,7 @@ const FundRaiser = ({id}) => {
 			amount: MonetaryAmount.make({value: 20}),
 			donorName: 'Joe Chill',
 			id: 'joechill@winterwell.com',
-			photo: 'https://static.comicvine.com/uploads/original/11127/111278246/5090739-2402727027-latest',
+			img: 'https://static.comicvine.com/uploads/original/11127/111278246/5090739-2402727027-latest',
 			message: 'I KILLED BATMAN\'S PARENTS. THAT\'S MY WHOLE DEAL.',
 		},
 		{
@@ -95,7 +95,7 @@ const FundRaiser = ({id}) => {
 			amount: MonetaryAmount.make({value: 30}),
 			donorName: 'Fork McGuffin',
 			id: 'fork@winterwell.com',
-			photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif/lossy-page1-220px-Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif.jpg',
+			img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif/lossy-page1-220px-Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif.jpg',
 			message: 'What Spoon said, but more... furcated.',
 		},
 		{
@@ -103,7 +103,7 @@ const FundRaiser = ({id}) => {
 			amount: MonetaryAmount.make({value: 5}),
 			donorName: 'Thomas Wayne',
 			id: 't.wayne@winterwell.com',
-			photo: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ad/Thomas_Wayne.png/250px-Thomas_Wayne.png',
+			img: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ad/Thomas_Wayne.png/250px-Thomas_Wayne.png',
 			message: 'I love you, my billionaire ninja son. Always remember who you are.',
 		},
 	];
@@ -125,7 +125,7 @@ const FundRaiser = ({id}) => {
 				<Row className='vitals'>
 					<Col md={6}>
 						<div className='user-event-photo'>
-							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.photo} />
+							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.img} />
 						</div>
 					</Col>
 					<Col md={6} className='donation-progress'>
@@ -166,7 +166,7 @@ const FundRaiser = ({id}) => {
 				<Row>
 					<Col md={6} className='me'>
 						<h3>Who I am:</h3>
-						<img className='avatar' alt={`Avatar for ${item.owner.name}`} src={item.owner.photo} />
+						<img className='avatar' alt={`Avatar for ${item.owner.name}`} src={item.owner.img} />
 						<p>{item.owner.description}</p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -205,7 +205,7 @@ const Supporters = ({item, supporters = [], charity}) => {
 const Supporter = ({supporter, charity}) => {
 	return (
 		<li className='supporter'>
-			<img className='supporter-photo' src={supporter.photo} />
+			<img className='supporter-photo' src={supporter.img} alt='supporter' />
 			<h4>{supporter.donorName}</h4>
 			<Misc.RelativeDate date={supporter.date} className='donation-date' />
 			<div><span className='amount-donated'><Misc.Money amount={supporter.amount} /></span> donated</div>

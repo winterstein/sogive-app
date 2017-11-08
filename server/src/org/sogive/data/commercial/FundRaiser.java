@@ -5,6 +5,8 @@ import org.sogive.data.charity.NGO;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.AThing;
+import com.winterwell.data.PersonLite;
+import com.winterwell.web.data.XId;
 
 /**
  * Mostly the info is contained in {@link Event} and {@link Person},
@@ -12,12 +14,15 @@ import com.winterwell.data.AThing;
  * @author daniel
  *
  */
-public class FundRaiserPage extends AThing {
+public class FundRaiser extends AThing {
 	String event;
-	String owner;
+	XId oxid;
+	PersonLite owner;
 	String description;
 	MonetaryAmount target;
 	MonetaryAmount donated;
 	Integer donationCount;
 	NGO charity;
+	
+	public String img;
 }

@@ -175,10 +175,9 @@ class Store {
 			"DataStore.setValue: "+path[0]+" is not a node in appstate - As a safety check against errors, the root node must already exist to use setValue()");
 		// console.log('DataStore.setValue', path, value);
 		const oldVal = this.getValue(path);
-		if (oldVal === value && update !== true) {
-			// not working for the NGO case?! 'cos fresh fetches from sogive?
-			// FIXME what about in place edits? where oldVal===value, but we did edit value, so a call to update() is wanted??
-			console.log("setValue no-op", path, value, "NB: beware of in-place edits - use update=true to force an update");
+		if (oldVal === value && update !== true && ! _.isObject(value)) {
+			// The no-op test only considers String and Number 'cos in place edits of objects are common and would cause problems here.
+			// console.log("setValue no-op", path, value, "NB: beware of in-place edits - use update=true to force an update");
 			return;
 		}
 		let tip = this.appstate;
@@ -201,10 +200,10 @@ class Store {
 			tip = newTip;
 		}
 		// HACK: update a data value => mark it as modified
-		if (path[0] === 'data' && path.length > 3 && DataStore.DATA_MODIFIED_PROPERTY) {
+		if (oldVal && path[0] === 'data' && path.length > 2 && DataStore.DATA_MODIFIED_PROPERTY) {
 			// chop path down to [data, type, id]
-			let itemPath = path.slice(0, 3);
-			let item = this.getValue(itemPath);
+			const itemPath = path.slice(0, 3);
+			const item = this.getValue(itemPath);
 			if (getType(item) && getId(item)) {
 				this.setLocalEditsStatus(getType(item), getId(item), C.STATUS.dirty, false);
 			}
@@ -303,7 +302,7 @@ class Store {
 					console.log("skip server object w/o type", item);
 					return;
 				}
-				assert(C.TYPES.has(type), "DataStore.updateFromServer: "+item);
+				assert(C.TYPES.has(type), "DataStore.updateFromServer: type:"+type, item);
 				let typemap = itemstate.data[type];
 				if ( ! typemap) {
 					typemap = {};

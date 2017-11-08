@@ -48,7 +48,6 @@ const PAGES = {
 
 const DEFAULT_PAGE = 'search';
 
-
 /**
 		Top-level: tabs
 */

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Well, Button, Tabs, Tab, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
-import {XId} from 'wwutils';
+import {XId, encURI} from 'wwutils';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import C from '../C';
@@ -12,6 +12,7 @@ import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
+import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
 import Misc from './Misc';
@@ -73,7 +74,7 @@ const RegisterPage = () => {
 				<Tab eventKey={6} title='Confirmation'>	
 					ticket list, receipt, print button
 					CTA(s) to go to your shiny new fundraising page(s)
-					<ConfirmedTicketList basket={basket} />
+					<ConfirmedTicketList basket={basket} event={event} />
 				</Tab>
 			</Tabs>
 
@@ -217,16 +218,26 @@ const CharityChoiceTab = ({basket}) => {
 	</div>);
 };
 
-const ConfirmedTicketList = ({basket}) => {
+const ConfirmedTicketList = ({basket, event}) => {
 	if ( ! basket) return null;
 	let tickets = Basket.getItems(basket);
 	return (<div className='ConfirmedTicketList'>
-		{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} /> )}
+		{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} event={event} /> )}
 	</div>);
 };
 
-const ConfirmedTicket = ({ticket}) => {
-	return <div><h3>{ticket.attendeeName}</h3><a href=''>Fund Raiser for {ticket.attendeeName}</a><pre>{JSON.stringify(ticket)}</pre></div>;
+const ConfirmedTicket = ({ticket, event}) => {
+	if ( ! ticket.event) ticket.event = getId(event);
+	let frid = FundRaiser.getIdForTicket(ticket);	
+	return (<div><h3>{ticket.attendeeName}</h3>
+		<a href={'#fundraiser/'+encURI(frid)}
+			onClick={() => {
+				// HACK create!
+				let fritem = FundRaiser.make({id:frid, event:getId(event)});
+				ActionMan.crud(C.TYPES.FundRaiser, frid, C.CRUDACTION.new, fritem);
+			}}
+		>Fund Raiser for {ticket.attendeeName}</a>
+		<pre>{JSON.stringify(ticket)}</pre></div>);
 };
 
 export default RegisterPage;

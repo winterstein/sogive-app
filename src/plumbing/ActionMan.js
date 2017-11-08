@@ -143,7 +143,7 @@ const addToBasket = (basket, item) => {
 	assert(item.id, item); // need an ID
 	item = _.cloneDeep(item); // copy so we can modify
 	basket.items = (basket.items || []).concat(item);
-	DataStore.update();
+	DataStore.setData(basket);
 	return basket;
 };
 
@@ -151,8 +151,13 @@ const removeFromBasket = (basket, item) => {
 	console.log("removeFromBasket",basket, item);
 	assert(item);
 	Basket.assIsa(basket);
-	basket.items = basket.items.filter(itm => getId(itm) !== getId(item));
-	DataStore.update();
+	// remove the first matching item (Note: items can share an ID)	
+	const i = basket.items.findIndex(itm => getId(itm) === getId(item));
+	if (i === -1) {
+		return;
+	}
+	basket.items.splice(i, 1);
+	DataStore.setData(basket);
 	return basket;
 };
 

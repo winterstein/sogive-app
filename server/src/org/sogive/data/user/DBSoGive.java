@@ -14,7 +14,7 @@ import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
-import org.sogive.data.commercial.FundRaiserPage;
+import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;

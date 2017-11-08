@@ -17,6 +17,7 @@ Ticket.name = (ngo) => Ticket.assIsa(ngo) && ngo.name;
 Ticket.make = (base, baseId) => {
 	assMatch(baseId, String);
 	return {
+		event: baseId,
 		id: baseId+'.'+nonce(),
 		price: MonetaryAmount.make(),
 	};
