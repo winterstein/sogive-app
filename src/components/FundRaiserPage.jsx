@@ -40,12 +40,12 @@ const FundRaiserPage = () => {
 
 const FundRaiser = ({id}) => {
 	let type = C.TYPES.FundRaiser;
-	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT}); // TODO published
-	console.warn(pEvent);
-	if ( ! pEvent.resolved) {
-		return <Misc.Loading />;
-	}
-	let item = pEvent.value || {};
+	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
+	// console.warn(pEvent);
+	// if ( ! pEvent.resolved) {
+	// 	return <Misc.Loading />;
+	// }
+	let item = pEvent.value || {id};
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';

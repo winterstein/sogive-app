@@ -21,7 +21,7 @@ const NGO = {};
 export default NGO;
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
-NGO.assIsa = (ngo) => assert(NGO.isa(ngo), "NGO.js - "+obj);
+NGO.assIsa = (ngo) => assert(NGO.isa(ngo), "NGO.js - wrong type "+ngo, ngo);
 /**
  * Mostly you should use #displayName()!
  */

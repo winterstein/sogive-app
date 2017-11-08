@@ -9,6 +9,13 @@ import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.Time;
 
+/**
+ * TODO it'd be nice to replace this with {@link com.goodloop.data.MonetaryAmount}
+ * However that would require lots of changes (and risk).
+ * 
+ * @author daniel
+ *
+ */
 public class MonetaryAmount extends Thing<MonetaryAmount> {
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +43,9 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 		assert ! Utils.isBlank(currency);
 	}
 
+	public MonetaryAmount plus(MonetaryAmount x) {
+		return new MonetaryAmount(getValue100() + x.getValue100());
+	}
 
 	public MonetaryAmount minus(MonetaryAmount x) {
 		return new MonetaryAmount(getValue100() - x.getValue100());

@@ -1,5 +1,6 @@
 package org.sogive.data.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.Output;
 
 import com.winterwell.data.AThing;
+import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
@@ -22,7 +24,25 @@ public class Donation extends AThing {
 	String donorAddress;
 	String donorPostcode;
 	
+	/**
+	 * id for the {@link FundRaiser}, if there was one
+	 */
+	String fundRaiser;
+	
+	/**
+	 * the user who helped raise the funds -- i.e. the walker in KiltWalk.
+	 */
+	XId via;
+	
+	
+	/**
+	 * The total amount the charity will receive.
+	 */
 	public MonetaryAmount getTotal() {
+		Mutable.Ref<MonetaryAmount> ttl = new Mutable.Ref<>(amount);
+		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c));
+		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c));
+		total = ttl.value;
 		return total;
 	}
 	
@@ -45,19 +65,32 @@ public class Donation extends AThing {
 		this.paymentId = paymentId;
 	}
 	
-	MonetaryAmount transfer;
-	
-	MonetaryAmount ourFee;
-	
-	MonetaryAmount otherFees;
 
 	boolean giftAid;
 	boolean giftAidTaxpayer;
 	boolean giftAidOwnMoney;
 	boolean giftAidNoCompensation;
 	
+
+	/**
+	 * Our fees + processing fees.
+	 */
+	List<MonetaryAmount> fees;
 	
-	MonetaryAmount total;
+	/**
+	 * The user's contribution
+	 */
+	MonetaryAmount amount;
+	
+	/**
+	 * Extra money! gift-aid boost + matched funding.
+	 */
+	List<MonetaryAmount> contributions;
+	
+	/**
+	 * The total amount the charity will receive.
+	 */
+	MonetaryAmount total;	
 
 	/**
 	 * When this donation was made
@@ -67,21 +100,14 @@ public class Donation extends AThing {
 	private List<Output> impacts;
 
 
-	public Donation(XId from, XId to, MonetaryAmount ourFee, MonetaryAmount otherFees, boolean giftAid,
-			MonetaryAmount total) {
-		Utils.check4null(from, to, total);
+	public Donation(XId from, XId to, MonetaryAmount userContribution) {
+		Utils.check4null(from, to);
 		this.from = from.toString();
 		this.to = to.toString();
-		this.ourFee = ourFee;
-		this.otherFees = otherFees;
-		this.giftAid = giftAid;
-		this.total = total;
-		if (ourFee!=null && otherFees!=null) {
-			transfer = total.minus(ourFee).minus(otherFees);
-		}
+		this.amount = userContribution;
 		// HACK: make an ID to block repeats within a couple of minutes
 		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
-		this.id = total.getValue100()+" "+from+" to "+to+" at "+(tmin);
+		this.id = userContribution.getValue()+" from "+from+" to "+to+" at "+(tmin);
 	}
 
 	public String getId() {

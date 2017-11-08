@@ -149,7 +149,10 @@ public class DonationServlet extends CrudServlet {
 		String email = state.get("stripeEmail");
 		if (user==null && email!=null) {
 			user = new XId(email, "Email");
-		}			
+		}
+		
+		// TODO use crud instead!
+		
 		XId charity = new XId(state.get("charityId"), "sogive");
 		String currency = state.get("currency");
 		Long value100 = state.get(new LongField("value100"));
@@ -157,21 +160,14 @@ public class DonationServlet extends CrudServlet {
 		MonetaryAmount otherFees= null;
 		boolean giftAid = state.get(new Checkbox("giftAid"));
 		MonetaryAmount total= new MonetaryAmount(value100, currency);
-		Donation donation = new Donation(user, charity, ourFee, otherFees, giftAid, total);
+		Donation donation = new Donation(user, charity, total);
+		
+		// TODO add fees
 		
 		// the impacts
 		List impacts = (List) state.get(new JsonField("impacts"));
 		if (impacts != null) {
 			donation.setImpacts(impacts);
-		}
-		
-		if (giftAid) {
-			String name = state.get("name");
-			String address = state.get("address");
-			String postcode = state.get("postcode");
-			if (name != null && address != null && postcode != null) {
-				donation.setGiftAid(name, address, postcode);
-			}
 		}
 		
 		// Store in the database (acts as a form of lock)
