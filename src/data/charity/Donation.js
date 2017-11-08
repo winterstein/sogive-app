@@ -19,7 +19,7 @@ Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not "+obj);
 Donation.make = (base = {}) => {
 	let ma = {
 		'@type': C.TYPES.Donation,
-		amount: MonetaryAmount.make(),
+		amount: MonetaryAmount.make(),		
 		...base
 	};
 	Donation.assIsa(ma);

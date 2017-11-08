@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Well, Button, Tabs, Tab, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
+import {XId} from 'wwutils';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import C from '../C';
@@ -16,13 +17,14 @@ import Roles from '../Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
+import NewDonationForm from './NewDonationForm';
 
 /**
  * Sign up for an event!
  */
 const RegisterPage = () => {
 	let eventId = DataStore.getValue('location', 'path')[1];
-	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId});
+	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED});
 	if ( ! pvEvent.value) return <Misc.Loading />;
 	const event = pvEvent.value;
 
@@ -47,26 +49,31 @@ const RegisterPage = () => {
 			<Tabs activeKey={stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
 				<Tab eventKey={1} title='Ticket(s)'>					
 					{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
-					<NextTab stagePath={stagePath} />
+					<NextTab stagePath={stagePath} disabled={ ! basket || ! basket.items.length} />
 				</Tab>
 				<Tab eventKey={2} title='Register'>
 					<RegisterOrLoginTab />
-					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} />
 				</Tab>
 				<Tab eventKey={3} title='Your Details'>
 					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
-					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={4} title='Your Charity'>					
 					<CharityChoiceTab basket={basket} />
-					<PreviousTab stagePath={stagePath} /> <NextTab stagePath={stagePath} />
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={5} title='Checkout'>					
+					{basket? <NewDonationForm item={basket} /> : null}
 					<PreviousTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={6} title='Confirmation'>	
 					ticket list, receipt, print button
 					CTA(s) to go to your shiny new fundraising page(s)
+					<ConfirmedTicketList basket={basket} />
 				</Tab>
 			</Tabs>
 
@@ -76,11 +83,11 @@ const RegisterPage = () => {
 	);
 };
 
-const NextTab = ({stagePath}) => {
+const NextTab = ({stagePath, disabled}) => {
 	return (<button onClick={() => {
 		let n = DataStore.getValue(stagePath) + 1;
 		DataStore.setValue(stagePath, n);
-	}} >Next</button>);
+	}} disabled={disabled} >Next</button>);
 };
 const PreviousTab = ({stagePath}) => {
 	return (<button onClick={() => {
@@ -127,6 +134,7 @@ const RegisterOrLoginTab = () => {
 const WalkerDetailsTab = ({basket, basketPath}) => {
 	if ( ! basket) return null;
 	assert(basketPath);
+	// ??do we want to sort?? Probably the first item is the ticket for the current user.
 	// Sort all tickets in basket & list in format:
 	// Ticket Type A
 	// - Attendee 1
@@ -158,6 +166,7 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 };
 
 const AttendeeDetails = ({i, ticket, path}) => {
+	assert(DataStore.getValue(path) === null || DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
 	const sameAddressAsFirst = i > 0 ? (
 		<Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' />
@@ -168,12 +177,19 @@ const AttendeeDetails = ({i, ticket, path}) => {
 	const address = isSame ? null : (
 		<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
 	);
-
+	// first ticket - fill in from user details
+	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn()) {
+		const user = Login.getUser();
+		ticket.attendeeName = user.name;
+		if (XId.service(user.xid) === 'email') ticket.attendeeEmail = XId.id(user.xid);
+		console.log("set name,email from Login", ticket, user.xid);
+		DataStore.setValue(path, ticket, false);
+	}
 	return (
 		<Well>
 			<h4>{noun} <span>{i+1}</span></h4>
-			<Misc.PropControl type='text' path={path} prop='attendeeName' label={`${noun} Name`} />
-			<Misc.PropControl type='text' path={path} prop='attendeeEmail' label='Email' />
+			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
+			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 			{ sameAddressAsFirst }
 			{ address }
 		</Well>
@@ -199,6 +215,18 @@ const CharityChoiceTab = ({basket}) => {
 
 		show some recommended charities
 	</div>);
+};
+
+const ConfirmedTicketList = ({basket}) => {
+	if ( ! basket) return null;
+	let tickets = Basket.getItems(basket);
+	return (<div className='ConfirmedTicketList'>
+		{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} /> )}
+	</div>);
+};
+
+const ConfirmedTicket = ({ticket}) => {
+	return <div><h3>{ticket.attendeeName}</h3><a href=''>Fund Raiser for {ticket.attendeeName}</a><pre>{JSON.stringify(ticket)}</pre></div>;
 };
 
 export default RegisterPage;

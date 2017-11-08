@@ -124,35 +124,39 @@ ServerIO.publishEdits = function(type, item) {
 ServerIO.discardEdits = function(type, item) {
 	return ServerIO.crud(type, item, 'discard-edits');
 };
+
 /**
  * get an item from the backend -- does not save it into DataStore
  */
-ServerIO.getDataItem = function({type, id, status}) {
+ServerIO.getDataItem = function({type, id, status, swallow, ...other}) {
 	assert(C.TYPES.has(type), 'Crud.js - ServerIO - bad type: '+type);
 	if ( ! status) {
 		console.warn("Crud.js - ServerIO.getDataItem: no status - this is unwise! Editor pages should specify DRAFT. type: "+type+" id: "+id);
 	}
 	assMatch(id, String);
-	const params = {data: {status}};
+	const params = {data: {status, ...other}, swallow};
 	return ServerIO.load('/'+servlet4type(type)+'/'+encURI(id)+'.json', params);
 };
-ActionMan.getDataItem = ({type, id, status}) => {
+/**
+ * get an item from DataStore, or call the backend if not there (and save it into DataStore)
+ */
+ActionMan.getDataItem = ({type, id, status, ...other}) => {
 	assert(C.TYPES.has(type), 'Crud.js - ActionMan - bad type: '+type);
 	assMatch(id, String);
 	return DataStore.fetch(['data', type, id], () => {
-		return ServerIO.getDataItem({type, id, status});
+		return ServerIO.getDataItem({type, id, status, ...other});
 	});
 };
 
-ServerIO.getDonationDraft = ({to}) => {
+ServerIO.getDonationDraft = ({to, swallow}) => {
 	assMatch(to, String);
-	return ServerIO.load('/donation/getDraft.json', {data: {to}});
+	return ServerIO.load('/donation/getDraft.json', {data: {to}, swallow});
 };
 
 ActionMan.getDonationDraft = ({to}) => {
 	// use a pseudo id to keep it in the local DataStore
 	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
-		return ServerIO.getDonationDraft({to});
+		return ServerIO.getDonationDraft({to, swallow:true});
 	});
 };
 

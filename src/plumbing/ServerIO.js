@@ -146,27 +146,27 @@ ServerIO.load = function(url, params) {
 		return defrd;
 	}
 	defrd = defrd
-			.then(ServerIO.handleMessages)
-			.fail(function(response, huh, bah) {
-				console.error('fail',url,params,response,huh,bah);
-				let msg = {
-					id: 'error from '+params.url,
-					type:'error', 
-					text: (response && response.responseText) || "Could not load "+params.url+" from the server"
-				};
-				if (response.status === 404) {
-					msg.text = "404: Sadly that content could not be found.";
-				}
-				// HACK hide details
-				if (msg.text.indexOf('\n----') !== -1) {
-					let i = msg.text.indexOf('\n----');
-					msg.details = msg.text.substr(i);
-					msg.text = msg.text.substr(0, i);
-				}
-				// bleurgh - a frameworky dependency
+		.then(ServerIO.handleMessages)
+		.fail(function(response, huh, bah) {
+			console.error('fail',url,params,response,huh,bah);
+			let msg = {
+				id: 'error from '+params.url,
+				type:'error', 
+				text: (response && response.responseText) || "Could not load "+params.url+" from the server"
+			};
+			if (response.status === 404) {
+				msg.text = "404: Sadly that content could not be found.";
+			}
+			// HACK hide details
+			if (msg.text.indexOf('\n----') !== -1) {
+				let i = msg.text.indexOf('\n----');
+				msg.details = msg.text.substr(i);
+				msg.text = msg.text.substr(0, i);
+			}
+			// bleurgh - a frameworky dependency
 			notifyUser(msg);
-				return response;
-			}.bind(this));
+			return response;
+		});
 	return defrd;
 };
 
