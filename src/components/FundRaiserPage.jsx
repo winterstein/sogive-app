@@ -40,7 +40,7 @@ const FundRaiserPage = () => {
 
 const FundRaiser = ({id}) => {
 	let type = C.TYPES.FundRaiser;
-	let pEvent = ActionMan.getDataItem({type:type, id:id}); //, status:C.KStatus.PUBLISHED});
+	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT}); // TODO published
 	console.warn(pEvent);
 	if ( ! pEvent.resolved) {
 		return <Misc.Loading />;
@@ -163,6 +163,7 @@ const FundRaiser = ({id}) => {
 						</div>
 					</Col>
 				</Row>
+				<div className='clear' />
 				<Row>
 					<Col md={6} className='me'>
 						<h3>Who I am:</h3>

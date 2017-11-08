@@ -31,7 +31,8 @@
 	}
 
 	.vitals {
-		height: 350px;
+		/* ??Hard-coded height was causing odd layout. Can we do height using flex layout instead, so it works nicely on any screen size?? ^Dan */
+		min-height: 350px;
 		background: linear-gradient(to bottom, #3f4151 0% , #3f4151 50%, white 50%, white 100%);
 
 		.user-event-photo {
@@ -51,48 +52,48 @@
 				object-fit: cover;
 				background-color: white;
 			}
-		}
+		}		
+	} // ./.vitals
 
-		.donation-progress {
-			height: 100%;
+	.vitals .donation-progress {
+		height: 100%;
 
-			.progress-graph {
-				height: 50%;
-				text-align: center;
-				color: white;
+		.progress-graph {
+			height: 50%;
+			text-align: center;
+			color: white;
 
-				.target {
-					color: @bold-text-colour;
+			.target {
+				color: @bold-text-colour;
+			}
+
+			.bar-container {
+				.progress-pointer, .donation-progress-bar {
+					display: inline-block;
 				}
-
-				.bar-container {
-					.progress-pointer, .donation-progress-bar {
-						display: inline-block;
+				.progress-pointer {
+					transform: translateY(-23%);
+					font-size: 1.5em;
+					font-weight: bold;
+					color: @progress-bar-done;
+					margin: auto -6px;
+				}
+				.donation-progress-bar {
+					height: 150px;
+					width: 50px;
+					.remaining {
+						background-color: white;
 					}
-					.progress-pointer {
-						transform: translateY(-23%);
-						font-size: 1.5em;
-						font-weight: bold;
-						color: @progress-bar-done;
-						margin: auto -6px;
-					}
-					.donation-progress-bar {
-						height: 150px;
-						width: 50px;
-						.remaining {
-							background-color: white;
-						}
-						.done {
-							background-color: @progress-bar-done;
-						}
+					.done {
+						background-color: @progress-bar-done;
 					}
 				}
 			}
-			.progress-details {
-				height: 50%;
-			}
 		}
-	}
+		.progress-details {
+			height: 50%;
+		}
+	} // /.vitals .donation-progress
 
 	.me {
 		.avatar {

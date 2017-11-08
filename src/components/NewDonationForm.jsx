@@ -215,7 +215,7 @@ const DetailsSection = ({path}) => (
 
 const MessageSection = ({path, item}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='message' label='Message' placeholder={`Do you have a message for ${item.owner.name}?`} path={path} type='text' />
+		<Misc.PropControl prop='message' label='Message' placeholder={`Do you have a message for ${item.owner.name}?`} path={path} type='textarea' />
 	</div>
 );
 
@@ -301,21 +301,29 @@ class StripeThingsClass extends Component {
 
 		return (
 			<form onSubmit={this.handleSubmit}>
-				<h3>Card number</h3>
-				<div className='form-control'>
-					<CardNumberElement placeholder='0000 0000 0000 0000' />
+				<div className='form-group'>
+					<label>Card number</label>
+					<div className='form-control'>
+						<CardNumberElement placeholder='0000 0000 0000 0000' />
+					</div>
 				</div>
-				<h3>Expiry date</h3>
-				<div className='form-control'>
-					<CardExpiryElement />
+				<div className='form-group'>
+					<label>Expiry date</label>
+					<div className='form-control'>
+						<CardExpiryElement />
+					</div>
 				</div>
-				<h3>CVC</h3>
-				<div className='form-control'>
-					<CardCVCElement />
+				<div className='form-group'>
+					<label>CVC</label>
+					<div className='form-control'>
+						<CardCVCElement />
+					</div>
 				</div>
-				<h3>Postcode</h3>
-				<div className='form-control'>
-					<PostalCodeElement placeholder='AB1 2CD' />
+				<div className='form-group'>
+					<label>Postcode</label>
+					<div className='form-control'>
+						<PostalCodeElement placeholder='AB1 2CD' />
+					</div>
 				</div>
 				<Button type='submit'>Submit Payment</Button>
 			</form>
