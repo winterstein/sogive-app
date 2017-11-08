@@ -179,11 +179,11 @@ const getDonationDraft = ({to}) => {
 	// use a pseudo id to keep it in the local DataStore
 	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
 		return ServerIO.getDonationDraft({to, swallow:true})
-		.then(res => {
-			console.warn("getDonationDraft", res, 'NB: take cargo.0');
-			let cargo = res.cargo;			
-		return (cargo.hits && cargo.hits[0]) || null;
-		});
+			.then(res => {
+				console.warn("getDonationDraft", res, 'NB: take cargo.0');
+				let cargo = res.cargo;			
+				return (cargo.hits && cargo.hits[0]) || null;
+			});
 	});
 };
 
