@@ -4,6 +4,9 @@ import org.sogive.data.charity.MonetaryAmount;
 
 import com.winterwell.data.AThing;
 
+import lombok.Data;
+
+@Data
 public class Ticket extends AThing {
 
 	MonetaryAmount price;
@@ -17,7 +20,7 @@ public class Ticket extends AThing {
 
 	@Override
 	public String toString() {
-		return "Product[price=" + price + ", name=" + name + ", id=" + id + "]";
+		return "Ticket[price=" + price + ", name=" + name + ", id=" + id + "]";
 	}
 	
 	

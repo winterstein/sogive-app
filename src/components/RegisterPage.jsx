@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Well, Button, Tabs, Tab, Label } from 'react-bootstrap';
+import { Well, Button, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
 import {XId, encURI} from 'wwutils';
@@ -20,7 +20,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
-import WizardProgressWidget from './WizardProgressWidget';
+import WizardProgressWidget, {WizardStage} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 
 /**
@@ -35,11 +35,11 @@ const RegisterPage = () => {
 	const wspath = ['widget', 'RegisterPage', eventId];
 	const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = wspath.concat('stage');
-	let stage = widgetState.stage;
-	if (stage===0) { // start on 1
-		stage = 1;
-		DataStore.setValue(stagePath, stage, false);
-	}
+	let stage = widgetState.stage || 0;
+	// if (stage===0) { // start on 1
+	// 	stage = 1;
+	// 	DataStore.setValue(stagePath, stage, false);
+	// }
 
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
@@ -52,39 +52,39 @@ const RegisterPage = () => {
 			<h2>Register &amp; get tickets for {event.name}</h2>
 
 			<WizardProgressWidget stageNum={stage} 
-				stages={[{title:'Tickets'}, {title:'Register'}, {title:'Your Details'}, {title:'Your Charity'}, {title:'Checkout'}, {title:'Confirmation'}]}			
+				stagePath={stagePath}
+				stages={[{title:'Tickets'}, {title:'Register'}, {title:'Your Details'}, {title:'Your Charity'}, 
+					{title:'Checkout'}, {title:'Confirmation'}]}			
 			/>
 
-			<Tabs activeKey={stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
-				<Tab eventKey={1} title='Ticket(s)'>					
-					{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
-					<NextTab stagePath={stagePath} disabled={ ! basket || !basket.items || ! basket.items.length} />
-				</Tab>
-				<Tab eventKey={2} title='Register'>
-					<RegisterOrLoginTab />
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} />
-				</Tab>
-				<Tab eventKey={3} title='Your Details'>
-					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} />
-				</Tab>
-				<Tab eventKey={4} title='Your Charity'>					
-					<CharityChoiceTab basket={basket} />
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} />
-				</Tab>
-				<Tab eventKey={5} title='Checkout'>					
-					<CheckoutTab basket={basket} event={event} />
-					<PreviousTab stagePath={stagePath} />
-				</Tab>
-				<Tab eventKey={6} title='Confirmation'>	
-					ticket list, receipt, print button
-					CTA(s) to go to your shiny new fundraising page(s)
-					<ConfirmedTicketList basket={basket} event={event} />
-				</Tab>
-			</Tabs>
+			<WizardStage stageKey={0} stageNum={stage}>					
+				{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
+				<NextTab stagePath={stagePath} disabled={ ! basket || !basket.items || ! basket.items.length} />
+			</WizardStage>
+			<WizardStage stageKey={1} stageNum={stage}>
+				<RegisterOrLoginTab />
+				<PreviousTab stagePath={stagePath} /> 
+				<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} />
+			</WizardStage>
+			<WizardStage stageKey={2} stageNum={stage}>
+				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
+				<PreviousTab stagePath={stagePath} /> 
+				<NextTab stagePath={stagePath} />
+			</WizardStage>
+			<WizardStage stageKey={3} stageNum={stage}>					
+				<CharityChoiceTab basket={basket} />
+				<PreviousTab stagePath={stagePath} /> 
+				<NextTab stagePath={stagePath} />
+			</WizardStage>
+			<WizardStage stageKey={4} stageNum={stage}>					
+				<CheckoutTab basket={basket} event={event} />
+				<PreviousTab stagePath={stagePath} />
+			</WizardStage>
+			<WizardStage stageKey={5} stageNum={stage}>	
+				ticket list, receipt, print button
+				CTA(s) to go to your shiny new fundraising page(s)
+				<ConfirmedTicketList basket={basket} event={event} />
+			</WizardStage>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} /> : null}
 

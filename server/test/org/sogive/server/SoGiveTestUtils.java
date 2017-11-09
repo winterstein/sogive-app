@@ -70,7 +70,7 @@ public class SoGiveTestUtils {
 	}
 
 
-	private static Event getTestEvent() {
+	static Event getTestEvent() {
 		Class<Event> klass = Event.class;
 		IESRouter r = Dep.get(IESRouter.class);
 		String id = "dummyEvent";

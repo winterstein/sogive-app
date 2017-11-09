@@ -18,6 +18,7 @@ import org.sogive.server.payment.StripePlugin;
 
 import com.stripe.Stripe;
 import com.stripe.model.Token;
+import com.winterwell.datalog.server.TrackingPixelServlet;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -27,7 +28,10 @@ import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.FakeBrowser;
 import com.winterwell.web.app.CrudServlet;
+import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.test.TestHttpServletRequest;
+import com.winterwell.web.test.TestHttpServletResponse;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.data.DBAuth;
 
@@ -43,10 +47,55 @@ public class DonationServletTest {
 	public void testMakeDonationNotLoggedIn() {
 		// fire up a server
 		String host = SoGiveTestUtils.getStartServer();
+				
+		String tokenId = null;
+		String tokenType = null;
+		try {
+			Stripe.apiKey = StripePlugin.secretKey();
+			
+			Token tok = getFreshToken(getTokenParams());
+			tokenId = tok.getId();
+			tokenType = tok.getType();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 		
-		// make a save + publish call with test Stripe details
+		
+		// make a save + publish call with test Stripe details	
+		// Do use a temp XId
+		WebRequest state = new WebRequest(new TestHttpServletRequest(), new TestHttpServletResponse());
+		String id = TrackingPixelServlet.getCreateCookieTrackerId(state);
+		XId from = new XId(id);
+		String to = SoGiveTestUtils.getCharity().getId();
+		MonetaryAmount userContribution = MonetaryAmount.pound(3);
+		
+		Donation don = new Donation(from, to, userContribution);
+		don.setA("test");
+		String did = don.getId();
+		
+		
+		String donj = Dep.get(Gson.class).toJson(don);
 		FakeBrowser fb = new FakeBrowser();
-		
+		fb.setRequestMethod("PUT");
+		try {
+			String json= fb.getPage(host+"/donation/"+WebUtils.urlEncode(did)+".json", 
+					new ArrayMap(
+							"stripeEmail", "spoonmcguffin@gmail.com",
+							"stripeToken", tokenId, 
+							"stripeTokenType", tokenType, 
+							"item", donj, 
+							"action", CrudServlet.ACTION_PUBLISH
+							)
+					);
+			Map response = (Map) JSON.parse(json);
+			Map esres = (Map) response.get("cargo");
+			
+			System.out.println(esres);
+			Donation don2 = Dep.get(Gson.class).fromJson(JSON.toString(esres));
+			System.out.println(don2);
+		} catch(Exception ex) { // allow us to breakpoint w/o a time out killing the JVM
+			ex.printStackTrace();
+		}	
 	}
 
 	/**
@@ -54,7 +103,7 @@ public class DonationServletTest {
 	 * Copy-pasted from Stripe's own test suite.
 	 * @return
 	 */
-	private Map<String, Object> getTokenParams() {
+	Map<String, Object> getTokenParams() {
 		// Expiry date can be whatever as long as it's (a) reasonable and (b) no earlier than the current month+year.
 		int expYear = Calendar.getInstance().get(Calendar.YEAR);
 		
@@ -69,7 +118,7 @@ public class DonationServletTest {
 		return tokenParams;
 	}
 	
-	private Token getFreshToken(Map<String, Object> params) throws Exception {
+	Token getFreshToken(Map<String, Object> params) throws Exception {
 		return Token.create(params);
 	}
 	
@@ -117,8 +166,8 @@ public class DonationServletTest {
 			String json= fb.getPage(host+"/donation/"+WebUtils.urlEncode(did)+".json", 
 					new ArrayMap(
 							"stripeEmail", "spoonmcguffin@gmail.com",
-							"stripeToken", tokenId, // TODO
-							"stripeTokenType", tokenType, // TODO
+							"stripeToken", tokenId, 
+							"stripeTokenType", tokenType, 
 							"item", donj, 
 							"action", CrudServlet.ACTION_PUBLISH
 							)
@@ -150,8 +199,11 @@ public class DonationServletTest {
 				));
 		Map response = (Map) JSON.parse(listjson);
 		Map esres = (Map) response.get("cargo");
-		List hits = Containers.asList(esres.get("hits"));
+		List<Map> hits = Containers.asList(esres.get("hits"));
 		Printer.out(hits);
 		assert hits.size() != 0; // the other tests should make donations for this to find
+		hits.forEach(hit -> {
+			assert fr.id.equals(hit.get("fundRaiser"));	
+		});
 	}
 }

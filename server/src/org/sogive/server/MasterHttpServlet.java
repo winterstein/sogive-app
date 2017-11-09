@@ -120,10 +120,6 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new BasketServlet();
 				s.process(request);
 				return;
-			case "register":
-				s = new RegisterServlet();
-				s.process(request);
-				return;
 			case "fundraiser":
 				s = new FundraiserServlet();
 				s.process(request);

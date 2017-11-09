@@ -1,9 +1,57 @@
 
+.WizardProgressWidget {
+	display: flex;
 
-.Stage.complete {
-	color: green;
-}
+	.Stage {
+		position: relative;
+		display: inline-block;
 
-.Stage.active {
-	color: red;
+		/* evenly spaced */
+		flex-grow: 1;
+		flex-basis: 0;
+
+		h5 {
+			font-size:18px;
+			transition: opacity 0.5s;
+		}
+		h5.active {
+		}
+		.marker {
+			font-size: 30px;
+			margin:0px;
+			padding:0px;
+		}
+		.line {
+			width: 100%;
+			border: solid 5px;
+			margin-top:-25px;	
+		}
+		.line:first-of-type {
+			border-radius: 5px 0px 5px 0px;
+		}
+		.line:last-of-type {
+			border-radius: 5px 0px 5px 0px;
+		}
+		.below {
+			opacity: 0;
+		}
+	}
+
+	.Stage {
+		color: #66f;
+	}
+	.Stage.complete {
+		color:#005;
+		cursor: pointer;
+	}
+	.Stage.active {
+		color: #005;
+		.above {
+			opacity: 0;
+		}
+		.below {
+			opacity: 1;  		
+		}
+	}
+
 }
