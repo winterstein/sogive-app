@@ -117,7 +117,7 @@ public class DonationServlet extends CrudServlet {
 		// collect the money
 		// TODO Less half-assed handling of Stripe exceptions
 		try {
-			Charge charge = StripePlugin.collect(donation, sa, userObj, ikey);
+			Charge charge = StripePlugin.collect(donation.getTotal(), donation.getId(), sa, userObj, ikey);
 			Log.d("stripe", charge);
 			donation.setPaymentId(charge.getId());
 			donation.setCollected(true);

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.jetty.util.ajax.JSON;
+import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
@@ -80,7 +81,9 @@ public class StripePlugin {
 		}
 	}
 
-	public static Charge collect(Donation donation, StripeAuth sa, Person user, String idempotencyKey) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
+	public static Charge collect(MonetaryAmount amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+			throws Exception
+	{
 		// https://stripe.com/docs/api#create_charge
 		String secretKey = secretKey();
 //		// Charge them!
@@ -88,13 +91,13 @@ public class StripePlugin {
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.token);
-        chargeMap.put("amount", donation.getTotal().getValue100());
-        chargeMap.put("description", donation.getId());
+        chargeMap.put("amount", amount.getValue100());
+        chargeMap.put("description", description); // ??
 //        metadata key value
         chargeMap.put("receipt_email", sa.email);        
-        chargeMap.put("customer", sa.customerId);
+        chargeMap.put("customer", sa.customerId);        
         chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
-        chargeMap.put("currency", Utils.or(donation.getTotal().getCurrency(), "GBP"));
+        chargeMap.put("currency", Utils.or(amount.getCurrency(), "GBP"));
 //        chargeMap.put("email", sa.email);
         
 //        https://stripe.com/docs/api#idempotent_requests
