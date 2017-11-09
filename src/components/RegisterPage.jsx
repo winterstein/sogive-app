@@ -21,6 +21,7 @@ import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
 import WizardProgressWidget from './WizardProgressWidget';
+import PaymentWidget from './PaymentWidget';
 
 /**
  * Sign up for an event!
@@ -42,6 +43,7 @@ const RegisterPage = () => {
 
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
+	console.log('pvbasket', pvbasket);
 	
 	const basketPath = ActionMan.getBasketPath();
 
@@ -74,7 +76,7 @@ const RegisterPage = () => {
 					<NextTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={5} title='Checkout'>					
-					{basket? <NewDonationForm item={basket} /> : null}
+					<CheckoutTab basket={basket} event={event} />
 					<PreviousTab stagePath={stagePath} />
 				</Tab>
 				<Tab eventKey={6} title='Confirmation'>	
@@ -103,7 +105,7 @@ const PreviousTab = ({stagePath}) => {
 	}} >Previous</button>);
 };
 
-const RegisterTicket = ({event,ticketType,basket}) => {
+const RegisterTicket = ({event, ticketType, basket}) => {
 	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
 	let tickets = basket? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
 	return (<div>		
@@ -125,7 +127,6 @@ const RegisterOrLoginTab = () => {
 				<Misc.Icon glyph='tick' className='text-success' />
 				<p>You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
 				<p>Not you? <Button bsSize='small' onClick={() => Login.logout()}>Log out</Button></p>
-				
 			</div>
 		);
 	}
@@ -241,32 +242,49 @@ const CharityChoiceTab = ({basket}) => {
 			}}
 		/>
 
-		Let's reuse SearchResults 
+			Let's reuse SearchResults 
 
-		show some recommended charities
-	</div>);
+			show some recommended charities
+		</div>
+	);
+};
+
+const CheckoutTab = ({basket, event}) => {
+	if (!basket) return <Misc.Loading />;
+
+	const onToken = (token, ...data) => {
+		console.log('CheckoutTab got token back from PaymentWidget:', token);
+		console.log('CheckoutTab got other data:', data);
+	};
+	return <PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} />;
 };
 
 const ConfirmedTicketList = ({basket, event}) => {
 	if ( ! basket) return null;
 	let tickets = Basket.getItems(basket);
-	return (<div className='ConfirmedTicketList'>
-		{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} event={event} /> )}
-	</div>);
+	return (
+		<div className='ConfirmedTicketList'>
+			{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} event={event} /> )}
+		</div>
+	);
 };
 
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! ticket.event) ticket.event = getId(event);
 	let frid = FundRaiser.getIdForTicket(ticket);	
-	return (<div><h3>{ticket.attendeeName}</h3>
-		<a href={'#fundraiser/'+encURI(frid)}
-			onClick={() => {
-				// HACK create!
-				let fritem = FundRaiser.make({id:frid, event:getId(event)});
-				ActionMan.crud(C.TYPES.FundRaiser, frid, C.CRUDACTION.new, fritem);
-			}}
-		>Fund Raiser for {ticket.attendeeName}</a>
-		<pre>{JSON.stringify(ticket)}</pre></div>);
+	return (
+		<div>
+			<h3>{ticket.attendeeName}</h3>
+			<a href={'#fundraiser/'+encURI(frid)}
+				onClick={() => {
+					// HACK create!
+					let fritem = FundRaiser.make({id:frid, event:getId(event)});
+					ActionMan.crud(C.TYPES.FundRaiser, frid, C.CRUDACTION.new, fritem);
+				}}
+			>Fund Raiser for {ticket.attendeeName}</a>
+			<pre>{JSON.stringify(ticket)}</pre>
+		</div>
+	);
 };
 
 export default RegisterPage;

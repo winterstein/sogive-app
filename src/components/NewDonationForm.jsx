@@ -197,7 +197,7 @@ const DonationForm = ({item}) => {
 const AmountSection = ({path}) => (
 	// TODO replace coverCosts checkbox with a slider for optional donation to cover our costs
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />		
+		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />
 		<Misc.PropControl prop='coverCosts' path={path} type='checkbox' label='Cover processing costs' />
 	</div>
 );
@@ -307,7 +307,7 @@ class StripeThingsClass extends Component {
 		} 
 
 		return (
-			<form onSubmit={this.handleSubmit}>
+			<form onSubmit={(event) => this.handleSubmit(event)}>
 				<div className='form-group'>
 					<label>Card number</label>
 					<div className='form-control'>

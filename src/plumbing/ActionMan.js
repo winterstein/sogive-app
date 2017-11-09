@@ -129,7 +129,7 @@ const getBasketPV = (uxid) => {
 	// loading - or maybe we have to make a new basket
 	let pGetMake = pvbasket.promise.fail(err => {
 		console.log("make a new basket");
-		let basket = {'@type': Basket.type, id: bid};
+		let basket = Basket.make({id: bid});
 		DataStore.setData(basket);
 		return basket;
 	});

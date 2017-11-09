@@ -41,3 +41,14 @@ MonetaryAmount.make = (base = {}) => {
 	MonetaryAmount.assIsa(item);
 	return item;
 };
+
+// Will fail if not called on 2 MonetaryAmounts of the same currency
+MonetaryAmount.add = (amount1, amount2) => {
+	MonetaryAmount.assIsa(amount1);
+	MonetaryAmount.assIsa(amount2);
+	assert(amount1.currency === amount2.currency);
+	return MonetaryAmount.make({
+		...amount1,
+		value: amount1.value + amount2.value,
+	});
+};

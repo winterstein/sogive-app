@@ -27,6 +27,22 @@ Basket.getItems = (basket) => {
 	return basket.items;
 };
 
+// Add up the prices of all the items in the basket
+Basket.getTotal = (basket) => {
+	// Using this clumsy forEach instead of a reduce because this makes it clearer
+	// that the total's MonetaryAmount object (thus currency) is based on the first item
+	let total = null;
+	Basket.getItems(basket).forEach((item) => {
+		MonetaryAmount.assIsa(item.price);
+		if (total === null) {
+			total = item.price;
+		} else {
+			total = MonetaryAmount.add(total, item.price);
+		}
+	});
+	return total || MonetaryAmount.make();
+};
+
 Basket.make = (base = {}) => {
 	let ma = {
 		items: [],

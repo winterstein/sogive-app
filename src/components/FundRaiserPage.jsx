@@ -45,7 +45,7 @@ const FundRaiserPage = ({id}) => {
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
 
 	// fetch donations
-	let pvDonations = DataStore.fetch(['list', C.TYPE.Donation, id], () => {
+	let pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
 	// console.warn(pEvent);

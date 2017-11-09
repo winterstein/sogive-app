@@ -2,6 +2,9 @@ package org.sogive.server;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +14,10 @@ import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
+import org.sogive.server.payment.StripePlugin;
 
+import com.stripe.Stripe;
+import com.stripe.model.Token;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -43,6 +49,30 @@ public class DonationServletTest {
 		
 	}
 
+	/**
+	 * Assemble a Map of parameters which can be used in a (test mode) Stripe request to create a fresh token.
+	 * Copy-pasted from Stripe's own test suite.
+	 * @return
+	 */
+	private Map<String, Object> getTokenParams() {
+		// Expiry date can be whatever as long as it's (a) reasonable and (b) no earlier than the current month+year.
+		int expYear = Calendar.getInstance().get(Calendar.YEAR);
+		
+		Map<String, Object> tokenParams = new HashMap<String, Object>();
+		Map<String, Object> cardParams = new HashMap<String, Object>();
+		cardParams.put("number", "4000008260000000"); // Using the UK Visa test card number
+		cardParams.put("exp_month", 12);
+		cardParams.put("exp_year", expYear);
+		cardParams.put("cvc", "666");
+		tokenParams.put("card", cardParams);
+
+		return tokenParams;
+	}
+	
+	private Token getFreshToken(Map<String, Object> params) throws Exception {
+		return Token.create(params);
+	}
+	
 	@Test
 	public void testMakeDonation_ToFundRaiser_LoggedIn() {
 		// fire up a server
@@ -52,6 +82,19 @@ public class DonationServletTest {
 		Person walker = SoGiveTestUtils.doTestWalker();
 		
 		FundRaiser fr = SoGiveTestUtils.getTestFundRaiser();
+		
+		String tokenId = null;
+		String tokenType = null;
+		try {
+			Stripe.apiKey = StripePlugin.secretKey();
+			
+			Token tok = getFreshToken(getTokenParams());
+			tokenId = tok.getId();
+			tokenType = tok.getType();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		
 		// make a save + publish call with test Stripe details
 		
@@ -65,6 +108,7 @@ public class DonationServletTest {
 		don.setVia(new XId(walker.getId()));
 		String did = don.getId();
 		
+		
 		String donj = Dep.get(Gson.class).toJson(don);
 		FakeBrowser fb = new FakeBrowser();
 		fb.setRequestMethod("PUT");
@@ -73,8 +117,8 @@ public class DonationServletTest {
 			String json= fb.getPage(host+"/donation/"+WebUtils.urlEncode(did)+".json", 
 					new ArrayMap(
 							"stripeEmail", "spoonmcguffin@gmail.com",
-							"stripeToken", "TODO", // TODO
-							"stripeTokenType", "TODO", // TODO
+							"stripeToken", tokenId, // TODO
+							"stripeTokenType", tokenType, // TODO
 							"item", donj, 
 							"action", CrudServlet.ACTION_PUBLISH
 							)
