@@ -3,6 +3,7 @@ package org.sogive.data.charity;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
+import com.winterwell.utils.io.Option;
 
 public class SoGiveConfig implements IESRouter {
 
@@ -14,8 +15,10 @@ public class SoGiveConfig implements IESRouter {
 //
 //	public static final String donationIndex = "donation";
 	
+	@Option
 	public int port = 8282;
 	
+	@Option
 	public String youagainApp = "sogive";
 
 	@Override

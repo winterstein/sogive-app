@@ -8,12 +8,15 @@ import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.web.data.XId;
 
+import lombok.Data;
+
 /**
  * Mostly the info is contained in {@link Event} and {@link Person},
  * but not entirely. Hence this data object
  * @author daniel
  *
  */
+@Data
 public class FundRaiser extends AThing {
 	String event;
 	XId oxid;

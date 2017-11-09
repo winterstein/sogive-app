@@ -63,7 +63,7 @@ import com.winterwell.youagain.client.YouAgainClient;
  * TODO list donations
  * 
  * @author daniel
- *
+ * @testedby {@link DonationServletTest}
  */
 public class DonationServlet extends CrudServlet {
 

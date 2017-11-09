@@ -18,5 +18,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/youagain-java-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.depot"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.maths"/>
+	<classpathentry kind="lib" path="/middleware/lombok/lombok.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

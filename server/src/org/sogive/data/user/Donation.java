@@ -17,6 +17,11 @@ import com.winterwell.utils.time.Time;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=true)
 public class Donation extends AThing {
 
 	/**
@@ -25,9 +30,9 @@ public class Donation extends AThing {
 	XId from;
 	
 	/**
-	 * the charity
+	 * the charity id
 	 */
-	XId to;
+	String to;
 	
 	String donorAddress;
 	String donorPostcode;
@@ -109,10 +114,11 @@ public class Donation extends AThing {
 	private List<Output> impacts;
 
 
-	public Donation(XId from, XId to, MonetaryAmount userContribution) {
+	public Donation(XId from, String to, MonetaryAmount userContribution) {
 		Utils.check4null(from, to);
 		this.from = from;
 		this.to = to;
+		assert ! to.contains("@") : to;
 		this.amount = userContribution;
 		// HACK: make an ID to block repeats within a couple of minutes
 		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
@@ -142,7 +148,7 @@ public class Donation extends AThing {
 
 	@Override
 	public String toString() {
-		return "Donation[from=" + from + ", to=" + to + ", total=" + total + ", time=" + date + "]";
+		return "Donation[from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
 	}
 
 	public void setImpacts(List<Output> impacts) {

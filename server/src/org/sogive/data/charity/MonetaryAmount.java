@@ -19,7 +19,7 @@ import com.winterwell.utils.time.Time;
 public class MonetaryAmount extends Thing<MonetaryAmount> {
 	private static final long serialVersionUID = 1L;
 
-	MonetaryAmount() {	
+	public MonetaryAmount() {	
 	}
 	
 	/**
