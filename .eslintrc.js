@@ -30,6 +30,7 @@ module.exports = {
 		"no-param-reassign": "off",
 		"no-plusplus": "off",
 		"no-tabs": "off",
+		"operator-assignment": "warn",
 		"no-underscore-dangle": "off",
 		"no-unused-vars": "warn",
 		"no-useless-constructor": "warn",

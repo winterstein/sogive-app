@@ -16,9 +16,23 @@ function isNumeric(value) {
 Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
 Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not "+obj);
 
+Donation.getTotal = (don) => {
+	// TODO + contributions - fees
+	// TODO test
+	let ttl = don.amount;
+	if (don.contributions) {
+		don.contributions.forEach(money => ttl = ttl+money);
+	}
+	if (don.fees) {
+		don.fees.forEach(money => ttl = ttl-money);
+	}
+	return ttl;
+};
+
 Donation.make = (base = {}) => {
 	let ma = {
 		'@type': C.TYPES.Donation,
+		/* The user's contribution (this is what the user pays; not what the charity recieves) */
 		amount: MonetaryAmount.make(),		
 		...base
 	};

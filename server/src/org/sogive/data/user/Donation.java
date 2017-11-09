@@ -8,19 +8,27 @@ import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.Output;
 
 import com.winterwell.data.AThing;
+import com.winterwell.data.PersonLite;
+import com.winterwell.es.ESPath;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
 public class Donation extends AThing {
 
-	String from;
+	/**
+	 * The user who donated
+	 */
+	XId from;
 	
-	String to;
+	/**
+	 * the charity
+	 */
+	XId to;
 	
-	String donorName;
 	String donorAddress;
 	String donorPostcode;
 	
@@ -71,6 +79,7 @@ public class Donation extends AThing {
 	boolean giftAidOwnMoney;
 	boolean giftAidNoCompensation;
 	
+	PersonLite donor;
 
 	/**
 	 * Our fees + processing fees.
@@ -102,8 +111,8 @@ public class Donation extends AThing {
 
 	public Donation(XId from, XId to, MonetaryAmount userContribution) {
 		Utils.check4null(from, to);
-		this.from = from.toString();
-		this.to = to.toString();
+		this.from = from;
+		this.to = to;
 		this.amount = userContribution;
 		// HACK: make an ID to block repeats within a couple of minutes
 		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
@@ -142,7 +151,8 @@ public class Donation extends AThing {
 
 	public void setGiftAid(String name, String address, String postcode) {
 		Utils.check4null(name, address, postcode);
-		this.donorName = name;
+		//		this.donorName = name; part of the user info
+		this.donor = AppUtils.getCreatePersonLite(from);
 		this.donorAddress = address;
 		this.donorPostcode = postcode;
 	}

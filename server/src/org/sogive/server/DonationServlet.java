@@ -76,7 +76,10 @@ public class DonationServlet extends CrudServlet {
 		super.process(state);
 	}
 	
-	
+	@Override
+	protected void doList(WebRequest state) throws IOException {
+		super.doList(state);
+	}
 		
 	@Override
 	protected QueryBuilder doList2_query(WebRequest state) {
@@ -102,9 +105,11 @@ public class DonationServlet extends CrudServlet {
 		if (user==null && email!=null) {
 			user = new XId(email, "Email");
 		}
+		
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
+		
 		// take payment
 		String ikey = donation.getId();
 		Person userObj = DBSoGive.getUser(user);

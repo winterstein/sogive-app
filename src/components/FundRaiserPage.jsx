@@ -8,6 +8,7 @@ import printer from '../utils/printer.js';
 
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
+import ServerIO from '../plumbing/ServerIO';
 
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import C from '../C';
@@ -42,6 +43,11 @@ const FundRaiserPage = ({id}) => {
 	let type = C.TYPES.FundRaiser;
 	assMatch(type, String);
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
+
+	// fetch donations
+	let pvDonations = DataStore.fetch(['list', C.TYPE.Donation, id], () => {
+		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
+	});
 	// console.warn(pEvent);
 	// if ( ! pEvent.resolved) {
 	// 	return <Misc.Loading />;

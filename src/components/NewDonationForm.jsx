@@ -153,7 +153,10 @@ const DonationForm = ({item}) => {
 		</Misc.SetButton>
 	);
 
-	// TODO use bootstrap dialog classes for the lightbox?? c.f. LoginWidget.jsx ^Dan
+	// TODO the tabs will be replaced by Isabel's Progress Widget
+	// TODO if NGO.isa(item) => no message section
+	// Minor TODO if no gift-aid => no details section
+
 	return (
 		<div>
 			{donateButton}
@@ -193,7 +196,7 @@ const DonationForm = ({item}) => {
 const AmountSection = ({path}) => (
 	// TODO replace coverCosts checkbox with a slider for optional donation to cover our costs
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />
+		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />		
 		<Misc.PropControl prop='coverCosts' path={path} type='checkbox' label='Cover processing costs' />
 	</div>
 );
