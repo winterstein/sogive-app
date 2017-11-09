@@ -8,4 +8,6 @@ import com.winterwell.data.AThing;
 
 public class Basket extends AThing {
 	List<Ticket> items;
+	
+	String charity;
 }

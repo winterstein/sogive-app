@@ -10,6 +10,7 @@ import printer from '../utils/printer.js';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
+import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -204,6 +205,7 @@ const AttendeeDetails = ({i, ticket, path}) => {
 
 const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
+	const bpath = ActionMan.getBasketPath();
 	// const pvCharities = DataStore.fetch([], () => {
 	// 		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
 	// 		.then(function(res) {
@@ -215,7 +217,29 @@ const CharityChoiceTab = ({basket}) => {
 
 	return (<div>
 		<p>Please choose a charity to support.</p>		
-		<Misc.PropControl path={['data',C.TYPES.Basket, getId(basket)]} prop='charity' label='My Charity' />
+		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' 	
+			type='autocomplete'
+			modelValueFromInput={v => v}
+			getItemValue={item => { console.warn("getItemValue", item); return getId(item) || 'no id'; }}
+			renderItem={(item, isHighlighted) => {
+				console.warn("renderItem", item);
+				return (<div className={isHighlighted? 'highlighted autocomplete-option' : 'autocomplete-option'} 
+					style={{ background: isHighlighted? 'lightgray' : 'white' }} 
+				>
+					{item.name || getId(item)}
+				</div>); 
+			}}
+			options={val => {
+				console.warn("fetch options for "+val);
+				// FIXME prefix handling!
+				return ServerIO.search({prefix: val, size:20})
+					.then(res => {
+						console.warn("autocomp", res);
+						let opts = res.cargo && res.cargo.hits; // [{'@id':'oxfam','id':'oxfam'}];
+						return opts;
+					});
+			}}
+		/>
 
 		Let's reuse SearchResults 
 

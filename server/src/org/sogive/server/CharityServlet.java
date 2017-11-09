@@ -133,9 +133,15 @@ public class CharityServlet extends CrudServlet<NGO> {
 		Map map = Gson.fromJSON(json);
 		if (map == null) return super.getId(state);
 		
+		String id = (String) map.get("@id");
+		if ( ! Utils.isBlank(id)) return id;
+		id = (String) map.get("id");
+		if ( ! Utils.isBlank(id)) return id;
+		
+		// deprecated fallback
 		String name = (String) map.get("name");
-		String id = NGO.idFromName(name);
-		if (id == null || id.isEmpty()) {
+		id = name==null? null : NGO.idFromName(name);
+		if (Utils.isBlank(id)) {
 			return super.getId(state);
 		} else {
 			return id;

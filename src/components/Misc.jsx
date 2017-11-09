@@ -16,7 +16,7 @@ import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
-// import Autocomplete from 'react-autocomplete';
+import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId} from '../data/DataClass';
 
@@ -324,7 +324,7 @@ const PropControlMonetaryAmount = ({prop, value, path, proppath,
 		let newVal = parseFloat(e.target.value);
 		value.raw = e.target.value;
 		value.value = newVal;
-		DataStore.setValue(proppath, value, true);
+		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});
 	};
@@ -452,8 +452,6 @@ const PropControlAutocomplete = ({prop, value, options, getItemValue, renderItem
 		onSelect={onChange2} 
   />);
 }; //./autocomplete
-
-const Autocomplete = () => <div>FIXME npm i</div>;
 
 /**
  * A button which sets a DataStore address to a specific value
