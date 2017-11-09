@@ -200,6 +200,17 @@ const FieldClearButton = ({onClick, children}) => (
 );
 
 
+/**
+ * 
+ * @param {
+ * 	results: NGO[]
+ * 	total: ?Number
+ * 	query: ?String
+ * 	from: ?Number
+ * 	all: ?Boolean true => show *all* charities
+ * 	recommended: ?Boolean true => show only recommended
+ * } 
+ */
 const SearchResults = ({ results, total, query, from, all, recommended}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
@@ -488,4 +499,4 @@ const DownloadLink = ({total}) => {
 	);
 };
 
-export {SearchResults};
+export {SearchResults, SearchResult};

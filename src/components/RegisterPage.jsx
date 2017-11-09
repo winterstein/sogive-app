@@ -206,7 +206,15 @@ const AttendeeDetails = ({i, ticket, path}) => {
 const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
-	// const pvCharities = DataStore.fetch([], () => {
+	const pvCharities = DataStore.fetch(['widget', 'RegisterPage', 'charityOptions', basket.charity || '*'], () => {
+		return ServerIO.search({prefix: basket.charity, size:20, recommended: ! basket.charity})
+			.then(res => {
+				console.warn("autocomp", res);
+				let opts = res.cargo && res.cargo.hits; // [{'@id':'oxfam','id':'oxfam'}];
+				return opts;
+			});
+	});
+
 	// 		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
 	// 		.then(function(res) {
 	// 		})
@@ -215,36 +223,25 @@ const CharityChoiceTab = ({basket}) => {
 		// results={charities} total={total} from={from} query={q} 
 		// all={this.state.all} recommended={recommended}
 
+	const pickCharity = (charity) => {
+		console.error("TODO", charity);
+	};
+
 	return (<div>
-		<p>Please choose a charity to support.</p>		
-		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' 	
-			type='autocomplete'
-			modelValueFromInput={v => v}
-			getItemValue={item => { console.warn("getItemValue", item); return getId(item) || 'no id'; }}
-			renderItem={(item, isHighlighted) => {
-				console.warn("renderItem", item);
-				return (<div className={isHighlighted? 'highlighted autocomplete-option' : 'autocomplete-option'} 
-					style={{ background: isHighlighted? 'lightgray' : 'white' }} 
-				>
-					{item.name || getId(item)}
-				</div>); 
-			}}
-			options={val => {
-				console.warn("fetch options for "+val);
-				// FIXME prefix handling!
-				return ServerIO.search({prefix: val, size:20})
-					.then(res => {
-						console.warn("autocomp", res);
-						let opts = res.cargo && res.cargo.hits; // [{'@id':'oxfam','id':'oxfam'}];
-						return opts;
-					});
-			}}
-		/>
+		<p>Please choose a charity to support.</p>
 
-		Let's reuse SearchResults 
+		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' />
 
-		show some recommended charities
+		{pvCharities.value? <SearchResults results={pvCharities.value} 
+			recommended={ ! basket.charity} 
+			cta='Pick this Charity'
+			onPick={(c) => pickCharity(c)} /> 
+			: null}
 	</div>);
+};
+
+const CharityOption = ({charity}) => {
+	return <div onClick={() => DataStore.setValue(ActionMan.getBasketPath(), charity.id)} >{charity.name}</div>;
 };
 
 const ConfirmedTicketList = ({basket, event}) => {
