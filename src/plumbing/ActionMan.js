@@ -124,7 +124,7 @@ const getBasketPV = (uxid) => {
 	}
 	const bid = Basket.idForUxid(uxid);
 	// FIXME we want to say "dont show errors from this"
-	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT});
+	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT, swallow:true});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket
 	let pGetMake = pvbasket.promise.fail(err => {

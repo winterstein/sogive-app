@@ -16,6 +16,7 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Basket from '../data/Basket';
 
 import Misc from './Misc';
 import {nonce,getType} from '../data/DataClass';
@@ -87,7 +88,7 @@ const stagesOK = (formData) => [
  */
 const DonationForm = ({item}) => {
 	assert(item.id, "DonationForm", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item), item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 

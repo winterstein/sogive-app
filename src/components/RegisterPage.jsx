@@ -19,6 +19,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
+import WizardProgressWidget from './WizardProgressWidget';
 
 /**
  * Sign up for an event!
@@ -47,10 +48,14 @@ const RegisterPage = () => {
 		<div className=''>
 			<h2>Register &amp; get tickets for {event.name}</h2>
 
+			<WizardProgressWidget stageNum={stage} 
+				stages={[{title:'Tickets'}, {title:'Register'}, {title:'Your Details'}, {title:'Your Charity'}, {title:'Checkout'}, {title:'Confirmation'}]}			
+			/>
+
 			<Tabs activeKey={stage} onSelect={key => DataStore.setValue(stagePath, key)} id='register-stages'>
 				<Tab eventKey={1} title='Ticket(s)'>					
 					{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
-					<NextTab stagePath={stagePath} disabled={ ! basket || ! basket.items.length} />
+					<NextTab stagePath={stagePath} disabled={ ! basket || !basket.items || ! basket.items.length} />
 				</Tab>
 				<Tab eventKey={2} title='Register'>
 					<RegisterOrLoginTab />

@@ -38,6 +38,7 @@ module.exports = {
 		"prefer-template": "off",
 		"jsx-a11y/img-redundant-alt": "warn",
 		"quote-props": "warn",
+		"no-nested-ternary": "warn",
 		"react/jsx-closing-bracket-location": "warn",
 		"react/jsx-first-prop-new-line": "off",
 		"react/jsx-indent": ["warn", "tab"],
