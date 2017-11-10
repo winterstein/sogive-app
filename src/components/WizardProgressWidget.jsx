@@ -38,7 +38,7 @@ const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 
 const WizardStage = ({stageKey, stageNum, children}) => {
 	if (stageKey !== stageNum) return null;
-	return <div>{children}</div>;
+	return <div className='WizardStage'>{children}</div>;
 };
 
 export {WizardStage};

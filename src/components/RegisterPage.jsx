@@ -59,12 +59,12 @@ const RegisterPage = () => {
 
 			<WizardStage stageKey={0} stageNum={stage}>					
 				{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
-				<NextTab stagePath={stagePath} disabled={ ! basket || !basket.items || ! basket.items.length} />
+				<NextTab stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
 			</WizardStage>
 			<WizardStage stageKey={1} stageNum={stage}>
 				<RegisterOrLoginTab />
 				<PreviousTab stagePath={stagePath} /> 
-				<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} />
+				<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
 			</WizardStage>
 			<WizardStage stageKey={2} stageNum={stage}>
 				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
@@ -74,7 +74,7 @@ const RegisterPage = () => {
 			<WizardStage stageKey={3} stageNum={stage}>					
 				<CharityChoiceTab basket={basket} />
 				<PreviousTab stagePath={stagePath} /> 
-				<NextTab stagePath={stagePath} />
+				<NextTab stagePath={stagePath} completed={ !! basket.charity} />
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>					
 				<CheckoutTab basket={basket} event={event} />
@@ -92,14 +92,14 @@ const RegisterPage = () => {
 	);
 };
 
-const NextTab = ({stagePath, disabled}) => {
-	return (<button onClick={() => {
+const NextTab = ({stagePath, disabled, completed}) => {
+	return (<button className={completed? 'btn btn-primary' : 'btn btn-default'} onClick={() => {
 		let n = DataStore.getValue(stagePath) + 1;
 		DataStore.setValue(stagePath, n);
 	}} disabled={disabled} >Next</button>);
 };
 const PreviousTab = ({stagePath}) => {
-	return (<button onClick={() => {
+	return (<button className='btn btn-default' onClick={() => {
 		let n = DataStore.getValue(stagePath) - 1;
 		DataStore.setValue(stagePath, n);
 	}} >Previous</button>);
