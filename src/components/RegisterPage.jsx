@@ -142,33 +142,13 @@ const RegisterOrLoginTab = () => {
 const WalkerDetailsTab = ({basket, basketPath}) => {
 	if ( ! basket) return null;
 	assert(basketPath);
-	// ??do we want to sort?? Probably the first item is the ticket for the current user.
-	// Sort all tickets in basket & list in format:
-	// Ticket Type A
-	// - Attendee 1
-	// - Attendee 2
-	// Ticket Type B
-	// - Attendee 1
-	let items = Basket.getItems(basket).sort((a, b) => a.name > b.name);
+	// No sort on Tickets -- so that the editor can adjust ordering (eg by name / kind, alphabetical, or walk-length, or whatever)
+	let items = Basket.getItems(basket); //.sort((a, b) => a.name > b.name);
+	if ( ! items.length) return null;
+	let ticket0 = items[0];
 	let wdetails = items.map((ticket, ti, tickets) => {
 		const ticketPath = [...basketPath, 'items', ti];
-
-		const prevTicket = (ti === 0) ? null : tickets[ti-1];
-		if (!prevTicket || prevTicket.id !== ticket.id) {
-			ticket.number = 1;
-		} else if (prevTicket && prevTicket.number && prevTicket.id === ticket.id) {
-			ticket.number = prevTicket.number + 1;
-		}
-		const header = (ticket.number === 1) ? (
-			<h3>{ticket.name}</h3>
-		) : null;
-
-		return (
-			<div key={ti}>
-				{header}
-				<AttendeeDetails ticket={ticket} i={ti} path={ticketPath} />
-			</div>
-		);
+		return (<AttendeeDetails key={ti} ticket={ticket} i={ti} path={ticketPath} />);
 	});
 	return <div>{wdetails}</div>;
 };
@@ -179,12 +159,6 @@ const AttendeeDetails = ({i, ticket, path}) => {
 	const sameAddressAsFirst = i > 0 ? (
 		<Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' />
 	) : null;
-
-	const isSame = DataStore.getValue([...path, 'sameAsFirst']);
-
-	const address = isSame ? null : (
-		<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
-	);
 	// first ticket - fill in from user details
 	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn()) {
 		const user = Login.getUser();
@@ -194,13 +168,14 @@ const AttendeeDetails = ({i, ticket, path}) => {
 		DataStore.setValue(path, ticket, false);
 	}
 	return (
-		<Well>
+		<div className='AttendeeDetails'>
+			<h3 className='name'>{ticket.name}</h3><h4>{ticket.subtitle}</h4><h4 className='kind'>{ticket.kind}</h4>			
 			<h4>{noun} <span>{i+1}</span></h4>
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 			{ sameAddressAsFirst }
-			{ address }
-		</Well>
+			{ ticket.sameAsFirst? null : <Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' /> }
+		</div>
 	);
 };
 

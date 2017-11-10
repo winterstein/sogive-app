@@ -123,7 +123,7 @@ const getBasketPV = (uxid) => {
 		uxid = Login.getId() || Login.getTempId();		
 	}
 	const bid = Basket.idForUxid(uxid);
-	// FIXME we want to say "dont show errors from this"
+	// Basket is normally DRAFT (PUBLISHED = paid for)
 	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT, swallow:true});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket

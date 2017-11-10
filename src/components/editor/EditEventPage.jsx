@@ -47,6 +47,19 @@ const EventEditor = ({id}) => {
 		DataStore.update();
 	};
 
+	/**
+	 * alter the ticket order 
+	 */
+	const move = (i, di) => {
+		// swap
+		let ta = item.ticketTypes[i];
+		let tb = item.ticketTypes[i+di];
+		assert(ta && tb, "EditEventPage.js - move");
+		item.ticketTypes[i] = tb;
+		item.ticketTypes[i+di] = ta;
+		DataStore.update();
+	};
+
 	const path = ['data', type, id];
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
@@ -64,7 +77,7 @@ const EventEditor = ({id}) => {
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={'tt'+i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} />) 
+				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} />) 
 				: <p>No tickets yet!</p>
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
@@ -74,17 +87,21 @@ const EventEditor = ({id}) => {
 	</div>);
 };
 
-const TicketTypeEditor = ({ticketType, path, event}) => {
+const TicketTypeEditor = ({ticketType, path, event, i, move}) => {
 	const removeTicketType = () => {
 		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
 		DataStore.update();
 	};
 	return (<div className='well'>
 		<small>{ticketType.id}</small>
-		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' />
+		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
+		<Misc.PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
+		<Misc.PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
 		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
-		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='eg Walker' />
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
+		<button disabled={i===0} className='btn btn-default' onClick={move(i, -1)}><Misc.Icon glyph='up' />up</button>
+		<button className='btn btn-default' onClick={move(i, 1)}><Misc.Icon glyph='up' />down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };

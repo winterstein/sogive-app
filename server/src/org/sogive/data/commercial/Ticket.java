@@ -8,6 +8,14 @@ import lombok.Data;
 
 @Data
 public class Ticket extends AThing {
+	
+	
+	/** e.g. "a gentle 1o mile walk" 
+	NB: name is the title, e.g. "Wee Wander" */
+	String subtitle;
+
+	/** Adult / Child */
+	String kind;
 
 	MonetaryAmount price;
 	String description;
@@ -17,6 +25,7 @@ public class Ticket extends AThing {
 	String attendeeName;
 	String attendeeEmail;
 	String attendeeAddress;
+
 
 	@Override
 	public String toString() {

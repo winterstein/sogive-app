@@ -11,6 +11,8 @@ export default Basket;
 
 // To get a Basket, use ActionMan.getBasketPV
 
+// Basket is normally DRAFT (PUBLISHED = paid for)
+
 Basket.type = C.TYPES.Basket;
 
 Basket.isa = (obj) => isa(obj, Basket.type);
