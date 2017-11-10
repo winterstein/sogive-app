@@ -15,8 +15,8 @@ const EditFundRaiserPage = () => {
 
 	// which event?	
 	let path = DataStore.getValue(['location','path']);
-	let eventId = path[1];
-	if (eventId) return <FundRaiserEditor id={eventId} />;
+	let id = path[1];
+	if (id) return <FundRaiserEditor id={id} />;
 
 	return (
 		<div className=''>

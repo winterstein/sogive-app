@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */ // Don't complain about more than one React class in the file
 import React from 'react';
 import _ from 'lodash';
-import { assert } from 'sjtest';
+import { assert, assMatch } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
 import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
@@ -200,7 +200,16 @@ const FieldClearButton = ({onClick, children}) => (
 );
 
 
-const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick}) => {
+/**
+ * 
+ * @param {
+* 		results: {!NGO[]} the charities
+ * 	CTA: {?ReactComponent} allows the Read More button to be replaced
+ * 	onPick: {?Function} charity => 
+ * 	tabs {Boolean|String[]}
+ * }
+ */
+const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick, tabs, download}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -222,11 +231,11 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 
 	return (
 		<div className='SearchResults'>
-			<div className='top-tab'>{resultsForText}</div>
+			{tabs !== false? <div className='top-tab'>{resultsForText}</div> : null}
 			{recommendedNote}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
-				{ _.map(ready, item => <SearchResult key={getId(item)} item={item} />) }
+				{ _.map(ready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				{ unready.length ? (
 					<div className='unready-results row'>
 						<h3>Analysis in progress</h3>
@@ -236,15 +245,14 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
 			</div>
-			<div className='col-md-12'>
-				<DownloadLink total={total} />
-			</div>
+			{download !== false? <div className='col-md-12'><DownloadLink total={total} /></div> : null}
 		</div>
 	);
 }; //./SearchResults
 
 
 const SearchResultsNum = ({results, total, query}) => {
+	if (total===undefined) total = results.length; // fallback
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
 	if (loading) return <div className='num-results'><Misc.Loading /></div>;
 	if (results.length || query) {
@@ -265,8 +273,8 @@ const ellipsize = (string, length) => {
 };
 
 
-const DefaultCTA = ({charityUrl, onClick}) => {
-	return (<a href={charityUrl} onClick={onClick} className='read-more'>
+const DefaultCTA = ({itemUrl, onClick, item}) => {
+	return (<a href={itemUrl} onClick={onClick} className='read-more btn btn-default'>
 				Read more
 		<img className='read-more-caret' src='/img/read-more-caret.svg' />
 	</a>);
@@ -275,7 +283,7 @@ const DefaultCTA = ({charityUrl, onClick}) => {
 /**
  * {
  * 	item: {!NGO} the charity
- * 	CTA: {?ReactComponent} allows the Read More button to be replaced
+ * 	CTA: {?ReactComponent: {itemUrl, onClick, item} => jsx} allows the Read More button to be replaced
  * }
  */
 const SearchResult = ({ item, CTA, onPick }) => {
@@ -336,7 +344,14 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	*/
 
 	/** if onPick is defined, then stop the click and call onPick */
-	const onClick = e => onPick && stopEvent(e) && onPick(item);
+	let onClick = null;
+	if (onPick) {
+		assMatch(onPick, Function);
+		onClick = e => {
+			stopEvent(e);
+			onPick(item);
+		};
+	}
 	
 	const impactExplanation = impact ? (
 		<div className='impact col-md-6 hidden-xs'>
@@ -347,14 +362,14 @@ const SearchResult = ({ item, CTA, onPick }) => {
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
 			</div>
-			<CTA charityUrl={charityUrl} onClick={onClick} item={item} />
+			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
 	
 	const noImpact = !impact ? (
 		<div className='noImpact col-md-6 hidden-xs'>
 			Impact information is not available for this charity.
-			<CTA charityUrl={charityUrl} onClick={onClick} item={item} />
+			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
 

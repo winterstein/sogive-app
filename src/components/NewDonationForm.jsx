@@ -108,7 +108,7 @@ const DonationForm = ({item}) => {
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
-	let pDonation = ActionMan.getDonationDraft({to: item.id});
+	let pDonation = ActionMan.getDonationDraft({item});
 	let donationDraft = pDonation.value;
 	if ( ! donationDraft) {
 		// if the promise is running, wait for it before making a new draft
