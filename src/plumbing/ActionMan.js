@@ -175,7 +175,7 @@ const getBasketPath = (uxid) => {
  */
 ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
 	assMatch(charity || fundRaiser, String);
-	let to = charity? charity : null;
+	let to = charity;
 	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
 	return ServerIO.load('/donation/list.json', {data: {to, q}, swallow: true});
 };
@@ -186,7 +186,7 @@ ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
 const getDonationDraft = ({item, charity, fundRaiser}) => {
 	if (item) {
 		if (NGO.isa(item)) charity = getId(item);
-		if (FundRaiser.isa(item)) fundRaiser = getId(fundRaiser);
+		if (FundRaiser.isa(item)) fundRaiser = getId(item);
 	}
 	assMatch(charity || fundRaiser, String);
 	// use a pseudo id to keep it in the local DataStore
