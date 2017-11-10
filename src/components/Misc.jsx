@@ -403,6 +403,11 @@ Misc.RelativeDate = ({date, ...rest}) => {
 	return <span title={absoluteDate} {...rest}>{count} {counter} {relation}</span>;
 };
 
+const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+Misc.LongDate = ({date}) => {
+	return `${weekdays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+};
 
 /**
  * wraps the reactjs autocomplete widget

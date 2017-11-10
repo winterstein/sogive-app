@@ -48,12 +48,18 @@ const RegisterPage = () => {
 	if (!basket) {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
+
+	const longdate = Misc.LongDate({date:(new Date(event.date))});
 	
 	const basketPath = ActionMan.getBasketPath();
-
 	return (
 		<div className=''>
-			<h2>Register &amp; get tickets for {event.name}</h2>
+			<img className='register-banner' src={event.bannerImage} />
+			<h2 className='register-masthead'>
+				<span className='event-name'>{event.name}</span>
+				&nbsp;
+				<span className='event-date'>{longdate}</span>
+			</h2>
 
 			<WizardProgressWidget stageNum={stage} 
 				stagePath={stagePath}
@@ -61,28 +67,38 @@ const RegisterPage = () => {
 					{title:'Checkout'}, {title:'Confirmation'}]}			
 			/>
 
-			<WizardStage stageKey={0} stageNum={stage}>					
-				{event.ticketTypes.map((tt,ti) => <RegisterTicket key={ti} event={event} ticketType={tt} basket={basket} />)}
-				<NextTab stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+			<WizardStage stageKey={0} stageNum={stage}>
+				<TicketTypes event={event} basket={basket} />
+				<div className='nav-buttons'>
+					<NextTab stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+				</div>
 			</WizardStage>
 			<WizardStage stageKey={1} stageNum={stage}>
 				<RegisterOrLoginTab />
-				<PreviousTab stagePath={stagePath} /> 
-				<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+				<div className='nav-buttons'>
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+				</div>
 			</WizardStage>
 			<WizardStage stageKey={2} stageNum={stage}>
 				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
-				<PreviousTab stagePath={stagePath} /> 
-				<NextTab stagePath={stagePath} />
+				<div className='nav-buttons'>
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} />
+				</div>
 			</WizardStage>
 			<WizardStage stageKey={3} stageNum={stage}>					
 				<CharityChoiceTab basket={basket} />
-				<PreviousTab stagePath={stagePath} /> 
-				<NextTab stagePath={stagePath} completed={ !! basket.charity} />
+				<div className='nav-buttons'>
+					<PreviousTab stagePath={stagePath} /> 
+					<NextTab stagePath={stagePath} completed={ !! basket.charity} />
+				</div>
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>					
 				<CheckoutTab basket={basket} event={event} />
-				<PreviousTab stagePath={stagePath} />
+				<div className='nav-buttons'>
+					<PreviousTab stagePath={stagePath} />
+				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
 				ticket list, receipt, print button
@@ -96,32 +112,104 @@ const RegisterPage = () => {
 	);
 };
 
-const NextTab = ({stagePath, disabled, completed}) => {
-	return (<button className={completed? 'btn btn-primary' : 'btn btn-default'} onClick={() => {
-		let n = DataStore.getValue(stagePath) + 1;
-		DataStore.setValue(stagePath, n);
-	}} disabled={disabled} >Next</button>);
+const NextTab = ({completed, stagePath, ...rest}) => {
+	const className = completed ? 'btn btn-primary' : 'btn btn-default';
+	return <NextPrevTab stagePath={stagePath} className={className} diff={1} text={'Next'} {...rest} />;
 };
-const PreviousTab = ({stagePath}) => {
-	return (<button className='btn btn-default' onClick={() => {
-		let n = DataStore.getValue(stagePath) - 1;
+const PreviousTab = ({stagePath, ...rest}) => {
+	return <NextPrevTab stagePath={stagePath} className='btn btn-default' diff={-1} text={'Previous'} {...rest} />;
+};
+
+const NextPrevTab = ({stagePath, diff, text, ...rest}) => {
+	const changeTab = () => {
+		let n = DataStore.getValue(stagePath) + diff;
 		DataStore.setValue(stagePath, n);
-	}} >Previous</button>);
+	};
+
+	return (
+		<button onClick={changeTab} {...rest} >
+			{text}
+		</button>
+	);
+};
+
+const TicketTypes = ({event, basket}) => {
+	const nameToTickets = {};
+	event.ticketTypes.forEach(tt => {
+		const ticketsForName = nameToTickets[tt.name];
+		if (ticketsForName && ticketsForName.types) {
+			ticketsForName.types.push(tt);
+		} else {
+			nameToTickets[tt.name] = {
+				...tt, // we'll want name, desc, etc - just use the first ticket type as our source of truth
+				types: [tt]
+			};
+		}
+	});
+
+	const ticketGroups = Object.entries(nameToTickets).map(([name, info]) => (
+		<TicketGroup basket={basket} {...info} />
+	));
+
+	return (
+		<div>
+			{ticketGroups}
+		</div>
+	);
+
+};
+
+const TicketGroup = ({name, description, types, basket}) => {
+	return (
+		<div className='ticket-group'>
+			<div className='ticket-group-header'>
+				<div className='name'>{name}</div>
+				<div className='desc'>{description}</div>
+			</div>
+			<ul className='ticket-group-types'>
+				{ types.map(type => <RegisterTicket ticketType={type} basket={basket} />) }
+			</ul>
+		</div>
+	);
 };
 
 const RegisterTicket = ({event, ticketType, basket}) => {
 	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
-	let tickets = basket? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
-	return (<div>		
-		<button onClick={() => ActionMan.addToBasket(basket, ticketType)} disabled={ ! basket }>
-			{ticketType.name} <Misc.Money amount={ticketType.price} />
-		</button>
-		{tickets.length? 
-			<div>{tickets.length} <button title='Cancel a ticket' onClick={() => ActionMan.removeFromBasket(basket, tickets[tickets.length-1])} >
-				<Misc.Icon glyph='minus' />
-			</button></div> 
-			: null}
-	</div>);
+	let tickets = basket ? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
+
+	const removeTicketAction = () => ActionMan.removeFromBasket(basket, tickets[tickets.length-1]);
+	const addTicketAction = () => ActionMan.addToBasket(basket, ticketType);
+
+	const addRemove = tickets.length ? (
+		<div className='add-remove-controls'>
+			<button className='add-remove-ticket' onClick={removeTicketAction}><Misc.Icon glyph='minus' /></button>
+			<span className='ticket-count'>{tickets.length}</span>
+			<button className='add-remove-ticket' onClick={addTicketAction}><Misc.Icon glyph='plus' /></button>
+		</div>
+	) : (
+		<button className='add-first-ticket' onClick={addTicketAction}>Add</button>
+	);
+
+	const {name, description, price, attendeeIcon} = ticketType;
+
+	return (
+		<li className='ticket-type'>
+			<div className='decoration'>
+				<img className='attendee-icon' src={attendeeIcon} />
+			</div>
+			<div className='info'>
+				<div className='top-line'>
+					<div className='type-name'>{name}</div>
+					<div className='type-price'><Misc.Money amount={price} /></div>
+				</div>
+				<div className='type-restrictions'>Open to humans only</div>
+				<div className='price-breakdown'>we throw 100% of your money in the lake</div>
+			</div>
+			<div className='controls'>
+				{addRemove}
+			</div>
+		</li>
+	);
 };
 
 const RegisterOrLoginTab = () => {

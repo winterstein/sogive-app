@@ -1,0 +1,134 @@
+@import "positioning.less";
+@import "colours.less";
+
+@header-line-colour: #f9ecdd;
+@add-remove-button-colour: #deb686;
+@type-bg-colour: #dfe0e2;
+@type-line-colour: #cdced2;
+@pale-blue: #80bde7;
+@masthead-bg: #676974;
+
+#register {
+	max-width: 800px;
+	margin: auto;
+	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+
+	.register-banner {
+		width: 100%;
+	}
+
+	.register-masthead {
+		background-color: @masthead-bg;
+		padding: 0.25em;
+		text-align: center;
+		.event-name {
+			color: white;
+		}
+		.event-date {
+			color: @pale-blue;
+		}
+	}
+
+	.nav-buttons {
+		text-align: center;
+	}
+
+	.ticket-group {
+		.ticket-group-header {
+			border-bottom: 5px solid @header-line-colour;
+			position: relative;
+	
+			.name, .desc {
+				display: inline-block;
+				position: relative;
+				width: 50%;
+			}
+			.name {
+				font-size: 1.5em;
+				text-align: left;
+				bottom: -0.4em;
+			}
+			.desc {
+				font-size: 1.2em;
+				text-align: right;
+				bottom: -0.5em;
+			}
+		}
+	
+		.ticket-group-types {
+			list-style-type: none;
+			position: relative;
+			padding: 0;
+
+			.ticket-type {
+				display: flex;
+				justify-content: space-between;
+
+				margin: 1em;
+				.decoration, .info, .controls {
+					display: inline-block;
+				}
+				.decoration {
+					background: @type-bg-colour;
+					width: 10em;
+					background-image: url(/img/ticket-corner.png);
+					background-repeat: no-repeat;
+					background-position-x: left;
+					background-position-y: bottom;
+					background-size: contain;
+					.attendee-icon {
+						width: 6em;
+						margin: 1em;
+					}
+				}
+				.decoration, .controls {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+				.info, .controls {
+					background: @type-bg-colour;
+				}
+				.info {
+					flex-grow: 1;
+					.top-line {
+						display: flex;
+						justify-content: space-between;
+						.type-name, .type-price {
+							font-size: 1.25em;
+						}
+					}
+				}
+				.controls {
+					width: 10em;
+					border-left: 2px solid @type-line-colour;
+					text-align: center;
+					.add-remove-controls {
+						display: flex;
+					}
+
+					.add-first-ticket, .add-remove-ticket, .ticket-count {
+						height: 2em;
+						font-size: 1.25em;
+						line-height: 2em;
+					}
+					.add-first-ticket, .add-remove-ticket {
+						background-color: @add-remove-button-colour;
+						box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+						border: none;
+					}
+					.add-first-ticket {
+						width: 6em;
+					}
+					.add-remove-ticket, .ticket-count{
+						width: 2em;
+					}
+					.ticket-count {
+						background-color: white;
+						display: inline-block;
+					}
+				}
+			}
+		}
+	}
+}

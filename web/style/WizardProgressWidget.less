@@ -1,3 +1,6 @@
+@import 'colours.less';
+
+@pale-blue: #80bde7;
 
 .WizardProgressWidget {
 	display: flex;
@@ -11,26 +14,21 @@
 		flex-basis: 0;
 
 		h5 {
-			font-size:18px;
+			font-size: 18px;
 			transition: opacity 0.5s;
 		}
 		h5.active {
 		}
 		.marker {
 			font-size: 30px;
-			margin:0px;
-			padding:0px;
+			margin: 0px;
+			padding: 0px;
 		}
 		.line {
 			width: 100%;
-			border: solid 5px;
-			margin-top:-25px;	
-		}
-		.line:first-of-type {
-			border-radius: 5px 0px 5px 0px;
-		}
-		.line:last-of-type {
-			border-radius: 5px 0px 5px 0px;
+			border-top: solid 3px;
+			border-bottom: solid 3px;
+			margin-top: -23px;	
 		}
 		.below {
 			opacity: 0;
@@ -38,7 +36,7 @@
 	}
 
 	.Stage {
-		color: #66f;
+		color: @pale-blue;
 	}
 	.Stage.complete {
 		color:#005;

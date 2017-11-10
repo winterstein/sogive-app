@@ -72,8 +72,8 @@ const EventEditor = ({id}) => {
 
 		<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
 
-		<Misc.PropControl path={['data', type, id]} prop='img' item={item} label='Square Logo Image' type='img' />
-		<Misc.PropControl path={['data', type, id]} prop='imgBanner' item={item} label='Banner Image' type='img' />
+		<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='img' />
+		<Misc.PropControl path={['data', type, id]} prop='bannerImage' item={item} label='Banner Image' type='img' />
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
@@ -100,6 +100,7 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
+		<Misc.PropControl type='img' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>

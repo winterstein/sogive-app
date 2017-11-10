@@ -21,6 +21,8 @@ public class Ticket extends AThing {
 	String description;
 	// i.e. "Walker"
 	String attendeeNoun;
+	String attendeeIcon;
+	
 	
 	String attendeeName;
 	String attendeeEmail;

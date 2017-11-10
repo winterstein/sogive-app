@@ -15,5 +15,9 @@ import com.winterwell.data.AThing;
 public class Event extends AThing {
 	
 	List<Ticket> ticketTypes;
+	String date;
+	Integer matchedFunding;
+	String logoImage;
+	String bannerImage;
 	
 }
