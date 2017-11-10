@@ -77,7 +77,7 @@ const EventEditor = ({id}) => {
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} />) 
+				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />) 
 				: <p>No tickets yet!</p>
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
@@ -87,7 +87,7 @@ const EventEditor = ({id}) => {
 	</div>);
 };
 
-const TicketTypeEditor = ({ticketType, path, event, i, move}) => {
+const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	const removeTicketType = () => {
 		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
 		DataStore.update();
@@ -100,8 +100,8 @@ const TicketTypeEditor = ({ticketType, path, event, i, move}) => {
 		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
-		<button disabled={i===0} className='btn btn-default' onClick={move(i, -1)}><Misc.Icon glyph='up' />up</button>
-		<button className='btn btn-default' onClick={move(i, 1)}><Misc.Icon glyph='up' />down</button>
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };

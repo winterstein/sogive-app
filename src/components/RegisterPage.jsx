@@ -44,6 +44,10 @@ const RegisterPage = () => {
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
 	console.log('pvbasket', pvbasket);
+
+	if (!basket) {
+		return <Misc.Loading text='Retrieving your basket...' />;
+	}
 	
 	const basketPath = ActionMan.getBasketPath();
 
