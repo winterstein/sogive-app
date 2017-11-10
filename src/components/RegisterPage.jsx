@@ -157,7 +157,7 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 	return <div>{wdetails}</div>;
 };
 
-const AttendeeDetails = ({i, ticket, path, ticket0}) => {
+const AttendeeDetails = ({i, ticket, path, ticket0}) => {	
 	assert(DataStore.getValue(path) === null || DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
 	// first ticket - fill in from user details
@@ -168,8 +168,10 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 		console.log("set name,email from Login", ticket, user.xid);
 		DataStore.setValue(path, ticket, false);
 	}
-	// other tickets - fill in from first ticket
-	if (i>0 && ticket.sameAsFirst) {
+	// other tickets - fill in from first ticket (default to "yes please")
+	if (i>0 && ticket.sameAsFirst===undefined) ticket.sameAsFirst = true;
+	let sameAsFirst = i>0 && ticket.sameAsFirst;
+	if (sameAsFirst) {
 		ticket.attendeeAddress = ticket0.attendeeAddress;
 		ticket.team = ticket0.team;
 	}
@@ -180,7 +182,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' /> : null}
-			{ ticket.sameAsFirst && i !== 0 ? null : 
+			{ sameAsFirst? null : 
 				<div>
 					<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
 					<TeamControl ticket={ticket} path={path} />
