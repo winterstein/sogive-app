@@ -10,6 +10,7 @@ import ServerIO from './ServerIO';
 import DataStore from './DataStore';
 import {getId, getType} from '../data/DataClass';
 import NGO from '../data/charity/NGO';
+import FundRaiser from '../data/charity/FundRaiser';
 import Project from '../data/charity/Project';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
@@ -169,16 +170,28 @@ const getBasketPath = (uxid) => {
 	return ['data', C.TYPES.Basket, bid];
 };
 
-
-ServerIO.getDonationDraft = ({to, swallow}) => {
-	assMatch(to, String);
-	return ServerIO.load('/donation/list.json', {data: {to}, swallow});
+/**
+ * TODO handle charity or fundraiser
+ */
+ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
+	assMatch(charity || fundRaiser, String);
+	let to = charity? charity : null;
+	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
+	return ServerIO.load('/donation/list.json', {data: {to, q}, swallow: true});
 };
 
-const getDonationDraft = ({to}) => {
+/**
+ * TODO handle charity or fundraiser
+ */
+const getDonationDraft = ({item, charity, fundRaiser}) => {
+	if (item) {
+		if (NGO.isa(item)) charity = getId(item);
+		if (FundRaiser.isa(item)) fundRaiser = getId(fundRaiser);
+	}
+	assMatch(charity || fundRaiser, String);
 	// use a pseudo id to keep it in the local DataStore
-	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+to], () => {
-		return ServerIO.getDonationDraft({to, swallow:true})
+	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+(charity || fundRaiser)], () => {
+		return ServerIO.getDonationDraft({charity, fundRaiser})
 			.then(res => {
 				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
 				let cargo = res.cargo;			

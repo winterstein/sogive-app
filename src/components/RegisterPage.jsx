@@ -13,6 +13,7 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
+import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
@@ -199,48 +200,48 @@ const TeamControl = ({ticket, path}) => {
 const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
-	// const pvCharities = DataStore.fetch([], () => {
-	// 		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
-	// 		.then(function(res) {
-	// 		})
-	// 	}
-	// );
-		// results={charities} total={total} from={from} query={q} 
+	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', basket.charity || '*'], 
+		() => {
+			return ServerIO.search({prefix: basket.charity, size: 20, recommended: !! basket.charity})
+				.then(res => {
+					console.warn("yeh :)", res);
+					let hits = res.cargo && res.cargo.hits;
+					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
+					return hits;
+				});
+		}
+	);
+	// keep previous results around, so they're stable whilst the user is typing
+	let results = pvCharities.resolved? pvCharities.value 
+		: DataStore.getValue(['widget','RegisterPage','pickCharityPrevious']);
 		// all={this.state.all} recommended={recommended}
+
+	const onPick = charity => {
+		NGO.assIsa(charity);
+		DataStore.setValue(bpath.concat('charity'), getId(charity));
+	};
 
 	return (<div>
 		<p>
 			Please choose a charity to support.
-		</p>
-		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' 	
-			type='autocomplete'
-			modelValueFromInput={v => v}
-			getItemValue={item => { console.warn("getItemValue", item); return getId(item) || 'no id'; }}
-			renderItem={(item, isHighlighted) => {
-				console.warn("renderItem", item);
-				return (<div className={isHighlighted? 'highlighted autocomplete-option' : 'autocomplete-option'} 
-					style={{ background: isHighlighted? 'lightgray' : 'white' }} 
-				>
-					{item.name || getId(item)}
-				</div>); 
-			}}
-			options={val => {
-				console.warn("fetch options for "+val);
-				// FIXME prefix handling!
-				return ServerIO.search({prefix: val, size:20})
-					.then(res => {
-						console.warn("autocomp", res);
-						let opts = res.cargo && res.cargo.hits; // [{'@id':'oxfam','id':'oxfam'}];
-						return opts;
-					});
-			}}
-		/>
+		</p>		
+		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' />
+		<SearchResults results={results} query={basket.charity} recommended={ ! basket.charity} 
+			onPick={onPick} CTA={PickCTA} tabs={false} download={false} />
+	</div>);
+};
 
-			Let's reuse SearchResults 
-
-			show some recommended charities
-		</div>
-	);
+const PickCTA = ({item, onClick}) => {
+	const bpath = ActionMan.getBasketPath();
+	const basket = DataStore.getValue(bpath);
+	if (basket.charity===getId(item)) {
+		return (<div className='read-more btn btn-default active'>
+			<Misc.Icon glyph='check' /> Selected
+		</div>);
+	}
+	return (<button onClick={onClick} className='read-more btn btn-default'>
+		<Misc.Icon glyph='unchecked' /> Select
+	</button>);
 };
 
 const CheckoutTab = ({basket, event}) => {
