@@ -146,19 +146,16 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 	let items = Basket.getItems(basket); //.sort((a, b) => a.name > b.name);
 	if ( ! items.length) return null;
 	let ticket0 = items[0];
-	let wdetails = items.map((ticket, ti, tickets) => {
+	let wdetails = items.map((ticket, ti) => {
 		const ticketPath = [...basketPath, 'items', ti];
-		return (<AttendeeDetails key={ti} ticket={ticket} i={ti} path={ticketPath} />);
+		return (<AttendeeDetails key={ti} ticket={ticket} i={ti} path={ticketPath} ticket0={ticket0} />);
 	});
 	return <div>{wdetails}</div>;
 };
 
-const AttendeeDetails = ({i, ticket, path}) => {
+const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	assert(DataStore.getValue(path) === null || DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
-	const sameAddressAsFirst = i > 0 ? (
-		<Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' />
-	) : null;
 	// first ticket - fill in from user details
 	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn()) {
 		const user = Login.getUser();
@@ -167,16 +164,30 @@ const AttendeeDetails = ({i, ticket, path}) => {
 		console.log("set name,email from Login", ticket, user.xid);
 		DataStore.setValue(path, ticket, false);
 	}
+	// other tickets - fill in from first ticket
+	if (i>0 && ticket.sameAsFirst) {
+		ticket.attendeeAddress = ticket0.attendeeAddress;
+		ticket.team = ticket0.team;
+	}
 	return (
 		<div className='AttendeeDetails'>
 			<h3 className='name'>{ticket.name}</h3><h4>{ticket.subtitle}</h4><h4 className='kind'>{ticket.kind}</h4>			
 			<h4>{noun} <span>{i+1}</span></h4>
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-			{ sameAddressAsFirst }
-			{ ticket.sameAsFirst? null : <Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' /> }
+			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' /> : null}
+			{ ticket.sameAsFirst && i !== 0 ? null : 
+				<div>
+					<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+					<TeamControl ticket={ticket} path={path} />
+				</div>
+			}
 		</div>
 	);
+};
+
+const TeamControl = ({ticket, path}) => {
+	return <Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Team' />;
 };
 
 const CharityChoiceTab = ({basket}) => {

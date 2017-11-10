@@ -25,7 +25,7 @@ public class Ticket extends AThing {
 	String attendeeName;
 	String attendeeEmail;
 	String attendeeAddress;
-
+	String team;
 
 	@Override
 	public String toString() {

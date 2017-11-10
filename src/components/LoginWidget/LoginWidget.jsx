@@ -52,7 +52,7 @@ const SocialSignin = ({verb, services}) => {
 					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
 				</button>
 			</div>
-			<p><small>We will never share your data, and will never post to social media without your consent.
+			<p><small>We will never share your data or post to social media without your consent.
 				You can read our <a href='https://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
 		</div>
