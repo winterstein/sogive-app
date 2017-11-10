@@ -192,7 +192,9 @@ const CharityChoiceTab = ({basket}) => {
 		// all={this.state.all} recommended={recommended}
 
 	return (<div>
-		<p>Please choose a charity to support.</p>		
+		<p>
+			Please choose a charity to support.
+		</p>
 		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' 	
 			type='autocomplete'
 			modelValueFromInput={v => v}

@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
-import {uid, encURI, modifyHash} from 'wwutils';
+import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
 
 import ServerIO from '../plumbing/ServerIO';
@@ -200,7 +200,7 @@ const FieldClearButton = ({onClick, children}) => (
 );
 
 
-const SearchResults = ({ results, total, query, from, all, recommended}) => {
+const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -233,7 +233,7 @@ const SearchResults = ({ results, total, query, from, all, recommended}) => {
 						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
 					</div>
 				) : null}
-				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} />) }
+				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
 			</div>
 			<div className='col-md-12'>
@@ -265,7 +265,21 @@ const ellipsize = (string, length) => {
 };
 
 
-const SearchResult = ({ item }) => {
+const DefaultCTA = ({charityUrl, onClick}) => {
+	return (<a href={charityUrl} onClick={onClick} className='read-more'>
+				Read more
+		<img className='read-more-caret' src='/img/read-more-caret.svg' />
+	</a>);
+};
+
+/**
+ * {
+ * 	item: {!NGO} the charity
+ * 	CTA: {?ReactComponent} allows the Read More button to be replaced
+ * }
+ */
+const SearchResult = ({ item, CTA, onPick }) => {
+	if ( ! CTA) CTA = DefaultCTA;
 	let project = NGO.getProject(item);
 	let status = item.status;
 	let page = C.KStatus.isDRAFT(status)? 'edit' : 'charity';
@@ -276,9 +290,13 @@ const SearchResult = ({ item }) => {
 	let targetCount = DataStore.getValue(['widget','SearchResults', NGO.id(item), 'targetCount']);
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
-	const impact = impactCalc({charity: item, project, outputs: project && project.outputs, amount: false, targetCount: targetCount || 1});
-
-
+	const impact = impactCalc({
+		charity: item, 
+		project, 
+		outputs: project && project.outputs, 
+		amount: false, 
+		targetCount: targetCount || 1
+	});
 
 	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
 	const charityName = item.displayName || item.name || '';
@@ -317,6 +335,9 @@ const SearchResult = ({ item }) => {
 	) : null;
 	*/
 
+	/** if onPick is defined, then stop the click and call onPick */
+	const onClick = e => onPick && stopEvent(e) && onPick(item);
+	
 	const impactExplanation = impact ? (
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
@@ -326,31 +347,28 @@ const SearchResult = ({ item }) => {
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
 			</div>
-			<a href={charityUrl} className='read-more'>
-				Read more
-				<img className='read-more-caret' src='/img/read-more-caret.svg' />
-			</a>
+			<CTA charityUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
 	
 	const noImpact = !impact ? (
 		<div className='noImpact col-md-6 hidden-xs'>
 			Impact information is not available for this charity.
+			<CTA charityUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
 
-	
 	return (
 		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
 			{recommendedTab}
-			<a href={charityUrl} className='logo col-md-2 col-xs-4'>
+			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
 					<img className='charity-logo' src={item.logo} alt={`Logo for ${charityName}`} />
 				) : (
 					<div className={`charity-logo-placeholder ${longName? 'long-name' : ''}`}>{charityName}</div>
 				)}
 			</a>
-			<a href={charityUrl} className='text-summary col-md-4 col-xs-8'>
+			<a href={charityUrl} onClick={onClick} className='text-summary col-md-4 col-xs-8'>
 				<span className='name'>{charityName}</span>
 				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
