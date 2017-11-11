@@ -6,7 +6,8 @@ import Login from 'you-again';
 import {XId } from 'wwutils';
 import { Tabs, Tab, Modal, Button } from 'react-bootstrap';
 
-import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
+import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, 
+	PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
 
 import C from '../C';
 import printer from '../utils/printer';
@@ -45,7 +46,7 @@ class StripeThingsClass extends Component {
 	constructor(props) {
 		super(props);
 
-		const {amount, onToken, recipient} = props;
+		const {amount, onToken, recipient, email} = props;
 
 		/* We might be able to forgo the rigmarole of collecting
 		+ submitting CC data ourselves, if the browser supports
@@ -58,10 +59,10 @@ class StripeThingsClass extends Component {
 		
 		const paymentRequest = props.stripe.paymentRequest({
 			country: 'GB',
-			currency: 'gbp',
+			currency: (amount.currency || 'gbp').toLowerCase(),
 			total: {
 				label: `Payment to ${recipient}`,
-				amount: amount.value,
+				amount: amount.value*100, // uses pence
 			},
 		});
 
@@ -78,20 +79,23 @@ class StripeThingsClass extends Component {
  
 		this.state = {
 			canMakePayment: false,
-			paymentRequest,
+			paymentRequest,			
+			email
 		};
-	}
+	} // ./constructor
 
 	handleSubmit(event) {
+		console.log("PaymentWidget - handleSubmit", event);
 		// Don't submit and cause a pageload!
 		event.preventDefault();
 
 		// Within the context of `Elements`, this call to createToken knows which Element to
 		// tokenize, since there's only one in this group.
-		this.props.stripe.createToken({
-			name: 'Spoon McGuffin',
-			email: 'spoonmcguffin@gmail.com',
-		}).then(({token, ...data}) => this.props.onToken({token, ...data}));
+		let tokenInfo = {
+			name: this.props.username,
+			email: this.state.email
+		};
+		this.props.stripe.createToken(tokenInfo).then(({token, ...data}) => this.props.onToken({token, ...data}));
 	
 		// However, this line of code will do the same thing:
 		// this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
@@ -108,7 +112,8 @@ class StripeThingsClass extends Component {
 		}
 
 		const {amount, recipient} = this.props;
-
+		// TODO an email editor if this.props.email is unset
+		// @Roscoe -- Why do we want postcode here?? ^Dan
 		return (
 			<form onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>

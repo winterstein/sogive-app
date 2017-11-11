@@ -32,9 +32,9 @@ This.charityId = obj => obj.charityId;
  */
 FundRaiser.getIdForTicket = (ticket) => {
 	// NB: hash with salt to protect the users email
-	assMatch(Ticket.getEventId(ticket), String, ticket);
+	assMatch(Ticket.eventId(ticket), String, ticket);
 	assMatch(ticket.attendeeEmail, String, ticket);
-	return Ticket.getEventId(ticket)+'.'+md5('user:'+ticket.attendeeEmail);
+	return Ticket.eventId(ticket)+'.'+md5('user:'+ticket.attendeeEmail);
 };
 
 FundRaiser.make = (base) => {

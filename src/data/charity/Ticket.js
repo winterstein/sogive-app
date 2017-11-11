@@ -28,10 +28,11 @@ This.charityId = obj => obj.charityId;
 Ticket.make = (base, eventId) => {
 	assMatch(eventId, String);
 	const obj = {
-		event: eventId,
+		eventId: eventId,
 		id: eventId+'.'+nonce(),
 		price: MonetaryAmount.make(),
 	};
+	obj['@type'] = This.type;
 	This.assIsa(obj);
 	return obj;
 };

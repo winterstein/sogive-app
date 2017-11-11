@@ -19,5 +19,5 @@ public class Event extends AThing {
 	Integer matchedFunding;
 	String logoImage;
 	String bannerImage;
-	
+	String description;
 }

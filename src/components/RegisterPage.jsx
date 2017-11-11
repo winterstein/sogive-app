@@ -13,6 +13,7 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
+import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO';
 import Ticket from '../data/charity/Ticket';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -51,7 +52,7 @@ const RegisterPage = () => {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
 
-	const longdate = Misc.LongDate({date:(new Date(event.date))});
+	const longdate = event.date? Misc.LongDate({date:(new Date(event.date))}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
 	return (
@@ -100,6 +101,7 @@ const RegisterPage = () => {
 				<CheckoutTab basket={basket} event={event} />
 				<div className='nav-buttons'>
 					<PreviousTab stagePath={stagePath} />
+					<NextTab stagePath={stagePath} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
@@ -135,7 +137,12 @@ const NextPrevTab = ({stagePath, diff, text, ...rest}) => {
 	);
 };
 
+/**
+ * 
+ */
 const TicketTypes = ({event, basket}) => {
+	Event.assIsa(event); Basket.assIsa(basket);
+	// pivot data ??why/to-what
 	const nameToTickets = {};
 	event.ticketTypes.forEach(tt => {
 		const ticketsForName = nameToTickets[tt.name];
@@ -150,7 +157,8 @@ const TicketTypes = ({event, basket}) => {
 	});
 
 	const ticketGroups = Object.entries(nameToTickets).map(([name, info]) => (
-		<TicketGroup basket={basket} {...info} />
+		<TicketGroup key={JSON.stringify([name,info])} 
+			basket={basket} {...info} />
 	));
 
 	return (
@@ -161,6 +169,9 @@ const TicketTypes = ({event, basket}) => {
 
 };
 
+/**
+ * types: {Ticket[]}
+ */
 const TicketGroup = ({name, description, types, basket}) => {
 	return (
 		<div className='ticket-group'>
@@ -169,13 +180,13 @@ const TicketGroup = ({name, description, types, basket}) => {
 				<div className='desc'>{description}</div>
 			</div>
 			<ul className='ticket-group-types'>
-				{ types.map(type => <RegisterTicket ticketType={type} basket={basket} />) }
+				{ types.map(type => <RegisterTicket key={JSON.stringify(type)} ticketType={type} basket={basket} />) }
 			</ul>
 		</div>
 	);
 };
 
-const RegisterTicket = ({event, ticketType, basket}) => {
+const RegisterTicket = ({ticketType, basket}) => {
 	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
 	let tickets = basket ? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
 
@@ -271,7 +282,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<h4>{noun} <span>{i+1}</span></h4>
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first walker' /> : null}
+			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
 			{ sameAsFirst? null : 
 				<div>
 					<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
@@ -308,14 +319,14 @@ const CharityChoiceTab = ({basket}) => {
 
 	const onPick = charity => {
 		NGO.assIsa(charity);
-		DataStore.setValue(bpath.concat('charity'), getId(charity));
+		DataStore.setValue(bpath.concat('charityId'), getId(charity));
 	};
 
 	return (<div>
 		<p>
 			Please choose a charity to support.
 		</p>		
-		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' />
+		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
 		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
 			onPick={onPick} CTA={PickCTA} tabs={false} download={false} />
 	</div>);
@@ -334,6 +345,21 @@ const PickCTA = ({item, onClick}) => {
 	</button>);
 };
 
+/**
+ * ?? where to store email?
+ */
+const getEmail = (basket) => {
+	let e = Login.getId('email');
+	if (e) return e;
+	// from ticket0?
+	let items = Basket.getItems(basket);
+	if ( ! items.length) {
+		console.warn("getEmail() No email :(", basket);
+		return null; // fail!
+	}
+	return items[0].attendeeEmail;
+};
+
 const CheckoutTab = ({basket, event}) => {
 	if (!basket) return <Misc.Loading />;
 
@@ -341,7 +367,9 @@ const CheckoutTab = ({basket, event}) => {
 		console.log('CheckoutTab got token back from PaymentWidget:', token);
 		console.log('CheckoutTab got other data:', data);
 	};
-	return <PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} />;
+	let email = getEmail();
+	return (<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
+			email={email} username={Login.getId()} />);
 };
 
 const ConfirmedTicketList = ({basket, event}) => {

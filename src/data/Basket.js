@@ -7,6 +7,7 @@ import MonetaryAmount from './charity/MonetaryAmount';
 import C from '../C';
 
 const Basket = {};
+const This = Basket;
 export default Basket;
 
 // To get a Basket, use ActionMan.getBasketPV
@@ -20,6 +21,9 @@ Basket.isa = (obj) => isa(obj, Basket.type)
 		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
 		&& true;
 Basket.assIsa = (obj) => assert(Basket.isa(obj), "Basket.js - not "+obj);
+
+This.eventId = obj => obj.eventId;
+This.charityId = obj => obj.charityId;
 
 Basket.idForUxid = (uxid) => "for_"+uxid;
 

@@ -20,6 +20,7 @@ import Basket from '../data/Basket';
 
 import Misc from './Misc';
 import {nonce,getType} from '../data/DataClass';
+import PaymentWidget from './PaymentWidget';
 
 /**
  * 
@@ -54,6 +55,7 @@ const initialWidgetState = {
 	stage: 1,
 };
 
+/** no donations below a min £1 */
 const amountOK = ({amount}) => amount && amount.value >= 1.0;
 
 const giftAidOK = ({giftAid, giftAidTaxpayer, giftAidOwnMoney, giftAidNoCompensation}) => (
@@ -227,117 +229,7 @@ const MessageSection = ({path, item}) => (
 );
 
 const PaymentSection = ({path}) => {
-	return (
-		<div className='section donation-amount'>
-			<StripeProvider apiKey={stripeKey}>
-				<Elements>
-					<StripeThings />
-				</Elements>
-			</StripeProvider>
-		</div>
-	);
+	return <PaymentWidget />;
 };
-
-/**
- * Stripe widgets manage their own state
- */	
-class StripeThingsClass extends Component {
-	constructor(props) {
-		super(props);
-
-		/* We might be able to forgo the rigmarole of collecting
-		+ submitting CC data ourselves, if the browser supports
-		the generic Payments API or has Google Wallet / Apple Pay
-		integration. Stripe gives us a pre-rolled button which
-		extracts a Stripe payment token from these services.
-		Here, we check if it's available - in render(), if it is,
-		we skip showing the form and just present a flashy "Pay"
-		button. */
-		
-		const paymentRequest = props.stripe.paymentRequest({
-			country: 'GB',
-			currency: 'gbp',
-			total: {
-				label: 'Demo total',
-				amount: 100,
-			},
-		});
-
-		paymentRequest.on('token', ({complete, token, ...data}) => {
-			console.log('Received Stripe token: ', token);
-			console.log('Received customer information: ', data);
-			complete('success');
-		});
-
-		paymentRequest.canMakePayment().then(result => {
-			this.setState({canMakePayment: !!result});
-		});
- 
-		this.state = {
-			canMakePayment: false,
-			paymentRequest,
-		};
-	}
-
-	handleSubmit(event) {
-		// Don't submit and cause a pageload!
-		event.preventDefault();
-	
-		// the below is copy-pasted from the react-stripe-elements docs
-		// ...for some doubtless ridiculous reason "this" is null when handleSubmit is invoked?
-
-		// Within the context of `Elements`, this call to createToken knows which Element to
-		// tokenize, since there's only one in this group.
-		this.props.stripe.createToken({name: 'Jenny Rosen'}).then(({token}) => {
-			console.log('Received Stripe token:', token);
-		});
-	
-		// However, this line of code will do the same thing:
-		// this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
-
-		// end copy-pasted code
-		
-		/* here's what we do with the token when we have it in the old donation widget! */
-		/*onToken={(stripeResponse) => { ActionMan.donate({ charity, formPath, formData, stripeResponse }); } }*/
-	}
-
-	render() {
-		if (this.state.canMakePayment) {
-			return (<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />);
-		} 
-
-		return (
-			<form onSubmit={(event) => this.handleSubmit(event)}>
-				<div className='form-group'>
-					<label>Card number</label>
-					<div className='form-control'>
-						<CardNumberElement placeholder='0000 0000 0000 0000' />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>Expiry date</label>
-					<div className='form-control'>
-						<CardExpiryElement />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>CVC</label>
-					<div className='form-control'>
-						<CardCVCElement />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>Postcode</label>
-					<div className='form-control'>
-						<PostalCodeElement placeholder='AB1 2CD' />
-					</div>
-				</div>
-				<Button type='submit'>Submit Payment</Button>
-			</form>
-		);
-	} // ./render()
-} // ./StripeThingsClass
-
-const StripeThings = injectStripe(StripeThingsClass);
 
 export default DonationForm;
