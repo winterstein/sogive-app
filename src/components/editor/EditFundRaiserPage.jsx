@@ -9,7 +9,7 @@ import C from '../../C';
 import Roles from '../../Roles';
 
 import Misc from '../Misc';
-
+import FundRaiser from '../../data/charity/FundRaiser';
 
 const EditFundRaiserPage = () => {
 
@@ -33,13 +33,14 @@ const FundRaiserEditor = ({id}) => {
 	}
 	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
+	FundRaiser.assIsa(item);	
 
 	const path = ['data', type, id];
 	return (<div>
 		<h2>Fundraiser {item.name || id} </h2>		
 		<p><small>ID: {id}</small></p>
-		<p><small>Owner: {item.owner}</small></p>
-		<p><small>Event: {item.event}</small></p>
+		<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
+		<p><small>Event: {FundRaiser.eventId(item.event)}</small></p>
 		<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
 		<Misc.PropControl path={path} prop='description' item={item} label='Description' />
 		<Misc.SavePublishDiscard type={type} id={id} />

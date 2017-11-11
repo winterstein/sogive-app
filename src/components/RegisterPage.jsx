@@ -14,6 +14,7 @@ import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../data/DataClass';
 import Basket from '../data/Basket';
 import NGO from '../data/charity/NGO';
+import Ticket from '../data/charity/Ticket';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
@@ -92,7 +93,7 @@ const RegisterPage = () => {
 				<CharityChoiceTab basket={basket} />
 				<div className='nav-buttons'>
 					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} completed={ !! basket.charity} />
+					<NextTab stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>					
@@ -288,9 +289,10 @@ const TeamControl = ({ticket, path}) => {
 const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
-	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', basket.charity || '*'], 
+	const charityId = Basket.charityId(basket);
+	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', Basket.charityId(basket) || '*'], 
 		() => {
-			return ServerIO.search({prefix: basket.charity, size: 20, recommended: !! basket.charity})
+			return ServerIO.search({prefix: charityId, size: 20, recommended: !! charityId})
 				.then(res => {
 					console.warn("yeh :)", res);
 					let hits = res.cargo && res.cargo.hits;
@@ -314,7 +316,7 @@ const CharityChoiceTab = ({basket}) => {
 			Please choose a charity to support.
 		</p>		
 		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charity' />
-		<SearchResults results={results} query={basket.charity} recommended={ ! basket.charity} 
+		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
 			onPick={onPick} CTA={PickCTA} tabs={false} download={false} />
 	</div>);
 };
@@ -322,7 +324,7 @@ const CharityChoiceTab = ({basket}) => {
 const PickCTA = ({item, onClick}) => {
 	const bpath = ActionMan.getBasketPath();
 	const basket = DataStore.getValue(bpath);
-	if (basket.charity===getId(item)) {
+	if (Basket.charityId(basket)===getId(item)) {
 		return (<div className='read-more btn btn-default active'>
 			<Misc.Icon glyph='check' /> Selected
 		</div>);
@@ -353,7 +355,7 @@ const ConfirmedTicketList = ({basket, event}) => {
 };
 
 const ConfirmedTicket = ({ticket, event}) => {
-	if ( ! ticket.event) ticket.event = getId(event);
+	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
 	let frid = FundRaiser.getIdForTicket(ticket);	
 	return (
 		<div>

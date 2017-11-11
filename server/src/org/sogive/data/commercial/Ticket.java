@@ -8,7 +8,13 @@ import lombok.Data;
 
 @Data
 public class Ticket extends AThing {
+
+	/**
+	 * By default, if you buy several tickets, they use the same address. 
+	 */
+	Boolean sameAsFirst = true;
 	
+	String eventId;
 	
 	/** e.g. "a gentle 1o mile walk" 
 	NB: name is the title, e.g. "Wee Wander" */
@@ -28,6 +34,7 @@ public class Ticket extends AThing {
 	String attendeeEmail;
 	String attendeeAddress;
 	String team;
+	String charityId;
 
 	@Override
 	public String toString() {

@@ -23,6 +23,8 @@ import org.sogive.server.payment.StripePlugin;
 import com.stripe.Stripe;
 import com.stripe.model.Token;
 import com.winterwell.datalog.server.TrackingPixelServlet;
+import com.winterwell.es.ESPath;
+import com.winterwell.es.IESRouter;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -31,6 +33,7 @@ import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.FakeBrowser;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
@@ -48,7 +51,7 @@ import com.winterwell.youagain.data.DBAuth;
 public class BasketServletTest {
 
 	@Test
-	public void testRegister() {
+	public void testBuy() {
 		// fire up a server
 		String host = SoGiveTestUtils.getStartServer();
 				
@@ -66,24 +69,26 @@ public class BasketServletTest {
 		
 		
 		// make a save + publish call with test Stripe details	
-		// Do use a temp XId
-		WebRequest state = new WebRequest(new TestHttpServletRequest(), new TestHttpServletResponse());
-		String id = TrackingPixelServlet.getCreateCookieTrackerId(state);
-		XId from = new XId(id);
-		String to = SoGiveTestUtils.getCharity().getId();
-		MonetaryAmount userContribution = MonetaryAmount.pound(3);
+		// NB: by this stage, the user is logged in 
+		AuthToken user = SoGiveTestUtils.doTestUserLogin(host);
+		XId from = user.xid;
 		
 		Event event = SoGiveTestUtils.getTestEvent();
 		
 		Basket basket = new Basket();
-		basket.id = "testBasketFor"+id;
+		basket.id = "testBasketFor"+user.xid;
 		// 1 ticket for spoon
 		Ticket ticket = new Ticket();
 		ticket.id = event.id+".foo";
+		ticket.setEventId(event.getId());
 		ticket.name = "Adult Ticket";
 		ticket.setPrice(MonetaryAmount.pound(2.5));
-		ticket.setAttendeeEmail("spoonmcguffin@gmail.com");		
+		ticket.setAttendeeName("Spoon");
+		ticket.setAttendeeEmail("spoonmcguffin@gmail.com");
 		basket.setItems(Arrays.asList(ticket));
+		// charity gets copied into the tickets
+		String to = SoGiveTestUtils.getCharity().getId();
+		basket.setCharityId(to);
 		
 		String donj = Dep.get(Gson.class).toJson(basket);
 		FakeBrowser fb = new FakeBrowser();
@@ -105,7 +110,12 @@ public class BasketServletTest {
 			Basket don2 = Dep.get(Gson.class).fromJson(JSON.toString(esres));
 			System.out.println(don2);
 			
-			// TODO check a fund-raiser page is made
+			// check a fund-raiser page is made
+			String frid = FundRaiser.getIDForTicket(ticket);
+			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid);
+			FundRaiser fr = AppUtils.get(path, FundRaiser.class);
+			assert fr != null;
+			
 			// TODO check a welcome email is sent -- Mockito the email sending
 			
 		} catch(Exception ex) { // allow us to breakpoint w/o a time out killing the JVM

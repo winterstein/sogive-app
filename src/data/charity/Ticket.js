@@ -2,23 +2,36 @@
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce} from '../DataClass';
-import {uid} from 'wwutils';
+import {uid, blockProp} from 'wwutils';
 import MonetaryAmount from './MonetaryAmount';
 
 const Ticket = {};
+const This = Ticket;
 export default Ticket;
 
 Ticket.type = 'Ticket';
 
-Ticket.isa = (ngo) => isa(ngo, Ticket.type);
-Ticket.assIsa = (p) => assert(Ticket.isa(p));
-Ticket.name = (ngo) => Ticket.assIsa(ngo) && ngo.name;
+This.isa = (obj) => isa(obj, This.type)
+		// sneaky place to add safety checks
+		&& blockProp(obj, 'charity', This.type+' - use charityId()')
+		&& blockProp(obj, 'event', This.type+' - use eventId()')
+		&& true;
+This.assIsa = (p) => assert(This.isa(p), p);
+This.name = (ngo) => This.assIsa(ngo) && ngo.name;
 
-Ticket.make = (base, baseId) => {
-	assMatch(baseId, String);
-	return {
-		event: baseId,
-		id: baseId+'.'+nonce(),
+This.eventId = obj => obj.eventId;
+This.charityId = obj => obj.charityId;
+
+/**
+ * 
+ */
+Ticket.make = (base, eventId) => {
+	assMatch(eventId, String);
+	const obj = {
+		event: eventId,
+		id: eventId+'.'+nonce(),
 		price: MonetaryAmount.make(),
 	};
+	This.assIsa(obj);
+	return obj;
 };

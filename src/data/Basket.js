@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce} from './DataClass';
-import {uid} from 'wwutils';
+import {uid, blockProp} from 'wwutils';
 import MonetaryAmount from './charity/MonetaryAmount';
 import C from '../C';
 
@@ -15,7 +15,10 @@ export default Basket;
 
 Basket.type = C.TYPES.Basket;
 
-Basket.isa = (obj) => isa(obj, Basket.type);
+Basket.isa = (obj) => isa(obj, Basket.type)
+		// sneaky place to add safety checks
+		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
+		&& true;
 Basket.assIsa = (obj) => assert(Basket.isa(obj), "Basket.js - not "+obj);
 
 Basket.idForUxid = (uxid) => "for_"+uxid;

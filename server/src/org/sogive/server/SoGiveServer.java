@@ -56,6 +56,9 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	
 	private static SoGiveServer main;
 
+	public SoGiveServer() {
+		super("sogive");
+	}
 
 	public static void main(String[] args) {
 		main = new SoGiveServer();
@@ -115,6 +118,11 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		// login
 //		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
+		
+		// local DataLog
+		DataLogConfig dlc = AppUtils.getConfig(this.projectName, DataLog.getImplementation().getConfig(), args);
+		DataLog.setConfig(dlc);
+		
 		return config;
 	}
 

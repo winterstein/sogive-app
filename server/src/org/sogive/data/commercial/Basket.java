@@ -22,7 +22,7 @@ import lombok.Data;
 public class Basket extends AThing {
 	List<Ticket> items;
 	
-	String charity;
+	String charityId;
 	
 	/**
 	 * Whether we think payment has been collected. 
@@ -43,11 +43,13 @@ public class Basket extends AThing {
 
 	public MonetaryAmount getTotal() {
 		if (items==null) return MonetaryAmount.pound(0);
-		Mutable.Ref<MonetaryAmount> ttl = new Mutable.Ref(MonetaryAmount.pound(0));
-		items.stream().map(item -> item.getPrice()).filter(p -> p!=null)
-			.map(p -> ttl.value = ttl.value.plus(p));
+		MonetaryAmount ttl = MonetaryAmount.pound(0.0);
+		for (Ticket ticket : items) {
+			if (ticket.getPrice()==null) continue;
+			ttl = ttl.plus(ticket.getPrice());
+		}
 		// tax??
-		return ttl.value;
+		return ttl;
 	}
 
 }

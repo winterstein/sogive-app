@@ -57,7 +57,7 @@ public class SoGiveTestUtils {
 			fr.setOxid(new XId(walker.getId()));
 			fr.setOwner(walker.getPersonLite());
 			// event
-			fr.setEvent(event.getId());
+			fr.setEventId(event.getId());
 			fr.name = "Test FundRaiser by "+walker.getName()+" for event "+event.getName();
 			
 			ESPath dpath = r.getPath(FundRaiser.class, id, KStatus.DRAFT);
