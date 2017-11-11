@@ -1,5 +1,9 @@
 package org.sogive.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.mockito.Mockito;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
@@ -14,8 +18,12 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.AppUtils;
+import com.winterwell.web.app.Emailer;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
 import com.winterwell.youagain.data.DBAuth;
@@ -140,6 +148,21 @@ public class SoGiveTestUtils {
 			AppUtils.doPublish(item, dpath, path);
 		}
 		return obj;
+	}
+
+	/**
+	 * Put in a mock emailer
+	 * @return sent emails list
+	 */
+	public static List<SimpleMessage> mockEmailer() {
+		ArrayList sent = new ArrayList();
+		Emailer emailer = Mockito.mock(Emailer.class);
+		Mockito.when(emailer.send(Mockito.any())).thenAnswer(
+				invocation -> sent.add((SimpleMessage) invocation.getArguments()[0])
+				);
+		Mockito.when(emailer.getBotEmail()).thenReturn(WebUtils2.internetAddress("testbot@example.com"));
+		Dep.set(Emailer.class, emailer);
+		return sent;
 	}
 
 }

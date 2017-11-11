@@ -9,6 +9,7 @@ import org.sogive.server.payment.StripePlugin;
 
 import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
@@ -49,9 +50,9 @@ public class BasketServlet extends CrudServlet<Basket> {
 			// store in the database
 			super.doPublish(state);
 			
-			// FIXME process the order!
-			// - Send emails
-			// - Make FundRaiser pages
+			// Process the order!
+			BasketPublishedActor bpa = Dep.get(BasketPublishedActor.class);
+			bpa.send(donation);
 			
 			return jthing;
 		} catch(Exception e) {

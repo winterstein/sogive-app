@@ -8,6 +8,7 @@ import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.data.XId;
 
 import lombok.Data;
@@ -31,6 +32,22 @@ public class FundRaiser extends AThing {
 	
 	public String img;
 
+	@Override
+	public void init() {
+		super.init();
+		// set url from ID
+		getUrl();
+	}
+	
+	@Override
+	public String getUrl() {
+		// set from ID?
+		if (url==null && id!=null) {
+			url = "https://app.sogive.org/#fundraiser/"+WebUtils.urlEncode(getId());
+		}
+		return url;
+	}
+	
 	/**
 	 * Important: this is copied in js
 	 * @param ticket

@@ -2,6 +2,7 @@ package org.sogive.server;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
@@ -29,14 +33,17 @@ import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Printer;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.FakeBrowser;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
+import com.winterwell.web.app.Emailer;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.test.TestHttpServletRequest;
 import com.winterwell.web.test.TestHttpServletResponse;
 import com.winterwell.youagain.client.AuthToken;
@@ -54,7 +61,10 @@ public class BasketServletTest {
 	public void testBuy() {
 		// fire up a server
 		String host = SoGiveTestUtils.getStartServer();
-				
+
+		// fake email
+		final List<SimpleMessage> sent = SoGiveTestUtils.mockEmailer();
+		
 		String tokenId = null;
 		String tokenType = null;
 		try {
@@ -111,13 +121,16 @@ public class BasketServletTest {
 			System.out.println(don2);
 			
 			// check a fund-raiser page is made
+			Utils.sleep(1500);
 			String frid = FundRaiser.getIDForTicket(ticket);
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid);
 			FundRaiser fr = AppUtils.get(path, FundRaiser.class);
 			assert fr != null;
 			
-			// TODO check a welcome email is sent -- Mockito the email sending
-			
+			// check a welcome email is sent -- Mockito the email sending
+			assert sent.size() == 1 : sent;
+			System.out.println(sent);
+
 		} catch(Exception ex) { // allow us to breakpoint w/o a time out killing the JVM
 			ex.printStackTrace();
 		}	

@@ -81,8 +81,16 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		jl.addServlet("/*", new MasterHttpServlet());
 	}
 
+	
 	@Override
-	public SoGiveConfig initConfig(String[] args) {		
+	protected void init2(SoGiveConfig config) {
+		super.init2(config);
+		// actors
+		Dep.set(BasketPublishedActor.class, new BasketPublishedActor());
+	}
+	
+	@Override
+	public SoGiveConfig init2_config(String[] args) {		
 		if (initFlag) return Dep.get(SoGiveConfig.class);
 		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), args);
 		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), args); 
