@@ -101,6 +101,8 @@ const RegisterPage = () => {
 				<CheckoutTab basket={basket} event={event} />
 				<div className='nav-buttons'>
 					<PreviousTab stagePath={stagePath} />
+
+					TODO no next button -- auto advance after payment
 					<NextTab stagePath={stagePath} />
 				</div>
 			</WizardStage>
@@ -301,7 +303,7 @@ const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
 	const charityId = Basket.charityId(basket);
-	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', Basket.charityId(basket) || '*'], 
+	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
 		() => {
 			return ServerIO.search({prefix: charityId, size: 20, recommended: !! charityId})
 				.then(res => {
