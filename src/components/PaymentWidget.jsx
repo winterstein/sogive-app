@@ -26,11 +26,17 @@ const stripeKey = (C.SERVER_TYPE) ?
 	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
-
+/**
+ * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
+ */
 const PaymentWidget = ({amount, onToken, recipient}) => {
+	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>
-			<div className='well'>??test card details, to make testing easy</div>
+			<div className='well'>
+				??test card details, to make testing easy
+				<button onClick={e => onToken()}>pretend I paid</button>
+			</div>
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
 					<StripeThings onToken={onToken} amount={amount} recipient={recipient} />

@@ -4,6 +4,7 @@ import C from '../../C';
 
 /** impact utils */
 const MonetaryAmount = {};
+const This = MonetaryAmount;
 export default MonetaryAmount;
 
 /* 

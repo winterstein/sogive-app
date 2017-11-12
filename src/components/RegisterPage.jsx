@@ -348,7 +348,7 @@ const PickCTA = ({item, onClick}) => {
 };
 
 /**
- * ?? where to store email?
+ * Login email, or ticket0, or null
  */
 const getEmail = (basket) => {
 	let e = Login.getId('email');
@@ -364,10 +364,11 @@ const getEmail = (basket) => {
 
 const CheckoutTab = ({basket, event}) => {
 	if (!basket) return <Misc.Loading />;
-
+	// does onToken mean on-successful-payment-auth??
 	const onToken = (token, ...data) => {
 		console.log('CheckoutTab got token back from PaymentWidget:', token);
 		console.log('CheckoutTab got other data:', data);
+		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket);
 	};
 	let email = getEmail();
 	return (<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
