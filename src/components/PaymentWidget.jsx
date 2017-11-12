@@ -30,6 +30,7 @@ const stripeKey = (C.SERVER_TYPE) ?
 const PaymentWidget = ({amount, onToken, recipient}) => {
 	return (
 		<div className='section donation-amount'>
+			<div className='well'>??test card details, to make testing easy</div>
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
 					<StripeThings onToken={onToken} amount={amount} recipient={recipient} />

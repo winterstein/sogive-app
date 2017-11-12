@@ -49,10 +49,10 @@ const FundRaiserPage = ({id}) => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
 	// console.warn(pEvent);
-	// if ( ! pEvent.resolved) {
+	// if ( ! pEvent.resolved) { TODO wait for load -- this is off to allow styling even if the backend isnt being helpful
 	// 	return <Misc.Loading />;
 	// }
-	let item = pEvent.value || FundRaiser.make({id, event:'fooEvent'});
+	let item = pEvent.value || FundRaiser.make({id, eventId:'fooEvent'});
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';

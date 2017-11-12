@@ -7,8 +7,8 @@ import Ticket from './Ticket';
 
 /** impact utils */
 const FundRaiser = {};
-/** This makes it easier to copy-paste code between similar classes */
-const This = {};
+/** `This` makes it easier to copy-paste code between similar classes */
+const This = FundRaiser;
 export default FundRaiser;
 
 // duck type: needs a value
@@ -29,6 +29,8 @@ This.charityId = obj => obj.charityId;
 /**
  * event + email => fund-raiser
  * Important: This is duplicated in Java
+ * 
+ * TODO what if there is no email?
  */
 FundRaiser.getIdForTicket = (ticket) => {
 	// NB: hash with salt to protect the users email
@@ -38,7 +40,7 @@ FundRaiser.getIdForTicket = (ticket) => {
 };
 
 FundRaiser.make = (base) => {
-	assert(base.event, base);
+	assert(base.eventId, base);
 	let ma = {
 		'@type': C.TYPES.FundRaiser,
 		...base

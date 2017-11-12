@@ -386,17 +386,24 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
+	if ( ! ticket.attendeeEmail) {
+		// TODO how can we make a page for no email??
+		// (a) use a temp id, and have a way for the user to claim it
+		// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
+		// Option (b) would allow for e.g. I set up my page and my Gran's page.
+		// for now: no email = no page
+		return (
+			<div>
+				<h3>{ticket.attendeeName}</h3>
+				No email provided
+			</div>
+		);
+	}
 	let frid = FundRaiser.getIdForTicket(ticket);	
 	return (
 		<div>
 			<h3>{ticket.attendeeName}</h3>
-			<a href={'#fundraiser/'+encURI(frid)}
-				onClick={() => {
-					// HACK create!
-					let fritem = FundRaiser.make({id:frid, event:getId(event)});
-					ActionMan.crud(C.TYPES.FundRaiser, frid, C.CRUDACTION.new, fritem);
-				}}
-			>Fund Raiser for {ticket.attendeeName}</a>
+			<a href={'#fundraiser/'+encURI(frid)}>Fund Raiser for {ticket.attendeeName}</a>
 			<pre>{JSON.stringify(ticket)}</pre>
 		</div>
 	);
