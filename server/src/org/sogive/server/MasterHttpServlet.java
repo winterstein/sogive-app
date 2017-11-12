@@ -16,6 +16,7 @@ import org.sogive.server.payment.StripeWebhookServlet;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.BestOne;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.IBuildStrings;
 import com.winterwell.utils.Key;
 import com.winterwell.utils.Printer;
@@ -29,12 +30,15 @@ import com.winterwell.web.app.HttpServletWrapper;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.LogServlet;
 import com.winterwell.web.app.ManifestServlet;
+import com.winterwell.web.app.UploadServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.AField;
 import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.JsonField;
 import com.winterwell.web.fields.SField;
-
+import com.winterwell.youagain.client.AuthToken;
+import com.winterwell.youagain.client.NoAuthException;
+import com.winterwell.youagain.client.YouAgainClient;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datascience.Experiment;
 import com.winterwell.depot.Desc;
@@ -103,7 +107,16 @@ public class MasterHttpServlet extends HttpServlet {
 			case "share":
 				s = new ShareServlet();
 				s.process(request);
-				return;				
+				return;
+			case "upload":
+				// must be logged in
+				YouAgainClient ya = Dep.get(YouAgainClient.class);
+				List<AuthToken> tokens = ya.getAuthTokens(request);
+				if (Utils.isEmpty(tokens)) throw new NoAuthException(request);
+				// upload
+				s = new UploadServlet();
+				s.process(request);
+				return;
 			case "log":
 				s = new LogServlet();
 				s.process(request);

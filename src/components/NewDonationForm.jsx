@@ -83,8 +83,6 @@ const stagesOK = (formData) => [
 ];
 
 
-
-
 /**
  * item: a FundRaiser or NGO
  */
@@ -156,7 +154,8 @@ const DonationForm = ({item}) => {
 		</Misc.SetButton>
 	);
 
-	// TODO the tabs will be replaced by Isabel's Progress Widget
+	// TODO replace tabs with WizardProgressWidget (see RegisterPage)
+	// TODO Thank You / confirmation / receipt page
 	// TODO if NGO.isa(item) => no message section
 	// Minor TODO if no gift-aid => no details section
 
@@ -183,6 +182,9 @@ const DonationForm = ({item}) => {
 						</Tab>
 						<Tab eventKey={5} title='Payment'>
 							<PaymentSection path={path} />
+						</Tab>
+						<Tab eventKey={5} title='Confirmation'>
+							<ThankYouSection path={path} />
 						</Tab>
 					</Tabs>
 				</Modal.Body>
@@ -230,6 +232,10 @@ const MessageSection = ({path, item}) => (
 
 const PaymentSection = ({path}) => {
 	return <PaymentWidget />;
+};
+
+const ThankYouSection = () => {
+	return <div>Thank You!</div>; // TODO
 };
 
 export default DonationForm;
