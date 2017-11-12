@@ -98,7 +98,7 @@ const RegisterPage = () => {
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>					
-				<CheckoutTab basket={basket} event={event} />
+				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				<div className='nav-buttons'>
 					<PreviousTab stagePath={stagePath} />
 
@@ -362,13 +362,19 @@ const getEmail = (basket) => {
 	return items[0].attendeeEmail;
 };
 
-const CheckoutTab = ({basket, event}) => {
+const CheckoutTab = ({basket, event, stagePath}) => {
 	if (!basket) return <Misc.Loading />;
 	// does onToken mean on-successful-payment-auth??
 	const onToken = (token, ...data) => {
 		console.log('CheckoutTab got token back from PaymentWidget:', token);
 		console.log('CheckoutTab got other data:', data);
-		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket);
+		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
+		.then(res => {
+			let n = DataStore.getValue(stagePath) + 1;
+			DataStore.setValue(stagePath, n);
+		}, err => {
+			console.error(err); // TODO
+		});
 	};
 	let email = getEmail();
 	return (<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
