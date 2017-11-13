@@ -1,7 +1,7 @@
 /** Data model functions for the NGO data-type */
 
 import _ from 'lodash';
-import {isa} from '../DataClass';
+import {isa, defineType} from '../DataClass';
 import {assert, assMatch} from 'sjtest';
 import Project from './Project';
 import Output from './Output';
@@ -17,7 +17,8 @@ import Citation from './Citation';
  * There is a representative project -- this gives the impact that's reported.
  */
 
-const NGO = {};
+const NGO = defineType('NGO');
+const This = NGO;
 export default NGO;
 
 NGO.isa = (ngo) => isa(ngo, 'NGO');
@@ -31,6 +32,8 @@ NGO.id = (ngo) => NGO.assIsa(ngo) && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
+NGO.logo = item => item.logo; 
+NGO.shortDescription = ngo => ngo.summaryDescription || ngo.description || '';
 NGO.registrationNumbers = (ngo) => {
 	// TODO OSCR, companies house
 	if (ngo.englandWalesCharityRegNum) return [{regulator:'Charity Commission', id:ngo.englandWalesCharityRegNum}];

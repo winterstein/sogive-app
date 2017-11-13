@@ -33,6 +33,11 @@ public class BasketPublishedActor extends Actor<Basket> {
 	}
 
 	private void process(Ticket ticket, Basket basket) {
+		// no email?!
+		if (ticket.getAttendeeEmail()==null) {
+			Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);
+			return;
+		}
 		// make fundraiser
 		FundRaiser fr = new FundRaiser(ticket, basket);
 		JThing draft = new JThing<>(fr);

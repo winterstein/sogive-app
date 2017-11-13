@@ -70,13 +70,13 @@ public class BasketServlet extends CrudServlet<Basket> {
 				Charge charge = StripePlugin.collect(donation.getTotal(), donation.getId(), sa, userObj, ikey);
 				Log.d("stripe", charge);
 				donation.setPaymentId(charge.getId());
-				donation.setCollected(true);
+				donation.setCollected(true);				
 			}
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
 				
-		// store in the database
+		// store in the database (this will save the edited basket)
 		super.doPublish(state);
 		
 		// Process the order!

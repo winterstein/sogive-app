@@ -53,6 +53,7 @@ const FundRaiserPage = ({id}) => {
 	// 	return <Misc.Loading />;
 	// }
 	let item = pEvent.value || FundRaiser.make({id, eventId:'fooEvent'});
+	let charity = FundRaiser.charity(item) || {};
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';
@@ -177,9 +178,9 @@ const FundRaiserPage = ({id}) => {
 						<p>{item.owner.description}</p>
 					</Col>
 					<Col md={6} className='charity-info'>
-						<h3>The Charity:</h3>
-						<img className='charity-logo' alt={`Logo for ${'Placeholder Charity'}`} src='http://www.halotrust.org/images/SiteLogo.svg' />
-						<p>The Halo Trust is being used as a placeholder while we decide how precisely to structure the data model behind fundraiser pages.</p>
+						<h3>The Charity: {NGO.displayName(charity)}</h3>
+						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
+						<p>{NGO.shortDescription(charity)}</p>
 					</Col>
 				</Row>
 				<Row>

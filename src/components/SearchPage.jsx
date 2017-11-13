@@ -330,7 +330,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	});
 
 	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
-	const charityName = item.displayName || item.name || '';
+	const charityName = NGO.displayName(item);
 	let charityDesc = item.summaryDescription || item.description || '';
 	let commonPrefixLength = 0;
 	for (let i = 0; i < charityName.length && i < charityDesc.length; i++) {
@@ -401,7 +401,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 			{recommendedTab}
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
-					<img className='charity-logo' src={item.logo} alt={`Logo for ${charityName}`} />
+					<img className='charity-logo' src={NGO.logo(item)} alt={`Logo for ${charityName}`} />
 				) : (
 					<div className={`charity-logo-placeholder ${longName? 'long-name' : ''}`}>{charityName}</div>
 				)}

@@ -2,7 +2,7 @@
 */
 
 import _ from 'lodash';
-import {assert} from 'sjtest';
+import {assert, assMatch} from 'sjtest';
 import {endsWith} from 'wwutils';
 
 /**
@@ -65,7 +65,7 @@ Meta.get = (obj, fieldName) => {
 	if (obj.meta && obj.meta[fieldName]) {
 		return obj.meta[fieldName];
 	}
-	// nope
+	// nope* 
 	return {};
 };
 
@@ -84,9 +84,22 @@ const nonce = (n=6) => {
 	const az = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (let i = 0; i < n; i++) {
 		s[i] = az.substr(Math.floor(Math.random() * az.length), 1);
-	}
+	}* 
 	return s.join("");
 };
 
-export {isa, getType, getId, Meta, nonce};
+/**
+ * Setup the "standard" DataClass functions.
+ * @param {!String} type 
+ */
+const defineType = (type) => {
+	assMatch(type, String);
+	const This = {};
+	This.type = type;
+	This.isa = (obj) => isa(obj, type);
+	This.assIsa = (obj) => assert(This.isa(obj), type+" expected, but got "+obj);
+	return This;
+};
+
+export {defineType, isa, getType, getId, Meta, nonce};
 	
