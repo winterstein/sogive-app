@@ -90,7 +90,7 @@ class MainDiv extends Component {
 				<NavBar page={page} />
 				<div className="container avoid-navbar">
 					<MessageBar messages={msgs} />
-					<div id={page}>
+					<div className='page' id={page}>
 						<Page />
 					</div>
 				</div>

@@ -10,10 +10,10 @@ import Misc from './Misc';
 
 const AboutPage = () => {
 	return (
-		<div className=''>
+		<div className='AboutPage'>
 			<h2>About SoGive</h2>
 
-			<p>Pleasee see our website for more information on SoGive: https://sogive.org</p>
+			<p>Please see our website for more information on SoGive: <a href='https://sogive.org'>https://sogive.org</a></p>
 
 			<p>We are grateful to SMART:Scotland and The Hunter Foundation for their support.</p>
 

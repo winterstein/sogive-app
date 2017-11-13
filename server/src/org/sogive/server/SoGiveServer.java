@@ -85,6 +85,8 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	@Override
 	protected void init2(SoGiveConfig config) {
 		super.init2(config);
+		// data
+		DBSoGive.init();
 		// actors
 		Dep.set(BasketPublishedActor.class, new BasketPublishedActor());
 	}
@@ -121,10 +123,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 				);
 		// ES router
 		Dep.set(IESRouter.class, config);
-		// mappings
-		DBSoGive.init();
 		// login
-//		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
 		
 		// local DataLog

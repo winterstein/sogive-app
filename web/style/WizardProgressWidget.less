@@ -26,9 +26,11 @@
 		}
 		.line {
 			width: 100%;
-			border-top: solid 3px;
+			border-top: solid 3px !important;
 			border-bottom: solid 3px;
-			margin-top: -23px;	
+			margin:0;
+			margin-top: -23px !important;	
+			margin-bottom: 20px !important;
 		}
 		.below {
 			opacity: 0;
@@ -56,4 +58,11 @@
 
 .WizardStage {
 	min-height: 50%;
+
+	.nav-buttons {
+		.padded-block;
+		margin-top:10px;
+		/* using floats, so we need to make the widget big enough */
+		min-height: 60px;
+	}
 }

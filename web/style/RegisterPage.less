@@ -1,73 +1,7 @@
 @import "positioning.less";
 @import "colours.less";
 
-@container-max-width: 800px;
-/** 
-	NB: We want to have borders which stretch 100%, but contents which are smaller.
-	So we can't simply put some padding on the page :(
-	Instead, add this to content elements:
-
-		.padded-block;
-
-*/
-@item-max-width: 650px;
-
-.padded-block {
-	max-width: @item-max-width;
-	margin-left: auto;	
-	margin-right: auto;
-}
-
-.WizardStage {	
-	min-height: 50vw;
-	
-	h3, h4 {
-		.padded-block;
-		margin-bottom: -0.15em;
-	}
-
-		/**
-	Put this on the wider div just below the .header
-	*/
-	hr {
-		padding: 0;
-		margin: 0;
-		margin-bottom: 8px;
-		border-top: medium solid @header-line-colour;
-	}
-
-}
-
 #register {
-	// TODO avoid page specific css
-	max-width: @container-max-width;
-	margin: auto;
-	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);	
-
-	.register-banner {
-		width: 100%;
-	}
-
-	.register-masthead {
-		background-color: @masthead-bg;
-		padding: 0.25em;
-		text-align: center;
-		.event-name {
-			color: white;
-		}
-		.event-date {
-			color: @pale-blue;
-		}
-	}
-
-	.nav-buttons {
-		text-align: center;
-		margin: 2em auto;
-	}
-
-	.login-tab {
-		.padded-block;
-	}
 
 	.ticket-group {		
 	
@@ -173,6 +107,3 @@
 	}
 	
 } // ./#register
-
-
-

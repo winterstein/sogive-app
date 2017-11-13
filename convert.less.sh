@@ -4,6 +4,21 @@ WATCH=$1
 USER=`whoami`
 GOTINOTIFYTOOLS=`which inotifywait`
 
+# the TOPLESS files are the top level files referenced in index.html
+TOPLESS[0]=/home/$USER/winterwell/sogive-app/web/style/main.less;
+TOPLESS[1]=/home/$USER/winterwell/sogive-app/web/style/print.less;
+
+# run through files
+for file in "${TOPLESS[@]}"; do
+		if [ -e "$file" ]; then
+			echo -e "converting $file"
+			lessc "$file" "${file%.less}.css"
+		else
+			echo "less file not found: $file"				
+		fi
+done
+
+# watch?
 if [[ $WATCH == 'watch' ]]; then
 	if [ "$GOTINOTIFYTOOLS" = "" ]; then
     	echo "In order to watch and continuously convert less files, you will first need to install inotify-tools on this system"
@@ -14,25 +29,14 @@ if [[ $WATCH == 'watch' ]]; then
 	while true
 	do
 		inotifywait -r -e modify,attrib,close_write,move,create,delete /home/$USER/winterwell/sogive-app/web/style && \
-		for file in /home/$USER/winterwell/sogive-app/web/style/*.less; do
+		for file in "${TOPLESS[@]}"; do
 			if [ -e "$file" ]; then
 				echo -e "converting $file"
 				lessc "$file" "${file%.less}.css"
 			else
-				echo "no less files found"
-				exit 0
+				echo "less file not found: $file"
 			fi
 		done
 	done
 	fi
-else
-	for file in /home/$USER/winterwell/sogive-app/web/style/*.less; do
-			if [ -e "$file" ]; then
-				echo -e "converting $file"
-				lessc "$file" "${file%.less}.css"
-			else
-				echo "no less files found"
-				exit 0
-			fi
-	done
 fi

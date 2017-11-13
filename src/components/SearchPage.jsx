@@ -62,7 +62,7 @@ export default class SearchPage extends React.Component {
 		}
 
 		return (
-			<div className='page SearchPage'>
+			<div className='SearchPage'>
 				<div className='col-md-12'>
 					<SearchForm query={q} from={from} status={status} setResults={this.setResults.bind(this)}/>
 				</div>

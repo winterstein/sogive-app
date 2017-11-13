@@ -61,8 +61,8 @@ const RegisterPage = () => {
 	const basketPath = ActionMan.getBasketPath();
 	return (
 		<div className=''>
-			<img className='register-banner' src={event.bannerImage} />
-			<h2 className='register-masthead'>
+			<img className='page-banner' src={event.bannerImage} alt='banner' />
+			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 				&nbsp;
 				<span className='event-date'>{longdate}</span>
@@ -106,9 +106,6 @@ const RegisterPage = () => {
 				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				<div className='nav-buttons'>
 					<PreviousTab stagePath={stagePath} />
-
-					TODO no next button -- auto advance after payment
-					<NextTab stagePath={stagePath} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
@@ -135,9 +132,10 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', ...rest}) => {
 		let n = DataStore.getValue(stagePath) + diff;
 		DataStore.setValue(stagePath, n);
 	};
-
+	// use Bootstrap pull class to left/right float
+	const pull = diff > 0? 'pull-right' : 'pull-left';
 	return (
-		<button className={`btn btn-${bsClass} btn-lg`} onClick={changeTab} {...rest} >
+		<button className={`btn btn-${bsClass} btn-lg ${pull}`} onClick={changeTab} {...rest} >
 			{text}
 		</button>
 	);
@@ -290,15 +288,15 @@ const InvoiceRow = ({item, label, count, cost}) => {
 const RegisterOrLoginTab = () => {
 	if (Login.isLoggedIn()) {
 		return (
-			<div className='login-tab'>
-				<Misc.Icon glyph='tick' className='text-success' />
+			<div className='login-tab padded-block'>
+				<Misc.Icon glyph='ok' className='text-success' />
 				<p>You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
 				<p>Not you? <Button bsSize='small' onClick={() => Login.logout()}>Log out</Button></p>
 			</div>
 		);
 	}
 	return (
-		<div className='login-tab'>
+		<div className='login-tab padded-block'>
 			<p>Please login or register your account.</p>
 			<LoginWidgetEmbed services={['twitter']} />
 		</div>
@@ -484,7 +482,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 		<h3>{ticket.attendeeName}</h3>
 		<hr />
 		<div className='padded-block'>
-			<a className='btn btn-primary btn-lg pull-right' href={'#fundraiser/'+encURI(frid)}>
+			<a className='btn btn-primary btn-lg pull-right' href={'#editFundraiser/'+encURI(frid)}>
 				Setup Fund-Raising Page for {ticket.attendeeName}
 			</a>
 			<table>

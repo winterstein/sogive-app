@@ -52,7 +52,7 @@ const EditCharityPage = () => {
 	// put it together
 	console.log("EditCharity", charity);
 	return (
-		<div className='page EditCharityPage'>				
+		<div className='EditCharityPage'>				
 			<Panel>
 				<h2>Editing: {charity.name}</h2>			
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>

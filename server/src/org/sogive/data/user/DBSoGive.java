@@ -55,8 +55,9 @@ public class DBSoGive {
 
 	private static final Class[] DBCLASSES = new Class[] {
 			NGO.class, 
-//			Person.class, Team.class, Event.class, FundRaiserPage.class,
-//			Basket.class, Donation.class
+			Person.class, Team.class, Event.class, 
+			FundRaiser.class,
+			Basket.class, Donation.class
 			};
 
 	public static void init() {
