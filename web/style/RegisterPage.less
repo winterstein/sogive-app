@@ -8,8 +8,11 @@
 @pale-blue: #80bde7;
 @masthead-bg: #676974;
 
+@container-max-width: 800px;
+@item-max-width: 650px;
+
 #register {
-	max-width: 800px;
+	max-width: @container-max-width;
 	margin: auto;
 	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
 
@@ -35,13 +38,16 @@
 
 	.ticket-group {
 		.ticket-group-header {
-			border-bottom: 5px solid @header-line-colour;
 			position: relative;
+			max-width: @item-max-width;
+			display: flex;
+			justify-content: space-between;
+			margin: auto;
+			z-index: 1;
 	
 			.name, .desc {
 				display: inline-block;
 				position: relative;
-				width: 50%;
 			}
 			.name {
 				font-size: 1.5em;
@@ -51,7 +57,7 @@
 			.desc {
 				font-size: 1.2em;
 				text-align: right;
-				bottom: -0.5em;
+				bottom: -0.8em;
 			}
 		}
 	
@@ -59,12 +65,14 @@
 			list-style-type: none;
 			position: relative;
 			padding: 0;
+			border-top: 5px solid @header-line-colour;
 
 			.ticket-type {
 				display: flex;
 				justify-content: space-between;
+				max-width: @item-max-width;
+				margin: 1em auto;
 
-				margin: 1em;
 				.decoration, .info, .controls {
 					display: inline-block;
 				}
@@ -129,6 +137,43 @@
 					}
 				}
 			}
+		}
+	}
+
+	.invoice {
+		.invoice-header {
+			max-width: @item-max-width;
+			margin: 0 auto;
+			position: relative;
+			bottom: -0.25em;
+			z-index: 1;
+		}
+		.invoice-body {
+			background-color: @type-bg-colour;
+			width: 100%;
+			padding: 1.5em 0;
+
+			.invoice-table {
+				width: 100%;
+				max-width: @item-max-width;
+				margin: auto;
+
+				line-height: 1.75em;
+				font-size: 1.25em;
+
+				.desc-col {
+					text-align: left;
+				}
+				.amount-col {
+					text-align: right;
+				}
+				.total-row {
+					border-top: 2px solid @add-remove-button-colour;
+					font-size: 1.25em;
+					line-height: 2em;
+				}
+			}
+
 		}
 	}
 }

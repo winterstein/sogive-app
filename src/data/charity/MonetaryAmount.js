@@ -53,3 +53,13 @@ MonetaryAmount.add = (amount1, amount2) => {
 		value: amount1.value + amount2.value,
 	});
 };
+
+// Must be called on a MonetaryAmount and a scalar
+MonetaryAmount.mul = (amount, multiplier) => {
+	MonetaryAmount.assIsa(amount);
+	// TODO Assert that multiplier is numeric (kind of painful in JS)
+	return MonetaryAmount.make({
+		...amount,
+		value: amount.value * multiplier,
+	});
+};

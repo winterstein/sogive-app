@@ -20,4 +20,5 @@ public class Event extends AThing {
 	String logoImage;
 	String bannerImage;
 	String description;
+	String backgroundImage;
 }

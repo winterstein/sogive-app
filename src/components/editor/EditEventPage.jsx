@@ -71,8 +71,11 @@ const EventEditor = ({id}) => {
 		<Misc.PropControl path={['data', type, id]} prop='description' item={item} label='Description' type='textarea' />
 
 		<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
-
+		
+		<Misc.PropControl path={['data', type, id]} prop='backgroundImage' item={item} label='Event Page Backdrop' type='img' />
+		
 		<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='img' />
+
 		<Misc.PropControl path={['data', type, id]} prop='bannerImage' item={item} label='Banner Image' type='img' />
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
