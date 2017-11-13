@@ -65,7 +65,7 @@ Meta.get = (obj, fieldName) => {
 	if (obj.meta && obj.meta[fieldName]) {
 		return obj.meta[fieldName];
 	}
-	// nope* 
+	// nope
 	return {};
 };
 
@@ -96,6 +96,7 @@ const defineType = (type) => {
 	assMatch(type, String);
 	const This = {};
 	This.type = type;
+	This['@type'] = 'DataClass';
 	This.isa = (obj) => isa(obj, type);
 	This.assIsa = (obj) => assert(This.isa(obj), type+" expected, but got "+obj);
 	return This;

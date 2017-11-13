@@ -578,23 +578,24 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 
 	// Sometimes we just want to autosave drafts!
 	if (hidden) return <span />;
+	const vis ={visibility: isSaving? 'visible' : 'hidden'};
 
 	return (<div title={item && item.status}>
 		<div><small>Status: {item && item.status}, Modified: {localStatus} {isSaving? "saving...":null}</small></div>
 		<button className='btn btn-default' disabled={isSaving || C.STATUS.isclean(localStatus)} onClick={() => ActionMan.saveEdits(type, id)}>
-			Save Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
+			Save Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
 		<button className='btn btn-primary' disabled={isSaving || noEdits} onClick={() => ActionMan.publishEdits(type, id)}>
-			Publish Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
+			Publish Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
 		<button className='btn btn-warning' disabled={isSaving || noEdits} onClick={() => ActionMan.discardEdits(type, id)}>
-			Discard Edits {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
+			Discard Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
 		<button className='btn btn-danger' disabled={isSaving} onClick={() => ActionMan.delete(type, id)} >
-			Delete {isSaving? <span className="glyphicon glyphicon-cd spinning" /> : <span>&nbsp;</span>}
+			Delete <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 	</div>);
 };
