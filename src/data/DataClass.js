@@ -84,7 +84,7 @@ const nonce = (n=6) => {
 	const az = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (let i = 0; i < n; i++) {
 		s[i] = az.substr(Math.floor(Math.random() * az.length), 1);
-	}* 
+	}
 	return s.join("");
 };
 
