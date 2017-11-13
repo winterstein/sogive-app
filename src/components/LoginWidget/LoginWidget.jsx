@@ -2,7 +2,7 @@ import React from 'react';
 import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import {Modal} from 'react-bootstrap';
-import { XId, uid, stopEvent } from 'wwutils';
+import { XId, uid, stopEvent, toTitleCase} from 'wwutils';
 import Cookies from 'js-cookie';
 import DataStore from '../../plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
@@ -30,31 +30,34 @@ const LoginLink = () => {
 	</a>);
 };
 
+const canSignIn = {
+	facebook: true,
+	instagram: true,
+	twitter: true,
+}
 const SocialSignin = ({verb, services}) => {
-	if (verb==='reset') return null;
+	if (verb === 'reset') return null;
 	if ( ! services) {
 		return null; 
 	}
 	return (
 		<div className="social-signin">
-			<div className={services.indexOf('twitter') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('twitter')} className="btn btn-default signin">
-					<Misc.Logo size='small' service='twitter' /> { verb } with Twitter
-				</button>
-			</div>
-			<div className={services.indexOf('facebook') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('facebook')} className="btn btn-default signin">
-					<Misc.Logo size="small" service="facebook" /> { verb } with Facebook
-				</button>
-			</div>
-			<div className={services.indexOf('instagram') === -1? "hidden" : "form-group"}>
-				<button onClick={() => socialLogin('instagram')} className="btn btn-default signin">
-					<Misc.Logo size='small' service='instagram' /> { verb } with Instagram
-				</button>
-			</div>
+			{ services.map(service => <SocialSignInButton service={service} verb={verb} key={service} />)}
 			<p><small>We will never share your data or post to social media without your consent.
 				You can read our <a href='https://sogive.org/privacy-policy.html' target="_new">privacy policy</a> for more information.
 			</small></p>
+		</div>
+	);
+};
+
+const SocialSignInButton = ({ service, verb}) => {
+	if (!canSignIn[service]) return null;
+
+	return (
+		<div className='form-group'>
+			<button onClick={() => socialLogin(service)} className="btn btn-default signin">
+				{toTitleCase(verb)} with {toTitleCase(service)} <Misc.Logo size='small' service={service} />
+			</button>
 		</div>
 	);
 };
@@ -225,38 +228,46 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 
 const LoginWidgetEmbed = ({services, verb}) => {
 	if ( ! verb) verb = DataStore.getValue(verbPath) || 'register';
-	return (<div>
-		<LoginWidgetGuts services={services} verb={verb} />
-		<SwitchVerb verb={verb} />
-	</div>);
+	return (
+		<div className='login-widget'>
+			<LoginWidgetGuts services={services} verb={verb} />
+			<SwitchVerb verb={verb} />
+		</div>
+	);
 };
 
 const SwitchVerb = ({verb}) => {
 	if ( ! verb) verb = DataStore.getValue(verbPath);
 	if (verb === 'register') {
-		return (<div>
-			Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
-		</div>);
+		return (
+			<div className='switch-verb'>
+				Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
+			</div>
+		);
 	}
-	return (<div>
-		Don&#39;t yet have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
-	</div>);
+	return (
+		<div className='switch-verb'>
+			Don&#39;t yet have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
+		</div>
+	);
 };
 
 const LoginWidgetGuts = ({services, verb}) => {
 	if (!verb) verb = DataStore.getValue(verbPath) || 'login';
-	return (<div className="container-fluid">
-		<div className="row">
-			<div className="col-sm-6">
-				<EmailSignin
-					verb={verb}
-				/>
-			</div>
-			<div className="col-sm-6">
-				<SocialSignin verb={verb} services={services} />
+	return (
+		<div className="login-guts container-fluid">
+			<div className="login-divs row">
+				<div className="login-email col-sm-6">
+					<EmailSignin
+						verb={verb}
+					/>
+				</div>
+				<div className="login-social col-sm-6">
+					<SocialSignin verb={verb} services={services} />
+				</div>
 			</div>
 		</div>
-	</div>);
+	);
 };
 
 

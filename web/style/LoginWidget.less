@@ -1,0 +1,23 @@
+@import "colours.less";
+
+.login-widget {
+	.login-guts {
+		.login-divs {
+			display: flex; // Make cols the same height
+			.login-email, .login-social {
+				background: @charity-page-greybg;
+				padding: 1em;
+				border-radius: 0.25em;
+			}
+			.login-email {
+				margin-right: 0.5em;
+			}
+		}
+	}
+	.switch-verb {
+		padding: 1em;
+		margin-top: 0.5em;
+		background: @charity-page-greybg;
+		border-radius: 0.25em;
+	}
+}
