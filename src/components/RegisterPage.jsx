@@ -121,21 +121,21 @@ const RegisterPage = () => {
 };
 
 const NextTab = ({completed, stagePath, ...rest}) => {
-	const className = completed ? 'btn btn-primary' : 'btn btn-default';
-	return <NextPrevTab stagePath={stagePath} className={className} diff={1} text={'Next'} {...rest} />;
+	const bsClass = completed ? 'primary' : null;
+	return <NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} text={<span>Next <Misc.Icon glyph='menu-right' /></span>} {...rest} />;
 };
 const PreviousTab = ({stagePath, ...rest}) => {
-	return <NextPrevTab stagePath={stagePath} className='btn btn-default' diff={-1} text={'Previous'} {...rest} />;
+	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Misc.Icon glyph='menu-left' /> Previous</span>} {...rest} />;
 };
 
-const NextPrevTab = ({stagePath, diff, text, ...rest}) => {
+const NextPrevTab = ({stagePath, diff, text, bsClass='default', ...rest}) => {
 	const changeTab = () => {
 		let n = DataStore.getValue(stagePath) + diff;
 		DataStore.setValue(stagePath, n);
 	};
 
 	return (
-		<button onClick={changeTab} {...rest} >
+		<button className={`btn btn-${bsClass} btn-lg`} onClick={changeTab} {...rest} >
 			{text}
 		</button>
 	);
@@ -254,9 +254,9 @@ const TicketInvoice = ({event, basket}) => {
 		.sort((a, b) => a.label < b.label);
 	const rowElements = rows.map(rowData => <InvoiceRow {...rowData} />);
 	
-	const total = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());
-
-	const processingFee = MonetaryAmount.mul(total, processingPercentage / 100);
+	const subTotal = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());
+	const processingFee = MonetaryAmount.mul(subTotal, processingPercentage / 100);
+	const total = MonetaryAmount.add(subTotal, processingFee);
 
 	return (
 		<div className='invoice'>
@@ -290,7 +290,7 @@ const InvoiceRow = ({item, label, count, cost}) => {
 const RegisterOrLoginTab = () => {
 	if (Login.isLoggedIn()) {
 		return (
-			<div>
+			<div className='login-tab'>
 				<Misc.Icon glyph='tick' className='text-success' />
 				<p>You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
 				<p>Not you? <Button bsSize='small' onClick={() => Login.logout()}>Log out</Button></p>
@@ -298,7 +298,7 @@ const RegisterOrLoginTab = () => {
 		);
 	}
 	return (
-		<div>
+		<div className='login-tab'>
 			<p>Please login or register your account.</p>
 			<LoginWidgetEmbed services={['twitter']} />
 		</div>
@@ -320,7 +320,7 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 	return <div>{wdetails}</div>;
 };
 
-const AttendeeDetails = ({i, ticket, path, ticket0}) => {	
+const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	assert(DataStore.getValue(path) === null || DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
 	// first ticket - fill in from user details
@@ -402,9 +402,11 @@ const PickCTA = ({item, onClick}) => {
 			<Misc.Icon glyph='check' /> Selected
 		</div>);
 	}
-	return (<button onClick={onClick} className='read-more btn btn-default'>
-		<Misc.Icon glyph='unchecked' /> Select
-	</button>);
+	return (
+		<button onClick={onClick} className='read-more btn btn-default'>
+			<Misc.Icon glyph='unchecked' /> Select
+		</button>
+	);
 };
 
 /**

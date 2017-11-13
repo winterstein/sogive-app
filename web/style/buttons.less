@@ -1,4 +1,27 @@
-.btn {
-	// Border-radius can't overlap, so it gets clamped to the largest non-overlapping value - giving us semicircular ends
-	border-radius: 100vw;
+@import "colours.less";
+
+@primary-bg: #aad2ef;
+@default-bg: #6e707b;
+@light-fg: white;
+@dark-fg: #414352;
+
+// Using #mainDiv to increase specificity of selectors
+#mainDiv {
+	.btn {
+		// Border-radius can't overlap, so it gets clamped to the largest non-overlapping value - giving us semicircular ends
+		border-radius: 100vw;
+		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+		border: none;
+		background-color: @default-bg;
+		color: @light-fg;
+	}
+	
+	.btn-primary {
+		background-color: @primary-bg;
+		color: @dark-fg;
+	}
+
+	.btn-warning {
+		background-color: @bold-text-colour;
+	}
 }

@@ -1,16 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
-import SJTest, { assert, assMatch } from 'sjtest';
-import Login from 'you-again';
-import printer from '../utils/printer.js';
-import {modifyHash} from 'wwutils';
-import C from '../C';
-import Roles from '../Roles';
-import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
-import ServerIO from '../plumbing/ServerIO';
-import {getType, getId, nonce} from '../data/DataClass';
+
 
 const WizardProgressWidget = ({stageNum, completed, stages, stagePath}) => {
 	if ( ! stageNum) stageNum = 0;
@@ -22,18 +12,25 @@ const WizardProgressWidget = ({stageNum, completed, stages, stagePath}) => {
 const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 	// NB: if no completed info, assume all before stageNum are fine
 	const complete = completed? completed[i] : i < stageNum;
-	let c = i===stageNum? 'active' : (complete? 'complete' : '');
-	return (<div className={'Stage '+c} 
-		onClick={() => {
-			if (complete && stagePath) DataStore.setValue(stagePath, i);
-	}}>
-		<h5 className='text-center above'>{stage.title}</h5>
-		<center>
-			<span className='marker'>&#11044;</span>
-		</center>
-		<hr className='line' />
-		<h5 className='text-center below'>{stage.title}</h5>
-	</div>);
+	let c = ''; 
+	if (i === stageNum) {
+		c = 'active';
+	} else if (complete) {
+		c = 'complete';
+	}
+
+	const maybeSetStage = () => complete && stagePath && DataStore.setValue(stagePath, i);
+
+	return (
+		<div className={'Stage '+c} onClick={maybeSetStage}>
+			<h5 className='text-center above'>{stage.title}</h5>
+			<center>
+				<span className='marker'>&#11044;</span>
+			</center>
+			<hr className='line' />
+			<h5 className='text-center below'>{stage.title}</h5>
+		</div>	
+	);
 };
 
 const WizardStage = ({stageKey, stageNum, children}) => {
