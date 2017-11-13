@@ -16,6 +16,7 @@ import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO';
 import Ticket from '../data/charity/Ticket';
+import MonetaryAmount from '../data/charity/MonetaryAmount';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
@@ -72,6 +73,7 @@ const RegisterPage = () => {
 
 			<WizardStage stageKey={0} stageNum={stage}>
 				<TicketTypes event={event} basket={basket} />
+				<TicketInvoice event={event} basket={basket} />
 				<div className='nav-buttons'>
 					<NextTab stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
 				</div>
@@ -205,7 +207,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 		<button className='add-first-ticket' onClick={addTicketAction}>Add</button>
 	);
 
-	const {name, description, price, attendeeIcon} = ticketType;
+	const {name, description, price, attendeeIcon, kind} = ticketType;
 
 	return (
 		<li className='ticket-type'>
@@ -214,7 +216,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 			</div>
 			<div className='info'>
 				<div className='top-line'>
-					<div className='type-name'>{name}</div>
+					<div className='type-kind'>{kind} Registration</div>
 					<div className='type-price'><Misc.Money amount={price} /></div>
 				</div>
 				<div className='type-restrictions'>Open to humans only</div>
@@ -224,6 +226,64 @@ const RegisterTicket = ({ticketType, basket}) => {
 				{addRemove}
 			</div>
 		</li>
+	);
+};
+
+const TicketInvoice = ({event, basket}) => {
+	// TODO don't hardcode this!
+	const processingPercentage = 5.5;
+
+	const noun = 'walk';
+	const idToRow = {};
+	Basket.getItems(basket).forEach(item => {
+		let row = idToRow[item.id];
+		if (row) {
+			row.count += 1;
+			row.cost = MonetaryAmount.add(row.cost, item.price);
+		} else {
+			idToRow[item.id] = {
+				item,
+				label: `${item.name} - ${item.kind}`, // eg "The Wee Wander - Child"
+				count: 1,
+				cost: item.price,
+			};
+		}
+	});
+
+	const rows = Object.values(idToRow)
+		.sort((a, b) => a.label < b.label);
+	const rowElements = rows.map(rowData => <InvoiceRow {...rowData} />);
+	
+	const total = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());
+
+	const processingFee = MonetaryAmount.mul(total, processingPercentage / 100);
+
+	return (
+		<div className='invoice'>
+			<h2 className='invoice-header'>Your {noun}s</h2>
+			<div className='invoice-body'>
+				<table className='invoice-table'>
+					{rowElements}
+					<tr>
+						<td className='desc-col'>Processing Fee</td>
+						<td className='amount-col'><Misc.Money amount={processingFee} /></td>
+					</tr>
+					<tr className='total-row'>
+						<td className='desc-col' >Total</td>
+						<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	);
+};
+
+const InvoiceRow = ({item, label, count, cost}) => {
+	return (
+		<tr>
+			<td className='desc-col'>{count} {label}</td>
+			<td className='amount-col'><Misc.Money amount={cost} /></td>
+		</tr>
 	);
 };
 
