@@ -207,9 +207,10 @@ const FieldClearButton = ({onClick, children}) => (
  * 	CTA: {?ReactComponent} allows the Read More button to be replaced
  * 	onPick: {?Function} charity => 
  * 	tabs {Boolean|String[]}
+ * 	loading {?Boolean}
  * }
  */
-const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick, tabs, download}) => {
+const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick, tabs, download, loading}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -245,7 +246,7 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
 			</div>
-			{results.length===0 && query? <SuggestCharityForm /> : null}
+			{results.length===0 && query && ! loading? <SuggestCharityForm /> : null}
 			{download !== false? <div className='col-md-12'><DownloadLink total={total} /></div> : null}
 		</div>
 	);
@@ -260,7 +261,9 @@ const SuggestCharityForm = () => {
 		console.error("TODO submit the form, say thank you to the user");
 	};
 	return (<div className='SuggestCharityForm'>
-		<p>Can't find the charity you want? Fill in the details below and we'll add it to the database.</p>
+		<p>Can't find the charity you want? If you fill in the details below, we'll try to add it to the database.
+			Meanwhile, you can still register -- pick 'Kiltwalk' as the charity, and you can change it later).
+		</p>
 		<Misc.PropControl path={fpath} prop='charityName' label='Name of charity' />		
 		<Misc.PropControl path={fpath} prop='website' label='Charity website' />
 		<Misc.PropControl path={fpath} prop='facebook' label='Charity Facebook page (if applicable)' />

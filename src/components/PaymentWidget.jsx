@@ -26,6 +26,8 @@ const stripeKey = (C.SERVER_TYPE) ?
 	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
+const SKIP_TOKEN = 'skip_token';
+
 /**
  * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
  */
@@ -35,7 +37,7 @@ const PaymentWidget = ({amount, onToken, recipient}) => {
 		<div className='section donation-amount'>
 			<div className='well'>
 				??test card details, to make testing easy
-				<button onClick={e => onToken()}>pretend I paid</button>
+				<button onClick={e => onToken(SKIP_TOKEN)}>pretend I paid</button>
 			</div>
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
@@ -156,4 +158,5 @@ class StripeThingsClass extends Component {
 
 const StripeThings = injectStripe(StripeThingsClass);
 
+export {SKIP_TOKEN};
 export default PaymentWidget;

@@ -330,7 +330,7 @@ const CharityChoiceTab = ({basket}) => {
 		</p>		
 		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
 		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
-			onPick={onPick} CTA={PickCTA} tabs={false} download={false} />
+			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />			
 	</div>);
 };
 
@@ -363,11 +363,14 @@ const getEmail = (basket) => {
 };
 
 const CheckoutTab = ({basket, event, stagePath}) => {
-	if (!basket) return <Misc.Loading />;
+	if ( ! basket) return <Misc.Loading />;
+	if ( ! basket.stripe) basket.stripe = {};
 	// does onToken mean on-successful-payment-auth??
 	const onToken = (token, ...data) => {
+		basket.stripe.token = token;
 		console.log('CheckoutTab got token back from PaymentWidget:', token);
 		console.log('CheckoutTab got other data:', data);
+		// TODO store this Stripe info in the basket		
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 		.then(res => {
 			let n = DataStore.getValue(stagePath) + 1;

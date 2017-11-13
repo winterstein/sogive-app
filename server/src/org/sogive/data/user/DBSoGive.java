@@ -18,9 +18,12 @@ import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
+import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
+import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.ESType;
+import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
@@ -33,6 +36,7 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.ArgsParser;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.AppUtils;
@@ -91,12 +95,6 @@ public class DBSoGive {
 				));
 	}
 
-	public static Person getUser(XId id) {
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		Map<String, Object> person = es.get("sogive", "user", id.toString());
-		return (Person) person;
-	}
-
 	public static List<NGO> getCharityById(NGO ngo) {
 		ESConfig ec = Dep.get(ESConfig.class);
 		ESHttpClient esjc = new ESHttpClient(ec);
@@ -116,4 +114,15 @@ public class DBSoGive {
 		List<NGO> hits = search.get().getSearchResults(NGO.class);		
 		return hits;
 	}
+
+	public static Person getCreateUser(XId user) {
+		ESPath path = Dep.get(IESRouter.class).getPath(Person.class, user.toString(), KStatus.PUBLISHED);
+		Person peep = AppUtils.get(path, Person.class);
+		if (peep != null) return peep;
+		PersonLite peepLite = AppUtils.getCreatePersonLite(user);
+		// HACK copy over
+		peep = new Person(peepLite);
+		return peep;
+	}
+
 }

@@ -112,7 +112,7 @@ public class DonationServlet extends CrudServlet {
 		
 		// take payment
 		String ikey = donation.getId();
-		Person userObj = DBSoGive.getUser(user);
+		Person userObj = DBSoGive.getCreateUser(user);
 		StripeAuth sa = new StripeAuth(userObj, state);
 		// collect the money
 		// TODO Less half-assed handling of Stripe exceptions

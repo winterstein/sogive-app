@@ -54,8 +54,8 @@ public class FundRaiser extends AThing {
 	 * @return
 	 */
 	public static String getIDForTicket(Ticket ticket) {
-		assert ! Utils.isBlank(ticket.getEventId());
-		assert ! Utils.isBlank(ticket.attendeeEmail);
+		assert ! Utils.isBlank(ticket.getEventId()) : "no event?! "+ticket;
+		assert ! Utils.isBlank(ticket.attendeeEmail): ticket;
 		// NB: hash with salt to protect the users email
 		return ticket.getEventId()+'.'+StrUtils.md5("user:"+ticket.attendeeEmail);	
 	}

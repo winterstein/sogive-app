@@ -84,6 +84,7 @@ public class StripePlugin {
 	public static Charge collect(MonetaryAmount amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
+		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
 		if (amount.getValue100() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}

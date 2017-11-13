@@ -1,9 +1,11 @@
 package org.sogive.data.commercial;
 
 import java.util.List;
+import java.util.Map;
 
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.NGO;
+import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.utils.Mutable;
@@ -20,6 +22,12 @@ import lombok.Data;
  */
 @Data
 public class Basket extends AThing {
+
+	/**
+	 * Stripe token etc
+	 */
+	StripeAuth stripe;
+	
 	List<Ticket> items;
 	
 	String charityId;

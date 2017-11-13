@@ -10,6 +10,7 @@ import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
+import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.JThing;
@@ -137,17 +138,8 @@ public class SoGiveTestUtils {
 		Class<Person> klass = Person.class;
 		IESRouter r = Dep.get(IESRouter.class);
 		String id = "forkmcguffin@gmail.com@email";
-		ESPath path = r.getPath(klass, id);
-		Person obj = AppUtils.get(path, klass);
-		if (obj==null) {
-			obj = new Person();
-			obj.put(Person.ID, id);
-			ESPath dpath = r.getPath(klass, id, KStatus.DRAFT);
-			JThing item = new JThing().setJava(obj);
-			AppUtils.doSaveEdit(dpath, item, null);
-			AppUtils.doPublish(item, dpath, path);
-		}
-		return obj;
+		Person tweep = DBSoGive.getCreateUser(new XId(id));
+		return tweep;
 	}
 
 	/**

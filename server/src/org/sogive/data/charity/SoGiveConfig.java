@@ -1,6 +1,9 @@
 package org.sogive.data.charity;
 
+import org.sogive.data.user.Person;
+
 import com.winterwell.data.KStatus;
+import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.io.Option;
@@ -23,6 +26,7 @@ public class SoGiveConfig implements IESRouter {
 
 	@Override
 	public ESPath getPath(String dataspaceIsIgnored, Class type, String id, Object status) {
+		if (type==PersonLite.class) type = Person.class;
 		String stype = type==NGO.class? "charity" : type.getSimpleName().toLowerCase();
 		String index = stype;
 		KStatus ks = (KStatus) status;
