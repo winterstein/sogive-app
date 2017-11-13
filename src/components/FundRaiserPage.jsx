@@ -11,6 +11,7 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 
 import MonetaryAmount from '../data/charity/MonetaryAmount';
+import NGO from '../data/charity/NGO';
 import C from '../C';
 import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -53,7 +54,7 @@ const FundRaiserPage = ({id}) => {
 	// 	return <Misc.Loading />;
 	// }
 	let item = pEvent.value || FundRaiser.make({id, eventId:'fooEvent'});
-	let charity = FundRaiser.charity(item) || {};
+	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
 
 	// Let's set up all the data that might not be in the model yet...
 	item.name = item.name || 'PlaceholderWalk';

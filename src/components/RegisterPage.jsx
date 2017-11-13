@@ -27,6 +27,9 @@ import NewDonationForm from './NewDonationForm';
 import WizardProgressWidget, {WizardStage} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 
+import pivot from 'data-pivot';
+window.pivot = pivot;
+
 /**
  * Sign up for an event!
  */
@@ -109,12 +112,11 @@ const RegisterPage = () => {
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
-				ticket list, receipt, print button
-				CTA(s) to go to your shiny new fundraising page(s)
+				TODO receipt, print button				
 				<ConfirmedTicketList basket={basket} event={event} />
 			</WizardStage>
 
-			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} /> : null}
+			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 
 		</div>
 	);
@@ -176,13 +178,11 @@ const TicketTypes = ({event, basket}) => {
 /**
  * types: {Ticket[]}
  */
-const TicketGroup = ({name, description, types, basket}) => {
+const TicketGroup = ({name, subtitle, types, basket}) => {
 	return (
 		<div className='ticket-group'>
-			<div className='ticket-group-header'>
-				<div className='name'>{name}</div>
-				<div className='desc'>{description}</div>
-			</div>
+			<h3>{name} <small>{subtitle}</small></h3>
+			<hr />
 			<ul className='ticket-group-types'>
 				{ types.map(type => <RegisterTicket key={JSON.stringify(type)} ticketType={type} basket={basket} />) }
 			</ul>
@@ -198,13 +198,13 @@ const RegisterTicket = ({ticketType, basket}) => {
 	const addTicketAction = () => ActionMan.addToBasket(basket, ticketType);
 
 	const addRemove = tickets.length ? (
-		<div className='add-remove-controls'>
-			<button className='add-remove-ticket' onClick={removeTicketAction}><Misc.Icon glyph='minus' /></button>
-			<span className='ticket-count'>{tickets.length}</span>
-			<button className='add-remove-ticket' onClick={addTicketAction}><Misc.Icon glyph='plus' /></button>
+		<div className='add-remove-controls btn-group' role="group" aria-label="add remove controls">
+			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon glyph='minus' /></button>
+			<span className='ticket-count btn-text'>{tickets.length}</span>
+			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon glyph='plus' /></button>
 		</div>
 	) : (
-		<button className='add-first-ticket' onClick={addTicketAction}>Add</button>
+		<button className='btn btn-default btn-square add-first-ticket' onClick={addTicketAction}>Add</button>
 	);
 
 	const {name, description, price, attendeeIcon, kind} = ticketType;
@@ -212,15 +212,14 @@ const RegisterTicket = ({ticketType, basket}) => {
 	return (
 		<li className='ticket-type'>
 			<div className='decoration'>
-				<img className='attendee-icon' src={attendeeIcon} />
+				<img className='attendee-icon' src={attendeeIcon} alt='' />
 			</div>
 			<div className='info'>
 				<div className='top-line'>
-					<div className='type-kind'>{kind} Registration</div>
+					<div className='type-kind'>{kind || ''} Registration</div>
 					<div className='type-price'><Misc.Money amount={price} /></div>
 				</div>
-				<div className='type-restrictions'>Open to humans only</div>
-				<div className='price-breakdown'>we throw 100% of your money in the lake</div>
+				<div className='description'>{description || ''}</div>
 			</div>
 			<div className='controls'>
 				{addRemove}
@@ -230,11 +229,8 @@ const RegisterTicket = ({ticketType, basket}) => {
 };
 
 const TicketInvoice = ({event, basket}) => {
-	// TODO don't hardcode this!
-	const processingPercentage = 5.5;
-
-	const noun = 'walk';
 	const idToRow = {};
+	console.warn("basket", basket);
 	Basket.getItems(basket).forEach(item => {
 		let row = idToRow[item.id];
 		if (row) {
@@ -243,7 +239,7 @@ const TicketInvoice = ({event, basket}) => {
 		} else {
 			idToRow[item.id] = {
 				item,
-				label: `${item.name} - ${item.kind}`, // eg "The Wee Wander - Child"
+				label: (item.name || 'Ticket') + (item.kind? ' - '+item.kind : ''), // eg "The Wee Wander - Child"
 				count: 1,
 				cost: item.price,
 			};
@@ -252,22 +248,26 @@ const TicketInvoice = ({event, basket}) => {
 
 	const rows = Object.values(idToRow)
 		.sort((a, b) => a.label < b.label);
-	const rowElements = rows.map(rowData => <InvoiceRow {...rowData} />);
+	const rowElements = rows.map(rowData => <InvoiceRow key={JSON.stringify(rowData)} {...rowData} />);
 	
-	const subTotal = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());
-	const processingFee = MonetaryAmount.mul(subTotal, processingPercentage / 100);
-	const total = MonetaryAmount.add(subTotal, processingFee);
+	const subTotal = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());	
+	let total = subTotal;
+	// NB: SoGive does not have processing fees -- the Stripe fee is invisible to the user.
+	let processingFee = false;
+	// const processingFee = MonetaryAmount.mul(subTotal, processingPercentage / 100);
+	// let total = MonetaryAmount.add(subTotal, processingFee);
+	// <h2 className='invoice-header'>Your {noun}s</h2>
 
 	return (
-		<div className='invoice'>
-			<h2 className='invoice-header'>Your {noun}s</h2>
+		<div className='invoice'>			
 			<div className='invoice-body'>
 				<table className='invoice-table'>
 					{rowElements}
-					<tr>
+					{processingFee? <tr>
 						<td className='desc-col'>Processing Fee</td>
 						<td className='amount-col'><Misc.Money amount={processingFee} /></td>
 					</tr>
+						: null}
 					<tr className='total-row'>
 						<td className='desc-col' >Total</td>
 						<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
@@ -338,10 +338,14 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 		ticket.attendeeAddress = ticket0.attendeeAddress;
 		ticket.team = ticket0.team;
 	}
-	return (
-		<div className='AttendeeDetails'>
-			<h3 className='name'>{ticket.name}</h3><h4>{ticket.subtitle}</h4><h4 className='kind'>{ticket.kind}</h4>			
-			<h4>{noun} <span>{i+1}</span></h4>
+	return (<div>		
+		<h3>
+			{ticket.name} 
+			{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
+			: <span>{noun} {i+1}</span>
+		</h3>
+		<hr />
+		<div className='AttendeeDetails'>			
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
@@ -352,7 +356,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 				</div>
 			}
 		</div>
-	);
+	</div>);
 };
 
 const TeamControl = ({ticket, path}) => {
@@ -385,10 +389,12 @@ const CharityChoiceTab = ({basket}) => {
 	};
 
 	return (<div>
-		<p>
-			Please choose a charity to support.
-		</p>		
-		<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
+		<div className='padded-block'>
+			<p>
+				Please choose a charity to support.
+			</p>		
+			<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
+		</div>
 		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
 			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />			
 	</div>);
@@ -434,16 +440,18 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 		console.log('CheckoutTab got other data:', data);
 		// TODO store this Stripe info in the basket		
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
-		.then(res => {
-			let n = DataStore.getValue(stagePath) + 1;
-			DataStore.setValue(stagePath, n);
-		}, err => {
-			console.error(err); // TODO
-		});
+			.then(res => {
+				let n = DataStore.getValue(stagePath) + 1;
+				DataStore.setValue(stagePath, n);
+			}, err => {
+				console.error(err); // TODO
+			});
 	};
 	let email = getEmail();
-	return (<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
-			email={email} username={Login.getId()} />);
+	return (<div className='padded-block'>
+		<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
+			email={email} username={Login.getId()} />
+	</div>);
 };
 
 const ConfirmedTicketList = ({basket, event}) => {
@@ -464,21 +472,29 @@ const ConfirmedTicket = ({ticket, event}) => {
 		// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
 		// Option (b) would allow for e.g. I set up my page and my Gran's page.
 		// for now: no email = no page
-		return (
-			<div>
-				<h3>{ticket.attendeeName}</h3>
+		return (<div className='clear'>
+			<h3>{ticket.attendeeName}</h3>
+			<div className='padded-block'>				
 				No email provided
 			</div>
-		);
+		</div>);
 	}
 	let frid = FundRaiser.getIdForTicket(ticket);	
-	return (
-		<div>
-			<h3>{ticket.attendeeName}</h3>
-			<a href={'#fundraiser/'+encURI(frid)}>Fund Raiser for {ticket.attendeeName}</a>
-			<pre>{JSON.stringify(ticket)}</pre>
+	return (<div className='clear'>
+		<h3>{ticket.attendeeName}</h3>
+		<hr />
+		<div className='padded-block'>
+			<a className='btn btn-primary btn-lg pull-right' href={'#fundraiser/'+encURI(frid)}>
+				Setup Fund-Raising Page for {ticket.attendeeName}
+			</a>
+			<table>
+				<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
+				<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
+				<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
+				{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+			</table>
 		</div>
-	);
+	</div>);
 };
 
 export default RegisterPage;

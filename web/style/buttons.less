@@ -1,27 +1,60 @@
 @import "colours.less";
 
-@primary-bg: #aad2ef;
-@default-bg: #6e707b;
-@light-fg: white;
-@dark-fg: #414352;
+// Actually ... Bootstrap have done quite a lot of work to make their buttons buttony
+// We want to cover the states like :active and :hover
+// We can copy stuff from Bootstrap
+// But for now, let's just use vanilla
 
-// Using #mainDiv to increase specificity of selectors
+// // Using #mainDiv to increase specificity of selectors
 #mainDiv {
-	.btn {
-		// Border-radius can't overlap, so it gets clamped to the largest non-overlapping value - giving us semicircular ends
-		border-radius: 100vw;
-		box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-		border: none;
-		background-color: @default-bg;
-		color: @light-fg;
-	}
+// 	.btn {
+// 		// Border-radius can't overlap, so it gets clamped to the largest non-overlapping value - giving us semicircular ends
+// 		border-radius: 100vw;
+// 		//box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+// 		box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+// 		// border: none; looks fuzzy without a border
+// 	}
 	
-	.btn-primary {
-		background-color: @primary-bg;
-		color: @dark-fg;
+// 	.btn-default {
+// 		background-color: @default-button-colour;
+// 		color: @light-fg;
+// 		border-color: darken(@default-button-colour, 5%);
+// 	}
+
+// 	.btn-primary {
+// 		background-color: @primary-bg;
+// 		color: @dark-fg;
+// 		border-color: darken(@primary-bg, 5%);
+
+// 		&:hover {
+// 			background-color: darken(@primary-bg, 10%);
+// 			border-color: darken(@primary-bg, 15%);
+// 		}	
+// 	}
+
+	.btn-square {
+		background-color: @default-button-colour;
+		box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+		border-radius: 0px !important;
+		border: none;
+		&:hover {
+			background-color: darken(@default-button-colour, 10%);
+		}	
+		&:active {
+			// box-shadow: inset 0 3px 5px rgba(0,0,0,.125)
+			box-shadow: inset 0 2px 5px rgba(0,0,0,0.2)
+		}
 	}
 
-	.btn-warning {
-		background-color: @bold-text-colour;
+	.btn-group {
+		display: flex;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+	}
+	.btn-group > .btn-text {
+		// box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+	}
+	.btn-group > .btn:not(:active) { //:first-child:not(:last-child):not(.dropdown-toggle) {
+		// no right shadow
+		box-shadow: none; // 0px 2px 2px rgba(0,0,0,0.2);
 	}
 }

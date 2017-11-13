@@ -4,6 +4,8 @@ import {blockProp} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
 import Ticket from './Ticket';
+import DataStore from '../../plumbing/DataStore';
+import ActionMan from '../../plumbing/ActionMan';
 
 /** impact utils */
 const FundRaiser = {};
@@ -25,6 +27,20 @@ This.oxid = obj => obj.oxid || (obj.owner && obj.owner.xid);
 
 This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;
+
+/**
+ * @returns {?NGO}
+ */
+This.charity = item => {
+	const cid = This.charityId(item);
+	if ( ! cid) {
+		console.warn("FundRaiser.js - No charity!", item);
+		return null;
+	}
+	const spec = {type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED};
+	let pvCharity = ActionMan.getDataItem(spec);
+	return pvCharity.value;
+};
 
 /**
  * event + email => fund-raiser

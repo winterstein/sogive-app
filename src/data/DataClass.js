@@ -99,6 +99,12 @@ const defineType = (type) => {
 	This['@type'] = 'DataClass';
 	This.isa = (obj) => isa(obj, type);
 	This.assIsa = (obj) => assert(This.isa(obj), type+" expected, but got "+obj);
+	This.make = (base = {}) => {
+		return {
+			'@type': This.type,
+			...base
+		};
+	};
 	return This;
 };
 

@@ -1,6 +1,6 @@
 {
 	"name": "SoGive",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Charity app",
 	"author": "Daniel Winterstein",
 	"repository": {
@@ -27,7 +27,8 @@
 		"webpack": "^3.5.5",
 		"easy-enums": "^1.1.6",
 		"easyi18n": "^1.1.0",
-		"sjtest": "^0.4.4",
+		"sjtest": "^0.4.6",
+		"data-pivot": "^0.3.1",
 		"wwutils": "^0.8.4",
 		"you-again": "^0.6.1",
 		"promise-value": "^1.0.8"

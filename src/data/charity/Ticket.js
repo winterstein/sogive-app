@@ -31,6 +31,7 @@ Ticket.make = (base, eventId) => {
 		eventId: eventId,
 		id: eventId+'.'+nonce(),
 		price: MonetaryAmount.make(),
+		...base
 	};
 	obj['@type'] = This.type;
 	This.assIsa(obj);

@@ -1,12 +1,12 @@
 
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
-import {isa, nonce} from './DataClass';
+import {isa, nonce, defineType} from './DataClass';
 import {uid, blockProp} from 'wwutils';
 import MonetaryAmount from './charity/MonetaryAmount';
 import C from '../C';
 
-const Basket = {};
+const Basket = defineType(C.TYPES.Basket);
 const This = Basket;
 export default Basket;
 
@@ -14,13 +14,10 @@ export default Basket;
 
 // Basket is normally DRAFT (PUBLISHED = paid for)
 
-Basket.type = C.TYPES.Basket;
-
 Basket.isa = (obj) => isa(obj, Basket.type)
 		// sneaky place to add safety checks
 		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
 		&& true;
-Basket.assIsa = (obj) => assert(Basket.isa(obj), "Basket.js - not "+obj);
 
 This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;

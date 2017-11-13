@@ -1,20 +1,48 @@
 @import "positioning.less";
 @import "colours.less";
 
-@header-line-colour: #f9ecdd;
-@add-remove-button-colour: #deb686;
-@type-bg-colour: #dfe0e2;
-@type-line-colour: #cdced2;
-@pale-blue: #80bde7;
-@masthead-bg: #676974;
-
 @container-max-width: 800px;
+/** 
+	NB: We want to have borders which stretch 100%, but contents which are smaller.
+	So we can't simply put some padding on the page :(
+	Instead, add this to content elements:
+
+		.padded-block;
+
+*/
 @item-max-width: 650px;
 
+.padded-block {
+	max-width: @item-max-width;
+	margin-left: auto;	
+	margin-right: auto;
+}
+
+.WizardStage {	
+	min-height: 50vw;
+	
+	h3, h4 {
+		.padded-block;
+		margin-bottom: -0.15em;
+	}
+
+		/**
+	Put this on the wider div just below the .header
+	*/
+	hr {
+		padding: 0;
+		margin: 0;
+		margin-bottom: 8px;
+		border-top: medium solid @header-line-colour;
+	}
+
+}
+
 #register {
+	// TODO avoid page specific css
 	max-width: @container-max-width;
 	margin: auto;
-	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);
+	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.2);	
 
 	.register-banner {
 		width: 100%;
@@ -38,42 +66,17 @@
 	}
 
 	.login-tab {
-		max-width: @item-max-width;
-		margin: auto;
+		.padded-block;
 	}
 
-	.ticket-group {
-		.ticket-group-header {
-			position: relative;
-			max-width: @item-max-width;
-			display: flex;
-			justify-content: space-between;
-			margin: auto;
-			z-index: 1;
-	
-			.name, .desc {
-				display: inline-block;
-				position: relative;
-			}
-			.name {
-				font-size: 1.5em;
-				text-align: left;
-				bottom: -0.4em;
-			}
-			.desc {
-				font-size: 1.2em;
-				text-align: right;
-				bottom: -0.8em;
-			}
-		}
+	.ticket-group {		
 	
 		.ticket-group-types {
 			list-style-type: none;
-			position: relative;
-			padding: 0;
-			border-top: 5px solid @header-line-colour;
+			position: relative;			
 
 			.ticket-type {
+				background: @type-bg-colour;
 				display: flex;
 				justify-content: space-between;
 				max-width: @item-max-width;
@@ -82,8 +85,11 @@
 				.decoration, .info, .controls {
 					display: inline-block;
 				}
+				// padding, except for the curled-corner .decoration
+				.info, .controls {
+					padding: 1em;
+				}
 				.decoration {
-					background: @type-bg-colour;
 					width: 10em;
 					background-image: url(/img/ticket-corner.png);
 					background-repeat: no-repeat;
@@ -99,9 +105,6 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
-				}
-				.info, .controls {
-					background: @type-bg-colour;
 				}
 				.info {
 					flex-grow: 1;
@@ -122,19 +125,12 @@
 					}
 
 					.add-first-ticket, .add-remove-ticket, .ticket-count {
-						height: 2em;
 						font-size: 1.25em;
-						line-height: 2em;
-					}
-					.add-first-ticket, .add-remove-ticket {
-						background-color: @add-remove-button-colour;
-						box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
-						border: none;
 					}
 					.add-first-ticket {
 						width: 6em;
 					}
-					.add-remove-ticket, .ticket-count{
+					.add-remove-ticket, .ticket-count {
 						width: 2em;
 					}
 					.ticket-count {
@@ -144,29 +140,21 @@
 				}
 			}
 		}
-	}
+	} // ./ticket-group
 
 	.invoice {
-		.invoice-header {
-			max-width: @item-max-width;
-			margin: 0 auto;
-			position: relative;
-			bottom: -0.25em;
-			z-index: 1;
-		}
 		.invoice-body {
 			background-color: @type-bg-colour;
 			width: 100%;
 			padding: 1.5em 0;
-
+	
 			.invoice-table {
 				width: 100%;
-				max-width: @item-max-width;
-				margin: auto;
-
+				.padded-block;
+	
 				line-height: 1.75em;
 				font-size: 1.25em;
-
+	
 				.desc-col {
 					text-align: left;
 				}
@@ -174,11 +162,17 @@
 					text-align: right;
 				}
 				.total-row {
-					border-top: 2px solid @add-remove-button-colour;
-					font-size: 1.25em;
-					line-height: 2em;
+					border-top: 1px solid darken(@type-bg-colour, 20%);
 				}
 			}
 		}
+	} // ./invoice
+
+	.AttendeeDetails {
+		.padded-block;
 	}
-}
+	
+} // ./#register
+
+
+

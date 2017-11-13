@@ -16,7 +16,7 @@ public class Ticket extends AThing {
 	
 	String eventId;
 	
-	/** e.g. "a gentle 1o mile walk" 
+	/** e.g. "a gentle 10 mile walk" 
 	NB: name is the title, e.g. "Wee Wander" */
 	String subtitle;
 
