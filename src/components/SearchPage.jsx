@@ -245,11 +245,31 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
 			</div>
+			{results.length===0 && query? <SuggestCharityForm /> : null}
 			{download !== false? <div className='col-md-12'><DownloadLink total={total} /></div> : null}
 		</div>
 	);
 }; //./SearchResults
 
+/**
+ * TODO allow users to suggest extra charities
+ */
+const SuggestCharityForm = () => {
+	let fpath = ['widget','SuggestCharityForm'];
+	let submitFn = e => {
+		console.error("TODO submit the form, say thank you to the user");
+	};
+	return (<div className='SuggestCharityForm'>
+		<p>Can't find the charity you want? Fill in the details below and we'll add it to the database.</p>
+		<Misc.PropControl path={fpath} prop='charityName' label='Name of charity' />		
+		<Misc.PropControl path={fpath} prop='website' label='Charity website' />
+		<Misc.PropControl path={fpath} prop='facebook' label='Charity Facebook page (if applicable)' />
+		<Misc.PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
+		<Misc.PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
+		<Misc.PropControl path={fpath} prop='email' label='Your email' />
+		<button className='btn btn-default' onClick={submitFn}>Submit</button>
+	</div>);
+};
 
 const SearchResultsNum = ({results, total, query}) => {
 	if (total===undefined) total = results.length; // fallback
