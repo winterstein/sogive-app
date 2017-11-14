@@ -56,6 +56,10 @@ const RegisterPage = () => {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
 
+	const walkerDetailsOK = Basket.getItems(basket).reduce((done, ticket) => {
+		return done && ticket.attendeeName && ticket.attendeeEmail && ticket.attendeeAddress;
+	}, true);
+
 	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
@@ -93,7 +97,7 @@ const RegisterPage = () => {
 				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				<div className='nav-buttons'>
 					<PrevButton stagePath={stagePath} /> 
-					<NextButton stagePath={stagePath} />
+					<NextButton stagePath={stagePath} disabled={! walkerDetailsDone} completed={walkerDetailsDone} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={3} stageNum={stage}>					
@@ -315,25 +319,27 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 		ticket.attendeeAddress = ticket0.attendeeAddress;
 		ticket.team = ticket0.team;
 	}
-	return (<div>		
-		<h3>
-			{ticket.name} 
-			{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
-			: <span>{noun} {i+1}</span>
-		</h3>
-		<hr />
-		<div className='AttendeeDetails'>			
-			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-			<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-			{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
-			{ sameAsFirst? null : 
-				<div>
-					<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-					<TeamControl ticket={ticket} path={path} />
-				</div>
-			}
+	return (
+		<div>		
+			<h3>
+				{ticket.name} 
+				{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
+				: <span>{noun} {i+1}</span>
+			</h3>
+			<hr />
+			<div className='AttendeeDetails'>			
+				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
+				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
+				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
+				{ sameAsFirst? null : 
+					<div>
+						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<TeamControl ticket={ticket} path={path} />
+					</div>
+				}
+			</div>
 		</div>
-	</div>);
+	);
 };
 
 const TeamControl = ({ticket, path}) => {
