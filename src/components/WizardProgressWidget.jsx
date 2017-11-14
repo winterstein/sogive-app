@@ -1,6 +1,7 @@
 import React from 'react';
 import DataStore from '../plumbing/DataStore';
-
+import Misc from './Misc';
+import {assMatch, assert} from 'sjtest';
 
 const WizardProgressWidget = ({stageNum, completed, stages, stagePath}) => {
 	if ( ! stageNum) stageNum = 0;
@@ -34,9 +35,47 @@ const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 };
 
 const WizardStage = ({stageKey, stageNum, children}) => {
-	if (stageKey !== stageNum) return null;
+	if ( ! stageNum) stageNum=0;
+	if (stageKey != stageNum) { // allow "1" == 1		
+		return null;
+	}
 	return <div className='WizardStage'>{children}</div>;
 };
 
-export {WizardStage};
+
+/**
+ * 
+ * @param {
+ * 	maxStage: {Number}
+ * }
+ */
+const NextButton = ({completed, stagePath, ...rest}) => {
+	const bsClass = completed ? 'primary' : null;
+	return <NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} text={<span>Next <Misc.Icon glyph='menu-right' /></span>} {...rest} />;
+};
+const PrevButton = ({stagePath, ...rest}) => {
+	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Misc.Icon glyph='menu-left' /> Previous</span>} {...rest} />;
+};
+
+const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...rest}) => {
+	assMatch(stagePath, 'String[]');
+	assMatch(diff, Number);	
+	assert(text, 'WizardProgressWidget.js - no button text');
+	const stage = DataStore.getValue(stagePath);
+	const changeTab = () => {
+		let n = stage + diff;
+		DataStore.setValue(stagePath, n);
+	};
+	// use Bootstrap pull class to left/right float
+	const pull = diff > 0? 'pull-right' : 'pull-left';
+	if (stage===0 && diff < 0) return null; // no previous on start
+	if (maxStage && stage===maxStage && diff > 0) return null; // no next on end
+	return (
+		<button className={`btn btn-${bsClass} btn-lg ${pull}`} onClick={changeTab} {...rest} >
+			{text}
+		</button>
+	);
+};
+
+export {WizardStage, NextButton, PrevButton};
 export default WizardProgressWidget;

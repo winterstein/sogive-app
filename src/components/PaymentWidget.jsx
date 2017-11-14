@@ -32,6 +32,9 @@ const SKIP_TOKEN = 'skip_token';
  * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
  */
 const PaymentWidget = ({amount, onToken, recipient}) => {
+	if ( ! amount) {
+		return null; // no amount, no payment
+	}
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>

@@ -1,12 +1,10 @@
 // @Flow
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { assert } from 'sjtest';
+import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import {XId } from 'wwutils';
-import { Tabs, Tab, Modal, Button } from 'react-bootstrap';
-
-import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
+import { Modal } from 'react-bootstrap';
 
 import C from '../C';
 import printer from '../utils/printer';
@@ -19,8 +17,9 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';
-import {nonce,getType} from '../data/DataClass';
+import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
+import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
 
 /**
  * 
@@ -50,9 +49,15 @@ const initialFormData = Donation.make({
 	complete: false,
 });
 
-const initialWidgetState = {
-	open: false,
-	stage: 1,
+/**
+ * NB: We can have several DonateButtons, but only one model form
+ */
+const DonateButton = ({item}) => {
+	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
+	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	return (<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		Donate
+	</button>);
 };
 
 /** no donations below a min £1 */
@@ -74,37 +79,25 @@ const messageOK = (formData) => true;
 
 const paymentOK = (formData) => true;
 
-const stagesOK = (formData) => [
-	amountOK(formData),
-	giftAidOK(formData),
-	detailsOK(formData),
-	messageOK(formData),
-	paymentOK(formData),
-];
-
-
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item}) => {
-	assert(item.id, "DonationForm", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);
+const DonationForm = ({item, causeName}) => {
+	assert(getId(item), "DonationForm", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);	
+	if ( ! causeName) causeName = item.displayName || item.name || getId(item);
+
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
 		"NewDonationForm - type "+getType(item));
 	*/
-	const widgetPath = ['widget', 'NewDonationForm', item.id];
-	let widgetState = DataStore.getValue(widgetPath);
-	if (!widgetState) {
-		widgetState = initialWidgetState;
-		DataStore.setValue(widgetPath, widgetState, false);
-	}
-	const donateButton = (
-		<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
-			Donate
-		</button>
-	);
+	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	// let widgetState = DataStore.getValue(widgetPath);
+	// if ( ! widgetState) {
+	// 	widgetState = initialWidgetState;
+	// 	DataStore.setValue(widgetPath, widgetState, false);
+	// }
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
@@ -113,9 +106,7 @@ const DonationForm = ({item}) => {
 	if ( ! donationDraft) {
 		// if the promise is running, wait for it before making a new draft
 		if ( ! pDonation.resolved) {
-			return donateButton;
-			// TODO if they click whilst the promise is running (unlikely)
-			// display a spinner
+			return <Misc.Loading />;
 		}
 		// make a new draft donation
 		donationDraft = {
@@ -125,9 +116,17 @@ const DonationForm = ({item}) => {
 		};
 	}
 
+	// what stage?
+	const stagePath = ['location', 'params', 'dntnStage'];	
+	const stage = DataStore.getUrlValue('dntnStage');
+
 	// not open? just show the button
-	if (!widgetState.open) {
-		return donateButton;
+	let isOpen = DataStore.getValue([...widgetPath, 'open']);
+	if (isOpen===undefined || isOpen===null) {
+		isOpen = stage!==undefined && stage!==null;
+	}
+	if ( ! isOpen) {
+		return null;
 	}
 
 	const path = ['data', type, donationDraft.id];
@@ -135,24 +134,8 @@ const DonationForm = ({item}) => {
 	// also store it where the fetch will find it
 	DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);
 	
-	const stagePath = [...widgetPath, 'stage'];
 
 	const closeLightbox = () => DataStore.setValue([...widgetPath, 'open'], false);
-
-	const { stage } = widgetState;
-	const isFirst = stage <= 1;
-	const isLast = stage >= 5;
-	
-	const prevLink = isFirst ? '' : (
-		<Misc.SetButton path={stagePath} value={stage - 1} className='btn btn-default pull-left'>
-			Previous
-		</Misc.SetButton>
-	);
-	const nextLink = isLast ? '' : (
-		<Misc.SetButton path={stagePath} value={stage + 1} className='btn btn-default pull-right'>
-			Next
-		</Misc.SetButton>
-	);
 
 	// TODO replace tabs with WizardProgressWidget (see RegisterPage)
 	// TODO Thank You / confirmation / receipt page
@@ -160,40 +143,39 @@ const DonationForm = ({item}) => {
 	// Minor TODO if no gift-aid => no details section
 
 	return (
-		<div>
-			{donateButton}
-			<Modal show={widgetState.open} className="donate-modal" onHide={closeLightbox}>
-				<Modal.Header closeButton >
-					<Modal.Title>GIMME YOUR MONEY</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Tabs activeKey={stage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
-						<Tab eventKey={1} title='Amount'>
-							<AmountSection path={path} />
-						</Tab>
-						<Tab eventKey={2} title='Gift Aid'>
-							<GiftAidSection path={path} />
-						</Tab>
-						<Tab eventKey={3} title='Details'>
-							<DetailsSection path={path} />
-						</Tab>
-						<Tab eventKey={4} title='Message'>
-							<MessageSection path={path} item={item} />
-						</Tab>
-						<Tab eventKey={5} title='Payment'>
-							<PaymentSection path={path} />
-						</Tab>
-						<Tab eventKey={5} title='Confirmation'>
-							<ThankYouSection path={path} />
-						</Tab>
-					</Tabs>
-				</Modal.Body>
-				<Modal.Footer>
-					{prevLink} {nextLink}
-				</Modal.Footer>
-				<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
-			</Modal>
-		</div>
+		<Modal show className="donate-modal" onHide={closeLightbox}>
+			<Modal.Header closeButton >
+				<Modal.Title>Donate to {causeName}</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<WizardProgressWidget stageNum={stage} 
+					stagePath={stagePath} 
+					stages={[{title:'Amount'}, {title:'Gift Aid'}, {title:'Details'}, {title:'Message'}, {title:'Payment'}, {title:'Confirmation'}]}
+				/>
+				<WizardStage stageKey={0} stageNum={stage}>
+					<AmountSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={1} stageNum={stage}>
+					<GiftAidSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={2} stageNum={stage}>
+					<DetailsSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={3} stageNum={stage}>
+					<MessageSection path={path} item={item} />
+				</WizardStage>
+				<WizardStage stageKey={4} stageNum={stage}>
+					<PaymentSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={5} stageNum={stage}>
+					<ThankYouSection path={path} />
+				</WizardStage>
+			</Modal.Body>
+			<Modal.Footer>
+				<PrevButton stagePath={stagePath} /> <NextButton maxStage={5} stagePath={stagePath} />
+			</Modal.Footer>
+			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
+		</Modal>
 	);
 }; // ./DonationForm
 
@@ -238,4 +220,5 @@ const ThankYouSection = () => {
 	return <div>Thank You!</div>; // TODO
 };
 
+export {DonateButton};
 export default DonationForm;

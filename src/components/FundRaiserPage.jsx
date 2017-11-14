@@ -2,7 +2,7 @@ import React from 'react';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import { Clearfix, Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 
 import printer from '../utils/printer.js';
 
@@ -17,7 +17,7 @@ import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
-import NewDonationForm from './NewDonationForm';
+import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
 
 
@@ -120,6 +120,7 @@ const FundRaiserPage = ({id}) => {
 	return (
 		<div>
 			<div id='fundraiser-bg' />
+			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				<Row>
 					<Col md={12} className='event-banner'>
@@ -143,14 +144,14 @@ const FundRaiserPage = ({id}) => {
 							<div className='bar-container'>
 								<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
 									<Misc.Money amount={item.donated} />
-									<Glyphicon glyph='triangle-right' />
+									<Misc.Icon glyph='triangle-right' />
 								</div>
 								<div className='donation-progress-bar'>
 									<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
 									<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
 								</div>
 								<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-									<Glyphicon glyph='triangle-left' />
+									<Misc.Icon glyph='triangle-left' />
 									{Math.round(donatedPercent)}%
 								</div>
 							</div>
@@ -168,7 +169,7 @@ const FundRaiserPage = ({id}) => {
 									<span className='amount'>25</span> local ponds repopulated with friendly amphibians
 								</div>
 							</div>
-							<NewDonationForm item={item} />
+							<DonateButton item={item} />
 						</div>
 					</Col>
 				</Row>
@@ -194,7 +195,7 @@ const FundRaiserPage = ({id}) => {
 					<Col md={6}>
 						<h3>Supporters:</h3>
 						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />
-						<NewDonationForm item={item} />
+						<DonateButton item={item} />
 					</Col>
 				</Row>
 			</Grid>
@@ -224,16 +225,5 @@ const Supporter = ({supporter, charity}) => {
 	);
 };
 
-const OldFundraiserPage = ({item, id}) => (
-	<div>
-		<h2>{item.name || 'Fundraiser '+id} </h2>		
-		<p><small>ID: {id}</small></p>
-		<img src={item.img} className='img-thumbnail' alt='fundraiser pic' />
-		<div>
-			{item.description}
-		</div>
-		<NewDonationForm item={item} />
-	</div>
-);
 
 export default FundRaiserTop;
