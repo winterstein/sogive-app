@@ -54,6 +54,17 @@ MonetaryAmount.add = (amount1, amount2) => {
 	});
 };
 
+// Will fail if not called on 2 MonetaryAmounts of the same currency
+MonetaryAmount.sub = (amount1, amount2) => {
+	MonetaryAmount.assIsa(amount1);
+	MonetaryAmount.assIsa(amount2);
+	assert(amount1.currency === amount2.currency);
+	return MonetaryAmount.make({
+		...amount1,
+		value: amount1.value - amount2.value,
+	});
+};
+
 // Must be called on a MonetaryAmount and a scalar
 MonetaryAmount.mul = (amount, multiplier) => {
 	MonetaryAmount.assIsa(amount);

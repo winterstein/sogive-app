@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import {encURI} from 'wwutils';
+
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../plumbing/DataStore';
 import C from '../../C';
@@ -51,14 +52,16 @@ const FundRaiserEditor = ({id}) => {
 			<p><small>Event: {FundRaiser.eventId(item)}</small></p>
 
 			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='img' />
+			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
 			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
 			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='MonetaryAmount' 
 				placeholder='Leave blank for an automatic target (recommended)' />
 
+			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='MonetaryAmount' />
+
 			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
-			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='img' />
+			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
 			<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
 			<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
 

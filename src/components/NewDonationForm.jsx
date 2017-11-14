@@ -37,9 +37,11 @@ const stripeKey = (C.SERVER_TYPE) ?
 const DonateButton = ({item}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
-	return (<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
-		Donate
-	</button>);
+	return (
+		<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+			Donate
+		</button>
+	);
 };
 
 /** no donations below a min £1 */
@@ -98,12 +100,14 @@ const DonationForm = ({item, charity, causeName}) => {
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({item});
+	// if the promise is running, wait for it before making a new draft
+	if ( ! pDonation.resolved) {
+		return <Misc.Loading />;
+	}
+	console.log('*** pDonation resolved, creating donation draft');
+
 	let donationDraft = pDonation.value;
 	if ( ! donationDraft) {
-		// if the promise is running, wait for it before making a new draft
-		if ( ! pDonation.resolved) {
-			return <Misc.Loading />;
-		}
 		// make a new draft donation
 		donationDraft = Donation.make({			
 			to: charityId,

@@ -73,6 +73,13 @@ For now -- safer to have the Kiltwalk stuff styled separately
 		border-top: medium solid @header-line-colour;
 	}	
 
+	/**
+	Bootstrap Containers have set widths for screen sizes - override!
+	*/
+	.container {
+		max-width: @container-max-width;
+	}
+
 } // ./page
 
 // Pages like FundRaiserPage and RegisterPage have a large image bg (image url set as inline style)

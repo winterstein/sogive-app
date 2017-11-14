@@ -87,7 +87,7 @@ const RegisterPage = () => {
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={1} stageNum={stage}>
-				<RegisterOrLoginTab />
+				<RegisterOrLoginTab stagePath={stagePath} />
 				<div className='nav-buttons'>
 					<PrevButton stagePath={stagePath} /> 
 					<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
@@ -96,25 +96,25 @@ const RegisterPage = () => {
 			<WizardStage stageKey={2} stageNum={stage}>
 				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} /> 
-					<NextButton stagePath={stagePath} disabled={! walkerDetailsDone} completed={walkerDetailsDone} />
+					<PrevButton stagePath={stagePath} />
+					<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
 				</div>
 			</WizardStage>
-			<WizardStage stageKey={3} stageNum={stage}>					
+			<WizardStage stageKey={3} stageNum={stage}>
 				<CharityChoiceTab basket={basket} />
 				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} /> 
+					<PrevButton stagePath={stagePath} />
 					<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
 				</div>
 			</WizardStage>
-			<WizardStage stageKey={4} stageNum={stage}>					
+			<WizardStage stageKey={4} stageNum={stage}>
 				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				<div className='nav-buttons'>
 					<PrevButton stagePath={stagePath} />
 				</div>
 			</WizardStage>
-			<WizardStage stageKey={5} stageNum={stage}>	
-				TODO receipt, print button
+			<WizardStage stageKey={5} stageNum={stage}>
+				<Receipt basket={basket} event={event} />
 				<ConfirmedTicketList basket={basket} event={event} />
 			</WizardStage>
 
@@ -267,7 +267,13 @@ const InvoiceRow = ({item, label, count, cost}) => {
 	);
 };
 
-const RegisterOrLoginTab = () => {
+const RegisterOrLoginTab = ({stagePath}) => {
+	// Advance to next stage on email login (no easy callback for social login)
+	const onLogin = () => {
+		let n = DataStore.getValue(stagePath) + 1;
+		DataStore.setValue(stagePath, n);
+	};
+
 	if (Login.isLoggedIn()) {
 		return (
 			<div className='login-tab padded-block'>
@@ -281,7 +287,7 @@ const RegisterOrLoginTab = () => {
 	return (
 		<div className='login-tab padded-block'>
 			<p>Please login or register your account.</p>
-			<LoginWidgetEmbed services={['twitter']} />
+			<LoginWidgetEmbed services={['twitter']} onLogin={onLogin} />
 		</div>
 	);
 };
@@ -425,8 +431,9 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 		};
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 			.then(res => {
-			let n = DataStore.getValue(stagePath) + 1;
+				let n = DataStore.getValue(stagePath) + 1;
 				DataStore.setValue(stagePath, n);
+				DataStore.setUrlValue('registerStage', n);
 			}, err => {
 				console.error(err); // TODO
 			});
@@ -453,6 +460,30 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 					username={Login.getId()}
 				/>
 			</div>
+		</div>
+	);
+};
+
+const Receipt = ({basket, event}) => {
+	const items = Basket.getItems(basket);
+	const ticket0 = items.length && items[0];
+	const stripe = basket.stripe;
+	const card = stripe && stripe.card;
+	// created will be numeric when returned direct from Stripe but String when retrieved from SoGive
+	const createdDate = new Date(Number.parseInt(stripe.created * 1000));
+
+	return (
+		<div>
+			<div className='padded-block'>
+				<h3>Payment to SoGive Ltd.</h3>
+				<p>Registered in England and Wales, company no. 09966206</p>
+				<p>Invoice no: TODO</p>
+				<p>Event: {event.name}</p>
+				<p>Payment date & time: {Misc.dateTimeString(createdDate)}</p>
+				<p>Customer name: {ticket0.attendeeName}</p>
+				<p>Payment card: **** **** **** {card.last4}</p>
+			</div>
+			<TicketInvoice basket={basket} showTip />
 		</div>
 	);
 };

@@ -65,6 +65,12 @@ public class StripeAuth {
 	 */
 	Map<String, Object> card;
 	
+	/**
+	 * Time when this authorisation was created
+	 * (NB: Stored as epoch seconds, not ms)
+	 */
+	String created;
+	
 	@Override
 	public String toString() {
 		// paranoia - dont leak money tokens into logs

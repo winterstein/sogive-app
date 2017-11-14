@@ -91,6 +91,27 @@ ServerIO.discardEdits = function(charity, status) {
 	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
+ServerIO.upload = function(file, progress, load) {
+	// Provide a pre-constructed XHR so we can insert progress/load callbacks
+	const xhr = () => {
+		const request = $.ajaxSettings.xhr();
+		request.onProgress = progress;
+		request.onLoad = load;
+		return request;
+	};
+
+	const data = new FormData();
+	data.append('upload', file);
+
+	return ServerIO.load('/upload.json', {
+		xhr,
+		data,
+		type: 'POST',
+		contentType: false,
+		processData: false,
+	});
+};
+
 
 /**
  * Submits an AJAX request. This is the key base method

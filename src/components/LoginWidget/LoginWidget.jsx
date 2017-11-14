@@ -34,7 +34,8 @@ const canSignIn = {
 	facebook: true,
 	instagram: true,
 	twitter: true,
-}
+};
+
 const SocialSignin = ({verb, services}) => {
 	if (verb === 'reset') return null;
 	if ( ! services) {
@@ -93,7 +94,7 @@ const emailLogin = ({verb, app, email, password}) => {
 	});
 };
 
-const EmailSignin = ({verb}) => {
+const EmailSignin = ({verb, onLogin = () => {}}) => {
 	// we need a place to stash form info. Maybe appstate.widget.LoginWidget.name etc would be better?
 	let person = DataStore.appstate.data.User.loggingIn;	
 
@@ -110,6 +111,7 @@ const EmailSignin = ({verb}) => {
 				.then(function(res) {
 					if (res.success) {
 						DataStore.setValue(['widget', C.show.LoginWidget, 'reset-requested'], true);
+						onLogin();
 					} else {
 						// poke React via DataStore (for Login.error)
 						DataStore.update({});
@@ -226,11 +228,11 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 }; // ./LoginWidget
 
 
-const LoginWidgetEmbed = ({services, verb}) => {
+const LoginWidgetEmbed = ({services, verb, onLogin}) => {
 	if ( ! verb) verb = DataStore.getValue(verbPath) || 'register';
 	return (
 		<div className='login-widget'>
-			<LoginWidgetGuts services={services} verb={verb} />
+			<LoginWidgetGuts services={services} verb={verb} onLogin={onLogin}/>
 			<SwitchVerb verb={verb} />
 		</div>
 	);
@@ -252,7 +254,7 @@ const SwitchVerb = ({verb}) => {
 	);
 };
 
-const LoginWidgetGuts = ({services, verb}) => {
+const LoginWidgetGuts = ({services, verb, onLogin}) => {
 	if (!verb) verb = DataStore.getValue(verbPath) || 'login';
 	return (
 		<div className="login-guts container-fluid">
@@ -260,6 +262,7 @@ const LoginWidgetGuts = ({services, verb}) => {
 				<div className="login-email col-sm-6">
 					<EmailSignin
 						verb={verb}
+						onLogin={onLogin}
 					/>
 				</div>
 				<div className="login-social col-sm-6">

@@ -41,23 +41,32 @@ const FundRaiserTop = () => {
 
 
 const FundRaiserPage = ({id}) => {
-	let type = C.TYPES.FundRaiser;
+	const type = C.TYPES.FundRaiser;
 	assMatch(type, String);
-	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
+	const pFundRaiser = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
 
 	// fetch donations
-	let pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
+	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
-	// console.warn(pEvent);
-	if ( ! pEvent.resolved) {
+
+if ( ! pFundRaiser.resolved) {
 		return <Misc.Loading />;
 	}
-	let item = pEvent.value;
+	const item = pFundRaiser.value;
 	if ( ! item) {
 		return null; // 404 :(
 	}
 	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
+
+	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
+	if ( ! pEvent.resolved) {
+		return <Misc.Loading />;
+	}
+	const event = pEvent.value;
+
+	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
+	const ownerViewing = item.owner.id === Login.getId();
 
 	// TODO
 	const supporters = [
@@ -105,7 +114,11 @@ const FundRaiserPage = ({id}) => {
 
 	return (
 		<div>
-			<div className='fullwidth-bg' style={{backgroundImage: `url(${item.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
+			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} />
+			<div className='own-fundraiser'>
+				<h3>You're viewing your own fundraiser page.</h3>
+				<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
+			</div>
 			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				<Row>
@@ -128,7 +141,7 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 
 					<Col md={6} className='donation-progress'>
-						<DonationProgress item={item} />
+						<DonationProgress item={item} supporters={supporters} />
 					</Col>
 				</Row>
 
@@ -171,7 +184,7 @@ const FundRaiserPage = ({id}) => {
 	);
 };
 
-const DonationProgress = ({item}) => {
+const DonationProgress = ({item, supporters}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	const donated = FundRaiser.donated(item);
@@ -197,10 +210,7 @@ const DonationProgress = ({item}) => {
 			</div>
 
 			<div className='progress-details'>
-				<div className='details-input'>
-					<Misc.Money amount={donated} />
-					raised of <Misc.Money amount={target} /> by {item.supporters && item.supporters.length} supporters
-				</div>
+				<DonationsSoFar item={item} supporters={supporters} />
 				<div className='details-output'>
 					<div className='first-impact'>
 						<span className='amount'>99 people</span> turned into frogs by witches
@@ -211,6 +221,34 @@ const DonationProgress = ({item}) => {
 				</div>
 				<DonateButton item={item} />
 			</div>
+		</div>
+	);
+};
+
+const DonationsSoFar = ({item, supporters}) => {
+	// Access the userTarget prop directly, before calling FundRaiser.target, to see if an actual target is set
+	const {donated, userTarget} = item;
+
+	if (supporters && supporters.length) {
+		// Absolute target set? 
+		if (userTarget && userTarget.value) {
+			return (
+				<div className='details-input'>
+					<Misc.Money amount={donated} /> raised of <Misc.Money amount={userTarget} /> by {supporters.length} supporters
+				</div>
+			);
+		}
+		const nextTarget = FundRaiser.target(item);
+		const diff = MonetaryAmount.sub(nextTarget, item.donated);
+		return (
+			<div className='details-input'>
+				<Misc.Money amount={donated} /> raised by {supporters.length} supporters. Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={nextTarget} />!
+			</div>
+		);
+	}
+	return (
+		<div className='details-input'>
+			Be the first to donate to {item.name}!
 		</div>
 	);
 };

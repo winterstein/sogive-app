@@ -9,6 +9,7 @@ import _ from 'lodash';
 import Enum from 'easy-enums';
 import {setHash, XId} from 'wwutils';
 import PV from 'promise-value';
+import Dropzone from 'react-dropzone';
 
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
@@ -168,6 +169,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.concat(prop);
 	// Checkbox?
+
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
@@ -178,6 +180,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
 	}
 	if (value===undefined) value = '';
+
 	// £s
 	// NB: This is a bit awkward code -- is there a way to factor it out nicely?? The raw vs parsed/object form annoyance feels like it could be a common case.
 	if (type==='MonetaryAmount') {
@@ -195,6 +198,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		e.preventDefault();
 		e.stopPropagation();
 	};
+
 	if (type === 'arraytext') {
 		// Pretty hacky: Value stored as ["one", "two", "three"] but displayed as "one two three"
 		// Currently used for entering list of unit-variants for publisher
@@ -217,6 +221,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		};
 		return <FormControl type={type} name={prop} value={value.join(' ')} onChange={arrayChange} {...otherStuff} />;
 	}
+
 	if (type==='textarea') {
 		return <textarea className="form-control" name={prop} onChange={onChange} {...otherStuff} value={value} />;
 	}
@@ -239,20 +244,62 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		};
 		return <textarea className="form-control" name={prop} onChange={onJsonChange} {...otherStuff} value={svalue} />;
 	}
+
 	if (type==='img') {
-		return (<div>
-			<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
-			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
-			<div className='clearfix' />
-		</div>);
+		return (
+			<div>
+				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
+				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
+				<div className='clearfix' />
+			</div>
+		);
 	}
+
+	if (type === 'imgUpload') {
+		const uploadAccepted = (accepted, rejected) => {
+			const progress = (event) => console.log('UPLOAD PROGRESS', event.loaded);
+			const load = (event) => console.log('UPLOAD SUCCESS', event);
+	
+			accepted.forEach(file => {
+				ServerIO.upload(file, progress, load)
+					.done(response => {
+						console.log('FILE UPLOAD RESPONSE:', response);
+						// DataStore.setValue(path, response.what?);
+					});
+			});
+	
+			rejected.forEach(file => {
+				// TODO Inform the user that their file had a Problem
+			});
+		};
+
+		return (
+			<div>
+				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
+				<div className='pull-left'>
+					<Dropzone
+						accept='image/jpeg, image/png'
+						onDrop={uploadAccepted}
+					>
+						Drop a JPG or PNG image here
+					</Dropzone>
+				</div>
+				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
+				<div className='clearfix' />
+			</div>
+		);
+	}
+
 	if (type==='url') {
-		return (<div>
-			<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
-			<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
-			<div className='clearfix' />
-		</div>);
+		return (
+			<div>
+				<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
+				<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
+				<div className='clearfix' />
+			</div>
+		);
 	}
+
 	// date
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
@@ -312,7 +359,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 }; //./PropControl
 
-Misc.ControlTypes = new Enum("img textarea text select autocomplete password email url color MonetaryAmount checkbox"
+Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color MonetaryAmount checkbox"
 							+" location date year number arraytext address postcode json");
 
 
@@ -415,12 +462,23 @@ Misc.RelativeDate = ({date, ...rest}) => {
 };
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const shortWeekdays = weekdays.map(weekday => weekday.substr(0, 3));
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const shortMonths = months.map(month => month.substr(0, 3));
+
+const oh = (n) => n<10? '0'+n : n;
 
 Misc.LongDate = ({date}) => {
 	if (_.isString(date)) date = new Date(date);
 	return <span>{`${weekdays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`}</span>;
 };
+
+/**
+ * Human-readable, unambiguous date+time string which doesn't depend on toLocaleString support
+ */
+Misc.dateTimeString = (d) => (
+	`${d.getDate()} ${shortMonths[d.getMonth()]} ${d.getFullYear()} ${oh(d.getHours())}:${oh(d.getMinutes())}`
+);
 
 Misc.AvatarImg = ({peep}) => {
 	if ( ! peep) return null;
@@ -531,12 +589,12 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 };
 
 
-const oh = (n) => n<10? '0'+n : n;
 /**
  * @param d {Date}
  * @returns {String}
  */
 const isoDate = (d) => d.toISOString().replace(/T.+/, '');
+
 
 // Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 

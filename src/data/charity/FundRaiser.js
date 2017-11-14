@@ -43,11 +43,25 @@ This.charity = item => {
 	return pvCharity.value;
 };
 
+
+const nextTarget = (number) => {
+	// ...people will definitely feel patronised if we encourage them to shoot for £1, so set a minimum.
+	// so £150 = "Aim for £200!", £200+ = "Aim for £500!", £500+ = "Aim for £1000!"
+	let target = Math.max(10 ** Math.ceil(Math.log10(number)), 100);
+	if (number > target * 0.5) return target;
+	if (number > target * 0.2) return target * 0.5;
+	return target * 0.2;
+};
+
 This.target = item => {
 	This.assIsa(item);
-	if ( ! item.target) {
-		item.target = MonetaryAmount.make({value:100});
-	}
+	
+	if (item.userTarget && item.userTarget.value) return item.userTarget;
+
+	if (item.target && item.target.value) return item.target;
+
+	item.target = MonetaryAmount.make({value: nextTarget(This.donated(item).value)});
+	
 	// TODO more than the total donations
 	return item.target;
 };
