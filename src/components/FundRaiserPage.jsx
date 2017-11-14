@@ -66,13 +66,13 @@ const FundRaiserPage = ({id}) => {
 	const donatedPercent = 100 * (item.donated.value / item.target.value);
 	const remainingPercent = 100 - donatedPercent;
 
-	item.owner = {
+	item.owner = item.owner || {
 		name: 'Patrick',
 		img: 'https://www.famousbirthdays.com/headshots/patrick-stewart-5.jpg',
 		description: `I plan to walk one hundred thousand miles, or die trying. I do not care about charity; only about punishing my feet, which I perceive to have wronged me.`,
 	};
 
-	item.img = 'https://www.looktothestars.org/photo/11291-patrick-stewart-and-ginger/story_wide-1491424139.jpg';
+	item.img = item.img || 'https://www.looktothestars.org/photo/11291-patrick-stewart-and-ginger/story_wide-1491424139.jpg';
 
 	const supporters = [
 		{
@@ -119,7 +119,7 @@ const FundRaiserPage = ({id}) => {
 
 	return (
 		<div>
-			<div id='fundraiser-bg' />
+			<div className='fullwidth-bg' style={{backgroundImage: `url(${item.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
 			<Grid id='FundRaiserPage'>
 				<Row>
 					<Col md={12} className='event-banner'>

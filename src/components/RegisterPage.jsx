@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Well, Button, Label } from 'react-bootstrap';
+import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
 import {XId, encURI} from 'wwutils';
@@ -61,6 +61,7 @@ const RegisterPage = () => {
 	const basketPath = ActionMan.getBasketPath();
 	return (
 		<div className=''>
+			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
 			<img className='page-banner' src={event.bannerImage} alt='banner' />
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
@@ -226,9 +227,10 @@ const RegisterTicket = ({ticketType, basket}) => {
 	);
 };
 
-const TicketInvoice = ({event, basket}) => {
+const TicketInvoice = ({event, basket, showTip}) => {
 	const idToRow = {};
 	console.warn("basket", basket);
+	// Group items of same type+kind into rows
 	Basket.getItems(basket).forEach(item => {
 		let row = idToRow[item.id];
 		if (row) {
@@ -248,30 +250,26 @@ const TicketInvoice = ({event, basket}) => {
 		.sort((a, b) => a.label < b.label);
 	const rowElements = rows.map(rowData => <InvoiceRow key={JSON.stringify(rowData)} {...rowData} />);
 	
-	const subTotal = rows.reduce((subtotal, row) => MonetaryAmount.add(subtotal, row.cost), MonetaryAmount.make());	
-	let total = subTotal;
-	// NB: SoGive does not have processing fees -- the Stripe fee is invisible to the user.
-	let processingFee = false;
-	// const processingFee = MonetaryAmount.mul(subTotal, processingPercentage / 100);
-	// let total = MonetaryAmount.add(subTotal, processingFee);
-	// <h2 className='invoice-header'>Your {noun}s</h2>
+	const total = Basket.getTotal(basket);
+	
+	const tipRow = (showTip && basket.hasTip && MonetaryAmount.isa(basket.tip)) ? (
+		<tr>
+			<td className='desc-col'>Tip to SoGive</td>
+			<td className='amount-col'><Misc.Money amount={basket.tip} /></td>
+		</tr>
+	) : null;
+
 
 	return (
 		<div className='invoice'>			
-			<div className='invoice-body'>
-				<table className='invoice-table'>
-					{rowElements}
-					{processingFee? <tr>
-						<td className='desc-col'>Processing Fee</td>
-						<td className='amount-col'><Misc.Money amount={processingFee} /></td>
-					</tr>
-						: null}
-					<tr className='total-row'>
-						<td className='desc-col' >Total</td>
-						<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
-					</tr>
-				</table>
-			</div>
+			<table className='invoice-table'>
+				{rowElements}
+				{ tipRow }
+				<tr className='total-row'>
+					<td className='desc-col' >Total</td>
+					<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
+				</tr>
+			</table>
 		</div>
 	);
 };
@@ -289,9 +287,10 @@ const RegisterOrLoginTab = () => {
 	if (Login.isLoggedIn()) {
 		return (
 			<div className='login-tab padded-block'>
-				<Misc.Icon glyph='ok' className='text-success' />
-				<p>You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
-				<p>Not you? <Button bsSize='small' onClick={() => Login.logout()}>Log out</Button></p>
+				<Jumbotron>
+					<p><Misc.Icon glyph='ok' className='text-success' /> You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
+					<p>Not you? <Button onClick={() => Login.logout()}>Log out</Button></p>
+				</Jumbotron>
 			</div>
 		);
 	}
@@ -432,24 +431,43 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	if ( ! basket) return <Misc.Loading />;
 	if ( ! basket.stripe) basket.stripe = {};
 	// does onToken mean on-successful-payment-auth??
-	const onToken = (token, ...data) => {
+	const onToken = ({token}, ...data) => {
 		basket.stripe.token = token;
 		console.log('CheckoutTab got token back from PaymentWidget:', token);
 		console.log('CheckoutTab got other data:', data);
-		// TODO store this Stripe info in the basket		
+		// TODO store this Stripe info in the basket
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 			.then(res => {
-				let n = DataStore.getValue(stagePath) + 1;
+			let n = DataStore.getValue(stagePath) + 1;
 				DataStore.setValue(stagePath, n);
 			}, err => {
 				console.error(err); // TODO
 			});
 	};
 	let email = getEmail();
-	return (<div className='padded-block'>
-		<PaymentWidget amount={Basket.getTotal(basket)} onToken={onToken} recipient={event.name} 
-			email={email} username={Login.getId()} />
-	</div>);
+
+	const bpath = ActionMan.getBasketPath();
+
+	return (
+		<div>
+			<div className='padded-block'>
+				<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
+				{basket.hasTip ? (
+					<Misc.PropControl type='MonetaryAmount' path={bpath} item={basket} prop='tip' label='Tip amount' dflt={MonetaryAmount.make({value:1})} />
+				) : ''}
+			</div>
+			<TicketInvoice basket={basket} showTip />
+			<div className='padded-block'>
+				<PaymentWidget
+					amount={Basket.getTotal(basket)}
+					onToken={onToken}
+					recipient={event.name} 
+					email={email}
+					username={Login.getId()}
+				/>
+			</div>
+		</div>
+	);
 };
 
 const ConfirmedTicketList = ({basket, event}) => {

@@ -241,13 +241,13 @@ const SwitchVerb = ({verb}) => {
 	if (verb === 'register') {
 		return (
 			<div className='switch-verb'>
-				Already have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</a>
+				Already have an account? <button className='btn btn-primary' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'login')} >Login</button>
 			</div>
 		);
 	}
 	return (
 		<div className='switch-verb'>
-			Don&#39;t yet have an account? <a href='#' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</a>
+			Don&#39;t yet have an account? <button className='btn btn-primary' onClick={e => stopEvent(e) && DataStore.setValue(verbPath, 'register')} >Register</button>
 		</div>
 	);
 };

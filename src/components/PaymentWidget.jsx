@@ -30,13 +30,18 @@ const SKIP_TOKEN = 'skip_token';
 
 /**
  * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
+ * defaultTip: MonetaryAmount, include to enable tip on this form (default can be zero)
  */
 const PaymentWidget = ({amount, onToken, recipient}) => {
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>
 			<div className='well'>
-				??test card details, to make testing easy
+				<div className='test-card-details'>
+					<h4> Test card details (use any CVC and any future expiry date)</h4>
+					<p><code>4000008260000000</code> UK Visa</p>
+					<p><code>4000058260000005</code> UK Visa Debit</p>
+				</div>
 				<button onClick={e => onToken(SKIP_TOKEN)}>pretend I paid</button>
 			</div>
 			<StripeProvider apiKey={stripeKey}>
