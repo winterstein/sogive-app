@@ -48,13 +48,17 @@ const FundRaiserEditor = ({id}) => {
 		<p><small>ID: {id}</small></p>
 		<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
 		<p><small>Event: {FundRaiser.eventId(item)}</small></p>
+
 		<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-		<Misc.PropControl path={path} prop='description' item={item} label='Description' />
+		<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='img' />
+		<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
 		<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
+
 		<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
 		<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='img' />
 		<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
 		<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
 };

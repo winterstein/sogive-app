@@ -56,7 +56,7 @@ const RegisterPage = () => {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
 
-	const longdate = event.date? Misc.LongDate({date:(new Date(event.date))}) : null;
+	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
 	return (

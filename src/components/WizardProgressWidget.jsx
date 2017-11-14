@@ -61,7 +61,7 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 	assMatch(stagePath, 'String[]');
 	assMatch(diff, Number);	
 	assert(text, 'WizardProgressWidget.js - no button text');
-	const stage = DataStore.getValue(stagePath);
+	const stage = parseInt(DataStore.getValue(stagePath) || 0);
 	const changeTab = () => {
 		let n = stage + diff;
 		// HACK: put it in the url?

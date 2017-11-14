@@ -7,7 +7,7 @@ import { Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
-import {setHash} from 'wwutils';
+import {setHash, XId} from 'wwutils';
 import PV from 'promise-value';
 
 import DataStore from '../plumbing/DataStore';
@@ -18,7 +18,8 @@ import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
-import {getType, getId} from '../data/DataClass';
+import {getType, getId, nonce} from '../data/DataClass';
+import md5 from 'md5';
 
 const Misc = {};
 
@@ -47,14 +48,24 @@ const CURRENCY = {
  * Money span, falsy displays as 0
  * @param amount {MonetaryAmount|Number}
  */
-Misc.Money = ({amount, precision}) => {
+Misc.Money = ({amount, minimumFractionDigits}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
 	if ( ! amount) amount = {value: 0};
-	let snum = printer.prettyNumber(amount.value, precision);
-	// remove .0
-	if (snum.substr(snum.length-2, snum) === '.0') snum = snum.substr(0, snum.length-2);
+	let snum = new Intl.NumberFormat().format(amount.value, {maximumFractionDigits:2, minimumFractionDigits});
+	// let snum;	
+	// if ( ! precision) {
+	// 	let sv2 = amount.value.toFixed(2);
+	// 	snum = printer.prettyNumber2_commas(sv2);
+	// } else {	
+	// 	snum = printer.prettyNumber(amount.value, precision);
+	// }
+	if ( ! minimumFractionDigits) {
+		// remove .0 and .00
+		if (snum.substr(snum.length-2) === '.0') snum = snum.substr(0, snum.length-2);
+		if (snum.substr(snum.length-3) === '.00') snum = snum.substr(0, snum.length-3);
+	}
 	// pad .1 to .10
 	if (snum.match(/\.\d$/)) snum += '0';
 	return (
@@ -405,8 +416,28 @@ Misc.RelativeDate = ({date, ...rest}) => {
 
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 Misc.LongDate = ({date}) => {
-	return `${weekdays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+	if (_.isString(date)) date = new Date(date);
+	return <span>{`${weekdays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`}</span>;
+};
+
+Misc.AvatarImg = ({peep}) => {
+	if ( ! peep) return null;
+	let src = peep.img;
+	const id = getId(peep);
+	const name = peep.name || (id && XId.id(id)) || 'anon';
+	if ( ! src) {
+		// try a gravatar -- maybe 20% will have one c.f. http://euri.ca/2013/how-many-people-use-gravatar/index.html#fnref-1104-3
+		if (id && XId.service(id) === 'email') {
+			let e = XId.id(id);
+			src = 'https://www.gravatar.com/avatar/'+md5(e);						
+		}
+		// security paranoia -- but it looks like Gravatar dont set a tracking cookie
+		// let html = `<img className='AvatarImg' alt=${'Avatar for '+name} src=${src} />`;
+		// return <iframe title={nonce()} src={'data:text/html,' + encodeURIComponent(html)} />;
+	}
+	return <img className='AvatarImg img-thumbnail' alt={'Avatar for '+name} src={src} />;
 };
 
 /**

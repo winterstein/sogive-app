@@ -31,24 +31,6 @@ const stripeKey = (C.SERVER_TYPE) ?
 	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
-
-const initialFormData = Donation.make({
-	id: nonce(),
-	from: Login.getId(),
-	amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
-	coverCosts: true,
-	giftAid: false,
-	giftAidTaxpayer: false,
-	giftAidOwnMoney: false,
-	giftAidNoCompensation: false,
-	donorName: '',
-	donorAddress: '',
-	donorPostcode: '',
-	message: '',
-	pending: false,
-	complete: false,
-});
-
 /**
  * NB: We can have several DonateButtons, but only one model form
  */
@@ -82,39 +64,23 @@ const paymentOK = (formData) => true;
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item, causeName}) => {
-	assert(getId(item), "DonationForm", item);
+const DonationForm = ({item, charity, causeName}) => {
+	const id = getId(item);
+	assert(id, "DonationForm", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);	
-	if ( ! causeName) causeName = item.displayName || item.name || getId(item);
+	if ( ! causeName) causeName = item.displayName || item.name || id;
 
+	if ( ! charity) {
+		if (NGO.isa(item)) charity = item;
+		// TODO get charity from FundRaiser
+	}
+	let charityId = charity? getId(charity) : item.charityId;
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
 		"NewDonationForm - type "+getType(item));
 	*/
-	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
-	// let widgetState = DataStore.getValue(widgetPath);
-	// if ( ! widgetState) {
-	// 	widgetState = initialWidgetState;
-	// 	DataStore.setValue(widgetPath, widgetState, false);
-	// }
-
-	// get/make the draft donation
-	let type = C.TYPES.Donation;
-	let pDonation = ActionMan.getDonationDraft({item});
-	let donationDraft = pDonation.value;
-	if ( ! donationDraft) {
-		// if the promise is running, wait for it before making a new draft
-		if ( ! pDonation.resolved) {
-			return <Misc.Loading />;
-		}
-		// make a new draft donation
-		donationDraft = {
-			...initialFormData,
-			to: item.id,
-			// TODO via and fundRaiser
-		};
-	}
+	const widgetPath = ['widget', 'NewDonationForm', id];
 
 	// what stage?
 	const stagePath = ['location', 'params', 'dntnStage'];
@@ -129,6 +95,26 @@ const DonationForm = ({item, causeName}) => {
 		return null;
 	}
 
+	// get/make the draft donation
+	let type = C.TYPES.Donation;
+	let pDonation = ActionMan.getDonationDraft({item});
+	let donationDraft = pDonation.value;
+	if ( ! donationDraft) {
+		// if the promise is running, wait for it before making a new draft
+		if ( ! pDonation.resolved) {
+			return <Misc.Loading />;
+		}
+		// make a new draft donation
+		donationDraft = Donation.make({			
+			to: charityId,
+			fundRaiser: FundRaiser.isa(item)? getId(item) : null,
+			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
+			from: Login.isLoggedIn()? Login.getId() : null,
+			amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
+			coverCosts: true,		
+		});
+	}	
+
 	const path = ['data', type, donationDraft.id];
 	DataStore.setValue(path, donationDraft, false);
 	// also store it where the fetch will find it
@@ -141,6 +127,12 @@ const DonationForm = ({item, causeName}) => {
 	// TODO Thank You / confirmation / receipt page
 	// TODO if NGO.isa(item) => no message section
 	// Minor TODO if no gift-aid => no details section
+
+	// your page?
+	let myPage = Login.getId() === item.oxid;
+	if ( ! myPage) {
+		Login.checkShare(item);
+	}
 
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>

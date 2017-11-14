@@ -188,14 +188,20 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 		if (NGO.isa(item)) charity = getId(item);
 		if (FundRaiser.isa(item)) fundRaiser = getId(item);
 	}
-	assMatch(charity || fundRaiser, String);
+	const forId = charity || fundRaiser;
+	assMatch(forId, String);
 	// use a pseudo id to keep it in the local DataStore
-	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+(charity || fundRaiser)], () => {
+	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+forId], () => {
 		return ServerIO.getDonationDraft({charity, fundRaiser})
 			.then(res => {
 				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
 				let cargo = res.cargo;			
-				return (cargo.hits && cargo.hits[0]) || null;
+				let dontn = cargo.hits && cargo.hits[0];
+				if ( ! dontn) {
+					// update anyway
+					DataStore.update();
+				}
+				return dontn || null;
 			});
 	});
 };
