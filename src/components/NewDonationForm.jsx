@@ -117,7 +117,7 @@ const DonationForm = ({item, causeName}) => {
 	}
 
 	// what stage?
-	const stagePath = ['location', 'params', 'dntnStage'];	
+	const stagePath = ['location', 'params', 'dntnStage'];
 	const stage = DataStore.getUrlValue('dntnStage');
 
 	// not open? just show the button
