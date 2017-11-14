@@ -46,12 +46,16 @@ Basket.getTotal = (basket) => {
 			total = MonetaryAmount.add(total, item.price);
 		}
 	});
+	if (basket.hasTip && MonetaryAmount.isa(basket.tip)) {
+		total = MonetaryAmount.add(total, basket.tip);
+	}
 	return total || MonetaryAmount.make();
 };
 
 Basket.make = (base = {}) => {
 	let ma = {
 		items: [],
+		hasTip: true,
 		...base,
 		'@type': Basket.type,
 	};

@@ -40,8 +40,8 @@ public class BasketServlet extends CrudServlet<Basket> {
 		XId user = state.getUserId();
 		if (user==null) {
 			String email = state.get("stripeEmail");
-			if (email==null && donation.getStripe()!=null) {
-				email = (String) donation.getStripe().getEmail(); 
+			if (email==null && donation.getStripe() != null) {
+				email = (String) donation.getStripe().getEmail();
 			}
 			if (email==null) throw new NoAuthException("Stripe requires authentication to process a payment");
 			user = new XId(email, "Email");
@@ -61,9 +61,9 @@ public class BasketServlet extends CrudServlet<Basket> {
 				if (Utils.isBlank(sa.getEmail())) {					
 					sa.setEmail(userObj.getEmail());
 				}
-				assert state==null || state.get("stripeToken")==null || state.get("stripeToken").equals(sa.token);
+				assert state==null || state.get("stripeToken")==null || state.get("stripeToken").equals(sa.id);
 			}
-			if (StripeAuth.SKIP_TOKEN.equals(sa.token)) {
+			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) {
 				Log.w("Basket.payment", "Skip! "+state);
 			} else {
 				// Show me the money!

@@ -75,10 +75,23 @@ For now -- safer to have the Kiltwalk stuff styled separately
 
 } // ./page
 
+// Pages like FundRaiserPage and RegisterPage have a large image bg (image url set as inline style)
+.fullwidth-bg {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-size: cover;
+	background-attachment: fixed;
+	z-index: -1
+}
+
 
 // Which pages get this??
 #register, #fundraiser {
 	.padded-page;
+	background-color: white;
 }
 
 

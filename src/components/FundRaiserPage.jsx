@@ -105,7 +105,7 @@ const FundRaiserPage = ({id}) => {
 
 	return (
 		<div>
-			<div id='fundraiser-bg' />
+			<div className='fullwidth-bg' style={{backgroundImage: `url(${item.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
 			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				<Row>
@@ -179,6 +179,7 @@ const DonationProgress = ({item}) => {
 	const remainingPercent = 100 - donatedPercent;
 
 	return (
+<<<<<<< HEAD
 		<div className='progress-graph'>
 			<div className='target'>Target: <Misc.Money amount={target} /></div>
 			<div className='bar-container'>
@@ -200,6 +201,32 @@ const DonationProgress = ({item}) => {
 				<div className='details-input'>
 					<Misc.Money amount={donated} />
 					raised of <Misc.Money amount={target} /> by {item.supporters && item.supporters.length} supporters
+=======
+		null
+		/*
+		<div>
+			<div className='progress-graph'>
+				<div className='target'>Target: <Misc.Money amount={item.target} /></div>
+				<div className='bar-container'>
+					<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Money amount={FundRaiser.totalDonated(item)} />
+						<Misc.Icon glyph='triangle-right' />
+					</div>
+					<div className='donation-progress-bar'>
+						<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+						<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+					</div>
+					<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Icon glyph='triangle-left' />
+						{Math.round(donatedPercent)}%
+					</div>
+				</div>
+			</div>
+			<div className='progress-details'>
+				<div className='details-input'>
+					<Misc.Money amount={MonetaryAmount.make()} />
+					raised of <Misc.Money amount={FundRaiser.target(item)} /> by {supporters.length} supporters
+>>>>>>> 782e6ffe12d464662fccc8b354d02f8eccb95304
 				</div>
 				<div className='details-output'>
 					<div className='first-impact'>
@@ -211,7 +238,12 @@ const DonationProgress = ({item}) => {
 				</div>
 				<DonateButton item={item} />
 			</div>
+<<<<<<< HEAD
 		</div>);
+=======
+		</div>*/
+	);
+>>>>>>> 782e6ffe12d464662fccc8b354d02f8eccb95304
 };
 
 const Supporters = ({item, supporters = [], charity}) => {

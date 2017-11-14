@@ -2,18 +2,17 @@
 @import "colours.less";
 
 #register {
-
 	.ticket-group {		
-	
 		.ticket-group-types {
+			.padded-block;
 			list-style-type: none;
+			padding: 0;
 			position: relative;			
 
 			.ticket-type {
 				background: @type-bg-colour;
 				display: flex;
 				justify-content: space-between;
-				max-width: @item-max-width;
 				margin: 1em auto;
 
 				.decoration, .info, .controls {
@@ -77,27 +76,25 @@
 	} // ./ticket-group
 
 	.invoice {
-		.invoice-body {
-			background-color: @type-bg-colour;
+		background-color: @type-bg-colour;
+		width: 100%;
+		padding: 1.5em 0;
+
+		.invoice-table {
 			width: 100%;
-			padding: 1.5em 0;
-	
-			.invoice-table {
-				width: 100%;
-				.padded-block;
-	
-				line-height: 1.75em;
-				font-size: 1.25em;
-	
-				.desc-col {
-					text-align: left;
-				}
-				.amount-col {
-					text-align: right;
-				}
-				.total-row {
-					border-top: 1px solid darken(@type-bg-colour, 20%);
-				}
+			.padded-block;
+
+			line-height: 1.75em;
+			font-size: 1.25em;
+
+			.desc-col {
+				text-align: left;
+			}
+			.amount-col {
+				text-align: right;
+			}
+			.total-row {
+				border-top: 1px solid darken(@type-bg-colour, 20%);
 			}
 		}
 	} // ./invoice
