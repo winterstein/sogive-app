@@ -110,7 +110,7 @@ const RegisterPage = () => {
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
-				TODO receipt, print button				
+				TODO receipt, print button
 				<ConfirmedTicketList basket={basket} event={event} />
 			</WizardStage>
 
@@ -241,12 +241,14 @@ const TicketInvoice = ({event, basket, showTip}) => {
 	return (
 		<div className='invoice'>			
 			<table className='invoice-table'>
-				{rowElements}
-				{ tipRow }
-				<tr className='total-row'>
-					<td className='desc-col' >Total</td>
-					<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
-				</tr>
+				<tbody>
+					{rowElements}
+					{ tipRow }
+					<tr className='total-row'>
+						<td className='desc-col' >Total</td>
+						<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 	);
@@ -395,6 +397,8 @@ const PickCTA = ({item, onClick}) => {
  */
 const getEmail = (basket) => {
 	let e = Login.getId('email');
+	// TODO @DW Do we have a "get dewarted ID usable on service" method in Login?
+	e = e.replace(/@email$/g, '');
 	if (e) return e;
 	// from ticket0?
 	let items = Basket.getItems(basket);
@@ -408,12 +412,13 @@ const getEmail = (basket) => {
 const CheckoutTab = ({basket, event, stagePath}) => {
 	if ( ! basket) return <Misc.Loading />;
 	if ( ! basket.stripe) basket.stripe = {};
+
 	// does onToken mean on-successful-payment-auth??
-	const onToken = ({token}, ...data) => {
-		basket.stripe.token = token;
-		console.log('CheckoutTab got token back from PaymentWidget:', token);
-		console.log('CheckoutTab got other data:', data);
-		// TODO store this Stripe info in the basket
+	const onToken = (token) => {
+		basket.stripe = {
+			...basket.stripe,
+			...token
+		};
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 			.then(res => {
 			let n = DataStore.getValue(stagePath) + 1;
@@ -422,8 +427,8 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 				console.error(err); // TODO
 			});
 	};
-	let email = getEmail();
 
+	const email = getEmail();
 	const bpath = ActionMan.getBasketPath();
 
 	return (

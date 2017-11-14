@@ -94,15 +94,14 @@ public class StripePlugin {
 		Stripe.apiKey = secretKey;
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("source", sa.token);
+        chargeMap.put("source", sa.id);
         chargeMap.put("amount", amount.getValue100());
         chargeMap.put("description", description); // ??
 //        metadata key value
-        chargeMap.put("receipt_email", sa.email);        
-        chargeMap.put("customer", sa.customerId);        
+        chargeMap.put("receipt_email", sa.email);
+        chargeMap.put("customer", sa.customerId);
         chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
         chargeMap.put("currency", Utils.or(amount.getCurrency(), "GBP"));
-//        chargeMap.put("email", sa.email);
         
 //        https://stripe.com/docs/api#idempotent_requests
 //        add header Idempotency-Key:
@@ -123,7 +122,7 @@ public class StripePlugin {
         Charge c = Charge.create(chargeMap);
 //        Customer c = Customer.create(chargeMap, requestOptions);
         Log.d(LOGTAG, c);
-        if (user!=null) {
+        if (user!=null && c.getCustomer() != null) {
 	        user.put("stripe", new ArrayMap(
 	        			"customerId", c.getCustomer(),
 	        			"email", c.getCustomerObject().getEmail()

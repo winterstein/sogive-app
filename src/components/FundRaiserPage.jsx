@@ -178,38 +178,43 @@ const FundRaiserPage = ({id}) => {
 const DonationProgress = ({item}) => {
 	FundRaiser.assIsa(item);
 	return (
-	<div className='progress-graph'>
-		<div className='target'>Target: <Misc.Money amount={item.target} /></div>
-	<div className='bar-container'>
-		<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
-			<Misc.Money amount={FundRaiser.totalDonated(item)} />
-			<Misc.Icon glyph='triangle-right' />
-		</div>
-		<div className='donation-progress-bar'>
-			<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-			<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
-		</div>
-		<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-			<Misc.Icon glyph='triangle-left' />
-			{Math.round(donatedPercent)}%
-		</div>
-	</div>
-</div>
-<div className='progress-details'>
-	<div className='details-input'>
-		<Misc.Money amount={} />
-		raised of <Misc.Money amount={FundRaiser.target(item)} /> by {supporters.length} supporters
-	</div>
-	<div className='details-output'>
-		<div className='first-impact'>
-			<span className='amount'>99 people</span> turned into frogs by witches
-		</div>
-		<div className='second-impact'>
-			<span className='amount'>25</span> local ponds repopulated with friendly amphibians
-		</div>
-	</div>
-	<DonateButton item={item} />
-</div>);
+		null
+		/*
+		<div>
+			<div className='progress-graph'>
+				<div className='target'>Target: <Misc.Money amount={item.target} /></div>
+				<div className='bar-container'>
+					<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Money amount={FundRaiser.totalDonated(item)} />
+						<Misc.Icon glyph='triangle-right' />
+					</div>
+					<div className='donation-progress-bar'>
+						<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+						<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+					</div>
+					<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Icon glyph='triangle-left' />
+						{Math.round(donatedPercent)}%
+					</div>
+				</div>
+			</div>
+			<div className='progress-details'>
+				<div className='details-input'>
+					<Misc.Money amount={MonetaryAmount.make()} />
+					raised of <Misc.Money amount={FundRaiser.target(item)} /> by {supporters.length} supporters
+				</div>
+				<div className='details-output'>
+					<div className='first-impact'>
+						<span className='amount'>99 people</span> turned into frogs by witches
+					</div>
+					<div className='second-impact'>
+						<span className='amount'>25</span> local ponds repopulated with friendly amphibians
+					</div>
+				</div>
+				<DonateButton item={item} />
+			</div>
+		</div>*/
+	);
 };
 
 const Supporters = ({item, supporters = [], charity}) => {

@@ -26,16 +26,27 @@ const stripeKey = (C.SERVER_TYPE) ?
 	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
-const SKIP_TOKEN = 'skip_token';
+const SKIP_TOKEN = {
+	id: 'skip_token',
+	type: 'card',
+};
 
 /**
  * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
- * defaultTip: MonetaryAmount, include to enable tip on this form (default can be zero)
  */
-const PaymentWidget = ({amount, onToken, recipient}) => {
+const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
+
+	// Invoke the callback, with a minimal fake token that the servlet will catch
+	const skipAction = (event) => (
+		onToken({
+			...SKIP_TOKEN,
+			email,
+		})
+	);
+
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>
@@ -45,11 +56,11 @@ const PaymentWidget = ({amount, onToken, recipient}) => {
 					<p><code>4000008260000000</code> UK Visa</p>
 					<p><code>4000058260000005</code> UK Visa Debit</p>
 				</div>
-				<button onClick={e => onToken(SKIP_TOKEN)}>pretend I paid</button>
+				<button onClick={skipAction}>pretend I paid</button>
 			</div>
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
-					<StripeThings onToken={onToken} amount={amount} recipient={recipient} />
+					<StripeThings onToken={onToken} amount={amount} recipient={recipient} email={email} />
 				</Elements>
 			</StripeProvider>
 		</div>
@@ -96,7 +107,7 @@ class StripeThingsClass extends Component {
  
 		this.state = {
 			canMakePayment: false,
-			paymentRequest,			
+			paymentRequest,
 			email
 		};
 	} // ./constructor
@@ -112,7 +123,7 @@ class StripeThingsClass extends Component {
 			name: this.props.username,
 			email: this.state.email
 		};
-		this.props.stripe.createToken(tokenInfo).then(({token, ...data}) => this.props.onToken({token, ...data}));
+		this.props.stripe.createToken(tokenInfo).then(({token, ...data}) => this.props.onToken(token));
 	
 		// However, this line of code will do the same thing:
 		// this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
@@ -130,7 +141,6 @@ class StripeThingsClass extends Component {
 
 		const {amount, recipient} = this.props;
 		// TODO an email editor if this.props.email is unset
-		// @Roscoe -- Why do we want postcode here?? ^Dan
 		return (
 			<form onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
@@ -150,12 +160,6 @@ class StripeThingsClass extends Component {
 					<label>CVC</label>
 					<div className='form-control'>
 						<CardCVCElement />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>Postcode</label>
-					<div className='form-control'>
-						<PostalCodeElement placeholder='AB1 2CD' />
 					</div>
 				</div>
 				<Button type='submit'>Submit Payment</Button>
