@@ -34,21 +34,21 @@
 
 	.btn-square {
 		background-color: @default-button-colour;
-		box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+		box-shadow: 2px 2px 2px @dropshadow-colour;
 		border-radius: 0px !important;
 		border: none;
 		&:hover {
-			background-color: darken(@default-button-colour, 10%);
+			background-color: @darken-default-button-colour;
 		}	
 		&:active {
 			// box-shadow: inset 0 3px 5px rgba(0,0,0,.125)
-			box-shadow: inset 0 2px 5px rgba(0,0,0,0.2)
+			box-shadow: inset 0 2px 5px @dropshadow-colour;
 		}
 	}
 
 	.btn-group {
 		display: flex;
-		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 2px 2px @dropshadow-colour;
 	}
 	.btn-group > .btn-text {
 		// box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
