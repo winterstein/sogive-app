@@ -1,5 +1,6 @@
 import {assert, assMatch} from 'sjtest';
 import {isa} from '../DataClass';
+import MonetaryAmount from './MonetaryAmount';
 import {blockProp} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
@@ -40,6 +41,15 @@ This.charity = item => {
 	const spec = {type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED};
 	let pvCharity = ActionMan.getDataItem(spec);
 	return pvCharity.value;
+};
+
+This.target = item => {
+	This.assIsa(item);
+	if ( ! item.target) {
+		item.target = MonetaryAmount.make({value:100});
+	}
+	// TODO more than the total donations
+	return item.target;
 };
 
 /**

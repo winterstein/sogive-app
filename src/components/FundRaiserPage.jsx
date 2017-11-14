@@ -60,13 +60,11 @@ const FundRaiserPage = ({id}) => {
 	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
 
 	// Let's set up all the data that might not be in the model yet...
-	item.name = item.name || 'PlaceholderWalk';
-	item.date = item.date || '2018-02-14';
 	item.banner = item.banner || '/img/kiltwalk/KW_generic_supporter_banner.png';
-	item.target = item.target || MonetaryAmount.make({value: 1000});
 	item.donated = item.donated || MonetaryAmount.make({value: 768});
 
-	const donatedPercent = 100 * (item.donated.value / item.target.value);
+	const target = FundRaiser.target(item);
+	const donatedPercent = item.donated? 100 * (item.donated.value / target) : 0;
 	const remainingPercent = 100 - donatedPercent;
 
 	// if ( ! item.owner) item.owner = {
