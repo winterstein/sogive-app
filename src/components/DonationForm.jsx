@@ -229,8 +229,7 @@ const ThankYouAndShare = ({thanks, user, charity, donationForm, project}) => {
  * one-click donate, or Stripe form?
  */
 const DonationFormButton = ({onToken, amount}) => {
-	let email = Login.getId('Email');
-	if (email) email = XId.id(email);
+	let email = Login.getEmail();	
 	const stripeKey = (window.location.host.startsWith('test') || window.location.host.startsWith('local')) ?
 		'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 		: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live

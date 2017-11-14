@@ -190,9 +190,10 @@ const GiftAidSection = ({path}) => (
 );
 
 const DetailsSection = ({path}) => (
-	// TODO do we have the user's details stored?
+	// TODO do we have the user's details stored?	
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
+		<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' dflt={Login.getUser() && Login.getUser().name} />
+		<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' dflt={Login.getEmail()} />
 		<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
 		<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
 	</div>

@@ -53,6 +53,16 @@ This.target = item => {
 };
 
 /**
+ * @returns {MonetaryAmount} the total donated
+ */
+This.donated = item => {
+	This.assIsa(item);
+	// TODO rely on the server summing and storing the donations.
+	// -- to avoid having to load all (might be 1000s for a popular fundraiser).
+	return item.donated;	
+};
+
+/**
  * event + email => fund-raiser
  * Important: This is duplicated in Java
  * 

@@ -42,24 +42,28 @@ const FundRaiserEditor = ({id}) => {
 	const path = ['data', type, id];
 	const peepPath = path.concat('owner');
 
-	return (<div>
-		<h2>Fundraiser {item.name || id} </h2>		
-		<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
-		<p><small>ID: {id}</small></p>
-		<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
-		<p><small>Event: {FundRaiser.eventId(item)}</small></p>
+	return (<div className='padded-page'>
+		<div className='padded-block'>
+			<h2>Fundraiser {item.name || id} </h2>
+			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
+			<p><small>ID: {id}</small></p>
+			<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
+			<p><small>Event: {FundRaiser.eventId(item)}</small></p>
 
-		<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-		<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='img' />
-		<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
-		<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
+			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
+			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='img' />
+			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
+			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
+			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='MonetaryAmount' 
+				placeholder='Leave blank for an automatic target (recommended)' />
 
-		<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
-		<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='img' />
-		<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
-		<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
+			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='img' />
+			<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
+			<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
 
-		<Misc.SavePublishDiscard type={type} id={id} />
+			<Misc.SavePublishDiscard type={type} id={id} />
+			</div>
 	</div>);
 };
 

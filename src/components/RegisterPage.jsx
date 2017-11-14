@@ -303,7 +303,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn()) {
 		const user = Login.getUser();
 		ticket.attendeeName = user.name;
-		if (XId.service(user.xid) === 'email') ticket.attendeeEmail = XId.id(user.xid);
+		ticket.attendeeEmail = Login.getEmail();
 		console.log("set name,email from Login", ticket, user.xid);
 		DataStore.setValue(path, ticket, false);
 	}
@@ -395,7 +395,7 @@ const PickCTA = ({item, onClick}) => {
  * Login email, or ticket0, or null
  */
 const getEmail = (basket) => {
-	let e = Login.getId('email');
+	let e = Login.getEmail();
 	if (e) return e;
 	// from ticket0?
 	let items = Basket.getItems(basket);

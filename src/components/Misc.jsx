@@ -137,7 +137,7 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
  * @param path {String[]} The DataStore path to item, e.g. [data, NGO, id]
  * @param item The item being edited. Can be null, and it will be fetched by path.
  * @param prop The field being edited 
- * dflt {?Object} default value
+ * @param dflt {?Object} default value Beware! This may not get saved if the user never interacts.
  */
 Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	// label / help? show it and recurse

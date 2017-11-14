@@ -37,6 +37,7 @@ public class FundRaiser extends AThing {
 	PersonLite owner;
 	String description;
 	MonetaryAmount target = MonetaryAmount.pound(100);
+	MonetaryAmount userTarget = MonetaryAmount.pound(100);
 	MonetaryAmount donated;
 	Integer donationCount;
 	String charityId;

@@ -59,10 +59,6 @@ const FundRaiserPage = ({id}) => {
 	}
 	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
 
-	const target = FundRaiser.target(item);
-	const donatedPercent = FundRaiser.totalDonated(item)? 100 * (FundRaiser.totalDonated(item).value / target.value) : 0;
-	const remainingPercent = 100 - donatedPercent;
-
 	// TODO
 	const supporters = [
 		{
@@ -132,7 +128,7 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 
 					<Col md={6} className='donation-progress'>
-						<DonationProgress />
+						<DonationProgress item={item} />
 					</Col>
 				</Row>
 
@@ -177,39 +173,45 @@ const FundRaiserPage = ({id}) => {
 
 const DonationProgress = ({item}) => {
 	FundRaiser.assIsa(item);
+	const target = FundRaiser.target(item);
+	const donated = FundRaiser.donated(item);
+	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
+	const remainingPercent = 100 - donatedPercent;
+
 	return (
-	<div className='progress-graph'>
-		<div className='target'>Target: <Misc.Money amount={item.target} /></div>
-	<div className='bar-container'>
-		<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
-			<Misc.Money amount={FundRaiser.totalDonated(item)} />
-			<Misc.Icon glyph='triangle-right' />
-		</div>
-		<div className='donation-progress-bar'>
-			<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-			<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
-		</div>
-		<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-			<Misc.Icon glyph='triangle-left' />
-			{Math.round(donatedPercent)}%
-		</div>
-	</div>
-</div>
-<div className='progress-details'>
-	<div className='details-input'>
-		<Misc.Money amount={} />
-		raised of <Misc.Money amount={FundRaiser.target(item)} /> by {supporters.length} supporters
-	</div>
-	<div className='details-output'>
-		<div className='first-impact'>
-			<span className='amount'>99 people</span> turned into frogs by witches
-		</div>
-		<div className='second-impact'>
-			<span className='amount'>25</span> local ponds repopulated with friendly amphibians
-		</div>
-	</div>
-	<DonateButton item={item} />
-</div>);
+		<div className='progress-graph'>
+			<div className='target'>Target: <Misc.Money amount={target} /></div>
+			<div className='bar-container'>
+				<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+					<Misc.Money amount={donated} />
+					<Misc.Icon glyph='triangle-right' />
+				</div>
+				<div className='donation-progress-bar'>
+					<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+					<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+				</div>
+				<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+					<Misc.Icon glyph='triangle-left' />
+					{Math.round(donatedPercent)}%
+				</div>
+			</div>
+
+			<div className='progress-details'>
+				<div className='details-input'>
+					<Misc.Money amount={donated} />
+					raised of <Misc.Money amount={target} /> by {item.supporters && item.supporters.length} supporters
+				</div>
+				<div className='details-output'>
+					<div className='first-impact'>
+						<span className='amount'>99 people</span> turned into frogs by witches
+					</div>
+					<div className='second-impact'>
+						<span className='amount'>25</span> local ponds repopulated with friendly amphibians
+					</div>
+				</div>
+				<DonateButton item={item} />
+			</div>
+		</div>);
 };
 
 const Supporters = ({item, supporters = [], charity}) => {
