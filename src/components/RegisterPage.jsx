@@ -396,13 +396,7 @@ const PickCTA = ({item, onClick}) => {
  * Login email, or ticket0, or null
  */
 const getEmail = (basket) => {
-<<<<<<< HEAD
 	let e = Login.getEmail();
-=======
-	let e = Login.getId('email');
-	// TODO @DW Do we have a "get dewarted ID usable on service" method in Login?
-	e = e.replace(/@email$/g, '');
->>>>>>> 782e6ffe12d464662fccc8b354d02f8eccb95304
 	if (e) return e;
 	// from ticket0?
 	let items = Basket.getItems(basket);
