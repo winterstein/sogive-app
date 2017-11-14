@@ -52,7 +52,7 @@ FundRaiser.getIdForTicket = (ticket) => {
 	// NB: hash with salt to protect the users email
 	assMatch(Ticket.eventId(ticket), String, ticket);
 	assMatch(ticket.attendeeEmail, String, ticket);
-	return Ticket.eventId(ticket)+'.'+md5('user:'+ticket.attendeeEmail);
+	return Ticket.eventId(ticket)+'.'+md5('user:'+Ticket.oxid(ticket));
 };
 
 FundRaiser.make = (base) => {

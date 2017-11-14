@@ -39,10 +39,10 @@ const RegisterPage = () => {
 	if ( ! pvEvent.value) return <Misc.Loading />;
 	const event = pvEvent.value;
 
-	const wspath = ['widget', 'RegisterPage', eventId];
-	const widgetState = DataStore.getValue(wspath) || {};
-	const stagePath = wspath.concat('stage');
-	let stage = widgetState.stage || 0;
+	// const wspath = ['widget', 'RegisterPage', eventId];
+	// const widgetState = DataStore.getValue(wspath) || {};
+	const stagePath = ['location','params', 'registerStage'];
+	let stage = DataStore.getUrlValue('registerStage') || 0;
 	// if (stage===0) { // start on 1
 	// 	stage = 1;
 	// 	DataStore.setValue(stagePath, stage, false);
@@ -464,10 +464,12 @@ const ConfirmedTicket = ({ticket, event}) => {
 				Setup Fund-Raising Page for {ticket.attendeeName}
 			</a>
 			<table>
-				<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
-				<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
-				<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
-				{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+				<tbody>
+					<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
+					<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
+					<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
+					{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+				</tbody>
 			</table>
 		</div>
 	</div>);
