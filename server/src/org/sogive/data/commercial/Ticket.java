@@ -3,6 +3,7 @@ package org.sogive.data.commercial;
 import org.sogive.data.charity.MonetaryAmount;
 
 import com.winterwell.data.AThing;
+import com.winterwell.web.data.XId;
 
 import lombok.Data;
 
@@ -39,6 +40,10 @@ public class Ticket extends AThing {
 	@Override
 	public String toString() {
 		return "Ticket[price=" + price + ", name=" + name + ", id=" + id + "]";
+	}
+
+	public XId getOwnerXId() {
+		return attendeeEmail==null? null : new XId(attendeeEmail, "email");
 	}
 	
 	

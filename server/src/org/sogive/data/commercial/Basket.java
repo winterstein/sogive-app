@@ -30,6 +30,13 @@ public class Basket extends AThing {
 	
 	List<Ticket> items;
 	
+	/**
+	 * a convenience for setting the per-ticket values.
+	 */
+	String eventId;
+	/**
+	 * a convenience for setting the per-ticket values.
+	 */
 	String charityId;
 	
 	/**

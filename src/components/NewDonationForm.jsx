@@ -1,12 +1,10 @@
 // @Flow
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { assert } from 'sjtest';
+import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import {XId } from 'wwutils';
-import { Tabs, Tab, Modal, Button } from 'react-bootstrap';
-
-import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
+import { Modal } from 'react-bootstrap';
 
 import C from '../C';
 import printer from '../utils/printer';
@@ -19,8 +17,9 @@ import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';
-import {nonce,getType} from '../data/DataClass';
+import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
+import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
 
 /**
  * 
@@ -32,27 +31,15 @@ const stripeKey = (C.SERVER_TYPE) ?
 	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
 	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
-
-const initialFormData = Donation.make({
-	id: nonce(),
-	from: Login.getId(),
-	amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
-	coverCosts: true,
-	giftAid: false,
-	giftAidTaxpayer: false,
-	giftAidOwnMoney: false,
-	giftAidNoCompensation: false,
-	donorName: '',
-	donorAddress: '',
-	donorPostcode: '',
-	message: '',
-	pending: false,
-	complete: false,
-});
-
-const initialWidgetState = {
-	open: false,
-	stage: 1,
+/**
+ * NB: We can have several DonateButtons, but only one model form
+ */
+const DonateButton = ({item}) => {
+	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
+	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	return (<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		Donate
+	</button>);
 };
 
 /** no donations below a min £1 */
@@ -74,37 +61,39 @@ const messageOK = (formData) => true;
 
 const paymentOK = (formData) => true;
 
-const stagesOK = (formData) => [
-	amountOK(formData),
-	giftAidOK(formData),
-	detailsOK(formData),
-	messageOK(formData),
-	paymentOK(formData),
-];
-
-
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item}) => {
-	assert(item.id, "DonationForm", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);
+const DonationForm = ({item, charity, causeName}) => {
+	const id = getId(item);
+	assert(id, "DonationForm", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);	
+	if ( ! causeName) causeName = item.displayName || item.name || id;
+
+	if ( ! charity) {
+		if (NGO.isa(item)) charity = item;
+		// TODO get charity from FundRaiser
+	}
+	let charityId = charity? getId(charity) : item.charityId;
 	/*
 	// Restore once we resolve this issue where Things keep losing their types
 	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
 		"NewDonationForm - type "+getType(item));
 	*/
-	const widgetPath = ['widget', 'NewDonationForm', item.id];
-	let widgetState = DataStore.getValue(widgetPath);
-	if (!widgetState) {
-		widgetState = initialWidgetState;
-		DataStore.setValue(widgetPath, widgetState, false);
+	const widgetPath = ['widget', 'NewDonationForm', id];
+
+	// what stage?
+	const stagePath = ['location', 'params', 'dntnStage'];
+	const stage = DataStore.getUrlValue('dntnStage');
+
+	// not open? just show the button
+	let isOpen = DataStore.getValue([...widgetPath, 'open']);
+	if (isOpen===undefined || isOpen===null) {
+		isOpen = stage!==undefined && stage!==null;
 	}
-	const donateButton = (
-		<button className='btn btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
-			Donate
-		</button>
-	);
+	if ( ! isOpen) {
+		return null;
+	}
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
@@ -113,87 +102,72 @@ const DonationForm = ({item}) => {
 	if ( ! donationDraft) {
 		// if the promise is running, wait for it before making a new draft
 		if ( ! pDonation.resolved) {
-			return donateButton;
-			// TODO if they click whilst the promise is running (unlikely)
-			// display a spinner
+			return <Misc.Loading />;
 		}
 		// make a new draft donation
-		donationDraft = {
-			...initialFormData,
-			to: item.id,
-			// TODO via and fundRaiser
-		};
-	}
-
-	// not open? just show the button
-	if (!widgetState.open) {
-		return donateButton;
-	}
+		donationDraft = Donation.make({			
+			to: charityId,
+			fundRaiser: FundRaiser.isa(item)? getId(item) : null,
+			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
+			from: Login.isLoggedIn()? Login.getId() : null,
+			amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
+			coverCosts: true,		
+		});
+	}	
 
 	const path = ['data', type, donationDraft.id];
 	DataStore.setValue(path, donationDraft, false);
 	// also store it where the fetch will find it
 	DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);
 	
-	const stagePath = [...widgetPath, 'stage'];
 
 	const closeLightbox = () => DataStore.setValue([...widgetPath, 'open'], false);
-
-	const { stage } = widgetState;
-	const isFirst = stage <= 1;
-	const isLast = stage >= 5;
-	
-	const prevLink = isFirst ? '' : (
-		<Misc.SetButton path={stagePath} value={stage - 1} className='btn btn-default pull-left'>
-			Previous
-		</Misc.SetButton>
-	);
-	const nextLink = isLast ? '' : (
-		<Misc.SetButton path={stagePath} value={stage + 1} className='btn btn-default pull-right'>
-			Next
-		</Misc.SetButton>
-	);
 
 	// TODO replace tabs with WizardProgressWidget (see RegisterPage)
 	// TODO Thank You / confirmation / receipt page
 	// TODO if NGO.isa(item) => no message section
 	// Minor TODO if no gift-aid => no details section
 
+	// your page?
+	let myPage = Login.getId() === item.oxid;
+	if ( ! myPage) {
+		Login.checkShare(item);
+	}
+
 	return (
-		<div>
-			{donateButton}
-			<Modal show={widgetState.open} className="donate-modal" onHide={closeLightbox}>
-				<Modal.Header closeButton >
-					<Modal.Title>GIMME YOUR MONEY</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Tabs activeKey={stage} onSelect={(key) => DataStore.setValue(stagePath, key)} id='payment-stages'>
-						<Tab eventKey={1} title='Amount'>
-							<AmountSection path={path} />
-						</Tab>
-						<Tab eventKey={2} title='Gift Aid'>
-							<GiftAidSection path={path} />
-						</Tab>
-						<Tab eventKey={3} title='Details'>
-							<DetailsSection path={path} />
-						</Tab>
-						<Tab eventKey={4} title='Message'>
-							<MessageSection path={path} item={item} />
-						</Tab>
-						<Tab eventKey={5} title='Payment'>
-							<PaymentSection path={path} />
-						</Tab>
-						<Tab eventKey={5} title='Confirmation'>
-							<ThankYouSection path={path} />
-						</Tab>
-					</Tabs>
-				</Modal.Body>
-				<Modal.Footer>
-					{prevLink} {nextLink}
-				</Modal.Footer>
-				<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
-			</Modal>
-		</div>
+		<Modal show className="donate-modal" onHide={closeLightbox}>
+			<Modal.Header closeButton >
+				<Modal.Title>Donate to {causeName}</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<WizardProgressWidget stageNum={stage} 
+					stagePath={stagePath} 
+					stages={[{title:'Amount'}, {title:'Gift Aid'}, {title:'Details'}, {title:'Message'}, {title:'Payment'}, {title:'Confirmation'}]}
+				/>
+				<WizardStage stageKey={0} stageNum={stage}>
+					<AmountSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={1} stageNum={stage}>
+					<GiftAidSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={2} stageNum={stage}>
+					<DetailsSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={3} stageNum={stage}>
+					<MessageSection path={path} item={item} />
+				</WizardStage>
+				<WizardStage stageKey={4} stageNum={stage}>
+					<PaymentSection path={path} />
+				</WizardStage>
+				<WizardStage stageKey={5} stageNum={stage}>
+					<ThankYouSection path={path} />
+				</WizardStage>
+			</Modal.Body>
+			<Modal.Footer>
+				<PrevButton stagePath={stagePath} /> <NextButton maxStage={5} stagePath={stagePath} />
+			</Modal.Footer>
+			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
+		</Modal>
 	);
 }; // ./DonationForm
 
@@ -238,4 +212,5 @@ const ThankYouSection = () => {
 	return <div>Thank You!</div>; // TODO
 };
 
+export {DonateButton};
 export default DonationForm;

@@ -33,6 +33,9 @@ const SKIP_TOKEN = 'skip_token';
  * defaultTip: MonetaryAmount, include to enable tip on this form (default can be zero)
  */
 const PaymentWidget = ({amount, onToken, recipient}) => {
+	if ( ! amount) {
+		return null; // no amount, no payment
+	}
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>

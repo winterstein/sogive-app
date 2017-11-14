@@ -2,7 +2,7 @@ import React from 'react';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import { Clearfix, Grid, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 
 import printer from '../utils/printer.js';
 
@@ -17,7 +17,7 @@ import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
-import NewDonationForm from './NewDonationForm';
+import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
 
 
@@ -50,30 +50,20 @@ const FundRaiserPage = ({id}) => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
 	// console.warn(pEvent);
-	// if ( ! pEvent.resolved) { TODO wait for load -- this is off to allow styling even if the backend isnt being helpful
-	// 	return <Misc.Loading />;
-	// }
-	let item = pEvent.value || FundRaiser.make({id, eventId:'fooEvent'});
+	if ( ! pEvent.resolved) {
+		return <Misc.Loading />;
+	}
+	let item = pEvent.value;
+	if ( ! item) {
+		return null; // 404 :(
+	}
 	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
 
-	// Let's set up all the data that might not be in the model yet...
-	item.name = item.name || 'PlaceholderWalk';
-	item.date = item.date || '2018-02-14';
-	item.banner = item.banner || '/img/kiltwalk/KW_generic_supporter_banner.png';
-	item.target = item.target || MonetaryAmount.make({value: 1000});
-	item.donated = item.donated || MonetaryAmount.make({value: 768});
-
-	const donatedPercent = 100 * (item.donated.value / item.target.value);
+	const target = FundRaiser.target(item);
+	const donatedPercent = FundRaiser.totalDonated(item)? 100 * (FundRaiser.totalDonated(item).value / target.value) : 0;
 	const remainingPercent = 100 - donatedPercent;
 
-	item.owner = item.owner || {
-		name: 'Patrick',
-		img: 'https://www.famousbirthdays.com/headshots/patrick-stewart-5.jpg',
-		description: `I plan to walk one hundred thousand miles, or die trying. I do not care about charity; only about punishing my feet, which I perceive to have wronged me.`,
-	};
-
-	item.img = item.img || 'https://www.looktothestars.org/photo/11291-patrick-stewart-and-ginger/story_wide-1491424139.jpg';
-
+	// TODO
 	const supporters = [
 		{
 			date: '2017-11-01T10:00Z',
@@ -120,62 +110,36 @@ const FundRaiserPage = ({id}) => {
 	return (
 		<div>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${item.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
+			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				<Row>
 					<Col md={12} className='event-banner'>
 						<img alt={`Banner for ${item.name}`} src={item.banner} />
 					</Col>
 				</Row>
+
 				<Row className='title-bar'>
 					<Col md={12}>
-						<h2>{item.owner.name}&apos;s {item.name} {(new Date(item.date)).toLocaleString('en-GB')}</h2>
+						<h2>{item.name} {item.date? ' - ' : null} {item.date? <Misc.LongDate date={item.date} /> : null}</h2>
 					</Col>
 				</Row>
+
 				<Row className='vitals'>
 					<Col md={6}>
 						<div className='user-event-photo'>
 							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.img} />
 						</div>
 					</Col>
+
 					<Col md={6} className='donation-progress'>
-						<div className='progress-graph'>
-							<div className='target'>Target: <Misc.Money amount={item.target} /></div>
-							<div className='bar-container'>
-								<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
-									<Misc.Money amount={item.donated} />
-									<Glyphicon glyph='triangle-right' />
-								</div>
-								<div className='donation-progress-bar'>
-									<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-									<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
-								</div>
-								<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-									<Glyphicon glyph='triangle-left' />
-									{Math.round(donatedPercent)}%
-								</div>
-							</div>
-						</div>
-						<div className='progress-details'>
-							<div className='details-input'>
-								<div className='amount'>£768</div>
-								raised of <Misc.Money amount={item.target} /> by {supporters.length} supporters
-							</div>
-							<div className='details-output'>
-								<div className='first-impact'>
-									<span className='amount'>99 people</span> turned into frogs by witches
-								</div>
-								<div className='second-impact'>
-									<span className='amount'>25</span> local ponds repopulated with friendly amphibians
-								</div>
-							</div>
-							<NewDonationForm item={item} />
-						</div>
+						<DonationProgress />
 					</Col>
 				</Row>
+
 				<Row>
 					<Col md={6} className='me'>
-						<h3>Who I am:</h3>
-						<img className='avatar' alt={`Avatar for ${item.owner.name}`} src={item.owner.img} />
+						<h3>Who I am: {item.owner.name}</h3>
+						<Misc.AvatarImg peep={item.owner} />						
 						<p>{item.owner.description}</p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -184,22 +148,68 @@ const FundRaiserPage = ({id}) => {
 						<p>{NGO.shortDescription(charity)}</p>
 					</Col>
 				</Row>
+
 				<Row>
 					<Col md={6}>
-						<h3>Story:</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis pulvinar magna, sed porta ex. Duis rhoncus eros tempor turpis efficitur, ut dignissim sapien suscipit. Vestibulum suscipit aliquet mauris. Nam volutpat pellentesque ligula, a interdum velit malesuada at. Nulla dictum nisl sit amet leo cursus euismod. Nunc ullamcorper metus eu lectus pellentesque, ac vestibulum augue mollis. Vivamus a euismod massa. Nullam rhoncus justo dui, id sollicitudin purus placerat vel.</p>
-						<p>In vel est odio. Fusce felis leo, molestie eget iaculis ac, tincidunt quis velit. Nam quis ligula consectetur, fermentum lacus ac, euismod ante. Aenean non neque nisi. Morbi leo nibh, pulvinar at sapien ac, vulputate aliquet odio. Curabitur at egestas dolor, eu consectetur lorem. In lectus nibh, auctor at sapien at, lobortis egestas metus. Vivamus orci libero, hendrerit et ligula nec, tempus posuere augue. Quisque ultricies ante a mi imperdiet, sed bibendum justo fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi feugiat pellentesque ligula, eget finibus orci sagittis vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean tincidunt faucibus velit a iaculis. Pellentesque volutpat dui a ipsum tincidunt, ut iaculis nunc hendrerit.</p>
-						<p>Vivamus ut odio accumsan, convallis sapien a, egestas enim. Nam congue arcu nisl, quis porta risus iaculis ac. Cras at scelerisque neque, sed commodo justo. Maecenas vitae pulvinar nunc. Nullam aliquet, magna ut facilisis interdum, velit est semper urna, ac sodales orci nunc eget mauris. Sed molestie elit nunc, vel tincidunt nunc aliquam sit amet. Praesent fringilla justo id nunc porta tempor. Morbi ipsum sapien, placerat sit amet ullamcorper eu, lacinia non velit. Integer dapibus sodales ligula vitae egestas. Integer sagittis elit consectetur ex commodo faucibus. Suspendisse massa magna, tincidunt ac dignissim et, faucibus sed orci. Vivamus lectus risus, dapibus at purus quis, dignissim facilisis nulla. Etiam ac commodo augue, sed lacinia lorem. Nam orci elit, volutpat in nunc sit amet, bibendum aliquet est. In mollis diam mi.</p>
+						{item.story? 
+							<div><h3>Story:</h3>{item.story}</div>
+							: null}
+						{item.updates? 
+							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
+							: null}
 					</Col>
 					<Col md={6}>
 						<h3>Supporters:</h3>
-						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />
-						<NewDonationForm item={item} />
+						{supporters? <DonateButton item={item} /> : null}
+						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />						
 					</Col>
 				</Row>
-			</Grid>
+
+				<Row>
+					<Col md={12}>
+						<center><DonateButton item={item} /></center>
+					</Col>
+				</Row>
+			</Grid>			
 		</div>
 	);
+};
+
+const DonationProgress = ({item}) => {
+	FundRaiser.assIsa(item);
+	return (
+	<div className='progress-graph'>
+		<div className='target'>Target: <Misc.Money amount={item.target} /></div>
+	<div className='bar-container'>
+		<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+			<Misc.Money amount={FundRaiser.totalDonated(item)} />
+			<Misc.Icon glyph='triangle-right' />
+		</div>
+		<div className='donation-progress-bar'>
+			<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+			<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+		</div>
+		<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+			<Misc.Icon glyph='triangle-left' />
+			{Math.round(donatedPercent)}%
+		</div>
+	</div>
+</div>
+<div className='progress-details'>
+	<div className='details-input'>
+		<Misc.Money amount={} />
+		raised of <Misc.Money amount={FundRaiser.target(item)} /> by {supporters.length} supporters
+	</div>
+	<div className='details-output'>
+		<div className='first-impact'>
+			<span className='amount'>99 people</span> turned into frogs by witches
+		</div>
+		<div className='second-impact'>
+			<span className='amount'>25</span> local ponds repopulated with friendly amphibians
+		</div>
+	</div>
+	<DonateButton item={item} />
+</div>);
 };
 
 const Supporters = ({item, supporters = [], charity}) => {
@@ -224,16 +234,5 @@ const Supporter = ({supporter, charity}) => {
 	);
 };
 
-const OldFundraiserPage = ({item, id}) => (
-	<div>
-		<h2>{item.name || 'Fundraiser '+id} </h2>		
-		<p><small>ID: {id}</small></p>
-		<img src={item.img} className='img-thumbnail' alt='fundraiser pic' />
-		<div>
-			{item.description}
-		</div>
-		<NewDonationForm item={item} />
-	</div>
-);
 
 export default FundRaiserTop;

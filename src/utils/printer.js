@@ -33,6 +33,8 @@ Printer.HASHTAG = /(^|[^&A-Za-z0-9/])#([\w\-]+)/g;
 Printer.URL_REGEX = /https?\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*‌​)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&amp;%‌​\$#_]*)?/g;
 
 /**
+ * TODO use new Intl.NumberFormat().format(
+ * 
  * Ported from StrUtils.java. TODO javascript's toPrecision could be
  * used to simplify this
  *
@@ -41,66 +43,19 @@ Printer.URL_REGEX = /https?\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*‌​)
  * @return x to n significant figures
  */
 Printer.prototype.toNSigFigs = function(x, n) {
-		if (x==0) return "0";
-		assert(n > 0, "Printer.js - toNSigFigs: n is not greater than 0");
-		var sign = x < 0 ? "-" : "";
-		var v = Math.abs(x);
-		var lv = Math.floor(Math.log(v)/Math.log(10));
-		var keeper = Math.pow(10, n - 1);
-		var tens = Math.pow(10, lv);
-		var keepMe = Math.round(v * keeper / tens);
-		// avoid scientific notation for fairly small decimals
-		if (lv < 0) {
-			var s = this.toNSigFigs2_small(n, sign, lv, keepMe);
-			if (s != null) return s;
-		}
-		var vt = keepMe * tens / keeper;
-		var num = ""+vt;
-		return sign + num;
-	};
-
-/**
- * Helper method
- */
-Printer.prototype.toNSigFigs2_small = function(n, sign, lv, keepMe) {
-	// use scientific notation for very small
-	if (lv < -8) return null;
-	var sb = ""+sign;
-	var zs = -lv;
-	var sKeepMe = ""+keepMe;
-	if (sKeepMe.length > n) {
-		assert(sKeepMe.charAt(sKeepMe.length - 1) == '0', "Printer.js - toNSigFigs2_small: error");
-		// we've rounded up from 9 to 10, so lose a decimal place
-		zs--;
-		sKeepMe = sKeepMe.substring(0, sKeepMe.length - 1);
-		if (zs == 0) {
-			return null;
-		}
-	}
-	sb += "0.";
-	for (var i = 1; i < zs; i++) {
-		sb += '0';
-	}
-	sb += sKeepMe;
-	return sb;
+	if (x==0) return "0";
+	assert(n > 0, "Printer.js - toNSigFigs: n is not greater than 0");
+	let snum = new Intl.NumberFormat().format(x, {maximumSignificantDigits: n});
+	return snum;
 };
 
+/**
+ * Convenience for new Intl.NumberFormat().format() directly
+ */
 Printer.prototype.prettyNumber = function(x, sigFigs) {
 	if ( ! sigFigs) sigFigs = 3;
-	// to 3 sig figs
-	var x3 = this.toNSigFigs(x, sigFigs);
-	if (x < 1000) return x3;
-	// add commas
-	var rx = "";
-	for(var i=0; i<x3.length; i++) {
-		rx += x3[x3.length - i - 1];
-		if (i % 3 == 2 && i != x3.length-1) rx += ",";
-	}
-	var cx = "";
-	for(var i=0; i<rx.length; i++) {
-		cx += rx[rx.length - i - 1];
-	}
-	return cx;
+	let snum = new Intl.NumberFormat().format(x, {maximumSignificantDigits: sigFigs});
+	return snum;
 };
 
 /**

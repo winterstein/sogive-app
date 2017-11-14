@@ -24,7 +24,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
-import WizardProgressWidget, {WizardStage} from './WizardProgressWidget';
+import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 
 import pivot from 'data-pivot';
@@ -39,10 +39,10 @@ const RegisterPage = () => {
 	if ( ! pvEvent.value) return <Misc.Loading />;
 	const event = pvEvent.value;
 
-	const wspath = ['widget', 'RegisterPage', eventId];
-	const widgetState = DataStore.getValue(wspath) || {};
-	const stagePath = wspath.concat('stage');
-	let stage = widgetState.stage || 0;
+	// const wspath = ['widget', 'RegisterPage', eventId];
+	// const widgetState = DataStore.getValue(wspath) || {};
+	const stagePath = ['location','params', 'registerStage'];
+	let stage = DataStore.getUrlValue('registerStage') || 0;
 	// if (stage===0) { // start on 1
 	// 	stage = 1;
 	// 	DataStore.setValue(stagePath, stage, false);
@@ -56,7 +56,7 @@ const RegisterPage = () => {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
 
-	const longdate = event.date? Misc.LongDate({date:(new Date(event.date))}) : null;
+	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
 	return (
@@ -79,34 +79,34 @@ const RegisterPage = () => {
 				<TicketTypes event={event} basket={basket} />
 				<TicketInvoice event={event} basket={basket} />
 				<div className='nav-buttons'>
-					<NextTab stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+					<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={1} stageNum={stage}>
 				<RegisterOrLoginTab />
 				<div className='nav-buttons'>
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+					<PrevButton stagePath={stagePath} /> 
+					<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={2} stageNum={stage}>
 				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				<div className='nav-buttons'>
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} />
+					<PrevButton stagePath={stagePath} /> 
+					<NextButton stagePath={stagePath} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={3} stageNum={stage}>					
 				<CharityChoiceTab basket={basket} />
 				<div className='nav-buttons'>
-					<PreviousTab stagePath={stagePath} /> 
-					<NextTab stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
+					<PrevButton stagePath={stagePath} /> 
+					<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>					
 				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				<div className='nav-buttons'>
-					<PreviousTab stagePath={stagePath} />
+					<PrevButton stagePath={stagePath} />
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={5} stageNum={stage}>	
@@ -117,28 +117,6 @@ const RegisterPage = () => {
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 
 		</div>
-	);
-};
-
-const NextTab = ({completed, stagePath, ...rest}) => {
-	const bsClass = completed ? 'primary' : null;
-	return <NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} text={<span>Next <Misc.Icon glyph='menu-right' /></span>} {...rest} />;
-};
-const PreviousTab = ({stagePath, ...rest}) => {
-	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Misc.Icon glyph='menu-left' /> Previous</span>} {...rest} />;
-};
-
-const NextPrevTab = ({stagePath, diff, text, bsClass='default', ...rest}) => {
-	const changeTab = () => {
-		let n = DataStore.getValue(stagePath) + diff;
-		DataStore.setValue(stagePath, n);
-	};
-	// use Bootstrap pull class to left/right float
-	const pull = diff > 0? 'pull-right' : 'pull-left';
-	return (
-		<button className={`btn btn-${bsClass} btn-lg ${pull}`} onClick={changeTab} {...rest} >
-			{text}
-		</button>
 	);
 };
 
@@ -504,10 +482,12 @@ const ConfirmedTicket = ({ticket, event}) => {
 				Setup Fund-Raising Page for {ticket.attendeeName}
 			</a>
 			<table>
-				<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
-				<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
-				<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
-				{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+				<tbody>
+					<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
+					<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
+					<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
+					{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+				</tbody>
 			</table>
 		</div>
 	</div>);

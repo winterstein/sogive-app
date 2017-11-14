@@ -22,6 +22,8 @@ This.name = (ngo) => This.assIsa(ngo) && ngo.name;
 This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;
 
+This.oxid = item => item.attendeeEmail+'@email';
+
 /**
  * 
  */

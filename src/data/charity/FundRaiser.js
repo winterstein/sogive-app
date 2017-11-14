@@ -1,5 +1,6 @@
 import {assert, assMatch} from 'sjtest';
 import {isa} from '../DataClass';
+import MonetaryAmount from './MonetaryAmount';
 import {blockProp} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
@@ -42,6 +43,15 @@ This.charity = item => {
 	return pvCharity.value;
 };
 
+This.target = item => {
+	This.assIsa(item);
+	if ( ! item.target) {
+		item.target = MonetaryAmount.make({value:100});
+	}
+	// TODO more than the total donations
+	return item.target;
+};
+
 /**
  * event + email => fund-raiser
  * Important: This is duplicated in Java
@@ -52,7 +62,7 @@ FundRaiser.getIdForTicket = (ticket) => {
 	// NB: hash with salt to protect the users email
 	assMatch(Ticket.eventId(ticket), String, ticket);
 	assMatch(ticket.attendeeEmail, String, ticket);
-	return Ticket.eventId(ticket)+'.'+md5('user:'+ticket.attendeeEmail);
+	return Ticket.eventId(ticket)+'.'+md5('user:'+Ticket.oxid(ticket));
 };
 
 FundRaiser.make = (base) => {

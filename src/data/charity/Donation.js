@@ -1,5 +1,5 @@
 import {assert} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa, nonce} from '../DataClass';
 import C from '../../C';
 import MonetaryAmount from './MonetaryAmount';
 
@@ -30,10 +30,16 @@ Donation.getTotal = (don) => {
 };
 
 Donation.make = (base = {}) => {
+	// to must should a charity
+	if (base.to) {
+		let charity = DataStore.getValue('data',C.TYPES.NGO, base.to);
+		if ( ! charity) console.warn();
+	}
 	let ma = {
 		'@type': C.TYPES.Donation,
 		/* The user's contribution (this is what the user pays; not what the charity recieves) */
-		amount: MonetaryAmount.make(),		
+		amount: MonetaryAmount.make(),
+		id: nonce(),	
 		...base
 	};
 	Donation.assIsa(ma);
