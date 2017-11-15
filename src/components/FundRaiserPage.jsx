@@ -50,7 +50,7 @@ const FundRaiserPage = ({id}) => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
 
-if ( ! pFundRaiser.resolved) {
+	if ( ! pFundRaiser.resolved) {
 		return <Misc.Loading />;
 	}
 	const item = pFundRaiser.value;
@@ -60,9 +60,9 @@ if ( ! pFundRaiser.resolved) {
 	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
-	if ( ! pEvent.resolved) {
-		return <Misc.Loading />;
-	}
+	// if ( ! pEvent.resolved) { // we can mostly render the page with event=null
+	// 	return <Misc.Loading />;
+	// }
 	const event = pEvent.value;
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
@@ -114,7 +114,7 @@ if ( ! pFundRaiser.resolved) {
 
 	return (
 		<div>
-			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} />
+			{event? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
 			<div className='own-fundraiser'>
 				<h3>You're viewing your own fundraiser page.</h3>
 				<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
