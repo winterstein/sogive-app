@@ -69,6 +69,14 @@ const impactCalc = ({charity, project, outputs, amount, targetCount}) => {
 	return { prefix, amount, impactNum, unitName: plunitName, description: firstOutput.description};
 };
 
+const multipleImpactCalc = ({charity, project, amount, targetCount}) => {
+	const { outputs = []} = project;
+	
+	return outputs.map((output) => (
+		impactCalc({charity, project, outputs: [output], amount, targetCount})
+	)).filter(impact => !!impact);
+};
+
 
 /**
  * Copy pasta from I18N.js (aka easyi18n)
@@ -99,4 +107,4 @@ Misc.TrPlural = (num, text) => {
 	return text;
 };
 
-export {ImpactDesc, impactCalc};
+export {ImpactDesc, impactCalc, multipleImpactCalc};

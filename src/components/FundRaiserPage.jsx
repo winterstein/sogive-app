@@ -19,6 +19,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
+import { multipleImpactCalc } from './ImpactWidgetry';
 
 
 const FundRaiserTop = () => {
@@ -50,7 +51,7 @@ const FundRaiserPage = ({id}) => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
 	});
 
-if ( ! pFundRaiser.resolved) {
+	if ( ! pFundRaiser.resolved) {
 		return <Misc.Loading />;
 	}
 	const item = pFundRaiser.value;
@@ -149,7 +150,7 @@ if ( ! pFundRaiser.resolved) {
 					</Col>
 
 					<Col md={6} className='donation-progress'>
-						<DonationProgress item={item} supporters={supporters} />
+						<DonationProgress item={item} supporters={supporters} charity={charity} />
 					</Col>
 				</Row>
 
@@ -199,34 +200,57 @@ const DonationProgress = ({item, supporters, charity}) => {
 	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
 	const remainingPercent = 100 - donatedPercent;
 
+	// impact info
+	let impacts = null;
+	const project = NGO.getProject(charity);
+	// NB: no project = no impact data, but you can still donate
+	if (project) {
+		impacts = multipleImpactCalc({ charity, project, amount: donated.value });
+	}
+	console.log('*** IMPACTS OF DONATIONS', impacts);
+
+	// Don't show the impact if it has a prefix (ie formatted like "10 people donating £10 will fund 1...")
+	const firstImpact = impacts && impacts[0] && !impacts[0].prefix ? (
+		<div className='first-impact'>
+			<big className='amount'>{impacts[0].amount}</big> {impacts[0].unitName}
+		</div>
+	) : null;
+	const secondImpact = impacts && impacts[1] && !impacts[1].prefix ? (
+		<div className='second-impact'>
+			<big className='amount'>{impacts[1].amount}</big> {impacts[1].unitName}
+		</div>
+	) : null;
+
+	const outputDesc = (firstImpact || secondImpact) ? (
+		<div className='details-output'>
+			<p>Your donations so far are enough to fund:</p>
+			{firstImpact}
+			{secondImpact}
+		</div>
+	) : null;
+
 	return (
-		<div className='progress-graph'>
-			<div className='target'>Target: <Misc.Money amount={target} /></div>
-			<div className='bar-container'>
-				<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
-					<Misc.Money amount={donated} />
-					<Misc.Icon glyph='triangle-right' />
-				</div>
-				<div className='donation-progress-bar'>
-					<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-					<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
-				</div>
-				<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
-					<Misc.Icon glyph='triangle-left' />
-					{Math.round(donatedPercent)}%
+		<div className='donation-progress'>
+			<div className='progress-graph'>
+				<div className='target'>Target: <Misc.Money amount={target} /></div>
+				<div className='bar-container'>
+					<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Money amount={donated} />
+						<Misc.Icon glyph='triangle-right' />
+					</div>
+					<div className='donation-progress-bar'>
+						<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
+						<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+					</div>
+					<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+						<Misc.Icon glyph='triangle-left' />
+						{Math.round(donatedPercent)}%
+					</div>
 				</div>
 			</div>
-
 			<div className='progress-details'>
 				<DonationsSoFar item={item} supporters={supporters} />
-				<div className='details-output'>
-					<div className='first-impact'>
-						<big className='amount'>99 people</big> turned into frogs by witches
-					</div>
-					<div className='second-impact'>
-						<span className='amount'>25</span> local ponds repopulated with friendly amphibians
-					</div>
-				</div>
+				{outputDesc}
 				<DonateButton item={item} />
 			</div>
 		</div>
@@ -238,20 +262,14 @@ const DonationsSoFar = ({item, supporters}) => {
 	const {donated, userTarget} = item;
 
 	if (supporters && supporters.length) {
-		// Absolute target set? 
-		if (userTarget && userTarget.value) {
-			return (
-				<div className='details-input'>
-					<Misc.Money amount={donated} /> raised of <Misc.Money amount={userTarget} /> by {supporters.length} supporters
-				</div>
-			);
-		}
-		const nextTarget = FundRaiser.target(item);
-		const diff = MonetaryAmount.sub(nextTarget, item.donated);
+		const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
+		const diff = MonetaryAmount.sub(target, item.donated);
 		return (
 			<div className='details-input'>
-				<p>{supporters.length} supporters have already raised <Misc.Money amount={donated} />.</p>
-				<p>Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={nextTarget} />!</p>
+				<p>
+					<big>{supporters.length}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
+					Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
+				</p>
 			</div>
 		);
 	}
