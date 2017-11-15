@@ -1,25 +1,15 @@
 // @Flow
 import React, { Component } from 'react';
-import _ from 'lodash';
-import { assert } from 'sjtest';
-import Login from 'you-again';
-import {XId } from 'wwutils';
-import { Tabs, Tab, Modal, Button } from 'react-bootstrap';
+import { Button, Form, FormGroup, Col } from 'react-bootstrap';
 
-import { StripeProvider, Elements, injectStripe, CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, 
-	PostalCodeElement, PaymentRequestButtonElement } from 'react-stripe-elements';
+import { StripeProvider, Elements, injectStripe,
+	CardNumberElement, CardExpiryElement, CardCVCElement, 
+	PaymentRequestButtonElement } from 'react-stripe-elements';
 
 import C from '../C';
-import printer from '../utils/printer';
-import ActionMan from '../plumbing/ActionMan';
-import DataStore from '../plumbing/DataStore';
-import NGO from '../data/charity/NGO';
-import FundRaiser from '../data/charity/FundRaiser';
-import Donation from '../data/charity/Donation';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 
 import Misc from './Misc';
-import {nonce,getType} from '../data/DataClass';
 
 // falsy value for SERVER_TYPE = production
 const stripeKey = (C.SERVER_TYPE) ?
@@ -50,7 +40,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>
-			<div className='well'>
+			<div className='well hidden'>
 				<div className='test-card-details'>
 					<h4> Test card details (use any CVC and any future expiry date)</h4>
 					<p><code>4000008260000000</code> UK Visa</p>
@@ -142,28 +132,32 @@ class StripeThingsClass extends Component {
 		const {amount, recipient} = this.props;
 		// TODO an email editor if this.props.email is unset
 		return (
-			<form onSubmit={(event) => this.handleSubmit(event)}>
+			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
-				<div className='form-group'>
-					<label>Card number</label>
-					<div className='form-control'>
-						<CardNumberElement placeholder='0000 0000 0000 0000' />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>Expiry date</label>
-					<div className='form-control'>
-						<CardExpiryElement />
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>CVC</label>
-					<div className='form-control'>
-						<CardCVCElement />
-					</div>
-				</div>
+				<FormGroup>
+					<Col md={12}>
+						<label>Card number</label>
+						<div className='form-control'>
+							<CardNumberElement placeholder='0000 0000 0000 0000' />
+						</div>
+					</Col>
+				</FormGroup>
+				<FormGroup>
+					<Col md={6}>
+						<label>Expiry date</label>
+						<div className='form-control'>
+							<CardExpiryElement />
+						</div>
+					</Col>
+					<Col md={6}>
+						<label>CVC</label>
+						<div className='form-control'>
+							<CardCVCElement />
+						</div>
+					</Col>
+				</FormGroup>
 				<Button type='submit'>Submit Payment</Button>
-			</form>
+			</Form>
 		);
 	} // ./render()
 } // ./StripeThingsClass

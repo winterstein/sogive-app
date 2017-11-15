@@ -71,51 +71,59 @@ if ( ! pFundRaiser.resolved) {
 	// TODO
 	const supporters = [
 		{
-			date: '2017-11-01T10:00Z',
+			date: '2017-11-12T10:00Z',
 			amount: MonetaryAmount.make({value: 10}),
-			donorName: 'Berk Herkson',
+			donorName: 'Robert Florence',
 			id: 'berkherkson@winterwell.com',
-			img: 'http://bogleech.com/trapdoor/td-berk.jpg',
-			message: 'I\'m Berk!',
+			img: '/img/stock-photos/male-1.jpg',
+			message: `Go ${item.owner.name}!`,
 		},
 		{
-			date: '2017-11-03T10:00Z',
+			date: '2017-11-08T10:00Z',
 			amount: MonetaryAmount.make({value: 5}),
-			donorName: 'Spoon McGuffin',
+			donorName: 'Linda Roberts',
 			id: 'spoon@winterwell.com',
-			img: 'http://www.geminieventrentals.com/wp-content/uploads/2015/01/King-Spoon-500x500.jpg',
-			message: 'Thank you, Sir Patrick. You have made the world a better place for spoons and witches.',
+			img: '/img/stock-photos/female-1.jpg',
+			message: `Don't slow down now - you'll break your record this year for sure!`,
 		},
 		{
-			date: '2017-11-10T10:00Z',
+			date: '2017-11-08T09:00Z',
 			amount: MonetaryAmount.make({value: 20}),
-			donorName: 'Joe Chill',
+			donorName: 'Michelle Stanley',
 			id: 'joechill@winterwell.com',
-			img: 'https://static.comicvine.com/uploads/original/11127/111278246/5090739-2402727027-latest',
-			message: 'I KILLED BATMAN\'S PARENTS. THAT\'S MY WHOLE DEAL.',
+			img: '/img/stock-photos/female-2.jpg',
+			message: `Can't wait for the big day. Don't leave me behind, ${item.owner.name}!`,
 		},
 		{
-			date: '2017-11-20T10:00Z',
+			date: '2017-11-07T10:00Z',
 			amount: MonetaryAmount.make({value: 30}),
-			donorName: 'Fork McGuffin',
+			donorName: 'Colin Furze',
 			id: 'fork@winterwell.com',
-			img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif/lossy-page1-220px-Tranchergaffel%2C_1640-tal_-_Skoklosters_slott_-_102831.tif.jpg',
-			message: 'What Spoon said, but more... furcated.',
+			img: '/img/stock-photos/male-2.jpg',
+			message: `You've inspired me, you'd better donate to my fundraiser too!`,
 		},
 		{
-			date: '2017-11-29T10:00Z',
+			date: '2017-11-04T10:00Z',
 			amount: MonetaryAmount.make({value: 5}),
+			donorName: 'Helen Nelson',
+			id: 't.wayne@winterwell.com',
+			img: '/img/stock-photos/female-3.jpg',
+			message: `Good luck!`,
+		},
+		{
+			date: '2017-11-01T10:00Z',
+			amount: MonetaryAmount.make({value: 100}),
 			donorName: 'Thomas Wayne',
 			id: 't.wayne@winterwell.com',
-			img: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/ad/Thomas_Wayne.png/250px-Thomas_Wayne.png',
-			message: 'I love you, my billionaire ninja son. Always remember who you are.',
+			img: '/img/stock-photos/male-3.jpg',
+			message: `See you out there`,
 		},
 	];
 
 	return (
 		<div>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} />
-			<div className='own-fundraiser'>
+			<div className='own-fundraiser hidden'>
 				<h3>You're viewing your own fundraiser page.</h3>
 				<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
 			</div>
@@ -123,7 +131,7 @@ if ( ! pFundRaiser.resolved) {
 			<Grid id='FundRaiserPage'>
 				<Row>
 					<Col md={12} className='event-banner'>
-						<img alt={`Banner for ${item.name}`} src={item.banner} />
+						<img alt={`Banner for ${item.name}`} src={event.bannerImage} />
 					</Col>
 				</Row>
 
@@ -148,7 +156,7 @@ if ( ! pFundRaiser.resolved) {
 				<Row>
 					<Col md={6} className='me'>
 						<h3>Who I am: {item.owner.name}</h3>
-						<Misc.AvatarImg peep={item.owner} />						
+						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
 						<p>{item.owner.description}</p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -184,7 +192,7 @@ if ( ! pFundRaiser.resolved) {
 	);
 };
 
-const DonationProgress = ({item, supporters}) => {
+const DonationProgress = ({item, supporters, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	const donated = FundRaiser.donated(item);
@@ -213,7 +221,7 @@ const DonationProgress = ({item, supporters}) => {
 				<DonationsSoFar item={item} supporters={supporters} />
 				<div className='details-output'>
 					<div className='first-impact'>
-						<span className='amount'>99 people</span> turned into frogs by witches
+						<big className='amount'>99 people</big> turned into frogs by witches
 					</div>
 					<div className='second-impact'>
 						<span className='amount'>25</span> local ponds repopulated with friendly amphibians
@@ -242,7 +250,8 @@ const DonationsSoFar = ({item, supporters}) => {
 		const diff = MonetaryAmount.sub(nextTarget, item.donated);
 		return (
 			<div className='details-input'>
-				<Misc.Money amount={donated} /> raised by {supporters.length} supporters. Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={nextTarget} />!
+				<p>{supporters.length} supporters have already raised <Misc.Money amount={donated} />.</p>
+				<p>Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={nextTarget} />!</p>
 			</div>
 		);
 	}

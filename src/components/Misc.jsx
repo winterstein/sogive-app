@@ -1,13 +1,13 @@
 import React from 'react';
 
 // FormControl removed in favour of basic <inputs> while debugging input lag
-import { Checkbox, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
+import { Checkbox, Radio, FormGroup, InputGroup, DropdownButton, MenuItem} from 'react-bootstrap';
 
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
-import {setHash, XId} from 'wwutils';
+import { setHash, XId } from 'wwutils';
 import PV from 'promise-value';
 import Dropzone from 'react-dropzone';
 
@@ -42,8 +42,8 @@ Misc.Col2 = ({children}) => (
 );
 
 const CURRENCY = {
-	GBP: "£",
-	USD: "$"
+	gbp: "£",
+	usd: "$"
 };
 /**
  * Money span, falsy displays as 0
@@ -69,9 +69,11 @@ Misc.Money = ({amount, minimumFractionDigits}) => {
 	}
 	// pad .1 to .10
 	if (snum.match(/\.\d$/)) snum += '0';
+
+	const currencyCode = (amount.currency || 'gbp').toLowerCase();
 	return (
 		<span className='money'>
-			<span className='currency-symbol'>{CURRENCY[amount.currency || 'GBP']}</span>
+			<span className='currency-symbol'>{CURRENCY[currencyCode]}</span>
 			<span className='amount'>{snum}</span>
 		</span>
 	);
@@ -142,6 +144,7 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
  */
 Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	// label / help? show it and recurse
+
 	// NB: Checkbox has a different html layout :( -- handled below
 	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
 		// Minor TODO help block id and aria-described-by property in the input
@@ -154,6 +157,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 			</div>
 		);
 	}
+
 	let {prop, path, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
 	assert( ! type || Misc.ControlTypes.has(type), 'Misc.PropControl: '+type);
@@ -168,23 +172,42 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	}
 	let value = item[prop]===undefined? dflt : item[prop];
 	const proppath = path.concat(prop);
-	// Checkbox?
 
+	// Checkbox?
 	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
-			DataStore.setValue(proppath, e.target.checked);
-			if (saveFn) saveFn({path:path, value:e.target && e.target.checked});		
+			const val = e && e.target && e.target.checked;
+			DataStore.setValue(proppath, val);
+			if (saveFn) saveFn({path: path, value: val});		
 		};
 		if (value===undefined) value = false;
 		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
 	}
+
+	// Yes-no radio buttons? (eg in the Gift Aid form)
+	if (type === 'yesNo') {
+		const onChange = e => {
+			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
+			const val = e && e.target && e.target.value && e.target.value !== 'false';
+			DataStore.setValue(proppath, val);
+			if (saveFn) saveFn({path:path, value: val});		
+		};
+		return (
+			<FormGroup>
+				<Radio value={true} name={prop} onChange={onChange} checked={value} inline>Yes</Radio>
+				<Radio value={false} name={prop} onChange={onChange} checked={!value} inline>No</Radio>
+			</FormGroup>
+		);
+	}
+
+
 	if (value===undefined) value = '';
 
 	// £s
 	// NB: This is a bit awkward code -- is there a way to factor it out nicely?? The raw vs parsed/object form annoyance feels like it could be a common case.
-	if (type==='MonetaryAmount') {
-		let acprops ={prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
+	if (type === 'MonetaryAmount') {
+		let acprops = {prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
 		return <PropControlMonetaryAmount {...acprops} />;
 	} // ./£
 	// text based
@@ -263,8 +286,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 			accepted.forEach(file => {
 				ServerIO.upload(file, progress, load)
 					.done(response => {
-						console.log('FILE UPLOAD RESPONSE:', response);
-						// DataStore.setValue(path, response.what?);
+						DataStore.setValue(path.concat(prop), response.cargo.url);
 					});
 			});
 	
@@ -360,7 +382,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 }; //./PropControl
 
 Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color MonetaryAmount checkbox"
-							+" location date year number arraytext address postcode json");
+							+" yesNo location date year number arraytext address postcode json");
 
 
 const PropControlMonetaryAmount = ({prop, value, path, proppath, 
@@ -480,22 +502,27 @@ Misc.dateTimeString = (d) => (
 	`${d.getDate()} ${shortMonths[d.getMonth()]} ${d.getFullYear()} ${oh(d.getHours())}:${oh(d.getMinutes())}`
 );
 
-Misc.AvatarImg = ({peep}) => {
+Misc.AvatarImg = ({peep, ...props}) => {
 	if ( ! peep) return null;
-	let src = peep.img;
+	let { img, name } = peep;
+	let { className, alt, ...rest} = props;
 	const id = getId(peep);
-	const name = peep.name || (id && XId.id(id)) || 'anon';
-	if ( ! src) {
+
+	name = name || (id && XId.id(id)) || 'anon';
+	alt = alt || `Avatar for ${name}`;
+
+	if ( ! img) {
 		// try a gravatar -- maybe 20% will have one c.f. http://euri.ca/2013/how-many-people-use-gravatar/index.html#fnref-1104-3
 		if (id && XId.service(id) === 'email') {
 			let e = XId.id(id);
-			src = 'https://www.gravatar.com/avatar/'+md5(e);						
+			img = 'https://www.gravatar.com/avatar/'+md5(e);						
 		}
 		// security paranoia -- but it looks like Gravatar dont set a tracking cookie
 		// let html = `<img className='AvatarImg' alt=${'Avatar for '+name} src=${src} />`;
 		// return <iframe title={nonce()} src={'data:text/html,' + encodeURIComponent(html)} />;
 	}
-	return <img className='AvatarImg img-thumbnail' alt={'Avatar for '+name} src={src} />;
+
+	return <img className={`AvatarImg img-thumbnail ${className}`} alt={alt} src={img} {...rest} />;
 };
 
 /**

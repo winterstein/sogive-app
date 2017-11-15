@@ -109,6 +109,7 @@ ServerIO.upload = function(file, progress, load) {
 		type: 'POST',
 		contentType: false,
 		processData: false,
+		swallow: true,
 	});
 };
 

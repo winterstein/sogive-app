@@ -16,6 +16,9 @@
 		color: white;
 		text-align: center;
 		font-weight: bold;
+		h2 {
+			margin: 0.5em auto;
+		}
 	}
 
 	.vitals {
@@ -25,9 +28,9 @@
 
 		.user-event-photo {
 			position: relative;
-			top: 50px;
-			height: 250px;
-			width: 250px;
+			top: 25px;
+			height: 300px;
+			width: 300px;
 			background-image: url('/img/circle-bg-left.svg');
 			background-size: contain;
 			display: flex;
@@ -36,6 +39,7 @@
 			margin: auto;
 			img {
 				height: 80%;
+				width: 80%;
 				border-radius: 50%;
 				object-fit: cover;
 				background-color: white;
@@ -80,15 +84,15 @@
 		}
 		.progress-details {
 			height: 50%;
+			color: black;
 		}
 	} // /.vitals .donation-progress
 
 	.me {
-		.avatar {
+		.AvatarImg {
 			width: 150px;
 			height: 150px;
-			border-radius: 50%;
-			float: left;
+			object-fit: cover;
 		}
 	}
 
@@ -96,7 +100,7 @@
 		.charity-logo {
 			width: 150px;
 			height: 150px;
-			border-radius: 50%;
+			object-fit: contain;
 			float: left;
 		}
 	}
@@ -109,6 +113,7 @@
 				width: 75px;
 				height: 75px;
 				border-radius: 50%;
+				object-fit: cover;
 				float: left;
 			}
 			.donation-date {

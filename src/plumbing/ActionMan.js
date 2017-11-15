@@ -201,7 +201,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 					// update anyway
 					DataStore.update();
 				}
-				return dontn || null;
+				return dontn || false;
 			});
 	});
 };
