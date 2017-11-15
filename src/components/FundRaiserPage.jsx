@@ -122,7 +122,7 @@ if ( ! pFundRaiser.resolved) {
 
 	return (
 		<div>
-			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} />
+			{event? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
 			<div className='own-fundraiser hidden'>
 				<h3>You're viewing your own fundraiser page.</h3>
 				<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
