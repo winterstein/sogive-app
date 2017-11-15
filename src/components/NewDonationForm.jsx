@@ -38,7 +38,7 @@ const DonateButton = ({item}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
 	return (
-		<button className='btn btn-lg btn-default' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		<button className='btn btn-lg btn-primary' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
 			Donate
 		</button>
 	);
@@ -165,7 +165,7 @@ const DonationForm = ({item, charity, causeName}) => {
 		navStages.push({title:'Message'},);
 	}
 	stages.push(<PaymentSection path={path} item={item} />);
-	stages.push(<ThankYouSection path={path} />);
+	stages.push(<ThankYouSection path={path} item={item} />);
 	navStages.push({title:'Payment'},);
 	navStages.push( {title:'Confirmation'});
 
@@ -242,13 +242,36 @@ const MessageSection = ({path, item}) => (
 	</div>
 );
 
-const PaymentSection = ({path, item}) => {
-	const amount = DataStore.getValue(path.concat('amount'));
-	return <PaymentWidget amount={amount} recipient={item.name} />;
+const onToken = (token) => {
+	setTimeout((token) => {
+		const stagePath = ['location', 'params', 'dntnStage'];
+		const stage = DataStore.getValue(stagePath);
+		DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
+	}, 2000);
 };
 
-const ThankYouSection = () => {
-	return <div>Thank You!</div>; // TODO
+const PaymentSection = ({path, item}) => {
+	const amount = DataStore.getValue(path.concat('amount'));
+	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
+};
+
+const ThankYouSection = ({path, item}) => {
+	const donation = DataStore.getValue(path);
+
+	return (
+		<div className='text-center'>
+			<h3>Thank You!</h3>
+			<big>
+				<p>
+					We've received your donation of <Misc.Money amount={donation.amount} /> to {item.name}.<br />
+					A receipt for your donation will be emailed to {Login.getEmail()}.
+				</p>
+				<p>
+					Thanks for using SoGive!
+				</p>
+			</big>
+		</div>
+	); // TODO
 };
 
 export {DonateButton};

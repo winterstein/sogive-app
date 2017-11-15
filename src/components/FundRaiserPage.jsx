@@ -123,11 +123,13 @@ const FundRaiserPage = ({id}) => {
 
 	return (
 		<div>
-			{event? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
-			<div className='own-fundraiser hidden'>
-				<h3>You're viewing your own fundraiser page.</h3>
-				<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
-			</div>
+			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
+			{ownerViewing ? (
+				<div className='own-fundraiser'>
+					<h3>You're viewing your own fundraiser page.</h3>
+					<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
+				</div>
+			) : null}	
 			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				<Row>
@@ -178,17 +180,18 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 					<Col md={6}>
 						<h3>Supporters:</h3>
-						{supporters? <DonateButton item={item} /> : null}
+						{/*supporters? <DonateButton item={item} /> : null*/}
 						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />						
 					</Col>
 				</Row>
-
+				{/*
 				<Row>
 					<Col md={12}>
 						<center><DonateButton item={item} /></center>
 					</Col>
 				</Row>
-			</Grid>			
+				*/}
+			</Grid>
 		</div>
 	);
 };
@@ -284,7 +287,7 @@ const Supporters = ({item, supporters = [], charity}) => {
 	return (
 		<ul className='supporters'>
 			{supporters.map(supporter => <Supporter key={`${supporter.id}.${supporter.amount.value}.${supporter.date}`} supporter={supporter} charity={charity} />)}
-			<li><Button>show more</Button></li>
+			<li className='show-more'><Button>show more</Button></li>
 		</ul>
 	);
 };

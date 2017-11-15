@@ -61,7 +61,7 @@ For now -- safer to have the Kiltwalk stuff styled separately
 	
 	h3, h4 {
 		.padded-block;
-		margin-bottom: -0.15em;
+		/*margin-bottom: -0.15em;*/
 	}
 	/**
 	Put this on the wider div just below the .header
@@ -99,6 +99,11 @@ For now -- safer to have the Kiltwalk stuff styled separately
 #register, #fundraiser {
 	.padded-page;
 	background-color: white;
+}
+
+/** Only allow vertical resize of textareas */
+textarea.form-control {
+	resize: vertical;
 }
 
 

@@ -156,7 +156,8 @@ class StripeThingsClass extends Component {
 						</div>
 					</Col>
 				</FormGroup>
-				<Button type='submit'>Submit Payment</Button>
+				<Button bsSize='lg' bsStyle='primary' type='submit'>Submit Payment</Button>
+				{C.SERVER_TYPE ? <small className='pull-right'>Test card no:<br/>4000008260000000</small> : null}
 			</Form>
 		);
 	} // ./render()
