@@ -110,9 +110,9 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			case "upload":
 				// must be logged in
-				YouAgainClient ya = Dep.get(YouAgainClient.class);
-				List<AuthToken> tokens = ya.getAuthTokens(request);
-				if (Utils.isEmpty(tokens)) throw new NoAuthException(request);
+				//YouAgainClient ya = Dep.get(YouAgainClient.class);
+				//List<AuthToken> tokens = ya.getAuthTokens(request);
+				//if (Utils.isEmpty(tokens)) throw new NoAuthException(request);
 				// upload
 				s = new UploadServlet();
 				s.process(request);
