@@ -40,19 +40,13 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	MonetaryAmount.assIsa(amount);
 	return (
 		<div className='section donation-amount'>
-			<div className='well hidden'>
-				<div className='test-card-details'>
-					<h4> Test card details (use any CVC and any future expiry date)</h4>
-					<p><code>4000008260000000</code> UK Visa</p>
-					<p><code>4000058260000005</code> UK Visa Debit</p>
-				</div>
-				<button onClick={skipAction}>pretend I paid</button>
-			</div>
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
 					<StripeThings onToken={onToken} amount={amount} recipient={recipient} email={email} />
 				</Elements>
 			</StripeProvider>
+			{ ! C.isProduction()? <small className='clear'>Test card no: 4000008260000000 (use any CVC and any future expiry date). Or <button onClick={skipAction}>test:pretend I paid</button>
+</small> : null}
 		</div>
 	);
 };
@@ -125,7 +119,7 @@ class StripeThingsClass extends Component {
 	}
 
 	render() {
-		if (false && this.state.canMakePayment) {
+		if (this.state.canMakePayment) {
 			return (<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />);
 		}
 
@@ -156,8 +150,7 @@ class StripeThingsClass extends Component {
 						</div>
 					</Col>
 				</FormGroup>
-				<Button bsSize='lg' bsStyle='primary' type='submit'>Submit Payment</Button>
-				{C.SERVER_TYPE ? <small className='pull-right'>Test card no:<br/>4000008260000000</small> : null}
+				<button className='btn btn-primary btn-lg pull-right' type='submit'>Submit Payment</button>
 			</Form>
 		);
 	} // ./render()

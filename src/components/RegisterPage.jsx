@@ -340,6 +340,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 				{ sameAsFirst? null : 
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -349,7 +350,11 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 };
 
 const TeamControl = ({ticket, path}) => {
-	return <Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Team' />;
+	return (<Misc.Col2>
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
+			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
+	</Misc.Col2>);
 };
 
 const CharityChoiceTab = ({basket}) => {
