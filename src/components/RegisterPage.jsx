@@ -42,7 +42,7 @@ const RegisterPage = () => {
 	// const wspath = ['widget', 'RegisterPage', eventId];
 	// const widgetState = DataStore.getValue(wspath) || {};
 	const stagePath = ['location','params', 'registerStage'];
-	let stage = DataStore.getUrlValue('registerStage') || 0;
+	let stage = Number.parseInt(DataStore.getUrlValue('registerStage')) || 0;
 	// if (stage===0) { // start on 1
 	// 	stage = 1;
 	// 	DataStore.setValue(stagePath, stage, false);
@@ -431,7 +431,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 		};
 		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 			.then(res => {
-				let n = DataStore.getValue(stagePath) + 1;
+				let n = Number.parseInt(DataStore.getValue(stagePath)) + 1;
 				DataStore.setValue(stagePath, n);
 				DataStore.setUrlValue('registerStage', n);
 			}, err => {
@@ -477,7 +477,7 @@ const Receipt = ({basket, event}) => {
 			<div className='padded-block'>
 				<h3>Payment to SoGive Ltd.</h3>
 				<p>Registered in England and Wales, company no. 09966206</p>
-				<p>Invoice no: TODO</p>
+				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
 				<p>Payment date & time: {Misc.dateTimeString(createdDate)}</p>
 				<p>Customer name: {ticket0.attendeeName}</p>

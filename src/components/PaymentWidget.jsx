@@ -125,7 +125,7 @@ class StripeThingsClass extends Component {
 	}
 
 	render() {
-		if (this.state.canMakePayment) {
+		if (false && this.state.canMakePayment) {
 			return (<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />);
 		}
 

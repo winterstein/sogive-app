@@ -85,7 +85,7 @@ const DonationForm = ({item, charity, causeName}) => {
 
 	// what stage?
 	const stagePath = ['location', 'params', 'dntnStage'];
-	const stage = DataStore.getUrlValue('dntnStage');
+	const stage = Number.parseInt(DataStore.getUrlValue('dntnStage'));
 
 	// not open? just show the button
 	let isOpen = DataStore.getValue([...widgetPath, 'open']);
@@ -245,7 +245,7 @@ const MessageSection = ({path, item}) => (
 const onToken = (token) => {
 	setTimeout((token) => {
 		const stagePath = ['location', 'params', 'dntnStage'];
-		const stage = DataStore.getValue(stagePath);
+		const stage = Number.parseInt(DataStore.getValue(stagePath));
 		DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
 	}, 2000);
 };
