@@ -38,12 +38,19 @@ const FundRaiserEditor = ({id}) => {
 	let item = pEvent.value;
 	FundRaiser.assIsa(item);	
 
+	let event = null;
+	if (item.eventId) {
+		let pvEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
+		event = pvEvent.value;
+	}
+
 	// TODO charity reuses register form control
 
 	const path = ['data', type, id];
 	const peepPath = path.concat('owner');
 
 	return (<div className='padded-page'>
+		{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity: '50%'}} /> : null}
 		<div className='padded-block'>
 			<h2>Fundraiser {item.name || id} </h2>
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
