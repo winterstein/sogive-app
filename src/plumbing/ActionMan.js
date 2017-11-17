@@ -18,7 +18,6 @@ import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
 
-
 const addCharity = () => {
 	// TODO search the database for potential matches, and confirm with the user
 	// get the info (just the name)

@@ -48,7 +48,7 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
-		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id}});
+		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
 	});
 
 	if ( ! pFundRaiser.resolved) {

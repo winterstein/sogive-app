@@ -13,6 +13,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DBSoGive;
@@ -110,10 +111,25 @@ public class DonationServlet extends CrudServlet {
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
 		
+		// Donating to/via a fundraiser? Update its donation total.
+		String frid = donation.getFundRaiser();
+		if (frid != null && !frid.isEmpty()) {
+			ESPath frPath = new ESPath(frid, frid, frid);
+			FundraiserServlet fart = new FundraiserServlet();
+			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
+			dtfa.send(donation);
+		}
+		
 		// take payment
 		String ikey = donation.getId();
 		Person userObj = DBSoGive.getCreateUser(user);
-		StripeAuth sa = new StripeAuth(userObj, state);
+		
+		/** Donation has provision to store a StripeAuth now - may already be on the object */
+		StripeAuth sa = donation.getStripe();
+		if (sa == null) {
+			sa = new StripeAuth(userObj, state);
+		}
+		
 		// collect the money
 		// TODO Less half-assed handling of Stripe exceptions
 		try {

@@ -89,6 +89,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		DBSoGive.init();
 		// actors
 		Dep.set(BasketPublishedActor.class, new BasketPublishedActor());
+		Dep.set(DonateToFundRaiserActor.class, new DonateToFundRaiserActor());
 	}
 	
 	@Override

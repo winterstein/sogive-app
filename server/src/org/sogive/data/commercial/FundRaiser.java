@@ -38,7 +38,7 @@ public class FundRaiser extends AThing {
 	String description;
 	MonetaryAmount target = MonetaryAmount.pound(100);
 	MonetaryAmount userTarget = MonetaryAmount.pound(100);
-	MonetaryAmount donated;
+	MonetaryAmount donated = MonetaryAmount.pound(0);
 	Integer donationCount;
 	String charityId;
 	/**

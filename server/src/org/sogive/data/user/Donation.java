@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.Output;
+import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
@@ -36,6 +37,8 @@ public class Donation extends AThing {
 	
 	String donorAddress;
 	String donorPostcode;
+	
+	String message;
 	
 	/**
 	 * id for the {@link FundRaiser}, if there was one
@@ -77,6 +80,8 @@ public class Donation extends AThing {
 	public void setPaymentId(String paymentId) {
 		this.paymentId = paymentId;
 	}
+	
+	StripeAuth stripe;
 	
 
 	boolean giftAid;

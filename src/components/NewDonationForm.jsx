@@ -165,7 +165,7 @@ const DonationForm = ({item, charity, causeName}) => {
 		stages.push(<MessageSection path={path} item={item} />);
 		navStages.push({title:'Message'},);
 	}
-	stages.push(<PaymentSection path={path} item={item} />);
+	stages.push(<PaymentSection path={path} donation={donationDraft} item={item} />);
 	stages.push(<ThankYouSection path={path} item={item} />);
 	navStages.push({title:'Payment'},);
 	navStages.push( {title:'Confirmation'});
@@ -244,16 +244,23 @@ const MessageSection = ({path, item}) => (
 	</div>
 );
 
-const onToken = (token) => {
-	setTimeout((token) => {
-		const stagePath = ['location', 'params', 'dntnStage'];
-		const stage = Number.parseInt(DataStore.getValue(stagePath));
-		DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
-	}, 2000);
-};
 
 const PaymentSection = ({path, item}) => {
-	const amount = DataStore.getValue(path.concat('amount'));
+	const donation = DataStore.getValue(path);
+	const {amount} = donation;
+
+	const onToken = (token) => {
+		donation.stripe = token;
+		DataStore.setData(donation);
+		
+		ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
+			.then(() => {
+				const stagePath = ['location', 'params', 'dntnStage'];
+				const stage = Number.parseInt(DataStore.getValue(stagePath));
+				DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
+			});
+	};
+
 	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
 };
 
