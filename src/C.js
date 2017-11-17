@@ -14,6 +14,8 @@ if (window.location.host.indexOf("test")===0) C.SERVER_TYPE = 'test';
 else if (window.location.host.indexOf("local")===0) C.SERVER_TYPE = 'local';
 // local servers dont have https
 C.HTTPS = C.SERVER_TYPE==='local'? 'http' : 'https';
+C.isProduction = () => C.SERVER_TYPE!=='local' && C.SERVER_TYPE!=='test';
+
 /**
  * app config
  */

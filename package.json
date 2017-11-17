@@ -32,7 +32,7 @@
     "sjtest": "^0.4.6",
     "webpack": "^3.5.5",
     "wwutils": "^0.8.4",
-    "you-again": "^0.6.1"
+    "you-again": "^0.6.2"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",

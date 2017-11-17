@@ -380,7 +380,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<h3>Impact Summary</h3>
-				<Misc.Money amount={impact.amount} precision={2} /> may fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
+				<Misc.Money amount={impact.amount} maximumFractionDigits={0} maximumSignificantDigits={2} /> may fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}

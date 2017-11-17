@@ -173,7 +173,7 @@ const DonationForm = ({item, charity, causeName}) => {
 		<WizardStage stageKey={i} stageNum={stage}>
 			{section}
 		</WizardStage>
-	));
+	));	
 
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
@@ -188,7 +188,7 @@ const DonationForm = ({item, charity, causeName}) => {
 				{wizardStages}
 			</Modal.Body>
 			<Modal.Footer>
-				<PrevButton stagePath={stagePath} /> <NextButton maxStage={5} stagePath={stagePath} />
+				<PrevButton stagePath={stagePath} /> <NextButton maxStage={4} stagePath={stagePath} />
 			</Modal.Footer>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
@@ -217,6 +217,7 @@ const GiftAidSection = ({path, charity}) => {
 
 	return (
 		<div className='section donation-amount'>
+			<img src='/img/gift-aid-it-logo.gif' alt='Gift Aid It' />
 			<Misc.PropControl prop='giftAidOwnMoney' label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, family or a collection.`} path={path} type='yesNo' />
 			<Misc.PropControl prop='giftAidFundRaisedBySale' label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`} path={path} type='yesNo' />
 			<Misc.PropControl prop='giftAidBenefitInReturn' label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`} path={path} type='yesNo' />

@@ -21,6 +21,7 @@ import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId, nonce} from '../data/DataClass';
 import md5 from 'md5';
+import Settings from '../Settings';
 
 const Misc = {};
 
@@ -33,6 +34,12 @@ Misc.Loading = ({text}) => (
 	</div>
 );
 
+/**
+ * 
+ * @param {
+ * 	TODO?? noPadding: {Boolean} switch off Bootstrap's row padding.
+ * }
+ */
 Misc.Col2 = ({children}) => (
 	<div className='container-fluid'>
 		<div className='row'>
@@ -49,12 +56,14 @@ const CURRENCY = {
  * Money span, falsy displays as 0
  * @param amount {MonetaryAmount|Number}
  */
-Misc.Money = ({amount, minimumFractionDigits}) => {
+Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
 	if ( ! amount) amount = {value: 0};
-	let snum = new Intl.NumberFormat().format(amount.value, {maximumFractionDigits:2, minimumFractionDigits});
+	let snum = new Intl.NumberFormat(Settings.locale, 
+		{maximumFractionDigits, minimumFractionDigits, maximumSignificantDigits}
+	).format(amount.value);
 	// let snum;	
 	// if ( ! precision) {
 	// 	let sv2 = amount.value.toFixed(2);
