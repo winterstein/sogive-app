@@ -232,7 +232,11 @@ const TicketInvoice = ({event, basket, showTip}) => {
 		.sort((a, b) => a.label < b.label);
 	const rowElements = rows.map(rowData => <InvoiceRow key={JSON.stringify(rowData)} {...rowData} />);
 	
-	const total = Basket.getTotal(basket);
+	let total = Basket.getTotal(basket);
+	// HACK: Don't include the tip in calculations when you're not showing it!
+	if (!showTip && basket.tip && MonetaryAmount.isa(basket.tip)) {
+		total = MonetaryAmount.sub(total, basket.tip);
+	}
 	
 	const tipRow = (showTip && basket.hasTip && MonetaryAmount.isa(basket.tip)) ? (
 		<tr>

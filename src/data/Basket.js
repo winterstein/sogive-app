@@ -56,6 +56,7 @@ Basket.make = (base = {}) => {
 	let ma = {
 		items: [],
 		hasTip: true,
+		tip: MonetaryAmount.make({value: 1}),
 		...base,
 		'@type': Basket.type,
 	};

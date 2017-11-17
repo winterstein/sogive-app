@@ -89,8 +89,9 @@ const DonationForm = ({item, charity, causeName}) => {
 
 	// not open? just show the button
 	let isOpen = DataStore.getValue([...widgetPath, 'open']);
+	// THERE IS DEFINITELY A BETTER WAY OF CHECKING THIS. I JUST HAD TO ADD ISNAN TO THE LIST OF "THINGS STAGE SHOULD NOT BE" RIGHT BEFORE A DEMO.
 	if (isOpen===undefined || isOpen===null) {
-		isOpen = stage!==undefined && stage!==null;
+		isOpen = stage!==undefined && stage!==null && !isNaN(stage);
 	}
 	if ( ! isOpen) {
 		return null;
