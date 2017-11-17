@@ -98,6 +98,53 @@ public class DonationServletTest {
 		}	
 	}
 
+	
+	
+	
+
+	@Test
+	public void testMakeGLStyleDonation() {
+		// fire up a server
+		String host = SoGiveTestUtils.getStartServer();
+		
+		// make a save + publish call with test Stripe details	
+		// Do use a temp XId
+		WebRequest state = new WebRequest(new TestHttpServletRequest(), new TestHttpServletResponse());
+		String id = TrackingPixelServlet.getCreateCookieTrackerId(state);
+		XId from = new XId(id);
+		String to = SoGiveTestUtils.getCharity().getId();		
+		// e.g. EuroCake funded a 5p donation in their marketing
+		MonetaryAmount userContribution = MonetaryAmount.pound(0.05);		
+		Donation don = new Donation(from, to, userContribution);
+		don.setA("testloop");
+		don.setVia(new XId("eurocake.com@ads"));
+		don.setPaidElsewhere(true);
+		String did = don.getId();
+		
+		String donj = Dep.get(Gson.class).toJson(don);
+		System.out.println(donj);
+		FakeBrowser fb = new FakeBrowser();
+		// the GL server reports, and it can authorise itself
+		AuthToken user = SoGiveTestUtils.doTestUserLogin(host);		
+		fb.setAuthenticationByJWT(user.getToken());
+		fb.setRequestMethod("PUT");
+		try {
+			String json= fb.getPage(host+"/donation/"+WebUtils.urlEncode(did)+".json", 
+					new ArrayMap(
+							"item", donj, 
+							"action", CrudServlet.ACTION_PUBLISH
+							)
+					);
+			Map response = (Map) JSON.parse(json);
+			Map esres = (Map) response.get("cargo");
+			
+			System.out.println(esres);
+			Donation don2 = Dep.get(Gson.class).fromJson(JSON.toString(esres));
+			System.out.println(don2);
+		} catch(Exception ex) { // allow us to breakpoint w/o a time out killing the JVM
+			ex.printStackTrace();
+		}	
+	}
 	/**
 	 * Assemble a Map of parameters which can be used in a (test mode) Stripe request to create a fresh token.
 	 * Copy-pasted from Stripe's own test suite.

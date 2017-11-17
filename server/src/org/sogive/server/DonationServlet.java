@@ -68,6 +68,8 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class DonationServlet extends CrudServlet {
 
+	private static final String LOGTAG = "DonationServlet";
+
 	public DonationServlet() {
 		super(Donation.class);
 	}
@@ -110,6 +112,7 @@ public class DonationServlet extends CrudServlet {
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
+		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
 		// Donating to/via a fundraiser? Update its donation total.
 		String frid = donation.getFundRaiser();
@@ -119,35 +122,43 @@ public class DonationServlet extends CrudServlet {
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
 		}
-		
-		// take payment
-		String ikey = donation.getId();
-		Person userObj = DBSoGive.getCreateUser(user);
-		
-		/** Donation has provision to store a StripeAuth now - may already be on the object */
-		StripeAuth sa = donation.getStripe();
-		if (sa == null) {
-			sa = new StripeAuth(userObj, state);
-		}
-		
+						
 		// collect the money
+		if (donation.isPaidElsewhere()) {
+			Log.d(LOGTAG, "paid elsewhere "+donation);
+		} else {
+			doCollectMoney(donation, state, user);
+		}
+		// store in the database
+		super.doPublish(state);
+		return jthing;
+	}
+
+	private void doCollectMoney(Donation donation, WebRequest state, XId user) {
 		// TODO Less half-assed handling of Stripe exceptions
 		try {
+			/** Donation has provision to store a StripeAuth now - may already be on the object */
+			// take payment
+			String ikey = donation.getId();
+			Person userObj = DBSoGive.getCreateUser(user);
+
+			StripeAuth sa = donation.getStripe();
+			if (sa == null) {
+				sa = new StripeAuth(userObj, state);
+			}
+
 			Charge charge = StripePlugin.collect(donation.getTotal(), donation.getId(), sa, userObj, ikey);
 			Log.d("stripe", charge);
 			donation.setPaymentId(charge.getId());
-			donation.setCollected(true);
-			
-			// store in the database
-			super.doPublish(state);
+			donation.setCollected(true);			
 			// FIXME
 //			pi.setRefresh("true");
 //			pi.setOpTypeCreate(true);				
-			// check we haven't done before: done by the op_type=create
-			return jthing;
+			// check we haven't done before: done by the op_type=create			
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
+
 	}
 
 	

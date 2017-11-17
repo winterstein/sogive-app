@@ -73,6 +73,12 @@ public class Donation extends AThing {
 	boolean paidOut;
 	
 	/**
+	 * If true, the money was paid outside of the SoGive system.
+	 * E.g. cash paid in directly. Then this record is just to log the donation in SoGive.
+	 */
+	boolean paidElsewhere;
+	
+	/**
 	 * e.g. a stripe charge id
 	 */
 	String paymentId;
