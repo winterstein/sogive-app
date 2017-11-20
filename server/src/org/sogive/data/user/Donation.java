@@ -90,10 +90,27 @@ public class Donation extends AThing {
 	StripeAuth stripe;
 	
 
+	/*
+	 * Gift Aid section: HMRC have asked us to change our questions to get more accurate data:
+	 * (their instructions were basically "Copy BT MyDonate's form")
+	 * - yes/no questions instead of checkboxes, which people just tick without reading
+	 * - some questions have "no" as the "correct" answer
+	 * Some fields have been deprecated as a result.
+	 */
+	/** Now has explanatory text on "I want to Gift Aid this donation" checkbox which makes {@link giftAidTaxPayer} redundant. */
 	boolean giftAid;
-	boolean giftAidTaxpayer;
+	
+	/** Must be true if giftAid is true. "This donation is my own money. It has not come from anyone else e.g. a business, friends, family or a collection." */
 	boolean giftAidOwnMoney;
+	/** Must be false if giftAid is true. "This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash." */
+	boolean giftAidFundRaisedBySale;
+	/** Must be false if giftAid is true. "I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake." */
+	boolean giftAidBenefitInReturn;
+	
+	/** Deprecated: Inverted to {@link giftAidBenefitInReturn} */
 	boolean giftAidNoCompensation;
+	/** Deprecated: Implicit in {@link giftAid} */ 
+	boolean giftAidTaxpayer;
 	
 	PersonLite donor;
 
@@ -173,7 +190,4 @@ public class Donation extends AThing {
 		this.donorAddress = address;
 		this.donorPostcode = postcode;
 	}
-	
-	
-
 }

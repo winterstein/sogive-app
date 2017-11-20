@@ -45,8 +45,13 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 					<StripeThings onToken={onToken} amount={amount} recipient={recipient} email={email} />
 				</Elements>
 			</StripeProvider>
-			{ ! C.isProduction()? <small className='clear'>Test card no: 4000008260000000 (use any CVC and any future expiry date). Or <button onClick={skipAction}>test:pretend I paid</button>
-</small> : null}
+			{ ! C.isProduction() ? (
+				<small className='clear'>
+					Test card no: 4000008260000000 (use any CVC and any future expiry date). Or
+					{' '}
+					<button onClick={skipAction}>test: pretend I paid</button>
+				</small>
+			) : null}
 		</div>
 	);
 };

@@ -50,6 +50,7 @@ const FundRaiserPage = ({id}) => {
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
 	});
+	const donations = pvDonations.value && pvDonations.value.hits;
 
 	if ( ! pFundRaiser.resolved) {
 		return <Misc.Loading />;
@@ -69,57 +70,6 @@ const FundRaiserPage = ({id}) => {
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = item.owner.id === Login.getId();
 
-	// TODO
-	const supporters = [
-		{
-			date: '2017-11-12T10:00Z',
-			amount: MonetaryAmount.make({value: 10}),
-			donorName: 'Robert Florence',
-			id: 'berkherkson@winterwell.com',
-			img: '/img/stock-photos/male-1.jpg',
-			message: `Go ${item.owner.name}!`,
-		},
-		{
-			date: '2017-11-08T10:00Z',
-			amount: MonetaryAmount.make({value: 5}),
-			donorName: 'Linda Roberts',
-			id: 'spoon@winterwell.com',
-			img: '/img/stock-photos/female-1.jpg',
-			message: `Don't slow down now - you'll break your record this year for sure!`,
-		},
-		{
-			date: '2017-11-08T09:00Z',
-			amount: MonetaryAmount.make({value: 20}),
-			donorName: 'Michelle Stanley',
-			id: 'joechill@winterwell.com',
-			img: '/img/stock-photos/female-2.jpg',
-			message: `Can't wait for the big day. Don't leave me behind, ${item.owner.name}!`,
-		},
-		{
-			date: '2017-11-07T10:00Z',
-			amount: MonetaryAmount.make({value: 30}),
-			donorName: 'Colin Furze',
-			id: 'fork@winterwell.com',
-			img: '/img/stock-photos/male-2.jpg',
-			message: `You've inspired me, you'd better donate to my fundraiser too!`,
-		},
-		{
-			date: '2017-11-04T10:00Z',
-			amount: MonetaryAmount.make({value: 5}),
-			donorName: 'Helen Nelson',
-			id: 't.wayne@winterwell.com',
-			img: '/img/stock-photos/female-3.jpg',
-			message: `Good luck!`,
-		},
-		{
-			date: '2017-11-01T10:00Z',
-			amount: MonetaryAmount.make({value: 100}),
-			donorName: 'Thomas Wayne',
-			id: 't.wayne@winterwell.com',
-			img: '/img/stock-photos/male-3.jpg',
-			message: `See you out there`,
-		},
-	];
 
 	return (
 		<div>
@@ -152,7 +102,7 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 
 					<Col md={6} className='donation-progress'>
-						<DonationProgress item={item} supporters={supporters} charity={charity} />
+						<DonationProgress item={item} charity={charity} />
 					</Col>
 				</Row>
 
@@ -181,7 +131,10 @@ const FundRaiserPage = ({id}) => {
 					<Col md={6}>
 						<h3>Supporters:</h3>
 						{/*supporters? <DonateButton item={item} /> : null*/}
-						<Supporters item={item} supporters={supporters} charity={/*charity*/ null} />						
+						{ donations ? (
+							<Supporters item={item} donations={donations} charity={/*charity*/ null} />						
+						) : null}
+						
 					</Col>
 				</Row>
 				{/*
@@ -196,12 +149,14 @@ const FundRaiserPage = ({id}) => {
 	);
 };
 
-const DonationProgress = ({item, supporters, charity}) => {
+const DonationProgress = ({item, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	const donated = FundRaiser.donated(item);
 	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
-	const remainingPercent = 100 - donatedPercent;
+	// Clamp the bar height to 100% for obvious reasons
+	const donatedBarHeight =Math.min(100, donatedPercent);
+	const remainingBarHeight = 100 - donatedBarHeight;
 
 	// impact info
 	let impacts = null;
@@ -237,22 +192,22 @@ const DonationProgress = ({item, supporters, charity}) => {
 			<div className='progress-graph'>
 				<div className='target'>Target: <Misc.Money amount={target} /></div>
 				<div className='bar-container'>
-					<div className='progress-pointer value' style={{bottom: donatedPercent+'%'}}>
+					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
 						<Misc.Money amount={donated} />
 						<Misc.Icon glyph='triangle-right' />
 					</div>
 					<div className='donation-progress-bar'>
-						<div className='remaining' style={{height: remainingPercent+'%'}}>&nbsp;</div>
-						<div className='done' style={{height: donatedPercent+'%'}}>&nbsp;</div>
+						<div className='remaining' style={{height: remainingBarHeight+'%'}}>&nbsp;</div>
+						<div className='done' style={{height: donatedBarHeight+'%'}}>&nbsp;</div>
 					</div>
-					<div className='progress-pointer percent' style={{bottom: donatedPercent+'%'}}>
+					<div className='progress-pointer percent' style={{bottom: donatedBarHeight+'%'}}>
 						<Misc.Icon glyph='triangle-left' />
 						{Math.round(donatedPercent)}%
 					</div>
 				</div>
 			</div>
 			<div className='progress-details'>
-				<DonationsSoFar item={item} supporters={supporters} />
+				<DonationsSoFar item={item} />
 				{outputDesc}
 				<DonateButton item={item} />
 			</div>
@@ -260,17 +215,29 @@ const DonationProgress = ({item, supporters, charity}) => {
 	);
 };
 
-const DonationsSoFar = ({item, supporters}) => {
+const DonationsSoFar = ({item}) => {
 	// Access the userTarget prop directly, before calling FundRaiser.target, to see if an actual target is set
-	const {donated, userTarget} = item;
+	const {donated, userTarget, donationCount } = item;
 
-	if (supporters && supporters.length) {
+	if (donationCount > 0) {
 		const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
 		const diff = MonetaryAmount.sub(target, item.donated);
+
+		if (diff.value <= 0) {
+			return (
+				<div className='details-input'>
+					<p>
+						<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
+						We've passed <Misc.Money amount={target} /> in donations - what's next?
+					</p>
+				</div>
+			);
+		}
+
 		return (
 			<div className='details-input'>
 				<p>
-					<big>{supporters.length}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
+					<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
 					Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
 				</p>
 			</div>
@@ -283,23 +250,30 @@ const DonationsSoFar = ({item, supporters}) => {
 	);
 };
 
-const Supporters = ({item, supporters = [], charity}) => {
+const Supporters = ({item, donations = [], charity}) => {
 	return (
 		<ul className='supporters'>
-			{supporters.map(supporter => <Supporter key={`${supporter.id}.${supporter.amount.value}.${supporter.date}`} supporter={supporter} charity={charity} />)}
+			{donations.map(donation => <Donation key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}
 			<li className='show-more'><Button>show more</Button></li>
 		</ul>
 	);
 };
 
-const Supporter = ({supporter, charity}) => {
+const Donation = ({donation, charity}) => {
+	const name = (donation.person && donation.person.name) || donation.donorName || 'Anonymous Donor';
+	const personImg = donation.person && donation.person.img;
+
 	return (
-		<li className='supporter'>
-			<img className='supporter-photo' src={supporter.img} alt='supporter' />
-			<h4>{supporter.donorName}</h4>
-			<Misc.RelativeDate date={supporter.date} className='donation-date' />
-			<div><span className='amount-donated'><Misc.Money amount={supporter.amount} /></span> donated</div>
-			<p>{supporter.message}</p>
+		<li className='donation'>
+			{ personImg ? (
+				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
+			) : null }
+			<h4>{name}</h4>
+			<Misc.RelativeDate date={donation.date} className='donation-date' />
+			<div><span className='amount-donated'><Misc.Money amount={donation.amount} /></span> donated</div>
+			{ donation.message ? (
+				<p>{donation.message}</p>
+			) : null }
 			<Clearfix />
 		</li>
 	);
