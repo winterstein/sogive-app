@@ -96,11 +96,11 @@ ServerIO.upload = function(file, progress, load) {
 	const xhr = () => {
 		const request = $.ajaxSettings.xhr();
 		request.onProgress = progress;
-		request.onLoad = load;
+		request.onLoad = load; // ??@Roscoe - Any particular reason for using onLoad instead of .then? ^Dan
 		return request;
 	};
 
-	const data = new FormData();
+	const data = new FormData(); // This is a browser native thing: https://developer.mozilla.org/en-US/docs/Web/API/FormData
 	data.append('upload', file);
 
 	return ServerIO.load('/upload.json', {
@@ -123,7 +123,15 @@ ServerIO.upload = function(file, progress, load) {
  * See <a href="http://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> for details.
  * IMPORTANT: To specify form data, use params.data
  *
- * To swallow any messages returned by the server - use params.swallow=true
+ * {
+ * 	// Our parameters
+ * 	swallow: true to swallow any messages returned by the server.   
+ * 
+ * 	// jQuery parameters (partial notes only)
+ * 	data: {Object} data to send - this should be a simple key -> primitive-value map.   
+ * 	xhr: {Function} Used for special requests, e.g. file upload
+ * }
+ 
  *
  * @returns A <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR object</a>.
 **/
@@ -131,7 +139,6 @@ ServerIO.load = function(url, params) {
 	assMatch(url,String);
 	console.log("ServerIO.load", url, params);
 	params = ServerIO.addDefaultParams(params);
-	if ( ! params.data) params.data = {};
 	// sanity check: no Objects except arrays
 	_.values(params.data).map(
 		v => assert( ! _.isObject(v) || _.isArray(v), v)
@@ -145,18 +152,19 @@ ServerIO.load = function(url, params) {
 	params.url = url;
 	// send cookies
 	params.xhrFields = {withCredentials: true};
-	params.data.withCredentials = true; // let the server know this is a with-credentials call
+	dataPut(params.data, 'withCredentials', true); // let the server know this is a with-credentials call
 	// add auth
 	if (Login.isLoggedIn()) {
-		params.data.as = Login.getId();
-		params.data.jwt = Login.getUser().jwt;
+		// Login.signAjaxData(data); TODO
+		dataPut(params.data, 'as',Login.getId());
+		dataPut(params.data, 'jwt', Login.getUser().jwt);
 	}
 	// debug: add stack
 	if (window.DEBUG) {
 		try {
 			const stack = new Error().stack;			
 			// stacktrace, chop leading "Error at Object." bit
-			params.data.stacktrace = (""+stack).replace(/\s+/g,' ').substr(16);
+			dataPut(params.data, 'stacktrace', (""+stack).replace(/\s+/g,' ').substr(16));
 		} catch(error) {
 			// oh well
 		}
@@ -190,6 +198,23 @@ ServerIO.load = function(url, params) {
 			return response;
 		});
 	return defrd;
+};
+
+/**
+ * Utility to set a key=value pair for FormData or a normal data map.
+ * @param {FormData|Object} formData 
+ * @param {String} key 
+ * @param {*} value 
+ */
+const dataPut = (formData, key, value) => {
+	assert(formData);
+	// HACK: is it a FormData object? then use append
+	if (_.isFunction(formData.append)) {
+		formData.append(key, value);
+	} else {
+		formData[key] = value;
+	}
+	return formData;
 };
 
 ServerIO.post = function(url, data) {
