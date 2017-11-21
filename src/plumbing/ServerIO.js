@@ -150,21 +150,14 @@ ServerIO.load = function(url, params) {
 		url = ServerIO.base + url;
 	}
 	params.url = url;
-	// send cookies
-	params.xhrFields = {withCredentials: true};
-	dataPut(params.data, 'withCredentials', true); // let the server know this is a with-credentials call
-	// add auth
-	if (Login.isLoggedIn()) {
-		// Login.signAjaxData(data); TODO
-		dataPut(params.data, 'as',Login.getId());
-		dataPut(params.data, 'jwt', Login.getUser().jwt);
-	}
+	// send cookies & add auth
+	Login.sign(params);
 	// debug: add stack
 	if (window.DEBUG) {
 		try {
 			const stack = new Error().stack;			
 			// stacktrace, chop leading "Error at Object." bit
-			dataPut(params.data, 'stacktrace', (""+stack).replace(/\s+/g,' ').substr(16));
+			params.data.stacktrace = (""+stack).replace(/\s+/g,' ').substr(16);
 		} catch(error) {
 			// oh well
 		}
@@ -200,22 +193,6 @@ ServerIO.load = function(url, params) {
 	return defrd;
 };
 
-/**
- * Utility to set a key=value pair for FormData or a normal data map.
- * @param {FormData|Object} formData 
- * @param {String} key 
- * @param {*} value 
- */
-const dataPut = (formData, key, value) => {
-	assert(formData);
-	// HACK: is it a FormData object? then use append
-	if (_.isFunction(formData.append)) {
-		formData.append(key, value);
-	} else {
-		formData[key] = value;
-	}
-	return formData;
-};
 
 ServerIO.post = function(url, data) {
 	return ServerIO.load(url, {data, method:'POST'});
