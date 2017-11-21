@@ -278,13 +278,11 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	}
 
 	if (type==='img') {
-		return (
-			<div>
+		return (<div>
 				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
 				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
 				<div className='clearfix' />
-			</div>
-		);
+			</div>);
 	}
 
 	if (type === 'imgUpload') {
@@ -322,13 +320,11 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	}
 
 	if (type==='url') {
-		return (
-			<div>
+		return (<div>
 				<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
 				<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
 				<div className='clearfix' />
-			</div>
-		);
+			</div>);
 	}
 
 	// date
@@ -625,6 +621,7 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 };
 
 
+const oh = (n) => n<10? '0'+n : n;
 /**
  * @param d {Date}
  * @returns {String}
