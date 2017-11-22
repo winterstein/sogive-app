@@ -108,16 +108,6 @@ const CharityDonate = ({charity}) => (
 
 
 const CharityAbout = ({charity}) => {
-	// const turnover = charity.turnover && (
-	// 	<p>
-	// 		Turnover: { charity.turnover }
-	// 	</p>
-	// );
-	// const employees = charity.employees && (
-	// 	<p>
-	// 		Employees: { charity.employees }
-	// 	</p>
-	// );
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
@@ -129,9 +119,9 @@ const CharityAbout = ({charity}) => {
 				<div className='description-short'>
 					{charity.summaryDescription? <ReactMarkdown source={charity.summaryDescription} /> : null}
 				</div>
-				<p className='description-long'>
+				<div className='description-long'>
 					{charity.description? <ReactMarkdown source={charity.description} /> : null}
-				</p>
+				</div>
 			</div>
 			<div className='url'>
 				<a href={churl} target='_blank'>{charity.url}</a>

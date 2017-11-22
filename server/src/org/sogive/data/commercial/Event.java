@@ -19,6 +19,10 @@ public class Event extends AThing {
 	Integer matchedFunding;
 	String logoImage;
 	String bannerImage;
+	/**
+	 * A default for pages where the user hasn't uploaded anything
+	 */
+	String defaultFundraiserImg;
 	String description;
 	String backgroundImage;
 }

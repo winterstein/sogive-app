@@ -1,6 +1,9 @@
 @import "colours.less";
 @import "positioning.less";
 
+// TODO move some of this from page-specific styling to "these are our widgets"
+// For more consistent style + easier maintenance
+
 #charity {
 	.column {
 		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
@@ -59,7 +62,7 @@
 				}
 			}
 		}
-	}
+	} // ./column
 
 	.top-bands {
 		position: fixed;
@@ -137,10 +140,10 @@
 
 		.header {
 			.extend-bg-to-sides(@bs-column-padding);
-			background-color: #D2D6C3;
+			background-color: @grey-lightest; // TODO use colours.less
 			border-style: solid;
-			border-top-color: #C1DEF2;
-			border-bottom-color: #C1DEF2;
+			border-top-color: @palest-blue;
+			border-bottom-color: @palest-blue;
 			border-width: @band-1-height 0 @band-3-height 0;
 			line-height: @band-2-height;
 			margin-bottom: 50px;
@@ -226,10 +229,6 @@
 			.descriptions {
 				.description-short {
 					font-size: 120%;
-				}
-
-				.description-long {
-
 				}
 			}
 
@@ -329,10 +328,6 @@
 			z-index: 9;
 			padding-right: 50px;
 
-			.prefix {
-				font-size: 1.2em;
-			}
-
 			.will-fund {
 				font-size: 2em;
 			}
@@ -385,44 +380,24 @@
 
 		/* The wide down-arrow decoration flowing from the output column to the donate button */
 		.donation-arrow-down {
-			width: 100%;
-			position: absolute;
+			float:right;
+			height:30px;
 		}
 
 		.below-arrow {
-			margin-top: 15px;
-		}
-
-		.gift-aid {
-			width: 75%;
-			float: left;
+			margin-top: -5px;
+			clear:both;
+			padding-bottom:5px;
 		}
 
 		.donate-button {
-			margin-right: 32px;
-
-			button {
-				&:focus {
-					outline: none;
-				}
-				border: none;
-				background-color: @donation-button-bg;
-				color: white;
-				font-size: 1.75em;
-				padding-left: 1.25em;
-				padding-right: 1.25em;
-				/* Slightly hacky but using spec-standard behaviour:
-				oversize radius clamped to largest non-overlapping value,
-				resulting in circle-ended "capsule" shape */
-				border-radius: 500px;
-				float: right;
-				margin-bottom: 10px;
-			}			
+			margin-right: 60px;
+			float:right;
 		}
-	}
+	} // ./donation-impact
 
 	.donation-column {
 		background-color: @charity-page-greybg;
 		margin-top: 15px;
 	}
-}
+} // ./#charity

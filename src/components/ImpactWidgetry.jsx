@@ -9,20 +9,20 @@ import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
-
+import Output from '../data/charity/Output';
 import Misc from './Misc.jsx';
 
 /**
  * @param amount {?Number} The £ to donate
  */
 const ImpactDesc = ({charity, project, outputs, amount}) => {
-	const impact = impactCalc({charity, project, outputs, amount});
+	const impact = impactCalc({charity, project, output:outputs[0], amount});
 	if (!impact) return null;
 
 	return (
 		<div className='impact'>
 			<p className='impact-text'>
-				<span><b>{impact.prefix}<Misc.Money amount={impact.amount} /></b></span>
+				<span><b><Misc.Money amount={impact.amount} /></b></span>
 				<span> will fund</span>
 				<span className="impact-units-amount"> {printer.prettyNumber(impact.impactNum, 2)}</span>					
 				<span className='impact-unit-name'> {impact.unitName}</span>
@@ -32,48 +32,57 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 	);
 }; //./ImpactDesc
 
-const impactCalc = ({charity, project, outputs, amount, targetCount}) => {
-	if ( ! outputs || ! outputs.length) {
+/**
+ * 
+  @returns {?Output}
+ */
+const impactCalc = ({charity, project, output, outputs, number, amount, targetCount}) => {
+	assert( ! outputs, "ImpactWidgetry.jsx - old code! use output not outputs");
+	NGO.assIsa(charity);
+	Project.assIsa(project);
+	assMatch(amount, "?String");
+	assMatch(number, "?Number");
+	if ( ! output) {
 		return null;
 	}
-	const firstOutput = outputs[0];
+	Output.assIsa(output);	
+	
 	// more people?
-	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:firstOutput});
+	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:output});
 	if (!cpbraw || !cpbraw.value) {
 		return null; // Not a quantified output?
 	}
-	const unitName = firstOutput.name || '';
+	const unitName = output.name || '';
 
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		const cost = MonetaryAmount.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
-		return { prefix: '', amount: cost, impactNum: targetCount, unitName: Misc.TrPlural(targetCount, unitName), description: firstOutput.description };
+		return Output.make({cost, number: targetCount, unitName: Misc.TrPlural(targetCount, unitName), description: output.description });
 	}
 
 	// No amount? Just show unit cost, then.
-	if (!amount) {
-		return { prefix: '', amount: cpbraw, impactNum: 1, unitName: Misc.TrPlural(1, unitName), description: firstOutput.description };
+	if ( ! number) {
+		return Output.make({costPerBeneficiary: cpbraw, number: 1, unitName: Misc.TrPlural(1, unitName), description: output.description });
 	}
 
-	let prefix = '';
-	let people = 1;
-	if (amount / cpbraw.value < 0.75) {
-		people = cpbraw.value / amount;
-		prefix = printer.prettyNumber(people, 1) + ' people donating ';
-	}
-	let impactNum = (amount / cpbraw.value) * people;
+	let impactNum = number / cpbraw.value;
 
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(impactNum, unitName);
 
-	return { prefix, amount, impactNum, unitName: plunitName, description: firstOutput.description};
-};
+	return Output.make({number:impactNum, name:plunitName, description:output.description});
+}; // ./impactCalc()
 
-const multipleImpactCalc = ({charity, project, amount, targetCount}) => {
+/**
+ * 
+ * @returns {Output[]}
+ */
+const multipleImpactCalc = ({charity, project, number, targetCount, amount}) => {
 	const { outputs = []} = project;
+	assert( ! amount, "ImpactWidgetry.jsx - old code: amount - use number");
 	
 	return outputs.map((output) => (
-		impactCalc({charity, project, outputs: [output], amount, targetCount})
+		impactCalc({charity, project, output, number, targetCount})
 	)).filter(impact => !!impact);
 };
 

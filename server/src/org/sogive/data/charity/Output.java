@@ -5,6 +5,13 @@ import java.util.Map;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.StrUtils;
 
+/**
+ * This is also the type for Impact!
+ * See Output.js which documents this type better
+ * 
+ * @author daniel
+ *
+ */
 public class Output extends Thing<Output> {
 
 	private static final long serialVersionUID = 1L;

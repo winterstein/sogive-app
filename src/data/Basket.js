@@ -46,7 +46,7 @@ Basket.getTotal = (basket) => {
 			total = MonetaryAmount.add(total, item.price);
 		}
 	});
-	if (basket.hasTip && MonetaryAmount.isa(basket.tip)) {
+	if (total && basket.hasTip && MonetaryAmount.isa(basket.tip)) {
 		total = MonetaryAmount.add(total, basket.tip);
 	}
 	return total || MonetaryAmount.make();
@@ -56,7 +56,7 @@ Basket.make = (base = {}) => {
 	let ma = {
 		items: [],
 		hasTip: true,
-		tip: MonetaryAmount.make({value: 1}),
+		tip: MonetaryAmount.make({value: 1}), // TODO tip/fee shouldn't really be hard-coded here
 		...base,
 		'@type': Basket.type,
 	};

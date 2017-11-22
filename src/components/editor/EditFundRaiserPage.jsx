@@ -50,7 +50,7 @@ const FundRaiserEditor = ({id}) => {
 	const peepPath = path.concat('owner');
 
 	return (<div className='padded-page'>
-		{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity: '50%'}} /> : null}
+		{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity:0.5}} /> : null}
 		<div className='padded-block'>
 			<h2>Fundraiser {item.name || id} </h2>
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>

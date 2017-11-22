@@ -4,27 +4,10 @@
 	width: 100%;
 }
 
-.sogive-form-inline {
-
-}
-
-.sogive-donate-btn {
-	width: 24% !important;
-	height: 7vh !important;
-	font-size: 1.5em !important;
-	line-height: 1.33 !important;
-	border-radius: 35px !important;
-	color: @colour-05 !important;
-	background-color: @colour-01 !important;
-	border-color: transparent !important;
-}
-
 @media screen and (max-width: 760px) {
-	.sogive-donate-btn {
-		width: 40% !important;
-		padding: 0px;
-	}
-	textarea.form-control { height: 100px;
+	// why??
+	textarea.form-control { 
+		height: 100px;
 	}
 	.inputs {
 		border-right: none !important;
@@ -71,11 +54,6 @@
 	}
 }
 
-.btn.active {
-	background-color: @colour-04 !important;
-	color: @colour-05 !important;
-}
-
 .giftAid {
 	border-bottom: 1px solid @colour-01;
 }
@@ -90,18 +68,15 @@
 }
 
 .twitter-btn {
-	color: #1DA1F3;
+	color: @color-twitter;
 }
-
+// ?? is this needed??
 .twitter-btn:hover {
-	color: #1DA1F3;
+	color: @color-twitter;
 }
-
-
 .facebook-btn {
-	color: 	#3b5998;
+	color: 	@color-facebook;
 }
-
 .facebook-btn:hover {
-	color: #3b5998;
+	color: @color-facebook;
 }

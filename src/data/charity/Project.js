@@ -2,22 +2,28 @@
 
 import _ from 'lodash';
 import {assert} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa, defineType} from '../DataClass';
 import MonetaryAmount from './MonetaryAmount';
 
-const Project = {};
+const Project = defineType('Project');
+const This = Project;
 export default Project;
 
 Project.overall = 'overall';
-Project.type = 'Project';
 
-
-Project.isa = (ngo) => isa(ngo, Project.type);
-Project.assIsa = (p) => assert(Project.isa(p), "Project.js - "+p);
-Project.name = (ngo) => isa(ngo, Project.type) && ngo.name;
-Project.year = (ngo) => isa(ngo, Project.type) && ngo.year;
+Project.name = (ngo) => ngo.name;
+Project.year = (ngo) => This.assIsa(ngo, Project.type) && ngo.year;
 
 Project.isOverall = (project) => Project.assIsa(project) && project.name && project.name.toLowerCase() === Project.overall;
+
+/**
+ * 
+ @return {Output[]} never null
+ */
+Project.outputs = project => {
+	Project.assIsa(project);
+	return project.outputs || [];
+};
 
 Project.make = function(base) {
 	let proj = {

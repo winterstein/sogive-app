@@ -209,7 +209,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 	);
 };
 
-const TicketInvoice = ({event, basket, showTip}) => {
+const TicketInvoice = ({event, basket}) => {
 	const idToRow = {};
 	console.warn("basket", basket);
 	// Group items of same type+kind into rows
@@ -233,14 +233,16 @@ const TicketInvoice = ({event, basket, showTip}) => {
 	const rowElements = rows.map(rowData => <InvoiceRow key={JSON.stringify(rowData)} {...rowData} />);
 	
 	let total = Basket.getTotal(basket);
-	// HACK: Don't include the tip in calculations when you're not showing it!
-	if (!showTip && basket.tip && MonetaryAmount.isa(basket.tip)) {
-		total = MonetaryAmount.sub(total, basket.tip);
-	}
+
+	// commented out 'cos (a) causes bugs with empty baskets, and (b) total should be total; anything else is confusing
+	// // HACK: Don't include the tip in calculations when you're not showing it!
+	// if (!showTip && basket.tip && MonetaryAmount.isa(basket.tip)) {
+	// 	total = MonetaryAmount.sub(total, basket.tip);
+	// }
 	
-	const tipRow = (showTip && basket.hasTip && MonetaryAmount.isa(basket.tip)) ? (
+	const tipRow = (basket.hasTip && MonetaryAmount.isa(basket.tip)) ? (
 		<tr>
-			<td className='desc-col'>Tip to SoGive</td>
+			<td className='desc-col'>Processing fee</td>
 			<td className='amount-col'><Misc.Money amount={basket.tip} /></td>
 		</tr>
 	) : null;
@@ -459,7 +461,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 					<Misc.PropControl type='MonetaryAmount' path={bpath} item={basket} prop='tip' label='Tip amount' dflt={MonetaryAmount.make({value:1})} />
 				) : ''}
 			</div>
-			<TicketInvoice basket={basket} showTip />
+			<TicketInvoice basket={basket} />
 			<div className='padded-block'>
 				<PaymentWidget
 					amount={Basket.getTotal(basket)}
@@ -475,7 +477,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 
 const Receipt = ({basket, event}) => {
 	const items = Basket.getItems(basket);
-	const ticket0 = items.length && items[0];
+	const ticket0 = items.length && items[0]; // TODO this is not necc the person who paid
 	const stripe = basket.stripe;
 	const card = stripe && stripe.card;
 	// created will be numeric when returned direct from Stripe but String when retrieved from SoGive
@@ -489,10 +491,10 @@ const Receipt = ({basket, event}) => {
 				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
 				<p>Payment date & time: {Misc.dateTimeString(createdDate)}</p>
-				<p>Customer name: {ticket0.attendeeName}</p>
-				<p>Payment card: **** **** **** {card.last4}</p>
+				<p>Customer name: {ticket0 && ticket0.attendeeName}</p>
+				{card? <p>Payment card: **** **** **** {card.last4}</p> : null}
 			</div>
-			<TicketInvoice basket={basket} showTip />
+			<TicketInvoice basket={basket} />
 		</div>
 	);
 };

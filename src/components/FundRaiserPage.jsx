@@ -159,21 +159,21 @@ const DonationProgress = ({item, charity}) => {
 	const remainingBarHeight = 100 - donatedBarHeight;
 
 	// impact info
+	// TODO refactor with ImpactWidgetry.jsx
 	let impacts = null;
 	const project = NGO.getProject(charity);
 	// NB: no project = no impact data, but you can still donate
 	if (project) {
-		impacts = multipleImpactCalc({ charity, project, amount: donated.value });
+		impacts = multipleImpactCalc({ charity, project, cost: donated.value });
 	}
 	console.log('*** IMPACTS OF DONATIONS', impacts);
 
-	// Don't show the impact if it has a prefix (ie formatted like "10 people donating £10 will fund 1...")
-	const firstImpact = impacts && impacts[0] && !impacts[0].prefix ? (
+	const firstImpact = impacts && impacts[0]? (
 		<div className='first-impact'>
 			<big className='amount'>{impacts[0].amount}</big> {impacts[0].unitName}
 		</div>
 	) : null;
-	const secondImpact = impacts && impacts[1] && !impacts[1].prefix ? (
+	const secondImpact = impacts && impacts[1]? (
 		<div className='second-impact'>
 			<big className='amount'>{impacts[1].amount}</big> {impacts[1].unitName}
 		</div>
