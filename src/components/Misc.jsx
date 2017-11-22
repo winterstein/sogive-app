@@ -621,7 +621,6 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 };
 
 
-const oh = (n) => n<10? '0'+n : n;
 /**
  * @param d {Date}
  * @returns {String}
