@@ -24,8 +24,8 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 			<p className='impact-text'>
 				<span><b><Misc.Money amount={impact.amount} /></b></span>
 				<span> will fund</span>
-				<span className="impact-units-amount"> {printer.prettyNumber(impact.impactNum, 2)}</span>					
-				<span className='impact-unit-name'> {impact.unitName}</span>
+				<span className="impact-units-amount"> {printer.prettyNumber(Output.number(impact), 2)}</span>					
+				<span className='impact-unit-name'> {Output.name(impact)}</span>
 			</p>
 			{ Project.isOverall(project)? null : <small className='details'>{project.name}</small> }
 		</div>
@@ -33,15 +33,20 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 }; //./ImpactDesc
 
 /**
- * 
+ * See Output.js for relevant doc notes
+ * {
+ * 	number: number of units, e.g. 10 for "10 malaria nets"
+ * 	cost: {?MonetaryAmount}
+ * }
   @returns {?Output}
  */
-const impactCalc = ({charity, project, output, outputs, number, amount, targetCount}) => {
+const impactCalc = ({charity, project, output, outputs, cost, amount, targetCount}) => {
 	assert( ! outputs, "ImpactWidgetry.jsx - old code! use output not outputs");
 	NGO.assIsa(charity);
 	Project.assIsa(project);
 	assMatch(amount, "?String");
-	assMatch(number, "?Number");
+	assMatch(targetCount, "?Number");
+	assMatch(cost, "?MonetaryAmount");
 	if ( ! output) {
 		return null;
 	}
@@ -52,20 +57,16 @@ const impactCalc = ({charity, project, output, outputs, number, amount, targetCo
 	if (!cpbraw || !cpbraw.value) {
 		return null; // Not a quantified output?
 	}
-	const unitName = output.name || '';
+	const unitName = Output.name(output) || '';
 
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
-		const cost = MonetaryAmount.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
-		return Output.make({cost, number: targetCount, unitName: Misc.TrPlural(targetCount, unitName), description: output.description });
+		assert( ! cost, "impactCalc - cant set cost and targetCount");
+		cost = MonetaryAmount.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
+		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
 	}
 
-	// No amount? Just show unit cost, then.
-	if ( ! number) {
-		return Output.make({costPerBeneficiary: cpbraw, number: 1, unitName: Misc.TrPlural(1, unitName), description: output.description });
-	}
-
-	let impactNum = number / cpbraw.value;
+	let impactNum = MonetaryAmount.divide(cost, cpbraw);
 
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(impactNum, unitName);

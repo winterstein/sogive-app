@@ -12,6 +12,7 @@ import ServerIO from '../plumbing/ServerIO';
 
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import NGO from '../data/charity/NGO';
+import Output from '../data/charity/Output';
 import C from '../C';
 import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -170,12 +171,12 @@ const DonationProgress = ({item, charity}) => {
 
 	const firstImpact = impacts && impacts[0]? (
 		<div className='first-impact'>
-			<big className='amount'>{impacts[0].amount}</big> {impacts[0].unitName}
+			<big className='amount'>{Output.number(impacts[0])}</big> {Output.name(impacts[0])}
 		</div>
 	) : null;
 	const secondImpact = impacts && impacts[1]? (
 		<div className='second-impact'>
-			<big className='amount'>{impacts[1].amount}</big> {impacts[1].unitName}
+			<big className='amount'>{Output.number(impacts[1])}</big> {Output.name(impacts[1])}
 		</div>
 	) : null;
 

@@ -22,6 +22,7 @@ import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
+import Output from '../data/charity/Output';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 
 import Misc from './Misc';
@@ -79,8 +80,12 @@ class DonationForm extends Component {
 		// donation info
 		const formPath = ['widget', 'DonationForm', NGO.id(charity)];
 		const formData = DataStore.getValue(formPath) || {};
-		let { amount } = formData;
-		if ( ! amount) amount = MonetaryAmount.make({value:10});
+		const amountPath = formPath.concat('amount');
+		let amount = DataStore.getValue(amountPath);
+		if ( ! amount) {
+			amount = MonetaryAmount.make({value:10});
+			DataStore.setValue(amountPath, amount, false);
+		}
 		const user = Login.getUser();
 
 		// impact info
@@ -89,10 +94,10 @@ class DonationForm extends Component {
 		let impact;
 		if (project) {
 			const outputs = Project.outputs(project);
-			impact = impactCalc({ charity, project, output:outputs[0], amount: amount.value });
+			impact = impactCalc({ charity, project, output:outputs[0], cost: amount });
 		}
-		if (!impact) {
-			impact = { unitName: NGO.displayName(charity) };
+		if ( ! impact) { // fallback to "funds the charity"
+			impact = { name: NGO.displayName(charity) };
 		}
 
 		const donationDown = () => this.incrementDonation(formData.amount.value, -1, charity);
@@ -113,9 +118,10 @@ class DonationForm extends Component {
 						</div>
 						<div className='donation-input'>
 							<div className='amount-input'>
-								<Misc.PropControl type='MonetaryAmount' prop='amount' path={['widget', 'DonationForm', NGO.id(charity)]} changeCurrency={false} />
+								<Misc.PropControl type='MonetaryAmount' prop='amount' 
+									path={['widget', 'DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
-							<div className='will-fund'>will fund</div>
+							<div className='will-fund'>may fund</div>
 							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
 						</div>
 						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
@@ -126,7 +132,7 @@ class DonationForm extends Component {
 								{printer.prettyNumber(impact.number, 2)}
 							</div> : null}
 							<div className='output-units'>
-								{impact.unitName}
+								{Output.name(impact)}
 							</div>
 						</div>
 					</div>
@@ -135,6 +141,7 @@ class DonationForm extends Component {
 				<div className='below-arrow'>
 					<div className='donate-button'>
 						<DonateButton item={charity} />
+						<NewDonationForm item={charity} />
 					</div>
 				</div>
 				<div className='clearfix' />
@@ -143,66 +150,66 @@ class DonationForm extends Component {
 	}
 } // ./DonationForm
 
-/**
- */
-const DonationAmounts = ({options, charity, project, outputs, amount, handleChange}) => {
-	// FIXME switch to using outputs
-	let damounts = _.map(options, price => (
-		<span key={'donate_' + price}>
-			<DonationAmount
-				price={price}
-				selected={price === amount}
-				handleChange={handleChange}
-				/>
-			&nbsp;
-		</span>
-	));
+// /**
+//  */
+// const DonationAmounts = ({options, charity, project, outputs, amount, handleChange}) => {
+// 	// FIXME switch to using outputs
+// 	let damounts = _.map(options, price => (
+// 		<span key={'donate_' + price}>
+// 			<DonationAmount
+// 				price={price}
+// 				selected={price === amount}
+// 				handleChange={handleChange}
+// 				/>
+// 			&nbsp;
+// 		</span>
+// 	));
 
-	let fgcol = (options.indexOf(amount) === -1) ? 'white' : null;
-	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
+// 	let fgcol = (options.indexOf(amount) === -1) ? 'white' : null;
+// 	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
 
-	return (
-		<div className='full-width'>
-			<form>
-				<div className="form-group col-md-1 col-xs-2">
-					{damounts}
-				</div>
-				<div className="form-group col-md-8 col-xs-10">
-					<InputGroup>
-						<InputGroup.Addon style={{ color: fgcol, backgroundColor: bgcol }}>£</InputGroup.Addon>
-						<FormControl
-							type="number"
-							min="1"
-							max="100000"
-							step="1"
-							placeholder="Enter donation amount"
-							onChange={({ target }) => { handleChange('amount', target.value); } }
-							value={amount}
-							/>
-					</InputGroup>
-				</div>
-				<div className="form-group col-md-2">
-					<Misc.ImpactDesc charity={charity} project={project} outputs={outputs} amount={amount} />
-				</div>
-			</form>
-		</div>
-	);
-};
+// 	return (
+// 		<div className='full-width'>
+// 			<form>
+// 				<div className="form-group col-md-1 col-xs-2">
+// 					{damounts}
+// 				</div>
+// 				<div className="form-group col-md-8 col-xs-10">
+// 					<InputGroup>
+// 						<InputGroup.Addon style={{ color: fgcol, backgroundColor: bgcol }}>£</InputGroup.Addon>
+// 						<FormControl
+// 							type="number"
+// 							min="1"
+// 							max="100000"
+// 							step="1"
+// 							placeholder="Enter donation amount"
+// 							onChange={({ target }) => { handleChange('amount', target.value); } }
+// 							value={amount}
+// 							/>
+// 					</InputGroup>
+// 				</div>
+// 				<div className="form-group col-md-2">
+// 					<Misc.ImpactDesc charity={charity} project={project} outputs={outputs} amount={amount} />
+// 				</div>
+// 			</form>
+// 		</div>
+// 	);
+// };
 
-const DonationAmount = function ({selected, price, handleChange}) {
-	return (
-		<div className=''>
-			<Button
-				bsStyle={selected ? 'primary' : null}
-				bsSize="sm"
-				className='amount-btn'
-				onClick={() => handleChange('amount', price)}
-				>
-				£ {price}
-			</Button>
-		</div>
-	);
-};
+// const DonationAmount = function ({selected, price, handleChange}) {
+// 	return (
+// 		<div className=''>
+// 			<Button
+// 				bsStyle={selected ? 'primary' : null}
+// 				bsSize="sm"
+// 				className='amount-btn'
+// 				onClick={() => handleChange('amount', price)}
+// 				>
+// 				£ {price}
+// 			</Button>
+// 		</div>
+// 	);
+// };
 
 
 // const DonationList = ({donations}) => {

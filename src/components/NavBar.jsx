@@ -10,7 +10,10 @@ import Roles from '../Roles';
  */
 const NavBar = ({currentPage}) => {
 	// which pages?
-	let pages = ['dashboard', 'search', 'event', 'fundraiser'];
+	let pages = ['dashboard', 'search'];
+	if (Roles.iCan(C.CAN.test)) { // TODO for everyone, not just dev
+		pages = pages.concat(['event', 'fundraiser']);
+	}
 	// make the page links
 	let pageLinks = pages.map( p => <NavLink currentPage={currentPage} targetPage={p} key={'li_'+p} /> );
 	return (

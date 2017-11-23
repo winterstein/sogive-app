@@ -54,16 +54,20 @@ const CURRENCY = {
 };
 /**
  * Money span, falsy displays as 0
+ * 
  * @param amount {MonetaryAmount|Number}
  */
 Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}
-	if ( ! amount) amount = {value: 0};
+	let value = amount? amount.value : 0;
+	if (maximumFractionDigits===0) { // because if maximumSignificantDigits is also set, these two can conflict
+		value = Math.round(value);
+	}
 	let snum = new Intl.NumberFormat(Settings.locale, 
 		{maximumFractionDigits, minimumFractionDigits, maximumSignificantDigits}
-	).format(amount.value);
+	).format(value);
 	// let snum;	
 	// if ( ! precision) {
 	// 	let sv2 = amount.value.toFixed(2);

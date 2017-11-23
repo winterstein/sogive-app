@@ -21,6 +21,21 @@ const isNumeric = value => {
 	return ! isNaN(value - parseFloat(value));
 };
 
+/**
+ * 
+ * @param {?MonetaryAmount} ma 
+ * @returns {Number}
+ */
+MonetaryAmount.value = ma => {
+	if ( ! ma) return 0;
+	if ( ! ma.value) {
+		// Patch bad server data?
+		if (ma.value100) ma.value = ma.value100 / 100;
+		else return 0;
+	}
+	return parseFloat(ma.value);
+};
+
 // duck type: needs a value
 MonetaryAmount.isa = (obj) => {
 	if ( ! obj) return false;
@@ -65,12 +80,24 @@ MonetaryAmount.sub = (amount1, amount2) => {
 	});
 };
 
-// Must be called on a MonetaryAmount and a scalar
+/** Must be called on a MonetaryAmount and a scalar */
 MonetaryAmount.mul = (amount, multiplier) => {
 	MonetaryAmount.assIsa(amount);
+	assert(isNumeric(multiplier), "MonetaryAmount.js - mul() "+multiplier);
 	// TODO Assert that multiplier is numeric (kind of painful in JS)
 	return MonetaryAmount.make({
 		...amount,
 		value: amount.value * multiplier,
 	});
+};
+
+/** 
+ * Called on two MonetaryAmounts
+ * @returns {Number}
+ */
+MonetaryAmount.divide = (total, part) => {
+	MonetaryAmount.assIsa(total);
+	MonetaryAmount.assIsa(part);
+	assert(total.currency === part.currency, "MonetaryAmount divide "+total.currency+" != "+part.currency);
+	return MonetaryAmount.value(total) / MonetaryAmount.value(part);
 };

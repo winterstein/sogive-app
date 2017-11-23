@@ -138,7 +138,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	// your page?
 	let myPage = Login.getId() === item.oxid;
 	if ( ! myPage) {
-		Login.checkShare(item);
+		Login.checkShare(getId(item));
 	}
 
 	// Don't ask for gift-aid details if the charity doesn't support it
@@ -171,7 +171,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	navStages.push( {title:'Confirmation'});
 
 	const wizardStages = stages.map((section, i) => (
-		<WizardStage stageKey={i} stageNum={stage}>
+		<WizardStage key={i} stageKey={i} stageNum={stage}>
 			{section}
 		</WizardStage>
 	));	

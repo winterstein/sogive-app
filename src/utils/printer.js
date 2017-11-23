@@ -45,7 +45,7 @@ Printer.URL_REGEX = /https?\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*‌​)
 Printer.prototype.toNSigFigs = function(x, n) {
 	if (x==0) return "0";
 	assert(n > 0, "Printer.js - toNSigFigs: n is not greater than 0");
-	let snum = new Intl.NumberFormat().format(x, {maximumSignificantDigits: n});
+	let snum = new Intl.NumberFormat('en-GB', {maximumSignificantDigits: n}).format(x);
 	return snum;
 };
 
@@ -54,7 +54,7 @@ Printer.prototype.toNSigFigs = function(x, n) {
  */
 Printer.prototype.prettyNumber = function(x, sigFigs) {
 	if ( ! sigFigs) sigFigs = 3;
-	let snum = new Intl.NumberFormat().format(x, {maximumSignificantDigits: sigFigs});
+	let snum = new Intl.NumberFormat('en-GB', {maximumSignificantDigits: sigFigs}).format(x);
 	return snum;
 };
 

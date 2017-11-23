@@ -24,9 +24,7 @@ export default NGO;
 /**
  * Mostly you should use #displayName()!
  */
-NGO.name = (ngo) => NGO.assIsa(ngo) && ngo.name;
 NGO.displayName = (ngo) => ngo.displayName || ngo.name || NGO.id(ngo);
-NGO.id = (ngo) => NGO.assIsa(ngo) && ngo['@id']; // thing.org id field
 NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;

@@ -2,7 +2,6 @@
 import Login from 'you-again';
 import DataStore from './plumbing/DataStore';
 import {assMatch} from 'sjtest';
-import C from './C';
 import pv from 'promise-value';
 
 // TODO switch from storing can:x to role:x with app-defined cans
@@ -76,7 +75,3 @@ const Roles = {
 };
 
 export default Roles;
-
-// setup roles
-defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
-defineRole(C.ROLES.admin, C.CAN.values);

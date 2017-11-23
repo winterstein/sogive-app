@@ -1,5 +1,6 @@
 
 import Enum from 'easy-enums';
+import Roles from './Roles';
 
 const C = {};
 export default C;
@@ -43,4 +44,8 @@ C.STATUS = new Enum('loading clean dirty saving');
 C.CRUDACTION = new Enum('new save publish discard-edits delete');
 
 C.ROLES = new Enum("editor admin");
-C.CAN = new Enum("edit publish admin editEvent");
+C.CAN = new Enum("edit publish admin editEvent test");
+// setup roles
+Roles.defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
+Roles.defineRole(C.ROLES.admin, C.CAN.values);
+

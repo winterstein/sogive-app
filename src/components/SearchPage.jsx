@@ -9,6 +9,8 @@ import Login from 'you-again';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
+import Project from '../data/charity/Project';
+import Output from '../data/charity/Output';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Misc from './Misc';
 import {impactCalc} from './ImpactWidgetry';
@@ -324,8 +326,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	const impact = impactCalc({
 		charity: item, 
 		project, 
-		outputs: project && project.outputs, 
-		amount: false, 
+		output: project && Project.outputs(project)[0], 
 		targetCount: targetCount || 1
 	});
 
@@ -351,21 +352,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
 	) : null;
 	
-	/*
-	// Variable donations in search results have officially been deemed Too Confusing
-		// onClick methods for the donation up/down buttons (don't allow target-count less than 1)
-	const changeTarget = change => {
-		DataStore.setValue(['widget','SearchResults', NGO.id(item), 'targetCount'], Math.max((targetCount || 1) + change, 1));
-	};
-	const impactAmountEntry = impact ? (
-		<div className={`amount-picker col-md-1 hidden-xs ${impact.amount.value >= 10000? 'long-amount' : ''}`}>
-			<img className='change-donation-amount' title='Increase donation' src='/img/donation-amount-up.svg' onClick={() => changeTarget(1)}/>
-			<Misc.Money amount={impact.amount} precision={2} />
-			<img className='change-donation-amount' title='Decrease donation' src='/img/donation-amount-down.svg' onClick={() => changeTarget(-1)}/>
-		</div>
-	) : null;
-	*/
-
 	/** if onPick is defined, then stop the click and call onPick */
 	let onClick = null;
 	if (onPick) {
@@ -380,7 +366,8 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<h3>Impact Summary</h3>
-				<Misc.Money amount={impact.amount} maximumFractionDigits={0} maximumSignificantDigits={2} /> may fund <span className='impact-count'>{impact.impactNum}</span> {impact.unitName}
+				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
+				fund <span className='impact-count'>{Output.number(impact)}</span> {Output.name(impact)}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
@@ -410,7 +397,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
 				<span className='name'>{charityName}</span>
 				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
-			{/*impactAmountEntry*/}
 			{impactExplanation}
 			{noImpact}
 		</div>
