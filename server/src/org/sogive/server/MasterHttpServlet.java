@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.util.ajax.JSON;
+import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.server.payment.StripeWebhookServlet;
 
 import com.winterwell.utils.log.Log;
@@ -110,8 +111,10 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			case "upload":
 				// upload
-				s = new UploadServlet();
-				s.process(request);
+				UploadServlet us = new UploadServlet();
+				SoGiveConfig conf = Dep.get(SoGiveConfig.class);
+				if (conf.uploadDir!=null) us.setUploadDir(conf.uploadDir);
+				us.process(request);				
 				return;
 			case "log":
 				s = new LogServlet();

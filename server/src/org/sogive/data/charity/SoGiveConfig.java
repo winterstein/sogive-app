@@ -1,5 +1,7 @@
 package org.sogive.data.charity;
 
+import java.io.File;
+
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.KStatus;
@@ -23,6 +25,9 @@ public class SoGiveConfig implements IESRouter {
 	
 	@Option
 	public String youagainApp = "sogive";
+
+	@Option
+	public File uploadDir;
 
 	@Override
 	public ESPath getPath(String dataspaceIsIgnored, Class type, String id, Object status) {
