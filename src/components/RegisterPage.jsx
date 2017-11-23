@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
 
 import SJTest, {assert} from 'sjtest';
-import {XId, encURI} from 'wwutils';
+import {XId, encURI, yessy} from 'wwutils';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import C from '../C';
@@ -63,6 +63,17 @@ const RegisterPage = () => {
 	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
+	let stages = [
+		{title:'Tickets'}, 
+		{title:'Register'}, 
+		{title:'Your Details'}, 
+		{title:'Your Charity'}, 
+		yessy(event.extras)? {title:'Extras'} : null,
+		{title:'Checkout'}, 
+		{title:'Confirmation'}
+	];
+	stages = stages.filter(x => x); // remove null
+
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
@@ -75,8 +86,7 @@ const RegisterPage = () => {
 
 			<WizardProgressWidget stageNum={stage} 
 				stagePath={stagePath}
-				stages={[{title:'Tickets'}, {title:'Register'}, {title:'Your Details'}, {title:'Your Charity'}, 
-					{title:'Checkout'}, {title:'Confirmation'}]}			
+				stages={stages}			
 			/>
 
 			<WizardStage stageKey={0} stageNum={stage}>
@@ -108,12 +118,20 @@ const RegisterPage = () => {
 				</div>
 			</WizardStage>
 			<WizardStage stageKey={4} stageNum={stage}>
+				TODO Extras
+				auto skip if none
+				<div className='nav-buttons'>
+					<PrevButton stagePath={stagePath} />
+					<NextButton stagePath={stagePath} />
+				</div>
+			</WizardStage>
+			<WizardStage stageKey={5} stageNum={stage}>
 				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				<div className='nav-buttons'>
 					<PrevButton stagePath={stagePath} />
 				</div>
 			</WizardStage>
-			<WizardStage stageKey={5} stageNum={stage}>
+			<WizardStage stageKey={6} stageNum={stage}>
 				<Receipt basket={basket} event={event} />
 				<ConfirmedTicketList basket={basket} event={event} />
 			</WizardStage>

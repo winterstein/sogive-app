@@ -80,7 +80,7 @@ const EventEditor = ({id}) => {
 			<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
 		</Misc.Card>
 
-		<Misc.Card title='Images & Branding'>
+		<Misc.Card icon='camera' title='Images & Branding'>
 			<Misc.PropControl path={['data', type, id]} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
 			
 			<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
@@ -96,10 +96,10 @@ const EventEditor = ({id}) => {
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
-		<Misc.Card title='Merchandise & Extras'>
+		<Misc.Card title='Merchandise & Extras' icon='gift'>
 			{item.extras? item.extras.map( (tt, i) => 
 				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
-				: <p>No tickets yet!</p>
+				: <p>No extras yet!</p>
 			}
 			<button onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
@@ -141,8 +141,10 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 		<Misc.PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
 		<Misc.PropControl type='MonetaryAmount' item={extra} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={extra} path={path} prop='description' label='Description' />
-		<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
-		<Misc.PropControl type='text' item={extra} path={path} prop='sold' label='Sold so far' />
+		<Misc.Col2>
+			<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
+			<div><label>Sold so far: {extra.sold || 0}</label></div>
+		</Misc.Col2>
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon glyph='trash' /></button>

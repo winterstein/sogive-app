@@ -311,7 +311,9 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
 				<div className='pull-left'>
 					<Dropzone
+						className='DropZone'
 						accept='image/jpeg, image/png'
+						style={{}}
 						onDrop={uploadAccepted}
 					>
 						Drop a JPG or PNG image here
@@ -634,7 +636,7 @@ const isoDate = (d) => d.toISOString().replace(/T.+/, '');
 
 // Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
-Misc.ImgThumbnail = ({url}) => url? <img className='logo' style={{maxWidth:'100%'}} src={url} /> : null;
+Misc.ImgThumbnail = ({url}) => url? <img className='img-thumbnail' style={{width:'100px', maxWidth:'100%', maxHeight:'200px'}} alt='thumbnail' src={url} /> : null;
 
 /**
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
