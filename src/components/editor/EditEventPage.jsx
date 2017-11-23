@@ -46,6 +46,11 @@ const EventEditor = ({id}) => {
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
 		DataStore.update();
 	};
+	const addExtra = () => {
+		const tt = Ticket.make({}, item.id);
+		item.extras = (item.extras || []).concat(tt);
+		DataStore.update();
+	};
 
 	/**
 	 * alter the ticket order 
@@ -64,19 +69,24 @@ const EventEditor = ({id}) => {
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
 		<small>ID: {id}</small>
-		<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
-		<Misc.PropControl path={['data', type, id]} prop='date' item={item} label='Event Date' type='date' />
-		
-		<Misc.PropControl path={['data', type, id]} prop='description' item={item} label='Description' type='textarea' />
+		<Misc.Card title='Event Details'>
+			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
-		<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
-		
-		<Misc.PropControl path={['data', type, id]} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
-		
-		<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
+			<Misc.PropControl path={['data', type, id]} prop='date' item={item} label='Event Date' type='date' />
+			
+			<Misc.PropControl path={['data', type, id]} prop='description' item={item} label='Description' type='textarea' />
 
-		<Misc.PropControl path={['data', type, id]} prop='bannerImage' item={item} label='Banner Image' type='imgUpload' />
+			<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
+		</Misc.Card>
+
+		<Misc.Card title='Images & Branding'>
+			<Misc.PropControl path={['data', type, id]} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
+			
+			<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
+
+			<Misc.PropControl path={['data', type, id]} prop='bannerImage' item={item} label='Banner Image' type='imgUpload' />
+		</Misc.Card>
 
 		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
@@ -85,6 +95,15 @@ const EventEditor = ({id}) => {
 			}
 			<button onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
+
+		<Misc.Card title='Merchandise & Extras'>
+			{item.extras? item.extras.map( (tt, i) => 
+				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
+				: <p>No tickets yet!</p>
+			}
+			<button onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
+
 
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
@@ -107,6 +126,26 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
+	</div>);
+};
+
+// copy pasta of TicketTypeEditor. We could refactor. We could use ListLoad. But prob copy-paste is optimal for time.
+const ExtraEditor = ({extra, path, event, i, move, last}) => {
+	const removeThing = () => {
+		event.extras = event.extras.filter(tt => tt !== extra);
+		DataStore.update();
+	};
+	return (<div className='well'>
+		<small>{getId(extra)}</small>
+		<Misc.PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
+		<Misc.PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
+		<Misc.PropControl type='MonetaryAmount' item={extra} path={path} prop='price' label='Price' />
+		<Misc.PropControl type='text' item={extra} path={path} prop='description' label='Description' />
+		<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
+		<Misc.PropControl type='text' item={extra} path={path} prop='sold' label='Sold so far' />
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
+		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };
 

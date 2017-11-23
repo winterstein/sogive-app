@@ -25,6 +25,19 @@ public class Ticket extends AThing {
 	String kind;
 
 	MonetaryAmount price;
+	
+	/**
+	 * How many can we sell?
+	 */
+	Integer stock;
+	
+	/**
+	 * TODO how many have we sold??
+	 * ?? do via DataLog or??
+	 */
+	Integer sold;
+	
+	
 	String description;
 	// i.e. "Walker"
 	String attendeeNoun;
