@@ -642,9 +642,13 @@ Misc.ImgThumbnail = ({url}) => url? <img className='img-thumbnail' style={{width
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
  * Plus since we're providing state handling, we don't need a full component.
  */
-const FormControl = ({value, ...otherProps}) => {
+const FormControl = ({value, type, ...otherProps}) => {
 	if (value===null || value===undefined) value = '';
-	return <input className='form-control' value={value} {...otherProps} />;
+	if (type==='color' && ! value) { 
+		// workaround: this prevents a harmless but annoying console warning about value not being an rrggbb format
+		return <input className='form-control' type={type} {...otherProps} />;	
+	}
+	return <input className='form-control' type={type} value={value} {...otherProps} />;
 };
 
 /** Hack: a debounced auto-save function for the save/publish widget */
