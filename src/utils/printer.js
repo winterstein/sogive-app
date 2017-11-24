@@ -33,8 +33,6 @@ Printer.HASHTAG = /(^|[^&A-Za-z0-9/])#([\w\-]+)/g;
 Printer.URL_REGEX = /https?\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*‌​)*(\/?)([a-zA-Z0-9\-‌​\.\?\,\'\/\\\+&amp;%‌​\$#_]*)?/g;
 
 /**
- * TODO use new Intl.NumberFormat().format(
- * 
  * Ported from StrUtils.java. TODO javascript's toPrecision could be
  * used to simplify this
  *

@@ -207,10 +207,10 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 			if (saveFn) saveFn({path:path, value: val});		
 		};
 		return (
-			<FormGroup>
+			<div className='form-group'>
 				<Radio value={true} name={prop} onChange={onChange} checked={value} inline>Yes</Radio>
 				<Radio value={false} name={prop} onChange={onChange} checked={!value} inline>No</Radio>
-			</FormGroup>
+			</div>
 		);
 	}
 
