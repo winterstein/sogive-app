@@ -3,10 +3,11 @@
 WATCH=$1
 USER=`whoami`
 GOTINOTIFYTOOLS=`which inotifywait`
+WEB=/home/$USER/winterwell/sogive-app/web
 
 # the TOPLESS files are the top level files referenced in index.html
-TOPLESS[0]=/home/$USER/winterwell/sogive-app/web/style/main.less;
-TOPLESS[1]=/home/$USER/winterwell/sogive-app/web/style/print.less;
+TOPLESS[0]=$WEB/style/main.less;
+TOPLESS[1]=$WEB/style/print.less;
 
 # run through files
 for file in "${TOPLESS[@]}"; do
@@ -28,7 +29,7 @@ if [[ $WATCH == 'watch' ]]; then
 	else
 	while true
 	do
-		inotifywait -r -e modify,attrib,close_write,move,create,delete /home/$USER/winterwell/sogive-app/web/style && \
+		inotifywait -r -e modify,attrib,close_write,move,create,delete $WEB/style && \
 		for file in "${TOPLESS[@]}"; do
 			if [ -e "$file" ]; then
 				echo -e "converting $file"
