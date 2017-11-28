@@ -1,4 +1,5 @@
 @import "colours.less";
+@import "positioning.less";
 
 .SearchResults {
 		position: relative;
@@ -255,14 +256,30 @@
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
 	.SearchForm {
-		margin-left: -2em;
-		margin-right: -2em;
+		.extend-content-to-sides(@bs-column-padding);
 		padding: 1em;
 	}
 	.SearchResults {
-		margin-left: -2em;
-		margin-right: -2em;
+		.extend-content-to-sides(@bs-column-padding);
 		padding: 0em;
+
+		position: relative;
+		margin-top: 50px;
+		background: #f2f2f2;
+		padding: 2em;
+
+		.results-list {
+			background-color: #dcdcdc;
+			padding: 2em;
+		}
+
+		.top-tab {
+			background-color: #f2f2f2;
+			width: 100%;
+			&:before {
+				content: none;
+			}
+		}
 
 		.num-results {
 			margin-left: 2em;
@@ -270,6 +287,8 @@
 
 		.results-list {
 			padding: 1em;
+			margin-left: -2em;
+			margin-right: -2em;
 		}
 
 		.SearchResult {
@@ -283,3 +302,6 @@
 	}
 
 } // ./mobile screen
+
+
+

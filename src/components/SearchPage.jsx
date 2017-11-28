@@ -64,7 +64,7 @@ export default class SearchPage extends React.Component {
 		}
 
 		return (
-			<div className='SearchPage'>
+			<div className='SearchPage row'>
 				<div className='col-md-12'>
 					<SearchForm query={q} from={from} status={status} setResults={this.setResults.bind(this)}/>
 				</div>
@@ -323,12 +323,12 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	let targetCount = DataStore.getValue(['widget','SearchResults', NGO.id(item), 'targetCount']);
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
-	const impact = impactCalc({
+	const impact = project ? impactCalc({
 		charity: item, 
 		project, 
 		output: project && Project.outputs(project)[0], 
 		targetCount: targetCount || 1
-	});
+	}) : null;
 
 	// Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
 	const charityName = NGO.displayName(item);
