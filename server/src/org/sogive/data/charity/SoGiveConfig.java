@@ -9,8 +9,9 @@ import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.io.Option;
+import com.winterwell.web.app.ISiteConfig;
 
-public class SoGiveConfig implements IESRouter {
+public class SoGiveConfig implements IESRouter, ISiteConfig {
 
 //	public static final String charityType = "charity";
 //
@@ -22,6 +23,11 @@ public class SoGiveConfig implements IESRouter {
 	
 	@Option
 	public int port = 8282;
+	
+	@Override
+	public int getPort() {
+		return port;
+	}
 	
 	@Option
 	public String youagainApp = "sogive";
