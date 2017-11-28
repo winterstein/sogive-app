@@ -13,7 +13,12 @@ const getRoles = () => {
 	if ( ! Login.isLoggedIn()) {
 		return pv([]);
 	}
-	let shared = DataStore.fetch(['misc', 'roles', Login.getId()],
+	const uxid = Login.getId();
+	if ( ! uxid) {	// debug paranoia
+		console.error("Roles.js huh? "+Login.isLoggedIn()+" but "+Login.getId());
+		return pv([]);
+	}
+	let shared = DataStore.fetch(['misc', 'roles', uxid],
 		() => {
 			let req = Login.getSharedWith({prefix:"role:*"});
 			return req.then(function(res) {
