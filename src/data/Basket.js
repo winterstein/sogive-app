@@ -33,7 +33,9 @@ Basket.getItems = (basket) => {
 	return basket.items;
 };
 
-// Add up the prices of all the items in the basket
+/** Add up the prices of all the items in the basket 
+ * @returns {MonetaryAmount} never null
+*/
 Basket.getTotal = (basket) => {
 	// Using this clumsy forEach instead of a reduce because this makes it clearer
 	// that the total's MonetaryAmount object (thus currency) is based on the first item

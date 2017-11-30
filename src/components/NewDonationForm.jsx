@@ -13,6 +13,7 @@ import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
+import Transfer from '../data/Transfer';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
 import Basket from '../data/Basket';
 
@@ -144,7 +145,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	// Don't ask for gift-aid details if the charity doesn't support it
 	// const showGiftAidSection = 
 	// We don't need to collect address etc. if we're not collecting gift-aid
-	const showDetailsSection = DataStore.getValue(path.concat('giftAid'));
+	const showDetailsSection = true; // hm - the UX flow is a bit odd with this popping in. DataStore.getValue(path.concat('giftAid'));
 	// You don't send messages to charities...
 	const showMessageSection = FundRaiser.isa(item);
 
@@ -176,6 +177,9 @@ const DonationForm = ({item, charity, causeName}) => {
 		</WizardStage>
 	));	
 
+	// don't offer a next button for payment
+	const maxStage = stages.length - 2; 
+
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
 			<Modal.Header closeButton >
@@ -189,7 +193,7 @@ const DonationForm = ({item, charity, causeName}) => {
 				{wizardStages}
 			</Modal.Body>
 			<Modal.Footer>
-				<PrevButton stagePath={stagePath} /> <NextButton maxStage={4} stagePath={stagePath} />
+				<PrevButton stagePath={stagePath} /> <NextButton maxStage={maxStage} stagePath={stagePath} />
 			</Modal.Footer>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
@@ -197,33 +201,47 @@ const DonationForm = ({item, charity, causeName}) => {
 }; // ./DonationForm
 
 
-const AmountSection = ({path}) => (
-	// TODO replace coverCosts checkbox with a slider for optional donation to cover our costs
-	<div className='section donation-amount'>
-		<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' />
-		{/*< Misc.PropControl prop='coverCosts' path={path} type='checkbox' label='Cover processing costs' />*/}
-	</div>
-);
+const AmountSection = ({path}) => {
+	let credit = Transfer.getCredit();
+	let dflt = credit || MonetaryAmount.make({value:10});
+	return (
+		<div className='section donation-amount'>
+			<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' dflt={dflt} />
+			{credit? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+		</div>);
+};
 
 const GiftAidSection = ({path, charity}) => {
 	const ownMoney = DataStore.getValue(path.concat('giftAidOwnMoney'));
 	const fromSale = DataStore.getValue(path.concat('giftAidFundRaisedBySale'));
 	const benefit = DataStore.getValue(path.concat('giftAidBenefitInReturn'));
-	const canGiftAid = ownMoney && !(fromSale || benefit);
+	const taxpayer = DataStore.getValue(path.concat('giftAidTaxpayer'));
+	const canGiftAid = ownMoney && taxpayer && ! (fromSale || benefit);
 	
 	// If we're disabling the checkbox, untick it too
-	if (!canGiftAid) {
+	if ( ! canGiftAid) {
 		DataStore.setValue(path.concat('giftAid'), false, false);
 	}
 
 	return (
 		<div className='section donation-amount'>
-			<img src='/img/gift-aid-it-logo.gif' alt='Gift Aid It' />
-			<Misc.PropControl prop='giftAidOwnMoney' label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, family or a collection.`} path={path} type='yesNo' />
-			<Misc.PropControl prop='giftAidFundRaisedBySale' label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`} path={path} type='yesNo' />
-			<Misc.PropControl prop='giftAidBenefitInReturn' label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`} path={path} type='yesNo' />
-			<p>I am a UK taxpayer and understand that if I pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount of Gift Aid claimed on all my donations it is my responsibility to pay any difference.</p>
-			<Misc.PropControl prop='giftAid' path={path} type='checkbox' label='I want to Gift Aid this donation' disabled={!canGiftAid} />
+			<img src='/img/giftaid-it-logo.gif' alt='Gift Aid It' />
+			<p>
+				GiftAid can add considerably to your donation at no extra cost. 
+				Please answer the questions below to see if this donation qualifies for GiftAid.
+			</p>
+			<Misc.PropControl prop='giftAidOwnMoney' 
+				label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.`} path={path} type='yesNo' />
+			<Misc.PropControl prop='giftAidFundRaisedBySale' 
+				label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`} path={path} type='yesNo' />
+			<Misc.PropControl prop='giftAidBenefitInReturn' label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`} 
+				path={path} type='yesNo' />
+			<Misc.PropControl prop='giftAidTaxpayer'
+				label={`I am a UK taxpayer.`}
+				path={path} type='yesNo' />
+			<p>If you pay less Income Tax and/or Capital Gains Tax in the current tax year 
+				than the amount of Gift Aid claimed on all your donations, it is your responsibility to pay any difference</p>
+			<Misc.PropControl prop='giftAid' path={path} type='checkbox' label='I want to Gift Aid this donation' disabled={ ! canGiftAid} />
 		</div>
 	);
 };

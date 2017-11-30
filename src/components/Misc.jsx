@@ -731,6 +731,42 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 	</div>);
 };
 
+Misc.SubmitButton = ({path, url, once, className='btn btn-primary', children}) => {
+	assMatch(url, String);
+	assMatch(path, 'String[]');
+	const tpath = ['transient','SubmitButton'].concat(path);
+
+	let formData = DataStore.getValue(path);
+	// DataStore.setValue(tpath, C.STATUS.loading);
+	const params = {
+		data: formData
+	};
+	const doSubmit = e => {
+		DataStore.setValue(tpath, C.STATUS.saving);
+		ServerIO.load(url, params)
+			.then(res => {
+				DataStore.setValue(tpath, C.STATUS.clean);
+			}, err => {
+				DataStore.setValue(tpath, C.STATUS.dirty);
+			});
+	};
+	
+	let localStatus = DataStore.getValue(tpath);
+	let isSaving = C.STATUS.issaving(localStatus);	
+	const vis ={visibility: isSaving? 'visible' : 'hidden'};
+	let disabled = isSaving || (once && localStatus);
+	let title ='Submit the form';
+	if (disabled) title = isSaving? "saving..." : "Submitted :) To avoid errors, you cannot re-submit this form";
+	return (<button onClick={doSubmit} 
+		className={className}
+		disabled={disabled}
+		title={title}
+	>
+		{children}
+		<span className="glyphicon glyphicon-cd spinning" style={vis} />
+	</button>);
+};
+
 export default Misc;
 // // TODO rejig for export {
 // 	PropControl: Misc.PropControl

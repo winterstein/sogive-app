@@ -28,6 +28,7 @@ const getRoles = () => {
 				}
 				let shares = res.cargo;				
 				let roles = shares.filter(s => s.item && s.item.substr(0,5)==='role:').map(s => s.item.substr(5));
+				roles = Array.from(new Set(roles)); // de dupe
 				return roles;
 			});
 		}
@@ -55,6 +56,10 @@ const iCan = (capability) => {
 	if (proles.value) {
 		for(let i=0; i<proles.value.length; i++) {
 			let cans = cans4role[proles.value[i]];
+			if ( ! cans) {
+				console.error("Roles.js - unknown role: "+proles.value[i]);
+				continue;
+			}
 			if (cans.indexOf(capability) !== -1) return pv(true);
 		}
 		return pv(false);

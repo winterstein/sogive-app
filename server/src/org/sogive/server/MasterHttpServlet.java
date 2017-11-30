@@ -115,7 +115,7 @@ public class MasterHttpServlet extends HttpServlet {
 				SoGiveConfig conf = Dep.get(SoGiveConfig.class);
 				if (conf.uploadDir!=null) us.setUploadDir(conf.uploadDir);
 				us.process(request);				
-				return;
+				return;			
 			case "log":
 				s = new LogServlet();
 				s.process(request);
@@ -134,6 +134,10 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			case "fundraiser":
 				s = new FundraiserServlet();
+				s.process(request);
+				return;
+			case "credit":
+				s = new CreditServlet();
 				s.process(request);
 				return;
 			}			

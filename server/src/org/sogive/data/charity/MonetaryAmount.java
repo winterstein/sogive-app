@@ -10,7 +10,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.Time;
 
 /**
- * TODO it'd be nice to replace this with {@link com.goodloop.data.MonetaryAmount}
+ * TODO it'd be nice to replace this with {@link com.goodloop.data.Money}
  * However that would require lots of changes (and risk).
  * 
  * @author daniel

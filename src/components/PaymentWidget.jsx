@@ -8,7 +8,8 @@ import { StripeProvider, Elements, injectStripe,
 
 import C from '../C';
 import MonetaryAmount from '../data/charity/MonetaryAmount';
-
+import Transfer from '../data/Transfer';
+import {assMatch} from 'sjtest';
 import Misc from './Misc';
 
 // falsy value for SERVER_TYPE = production
@@ -20,6 +21,10 @@ const SKIP_TOKEN = {
 	id: 'skip_token',
 	type: 'card',
 };
+const CREDIT_TOKEN = {
+	id: 'credit_token',
+	type: 'credit',
+};
 
 /**
  * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
@@ -28,6 +33,9 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
+	MonetaryAmount.assIsa(amount);
+	assMatch(onToken, Function);
+	assMatch(recipient, String);
 
 	// Invoke the callback, with a minimal fake token that the servlet will catch
 	const skipAction = (event) => (
@@ -36,13 +44,32 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 			email,
 		})
 	);
+	const payByCredit = (event) => (
+		onToken({
+			...CREDIT_TOKEN,
+			email,
+		})
+	);
 
-	MonetaryAmount.assIsa(amount);
+	// pay on credit??
+	let credit = Transfer.getCredit();
+	if (credit && MonetaryAmount.value(credit) > 0) {
+		if (MonetaryAmount.value(credit) > MonetaryAmount.value(amount)) {
+			return (
+				<div className='section donation-amount'>			
+					<p>Yay! You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
+					<button onClick={payByCredit} className='btn btn-primary'>TODO Send Payment</button>
+				</div>
+			);					
+		}
+	} // ./credit
+
+	
 	return (
-		<div className='section donation-amount'>
+		<div className='section donation-amount'>			
 			<StripeProvider apiKey={stripeKey}>
 				<Elements>
-					<StripeThings onToken={onToken} amount={amount} recipient={recipient} email={email} />
+					<StripeThings onToken={onToken} amount={amount} credit={credit} recipient={recipient} email={email} />
 				</Elements>
 			</StripeProvider>
 			{ ! C.isProduction() ? (
@@ -63,7 +90,12 @@ class StripeThingsClass extends Component {
 	constructor(props) {
 		super(props);
 
-		const {amount, onToken, recipient, email} = props;
+		const {amount, credit, onToken, recipient, email} = props;
+
+		let residual = amount;
+		if (credit) {
+			residual = MonetaryAmount.sub(amount, credit);		
+		}
 
 		/* We might be able to forgo the rigmarole of collecting
 		+ submitting CC data ourselves, if the browser supports
@@ -79,7 +111,7 @@ class StripeThingsClass extends Component {
 			currency: (amount.currency || 'gbp').toLowerCase(),
 			total: {
 				label: `Payment to ${recipient}`,
-				amount: amount.value*100, // uses pence
+				amount: residual.value*100, // uses pence
 			},
 		});
 
@@ -128,11 +160,16 @@ class StripeThingsClass extends Component {
 			return (<PaymentRequestButtonElement paymentRequest={this.state.paymentRequest} />);
 		}
 
-		const {amount, recipient} = this.props;
+		const {amount, recipient, credit} = this.props;
 		// TODO an email editor if this.props.email is unset
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
+				{credit && MonetaryAmount.value(credit) > 0? 
+					<FormGroup><Col md={12}>
+						You have <Misc.Money amount={credit} /> in credit which will be used towards this payment.
+					</Col></FormGroup>
+				: null}
 				<FormGroup>
 					<Col md={12}>
 						<label>Card number</label>

@@ -162,7 +162,7 @@ public class Donation extends AThing {
 	}
 	
 	/**
-	 * from - who provided this. There can be multiple sources
+	 * from - who provided this info. There can be multiple sources
 	 *  - e.g. if a bot infers the data, then both bot and original source should be listed here.
 	 *  
 	 * NB: see Claim.java in profiler

@@ -32,7 +32,7 @@ C.app = {
  */
 C.newId = 'new';
 
-C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Basket Ticket MonetaryAmount");
+C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Basket Ticket MonetaryAmount Transfer");
 
 /** dialogs you can show/hide.*/
 C.show = new Enum('LoginWidget');
@@ -43,9 +43,10 @@ C.STATUS = new Enum('loading clean dirty saving');
 
 C.CRUDACTION = new Enum('new save publish discard-edits delete');
 
-C.ROLES = new Enum("editor admin");
-C.CAN = new Enum("edit publish admin editEvent test");
+C.ROLES = new Enum("editor admin company");
+C.CAN = new Enum("edit publish admin editEvent test uploadCredit");
 // setup roles
 Roles.defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
+Roles.defineRole(C.ROLES.company, [C.CAN.uploadCredit]);
 Roles.defineRole(C.ROLES.admin, C.CAN.values);
 

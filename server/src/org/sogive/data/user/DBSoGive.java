@@ -15,9 +15,11 @@ import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
+import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
+
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
@@ -57,7 +59,8 @@ public class DBSoGive {
 			NGO.class, 
 			Person.class, Team.class, Event.class, 
 			FundRaiser.class,
-			Basket.class, Donation.class
+			Basket.class, Donation.class, 
+			Transfer.class
 			};
 
 	public static void init() {
@@ -92,7 +95,13 @@ public class DBSoGive {
 						new ESType()
 							.property("from", new ESType().keyword())
 							.property("to", new ESType().keyword())
-							.property("date", new ESType().date())						
+							.property("date", new ESType().date()),
+					
+					Transfer.class,
+							new ESType()
+								.property("from", new ESType().keyword())
+								.property("to", new ESType().keyword())
+								.property("date", new ESType().date())							
 				));
 	}
 
