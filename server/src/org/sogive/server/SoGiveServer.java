@@ -71,11 +71,6 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	}
 	
 	@Override
-	protected int getPort() {
-		return config.port;
-	}
-	
-	@Override
 	protected void addJettyServlets(JettyLauncher jl) {		
 		super.addJettyServlets(jl);
 		jl.addServlet("/*", new MasterHttpServlet());
