@@ -206,10 +206,14 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 			DataStore.setValue(proppath, val);
 			if (saveFn) saveFn({path:path, value: val});		
 		};
+
+		// Null/undefined doesn't mean "no"! Don't check either option until we have a value.
+		const noChecked = value !== null && value !== undefined && !value;
+
 		return (
 			<div className='form-group'>
 				<Radio value={true} name={prop} onChange={onChange} checked={value} inline>Yes</Radio>
-				<Radio value={false} name={prop} onChange={onChange} checked={!value} inline>No</Radio>
+				<Radio value={false} name={prop} onChange={onChange} checked={noChecked} inline>No</Radio>
 			</div>
 		);
 	}

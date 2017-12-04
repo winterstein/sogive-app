@@ -74,10 +74,10 @@ public class DonationServlet extends CrudServlet {
 		super(Donation.class);
 	}
 
-	public void process(WebRequest state) throws Exception {
+	/*public void process(WebRequest state) throws Exception {
 		// crud + list
 		super.process(state);
-	}
+	}*/
 	
 	@Override
 	protected void doList(WebRequest state) throws IOException {
@@ -95,7 +95,7 @@ public class DonationServlet extends CrudServlet {
 		if (to==null) return qb;
 		
 		// would ?q=to:id work just as well??
-		QueryBuilder tq = QueryBuilders.termQuery("to", user.toString());;
+		QueryBuilder tq = QueryBuilders.termQuery("to", to);;
 		
 		BoolQueryBuilder qb2 = QueryBuilders.boolQuery().must(qb).must(tq);
 		return qb2;

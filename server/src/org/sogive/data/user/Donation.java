@@ -97,20 +97,22 @@ public class Donation extends AThing {
 	 * - some questions have "no" as the "correct" answer
 	 * Some fields have been deprecated as a result.
 	 */
-	/** Now has explanatory text on "I want to Gift Aid this donation" checkbox which makes {@link giftAidTaxPayer} redundant. */
-	boolean giftAid;
+	/** The donor wants to Gift Aid this donation (and is legally able to do so) */
+	Boolean giftAid;
 	
 	/** Must be true if giftAid is true. "This donation is my own money. It has not come from anyone else e.g. a business, friends, family or a collection." */
-	boolean giftAidOwnMoney;
+	Boolean giftAidOwnMoney;
 	/** Must be false if giftAid is true. "This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash." */
-	boolean giftAidFundRaisedBySale;
+	Boolean giftAidFundRaisedBySale;
 	/** Must be false if giftAid is true. "I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake." */
-	boolean giftAidBenefitInReturn;
+	Boolean giftAidBenefitInReturn;
+	/** Must be true if giftAid is true. "I am a UK taxpayer." */
+	Boolean giftAidTaxpayer;
 	
 	/** Deprecated: Inverted to {@link giftAidBenefitInReturn} */
 	boolean giftAidNoCompensation;
-	/** Deprecated: Implicit in {@link giftAid} */ 
-	boolean giftAidTaxpayer;
+	
+	
 	
 	PersonLite donor;
 

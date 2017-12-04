@@ -62,7 +62,8 @@ MonetaryAmount.make = (base = {}) => {
 MonetaryAmount.add = (amount1, amount2) => {
 	MonetaryAmount.assIsa(amount1);
 	MonetaryAmount.assIsa(amount2);
-	assert(amount1.currency === amount2.currency);
+	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
+		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
 	return MonetaryAmount.make({
 		...amount1,
 		value: amount1.value + amount2.value,
@@ -73,7 +74,8 @@ MonetaryAmount.add = (amount1, amount2) => {
 MonetaryAmount.sub = (amount1, amount2) => {
 	MonetaryAmount.assIsa(amount1);
 	MonetaryAmount.assIsa(amount2);
-	assert(amount1.currency === amount2.currency);
+	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
+		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
 	return MonetaryAmount.make({
 		...amount1,
 		value: amount1.value - amount2.value,

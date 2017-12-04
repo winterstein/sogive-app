@@ -58,10 +58,15 @@ const PrevButton = ({stagePath, ...rest}) => {
 };
 
 const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...rest}) => {
+
 	assMatch(stagePath, 'String[]');
 	assMatch(diff, Number);	
 	assert(text, 'WizardProgressWidget.js - no button text');
 	const stage = parseInt(DataStore.getValue(stagePath) || 0);
+
+	if (stage === 0 && diff < 0) return null; // no previous on start
+	if (maxStage && stage >= maxStage && diff > 0) return null; // no next on end
+
 	const changeTab = () => {
 		let n = stage + diff;
 		// HACK: put it in the url?
@@ -71,10 +76,10 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 			DataStore.setValue(stagePath, n);
 		}
 	};
+	
 	// use Bootstrap pull class to left/right float
 	const pull = diff > 0? 'pull-right' : 'pull-left';
-	if (stage===0 && diff < 0) return null; // no previous on start
-	if (maxStage && stage===maxStage && diff > 0) return null; // no next on end
+
 	return (
 		<button className={`btn btn-${bsClass} btn-lg ${pull}`} onClick={changeTab} {...rest} >
 			{text}

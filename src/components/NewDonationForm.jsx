@@ -216,32 +216,58 @@ const GiftAidSection = ({path, charity}) => {
 	const fromSale = DataStore.getValue(path.concat('giftAidFundRaisedBySale'));
 	const benefit = DataStore.getValue(path.concat('giftAidBenefitInReturn'));
 	const taxpayer = DataStore.getValue(path.concat('giftAidTaxpayer'));
-	const canGiftAid = ownMoney && taxpayer && ! (fromSale || benefit);
+	
+	// User must have ticked yes or no for every question, even the "required no" ones
+	const formCompleted = ownMoney !== null && ownMoney !== undefined
+		&& fromSale !== null && fromSale !== undefined
+		&& benefit !== null && benefit !== undefined
+		&& taxpayer !== null && taxpayer !== undefined;
+		
+	const canGiftAid = formCompleted && ownMoney && taxpayer && ! (fromSale || benefit);
+
 	
 	// If we're disabling the checkbox, untick it too
 	if ( ! canGiftAid) {
 		DataStore.setValue(path.concat('giftAid'), false, false);
 	}
 
+	// Explicitly tell user the result of their answers
+	let giftAidMessage = '';
+	if (formCompleted) {
+		giftAidMessage = canGiftAid ? (
+			<p>
+				Your donation qualifies for Gift Aid!<br />
+				If you pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount
+				of Gift Aid claimed on all your donations, it is your responsibility to pay any difference.
+			</p>
+		) : (
+			<p>Your donation does not qualify for Gift Aid.</p>
+		);
+	}
+
 	return (
 		<div className='section donation-amount'>
 			<img src='/img/giftaid-it-logo.gif' alt='Gift Aid It' />
 			<p>
-				GiftAid can add considerably to your donation at no extra cost. 
+				GiftAid can add considerably to your donation at no extra cost.<br />
 				Please answer the questions below to see if this donation qualifies for GiftAid.
 			</p>
-			<Misc.PropControl prop='giftAidOwnMoney' 
-				label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.`} path={path} type='yesNo' />
-			<Misc.PropControl prop='giftAidFundRaisedBySale' 
-				label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`} path={path} type='yesNo' />
-			<Misc.PropControl prop='giftAidBenefitInReturn' label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`} 
-				path={path} type='yesNo' />
-			<Misc.PropControl prop='giftAidTaxpayer'
+			<Misc.PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
+				label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.`}
+			/>
+			<Misc.PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
+				label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`}
+			/>
+			<Misc.PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
+				label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`}
+			/>
+			<Misc.PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
 				label={`I am a UK taxpayer.`}
-				path={path} type='yesNo' />
-			<p>If you pay less Income Tax and/or Capital Gains Tax in the current tax year 
-				than the amount of Gift Aid claimed on all your donations, it is your responsibility to pay any difference</p>
-			<Misc.PropControl prop='giftAid' path={path} type='checkbox' label='I want to Gift Aid this donation' disabled={ ! canGiftAid} />
+			/>
+			{giftAidMessage}
+			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
+				label='I want to Gift Aid this donation'
+			/>
 		</div>
 	);
 };
