@@ -6,6 +6,7 @@ bin/
 *.class
 *.log
 config/stripe.properties
+config/cloudinary.properties
 sogive.log*
 *.css
 version.properties
