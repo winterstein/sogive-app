@@ -23,7 +23,6 @@ public class TransferTest {
 		Transfer t = new Transfer(company, user, new MonetaryAmount(500));
 		t.publish();
 		
-		Utils.sleep(1000);
 		
 		MonetaryAmount userCred = Transfer.getTotalCredit(user);
 		MonetaryAmount coCred = Transfer.getTotalCredit(company);

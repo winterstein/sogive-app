@@ -190,7 +190,7 @@ public class Transfer extends AThing {
 		JThing draft = new JThing(this);
 		ESPath draftPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.DRAFT);
 		ESPath publishPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.PUBLISHED);
-		JThing after = AppUtils.doPublish(draft, draftPath, publishPath);
+		JThing after = AppUtils.doPublish(draft, draftPath, publishPath, true);
 		return after;
 	}
 
