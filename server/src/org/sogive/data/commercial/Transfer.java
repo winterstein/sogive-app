@@ -1,6 +1,7 @@
 package org.sogive.data.commercial;
 
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
 * A lightweight object for maintaining an accounting audit trail
@@ -55,7 +57,6 @@ import lombok.Data;
 */
 @Data
 public class Transfer extends AThing {
-	String note;
 
 	/**
 	 * Providing the money
@@ -157,7 +158,9 @@ public class Transfer extends AThing {
 
 	public static MonetaryAmount getTotalCredit(XId user) {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequestBuilder s = new SearchRequestBuilder(es);		
+		SearchRequestBuilder s = new SearchRequestBuilder(es);	
+		String idx = Dep.get(IESRouter.class).getPath(Transfer.class, null).index();
+		s.setIndex(idx);
 		String toFrom = user.toString();
 		QueryBuilder qb = QueryBuilders.boolQuery()
 				.should(QueryBuilders.termQuery("to", toFrom))
@@ -169,14 +172,15 @@ public class Transfer extends AThing {
 		s.setSize(10000);
 		es.debug = true;
 		SearchResponse sr = s.get();
-		Map<String, Object> jobj = sr.getParsedJson();
-		List<Map> hits = sr.getHits();
-		
-		List hits2 = Containers.apply(hits, h -> h.get("_source"));
+		List<Transfer> hits = sr.getSearchResults(Transfer.class);
 		
 		MonetaryAmount sum = new MonetaryAmount(0);
-		for (Object object : hits2) {
-			
+		for (Transfer t : hits) {
+			if (t.getTo().equals(user)) {
+				sum = sum.plus(t.getAmount());
+			} else {
+				sum = sum.minus(t.getAmount());
+			}
 		}				
 		return sum;
 	}
@@ -188,6 +192,14 @@ public class Transfer extends AThing {
 		ESPath publishPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.PUBLISHED);
 		JThing after = AppUtils.doPublish(draft, draftPath, publishPath);
 		return after;
+	}
+
+	@Override
+	public String toString() {
+		return "Transfer [from=" + from + ", to=" + to + ", message=" + message + ", collected=" + collected
+				+ ", paidOut=" + paidOut + ", paidElsewhere=" + paidElsewhere + ", paymentId=" + paymentId + ", amount="
+				+ amount + ", total=" + total + ", date=" + date + ", f=" + Arrays.toString(f) + ", a=" + a + ", id="
+				+ id + "]";
 	}
 
 
