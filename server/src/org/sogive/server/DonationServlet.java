@@ -12,8 +12,10 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.FundRaiser;
+import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DBSoGive;
@@ -25,6 +27,7 @@ import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
+import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
@@ -42,6 +45,7 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
@@ -135,6 +139,18 @@ public class DonationServlet extends CrudServlet {
 	}
 
 	private void doCollectMoney(Donation donation, WebRequest state, XId user) {
+		MonetaryAmount total = donation.getTotal();
+		// paid on credit?
+		MonetaryAmount credit = Transfer.getTotalCredit(user);
+		if (credit!=null && credit.getValue() > 0) {
+			MonetaryAmount residual = doCollectMoney2(donation, state, user, credit);
+			if (residual==null || residual.getValue()==0) {
+				return;
+			}
+			Log.d(LOGTAG, "part payment on credit "+donation+" residual: "+residual);
+			total = residual;
+		}
+		
 		// TODO Less half-assed handling of Stripe exceptions
 		try {
 			/** Donation has provision to store a StripeAuth now - may already be on the object */
@@ -146,9 +162,9 @@ public class DonationServlet extends CrudServlet {
 			if (sa == null) {
 				sa = new StripeAuth(userObj, state);
 			}
-
-			Charge charge = StripePlugin.collect(donation.getTotal(), donation.getId(), sa, userObj, ikey);
-			Log.d("stripe", charge);
+			
+			Charge charge = StripePlugin.collect(total, donation.getId(), sa, userObj, ikey);
+			Log.d("stripe.collect", charge);
 			donation.setPaymentId(charge.getId());
 			donation.setCollected(true);			
 			// FIXME
@@ -159,6 +175,26 @@ public class DonationServlet extends CrudServlet {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private MonetaryAmount doCollectMoney2(Donation donation, WebRequest state, XId user, MonetaryAmount credit) 
+	{		
+		// TODO check credit more robustly
+		XId to = NGO.xidFromId(donation.getTo());
+		MonetaryAmount amount = donation.getAmount();
+		MonetaryAmount paidOnCredit = amount;
+		MonetaryAmount residual = MonetaryAmount.pound(0);
+		if (amount.getValue() > credit.getValue()) {
+			residual = amount.minus(credit);
+			paidOnCredit = credit;
+		} else {
+			// pay it all
+		}
+		// reduce credit
+		Transfer t = new Transfer(user, to, paidOnCredit);
+		t.publish();
+		// OK
+		return residual;
 	}
 
 	

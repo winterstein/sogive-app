@@ -2,18 +2,36 @@ package org.sogive.data.commercial;
 
 
 import java.util.List;
+import java.util.Map;
 
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.sogive.data.charity.MonetaryAmount;
 import org.sogive.data.charity.Output;
 import org.sogive.data.user.Donation;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
+import com.winterwell.data.JThing;
+import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
+import com.winterwell.es.ESPath;
+import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchResponse;
+import com.winterwell.gson.Gson;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.ajax.JsonResponse;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
 import lombok.Data;
@@ -135,6 +153,42 @@ public class Transfer extends AThing {
 	 * The app that created this - e.g. sogive or goodloop.
 	 */
 	String a;
+
+
+	public static MonetaryAmount getTotalCredit(XId user) {
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SearchRequestBuilder s = new SearchRequestBuilder(es);		
+		String toFrom = user.toString();
+		QueryBuilder qb = QueryBuilders.boolQuery()
+				.should(QueryBuilders.termQuery("to", toFrom))
+				.should(QueryBuilders.termQuery("from", toFrom))
+				.minimumNumberShouldMatch(1);
+		s.setQuery(qb);
+		
+		// TODO aggregate
+		s.setSize(10000);
+		es.debug = true;
+		SearchResponse sr = s.get();
+		Map<String, Object> jobj = sr.getParsedJson();
+		List<Map> hits = sr.getHits();
+		
+		List hits2 = Containers.apply(hits, h -> h.get("_source"));
+		
+		MonetaryAmount sum = new MonetaryAmount(0);
+		for (Object object : hits2) {
+			
+		}				
+		return sum;
+	}
+
+
+	public JThing publish() {
+		JThing draft = new JThing(this);
+		ESPath draftPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.DRAFT);
+		ESPath publishPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.PUBLISHED);
+		JThing after = AppUtils.doPublish(draft, draftPath, publishPath);
+		return after;
+	}
 
 
 }

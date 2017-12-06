@@ -13,6 +13,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.SimpleJson;
+import com.winterwell.web.data.XId;
 
 public class NGO extends Thing<NGO> {
 	private static final long serialVersionUID = 1L;
@@ -105,6 +106,10 @@ public class NGO extends Thing<NGO> {
 		String id = StrUtils.toCanonical(charityName).replaceAll("\\s+", "-");
 		assert ! Utils.isBlank(id) : charityName;
 		return id;
+	}
+
+	public static XId xidFromId(String id) {
+		return new XId(id+"@sogive");
 	}
 
 	

@@ -1,6 +1,7 @@
 package org.sogive.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,12 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 			return;
 		}
 		
+		// upload new transfers
+		doUploadTransfers(state);
+	}
+
+
+	private void doUploadTransfers(WebRequest state) throws IOException {
 		String csv = state.get(new SField("csv"));
 		StringReader input = new StringReader(csv.trim());
 		CSVSpec spec = new CSVSpec();
@@ -99,14 +106,12 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 		}
 		// NB: any fail above will abort the whole upload, which is prob good
 		for(Transfer t : transfers) {
-			JThing draft = new JThing(t);
-			ESPath draftPath = Dep.get(IESRouter.class).getPath(Transfer.class, t.id, KStatus.DRAFT);
-			ESPath publishPath = Dep.get(IESRouter.class).getPath(Transfer.class, t.id, KStatus.PUBLISHED);
-			JThing after = AppUtils.doPublish(draft, draftPath, publishPath);
+			t.publish();
 		}
 		List cargo = transfers;
 		JsonResponse output = new JsonResponse(state, cargo);
 		WebUtils2.sendJson(output, state);
 	}
+
 
 }
