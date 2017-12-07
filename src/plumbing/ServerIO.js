@@ -52,8 +52,13 @@ ServerIO.donate = function(data) {
 	return ServerIO.post('/donation', data);
 };
 
-ServerIO.getDonations = function() {
-	return ServerIO.load('/donation/list');
+ServerIO.getDonations = function({from, to}) {	
+	const params = {
+		data: {
+			from, to
+		}
+	};
+	return ServerIO.load('/donation/list', params);
 };
 
 

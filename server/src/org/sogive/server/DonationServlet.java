@@ -133,7 +133,7 @@ public class DonationServlet extends CrudServlet {
 		} else {
 			doCollectMoney(donation, state, user);
 		}
-		// store in the database
+		// store in the database TODO use an actor which can retry
 		super.doPublish(state);
 		return jthing;
 	}
@@ -193,6 +193,7 @@ public class DonationServlet extends CrudServlet {
 		// reduce credit
 		Transfer t = new Transfer(user, to, paidOnCredit);
 		t.publish();
+		donation.setPaymentId(t.getId());
 		// OK
 		return residual;
 	}

@@ -31,7 +31,7 @@ public class Donation extends AThing {
 	XId from;
 	
 	/**
-	 * the charity id
+	 * the charity id. this is NOT an Xid!
 	 */
 	String to;
 	

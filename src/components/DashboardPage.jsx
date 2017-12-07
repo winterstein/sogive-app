@@ -2,7 +2,8 @@ import React from 'react';
 import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import _ from 'lodash';
-import { XId } from 'wwutils';
+import wwutils, { XId, encURI } from 'wwutils';
+window.wwutils = wwutils;
 
 import printer from '../utils/printer';
 // import C from '../C';
@@ -11,7 +12,7 @@ import DataStore from '../plumbing/DataStore';
 // import ChartWidget from './ChartWidget';
 import Misc from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';
-
+import Donation from '../data/charity/Donation';
 
 const DashboardPage = () => {
 	let user = Login.getUser();
@@ -26,7 +27,7 @@ const DashboardPage = () => {
 
 	const pv = user? DataStore.fetch(['list','Donation','dashboard'],	
 		() => {
-			return ServerIO.getDonations()
+			return ServerIO.getDonations({from:Login.getId()})
 				.then(function(result) {
 					let dons = result.cargo.hits;
 					return dons;
@@ -62,18 +63,19 @@ const DashboardPage = () => {
 
 
 const DonationList = ({donations}) => {
-	return <div>{ _.map(donations, d => <Donation key={'d'+d.id} donation={d} />) }</div>;
+	return <div>{ _.map(donations, d => <DonationListItem key={'d'+d.id} donation={d} />) }</div>;
 };
 
-const Donation = ({donation}) => {
-	let niceName = XId.id(donation.to).split('-');
+const DonationListItem = ({donation}) => {
+	let charityId = donation.to;
+	// TODO fetch charity info
+	let niceName = charityId.split('-');
 	niceName = niceName.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
 	niceName = niceName.join(' ');
 	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
 		<div className='well'>
-			<Misc.Time time={donation.date} /> &nbsp;
-			You donated <Misc.Money precision={false} amount={donation.total} /> to <a href={'#charity?charityId='+XId.id(donation.to)}>{niceName}</a>.
+			<Misc.Time time={donation.date} /> You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>.
 			{impact}
 			<div>GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
 			<small>Payment ID: {donation.paymentId}</small></div>

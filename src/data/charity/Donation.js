@@ -1,10 +1,12 @@
 import {assert} from 'sjtest';
-import {isa, nonce} from '../DataClass';
+import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
 import MonetaryAmount from './MonetaryAmount';
+import DataStore from '../../plumbing/DataStore';
 
 /** impact utils */
-const Donation = {};
+const Donation = defineType(C.TYPES.Donation);
+const This = Donation;
 export default Donation;
 
 // ref: https://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
@@ -29,11 +31,18 @@ Donation.getTotal = (don) => {
 	return ttl;
 };
 
+/**
+ * 
+ * @param {Donation} don 
+ * @returns {MonetaryAmount}
+ */
+Donation.amount = don => This.assIsa(don) && don.amount;
+
 Donation.make = (base = {}) => {
-	// to must should a charity
+	// to must be a charity
 	if (base.to) {
 		let charity = DataStore.getValue('data',C.TYPES.NGO, base.to);
-		if ( ! charity) console.warn();
+		if ( ! charity) console.error("Donation not to a charity?! "+base.to, base);
 	}
 	let ma = {
 		'@type': C.TYPES.Donation,
