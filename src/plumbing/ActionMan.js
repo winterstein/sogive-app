@@ -180,7 +180,13 @@ ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
 };
 
 /**
- * TODO handle charity or fundraiser
+ * NB: uses a pseudo id of `draft-to:X`
+ * 
+ * {
+ * 	item: {?NGO|FundRaiser},
+ * 	charity: {?String} id
+ * 	fundRaiser: {?String} id
+ * }
  */
 const getDonationDraft = ({item, charity, fundRaiser}) => {
 	if (item) {
@@ -188,7 +194,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 		if (FundRaiser.isa(item)) fundRaiser = getId(item);
 	}
 	const forId = charity || fundRaiser;
-	assMatch(forId, String);
+	assMatch(forId, String, "getDonationDraft() expects an id string");
 	// use a pseudo id to keep it in the local DataStore
 	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+forId], () => {
 		return ServerIO.getDonationDraft({charity, fundRaiser})

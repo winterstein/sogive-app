@@ -10,14 +10,15 @@ import ServerIO from '../plumbing/ServerIO';
 import Roles from '../Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
-
+import {XId} from 'wwutils';
+import Transfer from '../data/Transfer';
 
 const AccountPage = () => {
 	let proles =Roles.getRoles();
 	let roles = proles.value;
 	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {	
 		return ServerIO.load('/credit/list', {data: {to: Login.getId()} });
-	});
+	});	
 	// TODO link into My-Loop, and vice-versa
 	// TODO store gift aid settings
 			// 	<Misc.Card title='Gift Aid'>
@@ -41,8 +42,12 @@ const AccountPage = () => {
 };
 
 const CreditToMe = ({credits}) => {
+	let totalCred = Transfer.getCredit();
 	return (<Misc.Card title='Credit'>
-		{credits.map(cred => <div key={cred.id}><Misc.Money amount={cred.amount} /> from {cred.from}</div>)}
+		{credits.map(cred => <div key={cred.id}><Misc.Money amount={cred.amount} /> from {XId.prettyName(cred.from)}</div>)}
+		<div>
+			Total: <Misc.Money amount={totalCred} />
+		</div>
 	</Misc.Card>);
 };
 

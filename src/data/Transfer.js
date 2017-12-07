@@ -42,8 +42,8 @@ Transfer.getTotal = (list, to) => {
 /**
  * TODO do this server-side
  */
-Transfer.getCredit = () => {
-	let uxid = Login.getId();
+Transfer.getCredit = (uxid) => {
+	if ( ! uxid) uxid = Login.getId();
 	if ( ! uxid) return null;
 	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'toFrom:'+Login.getId()], () => {	
 		return ServerIO.load('/credit/list', {data: {toFrom: Login.getId()} });

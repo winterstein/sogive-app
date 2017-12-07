@@ -27,7 +27,13 @@ const CREDIT_TOKEN = {
 };
 
 /**
- * onToken: {!Function} on success?? What are the inputs?? maybe link to Stripe doc??
+ * amount: {?MonetaryAmount} if null, return null
+ * recipient: {!String}
+ * onToken: {!Function} inputs: {id:String, type:String, token:String, email:String}
+ * 	Called once the user has provided payment details, and we've got a token back from Stripe. 
+ * 	This should then call the server e.g. by publishing a donation - to take the actual payment.
+ * 	The token string is either a Stripe authorisation token, or one of the fixed special values (e.g. credit_token).
+ * 	
  */
 const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
@@ -57,8 +63,8 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 		if (MonetaryAmount.value(credit) > MonetaryAmount.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
-					<p>Yay! You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
-					<button onClick={payByCredit} className='btn btn-primary'>TODO Send Payment</button>
+					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
+					<button onClick={payByCredit} className='btn btn-primary'>Send Payment</button>
 				</div>
 			);					
 		}

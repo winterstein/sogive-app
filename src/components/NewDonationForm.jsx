@@ -125,22 +125,14 @@ const DonationForm = ({item, charity, causeName}) => {
 			amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
 			coverCosts: true,
 		});
+		const path = ['data', type, donationDraft.id];
+		// store in data
+		DataStore.setValue(path, donationDraft, false);
+		// also store it where ActionMan.getDonationDraft will find it
+		DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);	
 	}
-
+	
 	const path = ['data', type, donationDraft.id];
-	DataStore.setValue(path, donationDraft, false);
-	// also store it where the fetch will find it
-	DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);
-
-	// TODO Thank You / confirmation / receipt page
-	// TODO if NGO.isa(item) => no message section
-	// Minor TODO if no gift-aid => no details section
-
-	// your page?
-	let myPage = Login.getId() === item.oxid;
-	if ( ! myPage) {
-		Login.checkShare(getId(item));
-	}
 
 	// Don't ask for gift-aid details if the charity doesn't support it
 	// const showGiftAidSection = 
@@ -236,12 +228,13 @@ const GiftAidSection = ({path, charity}) => {
 	if (formCompleted) {
 		giftAidMessage = canGiftAid ? (
 			<p>
-				Your donation qualifies for Gift Aid!<br />
+				Hooray: Your donation qualifies for Gift Aid!<br />
 				If you pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount
 				of Gift Aid claimed on all your donations, it is your responsibility to pay any difference.
 			</p>
 		) : (
-			<p>Your donation does not qualify for Gift Aid.</p>
+			<p>This donation does not qualify for Gift Aid. 
+				That's OK - many donations don't, and the difference is a small fraction.</p>
 		);
 	}
 
@@ -293,6 +286,10 @@ const PaymentSection = ({path, item}) => {
 	const donation = DataStore.getValue(path);
 	const {amount} = donation;
 
+	/**
+	 * Add the stripe token to the Donation object and publish the Donation
+	 * @param {id:String, type:String, token:String} token 
+	 */
 	const onToken = (token) => {
 		donation.stripe = token;
 		DataStore.setData(donation);
@@ -324,7 +321,7 @@ const ThankYouSection = ({path, item}) => {
 				</p>
 			</big>
 		</div>
-	); // TODO
+	);
 };
 
 export {DonateButton};

@@ -231,7 +231,7 @@ class Store {
 	 * @param {*} id 
 	 * @return "dirty", "clean", etc. -- see C.STATUS
 	 */
-	setLocalEditsStatus(type, id, status, update=true) {
+	setLocalEditsStatus(type, id, status, update) {
 		assert(C.TYPES.has(type));
 		assert(C.STATUS.has(status));
 		assert(id, "DataStore.setLocalEditsStatus: No id?! getData "+type);
