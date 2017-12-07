@@ -51,6 +51,10 @@ public class BasketPublishedActor extends Actor<Basket> {
 
 	private void doEmailWalker(Ticket ticket, FundRaiser fr) {
 		Emailer emailer = Dep.get(Emailer.class);
+		if (emailer==null) {
+			Log.e("BasketPublishedActor", "No Emailer?! Cannot email ticket info for "+ticket);
+			return;
+		}
 		String e = ticket.getAttendeeEmail();		
 		if (Utils.isBlank(e)) {
 			return;
