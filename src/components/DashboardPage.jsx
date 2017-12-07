@@ -15,7 +15,16 @@ import {LoginLink} from './LoginWidget/LoginWidget';
 
 const DashboardPage = () => {
 	let user = Login.getUser();
-	const pv = user? DataStore.fetch(['data','Donation'],	
+	if ( ! user) {
+		return (
+			<div className="page DashboardPage">
+				<h2>My Dashboard</h2>
+				<div><LoginLink title='Login or Register' /> to track your donations</div>
+			</div>
+		);
+	}
+
+	const pv = user? DataStore.fetch(['list','Donation','dashboard'],	
 		() => {
 			return ServerIO.getDonations()
 				.then(function(result) {
@@ -25,20 +34,18 @@ const DashboardPage = () => {
 		}) : {};
 	const donations = pv.value;
 
-	let content;
-
-	if ( ! user) {
+	if ( ! donations && ! pv.error) {		
 		return (
 			<div className="page DashboardPage">
 				<h2>My Dashboard</h2>
-				<div><LoginLink title='Login or Register' /> to track your donations</div>
+				<Misc.Loading />
 			</div>
 		);
 	}
-	if ( ! donations && ! pv.error) {		
-		content = <Misc.Loading />;
-	} else {
-		content = (
+	// display...
+	return (
+		<div className="page DashboardPage">
+			<h2>My Dashboard</h2>
 			<div>
 				<DashboardWidget title="Donation History">
 					<DonationList donations={donations} />
@@ -49,14 +56,6 @@ const DashboardPage = () => {
 					</DashboardWidget>
 				}
 			</div>
-		);
-	}
-
-	// display...
-	return (
-		<div className="page DashboardPage">
-			<h2>My Dashboard</h2>
-			{ content }
 		</div>
 	);
 }; // ./DashboardPage

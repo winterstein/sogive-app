@@ -399,6 +399,7 @@ DataStore.update({
 		NGO: {},
 		User: {}
 	},
+	// Use list to store search results
 	list: {
 
 	},
