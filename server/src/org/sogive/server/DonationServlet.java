@@ -159,6 +159,10 @@ public class DonationServlet extends CrudServlet {
 			Person userObj = DBSoGive.getCreateUser(user);
 
 			StripeAuth sa = donation.getStripe();
+			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) {
+				Log.d(LOGTAG, "skip payment: "+donation);
+				return; 
+			}
 			if (sa == null) {
 				sa = new StripeAuth(userObj, state);
 			}

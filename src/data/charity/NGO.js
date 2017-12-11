@@ -50,7 +50,7 @@ NGO.getProject = (ngo) => {
 		if ( ! best) return current;
 		return best.year > current.year ? best : current;
 	}, null);
-	console.log("getProject", repProject, "from", projects);
+	// console.log("getProject", repProject, "from", projects);
 	return repProject;
 };
 

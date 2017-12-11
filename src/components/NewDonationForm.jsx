@@ -194,11 +194,16 @@ const DonationForm = ({item, charity, causeName}) => {
 
 
 const AmountSection = ({path}) => {
-	let credit = Transfer.getCredit();
-	let dflt = credit || MonetaryAmount.make({value:10});
+	let credit = Transfer.getCredit();	
+	const pathAmount = path.concat('amount');
+	let val = DataStore.getValue(pathAmount);
+	if ( ! val) {
+		val = credit || MonetaryAmount.make({value:10});
+		DataStore.setValue(pathAmount, val);
+	}
 	return (
 		<div className='section donation-amount'>
-			<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' dflt={dflt} />
+			<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' value={val} />
 			{credit? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
 };
@@ -284,8 +289,14 @@ const MessageSection = ({path, item}) => (
 
 const PaymentSection = ({path, item}) => {
 	const donation = DataStore.getValue(path);
+	if ( ! donation) {
+		return null;
+	}
 	const {amount} = donation;
-
+	if ( ! amount) {
+		return null;
+	}
+	MonetaryAmount.assIsa(amount);
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
 	 * @param {id:String, type:String, token:String} token 
