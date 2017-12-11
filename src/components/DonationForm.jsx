@@ -51,6 +51,8 @@ class DonationForm extends Component {
 	// Bump the donation up or down by a "reasonable" amount for current value
 	// ...and round it to a clean multiple of the increment used
 	incrementDonation(amount, sign, charity) {
+		MonetaryAmount.assIsa(amount);
+		NGO.assIsa(charity);
 		const incrementKey = Object.keys(donationIncrements)
 			.sort((a, b) => a - b)
 			.find((key) => sign > 0 ? key > amount : key >= amount); // so that £20+ goes to £25, £20- goes to £19
@@ -100,8 +102,8 @@ class DonationForm extends Component {
 			impact = { name: NGO.displayName(charity) };
 		}
 
-		const donationDown = () => this.incrementDonation(formData.amount.value, -1, charity);
-		const donationUp = () => this.incrementDonation(formData.amount.value, 1, charity);
+		const donationDown = () => this.incrementDonation(amount.value, -1, charity);
+		const donationUp = () => this.incrementDonation(amount.value, 1, charity);
 
 		return (
 			<div className='donation-impact'>
@@ -149,72 +151,5 @@ class DonationForm extends Component {
 		);
 	}
 } // ./DonationForm
-
-// /**
-//  */
-// const DonationAmounts = ({options, charity, project, outputs, amount, handleChange}) => {
-// 	// FIXME switch to using outputs
-// 	let damounts = _.map(options, price => (
-// 		<span key={'donate_' + price}>
-// 			<DonationAmount
-// 				price={price}
-// 				selected={price === amount}
-// 				handleChange={handleChange}
-// 				/>
-// 			&nbsp;
-// 		</span>
-// 	));
-
-// 	let fgcol = (options.indexOf(amount) === -1) ? 'white' : null;
-// 	let bgcol = (options.indexOf(amount) === -1) ? '#337ab7' : null;
-
-// 	return (
-// 		<div className='full-width'>
-// 			<form>
-// 				<div className="form-group col-md-1 col-xs-2">
-// 					{damounts}
-// 				</div>
-// 				<div className="form-group col-md-8 col-xs-10">
-// 					<InputGroup>
-// 						<InputGroup.Addon style={{ color: fgcol, backgroundColor: bgcol }}>£</InputGroup.Addon>
-// 						<FormControl
-// 							type="number"
-// 							min="1"
-// 							max="100000"
-// 							step="1"
-// 							placeholder="Enter donation amount"
-// 							onChange={({ target }) => { handleChange('amount', target.value); } }
-// 							value={amount}
-// 							/>
-// 					</InputGroup>
-// 				</div>
-// 				<div className="form-group col-md-2">
-// 					<Misc.ImpactDesc charity={charity} project={project} outputs={outputs} amount={amount} />
-// 				</div>
-// 			</form>
-// 		</div>
-// 	);
-// };
-
-// const DonationAmount = function ({selected, price, handleChange}) {
-// 	return (
-// 		<div className=''>
-// 			<Button
-// 				bsStyle={selected ? 'primary' : null}
-// 				bsSize="sm"
-// 				className='amount-btn'
-// 				onClick={() => handleChange('amount', price)}
-// 				>
-// 				£ {price}
-// 			</Button>
-// 		</div>
-// 	);
-// };
-
-
-// const DonationList = ({donations}) => {
-// 	let ddivs = _.map(donations, d => <li key={d.id || JSON.stringify(d)}>{d}</li>);
-// 	return <ul>{ddivs}</ul>;
-// };
 
 export default DonationForm;
