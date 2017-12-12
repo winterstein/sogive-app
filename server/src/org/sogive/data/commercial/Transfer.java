@@ -8,7 +8,7 @@ import java.util.Map;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.user.Donation;
 import org.sogive.server.payment.StripeAuth;
@@ -74,8 +74,8 @@ public class Transfer extends AThing {
 	/**
 	 * The total amount the `to` will receive.
 	 */
-	public MonetaryAmount getTotal() {
-		Mutable.Ref<MonetaryAmount> ttl = new Mutable.Ref<>(amount);
+	public Money getTotal() {
+		Mutable.Ref<Money> ttl = new Mutable.Ref<>(amount);
 //		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c));
 		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c));
 		total = ttl.value;
@@ -107,24 +107,24 @@ public class Transfer extends AThing {
 	/**
 	 * Our fees + processing fees.
 	 */
-	List<MonetaryAmount> fees;
+	List<Money> fees;
 	
 	/**
 	 * The user's contribution
 	 */
-	MonetaryAmount amount;
+	Money amount;
 		
 	/**
 	 * The total amount the charity will receive.
 	 */
-	MonetaryAmount total;	
+	Money total;	
 
 	/**
 	 * When this donation was made
 	 */
 	String date = new Time().toISOString();
 
-	public Transfer(XId from, XId to, MonetaryAmount amount) {
+	public Transfer(XId from, XId to, Money amount) {
 		Utils.check4null(from, to);
 		this.from = from;
 		this.to = to;
@@ -156,7 +156,7 @@ public class Transfer extends AThing {
 	String a;
 
 
-	public static MonetaryAmount getTotalCredit(XId user) {
+	public static Money getTotalCredit(XId user) {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SearchRequestBuilder s = new SearchRequestBuilder(es);	
 		String idx = Dep.get(IESRouter.class).getPath(Transfer.class, null).index();
@@ -174,7 +174,7 @@ public class Transfer extends AThing {
 		SearchResponse sr = s.get();
 		List<Transfer> hits = sr.getSearchResults(Transfer.class);
 		
-		MonetaryAmount sum = new MonetaryAmount(0);
+		Money sum = new Money(0);
 		for (Transfer t : hits) {
 			if (t.getTo().equals(user)) {
 				sum = sum.plus(t.getAmount());

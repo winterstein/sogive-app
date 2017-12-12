@@ -2,7 +2,7 @@ package org.sogive.data.commercial;
 
 import java.util.List;
 
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
@@ -36,9 +36,9 @@ public class FundRaiser extends AThing {
 	 */
 	PersonLite owner;
 	String description;
-	MonetaryAmount target = MonetaryAmount.pound(100);
-	MonetaryAmount userTarget = MonetaryAmount.pound(100);
-	MonetaryAmount donated = MonetaryAmount.pound(0);
+	Money target = Money.pound(100);
+	Money userTarget = Money.pound(100);
+	Money donated = Money.pound(0);
 	Integer donationCount;
 	String charityId;
 	/**

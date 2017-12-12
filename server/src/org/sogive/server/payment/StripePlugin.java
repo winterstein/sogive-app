@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.jetty.util.ajax.JSON;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
@@ -81,7 +81,7 @@ public class StripePlugin {
 		}
 	}
 
-	public static Charge collect(MonetaryAmount amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+	public static Charge collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
 		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);

@@ -3,7 +3,7 @@ package org.sogive.data.commercial;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.server.SoGiveServer;
 
 import com.winterwell.utils.Utils;
@@ -20,13 +20,13 @@ public class TransferTest {
 		XId company = new XId("company"+Utils.getRandomString(6), "test", false);
 		XId charity = new XId("charity"+Utils.getRandomString(6), "test", false);
 		
-		Transfer t = new Transfer(company, user, new MonetaryAmount(500));
+		Transfer t = new Transfer(company, user, new Money(500));
 		t.publish();
 		
 		
-		MonetaryAmount userCred = Transfer.getTotalCredit(user);
-		MonetaryAmount coCred = Transfer.getTotalCredit(company);
-		MonetaryAmount charityCred = Transfer.getTotalCredit(charity);
+		Money userCred = Transfer.getTotalCredit(user);
+		Money coCred = Transfer.getTotalCredit(company);
+		Money charityCred = Transfer.getTotalCredit(charity);
 		
 		assert charityCred.getValue() == 0 : charityCred;
 		assert userCred.getValue() == 5 : userCred;

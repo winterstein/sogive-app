@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.zip.ZipFile;
 
 import org.sogive.data.charity.Citation;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
 import org.sogive.data.charity.Project;

@@ -16,17 +16,17 @@ import com.winterwell.utils.time.Time;
  * @author daniel
  *
  */
-public class MonetaryAmount extends Thing<MonetaryAmount> {
+public class Money extends Thing<Money> {
 	private static final long serialVersionUID = 1L;
 
-	public MonetaryAmount() {	
+	public Money() {	
 	}
 	
 	/**
 	 * Assume £s
 	 * @param value100 The pence / cents. This is to avoid rounding errors.
 	 */
-	public MonetaryAmount(long value100) {
+	public Money(long value100) {
 		// ISO 4217 £
 		this(value100, "GBP");
 	}
@@ -36,19 +36,19 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 	 * 
 	 * @param value100 The pence / cents. This is to avoid rounding errors.
 	 */
-	public MonetaryAmount(long value100, String currency) {
+	public Money(long value100, String currency) {
 		put("currency", currency);
 		put("value", value100/100.0);
 		put("value100", value100);
 		assert ! Utils.isBlank(currency);
 	}
 
-	public MonetaryAmount plus(MonetaryAmount x) {
-		return new MonetaryAmount(getValue100() + x.getValue100());
+	public Money plus(Money x) {
+		return new Money(getValue100() + x.getValue100());
 	}
 
-	public MonetaryAmount minus(MonetaryAmount x) {
-		return new MonetaryAmount(getValue100() - x.getValue100());
+	public Money minus(Money x) {
+		return new Money(getValue100() - x.getValue100());
 	}
 
 
@@ -78,8 +78,8 @@ public class MonetaryAmount extends Thing<MonetaryAmount> {
 		}
 	}
 
-	public static MonetaryAmount pound(double number) {
-		return new MonetaryAmount((long) (number*100));
+	public static Money pound(double number) {
+		return new Money((long) (number*100));
 	}
 
 	

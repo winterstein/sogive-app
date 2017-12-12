@@ -1,6 +1,6 @@
 package org.sogive.data.commercial;
 
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 
 import com.winterwell.data.AThing;
 import com.winterwell.web.data.XId;
@@ -24,7 +24,7 @@ public class Ticket extends AThing {
 	/** Adult / Child */
 	String kind;
 
-	MonetaryAmount price;
+	Money price;
 	
 	/**
 	 * How many can we sell?

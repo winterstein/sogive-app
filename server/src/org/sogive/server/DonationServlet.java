@@ -11,7 +11,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.FundRaiser;
@@ -139,11 +139,11 @@ public class DonationServlet extends CrudServlet {
 	}
 
 	private void doCollectMoney(Donation donation, WebRequest state, XId user) {
-		MonetaryAmount total = donation.getTotal();
+		Money total = donation.getTotal();
 		// paid on credit?
-		MonetaryAmount credit = Transfer.getTotalCredit(user);
+		Money credit = Transfer.getTotalCredit(user);
 		if (credit!=null && credit.getValue() > 0) {
-			MonetaryAmount residual = doCollectMoney2(donation, state, user, credit);
+			Money residual = doCollectMoney2(donation, state, user, credit);
 			if (residual==null || residual.getValue()==0) {
 				return;
 			}
@@ -181,13 +181,13 @@ public class DonationServlet extends CrudServlet {
 
 	}
 
-	private MonetaryAmount doCollectMoney2(Donation donation, WebRequest state, XId user, MonetaryAmount credit) 
+	private Money doCollectMoney2(Donation donation, WebRequest state, XId user, Money credit) 
 	{		
 		// TODO check credit more robustly
 		XId to = NGO.xidFromId(donation.getTo());
-		MonetaryAmount amount = donation.getAmount();
-		MonetaryAmount paidOnCredit = amount;
-		MonetaryAmount residual = MonetaryAmount.pound(0);
+		Money amount = donation.getAmount();
+		Money paidOnCredit = amount;
+		Money residual = Money.pound(0);
 		if (amount.getValue() > credit.getValue()) {
 			residual = amount.minus(credit);
 			paidOnCredit = credit;

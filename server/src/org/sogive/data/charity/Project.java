@@ -45,9 +45,9 @@ public class Project extends Thing<Project> {
 
 	public void merge(Project project) {
 		// union inputs & outputs
-		List<MonetaryAmount> inputs = getInputs();
-		List<MonetaryAmount> newInputs = project.getInputs();
-		for (MonetaryAmount n : newInputs) {
+		List<Money> inputs = getInputs();
+		List<Money> newInputs = project.getInputs();
+		for (Money n : newInputs) {
 			if ( ! inputs.contains(n)) { // TODO match on name & year, to allow amounts to be corrected
 				inputs.add(n);
 			}
@@ -65,8 +65,8 @@ public class Project extends Thing<Project> {
 		project.put("outputs", outputs);
 	}
 
-	public List<MonetaryAmount> getInputs() {
-		List outputs = getThings(list(get("inputs")), MonetaryAmount.class);
+	public List<Money> getInputs() {
+		List outputs = getThings(list(get("inputs")), Money.class);
 		if (outputs==null) {
 			outputs = new ArrayList();
 			put("inputs", outputs);
@@ -89,7 +89,7 @@ public class Project extends Thing<Project> {
 	}
 
 	
-	public void addInput(String costName, MonetaryAmount ac) {
+	public void addInput(String costName, Money ac) {
 		ac.put("name", costName);
 		addOrMerge("inputs", ac);
 	}
@@ -111,15 +111,15 @@ public class Project extends Thing<Project> {
 	 */
 	public Object calcCostPerOutput(Output output) {
 //		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
-		List<MonetaryAmount> inputs = getInputs();
+		List<Money> inputs = getInputs();
 		// only the latest year - but a Project is single year
 		// TODO what if the years don't match?
-		MonetaryAmount totalCosts = Containers.first(inputs, ma -> "annualCosts".equals(ma.getName()));
+		Money totalCosts = Containers.first(inputs, ma -> "annualCosts".equals(ma.getName()));
 //		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
-		MonetaryAmount tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
-		MonetaryAmount incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
+		Money tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
+		Money incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
 		
-		MonetaryAmount cost = totalCosts;
+		Money cost = totalCosts;
 		if (cost==null) {
 			// TODO unquantified impacts without
 			// can't calc anything

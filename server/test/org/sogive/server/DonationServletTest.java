@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
@@ -67,7 +67,7 @@ public class DonationServletTest {
 		String id = TrackingPixelServlet.getCreateCookieTrackerId(state);
 		XId from = new XId(id);
 		String to = SoGiveTestUtils.getCharity().getId();
-		MonetaryAmount userContribution = MonetaryAmount.pound(3);
+		Money userContribution = Money.pound(3);
 		
 		Donation don = new Donation(from, to, userContribution);
 		don.setA("test");
@@ -114,7 +114,7 @@ public class DonationServletTest {
 		XId from = new XId(id);
 		String to = SoGiveTestUtils.getCharity().getId();		
 		// e.g. EuroCake funded a 5p donation in their marketing
-		MonetaryAmount userContribution = MonetaryAmount.pound(0.05);		
+		Money userContribution = Money.pound(0.05);		
 		Donation don = new Donation(from, to, userContribution);
 		don.setA("testloop");
 		don.setVia(new XId("eurocake.com@ads"));
@@ -196,7 +196,7 @@ public class DonationServletTest {
 		
 		XId from = user.xid;
 		String to = SoGiveTestUtils.getCharity().getId();
-		MonetaryAmount userContribution = MonetaryAmount.pound(2);
+		Money userContribution = Money.pound(2);
 		
 		Donation don = new Donation(from, to, userContribution);
 		don.setA("test");

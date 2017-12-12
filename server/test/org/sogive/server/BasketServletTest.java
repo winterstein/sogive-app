@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
@@ -92,7 +92,7 @@ public class BasketServletTest {
 		ticket.id = event.id+".foo";
 		ticket.setEventId(event.getId());
 		ticket.name = "Adult Ticket";
-		ticket.setPrice(MonetaryAmount.pound(2.5));
+		ticket.setPrice(Money.pound(2.5));
 		ticket.setAttendeeName("Spoon");
 		ticket.setAttendeeEmail("spoonmcguffin@gmail.com");
 		basket.setItems(Arrays.asList(ticket));

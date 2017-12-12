@@ -101,9 +101,9 @@ import static com.winterwell.utils.containers.Containers.get;
  */
 public class ImportCharityDataFromCSV {
 
-	static MonetaryAmount cost(Object value) {
+	static Money cost(Object value) {
 		if (value==null) return null;
-		return MonetaryAmount.pound(MathUtils.getNumber(value));
+		return Money.pound(MathUtils.getNumber(value));
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -319,7 +319,7 @@ public class ImportCharityDataFromCSV {
 			// inputs
 			List inputs = new ArrayList();
 			for(String cost : new String[]{"annual costs", "fundraising costs", "trading costs", "income from beneficiaries"}) {
-				MonetaryAmount ac = cost(get(row, col(cost)));
+				Money ac = cost(get(row, col(cost)));
 				ac.setPeriod(start, end);
 				String costName = StrUtils.toCamelCase(cost);
 				ac.put("name", costName);
@@ -380,7 +380,7 @@ public class ImportCharityDataFromCSV {
 						break;
 					}
 					Output outputi = outputs.get(i);
-					MonetaryAmount costPerOut = MonetaryAmount.pound(costPerBen);
+					Money costPerOut = Money.pound(costPerBen);
 					outputi.setCostPerOutput(costPerOut);
 				}				
 			}

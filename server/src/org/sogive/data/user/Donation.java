@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.server.payment.StripeAuth;
 
@@ -54,8 +54,8 @@ public class Donation extends AThing {
 	/**
 	 * The total amount the charity will receive.
 	 */
-	public MonetaryAmount getTotal() {
-		Mutable.Ref<MonetaryAmount> ttl = new Mutable.Ref<>(amount);
+	public Money getTotal() {
+		Mutable.Ref<Money> ttl = new Mutable.Ref<>(amount);
 		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c));
 		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c));
 		total = ttl.value;
@@ -119,22 +119,22 @@ public class Donation extends AThing {
 	/**
 	 * Our fees + processing fees.
 	 */
-	List<MonetaryAmount> fees;
+	List<Money> fees;
 	
 	/**
 	 * The user's contribution
 	 */
-	MonetaryAmount amount;
+	Money amount;
 	
 	/**
 	 * Extra money! gift-aid boost + matched funding.
 	 */
-	List<MonetaryAmount> contributions;
+	List<Money> contributions;
 	
 	/**
 	 * The total amount the charity will receive.
 	 */
-	MonetaryAmount total;	
+	Money total;	
 
 	/**
 	 * When this donation was made
@@ -144,7 +144,7 @@ public class Donation extends AThing {
 	private List<Output> impacts;
 
 
-	public Donation(XId from, String to, MonetaryAmount userContribution) {
+	public Donation(XId from, String to, Money userContribution) {
 		Utils.check4null(from, to);
 		this.from = from;
 		this.to = to;

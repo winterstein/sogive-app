@@ -3,7 +3,7 @@ package org.sogive.data.commercial;
 import java.util.List;
 import java.util.Map;
 
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.server.payment.StripeAuth;
 
@@ -63,15 +63,15 @@ public class Basket extends AThing {
 	/**
 	 * Optional gratuity to cover SoGive's operating costs
 	 */
-	MonetaryAmount tip;
+	Money tip;
 	/**
 	 * Remember whether the user wanted to add a tip
 	 */
 	boolean hasTip;
 
-	public MonetaryAmount getTotal() {
-		if (items==null) return MonetaryAmount.pound(0);
-		MonetaryAmount ttl = MonetaryAmount.pound(0.0);
+	public Money getTotal() {
+		if (items==null) return Money.pound(0);
+		Money ttl = Money.pound(0.0);
 		for (Ticket ticket : items) {
 			if (ticket.getPrice()==null) continue;
 			ttl = ttl.plus(ticket.getPrice());

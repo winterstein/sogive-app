@@ -1,6 +1,6 @@
 package org.sogive.server;
 
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 
@@ -32,8 +32,8 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 		ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 		FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
 		
-		MonetaryAmount donated = fundraiser.getDonated();
-		if (donated == null) donated = MonetaryAmount.pound(0);
+		Money donated = fundraiser.getDonated();
+		if (donated == null) donated = Money.pound(0);
 		fundraiser.setDonated(donated.plus(donation.getAmount()));
 		
 		Integer donationCount = fundraiser.getDonationCount();

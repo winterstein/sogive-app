@@ -10,7 +10,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
-import org.sogive.data.charity.MonetaryAmount;
+import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Transfer;
 
 import com.winterwell.data.JThing;
@@ -98,7 +98,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 		for (String[] row : r) {		
 			if (row[0].equalsIgnoreCase("email")) continue;
 			XId to = YouAgainClient.xidFromEmail(row[0]);
-			MonetaryAmount amount = MonetaryAmount.pound(Double.valueOf(row[1]));
+			Money amount = Money.pound(Double.valueOf(row[1]));
 			// how shall we store credits
 			// ??separate objects?? ??as a field on the user??
 			Transfer t = new Transfer(from, to, amount);
