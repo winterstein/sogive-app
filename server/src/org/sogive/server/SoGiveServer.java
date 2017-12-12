@@ -30,7 +30,6 @@ import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.data.XId;
 import com.winterwell.youagain.client.YouAgainClient;
-import com.goodloop.data.Money;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winterwell.data.AThing;
 import com.winterwell.data.AThingAdapter;

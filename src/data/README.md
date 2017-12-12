@@ -2,7 +2,7 @@
 Data model classes -- are really sets of utility functions.
 They are all singletons!
 The state is always held in vanilla json objects.
-The data model class provides a class-like codeing pattern.
+The data model class provides a class-like coding pattern.
 
 E.g.
 
