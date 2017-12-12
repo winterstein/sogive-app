@@ -23,7 +23,7 @@ import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 
 import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
@@ -51,7 +51,7 @@ class DonationForm extends Component {
 	// Bump the donation up or down by a "reasonable" amount for current value
 	// ...and round it to a clean multiple of the increment used
 	incrementDonation(amount, sign, charity) {
-		MonetaryAmount.assIsa(amount);
+		Money.assIsa(amount);
 		NGO.assIsa(charity);
 		const incrementKey = Object.keys(donationIncrements)
 			.sort((a, b) => a - b)
@@ -59,7 +59,7 @@ class DonationForm extends Component {
 		const increment = donationIncrements[incrementKey];
 		const rawValue = amount + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
-		const newAmount = MonetaryAmount.make({ value, currency: 'gbp' });
+		const newAmount = Money.make({ value, currency: 'gbp' });
 		DataStore.setValue(['widget', 'DonationForm', NGO.id(charity), 'amount'], newAmount);
 	}
 
@@ -85,7 +85,7 @@ class DonationForm extends Component {
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
 		if ( ! amount) {
-			amount = MonetaryAmount.make({value:10});
+			amount = Money.make({value:10});
 			DataStore.setValue(amountPath, amount, false);
 		}
 		const user = Login.getUser();
@@ -120,7 +120,7 @@ class DonationForm extends Component {
 						</div>
 						<div className='donation-input'>
 							<div className='amount-input'>
-								<Misc.PropControl type='MonetaryAmount' prop='amount' 
+								<Misc.PropControl type='Money' prop='amount' 
 									path={['widget', 'DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>

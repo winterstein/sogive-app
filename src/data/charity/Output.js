@@ -7,8 +7,8 @@ import {isa, defineType} from '../DataClass';
 {
 	name {String}
 	number: {Number} Number of units output, e.g. the number of malaria nets
-	cost: {MonetaryAmount} total cost, ie cost = costPerOutput * number
-	costPerOutput {MonetaryAmount}
+	cost: {Money} total cost, ie cost = costPerOutput * number
+	costPerOutput {Money}
 	amount: {String} non-numerical descriptions of how much was output
 	confidence {String}
 	description: {String}
@@ -37,7 +37,7 @@ Output.make = (base = {}) => {
 
 /**
  * A scaled version 
- * @param donationAmount {MonetaryAmount}
+ * @param donationAmount {Money}
  */
 Output.scaleByDonation = (output, donationAmount) => {
 	// deep copy

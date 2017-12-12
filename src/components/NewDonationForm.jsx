@@ -14,7 +14,7 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Transfer from '../data/Transfer';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';
@@ -122,7 +122,7 @@ const DonationForm = ({item, charity, causeName}) => {
 			fundRaiser: FundRaiser.isa(item)? getId(item) : null,
 			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
 			from: Login.isLoggedIn()? Login.getId() : null,
-			amount: MonetaryAmount.make({ value: 10, currency: 'gbp' }),
+			amount: Money.make({ value: 10, currency: 'gbp' }),
 			coverCosts: true,
 		});
 		const path = ['data', type, donationDraft.id];
@@ -198,12 +198,12 @@ const AmountSection = ({path}) => {
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
 	if ( ! val) {
-		val = credit || MonetaryAmount.make({value:10});
+		val = credit || Money.make({value:10});
 		DataStore.setValue(pathAmount, val);
 	}
 	return (
 		<div className='section donation-amount'>
-			<Misc.PropControl prop='amount' path={path} type='MonetaryAmount' label='Donation' value={val} />
+			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{credit? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
 };
@@ -296,7 +296,7 @@ const PaymentSection = ({path, item}) => {
 	if ( ! amount) {
 		return null;
 	}
-	MonetaryAmount.assIsa(amount);
+	Money.assIsa(amount);
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
 	 * @param {id:String, type:String, token:String} token 

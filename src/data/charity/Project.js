@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {isa, defineType} from '../DataClass';
-import MonetaryAmount from './MonetaryAmount';
+import Money from './Money';
 
 const Project = defineType('Project');
 const This = Project;
@@ -28,10 +28,10 @@ Project.outputs = project => {
 Project.make = function(base) {
 	let proj = {
 		inputs: [
-			{"@type":"MonetaryAmount","name":"annualCosts","currency":"GBP"},
-			{"@type":"MonetaryAmount","name":"fundraisingCosts","currency":"GBP"},
-			{"@type":"MonetaryAmount","name":"tradingCosts","currency":"GBP"},
-			{"@type":"MonetaryAmount","name":"incomeFromBeneficiaries","currency":"GBP"}
+			{"@type":"Money","name":"annualCosts","currency":"GBP"},
+			{"@type":"Money","name":"fundraisingCosts","currency":"GBP"},
+			{"@type":"Money","name":"tradingCosts","currency":"GBP"},
+			{"@type":"Money","name":"incomeFromBeneficiaries","currency":"GBP"}
 		],
 		outputs: []
 	};
@@ -56,7 +56,7 @@ Project.getTotalCost = (project) => {
 		} 
 		return total - (input.value || 0);
 	}, 0);
-	return MonetaryAmount.make({currency, value});
+	return Money.make({currency, value});
 };
 
 const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];

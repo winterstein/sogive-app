@@ -7,7 +7,7 @@ import { StripeProvider, Elements, injectStripe,
 	PaymentRequestButtonElement } from 'react-stripe-elements';
 
 import C from '../C';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Transfer from '../data/Transfer';
 import {assMatch} from 'sjtest';
 import Misc from './Misc';
@@ -27,7 +27,7 @@ const CREDIT_TOKEN = {
 };
 
 /**
- * amount: {?MonetaryAmount} if null, return null
+ * amount: {?Money} if null, return null
  * recipient: {!String}
  * onToken: {!Function} inputs: {id:String, type:String, token:String, email:String}
  * 	Called once the user has provided payment details, and we've got a token back from Stripe. 
@@ -39,7 +39,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
-	MonetaryAmount.assIsa(amount);
+	Money.assIsa(amount);
 	assMatch(onToken, Function);
 	assMatch(recipient, String);
 
@@ -59,8 +59,8 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 
 	// pay on credit??
 	let credit = Transfer.getCredit();
-	if (credit && MonetaryAmount.value(credit) > 0) {
-		if (MonetaryAmount.value(credit) > MonetaryAmount.value(amount)) {
+	if (credit && Money.value(credit) > 0) {
+		if (Money.value(credit) > Money.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
 					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
@@ -100,7 +100,7 @@ class StripeThingsClass extends Component {
 
 		let residual = amount;
 		if (credit) {
-			residual = MonetaryAmount.sub(amount, credit);		
+			residual = Money.sub(amount, credit);		
 		}
 
 		/* We might be able to forgo the rigmarole of collecting
@@ -171,7 +171,7 @@ class StripeThingsClass extends Component {
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
-				{credit && MonetaryAmount.value(credit) > 0? 
+				{credit && Money.value(credit) > 0? 
 					<FormGroup><Col md={12}>
 						You have <Misc.Money amount={credit} /> in credit which will be used towards this payment.
 					</Col></FormGroup>

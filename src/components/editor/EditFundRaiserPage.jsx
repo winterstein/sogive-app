@@ -62,11 +62,11 @@ const FundRaiserEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
 			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
-			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='MonetaryAmount' 
+			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
 				placeholder='Leave blank for an automatic target (recommended)'
 			/>
 
-			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='MonetaryAmount' />
+			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
 
 			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
 			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />

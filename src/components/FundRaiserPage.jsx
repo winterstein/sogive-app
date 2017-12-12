@@ -10,7 +10,7 @@ import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
 import C from '../C';
@@ -222,7 +222,7 @@ const DonationsSoFar = ({item}) => {
 
 	if (donationCount > 0) {
 		const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
-		const diff = MonetaryAmount.sub(target, item.donated);
+		const diff = Money.sub(target, item.donated);
 
 		if (diff.value <= 0) {
 			return (

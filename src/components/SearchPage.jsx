@@ -11,7 +11,7 @@ import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Misc from './Misc';
 import {impactCalc} from './ImpactWidgetry';
 import C from '../C';

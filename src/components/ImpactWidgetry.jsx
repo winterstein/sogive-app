@@ -6,7 +6,7 @@ import Enum from 'easy-enums';
 import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
@@ -36,7 +36,7 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
  * See Output.js for relevant doc notes
  * {
  * 	number: number of units, e.g. 10 for "10 malaria nets"
- * 	cost: {?MonetaryAmount}
+ * 	cost: {?Money}
  * }
   @returns {?Output}
  */
@@ -46,7 +46,7 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	Project.assIsa(project);
 	assMatch(amount, "?String");
 	assMatch(targetCount, "?Number");
-	assMatch(cost, "?MonetaryAmount");
+	assMatch(cost, "?Money");
 	if ( ! output) {
 		return null;
 	}
@@ -62,11 +62,11 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = MonetaryAmount.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
+		cost = Money.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
 		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
 	}
 
-	let impactNum = MonetaryAmount.divide(cost, cpbraw);
+	let impactNum = Money.divide(cost, cpbraw);
 
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(impactNum, unitName);

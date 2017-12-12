@@ -5,7 +5,7 @@ import {isa, defineType} from '../DataClass';
 import {assert, assMatch} from 'sjtest';
 import Project from './Project';
 import Output from './Output';
-import MonetaryAmount from './MonetaryAmount';
+import Money from './Money';
 import HashMap from 'hashmap';
 import Citation from './Citation';
 
@@ -97,11 +97,11 @@ NGO.getProjects2 = (ngo) => {
 NGO.noPublicDonations = (ngo) => NGO.isa(ngo) && ngo.noPublicDonations;
 
 /**
- * @return {MonetaryAmount}
+ * @return {Money}
  */
 NGO.costPerBeneficiary = ({charity, project, output}) => {
 	// Is an override present? Forget calculation and just return that.
-	if (output && MonetaryAmount.isa(output.costPerBeneficiary)) {
+	if (output && Money.isa(output.costPerBeneficiary)) {
 		return output.costPerBeneficiary;
 	}
 	return NGO.costPerBeneficiaryCalc({charity, project, output});
@@ -118,9 +118,9 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 		console.warn("No project cost?!", project);
 		return null;
 	}
-	MonetaryAmount.assIsa(projectCost);
+	Money.assIsa(projectCost);
 	assMatch(outputCount, Number);
-	let costPerOutput = MonetaryAmount.make(projectCost);
+	let costPerOutput = Money.make(projectCost);
 	costPerOutput.value = projectCost.value / outputCount;
 	costPerOutput.value100 = Math.round(100 * costPerOutput.value);
 	return costPerOutput;

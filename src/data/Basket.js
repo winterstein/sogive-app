@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce, defineType} from './DataClass';
 import {uid, blockProp} from 'wwutils';
-import MonetaryAmount from './charity/MonetaryAmount';
+import Money from './charity/Money';
 import C from '../C';
 
 const Basket = defineType(C.TYPES.Basket);
@@ -34,31 +34,31 @@ Basket.getItems = (basket) => {
 };
 
 /** Add up the prices of all the items in the basket 
- * @returns {MonetaryAmount} never null
+ * @returns {Money} never null
 */
 Basket.getTotal = (basket) => {
 	// Using this clumsy forEach instead of a reduce because this makes it clearer
-	// that the total's MonetaryAmount object (thus currency) is based on the first item
+	// that the total's Money object (thus currency) is based on the first item
 	let total = null;
 	Basket.getItems(basket).forEach((item) => {
-		MonetaryAmount.assIsa(item.price);
+		Money.assIsa(item.price);
 		if (total === null) {
 			total = item.price;
 		} else {
-			total = MonetaryAmount.add(total, item.price);
+			total = Money.add(total, item.price);
 		}
 	});
-	if (total && basket.hasTip && MonetaryAmount.isa(basket.tip)) {
-		total = MonetaryAmount.add(total, basket.tip);
+	if (total && basket.hasTip && Money.isa(basket.tip)) {
+		total = Money.add(total, basket.tip);
 	}
-	return total || MonetaryAmount.make();
+	return total || Money.make();
 };
 
 Basket.make = (base = {}) => {
 	let ma = {
 		items: [],
 		hasTip: true,
-		tip: MonetaryAmount.make({value: 1}), // TODO tip/fee shouldn't really be hard-coded here
+		tip: Money.make({value: 1}), // TODO tip/fee shouldn't really be hard-coded here
 		...base,
 		'@type': Basket.type,
 	};

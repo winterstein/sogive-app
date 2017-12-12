@@ -3,9 +3,9 @@ import {isa} from '../DataClass';
 import C from '../../C';
 
 /** impact utils */
-const MonetaryAmount = {};
-const This = MonetaryAmount;
-export default MonetaryAmount;
+const Money = {};
+const This = Money;
+export default Money;
 
 /* 
 
@@ -23,10 +23,10 @@ const isNumeric = value => {
 
 /**
  * 
- * @param {?MonetaryAmount} ma 
+ * @param {?Money} ma 
  * @returns {Number}
  */
-MonetaryAmount.value = ma => {
+Money.value = ma => {
 	if ( ! ma) return 0;
 	if ( ! ma.value) {
 		// Patch bad server data?
@@ -37,69 +37,69 @@ MonetaryAmount.value = ma => {
 };
 
 // duck type: needs a value
-MonetaryAmount.isa = (obj) => {
+Money.isa = (obj) => {
 	if ( ! obj) return false;
-	if (isa(obj, C.TYPES.MonetaryAmount)) return true;
+	if (isa(obj, C.TYPES.Money)) return true;
 	// allow blank values
 	if (isNumeric(obj.value) || obj.value==='') return true;
 };
 
-MonetaryAmount.assIsa = (obj) => assert(MonetaryAmount.isa(obj), "MonetaryAmount.js - "+JSON.stringify(obj));
+Money.assIsa = (obj) => assert(Money.isa(obj), "Money.js - "+JSON.stringify(obj));
 
-MonetaryAmount.make = (base = {}) => {
+Money.make = (base = {}) => {
 	const item = {
 		value: 0, // default
 		currency: 'GBP', // default
 		...base, // Base comes after defaults so it overrides
-		'@type': C.TYPES.MonetaryAmount, // @type always last so it overrides any erroneous base.type
+		'@type': C.TYPES.Money, // @type always last so it overrides any erroneous base.type
 	};
 
-	MonetaryAmount.assIsa(item);
+	Money.assIsa(item);
 	return item;
 };
 
-// Will fail if not called on 2 MonetaryAmounts of the same currency
-MonetaryAmount.add = (amount1, amount2) => {
-	MonetaryAmount.assIsa(amount1);
-	MonetaryAmount.assIsa(amount2);
+// Will fail if not called on 2 Moneys of the same currency
+Money.add = (amount1, amount2) => {
+	Money.assIsa(amount1);
+	Money.assIsa(amount2);
 	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
 		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
-	return MonetaryAmount.make({
+	return Money.make({
 		...amount1,
 		value: amount1.value + amount2.value,
 	});
 };
 
-// Will fail if not called on 2 MonetaryAmounts of the same currency
-MonetaryAmount.sub = (amount1, amount2) => {
-	MonetaryAmount.assIsa(amount1);
-	MonetaryAmount.assIsa(amount2);
+// Will fail if not called on 2 Moneys of the same currency
+Money.sub = (amount1, amount2) => {
+	Money.assIsa(amount1);
+	Money.assIsa(amount2);
 	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
 		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
-	return MonetaryAmount.make({
+	return Money.make({
 		...amount1,
 		value: amount1.value - amount2.value,
 	});
 };
 
-/** Must be called on a MonetaryAmount and a scalar */
-MonetaryAmount.mul = (amount, multiplier) => {
-	MonetaryAmount.assIsa(amount);
-	assert(isNumeric(multiplier), "MonetaryAmount.js - mul() "+multiplier);
+/** Must be called on a Money and a scalar */
+Money.mul = (amount, multiplier) => {
+	Money.assIsa(amount);
+	assert(isNumeric(multiplier), "Money.js - mul() "+multiplier);
 	// TODO Assert that multiplier is numeric (kind of painful in JS)
-	return MonetaryAmount.make({
+	return Money.make({
 		...amount,
 		value: amount.value * multiplier,
 	});
 };
 
 /** 
- * Called on two MonetaryAmounts
+ * Called on two Moneys
  * @returns {Number}
  */
-MonetaryAmount.divide = (total, part) => {
-	MonetaryAmount.assIsa(total);
-	MonetaryAmount.assIsa(part);
-	assert(total.currency === part.currency, "MonetaryAmount divide "+total.currency+" != "+part.currency);
-	return MonetaryAmount.value(total) / MonetaryAmount.value(part);
+Money.divide = (total, part) => {
+	Money.assIsa(total);
+	Money.assIsa(part);
+	assert(total.currency === part.currency, "Money divide "+total.currency+" != "+part.currency);
+	return Money.value(total) / Money.value(part);
 };

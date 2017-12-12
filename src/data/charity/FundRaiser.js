@@ -1,6 +1,6 @@
 import {assert, assMatch} from 'sjtest';
 import {isa} from '../DataClass';
-import MonetaryAmount from './MonetaryAmount';
+import Money from './Money';
 import {blockProp} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
@@ -60,14 +60,14 @@ This.target = item => {
 
 	if (item.target && item.target.value) return item.target;
 
-	item.target = MonetaryAmount.make({value: nextTarget(This.donated(item).value)});
+	item.target = Money.make({value: nextTarget(This.donated(item).value)});
 	
 	// TODO more than the total donations
 	return item.target;
 };
 
 /**
- * @returns {MonetaryAmount} the total donated
+ * @returns {Money} the total donated
  */
 This.donated = item => {
 	This.assIsa(item);

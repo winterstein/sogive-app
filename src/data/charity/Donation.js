@@ -1,7 +1,7 @@
 import {assert} from 'sjtest';
 import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
-import MonetaryAmount from './MonetaryAmount';
+import Money from './Money';
 import DataStore from '../../plumbing/DataStore';
 
 /** impact utils */
@@ -34,7 +34,7 @@ Donation.getTotal = (don) => {
 /**
  * 
  * @param {Donation} don 
- * @returns {MonetaryAmount}
+ * @returns {Money}
  */
 Donation.amount = don => This.assIsa(don) && don.amount;
 
@@ -47,7 +47,7 @@ Donation.make = (base = {}) => {
 	let ma = {
 		'@type': C.TYPES.Donation,
 		/* The user's contribution (this is what the user pays; not what the charity recieves) */
-		amount: MonetaryAmount.make(),
+		amount: Money.make(),
 		id: nonce(),	
 		...base
 	};

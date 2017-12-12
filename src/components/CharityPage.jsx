@@ -12,7 +12,7 @@ import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Misc from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';

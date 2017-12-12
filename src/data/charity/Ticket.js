@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce} from '../DataClass';
 import {uid, blockProp} from 'wwutils';
-import MonetaryAmount from './MonetaryAmount';
+import Money from './Money';
 
 const Ticket = {};
 const This = Ticket;
@@ -32,7 +32,7 @@ Ticket.make = (base, eventId) => {
 	const obj = {
 		eventId: eventId,
 		id: eventId+'.'+nonce(),
-		price: MonetaryAmount.make(),
+		price: Money.make(),
 		...base
 	};
 	obj['@type'] = This.type;

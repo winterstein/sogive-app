@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce, defineType} from './DataClass';
 import {uid, blockProp} from 'wwutils';
-import MonetaryAmount from './charity/MonetaryAmount';
+import Money from './charity/Money';
 import C from '../C';
 import Login from 'you-again';
 import DataStore from '../plumbing/DataStore';
@@ -15,28 +15,28 @@ export default Transfer;
 
 
 /** Add up the prices of all the items in the basket 
- * @returns {MonetaryAmount} never null
+ * @returns {Money} never null
 */
 Transfer.getTotal = (list, to) => {
 	assMatch(to, String);
 	// Using this clumsy forEach instead of a reduce because this makes it clearer
-	// that the total's MonetaryAmount object (thus currency) is based on the first item
+	// that the total's Money object (thus currency) is based on the first item
 	let total = null;
 	list.forEach((item) => {
 		This.assIsa(item);
 		let amount = item.amount;
-		MonetaryAmount.assIsa(amount);
+		Money.assIsa(amount);
 		if (item.to !== to) { // TODO user with multiple IDs, eg email+Twitter
 			// Login.iam(to)
-			amount = MonetaryAmount.mul(amount, -1);
+			amount = Money.mul(amount, -1);
 		}
 		if (total === null) {
 			total = amount;
 		} else {
-			total = MonetaryAmount.add(total, amount);
+			total = Money.add(total, amount);
 		}		
 	});
-	return total || MonetaryAmount.make();
+	return total || Money.make();
 };
 
 /**

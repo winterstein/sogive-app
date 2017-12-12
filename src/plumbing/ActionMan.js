@@ -12,7 +12,7 @@ import {getId, getType} from '../data/DataClass';
 import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Project from '../data/charity/Project';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
@@ -90,7 +90,7 @@ const donate = ({charity, formPath, formData, stripeResponse}) => {
 		stripeTokenType: stripeResponse.type,
 		stripeEmail: stripeResponse.email,
 	};
-	MonetaryAmount.assIsa(donationParams);
+	Money.assIsa(donationParams);
 
 	// Add impact to submitted data
 	const project = NGO.getProject(charity);

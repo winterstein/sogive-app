@@ -16,7 +16,7 @@ import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO';
 import Ticket from '../data/charity/Ticket';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
@@ -235,7 +235,7 @@ const TicketInvoice = ({event, basket}) => {
 		let row = idToRow[item.id];
 		if (row) {
 			row.count += 1;
-			row.cost = MonetaryAmount.add(row.cost, item.price);
+			row.cost = Money.add(row.cost, item.price);
 		} else {
 			idToRow[item.id] = {
 				item,
@@ -254,11 +254,11 @@ const TicketInvoice = ({event, basket}) => {
 
 	// commented out 'cos (a) causes bugs with empty baskets, and (b) total should be total; anything else is confusing
 	// // HACK: Don't include the tip in calculations when you're not showing it!
-	// if (!showTip && basket.tip && MonetaryAmount.isa(basket.tip)) {
-	// 	total = MonetaryAmount.sub(total, basket.tip);
+	// if (!showTip && basket.tip && Money.isa(basket.tip)) {
+	// 	total = Money.sub(total, basket.tip);
 	// }
 	
-	const tipRow = (basket.hasTip && MonetaryAmount.isa(basket.tip)) ? (
+	const tipRow = (basket.hasTip && Money.isa(basket.tip)) ? (
 		<tr>
 			<td className='desc-col'>Processing fee</td>
 			<td className='amount-col'><Misc.Money amount={basket.tip} /></td>
@@ -476,7 +476,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 			<div className='padded-block'>
 				<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
 				{basket.hasTip ? (
-					<Misc.PropControl type='MonetaryAmount' path={bpath} item={basket} prop='tip' label='Tip amount' dflt={MonetaryAmount.make({value:1})} />
+					<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' dflt={Money.make({value:1})} />
 				) : ''}
 			</div>
 			<TicketInvoice basket={basket} />

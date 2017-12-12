@@ -16,7 +16,7 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
-import MonetaryAmount from '../data/charity/MonetaryAmount';
+import Money from '../data/charity/Money';
 import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId, nonce} from '../data/DataClass';
@@ -55,7 +55,7 @@ const CURRENCY = {
 /**
  * Money span, falsy displays as 0
  * 
- * @param amount {MonetaryAmount|Number}
+ * @param amount {Money|Number}
  */
 Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
 	if (_.isNumber(amount) || _.isString(amount)) {
@@ -223,9 +223,9 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 
 	// £s
 	// NB: This is a bit awkward code -- is there a way to factor it out nicely?? The raw vs parsed/object form annoyance feels like it could be a common case.
-	if (type === 'MonetaryAmount') {
+	if (type === 'Money') {
 		let acprops = {prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
-		return <PropControlMonetaryAmount {...acprops} />;
+		return <PropControlMoney {...acprops} />;
 	} // ./£
 	// text based
 	const onChange = e => {
@@ -396,24 +396,24 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 }; //./PropControl
 
-Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color MonetaryAmount checkbox"
+Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
 
-const PropControlMonetaryAmount = ({prop, value, path, proppath, 
+const PropControlMoney = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
 		// special case, as this is an object.
 	// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
 	// Convert null and numbers into MA objects
 	if ( ! value || _.isString(value) || _.isNumber(value)) {
-		value = MonetaryAmount.make({value});
+		value = Money.make({value});
 	}
 	// prefer raw, so users can type incomplete answers!
 	let v = value.raw || value.value;
 	if (v===undefined || v===null || _.isNaN(v)) { // allow 0, which is falsy
 		v = '';
 	}
-	//MonetaryAmount.assIsa(value); // type can be blank
+	//Money.assIsa(value); // type can be blank
 	// handle edits
 	const onMoneyChange = e => {
 		let newVal = parseFloat(e.target.value);

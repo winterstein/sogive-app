@@ -119,7 +119,7 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
 		<Misc.PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
 		<Misc.PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
-		<Misc.PropControl type='MonetaryAmount' item={ticketType} path={path} prop='price' label='Price' />
+		<Misc.PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
 		<Misc.PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
@@ -139,7 +139,7 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 		<small>{getId(extra)}</small>
 		<Misc.PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
 		<Misc.PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
-		<Misc.PropControl type='MonetaryAmount' item={extra} path={path} prop='price' label='Price' />
+		<Misc.PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
 		<Misc.PropControl type='text' item={extra} path={path} prop='description' label='Description' />
 		<Misc.Col2>
 			<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />

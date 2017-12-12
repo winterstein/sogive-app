@@ -14,7 +14,7 @@ import printer from '../../utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
-import MonetaryAmount from '../../data/charity/MonetaryAmount';
+import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
@@ -365,10 +365,10 @@ const ProjectInputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = ['draft',C.TYPES.NGO, cid, 'projects', pid];
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || MonetaryAmount.make({name: 'annualCosts'});	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || MonetaryAmount.make({name: 'projectCosts'});
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || MonetaryAmount.make({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || MonetaryAmount.make({name: "incomeFromBeneficiaries"});
+	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || Money.make({name: 'annualCosts'});	
+	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || Money.make({name: 'projectCosts'});
+	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || Money.make({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || Money.make({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
@@ -482,7 +482,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 		<td>{STD_INPUTS[input.name] || input.name}</td>
 		<td>
 			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<Misc.PropControl type='MonetaryAmount' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
+			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -511,7 +511,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td>
-			<Misc.PropControl prop='costPerBeneficiary' type='MonetaryAmount' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
+			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
@@ -574,7 +574,7 @@ const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) 
 	let path = ['draft',C.TYPES.NGO,cid,'projects', pid, io, ioi];
 	let item = input || output;
 	if (field==='this') { 
-		// HACK for MonetaryAmount inputs
+		// HACK for Money inputs
 		path = ['draft',C.TYPES.NGO,cid,'projects', pid, io];
 		field = ioi;
 		item = project[io];
