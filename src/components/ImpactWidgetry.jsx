@@ -50,7 +50,7 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	if ( ! output) {
 		return null;
 	}
-	Output.assIsa(output);	
+	// Output.assIsa(output);	can break old data :(
 	
 	// more people?
 	let cpbraw = NGO.costPerBeneficiary({charity:charity, project:project, output:output});
