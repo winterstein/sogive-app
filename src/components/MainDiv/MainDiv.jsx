@@ -71,14 +71,21 @@ class MainDiv extends Component {
 			}
 			this.setState({});
 		});
+
+		// enforce a page
+		let path = DataStore.getValue('location', 'path');
+		let page = (path && path[0]);
+		if ( ! page) {
+			modifyHash([DEFAULT_PAGE]);
+		}
 	}
 
 	render() {
 		let path = DataStore.getValue('location', 'path');		
 		let page = (path && path[0]);
 		if ( ! page) {
-			modifyHash([DEFAULT_PAGE]);
-			return null;
+			page = DEFAULT_PAGE;
+			console.warn("MainDiv.jsx - No page?! in render() - using default "+DEFAULT_PAGE);
 		}
 		assert(page);
 		let Page = PAGES[page];		

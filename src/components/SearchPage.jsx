@@ -316,11 +316,12 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	let project = NGO.getProject(item);
 	let status = item.status;
 	let page = C.KStatus.isDRAFT(status)? 'edit' : 'charity';
-	const charityUrl = '#'+page+'?charityId='+encURI(NGO.id(item));
+	const cid = NGO.id(item);
+	const charityUrl = '#'+page+'?charityId='+encURI(cid);
 
 	// We need to make impact calculations so we can say e.g. "£1 will find X units of impact"
 	// We also need to store the suggested donation amount so the user can tweak it on the fly with buttons
-	let targetCount = DataStore.getValue(['widget','SearchResults', NGO.id(item), 'targetCount']);
+	let targetCount = DataStore.getValue(['widget','SearchResults', cid, 'targetCount']);
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','DonationForm', NGO.id(item), 'amount'], newAmount);
 	const impact = project ? impactCalc({
@@ -384,7 +385,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	) : null;
 
 	return (
-		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} >
+		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} data-id={cid} >
 			{recommendedTab}
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
