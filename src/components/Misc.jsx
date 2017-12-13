@@ -288,7 +288,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 	if (type==='img') {
 		return (<div>
 				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
-				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
+			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} style={{background:bg}} /></div>
 				<div className='clearfix' />
 			</div>);
 	}
@@ -323,7 +323,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 						Drop a JPG or PNG image here
 					</Dropzone>
 				</div>
-				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} /></div>
+				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail style={{background: bg}} url={value} /></div>
 				<div className='clearfix' />
 			</div>
 		);
@@ -637,10 +637,22 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
  */
 const isoDate = (d) => d.toISOString().replace(/T.+/, '');
 
+/**
+ * 
+ * @param {
+ * 	url: {?String} The image url. If falsy, return null
+ * 	style: {?Object}
+ * }
+ */
+Misc.ImgThumbnail = ({url, style}) => {
+	if ( ! url) return null;
+	// add in base (NB this works with style=null)
+	style = Object.assign({width:'100px', maxHeight:'200px'}, style);
+	return (<img className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
+};
 
-// Misc.SiteThumbnail = ({url}) => url? <a href={url} target='_blank'><iframe style={{width:'150px',height:'100px'}} src={url} /></a> : null;
 
-Misc.ImgThumbnail = ({url}) => url? <img className='img-thumbnail' style={{width:'100px', maxWidth:'100%', maxHeight:'200px'}} alt='thumbnail' src={url} /> : null;
+
 
 /**
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 

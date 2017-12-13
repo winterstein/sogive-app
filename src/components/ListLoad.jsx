@@ -109,24 +109,35 @@ const DefaultListItem = ({type, servlet, navpage, item, checkboxes}) => {
 /**
  * Make a local blank, and set the nav url
  * Does not save (Crud will probably do that once you make an edit)
+ * @param {
+ * 	base: {?Object} use to make the blank.
+ * 	make: {?Function} use to make the blank. base -> base
+ * }
  */
-const createBlank = ({type, navpage, base}) => {
-	// make an id
-	let id = nonce(8);
-	// poke a new blank into DataStore
+const createBlank = ({type, navpage, base, make}) => {
+	assert( ! getId(base), "ListLoad - createBlank - no ID (could be an object reuse bug) "+type);
+	// Call the make?
+	if (make) {
+		base = make(base);
+	}
 	if ( ! base) base = {};
-	assert( ! getId(base), "ListLoad - createBlank "+type);
-	base.id = id;
-	base['@type'] = type;
+	// make an id?
+	if ( ! getId(base)) {
+	let id = nonce(8);
+		base.id = id;
+	}
+	const id = getId(base);
+	if ( ! getType(base)) base['@type'] = type;
+	// poke a new blank into DataStore
 	DataStore.setValue(['data', type, id], base);
 	// set the id
 	onPick({navpage, id});
 };
 
-const CreateButton = ({type, navpage, base}) => {
+const CreateButton = ({type, navpage, base, make}) => {
 	if ( ! navpage) navpage = DataStore.getValue('location', 'path')[0];
 	return (
-		<button className='btn btn-default' onClick={() => createBlank({type,navpage,base})}>
+		<button className='btn btn-default' onClick={() => createBlank({type,navpage,base,make})}>
 			<Misc.Icon glyph='plus' /> Create
 		</button>
 	);
