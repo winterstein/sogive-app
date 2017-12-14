@@ -23,7 +23,8 @@ class EditorDashboardPage extends React.Component {
 				<h3>In development...</h3>
 				<AddCharityWidget />
 				<AddEditorWidget />
-				<ImportDataWidget />
+				<ImportDataWidget />	
+				<p><a href='/#manageDonations'>Manage Donations</a></p>
 			</div>
 		);
 	}

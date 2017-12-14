@@ -58,6 +58,7 @@ const CURRENCY = {
  * @param amount {Money|Number}
  */
 Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
+	if ( ! amount) amount = 0;
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
 	}

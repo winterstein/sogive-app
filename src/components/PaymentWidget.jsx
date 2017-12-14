@@ -60,7 +60,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	// pay on credit??
 	let credit = Transfer.getCredit();
 	if (credit && Money.value(credit) > 0) {
-		if (Money.value(credit) > Money.value(amount)) {
+		if (Money.value(credit) >= Money.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
 					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>

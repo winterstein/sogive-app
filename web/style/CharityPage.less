@@ -175,70 +175,6 @@
 			overflow-x: hidden;
 		}
 
-		.charity-about {
-			@circles-width: 320px;
-			@big-circle: (@circles-width * 0.6545);
-			@small-circle: (@circles-width * 0.4727);
-
-			.images {
-				position: relative;
-				height: 225px;
-				width: @circles-width;
-				margin: 40px auto;
-
-				.charity-image, .charity-logo {
-					position: absolute;
-					bottom: 0;
-					background-size: contain;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-
-					img {
-						border-radius: 50%;
-						object-fit: contain;
-						background-color: white;
-					}
-				}
-
-				
-				.charity-image {
-					z-index: 10;
-					left: 0;
-					background-image: url('/img/circle-bg-left.svg');
-					height: @big-circle;
-					width: @big-circle;
-					img {
-						height: 85%;
-						width: 85%;
-					}
-				}
-				.charity-logo {
-					z-index: 20;
-					right: 0;
-					background-image: url(/img/circle-bg-right.svg);
-					height: @small-circle;
-					width: @small-circle;
-					img {
-						width: 70%;
-						height: 70%;
-					}
-				}
-			}
-
-			.descriptions {
-				.description-short {
-					font-size: 120%;
-				}
-			}
-
-			.url {
-				font-size: 120%;
-				width: 100%;
-				text-align: center;
-			}
-		}
-
 		.charity-extra {
 			background-color: @charity-page-greybg;
 			
@@ -255,152 +191,220 @@
 		} // ./charity-extra
 	} // ./info-column
 
-
-	.donation-impact {
-		background-color: white;
-		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
-
-		/* Appear in front of the social share buttons */
-		position: relative;
-		z-index: 10;
-
-		.project-image {
-			img {
-				width: 100%;
-				max-height: 380px;
-				min-height: 50px;
-				object-fit: contain;
-			}
-		}
-
-		/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
-		.left-column, .right-column {
-			height: 200px;
-		}
-
-		.donation-buttons {
-			position: absolute;
-			width: 150px;
-			height: 200px;
-			color: @donation-amt-fg;
-			/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
-			z-index: 10;
-
-			img.donation-sun {
-				height: 200px;
-				position: absolute;
-			}
-
-			button.donation-up, button.donation-down {
-				position: absolute;
-				padding: 0;
-				border: 5px solid @donation-amt-fg;
-				border-radius: 50%;
-				background-color: transparent;
-				height: 60px;
-				width: 60px;
-				font-size: 60px;
-				line-height: 30px;
-				font-weight: bold;
-				&:focus {
-					outline: none;
-				}
-			}
-
-			button.donation-up {
-				top: 50px;
-				left: 10px;
-			}
-
-			button.donation-down {
-				top: 120px;
-				left: 55px;
-			}
-		}
-
-		.donation-input, .donation-output {
-			height: 200px;
-		}
-
-		.donation-input {
-			text-align: right;
-			position: absolute;
-			z-index: 9;
-			padding-right: 50px;
-
-			.will-fund {
-				font-size: 2em;
-			}
-
-			.amount-input {
-				.input-group .input-group-addon {
-					padding-left: 120px;
-					z-index: 9; /* Must appear behind the sun graphic */
-					padding-right: 0;
-				}
-				.input-group .form-control {
-					padding-left: 0;
-					color: @donation-number-fg
-				}
-				.form-control, .input-group-addon {
-					background-color: @donation-amt-input-bg;
-					border: none;
-					border-radius: 0;
-					box-shadow: none;
-					font-size: 2.5em;
-					height: inherit;
-					z-index: 11; /* Must appear in front of the sun graphic */
-				}
-			}
-
-			.donation-hand {
-				position: absolute;
-				left: 100px;
-			}
-		}
-
-		.donation-arrow-right {
-			position: absolute;
-			top: 0;
-			right: -25px;
-			height: 200px;
-		}
-
-		/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
-		.donation-output {
-			.output-number {
-				font-size: 300%;
-				color: @donation-number-fg;
-			}
-
-			.output-units {
-				font-size: 200%;
-			}
-		}
-
-		/* The wide down-arrow decoration flowing from the output column to the donate button */
-		.donation-arrow-down {
-			float:right;
-			height:30px;
-		}
-
-		.below-arrow {
-			margin-top: -5px;
-			clear:both;
-			padding-bottom:5px;
-		}
-
-		.donate-button {
-			margin-right: 60px;
-			float:right;
-		}
-	} // ./donation-impact
-
 	.donation-column {
 		background-color: @charity-page-greybg;
 		margin-top: 15px;
 	}
 } // ./#charity
+
+
+.donation-impact {
+	background-color: white;
+	box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
+
+	/* Appear in front of the social share buttons */
+	position: relative;
+	z-index: 10;
+
+	.project-image {
+		img {
+			width: 100%;
+			max-height: 380px;
+			min-height: 50px;
+			object-fit: contain;
+		}
+	}
+
+	/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
+	.left-column, .right-column {
+		height: 200px;
+	}
+
+	.donation-buttons {
+		position: absolute;
+		width: 150px;
+		height: 200px;
+		color: @donation-amt-fg;
+		/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
+		z-index: 10;
+
+		img.donation-sun {
+			height: 200px;
+			position: absolute;
+		}
+
+		button.donation-up, button.donation-down {
+			position: absolute;
+			padding: 0;
+			border: 5px solid @donation-amt-fg;
+			border-radius: 50%;
+			background-color: transparent;
+			height: 60px;
+			width: 60px;
+			font-size: 60px;
+			line-height: 30px;
+			font-weight: bold;
+			&:focus {
+				outline: none;
+			}
+		}
+
+		button.donation-up {
+			top: 50px;
+			left: 10px;
+		}
+
+		button.donation-down {
+			top: 120px;
+			left: 55px;
+		}
+	}
+
+	.donation-input, .donation-output {
+		height: 200px;
+	}
+
+	.donation-input {
+		text-align: right;
+		position: absolute;
+		z-index: 9;
+		padding-right: 50px;
+
+		.will-fund {
+			font-size: 2em;
+		}
+
+		.amount-input {
+			.input-group .input-group-addon {
+				padding-left: 120px;
+				z-index: 9; /* Must appear behind the sun graphic */
+				padding-right: 0;
+			}
+			.input-group .form-control {
+				padding-left: 0;
+				color: @donation-number-fg
+			}
+			.form-control, .input-group-addon {
+				background-color: @donation-amt-input-bg;
+				border: none;
+				border-radius: 0;
+				box-shadow: none;
+				font-size: 2.5em;
+				height: inherit;
+				z-index: 11; /* Must appear in front of the sun graphic */
+			}
+		}
+
+		.donation-hand {
+			position: absolute;
+			left: 100px;
+		}
+	}
+
+	.donation-arrow-right {
+		position: absolute;
+		top: 0;
+		right: -25px;
+		height: 200px;
+	}
+
+	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
+	.donation-output {
+		.output-number {
+			font-size: 300%;
+			color: @donation-number-fg;
+		}
+
+		.output-units {
+			font-size: 200%;
+		}
+	}
+
+	/* The wide down-arrow decoration flowing from the output column to the donate button */
+	.donation-arrow-down {
+		float:right;
+		height:30px;
+	}
+
+	.below-arrow {
+		margin-top: -5px;
+		clear:both;
+		padding-bottom:5px;
+	}
+
+	.donate-button {
+		margin-right: 60px;
+		float:right;
+		padding:15px;
+	}
+} // ./donation-impact
+
+
+// .info-column
+.charity-about {
+	@circles-width: 320px;
+	@big-circle: (@circles-width * 0.6545);
+	@small-circle: (@circles-width * 0.4727);
+
+	.images {
+		position: relative;
+		height: 225px;
+		width: @circles-width;
+		margin: 40px auto;
+
+		.charity-image, .charity-logo {
+			position: absolute;
+			bottom: 0;
+			background-size: contain;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			img {
+				border-radius: 50%;
+				object-fit: contain;
+				background-color: white;
+			}
+		}
+
+		
+		.charity-image {
+			z-index: 10;
+			left: 0;
+			background-image: url('/img/circle-bg-left.svg');
+			height: @big-circle;
+			width: @big-circle;
+			img {
+				height: 85%;
+				width: 85%;
+			}
+		}
+		.charity-logo {
+			z-index: 20;
+			right: 0;
+			background-image: url(/img/circle-bg-right.svg);
+			height: @small-circle;
+			width: @small-circle;
+			img {
+				width: 70%;
+				height: 70%;
+			}
+		}
+	}
+
+	.descriptions {
+		.description-short {
+			font-size: 120%;
+		}
+	}
+
+	.url {
+		font-size: 120%;
+		width: 100%;
+		text-align: center;
+	}
+} // /.charity-about
+
 
 @media only screen and (max-width : 768px) {
 	#charity .donation-impact {

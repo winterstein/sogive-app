@@ -129,7 +129,7 @@ class Store {
 	 * 
 	 */
 	setData(item, update = true) {
-		assert(item && getType(item) && getId(item));
+		assert(item && getType(item) && getId(item), item);
 		assert(C.TYPES.has(getType(item)), item);
 		this.setValue(['data', getType(item), getId(item)], item, update);
 	}
@@ -329,6 +329,13 @@ class Store {
 	/**
 	 * get local, or fetch by calling fetchFn (but only once). 
 	 * Does not call update here and now, so it can be used inside a React render().
+	 * 
+	 * Warning: This will not modify appstate except for the path given, and transient.
+	 * So if you fetch a list of data items, they will not be stored into appstate.data.
+	 * The calling method should do this. 
+	 * NB: an advantage of this is that the server can return partial data (e.g. search results)
+	 * without over-writing the fuller data.
+	 * 
 	 * @param path {String[]}
 	 * @param fetchFn {Function} () -> Promise/value, which will be wrapped using promise-value PV()
 	 * fetchFn MUST return the value for path, or a promise for it. It should NOT set DataStore itself.

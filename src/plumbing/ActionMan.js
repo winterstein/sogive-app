@@ -202,9 +202,12 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
 				let cargo = res.cargo;			
 				let dontn = cargo.hits && cargo.hits[0];
+				if (dontn) {
+					DataStore.setData(dontn);
+				}
 				if ( ! dontn) {
-					// update anyway
-					DataStore.update();
+					// update anyway (should happen anyway)
+					// DataStore.update();
 				}
 				return dontn || false;
 			});

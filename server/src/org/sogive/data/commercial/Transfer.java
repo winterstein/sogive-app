@@ -173,7 +173,7 @@ public class Transfer extends AThing {
 		es.debug = true;
 		SearchResponse sr = s.get();
 		List<Transfer> hits = sr.getSearchResults(Transfer.class);
-		
+		// minor glitch: a transfer from:alice to:alice is only one result, and it gets counted as positive!
 		Money sum = new Money(0);
 		for (Transfer t : hits) {
 			if (t.getTo().equals(user)) {

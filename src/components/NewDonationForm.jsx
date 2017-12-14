@@ -115,6 +115,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	}
 
 	let donationDraft = pDonation.value;
+	console.warn('donationDraft',donationDraft);
 	if ( ! donationDraft) {
 		// make a new draft donation
 		donationDraft = Donation.make({
@@ -125,6 +126,7 @@ const DonationForm = ({item, charity, causeName}) => {
 			amount: Money.make({ value: 10, currency: 'gbp' }),
 			coverCosts: true,
 		});
+		console.warn('donationDraft-new', donationDraft);
 		const path = ['data', type, donationDraft.id];
 		// store in data
 		DataStore.setValue(path, donationDraft, false);
@@ -133,7 +135,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	}
 	
 	const path = ['data', type, donationDraft.id];
-
+	assert(donationDraft === DataStore.getValue(path), DataStore.getValue(path));
 	// Don't ask for gift-aid details if the charity doesn't support it
 	// const showGiftAidSection = 
 	// We don't need to collect address etc. if we're not collecting gift-aid
@@ -195,6 +197,8 @@ const DonationForm = ({item, charity, causeName}) => {
 
 const AmountSection = ({path}) => {
 	let credit = Transfer.getCredit();	
+	const dontn = DataStore.getValue(path);
+	console.log("donation", JSON.stringify(dontn));
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
 	if ( ! val) {
@@ -292,6 +296,7 @@ const PaymentSection = ({path, item}) => {
 	if ( ! donation) {
 		return null;
 	}
+	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
 	const {amount} = donation;
 	if ( ! amount) {
 		return null;

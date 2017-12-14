@@ -142,7 +142,7 @@ public class DonationServlet extends CrudServlet {
 		Money total = donation.getTotal();
 		// paid on credit?
 		Money credit = Transfer.getTotalCredit(user);
-		if (credit!=null && credit.getValue() > 0) {
+		if (credit!=null && true && credit.getValue() > 0) {
 			Money residual = doCollectMoney2(donation, state, user, credit);
 			if (residual==null || residual.getValue()==0) {
 				return;
