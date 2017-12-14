@@ -204,7 +204,7 @@ const AmountSection = ({path}) => {
 	return (
 		<div className='section donation-amount'>
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
-			{credit? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
 };
 

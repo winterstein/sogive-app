@@ -124,7 +124,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		
 		// local DataLog
 		DataLogConfig dlc = AppUtils.getConfig(this.projectName, DataLog.getImplementation().getConfig(), args);
-		DataLog.setConfig(dlc);
+		DataLog.init(dlc);
 		
 		return config;
 	}

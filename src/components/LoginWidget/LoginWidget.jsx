@@ -57,7 +57,7 @@ const SocialSignInButton = ({ service, verb}) => {
 	return (
 		<div className='form-group'>
 			<button onClick={() => socialLogin(service)} className="btn btn-default signin">
-				{toTitleCase(verb)} with {toTitleCase(service)} <Misc.Logo size='small' service={service} />
+				<Misc.Logo size='small' service={service} bgcolor /> <span>{toTitleCase(verb)} with {toTitleCase(service)}</span>
 			</button>
 		</div>
 	);
