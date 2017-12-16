@@ -15,6 +15,11 @@ import com.winterwell.web.data.XId;
 public class Person extends Thing {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * HACK is this a newly created user??
+	 */
+	public transient boolean isFresh;
 
 	public Person(PersonLite peepLite) {
 		Map peepLiteMap = Containers.objectAsMap(peepLite);		

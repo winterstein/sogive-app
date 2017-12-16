@@ -11,6 +11,7 @@ import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.user.Donation;
+import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
@@ -154,6 +155,11 @@ public class Transfer extends AThing {
 	 * The app that created this - e.g. sogive or goodloop.
 	 */
 	String a;
+
+	/**
+	 * HACK for passing Person objects around in CreditServlet
+	 */
+	public transient Person toPerson;
 
 
 	public static Money getTotalCredit(XId user) {

@@ -37,6 +37,7 @@ public class SoGiveConfig implements IESRouter, ISiteConfig {
 
 	@Override
 	public ESPath getPath(String dataspaceIsIgnored, Class type, String id, Object status) {
+		// map personlite and person to the same DB
 		if (type==PersonLite.class) type = Person.class;
 		String stype = type==NGO.class? "charity" : type.getSimpleName().toLowerCase();
 		String index = stype;

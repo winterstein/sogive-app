@@ -132,6 +132,7 @@ public class DBSoGive {
 		PersonLite peepLite = AppUtils.getCreatePersonLite(user);
 		// HACK copy over
 		peep = new Person(peepLite);
+		peep.isFresh = true; // HACK 
 		return peep;
 	}
 
