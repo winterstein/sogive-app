@@ -130,17 +130,19 @@ class DonationForm extends Component {
 					</div>
 					<div className='col-sm-6 right-column'>
 						<div className='donation-output'>
-							{impact.number ? <div className='output-number'>
-								{printer.prettyNumber(impact.number, 2)}
-							</div> : null}
-							<div className='output-units'>
-								{Output.name(impact)}
-							</div>
+							<center>
+								{impact.number ? <div className='output-number'>
+									{printer.prettyNumber(impact.number, 2)}
+								</div> : null}
+								<div className='output-units'>
+									{Output.name(impact)}
+								</div>
+							</center>
 						</div>
 					</div>
 				</div>
 
-				<img className='donation-arrow-down' src='/img/donation-arrow-down.png' alt="" />
+				<img className='donation-arrow-down' src='/img/donation-arrow-down-wide.png' alt="" />
 				
 				<div className='below-arrow'>
 					<div className='donate-button'>
