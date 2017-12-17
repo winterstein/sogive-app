@@ -30,10 +30,11 @@ export default ServerIO;
 // for debug
 window.ServerIO = ServerIO;
 
-// allow switching backend
+// allow switching backend during testing
 ServerIO.base = 
-	// null;
-	'https://app.sogive.org';
+	null;
+	// 'https://app.sogive.org';
+
 
 /**
  * @param query {!String} query string
