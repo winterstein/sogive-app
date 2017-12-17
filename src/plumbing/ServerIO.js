@@ -27,10 +27,13 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 
 const ServerIO = {};
 export default ServerIO;
-
 // for debug
 window.ServerIO = ServerIO;
 
+// allow switching backend
+ServerIO.base = 
+	// null;
+	'https://app.sogive.org';
 
 /**
  * @param query {!String} query string

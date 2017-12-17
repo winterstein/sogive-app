@@ -44,7 +44,7 @@ Money.isa = (obj) => {
 	if (isNumeric(obj.value) || obj.value==='') return true;
 };
 
-Money.assIsa = (obj) => assert(Money.isa(obj), "Money.js - "+JSON.stringify(obj));
+Money.assIsa = (obj, msg) => assert(Money.isa(obj), "Money.js - "+(msg||'')+" "+JSON.stringify(obj));
 
 Money.make = (base = {}) => {
 	const item = {
@@ -58,12 +58,26 @@ Money.make = (base = {}) => {
 	return item;
 };
 
+/**
+ * Check currencies match. Case insensitive.
+ */
+const assCurrencyEq = (a, b, msg) => {
+	const m = "Money.js assCurrencyEq "+(msg||'')+" a:"+JSON.stringify(a)+"  b:"+JSON.stringify(b);
+	Money.assIsa(a, m);
+	Money.assIsa(b, m);
+	// allow no-currency to padd
+	if ( ! a.currency || ! b.currency) {
+		return true;
+	}
+	assert(typeof(a.currency) === 'string' && typeof(b.currency) === 'string', m);
+	assert(a.currency.toUpperCase() === b.currency.toUpperCase(), m);
+};
+
 // Will fail if not called on 2 Moneys of the same currency
 Money.add = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
-	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
-		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
+	assCurrencyEq(amount1, amount2, "add()");
 	return Money.make({
 		...amount1,
 		value: amount1.value + amount2.value,
@@ -74,8 +88,7 @@ Money.add = (amount1, amount2) => {
 Money.sub = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
-	assert(typeof(amount1.currency) === 'string' && typeof(amount2.currency) === 'string' 
-		&& amount1.currency.toUpperCase() === amount2.currency.toUpperCase());
+	assCurrencyEq(amount1, amount2, "sub");
 	return Money.make({
 		...amount1,
 		value: amount1.value - amount2.value,
@@ -100,6 +113,6 @@ Money.mul = (amount, multiplier) => {
 Money.divide = (total, part) => {
 	Money.assIsa(total);
 	Money.assIsa(part);
-	assert(total.currency === part.currency, "Money divide "+total.currency+" != "+part.currency);
+	assCurrencyEq(total, part);
 	return Money.value(total) / Money.value(part);
 };
