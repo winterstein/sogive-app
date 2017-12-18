@@ -49,4 +49,3 @@ C.CAN = new Enum("edit publish admin editEvent test uploadCredit");
 Roles.defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
 Roles.defineRole(C.ROLES.company, [C.CAN.uploadCredit]);
 Roles.defineRole(C.ROLES.admin, C.CAN.values);
-

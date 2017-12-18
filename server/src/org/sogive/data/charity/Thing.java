@@ -161,7 +161,7 @@ implements IInit
 	
 	public static <X extends Thing> X getThing(Object obj, Class<X> klass) {
 		if (obj==null) {
-			Log.w("Thing", "null inpput = null for "+klass+" at "+ReflectionUtils.getSomeStack(12));
+			Log.w("Thing", "null input = null for "+klass+" at "+ReflectionUtils.getSomeStack(12));
 			return null;
 		}
 		if (obj instanceof Thing) return (X) obj;

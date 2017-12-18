@@ -157,7 +157,7 @@ const CharityExtra = ({charity}) => {
 		projectsByYear[project.year] = projectsForYear;
 	});
 
-	const yearDivs = Object.keys(projectsByYear).sort().map(year => (
+	const yearDivs = Object.keys(projectsByYear).sort().reverse().map(year => (
 		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
 	));
 	let refs = NGO.getCitations(charity);
