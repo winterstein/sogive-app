@@ -108,7 +108,7 @@ class DonationForm extends Component {
 		return (
 			<div className='donation-impact'>
 				<div className='project-image'>
-					<img src={project && project.images} alt='' />
+					<Misc.SafeImg src={project && project.images} alt='' />
 				</div>
 				<div className='row donation-io-row'>
 					<div className='col-sm-6 left-column'>

@@ -35,7 +35,7 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 /**
  * See Output.js for relevant doc notes
  * {
- * 	number: number of units, e.g. 10 for "10 malaria nets"
+ * 	targetCount: number of units, e.g. 10 for "10 malaria nets"
  * 	cost: {?Money}
  * }
   @returns {?Output}
@@ -71,19 +71,19 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(impactNum, unitName);
 
-	return Output.make({number:impactNum, name:plunitName, description:output.description});
+	return Output.make({number: impactNum, name: plunitName, description: output.description});
 }; // ./impactCalc()
 
 /**
  * 
  * @returns {Output[]}
  */
-const multipleImpactCalc = ({charity, project, number, targetCount, amount}) => {
+const multipleImpactCalc = ({charity, project, targetCount, cost, amount}) => {
 	const { outputs = []} = project;
 	assert( ! amount, "ImpactWidgetry.jsx - old code: amount - use number");
 	
 	return outputs.map((output) => (
-		impactCalc({charity, project, output, number, targetCount})
+		impactCalc({charity, project, output, targetCount, cost})
 	)).filter(impact => !!impact);
 };
 

@@ -126,7 +126,7 @@ Misc.Logo = ({service, size, transparent, bgcolor, color}) => {
 		if (transparent === false) file = '/img/SoGive-Light-70px.png';
 	}
 	return (
-		<img alt={service} data-pin-nopin="true" className={klass} src={file} />
+		<Misc.SafeImg alt={service} data-pin-nopin="true" className={klass} src={file} />
 	);
 }; // ./Logo
 
@@ -538,7 +538,7 @@ Misc.AvatarImg = ({peep, ...props}) => {
 		// return <iframe title={nonce()} src={'data:text/html,' + encodeURIComponent(html)} />;
 	}
 
-	return <img className={`AvatarImg img-thumbnail ${className}`} alt={alt} src={img} {...rest} />;
+	return <Misc.SafeImg className={`AvatarImg img-thumbnail ${className}`} alt={alt} src={img} {...rest} />;
 };
 
 /**
@@ -649,9 +649,8 @@ Misc.ImgThumbnail = ({url, style}) => {
 	if ( ! url) return null;
 	// add in base (NB this works with style=null)
 	style = Object.assign({width:'100px', maxHeight:'200px'}, style);
-	return (<img className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
+	return (<Misc.SafeImg className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
 };
-
 
 
 
@@ -782,6 +781,13 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', children}) =
 		{children}
 		<span className="glyphicon glyphicon-cd spinning" style={vis} />
 	</button>);
+};
+
+Misc.SafeImg = (props) => {
+	let {src = '/img/placeholder.svg', className, ...rest} = props;
+	if (!props.src) className += ' placeholder';
+	
+	return <img src={src} className={className} {...rest} />;
 };
 
 export default Misc;

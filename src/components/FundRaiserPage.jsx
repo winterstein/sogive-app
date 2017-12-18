@@ -85,7 +85,7 @@ const FundRaiserPage = ({id}) => {
 			<Grid id='FundRaiserPage'>
 				<Row>
 					<Col md={12} className='event-banner'>
-						<img alt={`Banner for ${item.name}`} src={event.bannerImage} />
+						<Misc.SafeImg alt={`Banner for ${item.name}`} src={event.bannerImage} />
 					</Col>
 				</Row>
 
@@ -98,7 +98,7 @@ const FundRaiserPage = ({id}) => {
 				<Row className='vitals'>
 					<Col md={6}>
 						<div className='user-event-photo'>
-							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.img} />
+							<Misc.SafeImg alt={`${item.owner.name}'s photo for ${item.name}`} src={item.img} />
 						</div>
 					</Col>
 
@@ -115,7 +115,7 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 					<Col md={6} className='charity-info'>
 						<h3>The Charity: {NGO.displayName(charity)}</h3>
-						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
+						<Misc.SafeImg className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>{NGO.shortDescription(charity)}</p>
 					</Col>
 				</Row>
@@ -156,7 +156,7 @@ const DonationProgress = ({item, charity}) => {
 	const donated = FundRaiser.donated(item);
 	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
 	// Clamp the bar height to 100% for obvious reasons
-	const donatedBarHeight =Math.min(100, donatedPercent);
+	const donatedBarHeight = Math.min(100, donatedPercent);
 	const remainingBarHeight = 100 - donatedBarHeight;
 
 	// impact info
@@ -165,7 +165,7 @@ const DonationProgress = ({item, charity}) => {
 	const project = NGO.getProject(charity);
 	// NB: no project = no impact data, but you can still donate
 	if (project) {
-		impacts = multipleImpactCalc({ charity, project, cost: donated.value });
+		impacts = multipleImpactCalc({ charity, project, cost: donated });
 	}
 	console.log('*** IMPACTS OF DONATIONS', impacts);
 
@@ -267,7 +267,7 @@ const Donation = ({donation, charity}) => {
 	return (
 		<li className='donation'>
 			{ personImg ? (
-				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
+				<Misc.SafeImg className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
 			<Misc.RelativeDate date={donation.date} className='donation-date' />

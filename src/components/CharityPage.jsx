@@ -134,14 +134,20 @@ const CharityAbout = ({charity}) => {
 };
 const CharityAboutImage = ({charity}) => {
 	if ( ! NGO.image(charity) && ! charity.logo) return null;
-	return (<div className='images'>
-		{NGO.image(charity)? <div className='charity-image'>
-			<img src={NGO.image(charity)} alt='Charity' />
-		</div> : null}
-		{charity.logo? <div className='charity-logo'>
-			<img src={charity.logo} alt='Charity logo' />
-		</div> : null}
-	</div>);
+	return (
+		<div className='images'>
+			{NGO.image(charity) ? (
+				<div className='charity-image'>
+					<img src={NGO.image(charity)} alt='Charity' />
+				</div> 
+			): null}
+			{charity.logo ? (
+				<div className='charity-logo'>
+					<img src={charity.logo} alt='Charity logo' />
+				</div>
+			) : null}
+		</div>
+	);
 };
 
 const CharityExtra = ({charity}) => {
@@ -365,7 +371,7 @@ const ProjectPanel = ({project}) => {
 const ProjectImage = ({images, title}) => {
 	if ( ! yessy(images)) return null;
 	let image = _.isArray(images)? images[0] : images;
-	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
+	return <div><center><Misc.SafeImg src={image} title={title} className='project-image'/></center></div>;
 };
 
 export default CharityPage;

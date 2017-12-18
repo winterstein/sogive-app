@@ -47,7 +47,7 @@ const Event = ({id}) => {
 		<div>
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
-			<img src={item.img} className='img-thumbnail' alt='event logo' />
+			<Misc.SafeImg src={item.img} className='img-thumbnail' alt='event logo' />
 			<div>
 				{item.description}
 			</div>

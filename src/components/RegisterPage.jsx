@@ -77,7 +77,7 @@ const RegisterPage = () => {
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
-			<img className='page-banner' src={event.bannerImage} alt='banner' />
+			<Misc.SafeImg className='page-banner' src={event.bannerImage} alt='banner' />
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 				&nbsp;
@@ -211,7 +211,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 	return (
 		<li className='ticket-type'>
 			<div className='decoration'>
-				<img className='attendee-icon' src={attendeeIcon} alt='' />
+				<Misc.SafeImg className='attendee-icon' src={attendeeIcon} alt='' />
 			</div>
 			<div className='info'>
 				<div className='top-line'>

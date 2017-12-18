@@ -388,7 +388,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} data-id={cid} >
 			{recommendedTab}
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
-				{item.logo? (
+				{NGO.logo(item) ? (
 					<img className='charity-logo' src={NGO.logo(item)} alt={`Logo for ${charityName}`} />
 				) : (
 					<div className={`charity-logo-placeholder ${longName? 'long-name' : ''}`}>{charityName}</div>

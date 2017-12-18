@@ -86,7 +86,7 @@ public class Money extends Thing<Money> {
 
 	@Override
 	public String toString() {
-		return "MonetaryAmount[£" + Printer.prettyNumber(getValue()) + ", name=" + getName() + "]";
+		return "Money[£" + Printer.prettyNumber(getValue()) + ", name=" + getName() + "]";
 	}
 
 	public String getCurrency() {

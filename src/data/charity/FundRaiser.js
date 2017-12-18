@@ -45,12 +45,14 @@ This.charity = item => {
 
 
 const nextTarget = (number) => {
+	// Start with a raw target one digit bigger than the total so far (ie raw target for 0-99.99 = 100, raw target for 100-999.99 = 1000)
+	let target = 10 ** Math.ceil(Math.log10(number));
 	// ...people will definitely feel patronised if we encourage them to shoot for £1, so set a minimum.
-	// so £150 = "Aim for £200!", £200+ = "Aim for £500!", £500+ = "Aim for £1000!"
-	let target = Math.max(Math.pow(10, Math.ceil(Math.log10(number)), 100));
-	if (number > target * 0.5) return target;
-	if (number > target * 0.2) return target * 0.5;
-	return target * 0.2;
+	if (target < 100) return 100;
+	// OK, should we pick a slightly closer goal?
+	if (number > target * 0.5) return target; // e.g. £500 to £999.99 = "Aim for £1000!"
+	if (number > target * 0.2) return target * 0.5; // e.g. £200 to £499.99 -> "Aim for £500!"
+	return target * 0.2; // e.g. £100 to £199.99 -> "Aim for £200!"
 };
 
 This.target = item => {
@@ -73,7 +75,7 @@ This.donated = item => {
 	This.assIsa(item);
 	// TODO rely on the server summing and storing the donations.
 	// -- to avoid having to load all (might be 1000s for a popular fundraiser).
-	return item.donated;	
+	return item.donated || Money.make();
 };
 
 /**
