@@ -28,7 +28,7 @@ import ManageDonationsPage from '../editor/ManageDonationsPage';
 import EditEventPage from '../editor/EditEventPage';
 import EventPage from '../EventPage';
 import RegisterPage from '../RegisterPage';
-
+import E404Page from '../E404Page';
 // Actions
 
 const PAGES = {
@@ -91,7 +91,9 @@ class MainDiv extends Component {
 		}
 		assert(page);
 		let Page = PAGES[page];		
-		assert(Page, page);
+		if ( ! Page) {
+			Page = E404Page;
+		}
 
 		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
 		return (
@@ -106,7 +108,7 @@ class MainDiv extends Component {
 				<LoginWidget logo={C.app.service} title={'Welcome to '+C.app.name} />
 			</div>
 		);
-	}
-}
+	} // ./render()
+} // ./MainDiv
 
 export default MainDiv;
