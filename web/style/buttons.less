@@ -26,16 +26,12 @@
 // 		border-color: darken(@default-button-colour, 5%);
 // 	}
 
-// 	.btn-primary {
-// 		background-color: @primary-bg;
-// 		color: @dark-fg;
-// 		border-color: darken(@primary-bg, 5%);
-
-// 		&:hover {
-// 			background-color: darken(@primary-bg, 10%);
-// 			border-color: darken(@primary-bg, 15%);
-// 		}	
-// 	}
+	.btn-primary {
+		background-color: @green;
+		&:hover, &:active, &:focus {
+			background-color: darken(@green, 15%);
+		}
+	}
 
 	.btn-square {
 		background-color: @default-button-colour;
