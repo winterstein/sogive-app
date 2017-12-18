@@ -59,13 +59,13 @@ const EditCharityPage = () => {
 				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				{Roles.iCan(C.CAN.publish)? 
+				{Roles.iCan(C.CAN.publish).value ? 
 					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
 					: <div><button className='btn btn-primary' disabled>Publish</button><br /><small>Please ask a senior editor</small></div>
 				}
 				&nbsp;
 				<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
-				{Roles.iCan(C.CAN.publish)? 
+				{Roles.iCan(C.CAN.publish).value ? 
 					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
 					: null
 				}
@@ -599,7 +599,7 @@ const saveDraftFn = _.debounce(
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
 	// some controls are not for all users
 	if (userFilter) {
-		if ( ! Roles.iCan(userFilter)) {
+		if ( ! Roles.iCan(userFilter).value ) {
 			return null;
 		}
 	}

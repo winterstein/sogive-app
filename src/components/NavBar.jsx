@@ -11,7 +11,7 @@ import Roles from '../Roles';
 const NavBar = ({currentPage}) => {
 	// which pages?
 	let pages = ['dashboard', 'search'];
-	if (Roles.iCan(C.CAN.test)) { // TODO for everyone, not just dev
+	if (Roles.iCan(C.CAN.test).value) { // TODO for everyone, not just dev
 		pages = pages.concat(['event', 'fundraiser']);
 	}
 	// make the page links

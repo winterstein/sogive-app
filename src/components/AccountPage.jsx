@@ -36,7 +36,7 @@ const AccountPage = () => {
 				{roles? roles.map((role, i) => <RoleLine key={i+role} role={role} />) : null}				
 			</Misc.Card>
 			{pvCreditToMe.value && pvCreditToMe.value.hits? <CreditToMe credits={pvCreditToMe.value.hits} /> : null}
-			{Roles.iCan(C.CAN.uploadCredit)? <UploadCredit /> : null}
+			{Roles.iCan(C.CAN.uploadCredit).value ? <UploadCredit /> : null}
 		</div>
 	);
 };
