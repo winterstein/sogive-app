@@ -129,7 +129,7 @@ class Store {
 	 * 
 	 */
 	setData(item, update = true) {
-		assert(item && getType(item) && getId(item), item);
+		assert(item && getType(item) && getId(item), item, "DataStore.js setData()");
 		assert(C.TYPES.has(getType(item)), item);
 		this.setValue(['data', getType(item), getId(item)], item, update);
 	}

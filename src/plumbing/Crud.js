@@ -54,9 +54,9 @@ ActionMan.crud = (type, id, action, item) => {
 		.fail((err) => {
 			// bleurgh
 			console.warn(err);
-		// TODO factor out message code
-		notifyUser(new Error(action+" failed: "+(err && err.responseText)));
-		// mark the object as dirty
+			// TODO factor out message code
+			notifyUser(new Error(action+" failed: "+(err && err.responseText)));
+			// mark the object as dirty
 			DataStore.setLocalEditsStatus(type, id, C.STATUS.dirty);
 			return err;
 		});

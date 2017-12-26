@@ -363,17 +363,12 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		</div>);
 	}
 	if (type==='select') {
-		const options = otherStuff.options;
-		const defaultValue = otherStuff.defaultValue;
-		delete otherStuff.options;
-		delete otherStuff.defaultValue;
+		const { options, defaultValue, labels, ...rest} = otherStuff;
 
 		assert(options, 'Misc.PropControl: no options for select '+[prop, otherStuff]);
 		assert(options.map, 'Misc.PropControl: options not an array '+options);
 		// Make an option -> nice label function
 		// the labels prop can be a map or a function
-		let labels = otherStuff.labels;
-		delete otherStuff.labels;		
 		let labeller = v => v;
 		if (labels) {
 			labeller = _.isFunction(labels)? labels : v => labels[v] || v;
@@ -382,7 +377,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 		let domOptions = options.map(option => <option key={"option_"+option} value={option} >{labeller(option)}</option>);
 		let sv = value || defaultValue;
 		return (
-			<select className='form-control' name={prop} value={sv} onChange={onChange} {...otherStuff} >
+			<select className='form-control' name={prop} value={sv} onChange={onChange} {...rest} >
 				{sv? null : <option></option>}
 				{domOptions}
 			</select>
