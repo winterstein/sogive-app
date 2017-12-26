@@ -44,7 +44,7 @@ Money.isa = (obj) => {
 	if (isNumeric(obj.value) || obj.value==='') return true;
 };
 
-Money.assIsa = (obj, msg) => assert(Money.isa(obj), "Money.js - "+(msg||'')+" "+JSON.stringify(obj));
+Money.assIsa = (obj, msg) => assert(Money.isa(obj), "Money.js - not Money "+(msg||'')+" "+JSON.stringify(obj));
 
 Money.make = (base = {}) => {
 	const item = {
