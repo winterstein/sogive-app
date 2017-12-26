@@ -67,7 +67,18 @@ ActionMan.saveEdits = (type, pubId, item) => {
 };
 
 ActionMan.publishEdits = (type, pubId, item) => {
-	return ActionMan.crud(type, pubId, 'publish', item);	
+	return ActionMan.crud(type, pubId, 'publish', item)
+		.then(res => {
+			// invalidate any cached list of this type
+			const listWas = DataStore.getValue(['list', type]);
+			if (listWas) {
+				DataStore.setValue(['list', type], null);
+				console.log('publish -> invalidate list', type, pubId, listWas);
+			} else {
+				console.log('publish -> no lists to invalidate');
+			}
+			return res;
+		}); // ./then	
 };
 
 ActionMan.discardEdits = (type, pubId) => {
