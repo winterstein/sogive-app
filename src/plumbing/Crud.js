@@ -70,13 +70,7 @@ ActionMan.publishEdits = (type, pubId, item) => {
 	return ActionMan.crud(type, pubId, 'publish', item)
 		.then(res => {
 			// invalidate any cached list of this type
-			const listWas = DataStore.getValue(['list', type]);
-			if (listWas) {
-				DataStore.setValue(['list', type], null);
-				console.log('publish -> invalidate list', type, pubId, listWas);
-			} else {
-				console.log('publish -> no lists to invalidate');
-			}
+			DataStore.invalidateList(type);
 			return res;
 		}); // ./then	
 };
@@ -88,12 +82,14 @@ ActionMan.discardEdits = (type, pubId) => {
 ActionMan.delete = (type, pubId) => {
 	// ?? put a safety check in here??
 	return ActionMan.crud(type, pubId, 'delete')
-	.then(e => {
-		console.warn("deleted!", type, pubId, e);
-		// remove the local version
-		DataStore.setValue(['data', type, pubId], null);
-		return e;
-	});
+		.then(e => {
+			console.warn("deleted!", type, pubId, e);
+			// remove the local version
+			DataStore.setValue(['data', type, pubId], null);
+			// invalidate any cached list of this type
+			DataStore.invalidateList(type);
+			return e;
+		});
 };
 
 // ServerIO //

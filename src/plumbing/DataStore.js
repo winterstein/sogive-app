@@ -384,7 +384,27 @@ class Store {
 		return pv;
 	} // ./fetch()
 
+	/**
+	 * Remove any list(s) stored under ['list', type].
+	 * 
+	 * These lists are often cached results from the server - this method is called to invalidate the cache
+	 * (and probably force a reload via other application-level code).
+	 * 
+	 * If more fine-grained control is provided, just call `setValue(['list', blah], null);` directly.
+	 */
+	invalidateList(type) {
+		assMatch(type, String);
+		const listWas = this.getValue(['list', type]);
+		if (listWas) {
+			DataStore.setValue(['list', type], null);
+			console.log('publish -> invalidate list', type, listWas);
+		} else {
+			console.log('publish -> no lists to invalidate');
+		}
+	}
+
 } // ./Store
+
 
 const DataStore = new Store();
 // switch on data item edits => modified flag

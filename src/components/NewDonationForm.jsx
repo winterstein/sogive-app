@@ -291,6 +291,31 @@ const MessageSection = ({path, item}) => (
 );
 
 
+/**
+ * Process the actual payment! Which is done by publishing the Donation.
+ * 
+ * PaymentWidget talks to Stripe, then passes over to this method for the actual payment.
+ * TODO refactor this into PaymentWidget
+ */
+const doPayment = ({donation}) => {
+	DataStore.setData(donation);
+
+	// invalidate credit if some got spent	
+	let credit = Transfer.getCredit();
+	if (credit && Money.value(credit) > 0) {
+		DataStore.invalidateList(C.TYPES.Transfer);
+	}
+
+	// publish the donation NB: Crud.js will invalidate the list
+	ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
+		.then(() => {
+			const stagePath = ['location', 'params', 'dntnStage'];
+			const stage = Number.parseInt(DataStore.getValue(stagePath));
+			DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
+		});
+};
+
+
 const PaymentSection = ({path, item}) => {
 	const donation = DataStore.getValue(path);
 	if ( ! donation) {
@@ -308,14 +333,7 @@ const PaymentSection = ({path, item}) => {
 	 */
 	const onToken = (token) => {
 		donation.stripe = token;
-		DataStore.setData(donation);
-		
-		ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
-			.then(() => {
-				const stagePath = ['location', 'params', 'dntnStage'];
-				const stage = Number.parseInt(DataStore.getValue(stagePath));
-				DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
-			});
+		doPayment(donation);
 	};
 
 	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
