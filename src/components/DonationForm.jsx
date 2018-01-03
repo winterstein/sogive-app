@@ -10,6 +10,7 @@
 
 // @Flow
 import React, { Component } from 'react';
+import ReactMarkdown from 'react-markdown';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
@@ -98,8 +99,8 @@ class DonationForm extends Component {
 			const outputs = Project.outputs(project);
 			impact = impactCalc({ charity, project, output:outputs[0], cost: amount });
 		}
-		if ( ! impact) { // fallback to "funds the charity"
-			impact = { name: NGO.displayName(charity) };
+		if ( ! impact) { // the display will fallback to "funds the charity"
+			// impact = { name: NGO.displayName(charity) };
 		}
 
 		const donationDown = () => this.incrementDonation(amount.value, -1, charity);
@@ -129,16 +130,7 @@ class DonationForm extends Component {
 						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
 					</div>
 					<div className='col-sm-6 right-column'>
-						<div className='donation-output'>
-							<center>
-								{impact.number ? <div className='output-number'>
-									{printer.prettyNumber(impact.number, 2)}
-								</div> : null}
-								<div className='output-units'>
-									{Output.name(impact)}
-								</div>
-							</center>
-						</div>
+						<DonationOutput impact={impact} charity={charity} />
 					</div>
 				</div>
 
@@ -155,5 +147,25 @@ class DonationForm extends Component {
 		);
 	}
 } // ./DonationForm
+
+const DonationOutput = ({impact, charity}) => {
+	if ( ! impact) {
+		return (<div className='donation-output'>
+			<h3>{NGO.name(charity)}</h3>
+			<ReactMarkdown source={NGO.shortDescription(charity)} />
+		</div>);	
+	}
+
+	return (<div className='donation-output'>
+		<center>
+			{impact.number ? <div className='output-number'>
+				{printer.prettyNumber(impact.number, 2)}
+			</div> : null}
+			<div className='output-units'>
+				{Output.name(impact)}
+			</div>
+		</center>
+	</div>);
+};
 
 export default DonationForm;

@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import {isa, defineType} from '../DataClass';
 import {assert, assMatch} from 'sjtest';
+import {ellipsize} from 'wwutils';
 import Project from './Project';
 import Output from './Output';
 import Money from './Money';
@@ -29,7 +30,10 @@ NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
 NGO.logo = item => item.logo; 
-NGO.shortDescription = ngo => ngo.summaryDescription || ngo.description || '';
+/**
+ * Get the summary or description, capped at 280 chars. Can be blank never null.
+ */
+NGO.shortDescription = ngo => ellipsize(ngo.summaryDescription || ngo.description || '', 280);
 NGO.registrationNumbers = (ngo) => {
 	// TODO OSCR, companies house
 	if (ngo.englandWalesCharityRegNum) return [{regulator:'Charity Commission', id:ngo.englandWalesCharityRegNum}];
