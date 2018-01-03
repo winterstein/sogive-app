@@ -178,7 +178,8 @@ public class Donation extends AThing {
 
 	@Override
 	public String toString() {
-		return "Donation[from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
+		return "Donation[id="+id+"]"; // NB id includes from, to, amount
+		// , from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
 	}
 
 	public void setImpacts(List<Output> impacts) {

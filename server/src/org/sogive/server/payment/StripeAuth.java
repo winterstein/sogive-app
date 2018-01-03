@@ -19,6 +19,8 @@ import lombok.Data;
 public class StripeAuth {
 
 	public static final String SKIP_TOKEN = "skip_token";
+	public static final String credit_token = "credit_token";
+	
 	public StripeAuth() {	
 	}
 	

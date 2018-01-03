@@ -19,6 +19,7 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DBSoGive;
+import org.sogive.server.payment.PaymentException;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
@@ -140,10 +141,16 @@ public class DonationServlet extends CrudServlet {
 
 	private void doCollectMoney(Donation donation, WebRequest state, XId user) {
 		Money total = donation.getTotal();
-		// paid on credit?
+		
+		// paid on credit?		
+		StripeAuth sa = donation.getStripe();
+		boolean allOnCredit = false;
+		if (sa != null && StripeAuth.credit_token.equals(sa.id)) {
+			allOnCredit = true;
+		}		
 		Money credit = Transfer.getTotalCredit(user);
 		if (credit!=null && true && credit.getValue() > 0) {
-			Money residual = doCollectMoney2(donation, state, user, credit);
+			Money residual = doCollectMoney2(donation, state, user, credit, allOnCredit);
 			if (residual==null || residual.getValue()==0) {
 				return;
 			}
@@ -158,7 +165,6 @@ public class DonationServlet extends CrudServlet {
 			String ikey = donation.getId();
 			Person userObj = DBSoGive.getCreateUser(user);
 
-			StripeAuth sa = donation.getStripe();
 			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) {
 				Log.d(LOGTAG, "skip payment: "+donation);
 				return; 
@@ -181,7 +187,8 @@ public class DonationServlet extends CrudServlet {
 
 	}
 
-	private Money doCollectMoney2(Donation donation, WebRequest state, XId user, Money credit) 
+	private Money doCollectMoney2(Donation donation, WebRequest state, XId user, 
+			Money credit, boolean allOnCredit) 
 	{		
 		// TODO check credit more robustly
 		XId to = NGO.xidFromId(donation.getTo());
@@ -191,6 +198,9 @@ public class DonationServlet extends CrudServlet {
 		if (amount.getValue() > credit.getValue()) {
 			residual = amount.minus(credit);
 			paidOnCredit = credit;
+			if (allOnCredit) {
+				throw new PaymentException("Cannot pay "+amount+" with credit of "+credit+" (donation: "+donation+")");
+			}
 		} else {
 			// pay it all
 		}
