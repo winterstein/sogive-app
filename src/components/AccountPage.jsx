@@ -28,8 +28,9 @@ const AccountPage = () => {
 		<div className=''>
 			<h2>My Account</h2>
 			<Misc.Card title='Login'>
-				ID: {Login.getId()}
-			</Misc.Card>
+				ID: {Login.getId()} <br />
+				My donations: shown on the <a href='#dashboard'>Dashboard</a>
+			</Misc.Card>			
 			<Misc.Card title='Roles'>
 				<p>Roles determine what you can do. E.g. only editors can publish changes.</p>
 				{proles.resolved? <p>No role</p> : <Misc.Loading />}

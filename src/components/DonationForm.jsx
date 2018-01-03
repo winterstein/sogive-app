@@ -99,9 +99,9 @@ class DonationForm extends Component {
 			const outputs = Project.outputs(project);
 			impact = impactCalc({ charity, project, output:outputs[0], cost: amount });
 		}
-		if ( ! impact) { // the display will fallback to "funds the charity"
-			// impact = { name: NGO.displayName(charity) };
-		}
+		// if ( ! impact) { // the display will fallback to "funds the charity"
+		// 	impact = { name: NGO.displayName(charity) };
+		// }
 
 		const donationDown = () => this.incrementDonation(amount.value, -1, charity);
 		const donationUp = () => this.incrementDonation(amount.value, 1, charity);
