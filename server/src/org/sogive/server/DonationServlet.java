@@ -19,10 +19,10 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DBSoGive;
-import org.sogive.server.payment.PaymentException;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
+import com.goodloop.data.PaymentException;
 import com.stripe.exception.APIException;
 import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
