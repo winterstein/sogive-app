@@ -43,9 +43,10 @@ C.STATUS = new Enum('loading clean dirty saving');
 
 C.CRUDACTION = new Enum('new save publish discard-edits delete');
 
-C.ROLES = new Enum("editor admin company");
-C.CAN = new Enum("edit publish admin editEvent test uploadCredit");
+C.ROLES = new Enum("editor admin company goodlooper");
+C.CAN = new Enum("edit publish admin editEvent test uploadCredit goodloop");
 // setup roles
 Roles.defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
 Roles.defineRole(C.ROLES.company, [C.CAN.uploadCredit]);
 Roles.defineRole(C.ROLES.admin, C.CAN.values);
+Roles.defineRole(C.ROLES.goodlooper, [C.CAN.edit, C.CAN.publish, C.CAN.goodloop]);

@@ -158,14 +158,24 @@ const ProfileEditor = ({charity}) => {
 		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
 		Copy and paste this URL into this field. 
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
+
 		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
+		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />
+		<EditField userFilter='goodloop' item={charity} type='number' field='circleCrop' label='Circle Crop Factor' max={100} min={0} />
+		{Roles.iCan('goodloop').value?
+			<div style={{backgroundColor: 'white', borderRadius: '50%', border: '1px solid grey', height: '100px', width: '100px', textAlign: 'center', overflow: 'hidden'}}>
+				<img src={charity.logo} style={{height: `${charity.circleCrop || 100}%`, width: `${charity.circleCrop || 100}%`, marginTop: `${(100 - (charity.circleCrop || 100)) / 2}%`, objectFit: 'contain', }} />
+			</div>
+			: null
+		}
 		<EditField item={charity} type='img' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
 		<EditField item={charity} type='textarea' field='stories' label='Story' 
 			help='A story from this project, e.g. about a beneficiary. We havent worked out a rule about whether the story and the photo need to relate to each other.' />
-		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />						
+			
+		<EditField item={charity} field='smallPrint' label='Small print' help='For charities which e.g. like WaterAid have a financial structure which donors must legally be made aware of.' />
 		
 		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
 				help='Keeping a summary of our efforts to get information from the charity, and their responses. Include dates of messages sent.' />
@@ -597,7 +607,7 @@ const saveDraftFn = _.debounce(
 	}, 1000);
 
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
-	// some controls are not for all users
+	// some controls are not for all users e.g. goodloop
 	if (userFilter) {
 		if ( ! Roles.iCan(userFilter).value ) {
 			return null;
