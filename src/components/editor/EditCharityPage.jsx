@@ -285,7 +285,6 @@ const ProjectEditor = ({charity, project}) => {
 	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
 	const isOverall = Project.isOverall(project);
-
 	return (
 		<div>
 			<ProjectDataSources charity={charity} project={project} />
@@ -295,7 +294,7 @@ const ProjectEditor = ({charity, project}) => {
 					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
 					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
-						help='A story from this project, e.g. about a beneficiary.' />
+						help='A story from this project, e.g. about a beneficiary.' />					
 				</div>
 			)}
 			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
@@ -313,9 +312,9 @@ const ProjectEditor = ({charity, project}) => {
 			
 			<ProjectInputs charity={charity} project={project} />
 			<ProjectOutputs charity={charity} project={project} />		
+			{isOverall? <EditProjectField charity={charity} project={project} type='Money' field='reserves' label='Reserves' /> : null}
 	</div>
 	);
-			// <ProjectImpacts charity={charity} project={project} />
 };
 
 // See and edit the list of data-sources for this project
