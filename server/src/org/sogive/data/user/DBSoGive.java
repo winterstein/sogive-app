@@ -19,7 +19,7 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
-
+import com.goodloop.data.Money;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
@@ -78,11 +78,26 @@ public class DBSoGive {
 //dtype.property("@id", new ESType().keyword());
 //dtype.property("projects", new ESType().object()
 //.property("year", new ESType().INTEGER())
-//);		
+//);
+		// dates also have a "raw" string field, for storing badly formatted input
+		// This is handled in Project.init()
+		ESType raw = new ESType().text().noIndex().noAnalyzer();
+		ESType money = Money.ESTYPE;
+		
 		ESType charitymapping = new ESType()
-				.property("projects", new ESType().object()
-						.property("year", new ESType().INTEGER())
-						)
+				.property("projects", 
+						new ESType().object()
+							.property("year", new ESType().INTEGER())
+							.property("start", new ESType().date())
+							.property("start_raw", raw)
+							.property("end", new ESType().date())
+							.property("end_raw", raw)
+//							.property("inputs", money) TODO => reindex
+							.property("outputs", 
+									new ESType().object()
+//									.property("costPerOutput", money) TODO => reindex
+									)
+						) // ./projects				
 				.property("suggest", new ESType().completion());	
 
 		// mappings

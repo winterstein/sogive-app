@@ -156,18 +156,19 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
  * @param prop The field being edited 
  * @param dflt {?Object} default value Beware! This may not get saved if the user never interacts.
  */
-Misc.PropControl = ({type="text", label, help, ...stuff}) => {
+Misc.PropControl = ({type="text", label, help, error, ...stuff}) => {
 	// label / help? show it and recurse
 
 	// NB: Checkbox has a different html layout :( -- handled below
-	if ((label || help) && ! Misc.ControlTypes.ischeckbox(type)) {
+	if ((label || help || error) && ! Misc.ControlTypes.ischeckbox(type)) {
 		// Minor TODO help block id and aria-described-by property in the input
 		const labelText = label || '';
 		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : '';
 		// The label and PropControl are on the same line to preserve the whitespace in between for inline forms
 		return (
-			<div className='form-group'>
+			<div className={'form-group' + (error? ' has-error' : '')}>
 				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label> <Misc.PropControl type={type} {...stuff} />
+				{error? <span className="help-block">{error}</span> : null}
 			</div>
 		);
 	}
@@ -213,7 +214,7 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 
 		return (
 			<div className='form-group'>
-				<Radio value={true} name={prop} onChange={onChange} checked={value} inline>Yes</Radio>
+				<Radio value name={prop} onChange={onChange} checked={value} inline>Yes</Radio>
 				<Radio value={false} name={prop} onChange={onChange} checked={noChecked} inline>No</Radio>
 			</div>
 		);
@@ -328,40 +329,24 @@ Misc.PropControl = ({type="text", label, help, ...stuff}) => {
 				<div className='clearfix' />
 			</div>
 		);
-	}
+	} // ./imgUpload
 
 	if (type==='url') {
 		return (<div>
-				<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
-				<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
-				<div className='clearfix' />
-			</div>);
+			<FormControl type='url' name={prop} value={value} onChange={onChange} onBlur={onChange} {...otherStuff} />
+			<div className='pull-right'><small>{value? <a href={value} target='_blank'>open in a new tab</a> : null}</small></div>
+			<div className='clearfix' />
+		</div>);
 	}
 
 	// date
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
 	if (type==='date') {
-		// parsing incomplete dates causes NaNs
-		// let date = new Date(value);
-		// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
-		// value = nvalue;
-		let datePreview = value? 'not a valid date' : null;
-		try {
-			let date = new Date(value);
-			datePreview = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
-		} catch (er) {
-			// bad date
-		}
-		// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
-		// Encourage ISO8601 format
-		if ( ! otherStuff.placeholder) otherStuff.placeholder = 'yyyy-mm-dd, e.g. today is '+isoDate(new Date());
-		return (<div>
-			<FormControl type='text' name={prop} value={value} onChange={onChange} {...otherStuff} />
-			<div className='pull-right'><i>{datePreview}</i></div>
-			<div className='clearfix' />
-		</div>);
+		const acprops = {prop, value, onChange, ...otherStuff};
+		return <PropControlDate {...acprops} />;
 	}
+
 	if (type==='select') {
 		const { options, defaultValue, labels, ...rest} = otherStuff;
 
@@ -441,6 +426,35 @@ const PropControlMoney = ({prop, value, path, proppath,
 		<FormControl name={prop} value={v} onChange={onMoneyChange} {...otherStuff} style={{minWidth}}/>
 	</InputGroup>);
 }; // ./£
+
+
+const PropControlDate = ({prop, value, onChange, ...otherStuff}) => {
+	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
+	//  && value && ! value.match(/dddd-dd-dd/)
+
+	// parsing incomplete dates causes NaNs
+	// let date = new Date(value);
+	// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
+	// value = nvalue;
+	let datePreview = null;
+	if (value) {
+		try {
+			let date = new Date(value);
+			datePreview = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+		} catch (er) {
+			// bad date
+			datePreview = 'Invalid date';
+		}
+	}
+	// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
+	// Encourage ISO8601 format
+	if ( ! otherStuff.placeholder) otherStuff.placeholder = 'yyyy-mm-dd, e.g. today is '+isoDate(new Date());
+	return (<div>
+		<FormControl type='text' name={prop} value={value} onChange={onChange} {...otherStuff} />
+		<div className='pull-right'><i>{datePreview}</i></div>
+		<div className='clearfix' />
+	</div>);	
+};
 
 
 const SECOND = 1000;
@@ -656,6 +670,7 @@ Misc.ImgThumbnail = ({url, style}) => {
  */
 const FormControl = ({value, type, ...otherProps}) => {
 	if (value===null || value===undefined) value = '';
+
 	if (type==='color' && ! value) { 
 		// workaround: this prevents a harmless but annoying console warning about value not being an rrggbb format
 		return <input className='form-control' type={type} {...otherProps} />;	

@@ -4,6 +4,7 @@
 package org.sogive.data.charity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,8 @@ import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Time;
+import com.winterwell.utils.time.TimeUtils;
 
 /**
  * @author daniel
@@ -25,10 +28,33 @@ public class Project extends Thing<Project> {
 	@Override
 	public void init() {
 		super.init();
+		// handle badly formatted dates
+		fixDate("start");
+		fixDate("end");
 		// this will remove any blanks
-		List<Output> outputs = getOutputs();
+		List<Money> inputs = getInputs();		
+		List<Output> outputs = getOutputs();				
 	}
 	
+	private void fixDate(String field) {
+		Object v = get(field);
+		String vraw = (String) get(field+"_raw");
+		
+		// TODO if vraw is null, set field to null
+		// But that would break backwards compatibility
+		
+		if (vraw != null) {
+			// convert to ISO format if not already
+			try {
+				Time time = TimeUtils.parseExperimental(vraw);
+				String iso = time.toISOStringDateOnly();
+				put(field, iso);
+			} catch(Exception ex) {
+				put(field, null); // avoid upsetting ES
+			}
+		}
+	}
+
 	@Override
 	public String toString() {	
 		return "Project["+getName()+" "+get("year")+"]";
