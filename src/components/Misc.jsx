@@ -155,25 +155,52 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
  * @param item The item being edited. Can be null, and it will be fetched by path.
  * @param prop The field being edited 
  * @param dflt {?Object} default value Beware! This may not get saved if the user never interacts.
+ * @param modelValueFromInput {?Function} See standardModelValueFromInput
  */
-Misc.PropControl = ({type="text", label, help, error, ...stuff}) => {
-	// label / help? show it and recurse
+Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...stuff}) => {
+	assMatch(prop, "String|Number");
+	assMatch(path, Array);
+	const proppath = path.concat(prop);
 
+	// HACK: catch bad dates and make an error message
+	// TODO generalise this with a validation function
+	if (Misc.ControlTypes.isdate(type) && ! error && ! recursing) {
+		const value = DataStore.getValue(proppath);
+		if (value) {
+			try {
+				let sdate = "" + new Date(value);
+				if (sdate === 'Invalid Date') {
+					error = 'Please use the date format yyyy-mm-dd';
+				}
+			} catch (er) {
+				error = 'Please use the date format yyyy-mm-dd';
+			}
+		} else {
+			const rawPath = path.concat(prop+"_raw");
+			const rawValue = DataStore.getValue(rawPath);
+			// raw but no date suggests the server removed it
+			if (rawValue) error = 'Please use the date format yyyy-mm-dd';
+		}
+	}
+
+	// label / help? show it and recurse
 	// NB: Checkbox has a different html layout :( -- handled below
-	if ((label || help || error) && ! Misc.ControlTypes.ischeckbox(type)) {
+	if ((label || help || error) && ! Misc.ControlTypes.ischeckbox(type) && ! recursing) {
 		// Minor TODO help block id and aria-described-by property in the input
 		const labelText = label || '';
 		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : '';
-		// The label and PropControl are on the same line to preserve the whitespace in between for inline forms
+		// NB: The label and PropControl are on the same line to preserve the whitespace in between for inline forms.
+		// NB: pass in recursing error to avoid an infinite loop with the date error handling above.
 		return (
 			<div className={'form-group' + (error? ' has-error' : '')}>
-				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label> <Misc.PropControl type={type} {...stuff} />
+				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label> <Misc.PropControl 
+					type={type} path={path} prop={prop} {...stuff} error={error} recursing />
 				{error? <span className="help-block">{error}</span> : null}
 			</div>
 		);
 	}
 
-	let {prop, path, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
+	let {item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
 	assert( ! type || Misc.ControlTypes.has(type), 'Misc.PropControl: '+type);
 	assert(_.isArray(path), 'Misc.PropControl: not an array:'+path);
@@ -186,7 +213,6 @@ Misc.PropControl = ({type="text", label, help, error, ...stuff}) => {
 		item = DataStore.getValue(path) || {};
 	}
 	let value = item[prop]===undefined? dflt : item[prop];
-	const proppath = path.concat(prop);
 
 	// Checkbox?
 	if (Misc.ControlTypes.ischeckbox(type)) {
@@ -343,7 +369,7 @@ Misc.PropControl = ({type="text", label, help, error, ...stuff}) => {
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
 	if (type==='date') {
-		const acprops = {prop, value, onChange, ...otherStuff};
+		const acprops = {prop, item, value, onChange, ...otherStuff};
 		return <PropControlDate {...acprops} />;
 	}
 
@@ -428,7 +454,7 @@ const PropControlMoney = ({prop, value, path, proppath,
 }; // ./£
 
 
-const PropControlDate = ({prop, value, onChange, ...otherStuff}) => {
+const PropControlDate = ({prop, item, value, onChange, ...otherStuff}) => {
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
 
@@ -446,11 +472,23 @@ const PropControlDate = ({prop, value, onChange, ...otherStuff}) => {
 			datePreview = 'Invalid date';
 		}
 	}
+
+	// HACK: also set the raw text in _raw. This is cos the server may have to ditch badly formatted dates.
+	// NB: defend against _raw_raw
+	const rawProp = prop.substr(prop.length-4, prop.length) === '_raw'? null : prop+'_raw';
+	if ( ! value && item && rawProp) value = item[rawProp];
+	const onChangeWithRaw = e => {
+		if (item && rawProp) {
+			item[rawProp] = e.target.value;
+		}
+		onChange(e);
+	};
+
 	// let's just use a text entry box -- c.f. bugs reported https://github.com/winterstein/sogive-app/issues/71 & 72
 	// Encourage ISO8601 format
 	if ( ! otherStuff.placeholder) otherStuff.placeholder = 'yyyy-mm-dd, e.g. today is '+isoDate(new Date());
 	return (<div>
-		<FormControl type='text' name={prop} value={value} onChange={onChange} {...otherStuff} />
+		<FormControl type='text' name={prop} value={value} onChange={onChangeWithRaw} {...otherStuff} />
 		<div className='pull-right'><i>{datePreview}</i></div>
 		<div className='clearfix' />
 	</div>);	
@@ -660,8 +698,6 @@ Misc.ImgThumbnail = ({url, style}) => {
 	style = Object.assign({width:'100px', maxHeight:'200px'}, style);
 	return (<img className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
 };
-
-
 
 
 /**
