@@ -16,6 +16,7 @@ import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.gson.Gson;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
+import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
@@ -61,6 +62,7 @@ public class SearchServlet implements IServlet {
 	public static final IntField SIZE = new IntField("size");
 	public static final IntField FROM = new IntField("from");
 	public static final BoolField RECOMMENDED = new BoolField("recommended");
+	public static final BoolField FIXREADY = new BoolField("fixready");
 	/**
 	 * What will ES allow without scrolling??
 	 */
@@ -84,10 +86,12 @@ public class SearchServlet implements IServlet {
 			// Can ES do it instead??
 			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
 			q = StrUtils.toCanonical(q);
-			// this will query _all
+			// this will query _all			
 			QueryBuilder qb = QueryBuilders.simpleQueryStringQuery(q)
 								.defaultOperator(Operator.AND);
 			
+//			SearchQuery sq = new SearchQuery(q);
+			// TODO AppUtils.makeESFilterFromSearchQuery(sq, start, end)
 			// NB: this required all terms in one field, which felt wrong
 //			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
 //					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
