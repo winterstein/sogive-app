@@ -659,6 +659,7 @@ Misc.SetButton = ({path, value, children, className}) => {
 /**
  * Convert inputs (probably text) into the model's format (e.g. numerical)
  * @param eventType "change"|"blur" More aggressive edits should only be done on "blur"
+ * @returns the model value/object to be stored in DataStore
  */
 const standardModelValueFromInput = (inputValue, type, eventType) => {
 	if ( ! inputValue) return inputValue;
@@ -666,7 +667,11 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 	if (type==='year') {
 		return parseInt(inputValue);
 	}
-	if (type==='number') {
+	if (type==='number') {		
+		// strip any commas, e.g. 1,000
+		if (_.isString(inputValue)) {
+			inputValue = inputValue.replace(",", "");
+		}
 		return parseFloat(inputValue);
 	}
 	// add in https:// if missing
