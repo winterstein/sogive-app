@@ -406,6 +406,19 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...
 Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
+/**
+ * Strip commas and parse float
+ * @param {*} v 
+ * @returns undefined/null are returned as-is.
+ */
+const numFromAnything = v => {
+	if (v===undefined || v===null) return v;
+	// strip any commas, e.g. 1,000
+	if (_.isString(v)) {
+		v = v.replace(",", "");
+	}
+	return parseFloat(v);
+};
 
 const PropControlMoney = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
@@ -422,8 +435,8 @@ const PropControlMoney = ({prop, value, path, proppath,
 	}
 	//Money.assIsa(value); // type can be blank
 	// handle edits
-	const onMoneyChange = e => {
-		let newVal = parseFloat(e.target.value);
+	const onMoneyChange = e => {		
+		let newVal = numFromAnything(e.target.value);
 		value.raw = e.target.value;
 		value.value = newVal;
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
@@ -668,11 +681,7 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 		return parseInt(inputValue);
 	}
 	if (type==='number') {		
-		// strip any commas, e.g. 1,000
-		if (_.isString(inputValue)) {
-			inputValue = inputValue.replace(",", "");
-		}
-		return parseFloat(inputValue);
+		return numFromAnything(inputValue);
 	}
 	// add in https:// if missing
 	if (type==='url' && eventType==='blur') {
