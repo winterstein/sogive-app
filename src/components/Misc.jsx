@@ -193,8 +193,10 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...
 		// NB: pass in recursing error to avoid an infinite loop with the date error handling above.
 		return (
 			<div className={'form-group' + (error? ' has-error' : '')}>
-				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label> <Misc.PropControl 
-					type={type} path={path} prop={prop} {...stuff} error={error} recursing />
+				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label>
+				<Misc.PropControl
+					type={type} path={path} prop={prop} error={error} {...stuff} recursing 
+				/>
 				{error? <span className="help-block">{error}</span> : null}
 			</div>
 		);
@@ -788,7 +790,7 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 	if (hidden) return <span />;
 	const vis ={visibility: isSaving? 'visible' : 'hidden'};
 
-	return (<div title={item && item.status}>
+	return (<div className='SavePublishDiscard' title={item && item.status}>
 		<div><small>Status: {item && item.status}, Modified: {localStatus} {isSaving? "saving...":null}</small></div>
 		<button className='btn btn-default' disabled={isSaving || C.STATUS.isclean(localStatus)} onClick={() => ActionMan.saveEdits(type, id)}>
 			Save Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />

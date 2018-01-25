@@ -119,7 +119,7 @@ class Store {
 	 * @returns a "data-item", such as a person or document, or undefined.
 	 */
 	getData(type, id) {
-		assert(C.TYPES.has(type), "DataStore.getData");
+		assert(C.TYPES.has(type), "DataStore.getData bad type: "+type);
 		assert(id, "DataStore.getData - No id?! getData "+type);
 		let item = this.appstate.data[type][id];
 		return item;
@@ -227,8 +227,9 @@ class Store {
 	}
 	/**
 	 * Has a data item been modified since loading?
-	 * @param {*} type 
-	 * @param {*} id 
+	 * @param {C.TYPES} type 
+	 * @param {!String} id 
+	 * @param {C.STATUS} status
 	 * @return "dirty", "clean", etc. -- see C.STATUS
 	 */
 	setLocalEditsStatus(type, id, status, update) {
