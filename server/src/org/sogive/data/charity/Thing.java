@@ -69,7 +69,7 @@ implements IInit
 		if (v instanceof String && Utils.isBlank((String)v)) {
 			return null;
 		}
-		return MathUtils.toNum(v);
+		return MathUtils.getNumber(v);
 	}
 
 	public final Long getLong(String key) {
