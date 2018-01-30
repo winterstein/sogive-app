@@ -56,9 +56,9 @@ class DonationForm extends Component {
 		NGO.assIsa(charity);
 		const incrementKey = Object.keys(donationIncrements)
 			.sort((a, b) => a - b)
-			.find((key) => sign > 0 ? key > amount : key >= amount); // so that £20+ goes to £25, £20- goes to £19
+			.find((key) => sign > 0 ? key > amount.value : key >= amount.value); // so that £20+ goes to £25, £20- goes to £19
 		const increment = donationIncrements[incrementKey];
-		const rawValue = amount + (increment * Math.sign(sign));
+		const rawValue = amount.value + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
 		const newAmount = Money.make({ value, currency: 'gbp' });
 		DataStore.setValue(['widget', 'DonationForm', NGO.id(charity), 'amount'], newAmount);
