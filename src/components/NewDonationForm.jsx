@@ -333,7 +333,7 @@ const PaymentSection = ({path, item}) => {
 	 */
 	const onToken = (token) => {
 		donation.stripe = token;
-		doPayment(donation);
+		doPayment({donation});
 	};
 
 	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
