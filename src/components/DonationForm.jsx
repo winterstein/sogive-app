@@ -103,8 +103,8 @@ class DonationForm extends Component {
 		// 	impact = { name: NGO.displayName(charity) };
 		// }
 
-		const donationDown = () => this.incrementDonation(amount.value, -1, charity);
-		const donationUp = () => this.incrementDonation(amount.value, 1, charity);
+		const donationDown = () => this.incrementDonation(amount, -1, charity);
+		const donationUp = () => this.incrementDonation(amount, 1, charity);
 
 		return (
 			<div className='donation-impact'>
