@@ -106,9 +106,25 @@ const EditorialEditor = ({charity}) => {
 		<EditField item={charity} type='checkbox' field='recommended'
 			label='Recommended High-Impact Charity'
 			help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
+		
+		<EditField item={charity} type='select' field='impact'
+			options={CONFIDENCE_VALUES.values} 
+			label='Overall Impact Rating'
+			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them?"
+		/>
+
+		<EditField item={charity} field='confidence' 
+			type='select' options={CONFIDENCE_VALUES.values} 
+			defaultValue={CONFIDENCE_VALUES.medium} 
+			label='Overall Confidence'
+			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities." 
+		/>
+
 		<EditField item={charity} type='textarea' field='recommendation' 
-			label='Recommendation Comment ' disabled={ ! rec}
-			help="A sentence or two on why SoGive recommends this charity." />
+			label='Recommendation Comment '
+			help="A sentence or two on why SoGive recommends (or not) this charity." 
+		/>
+
 	</div>);
 };
 
