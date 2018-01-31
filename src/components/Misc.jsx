@@ -156,6 +156,8 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
  * @param prop The field being edited 
  * @param dflt {?Object} default value Beware! This may not get saved if the user never interacts.
  * @param modelValueFromInput {?Function} See standardModelValueFromInput
+ * @param required {?Boolean} If set, this field should be filled in before a form submit. 
+* 		TODO mark that somehow
  */
 Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...stuff}) => {
 	assMatch(prop, "String|Number");
@@ -720,14 +722,16 @@ Misc.ImgThumbnail = ({url, style}) => {
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
  * Plus since we're providing state handling, we don't need a full component.
  */
-const FormControl = ({value, type, ...otherProps}) => {
+const FormControl = ({value, type, required, ...otherProps}) => {
 	if (value===null || value===undefined) value = '';
 
 	if (type==='color' && ! value) { 
 		// workaround: this prevents a harmless but annoying console warning about value not being an rrggbb format
 		return <input className='form-control' type={type} {...otherProps} />;	
 	}
-	return <input className='form-control' type={type} value={value} {...otherProps} />;
+	// add css classes for required fields
+	let klass = 'form-control'+ (required? (value? ' form-required' : ' form-required blank') : '');
+	return <input className={klass} type={type} value={value} {...otherProps} />;
 };
 
 /** Hack: a debounced auto-save function for the save/publish widget */

@@ -284,12 +284,13 @@ const AddIO = ({list, pio, ioPath}) => {
 	assert(_.isArray(list) && _.isArray(ioPath) && pio, "EditCharityPage.AddIO");
 	const formPath = ['widget','AddIO', pio, 'form'];
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
+	let name = DataStore.getValue(formPath.concat('name'));
 
 	return (
 		<div className='form-inline'>
 			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
-			<button className='btn btn-default' onClick={oc}>
+			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
 				<Glyphicon glyph='plus' />
 			</button>
 		</div>
@@ -532,9 +533,9 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let saveDraftFnWrap = (context) => {
 		context.parentItem = charity;
 		return saveDraftFn(context);
-	};	
-	let cpb = output.costPerBeneficiary;
-	let cpbraw = NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output});
+	};		
+	let cpb = output? output.costPerBeneficiary : null;
+	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
