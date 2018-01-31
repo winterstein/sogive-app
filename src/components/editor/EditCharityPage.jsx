@@ -285,7 +285,7 @@ const AddIO = ({list, pio, ioPath}) => {
 	const formPath = ['widget','AddIO', pio, 'form'];
 	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
 	let name = DataStore.getValue(formPath.concat('name'));
-
+	
 	return (
 		<div className='form-inline'>
 			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
