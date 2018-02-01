@@ -82,10 +82,10 @@ const EditCharityPage = () => {
 						field='uk_giftaid' type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 				</Panel>
-				<Panel header={<h3>Overall</h3>} eventKey="3">
+				<Panel header={<h3>Overall finances and impact</h3>} eventKey="3">
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
 				</Panel>
-				<Panel header={<h3>Projects ({projectProjects.length})</h3>} eventKey="4">
+				<Panel header={<h3>Project finances and impact ({projectProjects.length} projects)</h3>} eventKey="4">
 					<ProjectsEditor charity={charity} projects={projectProjects} />
 				</Panel>
 				<Panel header={<h3>Editorial</h3>} eventKey="5">
@@ -149,7 +149,7 @@ const ProfileEditor = ({charity}) => {
 			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
 			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
 			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
-			<EditField label='USA registration number' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
+			<EditField label='USA registration number (i.e. EIN)' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
 		<EditField item={charity} type='url' field='url' label='Website' />
