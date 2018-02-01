@@ -74,6 +74,9 @@ class MainDiv extends Component {
 			this.setState({});
 		});
 
+		// Are we logged in?
+		Login.verify();
+
 		// enforce a page
 		let path = DataStore.getValue('location', 'path');
 		let page = (path && path[0]);
