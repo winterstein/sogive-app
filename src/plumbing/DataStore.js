@@ -134,6 +134,16 @@ class Store {
 		this.setValue(['data', getType(item), getId(item)], item, update);
 	}
 
+	/**
+	 * the DataStore path for this item, or null
+	 */
+	getPath(item) {
+		if ( ! item) return null;
+		if ( ! C.TYPES.has(getType(item))) return null;
+		if ( ! getId(item)) return null;
+		return ['data', getType(item), getId(item)];
+	}
+
 	getValue(...path) {
 		assert(_.isArray(path), "DataStore.getValue - "+path);
 		// If a path array was passed in, use it correctly.

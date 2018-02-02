@@ -29,6 +29,7 @@
     "react-markdown": "^2.5.0",
     "react-stripe-checkout": "^2.4.0",
 	 "react-stripe-elements": "^1.2.0",
+	 "react-table": "^6.7.6",
     "sjtest": "^0.4.6",
     "wwutils": "^0.8.5",
     "you-again": "^0.6.7"

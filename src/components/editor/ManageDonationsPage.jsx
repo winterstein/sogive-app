@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import {encURI} from 'wwutils';
+import {encURI, XId} from 'wwutils';
+import ReactTable from 'react-table';
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../plumbing/DataStore';
@@ -12,10 +13,33 @@ import C from '../../C';
 import Roles from '../../Roles';
 import {getId} from '../../data/DataClass';
 import Misc from '../Misc';
+import SimpleTable from '../SimpleTable';
+
+const onEditPaidOut = ({item, value, event, row, column}) => {
+	item.paidOut = value;
+	console.warn('onEditPaidOut', item, row, column, value, event);
+	DataStore.setData(item);
+};
 
 const ManageDonationsPage = () => {
+
+	if ( ! Login.isLoggedIn()) {
+		return <div>Please login</div>;
+	}
+	if ( ! Roles.iCan(C.CAN.manageDonations).value) {
+		return <div>You need the `manageDonations` capability.</div>;
+	}
+
 	const pvDonations = DataStore.fetch(['list', 'Donations', 'all'], () => {
-		return ServerIO.load('/donation/list.json', {data: {}});
+		return ServerIO.load('/donation/list.json', {data: {}})
+		.then(res => {
+			let dons = res.cargo.hits;
+			dons.forEach(don => {
+				console.log("setData", don);
+				DataStore.setData(don);
+			});
+			return res;
+		});
 	});
 	if ( ! pvDonations.resolved) {
 		return <Misc.Loading />;
@@ -23,34 +47,72 @@ const ManageDonationsPage = () => {
 	let rdons = pvDonations.value;
 	console.warn('rdons', rdons);
 	let dons = rdons.hits;
-	// TODO ListLoad ??
+
+	const columns = [
+		{
+			id: 'id',
+			Header: 'Id',
+			accessor: d => getId(d)
+		}, 
+		{
+			Header: 'Date',
+			accessor: 'date'
+		},
+		{
+			Header: 'From',
+			accessor: 'from',
+			Cell: v => XId.dewart(v)
+		}, {
+			Header: 'To',
+			accessor: 'to'
+		}, 
+		{
+			Header: "Amount",
+			accessor: 'amount',
+			Cell: v => <Misc.Money amount={v} /> // Custom cell components!
+		},
+		'app',
+		{
+			Header: 'on-credit',
+			accessor: d => d.stripe.type === 'credit'
+		},
+		{
+			Header: "Paid Out",
+			accessor: 'paidOut',
+			editable: true,
+			type: 'checkbox',
+			saveFn: ({item,...huh}) => {
+				console.warn('huh', huh, item);
+				if (item.status === 'DRAFT') {
+					ActionMan.saveEdits(C.TYPES.Donation, item.id, item);
+				} else {
+					ActionMan.publishEdits(C.TYPES.Donation, item.id, item);
+				}
+			}
+		},
+		{
+			Header: "Gift Aid",
+			accessor: 'giftAid'
+		},
+		{
+			Header: "Donor details",
+			accessor: d => (d.donorAddress||'') + " " + (d.donorPostcode||'')
+		},
+		'status'
+	];
+
+
 	return (
 		<div className=''>
-			<h2>TODO Manage Donations</h2>
-			<table className='table'>
-				<tbody>
-					<tr>
-						<th>ID</th>
-						<th>From</th>
-						<th>To</th>						
-						<th>Paid out to charity?</th>						
-						<th>json</th>
-					</tr>
-					{dons.map(don => <DonRow key={getId(don)} don={don} />)}
-				</tbody>
-			</table>
+			<h2>Manage Donations</h2>
+
+  <SimpleTable
+    data={dons}
+    columns={columns}
+  />
+
 		</div>
 	);
-};
-
-const DonRow = ({don}) => {
-	return (<tr>
-		<td>{getId(don)}</td>
-		<td>{don.from}</td>
-		<td>{don.to}</td>
-		<td>{don.paidOut}</td>
-		<td>json {JSON.stringify(don)}</td>
-	</tr>);
 };
 
 export default ManageDonationsPage;

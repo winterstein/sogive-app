@@ -148,7 +148,7 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
 /**
  * Input bound to DataStore
  * 
- * @param saveFn {Function} {path, value} You are advised to wrap this with e.g. _.debounce(myfn, 500).
+ * @param saveFn {Function} {path, prop, item, value} You are advised to wrap this with e.g. _.debounce(myfn, 500).
  * NB: we cant debounce here, cos it'd be a different debounce fn each time.
  * label {?String}
  * @param path {String[]} The DataStore path to item, e.g. [data, NGO, id]
@@ -224,11 +224,15 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			const val = e && e.target && e.target.checked;
 			DataStore.setValue(proppath, val);
-			if (saveFn) saveFn({path: path, value: val});		
+			if (saveFn) saveFn({path, prop, item, value: val});		
 		};
 		if (value===undefined) value = false;
-		return (<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label}</Checkbox>);
-	}
+		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : null;
+		return (<div>
+			<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label} {helpIcon}</Checkbox>
+			{error? <span className="help-block">{error}</span> : null}
+		</div>);
+	} // ./checkbox
 
 	// Yes-no radio buttons? (eg in the Gift Aid form)
 	if (type === 'yesNo') {
@@ -236,7 +240,7 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			const val = e && e.target && e.target.value && e.target.value !== 'false';
 			DataStore.setValue(proppath, val);
-			if (saveFn) saveFn({path:path, value: val});		
+			if (saveFn) saveFn({path, prop, item, value: val});		
 		};
 
 		// Null/undefined doesn't mean "no"! Don't check either option until we have a value.

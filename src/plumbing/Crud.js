@@ -5,7 +5,7 @@ import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 import DataStore from './DataStore';
-import {getId} from '../data/DataClass';
+import {getId, getType} from '../data/DataClass';
 import Login from 'you-again';
 import {XId, encURI} from 'wwutils';
 
@@ -17,6 +17,8 @@ import {notifyUser} from './Messaging';
  * @returns Promise
  */
 ActionMan.crud = (type, id, action, item) => {
+	if ( ! type) type = getType(item);
+	if ( ! id) id = getId(item);
 	assMatch(id, String);
 	assert(C.TYPES.has(type), type);
 	assert(C.CRUDACTION.has(action), type);
@@ -66,7 +68,7 @@ ActionMan.saveEdits = (type, pubId, item) => {
 	return ActionMan.crud(type, pubId, 'save', item);
 };
 
-ActionMan.publishEdits = (type, pubId, item) => {
+ActionMan.publishEdits = (type, pubId, item) => {	
 	return ActionMan.crud(type, pubId, 'publish', item)
 		.then(res => {
 			// invalidate any cached list of this type
