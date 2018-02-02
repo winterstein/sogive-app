@@ -9,6 +9,7 @@ import DataStore from '../../plumbing/DataStore';
 import Roles from '../../Roles';
 import CRUD from '../../plumbing/Crud';
 import C from '../../C';
+import printer from '../../utils/printer';
 // Templates
 import MessageBar from '../MessageBar';
 import NavBar from '../NavBar';
@@ -85,8 +86,15 @@ class MainDiv extends Component {
 		}
 	}
 
+	componentDidCatch(error, info) {
+		// Display fallback UI
+		this.setState({error, info, errorPath: DataStore.getValue('location', 'path')});
+		console.error(error, info); 
+		if (window.onerror) window.onerror("Caught error", null, null, null, error);
+	}
+
 	render() {
-		let path = DataStore.getValue('location', 'path');		
+		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if ( ! page) {
 			page = DEFAULT_PAGE;
@@ -96,6 +104,12 @@ class MainDiv extends Component {
 		let Page = PAGES[page];		
 		if ( ! Page) {
 			Page = E404Page;
+		}
+		if (this.state && this.state.error && this.state.errorPath === path) {
+			Page = () => (<div><h3>There was an Error :'(</h3>
+				<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
+				<p>{this.state.error.message}<br/><small>{this.state.error.stack}</small></p>
+			</div>);
 		}
 
 		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});

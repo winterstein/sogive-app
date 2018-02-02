@@ -49,7 +49,7 @@ class SimpleTable extends React.Component {
 				data = data.reverse();
 			}
 		} // sort
-		
+
 		return (
 			<table className='table'>
 				<tbody>
