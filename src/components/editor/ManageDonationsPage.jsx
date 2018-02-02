@@ -31,14 +31,15 @@ const ManageDonationsPage = () => {
 
 	const pvDonations = DataStore.fetch(['list', 'Donations', 'all'], () => {
 		return ServerIO.load('/donation/list/all.json', {data: {status: 'ALL_BAR_TRASH'}} )
-		.then(res => {
-			let dons = res.cargo.hits;
-			dons.forEach(don => {
-				console.log("setData", don);
-				DataStore.setData(don);
+			.then(res => {
+				let dons = res.cargo.hits;
+				dons.forEach(don => {
+					console.log("setData", don);
+					DataStore.setValue(['data', C.TYPES.Donation, getId(don)], don, false);
+					// DataStore.setData(don); // handle missing type
+				});
+				return res;
 			});
-			return res;
-		});
 	});
 	if ( ! pvDonations.resolved) {
 		return <Misc.Loading />;
@@ -73,7 +74,7 @@ const ManageDonationsPage = () => {
 		'app',
 		{
 			Header: 'on-credit',
-			accessor: d => d.stripe.type === 'credit'
+			accessor: d => d.stripe && d.stripe.type === 'credit'
 		},
 		{
 			Header: "Paid Out",

@@ -27,6 +27,7 @@ import com.stripe.exception.APIException;
 import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
+import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
@@ -43,6 +44,7 @@ import com.winterwell.utils.TodoException;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
@@ -121,6 +123,16 @@ public class DonationServlet extends CrudServlet {
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
 		donation.setF(new XId[]{user}); // who reported this? audit trail
+		// make sure it has a date and some donor info
+		if (donation.getDate()==null) {
+			donation.setDate(new Time().toISOString());
+			jthing.setJava(donation); // Is this needed to avoid any stale json?
+		}
+		if (donation.getDonor()==null) {
+			PersonLite peepLite = AppUtils.getCreatePersonLite(donation.getFrom());
+			donation.setDonor(peepLite);
+			jthing.setJava(donation); // Is this needed to avoid any stale json?
+		}
 		
 		// Donating to/via a fundraiser? Update its donation total.
 		String frid = donation.getFundRaiser();

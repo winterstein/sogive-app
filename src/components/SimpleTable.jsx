@@ -42,7 +42,9 @@ class SimpleTable extends React.Component {
 			// TODO pluck the right column
 			let column = columns[tableSettings.sortBy];
 			let sortFn = (a,b) => {
-				return getValue({item:a, column}) < getValue({item:b, column});
+				let av = getValue({item:a, column});
+				let bv = getValue({item:b, column});
+				return av < bv;
 			};
 			data = data.sort(sortFn);
 			if (tableSettings.sortByReverse) {
@@ -120,11 +122,12 @@ const Editor = ({row, column, value, item}) => {
 	let dummyItem;
 	if (path && prop) {
 		// use item direct
-		dummyItem = item;
+		dummyItem = item || {};
 	} else {
 		// fallback to dummies
 		if ( ! path) path = ['widget', 'SimpleTable', row, str(column)];
 		if ( ! prop) prop = 'value';
+		dummyItem = {};
 		let editedValue = DataStore.getValue(path.concat(prop));
 		if (editedValue===undefined || editedValue===null) editedValue = value;
 		dummyItem[prop] = editedValue;

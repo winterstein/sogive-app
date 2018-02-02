@@ -9,7 +9,6 @@ import DataStore from '../../plumbing/DataStore';
 import Roles from '../../Roles';
 import CRUD from '../../plumbing/Crud';
 import C from '../../C';
-import printer from '../../utils/printer';
 // Templates
 import MessageBar from '../MessageBar';
 import NavBar from '../NavBar';
