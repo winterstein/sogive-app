@@ -19,45 +19,67 @@ const str = printer.str;
 // class ErrorBoundary extends React.Component {
 // https://reactjs.org/docs/error-boundaries.html
 
-const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
-	let tableSettings = DataStore.getValue('widget', tableName);
-	if ( ! tableSettings) {
-		tableSettings = {};
-		DataStore.setValue(['widget', tableName], tableSettings, false);
+class SimpleTable extends React.Component {
+
+	constructor(props) {
+		super(props);
 	}
-	if (tableSettings.sortBy) {
-		// TODO pluck the right column
-		let column = columns[tableSettings.sortBy];
-		let sortFn = (a,b) => {
-			return getValue({item:a, column}) < getValue({item:b, column});
-		};
-		data = data.sort(sortFn);
+
+	componentWillMount() {
+		this.setState({		
+		});
 	}
-	return (
-		<table className='table'>
-			<tbody>
-				<tr>{columns.map((col, c) => <Th tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
-				{data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />)}
-			</tbody>
-		</table>
-	);
-};
+
+	render() {
+		let {tableName='SimpleTable', data, columns} = this.props;
+
+		let tableSettings = this.state; // DataStore.getValue('widget', tableName);
+		if ( ! tableSettings) {
+			tableSettings = {};
+			DataStore.setValue(['widget', tableName], tableSettings, false);
+		}
+		if (tableSettings.sortBy !== undefined) {
+			// TODO pluck the right column
+			let column = columns[tableSettings.sortBy];
+			let sortFn = (a,b) => {
+				return getValue({item:a, column}) < getValue({item:b, column});
+			};
+			data = data.sort(sortFn);
+			if (tableSettings.sortByReverse) {
+				data = data.reverse();
+			}
+		} // sort
+		
+		return (
+			<table className='table'>
+				<tbody>
+					<tr>{columns.map((col, c) => <Th table={this} tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
+					{data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />)}
+				</tbody>
+			</table>
+		);
+	}
+} // ./SimpleTable
 
 // TODO onClick={} sortBy
-const Th = ({column, c, tableSettings}) => {
+const Th = ({column, c, table, tableSettings}) => {
 	let sortByMe = (""+tableSettings.sortBy) === (""+c);
 	let onClick = e => { 
 		console.warn('sort click', c, sortByMe, tableSettings);
 		if (sortByMe) {
-			tableSettings.sortByReverse = ! tableSettings.sortByReverse;
+			table.setState({sortByReverse: ! tableSettings.sortByReverse});
+			// tableSettings.sortByReverse = ! tableSettings.sortByReverse;
 		} else {
-			tableSettings.sortByReverse = false;
+			// table.setState({sortBy: c});
+			table.setState({sortByReverse: false});
+			// tableSettings.sortByReverse = false;
 		}
-		tableSettings.sortBy = c;
+		table.setState({sortBy: c});
+		// tableSettings.sortBy = c;
 	};
 	return (<th onClick={onClick} >
 		{ column.Header || column.name || column.id || str(column)}
-		{sortByMe? '*' : null}
+		{sortByMe? <Misc.Icon glyph={'triangle-'+(tableSettings.sortByReverse? 'top' :'bottom')} /> : null}
 	</th>);
 };
 

@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import {encURI, XId} from 'wwutils';
-import ReactTable from 'react-table';
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../plumbing/DataStore';
@@ -106,10 +105,7 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 
-  <SimpleTable
-    data={dons}
-    columns={columns}
-  />
+			<SimpleTable data={dons} columns={columns} />
 
 		</div>
 	);

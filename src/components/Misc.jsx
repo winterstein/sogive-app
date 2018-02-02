@@ -476,18 +476,14 @@ const PropControlMoney = ({prop, value, path, proppath,
 
 
 const PropControlDate = ({prop, item, value, onChange, ...otherStuff}) => {
-	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
-	//  && value && ! value.match(/dddd-dd-dd/)
-
-	// parsing incomplete dates causes NaNs
-	// let date = new Date(value);
-	// let nvalue = date.getUTCFullYear()+'-'+oh(date.getUTCMonth())+'-'+oh(date.getUTCDate());
-	// value = nvalue;
+	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the native date editor. But we stopped using that.
+	// NB: parsing incomplete dates causes NaNs
 	let datePreview = null;
 	if (value) {
 		try {
 			let date = new Date(value);
-			datePreview = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+			// use local settings??
+			datePreview = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'});
 		} catch (er) {
 			// bad date
 			datePreview = 'Invalid date';
@@ -749,32 +745,47 @@ const saveDraftFn = _.debounce(
 /**
  * Just a convenience for a Bootstrap panel
  */
-Misc.Card = ({title, glyph, icon, children, titleChildren, ...props}) => {
-	return (
-		<div className="panel panel-default" {...props}>
-			<div className="panel-heading">
-				<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} {title || ''}</h3>
+Misc.Card = ({title, glyph, icon, children, onHeaderClick, collapse, titleChildren, ...props}) => {
+	const h3 = (<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} 
+		{title || ''} {onHeaderClick? <Misc.Icon className='pull-right' glyph={'triangle-'+(collapse?'bottom':'top')} /> : null}
+	</h3>);
+	return (<div className="Card panel panel-default">
+		<div className={onHeaderClick? "panel-heading btn-link" : "panel-heading"} onClick={onHeaderClick} >
+				{h3}
 				{ titleChildren }
 			</div>
-			<div className="panel-body">
+		<div className={'panel-body' + (collapse? ' collapse' : '') }>
 				{children}
 			</div>
-		</div>
-	);
+	</div>);
 };
 
-// /** replaced by ListLoad
-//  * on click, set the hash to #hash
-//  * The child elements is what gets displayed inside an a tag (so the user could control-click or save the link)
-//  * Use-case: for making navigation links & buttons where we use deep-linking urls.
-//  */
-// Misc.RestItem = ({hash, children}) => {
-// 	assert(hash, 'Misc.RestItem');
-// 	const clicked = e => { setHash(hash); e.preventDefault(); e.stopPropagation(); };
-// 	return (<a className='RestItem' href={'#'+hash} onClick={clicked} >
-// 			{children}
-// 		</a>);
-// };
+/**
+ * 
+ * @param {?String} widgetName - Best practice is to give the widget a name.
+ * @param {Misc.Card[]} children
+ */
+Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
+	// NB: React-BS provides Accordion, but it does not work with modular panel code. So sod that.
+	// TODO manage state
+	const wcpath = ['widget', widgetName || 'CardAccordion', 'open'];
+	let open = DataStore.getValue(wcpath);
+	if ( ! open) open = [0];
+	const kids = React.Children.map(children, (Kid, i) => {
+		let collapse = ! open[i];
+		let onHeaderClick = e => {
+			if ( ! multiple) {
+				// close any others
+				open = [];
+			}
+			open[i] = collapse;
+			DataStore.setValue(wcpath, open);
+		};
+		// clone with click
+		return React.cloneElement(Kid, {collapse, onHeaderClick: onHeaderClick});
+	});
+	return (<div>{kids}</div>);
+};
 
 /**
  * save buttons
