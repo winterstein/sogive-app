@@ -16,8 +16,15 @@ import DataStore from '../plumbing/DataStore';
 
 const str = printer.str;
 
+// class ErrorBoundary extends React.Component {
+// https://reactjs.org/docs/error-boundaries.html
+
 const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
 	let tableSettings = DataStore.getValue('widget', tableName);
+	if ( ! tableSettings) {
+		tableSettings = {};
+		DataStore.setValue(['widget', tableName], tableSettings, false);
+	}
 	if (tableSettings.sortBy) {
 		// TODO pluck the right column
 		let column = columns[tableSettings.sortBy];
@@ -30,7 +37,7 @@ const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
 		<table className='table'>
 			<tbody>
 				<tr>{columns.map((col, c) => <Th tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
-				{data.map( (d,i) => <Row key={i} item={d} row={i} columns={columns} />)}
+				{data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />)}
 			</tbody>
 		</table>
 	);
@@ -38,7 +45,20 @@ const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
 
 // TODO onClick={} sortBy
 const Th = ({column, c, tableSettings}) => {
-	return <th onClick={e => tableSettings.sortBy=c }>{ column.Header || column.name || column.id || str(column)}</th>;
+	let sortByMe = tableSettings.sortBy===c;
+	let onClick = e => { 
+		console.warn('sort click');
+		if (sortByMe) {
+			tableSettings.sortByReverse = ! tableSettings.sortByReverse;
+		} else {
+			tableSettings.sortByReverse = false;
+		}
+		tableSettings.sortBy = c;
+	};
+	return (<th onClick={onClick} >
+		{ column.Header || column.name || column.id || str(column)}
+		{sortByMe? '*' : null}
+	</th>);
 };
 
 const Row = ({item, row, columns}) => {
