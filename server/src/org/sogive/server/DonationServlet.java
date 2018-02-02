@@ -91,6 +91,9 @@ public class DonationServlet extends CrudServlet {
 		
 	@Override
 	protected QueryBuilder doList2_query(WebRequest state) {
+		if ("all".equals(state.getSlugBits(2))) {
+			return null; // All!
+		}
 		// support from:user to:charity, so this can find draft donations
 		XId user = state.getUserId();
 		if (user==null) return null;

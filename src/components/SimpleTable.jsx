@@ -45,9 +45,9 @@ const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
 
 // TODO onClick={} sortBy
 const Th = ({column, c, tableSettings}) => {
-	let sortByMe = tableSettings.sortBy===c;
+	let sortByMe = (""+tableSettings.sortBy) === (""+c);
 	let onClick = e => { 
-		console.warn('sort click');
+		console.warn('sort click', c, sortByMe, tableSettings);
 		if (sortByMe) {
 			tableSettings.sortByReverse = ! tableSettings.sortByReverse;
 		} else {

@@ -37,7 +37,7 @@ C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Basket Ticket Mon
 /** dialogs you can show/hide.*/
 C.show = new Enum('LoginWidget');
 
-C.KStatus = new Enum('DRAFT PUBLISHED MODIFIED REQUEST_PUBLISH PENDING ARCHIVED TRASH');
+C.KStatus = new Enum('DRAFT PUBLISHED MODIFIED REQUEST_PUBLISH PENDING ARCHIVED TRASH ALL_BAR_TRASH');
 
 C.STATUS = new Enum('loading clean dirty saving');
 
