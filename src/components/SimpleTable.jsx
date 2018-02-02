@@ -16,19 +16,30 @@ import DataStore from '../plumbing/DataStore';
 
 const str = printer.str;
 
-const SimpleTable = ({data, columns}) => {
-
+const SimpleTable = ({tableName='SimpleTable', data, columns}) => {
+	let tableSettings = DataStore.getValue('widget', tableName);
+	if (tableSettings.sortBy) {
+		// TODO pluck the right column
+		let column = columns[tableSettings.sortBy];
+		let sortFn = (a,b) => {
+			return getValue({item:a, column}) < getValue({item:b, column});
+		};
+		data = data.sort(sortFn);
+	}
 	return (
 		<table className='table'>
 			<tbody>
-				<tr>{columns.map(col => <Th key={JSON.stringify(col)} column={col} />)}</tr>
+				<tr>{columns.map((col, c) => <Th tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
 				{data.map( (d,i) => <Row key={i} item={d} row={i} columns={columns} />)}
 			</tbody>
 		</table>
 	);
 };
 
-const Th = ({column}) => <th>{ column.Header || column.name || column.id || str(column)}</th>;
+// TODO onClick={} sortBy
+const Th = ({column, c, tableSettings}) => {
+	return <th onClick={e => tableSettings.sortBy=c }>{ column.Header || column.name || column.id || str(column)}</th>;
+};
 
 const Row = ({item, row, columns}) => {
 	return (<tr>
@@ -36,10 +47,15 @@ const Row = ({item, row, columns}) => {
 	</tr>);
 };
 
+const getValue = ({item, row, column}) => {
+	let accessor = column.accessor || column; 
+	let v = _.isFunction(accessor)? accessor(item) : item[accessor];
+	return v;
+};
+
 const Cell = ({item, row, column}) => {
 	try {
-		let accessor = column.accessor || column; 
-		let v = _.isFunction(accessor)? accessor(item) : item[accessor];
+		const v = getValue({item, row, column});
 		let render = column.Cell;
 		if ( ! render) {
 			if (column.editable) {
