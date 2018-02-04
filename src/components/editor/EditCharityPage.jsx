@@ -203,7 +203,7 @@ const ProfileEditor = ({charity}) => {
 
 
 const ProjectsEditor = ({charity, projects, isOverall}) => {
-	assert(NGO.isa(charity));
+	assert(NGO.isa(charity), 'ProjectsEditor', charity);
 	if (projects.length===0) {
 		return (<div>
 			No projects analysed. This is correct for charities which focus on a single overall project.
@@ -522,14 +522,14 @@ const CONFIDENCE_VALUES = new Enum("high medium low very-low");
  * Edit output / impact
  */
 const ProjectOutputEditor = ({charity, project, output}) => {	
-	assert(charity, "EditCharityPage.ProjectOutputEditor");
+	assert(charity, "EditCharityPage.ProjectOutputEditor not a charity", charity);
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
 	let inputPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
-	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor");
-	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor");
-	assert(DataStore.getValue(inputPath) === output);
+	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
+	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
+	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
 	let saveDraftFnWrap = (context) => {
 		context.parentItem = charity;
 		return saveDraftFn(context);
