@@ -538,7 +538,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
 		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.PropControl prop='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
 		<td>
 			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
