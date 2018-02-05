@@ -415,15 +415,18 @@ Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete pa
 							+" yesNo location date year number arraytext address postcode json");
 
 /**
- * Strip commas and parse float
+ * Strip commas £/$/euro and parse float
  * @param {*} v 
- * @returns undefined/null are returned as-is.
+ * @returns Number. undefined/null are returned as-is.
  */
 const numFromAnything = v => {
 	if (v===undefined || v===null) return v;
+	if (_.isNumber(v)) return v;
 	// strip any commas, e.g. 1,000
 	if (_.isString(v)) {
 		v = v.replace(",", "");
+		// £ / $ / euro
+		v = v.replace(/^(-)?[£$\u20AC]/, "$1");
 	}
 	return parseFloat(v);
 };
