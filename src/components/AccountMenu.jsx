@@ -27,8 +27,6 @@ const AccountMenu = ({pending, active}) => {
 		</ul>);
 	}
 	let user = Login.getUser();
-					// <li role="separator" className="divider" />
-					// <li><button onClick={() => DataStore.setValue(['widget', 'Basket', 'open'], true)} >Basket</button></li>
 	return (
 		<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 			<li className={'dropdown' + (active? ' active' : '')}>

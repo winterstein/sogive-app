@@ -7,7 +7,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest, {assert, assMatch} from 'sjtest';
+// import SJTest, {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Misc from './Misc';
 import printer from '../utils/printer';

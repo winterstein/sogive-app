@@ -98,7 +98,7 @@ const defineType = (type) => {
 	This.type = type;
 	This['@type'] = 'DataClass';
 	This.isa = (obj) => isa(obj, type);
-	This.assIsa = (obj, msg) => assert(This.isa(obj), (msg||'')+type+" expected, but got "+obj);
+	This.assIsa = (obj, msg) => assert(This.isa(obj), (msg||'')+" "+type+" expected, but got "+obj);
 	This.name = obj => obj && obj.name;
 	/** convenience for getId() */
 	This.id = obj => This.assIsa(obj) && getId(obj);
