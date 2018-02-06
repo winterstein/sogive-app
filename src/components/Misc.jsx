@@ -424,7 +424,7 @@ const numFromAnything = v => {
 	if (_.isNumber(v)) return v;
 	// strip any commas, e.g. 1,000
 	if (_.isString(v)) {
-		v = v.replace(",", "");
+		v = v.replace(/,/g, "");
 		// £ / $ / euro
 		v = v.replace(/^(-)?[£$\u20AC]/, "$1");
 	}
