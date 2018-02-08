@@ -773,7 +773,13 @@ Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
 	// TODO manage state
 	const wcpath = ['widget', widgetName || 'CardAccordion', 'open'];
 	let open = DataStore.getValue(wcpath);
-	if ( ! open) open = [0];
+	if ( ! open) open = [true]; // default to first kid open
+	if ( ! children) {
+		return (<div className='CardAccordion'></div>);
+	}
+	assert(_.isArray(open), "Misc.jsx - CardAccordion - open not an array", open);
+	// filter null, undefined
+	children = children.filter(x => !! x);
 	const kids = React.Children.map(children, (Kid, i) => {
 		let collapse = ! open[i];
 		let onHeaderClick = e => {
@@ -787,7 +793,7 @@ Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
 		// clone with click
 		return React.cloneElement(Kid, {collapse, onHeaderClick: onHeaderClick});
 	});
-	return (<div>{kids}</div>);
+	return (<div className='CardAccordion'>{kids}</div>);
 };
 
 /**

@@ -31,7 +31,9 @@ class SimpleTable extends React.Component {
 	}
 
 	render() {
-		let {tableName='SimpleTable', data, columns} = this.props;
+		let {tableName='SimpleTable', data, columns, className} = this.props;
+		assert(_.isArray(columns), "SimpleTable.jsx - columns", columns);
+		assert( ! data || _.isArray(data), "SimpleTable.jsx - data must be an array of objects", data);
 
 		let tableSettings = this.state; // DataStore.getValue('widget', tableName);
 		if ( ! tableSettings) {
@@ -51,12 +53,13 @@ class SimpleTable extends React.Component {
 				data = data.reverse();
 			}
 		} // sort
+		let cn = 'table'+(className? ' '+className : '');
 
 		return (
-			<table className='table'>
+			<table className={cn}>
 				<tbody>
 					<tr>{columns.map((col, c) => <Th table={this} tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
-					{data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />)}
+					{data? data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />) : null}
 				</tbody>
 			</table>
 		);
