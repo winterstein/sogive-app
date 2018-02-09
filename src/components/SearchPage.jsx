@@ -259,9 +259,11 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
  */
 const SuggestCharityForm = () => {
 	let fpath = ['widget','SuggestCharityForm'];
-	let submitFn = e => {
-		console.error("TODO submit the form, say thank you to the user");
-	};
+	let formData = DataStore.getValue(fpath);
+
+	// extra MyLoop vars
+	DataStore.setValue(fpath.concat('notify'), 'daniel@sodash.com');
+
 	return (<div className='SuggestCharityForm'>
 		<p>Can't find the charity you want? If you fill in the details below, we'll try to add it to the database.
 			Meanwhile, you can still register -- pick 'Kiltwalk' as the charity, and you can change it later).
@@ -272,7 +274,11 @@ const SuggestCharityForm = () => {
 		<Misc.PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
 		<Misc.PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
 		<Misc.PropControl path={fpath} prop='email' label='Your email' />
-		<button className='btn btn-default' onClick={submitFn}>Submit</button>
+		<Misc.SubmitButton url='http://localprofiler.winterwell.com/form/sogive' path={fpath} 
+			onSuccess={<p>Thank you for suggesting this charity.</p>} 
+		>
+			Submit
+		</Misc.SubmitButton>
 	</div>);
 };
 

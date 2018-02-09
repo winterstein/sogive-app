@@ -838,7 +838,11 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 	</div>);
 };
 
-Misc.SubmitButton = ({path, url, once, className='btn btn-primary', children}) => {
+/**
+ * 
+ * @param {Boolean} once If set, this button can only be clicked once.
+ */
+Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, children}) => {
 	assMatch(url, String);
 	assMatch(path, 'String[]');
 	const tpath = ['transient','SubmitButton'].concat(path);
@@ -859,11 +863,15 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', children}) =
 	};
 	
 	let localStatus = DataStore.getValue(tpath);
+	// show the success message instead?
+	if (onSuccess && C.STATUS.isclean(localStatus)) {
+		return onSuccess;
+	}
 	let isSaving = C.STATUS.issaving(localStatus);	
 	const vis ={visibility: isSaving? 'visible' : 'hidden'};
 	let disabled = isSaving || (once && localStatus);
 	let title ='Submit the form';
-	if (disabled) title = isSaving? "saving..." : "Submitted :) To avoid errors, you cannot re-submit this form";
+	if (disabled) title = isSaving? "saving..." : "Submitted :) To avoid errors, you cannot re-submit this form";	
 	return (<button onClick={doSubmit} 
 		className={className}
 		disabled={disabled}
