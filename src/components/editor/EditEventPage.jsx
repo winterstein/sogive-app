@@ -73,19 +73,27 @@ const EventEditor = ({id}) => {
 		<Misc.Card title='Event Details'>
 			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
-			<Misc.PropControl path={['data', type, id]} prop='date' item={item} label='Event Date' type='date' />
+			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' />
 			
-			<Misc.PropControl path={['data', type, id]} prop='description' item={item} label='Description' type='textarea' />
+			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
-			<Misc.PropControl path={['data', type, id]} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
+			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' type='number' />
+
+			<Misc.PropControl path={path} prop='pickCharity' item={item} 
+				label='Allow users to pick their charity?' type='checkbox' 
+				dflt 
+			/>
+
+			<Misc.PropControl path={path} prop='teams' item={item} 
+				label='User teams?' type='checkbox' />
 		</Misc.Card>
 
 		<Misc.Card icon='camera' title='Images & Branding'>
-			<Misc.PropControl path={['data', type, id]} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
+			<Misc.PropControl path={path} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
 			
-			<Misc.PropControl path={['data', type, id]} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
+			<Misc.PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
 
-			<Misc.PropControl path={['data', type, id]} prop='bannerImage' item={item} label='Banner Image' type='imgUpload' />
+			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image' type='imgUpload' />
 		</Misc.Card>
 
 		<Misc.Card title='Ticket Types' icon='ticket'>

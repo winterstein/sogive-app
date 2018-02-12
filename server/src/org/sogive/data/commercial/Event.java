@@ -29,4 +29,15 @@ public class Event extends AThing {
 	String defaultFundraiserImg;
 	String description;
 	String backgroundImage;
-}
+	
+	/**
+	 * Event "features"
+	 */
+	Boolean teams;
+	Boolean pickCharity;
+	/**
+	 * locked charity?
+	 */
+	String charityId;
+	
+}	

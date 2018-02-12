@@ -43,11 +43,12 @@ const Event = ({id}) => {
 		return <Misc.Loading />;
 	}
 	let item = pEvent.value;
+	let logo = item.logoImage || item.img;
 	return (
 		<div>
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
-			<img src={item.img} className='img-thumbnail' alt='event logo' />
+			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
 			<div>
 				{item.description}
 			</div>
