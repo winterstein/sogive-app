@@ -55,10 +55,11 @@ Basket.getTotal = (basket) => {
 };
 
 Basket.make = (base = {}) => {
+	// event??
 	let ma = {
 		items: [],
 		hasTip: true,
-		tip: Money.make({value: 1}), // TODO tip/fee shouldn't really be hard-coded here
+		// tip: Money.make({value: 1}), // TODO tip/fee based on event and tickets
 		...base,
 		'@type': Basket.type,
 	};

@@ -73,11 +73,7 @@ class Store {
 	setUrlValue(key, value) {
 		assMatch(key, String);
 		if (value) assMatch(value, "String|Boolean|Number");
-		// update the url
-		let newParams = {};
-		newParams[key] = value;
-		modifyHash(null, newParams);
-		// update the datastore
+		// the modifyHash hack is in setValue() so that Misc.PropControl can use it too
 		this.setValue(['location', 'params', key], value);
 	}
 
@@ -190,6 +186,15 @@ class Store {
 			// console.log("setValue no-op", path, value, "NB: beware of in-place edits - use update=true to force an update");
 			return;
 		}
+
+		// HACK: modify the url?
+		if (path[0] === 'location' && path[1] === 'params') {
+			let newParams = {};
+			assert(path.length === 3, "DataStore.js - path should be location.params.key "+path[3]);
+			newParams[path[2]] = value;
+			modifyHash(null, newParams);
+		}
+
 		let tip = this.appstate;
 		for(let pi=0; pi < path.length; pi++) {
 			let pkey = path[pi];

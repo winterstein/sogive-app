@@ -71,12 +71,7 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 
 	const changeTab = () => {
 		let n = stage + diff;
-		// HACK: put it in the url?
-		if (stagePath.length===3 && stagePath[0]==='location' && stagePath[1]==='params') {
-			DataStore.setUrlValue(stagePath[2], n);	
-		} else {
-			DataStore.setValue(stagePath, n);
-		}
+		DataStore.setValue(stagePath, n);		
 	};
 	
 	// use Bootstrap pull class to left/right float

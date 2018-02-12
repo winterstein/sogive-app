@@ -128,6 +128,10 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new EventServlet();
 				s.process(request);
 				return;
+			case "eventReport":
+				s = new EventReportServlet();
+				s.process(request);
+				return;				
 			case "basket":
 				s = new BasketServlet();
 				s.process(request);

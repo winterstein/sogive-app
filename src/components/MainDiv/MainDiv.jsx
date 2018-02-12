@@ -27,6 +27,7 @@ import EditFundRaiserPage from '../editor/EditFundRaiserPage';
 import ManageDonationsPage from '../editor/ManageDonationsPage';
 import EditEventPage from '../editor/EditEventPage';
 import EventPage from '../EventPage';
+import EventReportPage from '../editor/EventReportPage';
 import RegisterPage from '../RegisterPage';
 import E404Page from '../E404Page';
 // Actions
@@ -34,6 +35,7 @@ import E404Page from '../E404Page';
 const PAGES = {
 	event: EventPage,
 	editEvent: EditEventPage,
+	eventReport: EventReportPage,
 	register: RegisterPage,
 	fundraiser: FundRaiserPage,
 	editFundraiser: EditFundRaiserPage,

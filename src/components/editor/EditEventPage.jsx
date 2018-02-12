@@ -128,6 +128,11 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<Misc.PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
 		<Misc.PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
 		<Misc.PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
+		<Misc.Col2>
+			<Misc.PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
+				help='The maximum number that can be sold - normally left blank for unlimited' />
+			<div><label>Sold so far: {ticketType.sold || 0}</label></div>
+		</Misc.Col2>
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
 		<Misc.PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
