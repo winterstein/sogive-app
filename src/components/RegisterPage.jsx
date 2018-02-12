@@ -24,7 +24,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
-import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
+import Wizard, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 
 import pivot from 'data-pivot';
@@ -41,8 +41,7 @@ const RegisterPage = () => {
 
 	// const wspath = ['widget', 'RegisterPage', eventId];
 	// const widgetState = DataStore.getValue(wspath) || {};
-	const stagePath = ['location','params', 'registerStage'];
-	let stage = Number.parseInt(DataStore.getUrlValue('registerStage')) || 0;
+	// const stagePath = ['location','params', 'registerStage'];
 	// if (stage===0) { // start on 1
 	// 	stage = 1;
 	// 	DataStore.setValue(stagePath, stage, false);
@@ -63,78 +62,77 @@ const RegisterPage = () => {
 	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
-	let stages = [
-		{title:'Tickets'}, 
-		{title:'Register'}, 
-		{title:'Your Details'}, 
-		{title:'Your Charity'}, 
-		yessy(event.extras)? {title:'Extras'} : null,
-		{title:'Checkout'}, 
-		{title:'Confirmation'}
-	];
-	stages = stages.filter(x => x); // remove null
+
+	const stagePath = ['location', 'params', 'registerStage'];
 
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
-			<img className='page-banner' src={event.bannerImage} alt='banner' />
+			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 				&nbsp;
 				<span className='event-date'>{longdate}</span>
 			</h2>
 
-			<WizardProgressWidget stageNum={stage} 
-				stagePath={stagePath}
-				stages={stages}			
-			/>
+			<Wizard stagePath={stagePath} >
+				<WizardStage title='Tickets'>
+					<TicketTypes event={event} basket={basket} />
+					<TicketInvoice event={event} basket={basket} />
+					<div className='nav-buttons'>
+						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+					</div>
+				</WizardStage>
 
-			<WizardStage stageKey={0} stageNum={stage}>
-				<TicketTypes event={event} basket={basket} />
-				<TicketInvoice event={event} basket={basket} />
-				<div className='nav-buttons'>
-					<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={1} stageNum={stage}>
-				<RegisterOrLoginTab stagePath={stagePath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} /> 
-					<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={2} stageNum={stage}>
-				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={3} stageNum={stage}>
-				<CharityChoiceTab basket={basket} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={4} stageNum={stage}>
-				TODO Extras
-				auto skip if none
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={5} stageNum={stage}>
-				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-				</div>
-			</WizardStage>
-			<WizardStage stageKey={6} stageNum={stage}>
-				<Receipt basket={basket} event={event} />
-				<ConfirmedTicketList basket={basket} event={event} />
-			</WizardStage>
+				<WizardStage title='Register'>
+					<RegisterOrLoginTab stagePath={stagePath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} /> 
+						<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+					</div>
+				</WizardStage>
+				
+				<WizardStage title='Your Details' >
+					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} />
+						<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
+					</div>
+				</WizardStage>
+						
+				{event.pickCharity === false? null :
+					<WizardStage title='Your Charity'>
+						<CharityChoiceTab basket={basket} />
+						<div className='nav-buttons'>
+							<PrevButton stagePath={stagePath} />
+							<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
+						</div>
+					</WizardStage>
+				}
+				
+				{ ! yessy(event.extras)? null :
+					<WizardStage title='Extras'>
+						TODO Extras
+						auto skip if none
+						<div className='nav-buttons'>
+							<PrevButton stagePath={stagePath} />
+							<NextButton stagePath={stagePath} />
+						</div>
+					</WizardStage>
+				}
+
+				<WizardStage title='Checkout'>
+					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} />
+					</div>
+				</WizardStage>
+				
+				<WizardStage title='Confirmation'>
+					<Receipt basket={basket} event={event} />
+					<ConfirmedTicketList basket={basket} event={event} />
+				</WizardStage>
+			</Wizard>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 
@@ -374,6 +372,12 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 };
 
 const TeamControl = ({ticket, path}) => {
+	// does this event support teams?
+	let event = Ticket.eventId(ticket)? DataStore.getData(C.TYPES.Event, Ticket.eventId(ticket)) : null;
+	if (event && event.teams === false) {
+		return null;
+	}
+
 	return (<Misc.Col2>
 		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
 			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
