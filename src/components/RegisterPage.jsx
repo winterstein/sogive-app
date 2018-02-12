@@ -24,7 +24,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
-import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
+import Wizard, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 
 import pivot from 'data-pivot';
@@ -41,7 +41,7 @@ const RegisterPage = () => {
 
 	// const wspath = ['widget', 'RegisterPage', eventId];
 	// const widgetState = DataStore.getValue(wspath) || {};
-	const stagePath = ['location','params', 'registerStage'];
+	// const stagePath = ['location','params', 'registerStage'];
 	// if (stage===0) { // start on 1
 	// 	stage = 1;
 	// 	DataStore.setValue(stagePath, stage, false);
@@ -62,88 +62,77 @@ const RegisterPage = () => {
 	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
-	let stages = [
-		{title:'Tickets'}, 
-		{title:'Register'}, 
-		{title:'Your Details', key:'details'}, 
-		event.pickCharity !== false? {title:'Your Charity', key:'charity'} : null, 
-		yessy(event.extras)? {title:'Extras', key:'extras'} : null,
-		{title:'Checkout'}, 
-		{title:'Confirmation'}
-	];
-	stages = stages.filter(x => x); // remove null
-	// make stage keys from the titles
-	stages.forEach(s => s.key = s.key || s.title.toLowerCase().replace(/\W/g, ''));
-	// where is the user?
-	const stage = DataStore.getUrlValue('registerStage') || stages[0].key;
+
+	const stagePath = ['location', 'params', 'registerStage'];
 
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
-			<img className='page-banner' src={event.bannerImage} alt='banner' />
+			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 				&nbsp;
 				<span className='event-date'>{longdate}</span>
 			</h2>
 
-			<WizardProgressWidget stageNum={stage} 
-				stagePath={stagePath}
-				stages={stages}			
-			/>
+			<Wizard stagePath={stagePath} >
+				<WizardStage title='Tickets'>
+					<TicketTypes event={event} basket={basket} />
+					<TicketInvoice event={event} basket={basket} />
+					<div className='nav-buttons'>
+						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+					</div>
+				</WizardStage>
 
-			<WizardStage stageKey='tickets' stageNum={stage}>
-				<TicketTypes event={event} basket={basket} />
-				<TicketInvoice event={event} basket={basket} />
-				<div className='nav-buttons'>
-					<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
-				</div>
-			</WizardStage>
+				<WizardStage title='Register'>
+					<RegisterOrLoginTab stagePath={stagePath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} /> 
+						<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+					</div>
+				</WizardStage>
+				
+				<WizardStage title='Your Details' >
+					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} />
+						<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
+					</div>
+				</WizardStage>
+						
+				{event.pickCharity === false? null :
+					<WizardStage title='Your Charity'>
+						<CharityChoiceTab basket={basket} />
+						<div className='nav-buttons'>
+							<PrevButton stagePath={stagePath} />
+							<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
+						</div>
+					</WizardStage>
+				}
+				
+				{ ! yessy(event.extras)? null :
+					<WizardStage title='Extras'>
+						TODO Extras
+						auto skip if none
+						<div className='nav-buttons'>
+							<PrevButton stagePath={stagePath} />
+							<NextButton stagePath={stagePath} />
+						</div>
+					</WizardStage>
+				}
 
-			<WizardStage stageKey='register' stageNum={stage}>
-				<RegisterOrLoginTab stagePath={stagePath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} /> 
-					<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
-				</div>
-			</WizardStage>
-			
-			<WizardStage stageKey='details' stageNum={stage}>
-				<WalkerDetailsTab basket={basket} basketPath={basketPath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
-				</div>
-			</WizardStage>
-			
-			<WizardStage stageKey='charity' stageNum={stage}>
-				<CharityChoiceTab basket={basket} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
-				</div>
-			</WizardStage>
-			
-			<WizardStage stageKey='extras' stageNum={stage}>
-				TODO Extras
-				auto skip if none
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-					<NextButton stagePath={stagePath} />
-				</div>
-			</WizardStage>
-
-			<WizardStage stageKey='checkout' stageNum={stage}>
-				<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
-				<div className='nav-buttons'>
-					<PrevButton stagePath={stagePath} />
-				</div>
-			</WizardStage>
-			
-			<WizardStage stageKey='confirmation' stageNum={stage}>
-				<Receipt basket={basket} event={event} />
-				<ConfirmedTicketList basket={basket} event={event} />
-			</WizardStage>
+				<WizardStage title='Checkout'>
+					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
+					<div className='nav-buttons'>
+						<PrevButton stagePath={stagePath} />
+					</div>
+				</WizardStage>
+				
+				<WizardStage title='Confirmation'>
+					<Receipt basket={basket} event={event} />
+					<ConfirmedTicketList basket={basket} event={event} />
+				</WizardStage>
+			</Wizard>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 

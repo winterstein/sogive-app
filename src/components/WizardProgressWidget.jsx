@@ -16,7 +16,7 @@ const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 	// NB: if no completed info, assume all before stageNum are fine
 	const complete = completed? completed[i] : i < stageNum;
 	let c = ''; 
-	if (i === stageNum) {
+	if (i == stageNum) {
 		c = 'active';
 	} else if (complete) {
 		c = 'complete';
@@ -39,7 +39,7 @@ const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 const WizardStage = ({stageKey, stageNum, children}) => {
 	if ( ! stageNum) stageNum=0;
 	if (stageKey != stageNum) { // allow "1" == 1		
-		return null;
+		return null; //<p>k:{stageKey} n:{stageNum}</p>;
 	}
 	return <div className='WizardStage'>{children}</div>;
 };
@@ -89,26 +89,29 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 	);
 };
 
-const Wizard = ({widgetName, children}) => {
+const Wizard = ({widgetName, stagePath, children}) => {
 	// NB: React-BS provides Accordion, but it does not work with modular panel code. So sod that.
 	// TODO manage state
-	const wcpath = ['widget', widgetName || 'Wizard', 'stage'];
-	let stage = DataStore.getValue(wcpath);
-	if ( ! stage) stage = 0; // default to first kid open
+	const wcpath = stagePath || ['widget', widgetName || 'Wizard', 'stage'];
+	let stageNum = DataStore.getValue(wcpath);
+	if ( ! stageNum) stageNum = 0; // default to first kid open
 	if ( ! children) {
 		return (<div className='Wizard'></div>);
 	}
 	// filter null, undefined
 	children = children.filter(x => !! x);
-	// pick the right Kid
+	let stages = children.map( (kid, i) => {
+		return {title: kid.props && kid.props.title? kid.props.title : 'Step '+i};	
+	});
 	const kids = React.Children.map(children, (Kid, i) => {
-			
+		// clone with stageNum
+		return React.cloneElement(Kid, {stageNum, stageKey:i});
 	});
 	return (<div className='Wizard'>
-		<WizardProgressWidget />
-		{children}
+		<WizardProgressWidget stages={stages} stagePath={stagePath} stageNum={stageNum} />
+		{kids}
 	</div>);
 };
 
-export {Wizard, WizardStage, NextButton, PrevButton};
-export default WizardProgressWidget;
+export {Wizard, WizardStage, WizardProgressWidget, NextButton, PrevButton};
+export default Wizard;
