@@ -3,6 +3,8 @@ import DataStore from '../plumbing/DataStore';
 import Misc from './Misc';
 import {assMatch, assert} from 'sjtest';
 
+// TODO refactor a la Misc.CardAccordion
+
 const WizardProgressWidget = ({stageNum, completed, stages, stagePath}) => {
 	if ( ! stageNum) stageNum = 0;
 	return (<div className='WizardProgressWidget'>
@@ -87,5 +89,26 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 	);
 };
 
-export {WizardStage, NextButton, PrevButton};
+const Wizard = ({widgetName, children}) => {
+	// NB: React-BS provides Accordion, but it does not work with modular panel code. So sod that.
+	// TODO manage state
+	const wcpath = ['widget', widgetName || 'Wizard', 'stage'];
+	let stage = DataStore.getValue(wcpath);
+	if ( ! stage) stage = 0; // default to first kid open
+	if ( ! children) {
+		return (<div className='Wizard'></div>);
+	}
+	// filter null, undefined
+	children = children.filter(x => !! x);
+	// pick the right Kid
+	const kids = React.Children.map(children, (Kid, i) => {
+			
+	});
+	return (<div className='Wizard'>
+		<WizardProgressWidget />
+		{children}
+	</div>);
+};
+
+export {Wizard, WizardStage, NextButton, PrevButton};
 export default WizardProgressWidget;
