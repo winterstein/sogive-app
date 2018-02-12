@@ -36,8 +36,8 @@ public class EventReportServlet implements IServlet {
 
 	@Override
 	public void process(WebRequest state) throws Exception {
-		String eventId = state.getSlugBits(0);
-		String sub = state.getSlugBits(1);
+		String eventId = state.getSlugBits(1);
+		String sub = state.getSlugBits(2);
 		// ticket sales?
 		
 		// ticket list?
