@@ -60,7 +60,6 @@ import jobs.BuildDepot;
 import jobs.BuildUtils;
 import jobs.BuildWeb;
 import jobs.BuildWinterwellProject;
-import jobs.BuildYouAgainJavaClient;
 
 
 /**
