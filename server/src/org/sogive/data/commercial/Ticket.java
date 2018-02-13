@@ -30,6 +30,7 @@ public class Ticket extends AThing {
 	 * How many can we sell?
 	 */
 	Integer stock;
+	Boolean inviteOnly; // TODO
 	
 	/**
 	 * TODO how many have we sold??
