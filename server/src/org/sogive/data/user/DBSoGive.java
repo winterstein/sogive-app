@@ -15,6 +15,7 @@ import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
+import org.sogive.data.commercial.Ticket;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 
@@ -59,7 +60,7 @@ public class DBSoGive {
 			NGO.class, 
 			Person.class, Team.class, Event.class, 
 			FundRaiser.class,
-			Basket.class, Donation.class, 
+			Basket.class, Donation.class, Ticket.class,
 			Transfer.class
 			};
 
@@ -72,13 +73,6 @@ public class DBSoGive {
 		
 		// charity mapping
 		
-//		dtype.property("name", new ESType().text()
-//				// enable keyword based sorting
-//				.field("raw", "keyword"));
-//dtype.property("@id", new ESType().keyword());
-//dtype.property("projects", new ESType().object()
-//.property("year", new ESType().INTEGER())
-//);
 		// dates also have a "raw" string field, for storing badly formatted input
 		// This is handled in Project.init()
 		ESType raw = new ESType().text().noIndex().noAnalyzer();
@@ -101,22 +95,29 @@ public class DBSoGive {
 				.property("suggest", new ESType().completion());	
 
 		// mappings
-		AppUtils.initESMappings(KStatus.main(), DBCLASSES,
+		AppUtils.initESMappings(KStatus.main(), 
+				// default handling for Basket Ticket etc.
+				DBCLASSES,
 				new ArrayMap(
 					
 					NGO.class, charitymapping,
 						
 					Donation.class,
 						new ESType()
-							.property("from", new ESType().keyword())
-							.property("to", new ESType().keyword())
+							.property("from", ESType.keyword)
+							.property("to", ESType.keyword)
 							.property("date", new ESType().date()),
 					
 					Transfer.class,
 							new ESType()
-								.property("from", new ESType().keyword())
-								.property("to", new ESType().keyword())
-								.property("date", new ESType().date())							
+								.property("from", ESType.keyword)
+								.property("to", ESType.keyword)
+								.property("date", new ESType().date()),
+					
+					Ticket.class, 
+							new ESType()
+								.property("eventId", ESType.keyword)
+					
 				));
 	}
 
