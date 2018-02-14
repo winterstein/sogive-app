@@ -3,6 +3,7 @@ package org.sogive.server;
 import java.util.List;
 
 import org.sogive.data.commercial.Basket;
+import org.sogive.data.commercial.Ticket;
 import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
@@ -12,9 +13,12 @@ import org.sogive.server.payment.StripePlugin;
 import com.stripe.model.Charge;
 import com.sun.corba.se.impl.protocol.NotLocalLocalCRDImpl;
 import com.winterwell.data.JThing;
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
@@ -32,10 +36,10 @@ public class BasketServlet extends CrudServlet<Basket> {
 	@Override
 	protected JThing<Basket> doPublish(WebRequest state) {
 		// copy pasta from DonationServlet
-		
+		Basket basket = (Basket) jthing.java();
 		// make/save Donation
 		super.doSave(state);
-		Basket donation = (Basket) jthing.java();
+		Basket donation = basket;
 
 		XId user = state.getUserId();
 		if (user==null) {
@@ -78,6 +82,17 @@ public class BasketServlet extends CrudServlet<Basket> {
 				
 		// store in the database (this will save the edited basket)
 		super.doPublish(state);
+		// store the tickets
+		List<Ticket> items = basket.getItems();
+		for (Ticket ticket : items) {
+			String id = ticket.getId();
+			Utils.check4null(id); 
+			ESPath draftPath = esRouter.getPath(dataspace, type, id, KStatus.DRAFT);
+			ESPath publishPath = esRouter.getPath(dataspace, type, id, KStatus.PUBLISHED);
+			JThing jticket = new JThing().setJava(ticket);
+			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);
+			return obj.setType(type);
+		}
 		
 		// Process the order!
 		BasketPublishedActor bpa = Dep.get(BasketPublishedActor.class);
