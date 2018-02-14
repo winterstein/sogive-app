@@ -65,6 +65,10 @@ const RegisterPage = () => {
 
 	const stagePath = ['location', 'params', 'registerStage'];
 
+	const deleteBasket = e => {
+		ActionMan.delete(C.TYPES.Basket, basket.id);
+	};
+
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
@@ -80,6 +84,9 @@ const RegisterPage = () => {
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 					<div className='nav-buttons'>
+						<button className="btn btn-default btn-lg pull-left" onClick={deleteBasket} >
+							<Misc.Icon glyph='trash' />Cancel
+						</button> 
 						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
 					</div>
 				</WizardStage>

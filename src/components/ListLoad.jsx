@@ -132,6 +132,8 @@ const createBlank = ({type, navpage, base, make}) => {
 	DataStore.setValue(['data', type, id], base);
 	// set the id
 	onPick({navpage, id});
+	// invalidate lists
+	DataStore.invalidateList(type);
 };
 
 const CreateButton = ({type, navpage, base, make}) => {

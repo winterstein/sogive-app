@@ -274,7 +274,7 @@ const SuggestCharityForm = () => {
 		<Misc.PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
 		<Misc.PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
 		<Misc.PropControl path={fpath} prop='email' label='Your email' />
-		<Misc.SubmitButton url='http://localprofiler.winterwell.com/form/sogive' path={fpath} 
+		<Misc.SubmitButton url='https://profiler.winterwell.com/form/sogive' path={fpath} 
 			onSuccess={<p>Thank you for suggesting this charity.</p>} 
 		>
 			Submit
