@@ -119,6 +119,14 @@ public class DBSoGive {
 								.property("eventId", ESType.keyword)
 					
 				));
+		
+		// Dummy TBD charity
+		NGO ngo = new NGO("tbd");
+		ngo.put("displayName", "TBD: To Be Decided");
+		ngo.put("description", "This is a placeholder for people who haven't picked their charity yet.");
+		ESPath draftPath = Dep.get(IESRouter.class).getPath(NGO.class, "tbd", KStatus.DRAFT);
+		ESPath pubPath = Dep.get(IESRouter.class).getPath(NGO.class, "tbd", KStatus.PUBLISHED);
+		AppUtils.doPublish(new JThing(ngo), draftPath, pubPath);
 	}
 
 	public static List<NGO> getCharityById(NGO ngo) {
