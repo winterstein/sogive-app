@@ -266,8 +266,8 @@ const SuggestCharityForm = () => {
 	DataStore.setValue(fpath.concat('controller'), 'sogive.org', false);
 
 	let profilerEndpoint = 
-		// 'https://profiler.winterwell.com/form/sogive'
-		'http://localprofiler.winterwell.com/form/sogive';
+		'https://profiler.winterwell.com/form/sogive';
+		// 'http://localprofiler.winterwell.com/form/sogive';
 
 	return (<div className='SuggestCharityForm'>
 		<p>
