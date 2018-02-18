@@ -5,11 +5,11 @@ import Login from 'you-again';
 import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 
 import printer from '../utils/printer.js';
-
+import _ from 'lodash';
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
-
+import {notifyUser} from '../plumbing/Messaging';
 import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
@@ -70,17 +70,19 @@ const FundRaiserPage = ({id}) => {
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = item.owner.id === Login.getId();
-
+	if (ownerViewing) {
+		_.defer(notifyUser, {
+			type:'info',
+			id: 'welcome-you',
+			text:'Welcome to your fundraiser page',
+			jsx: <a href={'#editFundraiser/'+item.id}>Edit Fundraiser</a>,
+			onePageOnly: true
+		});
+	}
 
 	return (
 		<div>
 			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
-			{ownerViewing ? (
-				<div className='own-fundraiser'>
-					<h3>You're viewing your own fundraiser page.</h3>
-					<a href={`#editFundraiser/${item.id}`}>Edit Fundraiser</a>
-				</div>
-			) : null}	
 			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
 				{event.bannerImage? <Row>
@@ -156,6 +158,14 @@ const DonationProgress = ({item, charity}) => {
 	assMatch(target, "?Money");
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
+	// nothing?
+	if (Money.value(donated) < 0.1) {
+		return (<div className='DonationProgress'>
+			<p>No money raised yet</p>
+			<div className='target'>Target: <Misc.Money amount={target} /></div>
+		</div>);
+	}
+
 	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
 	// Clamp the bar height to 100% for obvious reasons
 	const donatedBarHeight =Math.min(100, donatedPercent);

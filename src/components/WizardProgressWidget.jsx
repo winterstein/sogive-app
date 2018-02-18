@@ -47,21 +47,34 @@ const Stage = ({i, stage, stageNum, stagePath}) => {
  * to all children:
  * setNavStatus {sufficient, complete}
  */
-const WizardStage = ({stageKey, stageNum, setNavStatus, next, previous, title, children}) => {
+const WizardStage = ({stageKey, stageNum, stagePath, maxStage,
+	next, previous, sufficient, complete, title, children}) => {
 	assert(stageNum !==null && stageNum !== undefined);
+	assMatch(maxStage, Number);
 	if (stageKey != stageNum) { // allow "1" == 1		
 		return null; //<p>k:{stageKey} n:{stageNum}</p>;
 	}
+
+	// allow sections to set sufficient, complete, next, previous
+	const navStatus = {next, previous, sufficient, complete};
+	const setNavStatus = (newStatus) => {
+		Object.assign(navStatus, newStatus);
+	};
 	// pass in setNavStatus	
 	if (children) {
 		// array of elements (or just one)?
 		if (children.filter) children = children.filter(x => !! x);
 		children = React.Children.map(children, (Kid, i) => {
-			// clone with setNavStatus
-			return React.cloneElement(Kid, {setNavStatus});
+			// clone with setNavStatus?
+			let sns = Kid.props && Kid.props.setNavStatus;
+			return sns? React.cloneElement(Kid, {setNavStatus}) : Kid;
 		});
 	}
-	return <div className='WizardStage'>{children}</div>;
+	return (<div className='WizardStage'>
+		{children}
+		<WizardNavButtons stagePath={stagePath} 
+			navStatus={navStatus} maxStage={maxStage} />
+	</div>);
 };
 
 
@@ -71,9 +84,12 @@ const WizardStage = ({stageKey, stageNum, setNavStatus, next, previous, title, c
  * 	maxStage: {Number}
  * }
  */
-const NextButton = ({complete, stagePath, ...rest}) => {
+const NextButton = ({complete, stagePath, maxStage, ...rest}) => {
 	const bsClass = complete ? 'primary' : null;
-	return <NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} text={<span>Next <Misc.Icon glyph='menu-right' /></span>} {...rest} />;
+	assMatch(maxStage, Number);
+	return (<NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} 
+		text={<span>Next <Misc.Icon glyph='menu-right' /></span>} 
+		maxStage={maxStage} {...rest} />);
 };
 const PrevButton = ({stagePath, ...rest}) => {
 	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Misc.Icon glyph='menu-left' /> Previous</span>} {...rest} />;
@@ -121,18 +137,16 @@ const Wizard = ({widgetName, stagePath, children}) => {
 		if ( ! props.title) props.title = 'Step '+i;
 		return props;
 	});
-	// allow sections to set sufficient, complete, next, previous
-	const navStatus = {};
-	const setNavStatus = (newStatus) => {
-		Object.assign(navStatus, newStatus);
-	};
+	// so next can recognise the end
+	const maxStage = stages.length - 1;
+	// add overview stage info to the stages
 	let kids = React.Children.map(children, (Kid, i) => {
 		// active?
 		if (i != stageNum) {
 			return null;
 		}
-		// clone with stageNum and functions
-		return React.cloneElement(Kid, {stageNum, stageKey:i, setNavStatus});
+		// clone with stageNum/path/key
+		return React.cloneElement(Kid, {stageNum, stagePath, stageKey:i, maxStage});
 	});
 	// filter null again (we should now only have the active stage)
 	kids = kids.filter(x => !! x);
@@ -141,19 +155,19 @@ const Wizard = ({widgetName, stagePath, children}) => {
 	return (<div className='Wizard'>
 		<WizardProgressWidget stages={stages} stagePath={stagePath} stageNum={stageNum} />
 		{kids}
-		<WizardNavButtons stagePath={stagePath} navStatus={navStatus} stage={activeStage} />
 	</div>);
 };
 
-const WizardNavButtons = ({stagePath, navStatus, stage}) => {
+const WizardNavButtons = ({stagePath, maxStage, next, previous, sufficient, complete}) => {
 	assert(stagePath, "WizardProgressWidget.jsx - WizardNavButtons: no stagePath");
 	// read from WizardStage props if set, or setNavStatus
-	let {next, previous, sufficient, complete} = Object.assign({}, stage && stage.props, navStatus);
+	// navStatus;
 	if (complete) sufficient = true;
 	let msg = sufficient===false? 'Please fill in more of the form' : null;
 	return (<div className='nav-buttons clearfix'>
 		{previous===false? null : <PrevButton stagePath={stagePath} /> }
-		{next===false? null : <NextButton stagePath={stagePath} disabled={sufficient===false} complete={complete} title={msg} /> }
+		{next===false? null : <NextButton stagePath={stagePath} maxStage={maxStage}
+			disabled={sufficient===false} complete={complete} title={msg} /> }
 	</div>);
 };
 
