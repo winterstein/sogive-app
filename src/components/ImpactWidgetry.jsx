@@ -35,8 +35,9 @@ const ImpactDesc = ({charity, project, outputs, amount}) => {
 /**
  * See Output.js for relevant doc notes
  * {
- * 	number: number of units, e.g. 10 for "10 malaria nets"
- * 	cost: {?Money}
+ * 	cost: {?Money} how much do you wish to donate?
+ * 	targetCount: {?Number} e.g. 10 for "10 malaria nets"
+ * 		Either cost or targetCount should be set, but not both.
  * }
   @returns {?Output}
  */
@@ -48,6 +49,10 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	assMatch(targetCount, "?Number");
 	assMatch(cost, "?Money");
 	if ( ! output) {
+		return null;
+	}
+	if ( ! cost && ! targetCount) {
+		// specify either a spend, e.g. cost:£10, or a target scale, e.g. targetCount:10 (nets)
 		return null;
 	}
 	// Output.assIsa(output);	can break old data :(
@@ -76,14 +81,14 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 
 /**
  * 
- * @returns {Output[]}
+ * @returns {Output[]} Filters null, so can be an empty list
  */
-const multipleImpactCalc = ({charity, project, number, targetCount, amount}) => {
-	const { outputs = []} = project;
-	assert( ! amount, "ImpactWidgetry.jsx - old code: amount - use number");
+const multipleImpactCalc = ({charity, project, ...params}) => {
+	const outputs = Project.outputs(project);
+	assert( ! params.amount, "ImpactWidgetry.jsx - old code: amount - use number");
 	
 	return outputs.map((output) => (
-		impactCalc({charity, project, output, number, targetCount})
+		impactCalc({charity, project, output, ...params})
 	)).filter(impact => !!impact);
 };
 

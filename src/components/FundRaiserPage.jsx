@@ -83,11 +83,11 @@ const FundRaiserPage = ({id}) => {
 			) : null}	
 			<NewDonationForm item={item} />
 			<Grid id='FundRaiserPage'>
-				<Row>
+				{event.bannerImage? <Row>
 					<Col md={12} className='event-banner'>
 						<img alt={`Banner for ${item.name}`} src={event.bannerImage} />
 					</Col>
-				</Row>
+				</Row> : null}
 
 				<Row className='title-bar'>
 					<Col md={12}>
@@ -153,7 +153,9 @@ const FundRaiserPage = ({id}) => {
 const DonationProgress = ({item, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
+	assMatch(target, "?Money");
 	const donated = FundRaiser.donated(item);
+	assMatch(donated, "?Money");
 	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
 	// Clamp the bar height to 100% for obvious reasons
 	const donatedBarHeight =Math.min(100, donatedPercent);
@@ -165,7 +167,7 @@ const DonationProgress = ({item, charity}) => {
 	const project = NGO.getProject(charity);
 	// NB: no project = no impact data, but you can still donate
 	if (project) {
-		impacts = multipleImpactCalc({ charity, project, cost: donated.value });
+		impacts = multipleImpactCalc({ charity, project, cost: donated });
 	}
 	console.log('*** IMPACTS OF DONATIONS', impacts);
 
@@ -189,8 +191,8 @@ const DonationProgress = ({item, charity}) => {
 	) : null;
 
 	return (
-		<div className='donation-progress'>
-			<div className='progress-graph'>
+		<div className='DonationProgress'>
+			<div className='ProgressGraph'>
 				<div className='target'>Target: <Misc.Money amount={target} /></div>
 				<div className='bar-container'>
 					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
@@ -214,7 +216,7 @@ const DonationProgress = ({item, charity}) => {
 			</div>
 		</div>
 	);
-};
+}; // DonationProgress
 
 const DonationsSoFar = ({item}) => {
 	// Access the userTarget prop directly, before calling FundRaiser.target, to see if an actual target is set

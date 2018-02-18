@@ -3,7 +3,7 @@ import C from '../C.js';
 import _ from 'lodash';
 import {getId, getType} from '../data/DataClass';
 import {assert,assMatch} from 'sjtest';
-import {yessy, is, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
+import {parseHash, modifyHash, toTitleCase} from 'wwutils';
 import PV from 'promise-value';
 
 /**
@@ -421,6 +421,8 @@ class Store {
 
 } // ./Store
 
+// NB: this is also in wwutils, but npm or something is being weird about versioning. Feb 2018
+const is = x => x !== undefined && x !== null;
 
 const DataStore = new Store();
 // switch on data item edits => modified flag

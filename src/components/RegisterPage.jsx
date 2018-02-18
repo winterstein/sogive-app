@@ -79,15 +79,16 @@ const RegisterPage = () => {
 				<span className='event-date'>{longdate}</span>
 			</h2>
 
-			<Wizard stagePath={stagePath} >
-				<WizardStage title='Tickets'>
+			<Wizard stagePath={stagePath} nonavButtons >
+				<WizardStage title='Tickets' >
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 					<div className='nav-buttons'>
 						<button className="btn btn-default btn-sm pull-left" onClick={deleteBasket} >
 							<Misc.Icon glyph='trash' />Empty Basket
 						</button> 
-						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
+						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} 
+							complete={basket && Basket.getItems(basket).length} />
 					</div>
 				</WizardStage>
 
@@ -95,7 +96,7 @@ const RegisterPage = () => {
 					<RegisterOrLoginTab stagePath={stagePath} />
 					<div className='nav-buttons'>
 						<PrevButton stagePath={stagePath} /> 
-						<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} completed={Login.isLoggedIn()} />
+						<NextButton stagePath={stagePath} disabled={ ! Login.isLoggedIn()} complete={Login.isLoggedIn()} />
 					</div>
 				</WizardStage>
 				
@@ -103,7 +104,7 @@ const RegisterPage = () => {
 					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 					<div className='nav-buttons'>
 						<PrevButton stagePath={stagePath} />
-						<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} completed={walkerDetailsOK} />
+						<NextButton stagePath={stagePath} disabled={! walkerDetailsOK} complete={walkerDetailsOK} />
 					</div>
 				</WizardStage>
 						
@@ -112,7 +113,7 @@ const RegisterPage = () => {
 						<CharityChoiceTab basket={basket} />
 						<div className='nav-buttons'>
 							<PrevButton stagePath={stagePath} />
-							<NextButton stagePath={stagePath} completed={ !! Basket.charityId(basket)} />
+							<NextButton stagePath={stagePath} complete={ !! Basket.charityId(basket)} />
 						</div>
 					</WizardStage>
 				}

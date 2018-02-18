@@ -1,5 +1,5 @@
 import {assert, assMatch} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa, defineType} from '../DataClass';
 import Money from './Money';
 import {blockProp} from 'wwutils';
 import C from '../../C';
@@ -9,20 +9,16 @@ import DataStore from '../../plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 
 /** impact utils */
-const FundRaiser = {};
+const FundRaiser = defineType(C.TYPES.FundRaiser);
 /** `This` makes it easier to copy-paste code between similar classes */
 const This = FundRaiser;
 export default FundRaiser;
 
-// duck type: needs a value
-This.type = C.TYPES.FundRaiser;
 This.isa = (obj) => isa(obj, This.type)
 		// sneaky place to add safety checks
 		&& blockProp(obj, 'charity', This.type+' - use charityId()')
 		&& blockProp(obj, 'event', This.type+' - use eventId()')
 		&& true;
-This.assIsa = (p) => assert(This.isa(p), This.type, p);
-This.name = (ngo) => This.assIsa(ngo) && ngo.name;
 
 This.oxid = obj => obj.oxid || (obj.owner && obj.owner.xid);
 
@@ -73,6 +69,7 @@ This.donated = item => {
 	This.assIsa(item);
 	// TODO rely on the server summing and storing the donations.
 	// -- to avoid having to load all (might be 1000s for a popular fundraiser).
+	assMatch(item.donated, "?Money");
 	return item.donated;	
 };
 

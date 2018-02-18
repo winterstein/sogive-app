@@ -234,7 +234,7 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, recursing, ...
 		</div>);
 	} // ./checkbox
 
-	// Yes-no radio buttons? (eg in the Gift Aid form)
+	// HACK: Yes-no (or unset) radio buttons? (eg in the Gift Aid form)
 	if (type === 'yesNo') {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events

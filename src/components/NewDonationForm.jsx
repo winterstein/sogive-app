@@ -20,7 +20,7 @@ import Basket from '../data/Basket';
 import Misc from './Misc';
 import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
-import WizardProgressWidget, {WizardStage, NextButton, PrevButton} from './WizardProgressWidget';
+import Wizard, {WizardStage, WizardNavButtons} from './WizardProgressWidget';
 
 /**
  * 
@@ -74,7 +74,7 @@ const DonationForm = ({item, charity, causeName}) => {
 
 	if ( ! charity) {
 		if (NGO.isa(item)) charity = item;
-		// TODO get charity from FundRaiser
+		else if (FundRaiser.isa(item)) charity = FundRaiser.charity(item);
 	}
 	let charityId = charity? getId(charity) : item.charityId;
 	/*
@@ -137,42 +137,11 @@ const DonationForm = ({item, charity, causeName}) => {
 	const path = ['data', type, donationDraft.id];
 	assert(donationDraft === DataStore.getValue(path), DataStore.getValue(path));
 	// Don't ask for gift-aid details if the charity doesn't support it
-	// const showGiftAidSection = 
+	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];
 	// We don't need to collect address etc. if we're not collecting gift-aid
 	const showDetailsSection = true; // hm - the UX flow is a bit odd with this popping in. DataStore.getValue(path.concat('giftAid'));
 	// You don't send messages to charities...
 	const showMessageSection = FundRaiser.isa(item);
-
-	const stages = [
-		<AmountSection path={path} />,
-		<GiftAidSection path={path} />,
-	];
-	const navStages = [
-		{title:'Amount'},
-		{title:'Gift Aid'},
-	];
-
-	if (showDetailsSection) {
-		stages.push(<DetailsSection path={path} />);
-		navStages.push({title:'Details'},);
-	}
-	if (showMessageSection) {
-		stages.push(<MessageSection path={path} item={item} />);
-		navStages.push({title:'Message'},);
-	}
-	stages.push(<PaymentSection path={path} donation={donationDraft} item={item} />);
-	stages.push(<ThankYouSection path={path} item={item} />);
-	navStages.push({title:'Payment'},);
-	navStages.push( {title:'Confirmation'});
-
-	const wizardStages = stages.map((section, i) => (
-		<WizardStage key={i} stageKey={i} stageNum={stage}>
-			{section}
-		</WizardStage>
-	));	
-
-	// don't offer a next button for payment
-	const maxStage = stages.length - 2; 
 
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
@@ -180,15 +149,37 @@ const DonationForm = ({item, charity, causeName}) => {
 				<Modal.Title>Donate to {causeName}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<WizardProgressWidget stageNum={stage} 
-					stagePath={stagePath} 
-					stages={navStages}
-				/>
-				{wizardStages}
+				<Wizard stagePath={stagePath} >
+					<WizardStage title='Amount' >
+						<AmountSection path={path} />
+						<WizardNavButtons stagePath={stagePath} 
+							sufficient={donationDraft.amount} 
+							complete={donationDraft.amount} />
+					</WizardStage>
+				
+					{showGiftAidSection? <WizardStage title='Gift Aid' >
+						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
+					</WizardStage> : null}
+				
+					{showDetailsSection? <WizardStage title='Your Details'>
+						<DetailsSection path={path} stagePath={stagePath} />
+					</WizardStage> : null}
+				
+					{showMessageSection? <WizardStage title='Message'>
+						<MessageSection path={path} recipient={item.owner} />
+						<WizardNavButtons stagePath={stagePath} />
+					</WizardStage> : null}
+				
+					<WizardStage title='Payment' next={false} >
+						<PaymentSection path={path} donation={donationDraft} item={item} />
+						<WizardNavButtons stagePath={stagePath} next={false} />
+					</WizardStage>
+				
+					<WizardStage title='Confirmation'>
+						<ThankYouSection path={path} item={item} />
+					</WizardStage>
+				</Wizard>
 			</Modal.Body>
-			<Modal.Footer>
-				<PrevButton stagePath={stagePath} /> <NextButton maxStage={maxStage} stagePath={stagePath} />
-			</Modal.Footer>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
 	);
@@ -212,40 +203,37 @@ const AmountSection = ({path}) => {
 		</div>);
 };
 
-const GiftAidSection = ({path, charity}) => {
+const GiftAidSection = ({path, charity, stagePath}) => {
+	assert(stagePath, "GiftAidSection no stagePath");
 	const ownMoney = DataStore.getValue(path.concat('giftAidOwnMoney'));
 	const fromSale = DataStore.getValue(path.concat('giftAidFundRaisedBySale'));
 	const benefit = DataStore.getValue(path.concat('giftAidBenefitInReturn'));
 	const taxpayer = DataStore.getValue(path.concat('giftAidTaxpayer'));
-	
-	// User must have ticked yes or no for every question, even the "required no" ones
-	const formCompleted = ownMoney !== null && ownMoney !== undefined
-		&& fromSale !== null && fromSale !== undefined
-		&& benefit !== null && benefit !== undefined
-		&& taxpayer !== null && taxpayer !== undefined;
-		
-	const canGiftAid = formCompleted && ownMoney && taxpayer && ! (fromSale || benefit);
-
+	const yesToGiftAid = DataStore.getValue(path.concat('giftAid'));
+			
+	const canGiftAid = !! (ownMoney && taxpayer && fromSale===false && benefit===false);
+	const cannotGiftAid = !! (ownMoney===false || taxpayer===false || fromSale || benefit);
 	
 	// If we're disabling the checkbox, untick it too
-	if ( ! canGiftAid) {
+	if (cannotGiftAid) {
 		DataStore.setValue(path.concat('giftAid'), false, false);
 	}
 
 	// Explicitly tell user the result of their answers
 	let giftAidMessage = '';
-	if (formCompleted) {
-		giftAidMessage = canGiftAid ? (
-			<p>
+	if (canGiftAid) {
+		giftAidMessage = (<p>
 				Hooray: Your donation qualifies for Gift Aid!<br />
 				If you pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount
 				of Gift Aid claimed on all your donations, it is your responsibility to pay any difference.
-			</p>
-		) : (
-			<p>This donation does not qualify for Gift Aid. 
+		</p>);
+	} else if (cannotGiftAid) {
+		giftAidMessage = (<p>This donation does not qualify for Gift Aid. 
 				That's OK - many donations don't, and the difference is a small fraction.</p>
 		);
 	}
+
+	let suff = canGiftAid || cannotGiftAid;
 
 	return (
 		<div className='section donation-amount'>
@@ -268,25 +256,42 @@ const GiftAidSection = ({path, charity}) => {
 			/>
 			{giftAidMessage}
 			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
-				label='I want to Gift Aid this donation'
+				label='I want to Gift Aid this donation, and agree to sharing my details for this.'
 			/>
+
+			<WizardNavButtons stagePath={stagePath} 
+				sufficient={suff} 
+				complete={cannotGiftAid || (canGiftAid && yesToGiftAid)} />
 		</div>
 	);
 };
 
-const DetailsSection = ({path}) => (
-	// TODO do we have the user's details stored?	
-	<div className='section donation-amount'>
-		<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' dflt={Login.getUser() && Login.getUser().name} />
-		<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' dflt={Login.getEmail()} />
-		<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
-		<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
-	</div>
-);
+const DetailsSection = ({path, stagePath}) => {
+	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
+	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
+	return (
+		// TODO do we have the user's details stored?	
+		<div className='section donation-amount'>
+			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
+				: <p>These details are optional: you can give anonymously.</p>}
+			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' dflt={Login.getUser() && Login.getUser().name} />
+			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' dflt={Login.getEmail()} />
+			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
+			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
 
-const MessageSection = ({path, item}) => (
+			<WizardNavButtons stagePath={stagePath} 
+				sufficient={allDetails || ! giftAid} 
+				complete={allDetails} />
+		</div>);
+};
+
+const MessageSection = ({path, recipient}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl prop='message' label='Message' placeholder={`Do you have a message for ${item.owner.name}?`} path={path} type='textarea' />
+		<Misc.PropControl 
+			prop='message' 
+			label='Message' 
+			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
+			path={path} type='textarea' />
 	</div>
 );
 

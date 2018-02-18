@@ -1,5 +1,6 @@
 package org.sogive.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sogive.data.commercial.Basket;
@@ -35,8 +36,11 @@ public class BasketServlet extends CrudServlet<Basket> {
 
 	@Override
 	protected JThing<Basket> doPublish(WebRequest state) {
+		Basket basket = getThing(state);
+		if (basket==null) {
+			jthing = getThingFromDB(state);
+		}
 		// copy pasta from DonationServlet
-		Basket basket = (Basket) jthing.java();
 		// make/save Donation
 		super.doSave(state);
 		Basket donation = basket;
@@ -84,14 +88,15 @@ public class BasketServlet extends CrudServlet<Basket> {
 		super.doPublish(state);
 		// store the tickets
 		List<Ticket> items = basket.getItems();
+		List<JThing<Ticket>> pubTickets = new ArrayList();
 		for (Ticket ticket : items) {
 			String id = ticket.getId();
 			Utils.check4null(id); 
-			ESPath draftPath = esRouter.getPath(dataspace, type, id, KStatus.DRAFT);
-			ESPath publishPath = esRouter.getPath(dataspace, type, id, KStatus.PUBLISHED);
+			ESPath draftPath = esRouter.getPath(dataspace, Ticket.class, id, KStatus.DRAFT);
+			ESPath publishPath = esRouter.getPath(dataspace, Ticket.class, id, KStatus.PUBLISHED);
 			JThing jticket = new JThing().setJava(ticket);
-			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);
-			return obj.setType(type);
+			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);			
+			pubTickets.add(obj);
 		}
 		
 		// Process the order!

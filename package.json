@@ -34,7 +34,7 @@
     "react-stripe-elements": "^1.4.1",
     "sjtest": "^0.4.6",
     "webpack": "^3.11.0",
-    "wwutils": "^0.8.6",
+    "wwutils": "^0.8.8",
     "you-again": "^0.6.7"
   },
   "scripts": {

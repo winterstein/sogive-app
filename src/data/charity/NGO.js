@@ -9,6 +9,7 @@ import Output from './Output';
 import Money from './Money';
 import HashMap from 'hashmap';
 import Citation from './Citation';
+import Enum from 'easy-enums';
 
 /**
  * Each Charity (NGO -- which is the thing.org type) has projects.
@@ -30,6 +31,9 @@ NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
 NGO.logo = item => item.logo; 
+
+NGO.PROPS = new Enum('uk_giftaid');
+
 /**
  * Get the summary or description, capped at 280 chars. Can be blank never null.
  */

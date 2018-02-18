@@ -32,7 +32,7 @@
 	.vitals {
 		/* ??Hard-coded height was causing odd layout. min-height fixes that. Minor thought: Can we do height using flex layout instead, so it works nicely on any screen size?? ^Dan */
 		min-height: 350px;
-		background: linear-gradient(to bottom, #3f4151 0% , #3f4151 50%, white 50%, white 100%);
+		background: linear-gradient(to bottom, @grey 0% , @grey 50%, white 50%, white 100%);
 
 		.user-event-photo {
 			position: relative;
@@ -54,49 +54,53 @@
 			}
 		}		
 	} // ./.vitals
+}
 
-	.vitals .donation-progress {
-		height: 350px;
+.DonationProgress {
+	height: 350px;
 
-		.progress-graph {
-			height: 50%;
-			text-align: center;
-			color: white;
+	.ProgressGraph {
+		height: 50%;
+		text-align: center;
+		color: white;
+		background: @grey;
+		
+		.target {
+			color: @bold-text-colour;
+		}
 
-			.target {
-				color: @bold-text-colour;
+		.bar-container {
+			.progress-pointer, .donation-progress-bar {
+				display: inline-block;
 			}
-
-			.bar-container {
-				.progress-pointer, .donation-progress-bar {
-					display: inline-block;
+			.progress-pointer {
+				transform: translateY(-16%);
+				font-size: 1.5em;
+				font-weight: bold;
+				color: @progress-bar-done;
+				margin: auto -6px;
+			}
+			.donation-progress-bar {
+				height: 150px;
+				width: 50px;
+				.remaining {
+					background-color: white;
 				}
-				.progress-pointer {
-					transform: translateY(-16%);
-					font-size: 1.5em;
-					font-weight: bold;
-					color: @progress-bar-done;
-					margin: auto -6px;
-				}
-				.donation-progress-bar {
-					height: 150px;
-					width: 50px;
-					.remaining {
-						background-color: white;
-					}
-					.done {
-						background-color: @progress-bar-done;
-					}
+				.done {
+					background-color: @progress-bar-done;
 				}
 			}
 		}
-		.progress-details {
-			height: 50%;
-			text-align: center;
-			color: black;
-		}
-	} // /.vitals .donation-progress
+	}
 
+	.progress-details {
+		height: 50%;
+		text-align: center;
+		color: black;
+	}
+} // /.DonationProgress
+
+#FundRaiserPage {
 	.me {
 		.AvatarImg {
 			width: 150px;

@@ -2,19 +2,20 @@ import React from 'react';
 import DataStore from '../plumbing/DataStore';
 import Misc from './Misc';
 import {assMatch, assert} from 'sjtest';
+import {is} from 'wwutils';
 
 // TODO refactor a la Misc.CardAccordion
 
-const WizardProgressWidget = ({stageNum, completed, stages, stagePath}) => {
+const WizardProgressWidget = ({stageNum, stages, stagePath}) => {
 	if ( ! stageNum) stageNum = 0;
 	return (<div className='WizardProgressWidget'>
-		{stages.map((stage, i) => <Stage key={i} stage={stage} stageNum={stageNum} i={i} completed={completed} stagePath={stagePath} />)}
+		{stages.map((stage, i) => <Stage key={i} stage={stage} stageNum={stageNum} i={i} stagePath={stagePath} />)}
 	</div>);
 };
 
-const Stage = ({i, stage, stageNum, stagePath, completed}) => {
+const Stage = ({i, stage, stageNum, stagePath}) => {
 	// NB: if no completed info, assume all before stageNum are fine
-	const complete = completed? completed[i] : i < stageNum;
+	const complete = stage.complete || i < stageNum;
 	let c = ''; 
 	if (i == stageNum) {
 		c = 'active';
@@ -36,8 +37,8 @@ const Stage = ({i, stage, stageNum, stagePath, completed}) => {
 	);
 };
 
-const WizardStage = ({stageKey, stageNum, children}) => {
-	if ( ! stageNum) stageNum=0;
+const WizardStage = ({stageKey, stageNum, title, sufficient, complete, next, previous, children}) => {
+	assert(stageNum !==null && stageNum !== undefined);
 	if (stageKey != stageNum) { // allow "1" == 1		
 		return null; //<p>k:{stageKey} n:{stageNum}</p>;
 	}
@@ -51,8 +52,8 @@ const WizardStage = ({stageKey, stageNum, children}) => {
  * 	maxStage: {Number}
  * }
  */
-const NextButton = ({completed, stagePath, ...rest}) => {
-	const bsClass = completed ? 'primary' : null;
+const NextButton = ({complete, stagePath, ...rest}) => {
+	const bsClass = complete ? 'primary' : null;
 	return <NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} text={<span>Next <Misc.Icon glyph='menu-right' /></span>} {...rest} />;
 };
 const PrevButton = ({stagePath, ...rest}) => {
@@ -95,18 +96,35 @@ const Wizard = ({widgetName, stagePath, children}) => {
 	}
 	// filter null, undefined
 	children = children.filter(x => !! x);
+	// get stage info for the progress bar
 	let stages = children.map( (kid, i) => {
-		return {title: kid.props && kid.props.title? kid.props.title : 'Step '+i};	
+		let props = Object.assign({}, kid.props);
+		if ( ! props.title) props.title = 'Step '+i;
+		return props;
 	});
-	const kids = React.Children.map(children, (Kid, i) => {
+	let kids = React.Children.map(children, (Kid, i) => {
+		// active?
+		if (i != stageNum) {
+			return null;
+		}
 		// clone with stageNum
 		return React.cloneElement(Kid, {stageNum, stageKey:i});
 	});
+	// filter null again (we should now only have the active stage)
+	kids = kids.filter(x => !! x);
 	return (<div className='Wizard'>
 		<WizardProgressWidget stages={stages} stagePath={stagePath} stageNum={stageNum} />
 		{kids}
 	</div>);
 };
 
-export {Wizard, WizardStage, WizardProgressWidget, NextButton, PrevButton};
+const WizardNavButtons = ({stagePath, sufficient, complete, next, previous}) => {
+	assert(stagePath, "WizardProgressWidget.jsx - WizardNavButtons: no stagePath");
+	return (<div className='nav-buttons clearfix'>
+		{previous===false? null : <PrevButton stagePath={stagePath} /> }
+		{next===false? null : <NextButton stagePath={stagePath} disabled={sufficient===false} complete={complete} /> }
+	</div>);
+};
+
+export {Wizard, WizardStage, WizardProgressWidget, WizardNavButtons, NextButton, PrevButton};
 export default Wizard;
