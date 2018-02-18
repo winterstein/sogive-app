@@ -39,6 +39,12 @@ const Stage = ({i, stage, stageNum, stagePath}) => {
 
 /**
  * title
+ * next, previous, sufficient, complete
+ *
+ * NB: these are used by the surrounding widgets - progress & next/prev buttons
+ * 
+ * Also for convenient lazy setting of sufficient/complete, a function is passed
+ * to all children:
  * setNavStatus {sufficient, complete}
  */
 const WizardStage = ({stageKey, stageNum, setNavStatus, next, previous, title, children}) => {
