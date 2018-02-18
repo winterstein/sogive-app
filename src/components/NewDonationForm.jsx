@@ -20,7 +20,7 @@ import Basket from '../data/Basket';
 import Misc from './Misc';
 import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
-import Wizard, {WizardStage, WizardNavButtons} from './WizardProgressWidget';
+import Wizard, {WizardStage} from './WizardProgressWidget';
 
 /**
  * 
@@ -152,30 +152,25 @@ const DonationForm = ({item, charity, causeName}) => {
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' >
 						<AmountSection path={path} />
-						<WizardNavButtons stagePath={stagePath} 
-							sufficient={donationDraft.amount} 
-							complete={donationDraft.amount} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' >
 						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
 					</WizardStage> : null}
 				
-					{showDetailsSection? <WizardStage title='Your Details'>
+					{showDetailsSection? <WizardStage title='Details'>
 						<DetailsSection path={path} stagePath={stagePath} />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
 						<MessageSection path={path} recipient={item.owner} />
-						<WizardNavButtons stagePath={stagePath} />
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false} >
 						<PaymentSection path={path} donation={donationDraft} item={item} />
-						<WizardNavButtons stagePath={stagePath} next={false} />
 					</WizardStage>
 				
-					<WizardStage title='Confirmation'>
+					<WizardStage title='Receipt'>
 						<ThankYouSection path={path} item={item} />
 					</WizardStage>
 				</Wizard>
@@ -203,7 +198,7 @@ const AmountSection = ({path}) => {
 		</div>);
 };
 
-const GiftAidSection = ({path, charity, stagePath}) => {
+const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	assert(stagePath, "GiftAidSection no stagePath");
 	const ownMoney = DataStore.getValue(path.concat('giftAidOwnMoney'));
 	const fromSale = DataStore.getValue(path.concat('giftAidFundRaisedBySale'));
@@ -234,6 +229,7 @@ const GiftAidSection = ({path, charity, stagePath}) => {
 	}
 
 	let suff = canGiftAid || cannotGiftAid;
+	setNavStatus({sufficient: suff, complete: cannotGiftAid || (canGiftAid && yesToGiftAid)});
 
 	return (
 		<div className='section donation-amount'>
@@ -258,30 +254,25 @@ const GiftAidSection = ({path, charity, stagePath}) => {
 			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
 				label='I want to Gift Aid this donation, and agree to sharing my details for this.'
 			/>
-
-			<WizardNavButtons stagePath={stagePath} 
-				sufficient={suff} 
-				complete={cannotGiftAid || (canGiftAid && yesToGiftAid)} />
 		</div>
 	);
 };
 
-const DetailsSection = ({path, stagePath}) => {
+const DetailsSection = ({path, stagePath, setNavStatus}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
+	setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
+	// dflt={Login.getUser() && Login.getUser().name} 
+	// dflt={Login.getEmail()}
 	return (
 		// TODO do we have the user's details stored?	
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
 				: <p>These details are optional: you can give anonymously.</p>}
-			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' dflt={Login.getUser() && Login.getUser().name} />
-			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' dflt={Login.getEmail()} />
+			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
+			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
 			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
-
-			<WizardNavButtons stagePath={stagePath} 
-				sufficient={allDetails || ! giftAid} 
-				complete={allDetails} />
 		</div>);
 };
 
