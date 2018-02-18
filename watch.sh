@@ -1,2 +1,3 @@
+npm run compile-watch &
 npm i &
-npm run compile-watch
+npm update --save &

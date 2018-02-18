@@ -84,8 +84,8 @@ const RegisterPage = () => {
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 					<div className='nav-buttons'>
-						<button className="btn btn-default btn-lg pull-left" onClick={deleteBasket} >
-							<Misc.Icon glyph='trash' />Cancel
+						<button className="btn btn-default btn-sm pull-left" onClick={deleteBasket} >
+							<Misc.Icon glyph='trash' />Empty Basket
 						</button> 
 						<NextButton stagePath={stagePath} disabled={ ! basket || ! Basket.getItems(basket).length} completed={basket && Basket.getItems(basket).length} />
 					</div>

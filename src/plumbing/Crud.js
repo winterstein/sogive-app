@@ -23,6 +23,11 @@ ActionMan.crud = (type, id, action, item) => {
 	assert(C.TYPES.has(type), type);
 	assert(C.CRUDACTION.has(action), type);
 	if ( ! item) item = DataStore.getData(type, id);
+	if ( ! item) {
+		// No item? fine for action=delete. Make a transient dummy here
+		assert(action==='delete', action+" "+type+" "+id);
+		item = {id, "@type": type};
+	}
 	if ( ! getId(item)) {
 		assert(id==='new', id);
 		item.id = id;

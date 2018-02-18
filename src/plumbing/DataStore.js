@@ -3,7 +3,7 @@ import C from '../C.js';
 import _ from 'lodash';
 import {getId, getType} from '../data/DataClass';
 import {assert,assMatch} from 'sjtest';
-import {yessy, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
+import {yessy, is, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
 import PV from 'promise-value';
 
 /**
@@ -214,8 +214,8 @@ class Store {
 			}
 			tip = newTip;
 		}
-		// HACK: update a data value => mark it as modified
-		if (oldVal && path[0] === 'data' && path.length > 2 && DataStore.DATA_MODIFIED_PROPERTY) {
+		// HACK: update a data value => mark it as modified (but not for deletes)
+		if (is(oldVal) && is(value) && path[0] === 'data' && path.length > 2 && DataStore.DATA_MODIFIED_PROPERTY) {
 			// chop path down to [data, type, id]
 			const itemPath = path.slice(0, 3);
 			const item = this.getValue(itemPath);
@@ -227,7 +227,7 @@ class Store {
 			console.log("setValue -> update", path, value);
 			this.update();
 		}
-	}
+	} // ./setValue()
 
 	/**
 	 * Has a data item been modified since loading?
