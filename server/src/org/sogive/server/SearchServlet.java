@@ -10,6 +10,7 @@ import java.util.Map;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
+import com.winterwell.es.ESUtils;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
@@ -76,8 +77,7 @@ public class SearchServlet implements IServlet {
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
 		ESPath path = config.getPath(null, NGO.class, null, status);
 		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
-		s.setDebug(true);
-		
+		s.setDebug(true);		
 		String q = state.get(Q);
 		boolean showRecommended = state.get(RECOMMENDED, false);
 		
@@ -87,8 +87,9 @@ public class SearchServlet implements IServlet {
 			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
 			q = StrUtils.toCanonical(q);
 			// this will query _all			
-			QueryBuilder qb = QueryBuilders.simpleQueryStringQuery(q)
+			QueryBuilder qbq = QueryBuilders.simpleQueryStringQuery(q)
 								.defaultOperator(Operator.AND);
+			s.addQuery(qbq);
 			
 //			SearchQuery sq = new SearchQuery(q);
 			// TODO AppUtils.makeESFilterFromSearchQuery(sq, start, end)
@@ -96,17 +97,28 @@ public class SearchServlet implements IServlet {
 //			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
 //					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
 //							.operator(Operator.AND);			
-			s.setQuery(qb);
+			
 		}
 		// prefix search for auto-complete
 		String prefix = state.get("prefix");
 		if (prefix != null) {
 			s.addSuggester(Suggesters.autocomplete("suggest", prefix));
 		}
-		// else ?? ^DW 
+		
+		// Data status Filters
 		if (showRecommended) {
 			QueryBuilder qb = QueryBuilders.termQuery("recommended", "true");
-			s.setQuery(qb);
+			s.addQuery(qb);
+		}
+		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
+		if (onlyHasImpact) {
+			QueryBuilder qb = QueryBuilders.existsQuery("projects");
+			s.addQuery(qb);
+		}
+		Boolean onlyReady = state.get(new BoolField("ready"));
+		if (Utils.yes(onlyReady)) {
+			QueryBuilder qb = QueryBuilders.termQuery("ready", "true");
+			s.addQuery(qb);
 		}
 		
 		// TODO test ordering.

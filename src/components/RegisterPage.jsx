@@ -135,6 +135,9 @@ const RegisterPage = () => {
  */
 const TicketTypes = ({event, basket}) => {
 	Event.assIsa(event); Basket.assIsa(basket);
+	if ( ! event.ticketTypes) {
+		return <div className='alert alert-warning'>No tickets have been setup for this event. Please speak to the event organiser.</div>;
+	}
 	// pivot data ??why/to-what
 	const nameToTickets = {};
 	event.ticketTypes.forEach(tt => {

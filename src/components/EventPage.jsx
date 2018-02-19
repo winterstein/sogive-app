@@ -30,6 +30,7 @@ const EventPage = () => {
 		<div>
 			<h2>Pick an Event</h2>
 			<ListLoad type={type} />
+			<hr />
 			<div><a href='#editEvent'>Create / edit events</a></div>
 		</div>
 	);

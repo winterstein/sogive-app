@@ -14,8 +14,9 @@ const WizardProgressWidget = ({stageNum, stages, stagePath}) => {
 };
 
 const Stage = ({i, stage, stageNum, stagePath}) => {
-	// NB: if no completed info, assume all before stageNum are fine
-	const complete = stage.complete || i < stageNum;
+	// Display in progress as complete if left of the current page
+	let complete = i < stageNum;
+	// if (stage.complete === false) complete = false; TODO stage.error/warning?
 	let c = ''; 
 	if (i == stageNum) {
 		c = 'active';

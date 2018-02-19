@@ -394,6 +394,8 @@ class Store {
 			// This is done after the cargo-unwrap PV has resolved. So any calls to fetch() during render will get a resolved PV
 			// even if res is null.
 			this.setValue(path, res); // this should trigger an update (typically a React render update)
+			// finally, clear the promise from DataStore
+			this.setValue(fpath, null, false);
 			return res;
 		});
 		this.setValue(fpath, pv, false);
@@ -412,11 +414,14 @@ class Store {
 		assMatch(type, String);
 		const listWas = this.getValue(['list', type]);
 		if (listWas) {
-			DataStore.setValue(['list', type], null);
+			this.setValue(['list', type], null);
 			console.log('publish -> invalidate list', type, listWas);
 		} else {
 			console.log('publish -> no lists to invalidate');
 		}
+		// also remove any promises for these lists -- see fetch()		
+		let ppath = ['transient', 'PromiseValue', 'list', type];
+		this.setValue(ppath, null, false);
 	}
 
 } // ./Store
