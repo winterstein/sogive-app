@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
+import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
@@ -21,7 +22,7 @@ import lombok.Data;
  *
  */
 @Data
-public class Basket extends AThing {
+public class Basket extends AThing implements IForSale {
 
 	/**
 	 * Stripe token etc
@@ -69,7 +70,7 @@ public class Basket extends AThing {
 	 */
 	boolean hasTip;
 
-	public Money getTotal() {
+	public Money getAmount() {
 		if (items==null) return Money.pound(0);
 		Money ttl = Money.pound(0.0);
 		for (Ticket ticket : items) {
@@ -80,6 +81,11 @@ public class Basket extends AThing {
 			ttl = ttl.plus(tip);
 		}
 		return ttl;
+	}
+
+	@Override
+	public void setPaymentCollected(boolean b) {
+		this.collected = b;
 	}
 
 }

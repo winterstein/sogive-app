@@ -3,15 +3,18 @@ package org.sogive.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sogive.data.charity.NGO;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Ticket;
 import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
+import org.sogive.server.payment.MoneyCollector;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
 import com.stripe.model.Charge;
+import com.stripe.model.Event;
 import com.sun.corba.se.impl.protocol.NotLocalLocalCRDImpl;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
@@ -56,34 +59,15 @@ public class BasketServlet extends CrudServlet<Basket> {
 		}
 		assert user != null;
 		
-		// take payment
-		// TODO Less half-assed handling of Stripe exceptions
-		try {
-			String ikey = donation.getId();
-			Person userObj = DBSoGive.getCreateUser(user);
-			assert userObj != null : user;
-			StripeAuth sa = donation.getStripe();
-			if (sa==null) sa = new StripeAuth(userObj, state);
-			else {
-				// email??
-				if (Utils.isBlank(sa.getEmail())) {					
-					sa.setEmail(userObj.getEmail());
-				}
-				assert state==null || state.get("stripeToken")==null || state.get("stripeToken").equals(sa.id);
-			}
-			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) {
-				Log.w("Basket.payment", "Skip! "+state);
-			} else {
-				// Show me the money!
-				Charge charge = StripePlugin.collect(donation.getTotal(), donation.getId(), sa, userObj, ikey);
-				Log.d("stripe", charge);
-				donation.setPaymentId(charge.getId());
-				donation.setCollected(true);				
-			}
-		} catch(Exception e) {
-			throw new RuntimeException(e);
+		// collect the money
+		String eventId = basket.getEventId();
+		if (eventId==null) {
+			eventId = basket.getItems().get(0).getEventId();
 		}
-				
+		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements
+		MoneyCollector mc = new MoneyCollector(basket, user, to, state);
+		mc.run();
+						
 		// store in the database (this will save the edited basket)
 		super.doPublish(state);
 		// store the tickets

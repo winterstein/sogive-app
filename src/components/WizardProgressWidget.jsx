@@ -74,7 +74,9 @@ const WizardStage = ({stageKey, stageNum, stagePath, maxStage,
 	return (<div className='WizardStage'>
 		{children}
 		<WizardNavButtons stagePath={stagePath} 
-			navStatus={navStatus} maxStage={maxStage} />
+			navStatus={navStatus} 
+			maxStage={maxStage} 
+		/>
 	</div>);
 };
 
@@ -159,8 +161,9 @@ const Wizard = ({widgetName, stagePath, children}) => {
 	</div>);
 };
 
-const WizardNavButtons = ({stagePath, maxStage, next, previous, sufficient, complete}) => {
+const WizardNavButtons = ({stagePath, maxStage, navStatus}) => {
 	assert(stagePath, "WizardProgressWidget.jsx - WizardNavButtons: no stagePath");
+	let {next, previous, sufficient, complete} = navStatus;
 	// read from WizardStage props if set, or setNavStatus
 	// navStatus;
 	if (complete) sufficient = true;

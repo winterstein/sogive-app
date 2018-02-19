@@ -19,6 +19,7 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.DBSoGive;
+import org.sogive.server.payment.MoneyCollector;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
 
@@ -133,6 +134,17 @@ public class DonationServlet extends CrudServlet {
 			donation.setDonor(peepLite);
 			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}
+								
+		// collect the money
+		if (donation.isPaidElsewhere()) {
+			Log.d(LOGTAG, "paid elsewhere "+donation);
+		} else {
+			XId to = NGO.xidFromId(donation.getTo());
+			MoneyCollector mc = new MoneyCollector(donation, user, to, state);
+			mc.run();
+		}
+		// store in the database TODO use an actor which can retry
+		super.doPublish(state);
 		
 		// Donating to/via a fundraiser? Update its donation total.
 		String frid = donation.getFundRaiser();
@@ -142,89 +154,9 @@ public class DonationServlet extends CrudServlet {
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
 		}
-						
-		// collect the money
-		if (donation.isPaidElsewhere()) {
-			Log.d(LOGTAG, "paid elsewhere "+donation);
-		} else {
-			doCollectMoney(donation, state, user);
-		}
-		// store in the database TODO use an actor which can retry
-		super.doPublish(state);
+		
+		// Done
 		return jthing;
-	}
-
-	private void doCollectMoney(Donation donation, WebRequest state, XId user) {
-		Money total = donation.getTotal();
-		
-		// paid on credit?		
-		StripeAuth sa = donation.getStripe();
-		boolean allOnCredit = false;
-		if (sa != null && StripeAuth.credit_token.equals(sa.id)) {
-			allOnCredit = true;
-		}		
-		Money credit = Transfer.getTotalCredit(user);
-		if (credit!=null && credit.getValue() > 0) {
-			Money residual = doCollectMoney2(donation, state, user, credit, allOnCredit);
-			if (residual==null || residual.getValue()==0) {
-				return;
-			}
-			Log.d(LOGTAG, "part payment on credit "+donation+" residual: "+residual);
-			total = residual;
-		}
-		
-		// TODO Less half-assed handling of Stripe exceptions
-		try {
-			/** Donation has provision to store a StripeAuth now - may already be on the object */
-			// take payment
-			String ikey = donation.getId();
-			Person userObj = DBSoGive.getCreateUser(user);
-
-			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) {
-				Log.d(LOGTAG, "skip payment: "+donation);
-				return; 
-			}
-			if (sa == null) {
-				sa = new StripeAuth(userObj, state);
-			}
-			
-			Charge charge = StripePlugin.collect(total, donation.getId(), sa, userObj, ikey);
-			Log.d("stripe.collect", charge);
-			donation.setPaymentId(charge.getId());
-			donation.setCollected(true);			
-			// FIXME
-//			pi.setRefresh("true");
-//			pi.setOpTypeCreate(true);				
-			// check we haven't done before: done by the op_type=create			
-		} catch(Exception e) {
-			throw new RuntimeException(e);
-		}
-
-	}
-
-	private Money doCollectMoney2(Donation donation, WebRequest state, XId user, 
-			Money credit, boolean allOnCredit) 
-	{		
-		// TODO check credit more robustly
-		XId to = NGO.xidFromId(donation.getTo());
-		Money amount = donation.getAmount();
-		Money paidOnCredit = amount;
-		Money residual = Money.pound(0);
-		if (amount.getValue() > credit.getValue()) {
-			residual = amount.minus(credit);
-			paidOnCredit = credit;
-			if (allOnCredit) {
-				throw new PaymentException("Cannot pay "+amount+" with credit of "+credit+" (donation: "+donation+")");
-			}
-		} else {
-			// pay it all
-		}
-		// reduce credit
-		Transfer t = new Transfer(user, to, paidOnCredit);
-		t.publish();
-		donation.setPaymentId(t.getId());
-		// OK
-		return residual;
 	}
 
 	
