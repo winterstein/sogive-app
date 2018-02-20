@@ -117,21 +117,17 @@ const FundRaiserPage = ({id}) => {
 				<Row>
 					<Col md={6} className='me'>
 						<center>
-							<h3>About Me:</h3>
-							<br />
-							<h3>{item.owner.name}</h3>
+							<h3>About Me: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
 						<p>{item.owner.description}</p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
-							<h3>I am Supporting:</h3>
-							<br />
-							<h3>{NGO.displayName(charity)}</h3>
+							<h3>The Charity: {NGO.shortDescription(charity)}</h3>
 						</center>
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
-						<p>{NGO.shortDescription(charity)}</p>
+						<p></p>
 					</Col>
 				</Row>
 

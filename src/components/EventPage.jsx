@@ -46,7 +46,7 @@ const Event = ({id}) => {
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
 	return (
-		<div class="col-md-8 col-md-offset-2">
+		<div className="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}

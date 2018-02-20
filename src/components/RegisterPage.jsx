@@ -173,9 +173,7 @@ const TicketGroup = ({name, subtitle, types, basket}) => {
 	return (
 		<div className='ticket-group'>
 			<center>
-				<h3>{name}</h3>
-				<br></br>
-				<small>{subtitle}</small>
+				<h3>{name} <small>{subtitle}</small></h3>
 			</center>
 			<hr />
 			<ul className='ticket-group-types'>
@@ -349,25 +347,20 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 		<div>
 			<center>		
 				<h3>
-					{ticket.name}
+				{ticket.name} 
+				{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
+				: <span>{noun} {i+1}</span>
 				</h3>
-				<br></br>
-				<h4>
-					{ticket.kind? <span className='kind'> {ticket.kind}</span> : null} 
-					: <span>{noun}</span>
-					<br></br>
-					<span>Number of Tickets : {i+1}</span>
-				</h4>
 			</center>
 			<hr />
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email (required)' />
+				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
 				{ sameAsFirst? null : 
 					<div>
-						<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number (optional)' />						
+						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -386,7 +379,7 @@ const TeamControl = ({ticket, path}) => {
 	return (<Misc.Col2>
 		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
 			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
 	</Misc.Col2>);
 };
 
@@ -564,7 +557,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 				</a>
 			</center>
 			<hr />
-			<div class="col-md-6 col-md-offset-3">
+			<div>
 				<table>
 					<tbody>
 						<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
