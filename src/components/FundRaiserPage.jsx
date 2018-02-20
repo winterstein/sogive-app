@@ -163,6 +163,7 @@ const DonationProgress = ({item, charity}) => {
 		return (<div className='DonationProgress'>
 			<p>No money raised yet</p>
 			<div className='target'>Target: <Misc.Money amount={target} /></div>
+			<DonateButton item={item} />
 		</div>);
 	}
 

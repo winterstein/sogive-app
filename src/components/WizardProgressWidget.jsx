@@ -14,8 +14,9 @@ const WizardProgressWidget = ({stageNum, stages, stagePath}) => {
 };
 
 const Stage = ({i, stage, stageNum, stagePath}) => {
-	// NB: if no completed info, assume all before stageNum are fine
-	const complete = stage.complete || i < stageNum;
+	// Display in progress as complete if left of the current page
+	let complete = i < stageNum;
+	// if (stage.complete === false) complete = false; TODO stage.error/warning?
 	let c = ''; 
 	if (i == stageNum) {
 		c = 'active';
@@ -73,7 +74,9 @@ const WizardStage = ({stageKey, stageNum, stagePath, maxStage,
 	return (<div className='WizardStage'>
 		{children}
 		<WizardNavButtons stagePath={stagePath} 
-			navStatus={navStatus} maxStage={maxStage} />
+			navStatus={navStatus} 
+			maxStage={maxStage} 
+		/>
 	</div>);
 };
 
@@ -158,8 +161,9 @@ const Wizard = ({widgetName, stagePath, children}) => {
 	</div>);
 };
 
-const WizardNavButtons = ({stagePath, maxStage, next, previous, sufficient, complete}) => {
+const WizardNavButtons = ({stagePath, maxStage, navStatus}) => {
 	assert(stagePath, "WizardProgressWidget.jsx - WizardNavButtons: no stagePath");
+	let {next, previous, sufficient, complete} = navStatus;
 	// read from WizardStage props if set, or setNavStatus
 	// navStatus;
 	if (complete) sufficient = true;

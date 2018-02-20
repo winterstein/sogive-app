@@ -720,6 +720,7 @@ Misc.ImgThumbnail = ({url, style}) => {
 	return (<img className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
 };
 
+Misc.VideoThumbnail = ({url}) => url? <video width={200} height={150} src={url} controls /> : null;
 
 /**
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 

@@ -50,5 +50,9 @@ const Messaging = {
 	jsxFromId
 };
 window.Messaging = Messaging;
+// HACK wire up DataStore for default Message handling
+if ( ! DataStore.Messaging) {
+	DataStore.Messaging = Messaging;
+}
 export {notifyUser};
 export default Messaging;

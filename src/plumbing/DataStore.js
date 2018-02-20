@@ -3,7 +3,7 @@ import C from '../C.js';
 import _ from 'lodash';
 import {getId, getType} from '../data/DataClass';
 import {assert,assMatch} from 'sjtest';
-import {parseHash, modifyHash, toTitleCase} from 'wwutils';
+import {yessy, getUrlVars, parseHash, modifyHash, toTitleCase} from 'wwutils';
 import PV from 'promise-value';
 
 /**
@@ -357,9 +357,10 @@ class Store {
 	 * fetchFn MUST return the value for path, or a promise for it. It should NOT set DataStore itself.
 	 * As a convenience hack, this method will extract `cargo` from fetchFn's return, so it can be used
 	 * that bit more easily with Winterwell's "standard" json api back-end.
+	 * @param messaging {?Boolean} If true, try to use Messaging.js to notify the user of failures.
 	 * @returns {?value, promise} (see promise-value.js)
 	 */
-	fetch(path, fetchFn) { // TODO allow retry after 10 seconds
+	fetch(path, fetchFn, messaging=true) { // TODO allow retry after 10 seconds
 		let item = this.getValue(path);
 		if (item!==null && item!==undefined) { 
 			// Note: falsy or an empty list/object is counted as valid. It will not trigger a fresh load
@@ -375,9 +376,14 @@ class Store {
 		let pvPromiseOrValue = PV(promiseOrValue);
 		// process the result async
 		let promiseWithCargoUnwrap = pvPromiseOrValue.promise.then(res => {
-			// HACK unwrap cargo
+			if ( ! res) return res;
+			// HACK handle WW standard json wrapper: check success and unwrap cargo 			
+			if (res.success === false) {
+				// pass it to the fail() handler
+				throw new Error(JSON.stringify(res.errors));
+			}
 			// TODO let's make unwrap a configurable setting
-			if (res && res.cargo) {
+			if (res.cargo) {
 				console.log("unwrapping cargo to store at "+path, res);
 				res = res.cargo;
 			}			
@@ -385,6 +391,9 @@ class Store {
 		}).fail(err => {
 			// what if anything to do here??
 			console.warn("DataStore fetch fail", path, err);
+			if (messaging && DataStore.Messaging && DataStore.Messaging.notifyUser) {
+				DataStore.Messaging.notifyUser(err);
+			}
 			return err;
 		});
 		// wrap this promise as a PV
@@ -394,6 +403,8 @@ class Store {
 			// This is done after the cargo-unwrap PV has resolved. So any calls to fetch() during render will get a resolved PV
 			// even if res is null.
 			this.setValue(path, res); // this should trigger an update (typically a React render update)
+			// finally, clear the promise from DataStore
+			this.setValue(fpath, null, false);
 			return res;
 		});
 		this.setValue(fpath, pv, false);
@@ -412,11 +423,14 @@ class Store {
 		assMatch(type, String);
 		const listWas = this.getValue(['list', type]);
 		if (listWas) {
-			DataStore.setValue(['list', type], null);
+			this.setValue(['list', type], null);
 			console.log('publish -> invalidate list', type, listWas);
 		} else {
 			console.log('publish -> no lists to invalidate');
 		}
+		// also remove any promises for these lists -- see fetch()		
+		let ppath = ['transient', 'PromiseValue', 'list', type];
+		this.setValue(ppath, null, false);
 	}
 
 } // ./Store

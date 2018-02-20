@@ -9,6 +9,11 @@ import DataStore from '../plumbing/DataStore';
 import C from '../C.js';
 import Messaging from '../plumbing/Messaging';
 
+/**
+ * To add a message: see Messaging.js
+ * 
+ * This displays messages
+ */
 const MessageBar = ({messages}) => {
 	if ( ! messages || messages.length===0) return <div></div>;
 	const messageUI = messages.map( (m, mi) => <MessageBarItem key={'mi'+mi} message={m} /> );
