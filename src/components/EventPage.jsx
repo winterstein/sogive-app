@@ -50,11 +50,9 @@ const Event = ({id}) => {
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
-			<div class="col-md-12">
-				<center>
+			<center>
 				{item.description}
-				</center>
-			</div>
+			</center>
 
 			<Register event={item} />
 
@@ -65,7 +63,7 @@ const Event = ({id}) => {
 const Register = ({event}) => {
 	assert(event);
 	// just a big CTA
-	return (<div class="col-md-12"><center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center></div>);
+	return (<center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center>);
 };
 
 

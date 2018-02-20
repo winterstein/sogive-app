@@ -79,14 +79,6 @@ export default class SearchPage extends React.Component {
 }
 
 const FeaturedCharities = () => null; 
-/*
-<div> class='featured-charities''
-	<p className='featured-charities-header'>
-		Featured Charities
-	<FeaturedCharities results={ { TODO a render-er for top-charities or a featured charity. When a search returns results, this should convert into a sidebar, or at least become hidden, and a sidebar should be generated. } }/>
-	</p>
-*/
-
 
 class SearchForm extends React.Component {
 	constructor(...params) {
