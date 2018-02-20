@@ -36,7 +36,12 @@ const FundRaiserTop = () => {
 		<div>
 			<h2>Pick a Fundraiser</h2>
 			<ListLoad type={type} />
-			<div><a href='#editEvent'>Create / edit events</a></div>
+			<hr/>
+			<div>
+				Fundraisers are personal pages linked to a specific event, e.g. 
+				"Sanjay's Sponsored Marathon". 
+				To create a Fundraiser, start by registering for the <a href='#event'>event</a>.
+			</div>
 		</div>
 	);
 };
