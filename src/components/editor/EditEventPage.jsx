@@ -94,7 +94,7 @@ const EventEditor = ({id}) => {
 			
 			<Misc.PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
 
-			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image' type='imgUpload' />
+			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
 		</Misc.Card>
 
 		<Misc.Card title='Ticket Types' icon='ticket'>

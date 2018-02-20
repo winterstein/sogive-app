@@ -52,7 +52,9 @@ const FundRaiserEditor = ({id}) => {
 	return (<div className='padded-page'>
 		{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity:0.5}} /> : null}
 		<div className='padded-block'>
-			<h2>Fundraiser {item.name || id} </h2>
+			<center>
+				<h2>Fundraiser for {item.name || id} </h2>
+			</center>
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 			<p><small>ID: {id}</small></p>
 			<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
@@ -72,6 +74,8 @@ const FundRaiserEditor = ({id}) => {
 			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
 			<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
 			<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+			<hr />
+			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
 			<Misc.SavePublishDiscard type={type} id={id} />
 			</div>
