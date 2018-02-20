@@ -1,7 +1,6 @@
 # !/bin/env bash
 
 WATCH=$1
-USER=`whoami`
 GOTINOTIFYTOOLS=`which inotifywait`
 WEB=/home/$USER/winterwell/sogive-app/web
 

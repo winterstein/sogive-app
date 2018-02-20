@@ -76,6 +76,7 @@ const RegisterPage = () => {
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 				&nbsp;
+				<br></br>
 				<span className='event-date'>{longdate}</span>
 			</h2>
 
@@ -171,7 +172,11 @@ const TicketTypes = ({event, basket}) => {
 const TicketGroup = ({name, subtitle, types, basket}) => {
 	return (
 		<div className='ticket-group'>
-			<h3>{name} <small>{subtitle}</small></h3>
+			<center>
+				<h3>{name}</h3>
+				<br></br>
+				<small>{subtitle}</small>
+			</center>
 			<hr />
 			<ul className='ticket-group-types'>
 				{ types.map(type => <RegisterTicket key={JSON.stringify(type)} ticketType={type} basket={basket} />) }
@@ -341,21 +346,28 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 		ticket.team = ticket0.team;
 	}
 	return (
-		<div>		
-			<h3>
-				{ticket.name} 
-				{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
-				: <span>{noun} {i+1}</span>
-			</h3>
+		<div>
+			<center>		
+				<h3>
+					{ticket.name}
+				</h3>
+				<br></br>
+				<h4>
+					{ticket.kind? <span className='kind'> {ticket.kind}</span> : null} 
+					: <span>{noun}</span>
+					<br></br>
+					<span>Number of Tickets : {i+1}</span>
+				</h4>
+			</center>
 			<hr />
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
+				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email (required)' />
 				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
 				{ sameAsFirst? null : 
 					<div>
-						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
+						<Misc.PropControl type='text' path={path} prop='attendeeAddress' label='Address' />
+						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number (optional)' />						
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -374,7 +386,7 @@ const TeamControl = ({ticket, path}) => {
 	return (<Misc.Col2>
 		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
 			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
 	</Misc.Col2>);
 };
 
@@ -546,17 +558,22 @@ const ConfirmedTicket = ({ticket, event}) => {
 		<h3>{ticket.attendeeName}</h3>
 		<hr />
 		<div className='padded-block'>
-			<a className='btn btn-primary btn-lg pull-right' href={'#editFundraiser/'+encURI(frid)}>
-				Setup Fund-Raising Page for {ticket.attendeeName}
-			</a>
-			<table>
-				<tbody>
-					<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
-					<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
-					<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
-					{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
-				</tbody>
-			</table>
+			<center>
+				<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
+					Setup Fund-Raising Page for {ticket.attendeeName}
+				</a>
+			</center>
+			<hr />
+			<div class="col-md-6 col-md-offset-3">
+				<table>
+					<tbody>
+						<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
+						<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
+						<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
+						{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>);
 };

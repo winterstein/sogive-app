@@ -46,12 +46,14 @@ const Event = ({id}) => {
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
 	return (
-		<div>
+		<div class="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
-			<div>
+			<div class="col-md-12">
+				<center>
 				{item.description}
+				</center>
 			</div>
 
 			<Register event={item} />
@@ -63,7 +65,7 @@ const Event = ({id}) => {
 const Register = ({event}) => {
 	assert(event);
 	// just a big CTA
-	return (<a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a>);
+	return (<div class="col-md-12"><center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center></div>);
 };
 
 
