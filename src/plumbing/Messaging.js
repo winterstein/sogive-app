@@ -30,6 +30,12 @@ const notifyUser = (msgOrError) => {
 	}
 	let mid = msg.id || printer.str(msg);
 	msg.id = mid;
+	
+	let msgs = DataStore.getValue('misc', 'messages-for-user') || {};
+	let oldMsg = msgs[mid];
+	if (oldMsg && oldMsg.closed) {
+		return;
+	}
 
 	// HACK allow react to send through custom widgets
 	let jsx = msg.jsx;
@@ -40,8 +46,12 @@ const notifyUser = (msgOrError) => {
 		jsxFromId[msg.id] = jsx;
 	}
 
-	let msgs = DataStore.getValue('misc', 'messages-for-user') || {};
-	msgs[mid] = msg; //{type:'error', text: action+" failed: "+(err && err.responseText)};
+	// already there?
+	if (oldMsg) {
+		return; // no dupes
+	}
+	// set
+	msgs[mid] = msg; //{type:'error', text: action+" failed: "+(err && err.responseText)};		
 	DataStore.setValue(['misc', 'messages-for-user'], msgs);
 };
 
