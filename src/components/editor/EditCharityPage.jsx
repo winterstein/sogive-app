@@ -206,7 +206,13 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	assert(NGO.isa(charity), 'ProjectsEditor', charity);
 	if (projects.length===0) {
 		return (<div>
-			No projects analysed. This is correct for charities which focus on a single overall project.
+			<p>How does SoGive use projects data?</p>
+			<ul>
+				<li>There are some charities which do just one thing – single-project charities. For those charities, the projects section can be left blank.</li>
+				<li>If the charity does several things, we will use a split of the costs between different projects to understand how the charity allocates its funds between different activities.</li>
+				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
+				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
+			</ul>
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
@@ -218,7 +224,13 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 		);
 	return (
 		<div>
-			<p>Please don't mark a charity as "Ready for use" before entering <strong>all</strong> known projects.</p>
+			<p>How does SoGive use projects data?</p>
+			<ul>
+				<li>There are some charities which do just one thing – single-project charities. For those charities, the projects section can be left blank.</li>
+				<li>If the charity does several things, we will use a split of the costs between different projects to understand how the charity allocates its funds between different activities.</li>
+				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
+				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
+			</ul>
 			<Accordion>{rprojects}</Accordion>
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>
@@ -427,7 +439,7 @@ const ProjectOutputs = ({charity, project}) => {
 					<tr>
 						<th>
 							Impact units <Glyphicon glyph='question-sign' title={
-`These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Keep this short, preferably about 2-3 words. 5 words max.
+`These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Be aware that the SoGive code will calculate the amount of impact attributable to a donor, and then append these words after that number (eg wording like "case(s) of malaria averted" would work if you put a number in front, but "reduction in malaria prevalence" wouldn't work). Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
 							/>
