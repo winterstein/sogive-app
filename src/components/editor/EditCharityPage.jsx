@@ -79,7 +79,7 @@ const EditCharityPage = () => {
 						field='noPublicDonations' label='No public donations' type='checkbox' 
 						help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
 					<EditField item={charity} 
-						field={NGO.uk_giftaid} type='checkbox' label='Eligible for UK GiftAid' 
+						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 				</Panel>
 				<Panel header={<h3>Overall finances and impact</h3>} eventKey="3">
