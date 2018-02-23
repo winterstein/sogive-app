@@ -128,9 +128,11 @@ public class SearchServlet implements IServlet {
 		// Prioritise charities marked "ready for use"
 		SortBuilder readySort = SortBuilders.fieldSort("ready").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
 		s.addSort(readySort);
-		s.addSort("name.raw", SortOrder.ASC);
-//		s.addSort("@id", SortOrder.ASC);
-		// TODO paging!
+		// After that - just use the relevance score
+		s.addSort(SortBuilders.scoreSort());
+		// s.addSort("name.raw", SortOrder.ASC);
+		// s.addSort("@id", SortOrder.ASC);
+		s.setDebug(true);
 		
 		int size = state.get(SIZE, 
 				// HACK: csv => unlimited
