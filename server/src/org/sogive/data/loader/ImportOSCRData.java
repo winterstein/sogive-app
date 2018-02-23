@@ -61,7 +61,6 @@ public class ImportOSCRData {
 		Desc<File> desc = getDesc();
 		Depot.getDefault().setErrorPolicy(KErrorPolicy.ASK);
 		File file = Depot.getDefault().get(desc);
-		System.out.println(file);
 
 		BufferedReader r = FileUtils.getZIPReader(file);
 		CSVReader reader = new CSVReader(r, new CSVSpec());
