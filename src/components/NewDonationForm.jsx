@@ -115,24 +115,7 @@ const DonationForm = ({item, charity, causeName}) => {
 	}
 
 	let donationDraft = pDonation.value;
-	console.warn('donationDraft',donationDraft);
-	if ( ! donationDraft) {
-		// make a new draft donation
-		donationDraft = Donation.make({
-			to: charityId,
-			fundRaiser: FundRaiser.isa(item)? getId(item) : null,
-			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
-			from: Login.isLoggedIn()? Login.getId() : null,
-			amount: Money.make({ value: 10, currency: 'gbp' }),
-			coverCosts: true,
-		});
-		console.warn('donationDraft-new', donationDraft);
-		const path = ['data', type, donationDraft.id];
-		// store in data
-		DataStore.setValue(path, donationDraft, false);
-		// also store it where ActionMan.getDonationDraft will find it
-		DataStore.setValue(['data', type, 'draft-to:'+donationDraft.to], donationDraft, false);	
-	}
+	Donation.assIsa(donationDraft);
 	
 	const path = ['data', type, donationDraft.id];
 	assert(donationDraft === DataStore.getValue(path), DataStore.getValue(path));

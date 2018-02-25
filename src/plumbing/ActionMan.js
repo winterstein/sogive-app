@@ -11,6 +11,7 @@ import DataStore from './DataStore';
 import {getId, getType} from '../data/DataClass';
 import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
+import Donation from '../data/charity/Donation';
 import Project from '../data/charity/Project';
 import Money from '../data/charity/Money';
 import Basket from '../data/Basket';
@@ -189,30 +190,46 @@ ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
  * }
  */
 const getDonationDraft = ({item, charity, fundRaiser}) => {
+	assMatch(charity, "?String");
+	assMatch(fundRaiser, "?String");
+	// ID info from item
 	if (item) {
 		if (NGO.isa(item)) charity = getId(item);
-		if (FundRaiser.isa(item)) fundRaiser = getId(item);
+		if (FundRaiser.isa(item)) {
+			fundRaiser = getId(item);			
+			// can we get a charity?
+			let fCharity = FundRaiser.charityId(item);
+			if ( ! charity) charity = fCharity;
+			assert(charity === fCharity);
+		}
 	}
-	const forId = charity || fundRaiser;
+	// for fundraiser if known, or charity
+	const forId = fundRaiser || charity;
 	assMatch(forId, String, "getDonationDraft() expects an id string");
 	// use a pseudo id to keep it in the local DataStore
-	foo - this id breaks for fundraisers vs code in NewDOnationForm
 	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+forId], () => {
 		return ServerIO.getDonationDraft({charity, fundRaiser})
 			.then(res => {
 				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
 				let cargo = res.cargo;			
 				let dontn = cargo.hits && cargo.hits[0];
-				if (dontn) {
-					DataStore.setData(dontn);
-				}
 				if ( ! dontn) {
-					// update anyway (should happen anyway)
-					// DataStore.update();
+					// make a new draft donation
+					dontn = Donation.make({
+						to: charity,
+						fundRaiser: fundRaiser,
+						via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
+						from: Login.isLoggedIn()? Login.getId() : null,
+						amount: Money.make({ value: 10, currency: 'gbp' }),
+						coverCosts: true,
+					});
+					console.warn('donationDraft-new', dontn);
 				}
-				return dontn || false;
-			});
-	});
+				// store in data by ID (the fetch stores under draft-to)
+				DataStore.setData(dontn);
+				return dontn;
+			}); // ./then()
+	}); // ./fetch()
 };
 
 
