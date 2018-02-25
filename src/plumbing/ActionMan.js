@@ -196,6 +196,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 	const forId = charity || fundRaiser;
 	assMatch(forId, String, "getDonationDraft() expects an id string");
 	// use a pseudo id to keep it in the local DataStore
+	foo - this id breaks for fundraisers vs code in NewDOnationForm
 	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+forId], () => {
 		return ServerIO.getDonationDraft({charity, fundRaiser})
 			.then(res => {
