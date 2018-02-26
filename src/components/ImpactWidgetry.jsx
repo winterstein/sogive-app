@@ -11,26 +11,42 @@ import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Misc from './Misc.jsx';
+import Settings from '../Settings';
 
 /**
+ * @param charity {NGO}
+ * @param project (?Project)
  * @param amount {?Number} The £ to donate
  */
-const ImpactDesc = ({charity, project, outputs, amount}) => {
-	const impact = impactCalc({charity, project, output:outputs[0], amount});
-	if (!impact) return null;
-
+const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=true, textBefore="may fund"}) => {
+	NGO.assIsa(charity);
+	Money.assIsa(amount);
+	if ( ! project) project = NGO.getProject(charity);
+	// NB: no project = no impact data
+	if ( ! project) return null;
+	let impacts = multipleImpactCalc({ charity, project, cost: amount });	
+	if ( ! impacts) return null;
+	if ( ! maxImpacts) maxImpacts = 1;
+	if (maxImpacts === -1) maxImpacts = impacts.length;
+	let impactDivs = [];
+	for(let i=0; i < maxImpacts; i++) {
+		let impi = impacts[i];
+		let inum = new Intl.NumberFormat(Settings.locale, {maximumSignificantDigits:2}).format(Output.number(impi));
+		impactDivs.concat(<div className='impact' key={i}>
+			<big className='amount'>{inum}</big> <span className='impact-unit-name'>{Output.name(impi)}</span>
+		</div>);
+	}
+	
 	return (
-		<div className='impact'>
-			<p className='impact-text'>
-				<span><b><Misc.Money amount={impact.amount} /></b></span>
-				<span> will fund</span>
-				<span className="impact-units-amount"> {printer.prettyNumber(Output.number(impact), 2)}</span>					
-				<span className='impact-unit-name'> {Output.name(impact)}</span>
-			</p>
-			{ Project.isOverall(project)? null : <small className='details'>{project.name}</small> }
+		<div className='ImpactDesc'>
+			{showMoney? <b><Misc.Money amount={amount} /></b> : null}
+			{textBefore}
+			{impactDivs}
+			{ Project.isOverall(project)? null : <div><small className='details'>{project.name}</small></div> }
 		</div>
 	);
 }; //./ImpactDesc
+
 
 /**
  * See Output.js for relevant doc notes

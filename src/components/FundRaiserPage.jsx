@@ -20,7 +20,7 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
-import { multipleImpactCalc } from './ImpactWidgetry';
+import {ImpactDesc} from './ImpactWidgetry';
 
 
 const FundRaiserTop = () => {
@@ -181,35 +181,6 @@ const DonationProgress = ({item, charity}) => {
 	const donatedBarHeight =Math.min(100, donatedPercent);
 	const remainingBarHeight = 100 - donatedBarHeight;
 
-	// impact info
-	// TODO refactor with ImpactWidgetry.jsx
-	let impacts = null;
-	const project = NGO.getProject(charity);
-	// NB: no project = no impact data, but you can still donate
-	if (project) {
-		impacts = multipleImpactCalc({ charity, project, cost: donated });
-	}
-	console.log('*** IMPACTS OF DONATIONS', impacts);
-
-	const firstImpact = impacts && impacts[0]? (
-		<div className='first-impact'>
-			<big className='amount'>{Output.number(impacts[0])}</big> {Output.name(impacts[0])}
-		</div>
-	) : null;
-	const secondImpact = impacts && impacts[1]? (
-		<div className='second-impact'>
-			<big className='amount'>{Output.number(impacts[1])}</big> {Output.name(impacts[1])}
-		</div>
-	) : null;
-
-	const outputDesc = (firstImpact || secondImpact) ? (
-		<div className='details-output'>
-			<p>Your donations so far are enough to fund:</p>
-			{firstImpact}
-			{secondImpact}
-		</div>
-	) : null;
-
 	return (
 		<div className='DonationProgress'>
 			<div className='ProgressGraph'>
@@ -230,8 +201,8 @@ const DonationProgress = ({item, charity}) => {
 				</div>
 			</div>
 			<div className='progress-details'>
-				<DonationsSoFar item={item} />
-				{outputDesc}
+				<DonationsSoFar item={item} />				
+				<ImpactDesc showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
 				<DonateButton item={item} />
 			</div>
 		</div>

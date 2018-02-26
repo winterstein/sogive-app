@@ -16,7 +16,6 @@ import Money from '../data/charity/Money';
 import Misc from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';
-import {impactCalc} from './ImpactWidgetry.jsx';
 import SocialShare from './SocialShare';
 
 const CharityPage = () => {
