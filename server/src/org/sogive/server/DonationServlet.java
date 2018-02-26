@@ -42,6 +42,7 @@ import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Key;
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
@@ -76,6 +77,13 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class DonationServlet extends CrudServlet {
 
+	@Override
+	protected void doSecurityCheck(WebRequest state) throws SecurityException {
+		YouAgainClient ya = Dep.get(YouAgainClient.class);
+		List<AuthToken> tokens = ya.getAuthTokens(state);
+		// actually, it's OK to donate anonymously
+	}
+	
 	private static final String LOGTAG = "DonationServlet";
 
 	public DonationServlet() {
@@ -113,24 +121,33 @@ public class DonationServlet extends CrudServlet {
 	}
 	
 	@Override
-	protected JThing doPublish(WebRequest state) {
-		XId user = state.getUserId();
-		String email = state.get("stripeEmail");
-		if (user==null && email!=null) {
-			user = new XId(email, "Email");
-		}
-		
+	protected JThing doPublish(WebRequest state) {		
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
+		// who
+		XId user = state.getUserId();
+		XId from = donation.getFrom(); // you can donate w/o logging in
+		String email = donation.getStripe()==null? null : donation.getStripe().getEmail();
+		String email2 = state.get("stripeEmail");
+		if (user==null) {
+			user = from;
+		}
+		if (user==null) {
+			String e = Utils.or(email, email2);
+			if (e != null) {
+				user = new XId(e, "Email");
+			}
+		}
 		donation.setF(new XId[]{user}); // who reported this? audit trail
+		
 		// make sure it has a date and some donor info
 		if (donation.getDate()==null) {
 			donation.setDate(new Time().toISOString());
 			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}
 		if (donation.getDonor()==null) {
-			PersonLite peepLite = AppUtils.getCreatePersonLite(donation.getFrom());
+			PersonLite peepLite = AppUtils.getCreatePersonLite(from);
 			donation.setDonor(peepLite);
 			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}

@@ -29,6 +29,7 @@ import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
@@ -162,7 +163,16 @@ public class Transfer extends AThing {
 	public transient Person toPerson;
 
 
+	/**
+	 * 
+	 * @param user Can be null (returns null)
+	 * @return Can be null
+	 */
 	public static Money getTotalCredit(XId user) {
+		if (user==null) {
+			Log.d("Transfer", "no credit for no user");
+			return null;
+		}
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SearchRequestBuilder s = new SearchRequestBuilder(es);	
 		String idx = Dep.get(IESRouter.class).getPath(Transfer.class, null).index();

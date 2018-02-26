@@ -27,12 +27,19 @@ const Misc = {};
 
 /**
 E.g. "Loading your settings...""
+See https://www.w3schools.com/howto/howto_css_loader.asp
+http://tobiasahlin.com/spinkit/
 */
-Misc.Loading = ({text}) => (
-	<div>
-		<span className="glyphicon glyphicon-cog spinning" /> Loading {text || ''}...
-	</div>
-);
+Misc.Loading = ({text}) => {
+	return (<div className='loader-box'><center>	
+		<div className="loader" />
+		{text===undefined? 'Loading...' : text}
+	</center>
+	</div>);
+	// <div>
+	// 	<span className="glyphicon glyphicon-cog spinning" /> Loading {text || ''}...
+	// </div>
+};
 
 /**
  * 

@@ -202,7 +202,8 @@ const DonationProgress = ({item, charity}) => {
 			</div>
 			<div className='progress-details'>
 				<DonationsSoFar item={item} />				
-				<ImpactDesc showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
+				<ImpactDesc charity={charity} amount={donated} showMoney={false} 
+					beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
 				<DonateButton item={item} />
 			</div>
 		</div>
@@ -211,35 +212,36 @@ const DonationProgress = ({item, charity}) => {
 
 const DonationsSoFar = ({item}) => {
 	// Access the userTarget prop directly, before calling FundRaiser.target, to see if an actual target is set
-	const {donated, userTarget, donationCount } = item;
+	const {userTarget, donationCount } = item;
+	const donated = FundRaiser.donated(item);
 
-	if (donationCount > 0) {
-		const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
-		const diff = Money.sub(target, item.donated);
+	if ( ! donationCount) {
+		return (
+			<div className='details-input'>
+				Be the first to donate to {item.name}!
+			</div>
+		);		
+	}
+	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
+	const diff = Money.sub(target, item.donated);
 
-		if (diff.value <= 0) {
-			return (
-				<div className='details-input'>
-					<p>
-						<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-						We've passed <Misc.Money amount={target} /> in donations - what's next?
-					</p>
-				</div>
-			);
-		}
-
+	if (diff.value <= 0) {
 		return (
 			<div className='details-input'>
 				<p>
 					<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-					Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
+					We've passed <Misc.Money amount={target} /> in donations - what's next?
 				</p>
 			</div>
 		);
 	}
+
 	return (
 		<div className='details-input'>
-			Be the first to donate to {item.name}!
+			<p>
+				<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
+				Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
+			</p>
 		</div>
 	);
 };
@@ -247,10 +249,10 @@ const DonationsSoFar = ({item}) => {
 const Supporters = ({item, donations = [], charity}) => {
 	return (
 		<ul className='supporters'>
-			{donations.map(donation => <Donation key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}
-			<li className='show-more'><Button>show more</Button></li>
+			{donations.map(donation => <Donation key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}			
 		</ul>
 	);
+	// TODO <li className='show-more'><Button>show more</Button></li>
 };
 
 const Donation = ({donation, charity}) => {

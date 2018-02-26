@@ -18,7 +18,7 @@ import Settings from '../Settings';
  * @param project (?Project)
  * @param amount {?Number} The £ to donate
  */
-const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=true, textBefore="may fund"}) => {
+const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=true, beforeText="may fund"}) => {
 	NGO.assIsa(charity);
 	Money.assIsa(amount);
 	if ( ! project) project = NGO.getProject(charity);
@@ -29,10 +29,10 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 	if ( ! maxImpacts) maxImpacts = 1;
 	if (maxImpacts === -1) maxImpacts = impacts.length;
 	let impactDivs = [];
-	for(let i=0; i < maxImpacts; i++) {
+	for(let i=0; i < Math.min(maxImpacts, impacts.length); i++) {
 		let impi = impacts[i];
 		let inum = new Intl.NumberFormat(Settings.locale, {maximumSignificantDigits:2}).format(Output.number(impi));
-		impactDivs.concat(<div className='impact' key={i}>
+		impactDivs.push(<div className='impact' key={i}>
 			<big className='amount'>{inum}</big> <span className='impact-unit-name'>{Output.name(impi)}</span>
 		</div>);
 	}
@@ -40,7 +40,7 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 	return (
 		<div className='ImpactDesc'>
 			{showMoney? <b><Misc.Money amount={amount} /></b> : null}
-			{textBefore}
+			{beforeText}
 			{impactDivs}
 			{ Project.isOverall(project)? null : <div><small className='details'>{project.name}</small></div> }
 		</div>

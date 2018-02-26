@@ -12,6 +12,7 @@ import org.sogive.data.user.Person;
 
 import com.goodloop.data.PaymentException;
 import com.stripe.model.Charge;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
@@ -19,11 +20,11 @@ import com.winterwell.web.data.XId;
 public class MoneyCollector {
 
 	public MoneyCollector(IForSale basket, XId buyer, XId seller, WebRequest state) {
-		super();
 		this.basket = basket;
 		this.user = buyer;
 		this.to = seller;
 		this.state = state;
+		Utils.check4null(basket, buyer);
 	}
 
 
