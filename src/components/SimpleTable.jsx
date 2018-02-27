@@ -44,8 +44,9 @@ class SimpleTable extends React.Component {
 			// TODO pluck the right column
 			let column = columns[tableSettings.sortBy];
 			let sortFn = (a,b) => {
-				let av = getValue({item:a, column});
-				let bv = getValue({item:b, column});
+				let ia = {item:a, column:column};
+				let av = getValue(ia);
+				let bv = getValue({item:b, column:column});
 				return av < bv;
 			};
 			data = data.sort(sortFn);
@@ -95,6 +96,10 @@ const Row = ({item, row, columns}) => {
 };
 
 const getValue = ({item, row, column}) => {
+	if ( ! item) {
+		console.error("SimpleTable.jsx getValue: null item", column);
+		return undefined;
+	}
 	let accessor = column.accessor || column; 
 	let v = _.isFunction(accessor)? accessor(item) : item[accessor];
 	return v;
