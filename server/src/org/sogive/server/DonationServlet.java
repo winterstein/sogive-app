@@ -1,5 +1,7 @@
 package org.sogive.server;
 
+import static com.winterwell.utils.StrUtils.newLine;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,8 @@ import com.winterwell.es.client.IndexRequestBuilder;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
+import com.winterwell.es.client.query.ESQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -101,22 +105,30 @@ public class DonationServlet extends CrudServlet {
 	}
 		
 	@Override
-	protected QueryBuilder doList2_query(WebRequest state) {
+	protected ESQueryBuilder doList2_query(WebRequest state) {
 		if ("all".equals(state.getSlugBits(2))) {
 			return null; // All!
 		}
+		// a donations request MUST provide from or q, to avoid listing all
+		String from = state.get("from");
+		String q = state.get("q");
+		if (from==null && q==null) {
+			throw new WebEx.E40X(400, state.getRequestUrl(), "No from or q to query by");
+		}
+		
+		ESQueryBuilder qb = null;
 		// support from:user to:charity, so this can find draft donations
-		XId user = state.getUserId();
-		if (user==null) return null;
-		TermQueryBuilder qb = QueryBuilders.termQuery("from", user.toString());
+		if (from != null) {
+			XId user = new XId(from);
+			qb = ESQueryBuilders.termQuery("from", user.toString());
+		}
 		
 		String to = state.get("to");
 		if (to==null) return qb;
 		
 		// would ?q=to:id work just as well??
-		QueryBuilder tq = QueryBuilders.termQuery("to", to);;
-		
-		BoolQueryBuilder qb2 = QueryBuilders.boolQuery().must(qb).must(tq);
+		ESQueryBuilder tq = ESQueryBuilders.termQuery("to", to);
+		ESQueryBuilder qb2 = ESQueryBuilders.must(qb, tq);		
 		return qb2;
 	}
 	
