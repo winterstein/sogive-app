@@ -3,7 +3,7 @@
 #sogive-app uploads directory backup script
 
 #remove older backups:
-rm -rf /mnt/backup-server/sogive-app-uploads/*.7z
+rm -rf /mnt/common-backup/sogive-app-uploads/*.7z
 
 #Function to send alert email if something goes wrong
 function send_alert {
@@ -17,10 +17,10 @@ function send_alert {
 
 # zip the uploads
 printf "\nCreating Archive...\n"
-7z a -t7z -mmt /mnt/backup-server/sogive-app-uploads/sogive-app-uploads.$(date +%Y-%m-%d).7z /home/winterwell/sogive-app/web/uploads/*
+7z a -t7z -mmt /mnt/common-backup/sogive-app-uploads/sogive-app-uploads.$(date +%Y-%m-%d).7z /home/winterwell/sogive-app/web/uploads/*
 # Test the new zip file and send an alert if something is wrong with it
 printf "\nTesting Archive...\n"
-7z t /mnt/backup-server/sogive-app-uploads/sogive-app-uploads.$(date +%Y-%m-%d).7z
+7z t /mnt/common-backup/sogive-app-uploads/sogive-app-uploads.$(date +%Y-%m-%d).7z
 RETVAL=$?
 case $RETVAL in
 0)
