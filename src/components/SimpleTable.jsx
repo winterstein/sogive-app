@@ -45,9 +45,13 @@ class SimpleTable extends React.Component {
 			let column = columns[tableSettings.sortBy];
 			let sortFn = (a,b) => {
 				let ia = {item:a, column:column};
-				let av = getValue(ia);
-				let bv = getValue({item:b, column:column});
-				return av < bv;
+				let av = ""+getValue(ia);
+				let bv = ""+getValue({item:b, column:column});
+				// // avoid undefined 'cos it messes up ordering
+				// if (av === undefined || av === null) av = "";
+				// if (bv === undefined || bv === null) bv = "";
+				console.log("sortFn", av, bv, a, b);
+				return (av < bv) ? -1 : (av > bv) ? 1 : 0;
 			};
 			data = data.sort(sortFn);
 			if (tableSettings.sortByReverse) {
@@ -102,6 +106,7 @@ const getValue = ({item, row, column}) => {
 	}
 	let accessor = column.accessor || column; 
 	let v = _.isFunction(accessor)? accessor(item) : item[accessor];
+	console.log("getValue", item, column, v);
 	return v;
 };
 
