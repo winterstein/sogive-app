@@ -89,7 +89,7 @@ for server in ${TARGET[*]}; do
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/lib/* winterwell@$server:/home/winterwell/sogive-app/web/lib/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/style/* winterwell@$server:/home/winterwell/sogive-app/web/style/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/test/* winterwell@$server:/home/winterwell/sogive-app/web/test/
-	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/* winterwell@$server:/home/winterwell/sogive-app/web/
+	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/web/* winterwell@$server:/home/winterwell/sogive-app/web/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/package.json winterwell@$server:/home/winterwell/sogive-app/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/webpack* winterwell@$server:/home/winterwell/sogive-app/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/.babelrc winterwell@$server:/home/winterwell/sogive-app/web/build/js/
