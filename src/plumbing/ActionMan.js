@@ -171,16 +171,6 @@ const getBasketPath = (uxid) => {
 };
 
 /**
- * TODO handle charity or fundraiser
- */
-ServerIO.getDonationDraft = ({charity, fundRaiser}) => {
-	assMatch(charity || fundRaiser, String);
-	let to = charity;
-	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
-	return ServerIO.load('/donation/list.json', {data: {to, q}, swallow: true});
-};
-
-/**
  * NB: uses a pseudo id of `draft-to:X`
  * 
  * {
@@ -207,8 +197,9 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 	const forId = fundRaiser || charity;
 	assMatch(forId, String, "getDonationDraft() expects an id string");
 	// use a pseudo id to keep it in the local DataStore
-	return DataStore.fetch(['data', C.TYPES.Donation, 'draft-to:'+forId], () => {
-		return ServerIO.getDonationDraft({charity, fundRaiser})
+	let from = Login.getId();
+	return DataStore.fetch(['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId], () => {
+		return ServerIO.getDonationDraft({from, charity, fundRaiser})
 			.then(res => {
 				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
 				let cargo = res.cargo;			
@@ -219,7 +210,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 						to: charity,
 						fundRaiser: fundRaiser,
 						via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
-						from: Login.isLoggedIn()? Login.getId() : null,
+						from: from,
 						amount: Money.make({ value: 10, currency: 'gbp' }),
 						coverCosts: true,
 					});

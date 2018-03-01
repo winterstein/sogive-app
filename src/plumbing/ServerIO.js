@@ -65,7 +65,9 @@ ServerIO.getDonations = function({from, to}) {
 	return ServerIO.load('/donation/list', params);
 };
 
-
+/**
+ * TODO delete and just use Crud.js
+ */
 ServerIO.saveCharity = function(charity, status) {
 	assert(NGO.isa(charity), charity);
 	let params = {		
@@ -74,13 +76,17 @@ ServerIO.saveCharity = function(charity, status) {
 	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
-ServerIO.publish = function(charity, status) {
-	assert(NGO.isa(charity), charity);
-	let params = {		
-		data: {action: 'publish', status: status}
-	};
-	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
+
+/**
+ * TODO handle charity or fundraiser
+ */
+ServerIO.getDonationDraft = ({from, charity, fundRaiser}) => {
+	assMatch(charity || fundRaiser, String);
+	let to = charity;
+	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
+	return ServerIO.load('/donation/list.json', {data: {from, to, q}, swallow: true});
 };
+
 
 /**
  * @param charity {name:String}

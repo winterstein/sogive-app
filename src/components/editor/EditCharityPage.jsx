@@ -598,32 +598,7 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
-const EditProjectIOField = ({charity, project, input, output, field, ...stuff}) => {
-	assert(charity && project, "EditCharityPage.EditProjectIOField");
-	let cid = NGO.id(charity);
-	let pid = charity.projects.indexOf(project);
-	assert(pid!==-1, project, "EditCharityPage.EditProjectIOField: "+charity.projects);
-	let io; let ioi;
-	if (input) {
-		io='inputs';
-		ioi = project.inputs.indexOf(input);
-	} else {
-		io='outputs';
-		ioi = project.outputs.indexOf(output);
-	}
-	assert(ioi !== -1, "EditCharityPage.EditProjectIOField");
-	let path = ['draft',C.TYPES.NGO,cid,'projects', pid, io, ioi];
-	let item = input || output;
-	if (field==='this') { 
-		// HACK for Money inputs
-		path = ['draft',C.TYPES.NGO,cid,'projects', pid, io];
-		field = ioi;
-		item = project[io];
-	}
-	return <EditField2 parentItem={charity} item={item} path={path} field={field} {...stuff} />;
-};
-
-
+// TODO delete and just use Crud.js
 const saveDraftFn = _.debounce(
 	({path, parentItem}) => {
 		if ( ! parentItem) parentItem = DataStore.getValue(path);
