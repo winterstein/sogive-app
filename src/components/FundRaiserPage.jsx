@@ -110,7 +110,7 @@ const FundRaiserPage = ({id}) => {
 						</div>
 					</Col>
 
-					<Col md={6} className='donation-progress'>
+					<Col md={6}>
 						<DonationProgress item={item} charity={charity} />
 					</Col>
 				</Row>
