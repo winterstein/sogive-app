@@ -198,8 +198,8 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 			&& ! validator)
 	{
 		validator = v => {
-			if (v && v.substr(0,5) !== 'https') {
-				return "Use https for secure urls";
+			if (v && v.substr(0,5) === 'http:') {
+				return "Please use https for secure urls";
 			}
 			return null;
 		};
