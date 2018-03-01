@@ -356,7 +356,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first walker' /> : null}
+				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
 				{ sameAsFirst? null : 
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
@@ -387,12 +387,11 @@ const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
 	const charityId = Basket.charityId(basket);
-	const recommended = !! charityId; // limit to recommended charities if the input is blank
+	const recommended = ! charityId; // limit to recommended charities if the input is blank
 	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
 		() => {
-			return ServerIO.search({q: charityId, size: 20, recommended})
+			return ServerIO.search({prefix: charityId, size: 20, recommended})
 				.then(res => {
-					console.warn("yeh :)", res);
 					let hits = res.cargo && res.cargo.hits;
 					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
 					return hits;

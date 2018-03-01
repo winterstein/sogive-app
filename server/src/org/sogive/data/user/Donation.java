@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class Donation extends AThing implements IForSale {
-
+	
 	/**
 	 * The user who donated
 	 */
