@@ -176,7 +176,7 @@ public class DonationServlet extends CrudServlet {
 			mc.run();
 		}
 		// store in the database TODO use an actor which can retry
-		super.doPublish(state);
+		super.doPublish(state, true, true);
 		
 		// Donating to/via a fundraiser? Update its donation total.
 		String frid = donation.getFundRaiser();
