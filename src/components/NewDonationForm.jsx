@@ -98,7 +98,11 @@ const DonationForm = ({item, charity, causeName}) => {
 		return null;
 	}
 
-	const closeLightbox = () => DataStore.setValue([...widgetPath, 'open'], false);
+	// close dialog and reset the wizard stage
+	const closeLightbox = () => {
+		DataStore.setValue([...widgetPath, 'open'], false);
+		DataStore.setValue(stagePath, null);
+	};
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
@@ -153,7 +157,7 @@ const DonationForm = ({item, charity, causeName}) => {
 						<PaymentSection path={path} donation={donationDraft} item={item} />
 					</WizardStage>
 				
-					<WizardStage title='Receipt'>
+					<WizardStage title='Receipt' previous={false} >
 						<ThankYouSection path={path} item={item} />
 					</WizardStage>
 				</Wizard>

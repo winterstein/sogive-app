@@ -48,8 +48,8 @@ const Stage = ({i, stage, stageNum, stagePath}) => {
  * to all children:
  * setNavStatus {sufficient, complete}
  */
-const WizardStage = ({stageKey, stageNum, stagePath, maxStage,
-	next, previous, sufficient, complete, title, children}) => {
+const WizardStage = ({stageKey, stageNum, stagePath, maxStage, next, previous, sufficient, complete, title, children}) => 
+{
 	assert(stageNum !==null && stageNum !== undefined);
 	assMatch(maxStage, Number);
 	if (stageKey != stageNum) { // allow "1" == 1		

@@ -153,7 +153,7 @@ public class DBSoGive {
 		ESPath path = Dep.get(IESRouter.class).getPath(Person.class, user.toString(), KStatus.PUBLISHED);
 		Person peep = AppUtils.get(path, Person.class);
 		if (peep != null) return peep;
-		PersonLite peepLite = AppUtils.getCreatePersonLite(user);
+		PersonLite peepLite = AppUtils.getCreatePersonLite(user, null);
 		// HACK copy over
 		peep = new Person(peepLite);
 		peep.isFresh = true; // HACK 

@@ -3,6 +3,7 @@ import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
 import Money from './Money';
 import DataStore from '../../plumbing/DataStore';
+import {XId} from 'wwutils';
 
 /** impact utils */
 const Donation = defineType(C.TYPES.Donation);
@@ -29,6 +30,19 @@ Donation.getTotal = (don) => {
 		don.fees.forEach(money => ttl = ttl-money);
 	}
 	return ttl;
+};
+
+/**
+ * @param {?Donation} don 
+ * @returns ?String can be null for anonymous donors
+ */
+Donation.donorName = don => {
+	if ( ! don) return null;
+	This.assIsa(don);
+	// did they ask to be anonymous?
+	if (don.anonymous) return null;
+	if ( ! don.donor) return don.donorName; // draft
+	return don.donor.name || (don.donor.id && XId.prettyName(don.donor.id)) || null;
 };
 
 /**

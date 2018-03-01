@@ -16,6 +16,7 @@ import Output from '../data/charity/Output';
 import C from '../C';
 import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
+import Donation from '../data/charity/Donation';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
@@ -251,15 +252,15 @@ const DonationsSoFar = ({item}) => {
 const Supporters = ({item, donations = [], charity}) => {
 	return (
 		<ul className='supporters'>
-			{donations.map(donation => <Donation key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}			
+			{donations.map(donation => <Supporter key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}			
 		</ul>
 	);
 	// TODO <li className='show-more'><Button>show more</Button></li>
 };
 
-const Donation = ({donation, charity}) => {
-	const name = (donation.person && donation.person.name) || donation.donorName || 'Anonymous Donor';
-	const personImg = donation.person && donation.person.img;
+const Supporter = ({donation, charity}) => {
+	const name = Donation.donorName(donation) || 'Anonymous Donor';
+	const personImg = donation.donor && donation.donor.img;
 
 	return (
 		<li className='donation'>

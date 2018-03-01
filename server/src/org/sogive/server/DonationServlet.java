@@ -159,7 +159,10 @@ public class DonationServlet extends CrudServlet {
 			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}
 		if (donation.getDonor()==null) {
-			PersonLite peepLite = AppUtils.getCreatePersonLite(from);
+			Map info = new ArrayMap(
+					"name", donation.getDonorName()
+					);
+			PersonLite peepLite = AppUtils.getCreatePersonLite(from, info);
 			donation.setDonor(peepLite);
 			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}

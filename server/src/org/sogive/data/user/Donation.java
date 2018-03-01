@@ -36,6 +36,10 @@ public class Donation extends AThing implements IForSale {
 	 */
 	String to;
 	
+	/**
+	 * @deprecated This is a "temp" storage, used during drafts, which is then copied into the donor object
+	 */
+	String donorName;
 	String donorAddress;
 	String donorPostcode;
 	
@@ -185,15 +189,4 @@ public class Donation extends AThing implements IForSale {
 		// , from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
 	}
 
-	public void setImpacts(List<Output> impacts) {
-		this.impacts = impacts;
-	}
-
-	public void setGiftAid(String name, String address, String postcode) {
-		Utils.check4null(name, address, postcode);
-		//		this.donorName = name; part of the user info
-		this.donor = AppUtils.getCreatePersonLite(from);
-		this.donorAddress = address;
-		this.donorPostcode = postcode;
-	}
 }

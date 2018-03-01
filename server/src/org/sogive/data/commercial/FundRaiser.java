@@ -1,6 +1,7 @@
 package org.sogive.data.commercial;
 
 import java.util.List;
+import java.util.Map;
 
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
@@ -14,6 +15,7 @@ import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.app.AppUtils;
@@ -90,9 +92,11 @@ public class FundRaiser extends AThing {
 		charityId = Utils.or(ticket.charityId, basket.charityId); 
 		eventId = Utils.or(ticket.eventId, basket.eventId);
 		oxid = ticket.getOwnerXId();
-		owner = AppUtils.getCreatePersonLite(oxid);
-		this.ticket = ticket;
-		if ( ! Utils.isBlank(ticket.attendeeName)) owner.name = ticket.attendeeName;
+		Map info = new ArrayMap(
+				"name", ticket.attendeeName
+				);
+		owner = AppUtils.getCreatePersonLite(oxid, info);
+		this.ticket = ticket;		
 		// name
 		Event event = getEvent();		
 		if (event==null) {
