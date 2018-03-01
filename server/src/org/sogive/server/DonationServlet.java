@@ -175,18 +175,18 @@ public class DonationServlet extends CrudServlet {
 			MoneyCollector mc = new MoneyCollector(donation, user, to, state);
 			mc.run();
 		}
-		// store in the database TODO use an actor which can retry
-		super.doPublish(state, true, true);
 		
-		// Donating to/via a fundraiser? Update its donation total.
+		// Donating to/via a fundraiser? Update its donation total + add matched funding
 		String frid = donation.getFundRaiser();
-		if (frid != null && !frid.isEmpty()) {
-			ESPath frPath = new ESPath(frid, frid, frid);
+		if ( ! Utils.isBlank(frid)) {
 			FundraiserServlet fart = new FundraiserServlet();
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
-		}
+		}		
 		
+		// store in the database TODO use an actor which can retry
+		super.doPublish(state, true, true);
+				
 		// Done
 		return jthing;
 	}

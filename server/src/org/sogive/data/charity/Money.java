@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.Validate;
 
+import com.goodloop.data.KCurrency;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
@@ -46,11 +47,18 @@ public class Money extends Thing<Money> {
 	public Money plus(Money x) {
 		return new Money(getValue100() + x.getValue100());
 	}
+	
+	public Money plus(com.goodloop.data.Money x) {
+		return new Money(getValue100() + x.getValue100p()/100);
+	}
 
 	public Money minus(Money x) {
 		return new Money(getValue100() - x.getValue100());
 	}
 
+	public Money minus(com.goodloop.data.Money x) {
+		return new Money(getValue100() - x.getValue100p()/100);
+	}
 
 	public double getValue() {
 		return MathUtils.toNum(get("value"));
@@ -92,4 +100,14 @@ public class Money extends Thing<Money> {
 	public String getCurrency() {
 		return (String) get("currency");
 	}
+
+	/**
+	 * HACK convertor
+	 * @return
+	 */
+	public com.goodloop.data.Money asMoney() {
+		KCurrency curr = getCurrency()==null? KCurrency.GBP : KCurrency.valueOf(getCurrency().toUpperCase());
+		return new com.goodloop.data.Money(curr, getValue());
+	}
+
 }

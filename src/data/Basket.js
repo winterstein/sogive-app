@@ -42,6 +42,11 @@ Basket.getTotal = (basket) => {
 	let total = null;
 	Basket.getItems(basket).forEach((item) => {
 		Money.assIsa(item.price);
+		// skip over any NaNs
+		if (isNaN(item.price.value)) {
+			console.warn("Basket.js getTotal: NaN", basket, item);
+			return;
+		}
 		if (total === null) {
 			total = item.price;
 		} else {

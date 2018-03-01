@@ -61,8 +61,8 @@ public class Donation extends AThing implements IForSale {
 	 */
 	public Money getTotal() {
 		Mutable.Ref<Money> ttl = new Mutable.Ref<>(amount);
-		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c));
-		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c));
+		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c.money));
+		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c.money));
 		total = ttl.value;
 		return total;
 	}
@@ -125,7 +125,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * Our fees + processing fees.
 	 */
-	List<Money> fees;
+	List<MoneyItem> fees;
 	
 	/**
 	 * The user's contribution
@@ -135,7 +135,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * Extra money! gift-aid boost + matched funding.
 	 */
-	List<Money> contributions;
+	List<MoneyItem> contributions;
 	
 	/**
 	 * The total amount the charity will receive.
@@ -187,6 +187,11 @@ public class Donation extends AThing implements IForSale {
 	public String toString() {
 		return "Donation[id="+id+"]"; // NB id includes from, to, amount
 		// , from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
+	}
+
+	public void addContribution(MoneyItem matchAmount) {
+		if (contributions==null) contributions = new ArrayList();
+		contributions.add(matchAmount);
 	}
 
 }

@@ -70,6 +70,7 @@ Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSi
 		amount = {value: amount, currency:'GBP'};
 	}
 	let value = amount? amount.value : 0;
+	if (isNaN(value)) value = 0; // avoid ugly NaNs
 	if (maximumFractionDigits===0) { // because if maximumSignificantDigits is also set, these two can conflict
 		value = Math.round(value);
 	}

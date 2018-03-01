@@ -1,8 +1,10 @@
 package org.sogive.server;
 
 import org.sogive.data.charity.Money;
+import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
+import org.sogive.data.user.MoneyItem;
 
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
@@ -31,10 +33,24 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 	private void updateFundRaiser(Donation donation, String frid, KStatus status) {
 		ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 		FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
+				
+		Money amount = donation.getAmount();
 		
+		// Add in matched funding?
+		Event event = fundraiser.getEvent();
+		if (event != null && event.getMatchedFunding() != null && event.getMatchedFunding() != 0) {
+			double ma = amount.getValue100() * event.getMatchedFunding() / 100.0;
+			Money matchAmount = new Money(Math.round(ma), amount.getCurrency());
+			MoneyItem mi = new MoneyItem("matched funding", matchAmount.asMoney());
+			donation.addContribution(mi);
+			assert donation.getStatus() == KStatus.PUBLISHED : donation;
+			AppUtils.doPublish(donation, false, true);
+		}
+		
+		Money total = donation.getTotal();
 		Money donated = fundraiser.getDonated();
 		if (donated == null) donated = Money.pound(0);
-		fundraiser.setDonated(donated.plus(donation.getAmount()));
+		fundraiser.setDonated(donated.plus(total));
 		
 		Integer donationCount = fundraiser.getDonationCount();
 		if (donationCount == null) donationCount = 0;

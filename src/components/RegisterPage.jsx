@@ -473,13 +473,18 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	const email = getEmail();
 	const bpath = ActionMan.getBasketPath();
 
+	// tip? Default to £1
+	if (basket.hasTip && basket.tip === undefined) {
+		basket.tip = Money.make({value:1});
+	}
+
 	return (
 		<div>
 			<div className='padded-block'>
 				<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
 					label={`Include a tip to cover SoGive's operating costs?`} />
 				{basket.hasTip ? (
-					<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' dflt={Money.make({value:1})} />
+					<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
 				) : ''}
 			</div>
 			<TicketInvoice basket={basket} />
