@@ -22,6 +22,8 @@ import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.query.ESQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
@@ -58,23 +60,23 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 	
 
 	@Override
-	protected QueryBuilder doList2_query(WebRequest state) {
+	protected ESQueryBuilder doList2_query(WebRequest state) {
 		// support from:user
 		String from = state.get("from");
 		if (from!=null) {
-			TermQueryBuilder qb = QueryBuilders.termQuery("from", from);
+			ESQueryBuilder qb = ESQueryBuilders.termQuery("from", from);
 			return qb;
 		}
 		String to = state.get("to");
 		if (to!=null) {
-			TermQueryBuilder qb = QueryBuilders.termQuery("to", to);
+			ESQueryBuilder qb = ESQueryBuilders.termQuery("to", to);
 			return qb;
 		}
 		String toFrom = state.get("toFrom");
 		if (toFrom!=null) {
-			QueryBuilder qb = QueryBuilders.boolQuery()
-					.should(QueryBuilders.termQuery("to", toFrom))
-					.should(QueryBuilders.termQuery("from", toFrom))
+			ESQueryBuilder qb = ESQueryBuilders.boolQuery()
+					.should(ESQueryBuilders.termQuery("to", toFrom))
+					.should(ESQueryBuilders.termQuery("from", toFrom))
 					.minimumNumberShouldMatch(1)
 					;
 			return qb;

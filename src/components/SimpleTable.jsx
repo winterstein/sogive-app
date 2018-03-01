@@ -7,11 +7,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// import SJTest, {assert, assMatch} from 'sjtest';
+import SJTest, {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Misc from './Misc';
 import printer from '../utils/printer';
 
+import Enum from 'easy-enums';
 import DataStore from '../plumbing/DataStore';
 
 const str = printer.str;
@@ -106,10 +107,21 @@ const getValue = ({item, row, column}) => {
 	}
 	let accessor = column.accessor || column; 
 	let v = _.isFunction(accessor)? accessor(item) : item[accessor];
-	console.log("getValue", item, column, v);
 	return v;
 };
 
+const defaultCellRender = (v, column) => {
+	if (column.format) {
+		if (CellFormat.ispercent(column.format)) {
+			if (Math.abs(v) < 0.1) {
+				return (100*v) + "%"; // no rounding for tiny %s
+			}
+			// to 1 decimal place, e.g. "0.5%"
+			return (Math.round(1000*v)/10) + "%";
+		}
+	}
+	return str(v);
+};
 const Cell = ({item, row, column}) => {
 	try {
 		const v = getValue({item, row, column});
@@ -118,10 +130,10 @@ const Cell = ({item, row, column}) => {
 			if (column.editable) {
 				render = val => <Editor value={val} row={row} column={column} item={item} />;
 			} else {
-				render = val => str(val);
+				render = defaultCellRender;
 			}
 		}
-		return <td>{render(v)}</td>;
+		return <td>{render(v, column)}</td>;
 	} catch(err) {
 		// be robust
 		console.error(err);
@@ -151,5 +163,7 @@ const Editor = ({row, column, value, item}) => {
 		saveFn={column.saveFn} 
 	/>);
 };
+const CellFormat = new Enum("percent"); // What does a spreadsheet normally offer??
 
 export default SimpleTable;
+export {CellFormat};
