@@ -110,7 +110,7 @@ const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...res
 
 	const changeTab = () => {
 		let n = stage + diff;
-		DataStore.setValue(stagePath, n);		
+		DataStore.setValue(stagePath, n);	
 	};
 	
 	// use Bootstrap pull class to left/right float

@@ -54,7 +54,7 @@ const FundRaiserPage = ({id}) => {
 	assMatch(type, String);
 	const pFundRaiser = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.PUBLISHED});
 
-	// fetch donations
+	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
 	});

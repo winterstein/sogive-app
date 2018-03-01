@@ -75,7 +75,10 @@ const DonationListItem = ({donation}) => {
 	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
 		<div className='well'>
-			<Misc.Time time={donation.date} /> You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>.
+			<Misc.Time time={donation.date} />
+			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
+			{donation.fundRaiser && donation.via? <span> as part of <a href={'#fundraiser/'+encURI(donation.fundRaiser)}>{XId.prettyName(donation.via)}'s fund-raiser</a></span> : null}
+			.
 			{impact}
 			<div>GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
 			<small>Payment ID: {donation.paymentId}</small></div>
