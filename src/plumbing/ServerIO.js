@@ -59,7 +59,8 @@ ServerIO.donate = function(data) {
 ServerIO.getDonations = function({from, to}) {	
 	const params = {
 		data: {
-			from, to
+			from, to,
+			sort:'date-desc'
 		}
 	};
 	return ServerIO.load('/donation/list', params);
