@@ -29,7 +29,7 @@ public class BasketPublishedActor extends Actor<Basket> {
 	@Override
 	protected void consume(Basket basket, Actor from) throws Exception {
 		// make a fundraiser for each walker
-		Log.d("BasketPublishedActor", "consume "+basket);
+		Log.d("BasketPublishedActor", "consume "+basket+" tickets "+basket.getItems());
 		basket.getItems().forEach(ticket -> process(ticket, basket));
 	}
 
@@ -48,7 +48,11 @@ public class BasketPublishedActor extends Actor<Basket> {
 		AppUtils.doPublish(draft, draftPath, publishPath);
 		
 		// email user
-		doEmailWalker(ticket, fr);
+		try {
+			doEmailWalker(ticket, fr);
+		} catch(Throwable ex) {
+			Log.e("BasketPublished", ex);
+		}
 	}
 
 	private void doEmailWalker(Ticket ticket, FundRaiser fr) {

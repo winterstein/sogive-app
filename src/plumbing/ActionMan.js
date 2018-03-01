@@ -14,6 +14,7 @@ import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Project from '../data/charity/Project';
 import Money from '../data/charity/Money';
+import Ticket from '../data/charity/Ticket';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
@@ -137,12 +138,24 @@ const getBasketPV = (uxid) => {
 	return PV(pGetMake);
 };
 
+/**
+ * 
+ * @param {!Basket} basket 
+ * @param {!Ticket} item 
+ */
 const addToBasket = (basket, item) => {
 	console.log("addFromBasket",basket, item);
 	assert(item, basket);
 	Basket.assIsa(basket);
 	assert(item.id, item); // need an ID
-	item = _.cloneDeep(item); // copy so we can modify
+	// copy so we can safely modify elsewhere
+	// copy a ticket
+	if (Ticket.isa(item)) {
+		item = Ticket.make(item, item.eventId);
+	} else {
+		console.log("addToBasket - not a Ticket", item);
+		item = _.cloneDeep(item);
+	}
 	basket.items = (basket.items || []).concat(item);
 	DataStore.setData(basket);
 	return basket;

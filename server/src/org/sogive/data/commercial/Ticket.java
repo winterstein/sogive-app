@@ -7,6 +7,11 @@ import com.winterwell.web.data.XId;
 
 import lombok.Data;
 
+/**
+ * Hm: right now, Ticket.id is NOT unique!
+ * @author daniel
+ *
+ */
 @Data
 public class Ticket extends AThing {
 
