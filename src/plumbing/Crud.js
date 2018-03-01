@@ -155,11 +155,30 @@ ServerIO.getDataItem = function({type, id, status, swallow, ...other}) {
  * get an item from DataStore, or call the backend if not there (and save it into DataStore)
  */
 ActionMan.getDataItem = ({type, id, status, ...other}) => {
-	assert(C.TYPES.has(type), 'Crud.js - ActionMan - bad type: '+type);
+	assert(C.TYPES.has(type), 'Crud.js - ActionMan getDataItem - bad type: '+type);
 	assMatch(id, String);
 	return DataStore.fetch(['data', type, id], () => {
 		return ServerIO.getDataItem({type, id, status, ...other});
 	});
+};
+
+/**
+ * Smooth update: Get an update from the server without null-ing out the local copy.
+ */
+ActionMan.refreshDataItem = ({type, id, status, ...other}) => {
+	console.log("refreshing...", type, id);
+	assert(C.TYPES.has(type), 'Crud.js - ActionMan refreshDataItem - bad type: '+type);
+	assMatch(id, String);
+	return ServerIO.getDataItem({type, id, status, ...other})
+		.then(res => {
+			if (res.success) {
+				console.log("refreshed", type, id);
+				let item = res.cargo;
+				DataStore.setData(item);				
+			} else {
+				console.warn("refresh-failed", res, type, id);
+			}
+		});
 };
 
 const CRUD = {	
