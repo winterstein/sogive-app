@@ -69,7 +69,7 @@ const paymentOK = (formData) => true;
 const DonationForm = ({item, charity, causeName}) => {
 	const id = getId(item);
 	assert(id, "DonationForm", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), item);	
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 
 	if ( ! charity) {
@@ -77,11 +77,6 @@ const DonationForm = ({item, charity, causeName}) => {
 		else if (FundRaiser.isa(item)) charity = FundRaiser.charity(item);
 	}
 	let charityId = charity? getId(charity) : item.charityId;
-	/*
-	// Restore once we resolve this issue where Things keep losing their types
-	assert(C.TYPES.isFundRaiser(getType(item)) || C.TYPES.isNGO(getType(item)) || C.TYPES.isEvent(getType(item)), 
-		"NewDonationForm - type "+getType(item));
-	*/
 	const widgetPath = ['widget', 'NewDonationForm', id];
 
 	// what stage?

@@ -387,9 +387,10 @@ const CharityChoiceTab = ({basket}) => {
 	if ( ! basket) return null;
 	const bpath = ActionMan.getBasketPath();
 	const charityId = Basket.charityId(basket);
+	const recommended = !! charityId; // limit to recommended charities if the input is blank
 	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
 		() => {
-			return ServerIO.search({prefix: charityId, size: 20, recommended: !! charityId})
+			return ServerIO.search({q: charityId, size: 20, recommended})
 				.then(res => {
 					console.warn("yeh :)", res);
 					let hits = res.cargo && res.cargo.hits;
