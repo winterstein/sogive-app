@@ -29,10 +29,12 @@ public class BasketPublishedActor extends Actor<Basket> {
 	@Override
 	protected void consume(Basket basket, Actor from) throws Exception {
 		// make a fundraiser for each walker
+		Log.d("BasketPublishedActor", "consume "+basket);
 		basket.getItems().forEach(ticket -> process(ticket, basket));
 	}
 
 	private void process(Ticket ticket, Basket basket) {
+		Log.d("BasketPublishedActor", "process ticket "+ticket+" from "+basket);
 		// no email?!
 		if (ticket.getAttendeeEmail()==null) {
 			Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);

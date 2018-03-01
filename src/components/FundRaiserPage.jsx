@@ -6,6 +6,7 @@ import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 
 import printer from '../utils/printer.js';
 import _ from 'lodash';
+import {encURI} from 'wwutils';
 import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
@@ -123,6 +124,7 @@ const FundRaiserPage = ({id}) => {
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
 						<p>{item.owner.description}</p>
+						<p><small><a href={'#event/'+encURI(event.id)}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>

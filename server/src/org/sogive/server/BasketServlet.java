@@ -81,9 +81,11 @@ public class BasketServlet extends CrudServlet<Basket> {
 			JThing jticket = new JThing().setJava(ticket);
 			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);			
 			pubTickets.add(obj);
+			Log.d("basket", "published ticket "+id+" "+ticket);
 		}
 		
 		// Process the order!
+		Log.d("basket", "send process basket "+basket+" message...");
 		BasketPublishedActor bpa = Dep.get(BasketPublishedActor.class);
 		bpa.send(donation);
 		

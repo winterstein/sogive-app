@@ -533,41 +533,24 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
-	if ( ! ticket.attendeeEmail) {
-		// TODO how can we make a page for no email??
-		// (a) use a temp id, and have a way for the user to claim it
-		// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
-		// Option (b) would allow for e.g. I set up my page and my Gran's page.
-		// for now: no email = no page
-		return (<div className='clear'>
-			<h3>{ticket.attendeeName}</h3>
-			<div className='padded-block'>				
-				No email provided
-			</div>
-		</div>);
-	}
+	// TODO how can we make a page for no email??
+	// (a) use a temp id, and have a way for the user to claim it
+	// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
+	// Option (b) would allow for e.g. I set up my page and my Gran's page.
+	// for now: no email = no page
 	let frid = FundRaiser.getIdForTicket(ticket);	
-	return (<div className='clear'>
-		<h3>{ticket.attendeeName}</h3>
-		<hr />
-		<div className='padded-block'>
-			<center>
-				<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
-					Setup Fund-Raising Page for {ticket.attendeeName}
-				</a>
-			</center>
-			<hr />
+	return (<div className='clear padded-block'>
+		<Misc.Col2>
+			<h3>{ticket.attendeeName}</h3>
 			<div>
-				<table>
-					<tbody>
-						<tr><td>Ticket</td><td>{ticket.name} {ticket.kind}</td></tr>
-						<tr><td>Price</td><td><Misc.Money amount={ticket.price} /></td></tr>
-						<tr><td>Email</td><td>{ticket.attendeeEmail}</td></tr>
-						{ticket.team? <tr><td>Team</td><td>{ticket.team}</td></tr> : null}
-					</tbody>
-				</table>
+				{ ticket.attendeeEmail? 
+					<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
+						Setup Fund-Raising Page for {ticket.attendeeName}
+					</a>
+					: <p>No email provided</p>
+				}
 			</div>
-		</div>
+		</Misc.Col2>
 	</div>);
 };
 
