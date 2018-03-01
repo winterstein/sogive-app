@@ -187,14 +187,19 @@ ServerIO.load = function(url, params) {
 		.then(ServerIO.handleMessages)
 		.fail(function(response, huh, bah) {
 			console.error('fail',url,params,response,huh,bah);
+			// error message
+			let text = response.status===404? 
+				"404: Sadly that content could not be found."
+				: "Could not load "+params.url+" from the server";
+			if (response.responseText && ! (response.status >= 500)) {
+				// NB: dont show the nginx error page for a 500 server fail
+				text = response.responseText;
+			}
 			let msg = {
 				id: 'error from '+params.url,
 				type:'error', 
-				text: (response && response.responseText) || "Could not load "+params.url+" from the server"
+				text
 			};
-			if (response.status === 404) {
-				msg.text = "404: Sadly that content could not be found.";
-			}
 			// HACK hide details
 			if (msg.text.indexOf('\n----') !== -1) {
 				let i = msg.text.indexOf('\n----');
