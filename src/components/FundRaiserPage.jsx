@@ -46,6 +46,7 @@ const FundRaiserTop = () => {
 	);
 };
 
+const isOwner = item => item.owner.id === Login.getId();
 
 const FundRaiserPage = ({id}) => {
 	const type = C.TYPES.FundRaiser;
@@ -74,7 +75,7 @@ const FundRaiserPage = ({id}) => {
 	const event = pEvent.value;
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
-	const ownerViewing = item.owner.id === Login.getId();
+	const ownerViewing = isOwner(item);
 	if (ownerViewing) {
 		_.defer(notifyUser, {
 			type:'info',
@@ -169,8 +170,9 @@ const DonationProgress = ({item, charity}) => {
 	assMatch(donated, "?Money");
 	// nothing?
 	if (Money.value(donated) < 0.1) {
-		return (<div className='DonationProgress'>
-			<p>No money raised yet</p>
+		return (<div className='DonationProgress no-money'>
+			<p>No money raised yet.</p>
+			{isOwner(item)? <p>Why not kick-start things by making a seed donation yourself?</p> : null}
 			<div className='target'>Target: <Misc.Money amount={target} /></div>
 			<DonateButton item={item} />
 		</div>);
