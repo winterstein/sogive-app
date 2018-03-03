@@ -334,10 +334,9 @@ const ProjectEditor = ({charity, project}) => {
 				to influence the choice of representative project too.`} />			
 			<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
 				help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
-			<EditProjectField charity={charity} project={project} field='start_raw' label='Year start' 
-				placeholder='yyyy-mm-dd'
-				error={project.start_raw && ! project.start? "Please check the date format is yyyy-mm-dd" : null}
-				help='Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at' />			
+			<EditProjectField charity={charity} project={project} field='start' label='Year start' 
+				type='date'
+				help="Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at" />			
 			<EditProjectField charity={charity} project={project} field='end' label='Year end' 
 				type='date'
 				help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
