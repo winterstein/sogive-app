@@ -103,6 +103,7 @@ public class DonationServlet extends CrudServlet {
 	protected void doList(WebRequest state) throws IOException {
 		super.doList(state);
 	}
+
 		
 	@Override
 	protected ESQueryBuilder doList2_query(WebRequest state) {
@@ -134,6 +135,7 @@ public class DonationServlet extends CrudServlet {
 	
 	@Override
 	protected JThing doPublish(WebRequest state) {		
+		Log.d(LOGTAG, "doPublish "+state);
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
@@ -179,10 +181,13 @@ public class DonationServlet extends CrudServlet {
 		// Donating to/via a fundraiser? Update its donation total + add matched funding
 		String frid = donation.getFundRaiser();
 		if ( ! Utils.isBlank(frid)) {
-			FundraiserServlet fart = new FundraiserServlet();
+//			FundraiserServlet fart = new FundraiserServlet();
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
-		}		
+			Log.d(LOGTAG, "send to fundraiser actor "+donation);
+		} else {
+			Log.d(LOGTAG, "no fundraiser for "+donation);
+		}
 		
 		// store in the database TODO use an actor which can retry
 		super.doPublish(state, true, true);

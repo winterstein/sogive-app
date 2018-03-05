@@ -11,6 +11,7 @@ import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.web.app.AppUtils;
 
@@ -31,6 +32,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 	}
 	
 	private void updateFundRaiser(Donation donation, String frid, KStatus status) {
+		Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status);
 		ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 		FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
 				
@@ -47,16 +49,17 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			AppUtils.doPublish(donation, false, true);
 		}
 		
-		Money total = donation.getTotal();
+		final Money prevTotal = donation.getTotal();
 		Money donated = fundraiser.getDonated();
 		if (donated == null) donated = Money.pound(0);
-		fundraiser.setDonated(donated.plus(total));
+		fundraiser.setDonated(donated.plus(prevTotal));
 		
 		Integer donationCount = fundraiser.getDonationCount();
 		if (donationCount == null) donationCount = 0;
 		fundraiser.setDonationCount(donationCount + 1);
 		// FIXME race condition vs edits or other donations!
 		// TODO use an update script, and handle conflict exceptions
+		Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal);
 		AppUtils.doSaveEdit2(path, new JThing<FundRaiser>(fundraiser), null);
 	}	
 }
