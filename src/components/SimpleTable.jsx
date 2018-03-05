@@ -105,9 +105,12 @@ const Th = ({column, c, table, tableSettings, dataArray}) => {
 	</th>);
 };
 
-const Row = ({item, row, columns}) => {
+const Row = ({item, row, columns, dataArray}) => {
+	let dataRow = [];
+	dataArray.push(dataRow);
+
 	return (<tr>
-		{columns.map(col => <Cell key={JSON.stringify(col)} row={row} column={col} item={item} />)}
+		{columns.map(col => <Cell key={JSON.stringify(col)} row={row} column={col} item={item} dataRow={dataRow} />)}
 	</tr>);
 };
 
@@ -133,7 +136,7 @@ const defaultCellRender = (v, column) => {
 	}
 	return str(v);
 };
-const Cell = ({item, row, column}) => {
+const Cell = ({item, row, column, dataRow}) => {
 	try {
 		const v = getValue({item, row, column});
 		let render = column.Cell;
@@ -144,6 +147,10 @@ const Cell = ({item, row, column}) => {
 				render = defaultCellRender;
 			}
 		}
+
+		// HACK for the csv
+		dataRow.push(defaultCellRender(v, column)); // TODO use custom render - but what about html/jsx?
+
 		return <td>{render(v, column)}</td>;
 	} catch(err) {
 		// be robust
