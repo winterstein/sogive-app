@@ -45,7 +45,9 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Money matchAmount = new Money(Math.round(ma), amount.getCurrency());
 			MoneyItem mi = new MoneyItem("matched funding", matchAmount.asMoney());
 			donation.addContribution(mi);
-			assert donation.getStatus() == KStatus.PUBLISHED : donation;
+			if (donation.getStatus() != KStatus.PUBLISHED) {
+				Log.w(getName(), "Not published?! "+donation+" to "+frid);
+			}
 			AppUtils.doPublish(donation, false, true);
 		}
 		

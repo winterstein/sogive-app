@@ -90,7 +90,10 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 };
 
 /**
- * Stripe widgets manage their own state
+ * Stripe widgets manage their own state.
+ 
+ * @Roscoe: Why can't we use DataStore for state? Thanks, Dan
+ * 
  */	
 class StripeThingsClass extends Component {
 	constructor(props) {
@@ -128,6 +131,7 @@ class StripeThingsClass extends Component {
 			complete('success');
 		});
 
+		// TODO do this earlier to avoid a redraw glitch
 		paymentRequest.canMakePayment().then(result => {
 			this.setState({canMakePayment: !!result});
 		});

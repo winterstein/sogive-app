@@ -32,7 +32,7 @@ class SimpleTable extends React.Component {
 	}
 
 	render() {
-		let {tableName='SimpleTable', data, columns, className} = this.props;
+		let {tableName='SimpleTable', data, columns, className, csv} = this.props;
 		assert(_.isArray(columns), "SimpleTable.jsx - columns", columns);
 		assert( ! data || _.isArray(data), "SimpleTable.jsx - data must be an array of objects", data);
 
@@ -61,19 +61,28 @@ class SimpleTable extends React.Component {
 		} // sort
 		let cn = 'table'+(className? ' '+className : '');
 
+		// HACK build up an array view of the table
+		// TODO refactor to build this first, then generate the html
+		let dataArray = [[]];
+
 		return (
-			<table className={cn}>
-				<tbody>
-					<tr>{columns.map((col, c) => <Th table={this} tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} />)}</tr>
-					{data? data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} />) : null}
-				</tbody>
-			</table>
+			<div className={className}>
+				<table className={cn}>
+					<thead>
+						<tr>{columns.map((col, c) => <Th table={this} tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} dataArray={dataArray} />)}</tr>
+					</thead>
+					<tbody>					
+						{data? data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} dataArray={dataArray} />) : null}
+					</tbody>
+				</table>
+				{csv? <CSVDownload tableName={tableName} dataArray={dataArray} /> : null}
+			</div>
 		);
 	}
 } // ./SimpleTable
 
 // TODO onClick={} sortBy
-const Th = ({column, c, table, tableSettings}) => {
+const Th = ({column, c, table, tableSettings, dataArray}) => {
 	let sortByMe = (""+tableSettings.sortBy) === (""+c);
 	let onClick = e => { 
 		console.warn('sort click', c, sortByMe, tableSettings);
@@ -88,8 +97,10 @@ const Th = ({column, c, table, tableSettings}) => {
 		table.setState({sortBy: c});
 		// tableSettings.sortBy = c;
 	};
+	let hText = column.Header || column.name || column.id || str(column);
+	dataArray[0].push(hText);
 	return (<th onClick={onClick} >
-		{ column.Header || column.name || column.id || str(column)}
+		{hText}
 		{sortByMe? <Misc.Icon glyph={'triangle-'+(tableSettings.sortByReverse? 'top' :'bottom')} /> : null}
 	</th>);
 };
@@ -164,6 +175,18 @@ const Editor = ({row, column, value, item}) => {
 	/>);
 };
 const CellFormat = new Enum("percent"); // What does a spreadsheet normally offer??
+
+const CSVDownload = ({tableName, columns, data, dataArray}) => {
+	// assert(_.isArray(jsonArray), jsonArray);
+	// // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+	let csv = dataArray.map(r => r.join? r.join(",") : ""+r).join("\r\n");
+	let csvLink = 'data:text/csv;charset=utf-8,'+csv;
+	return (
+		<a href={csvLink} download={(tableName||'table')+'.csv'} >
+			<Misc.Icon glyph='download-alt' /> .csv
+		</a>
+	);
+};
 
 export default SimpleTable;
 export {CellFormat};

@@ -12,8 +12,12 @@ import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import {XId} from 'wwutils';
 import Transfer from '../data/Transfer';
+import {LoginLink} from './LoginWidget/LoginWidget';
 
 const AccountPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return <div><h2>My Account: Please login</h2><LoginLink title='Login' /></div>;
+	}
 	let proles =Roles.getRoles();
 	let roles = proles.value;
 	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {	

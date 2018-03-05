@@ -106,7 +106,7 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 
-			<SimpleTable data={dons} columns={columns} />
+			<SimpleTable data={dons} columns={columns} csv />
 
 		</div>
 	);
