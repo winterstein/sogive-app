@@ -220,7 +220,7 @@ const DonationsSoFar = ({item}) => {
 	const {userTarget, donationCount } = item;
 	const donated = FundRaiser.donated(item);
 
-	if ( ! donationCount) {
+	if ( ! donationCount && Money.value(donated) !== 0) {
 		return (
 			<div className='details-input'>
 				Be the first to donate to {item.name}!
