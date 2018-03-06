@@ -74,8 +74,11 @@ class SimpleTable extends React.Component {
 					<tbody>					
 						{data? data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} dataArray={dataArray} />) : null}
 					</tbody>
-				</table>
-				{csv? <CSVDownload tableName={tableName} dataArray={dataArray} /> : null}
+					{csv? <tfoot><tr>
+						<td colSpan={columns.length}><div className='pull-right'><CSVDownload tableName={tableName} dataArray={dataArray} /></div></td>
+					</tr></tfoot>
+						: null}	
+				</table>				
 			</div>
 		);
 	}
@@ -186,13 +189,25 @@ const CellFormat = new Enum("percent"); // What does a spreadsheet normally offe
 const CSVDownload = ({tableName, columns, data, dataArray}) => {
 	// assert(_.isArray(jsonArray), jsonArray);
 	// // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
-	let csv = dataArray.map(r => r.join? r.join(",") : ""+r).join("\r\n");
+	let csv = dataArray.map(r => r.join? r.map(cell => csvEscCell(cell)).join(",") : ""+r).join("\r\n");
 	let csvLink = 'data:text/csv;charset=utf-8,'+csv;
 	return (
 		<a href={csvLink} download={(tableName||'table')+'.csv'} >
 			<Misc.Icon glyph='download-alt' /> .csv
 		</a>
 	);
+};
+
+const csvEscCell = s => {
+	if ( ! s) return "";
+	// do we have to quote?
+	if (s.indexOf('"')===-1 && s.indexOf(',')===-1 && s.indexOf('\r')===-1 && s.indexOf('\n')===-1) {
+		return s;
+	}
+	// quote to double quote
+	s = s.replace(/"/g, '""');
+	// quote it
+	return '"'+s+'"';
 };
 
 export default SimpleTable;
