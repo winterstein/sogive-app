@@ -86,6 +86,7 @@ for server in ${TARGET[*]}; do
 		ssh winterwell@$server 'rm /home/winterwell/sogive-app/config/stripe.properties'
 		scp ~/winterwell/logins/sogive-app/production.sogive.properties winterwell@$server:/home/winterwell/sogive-app/config/stripe.properties
 	fi
+	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/logins/sogive-app/email.properties winterwell@$server:/home/winterwell/sogive-app/config/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/server/* winterwell@$server:/home/winterwell/sogive-app/server/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
