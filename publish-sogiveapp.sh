@@ -79,6 +79,10 @@ for server in ${TARGET[*]}; do
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/bin/* winterwell@$server:/home/winterwell/sogive-app/bin/
 	printf "\nsyncing everything else...\n"
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/config/* winterwell@$server:/home/winterwell/sogive-app/config/
+	if [[ $server = 'hugh.soda.sh' ]]; then
+		ssh winterwell@$server 'rm /home/winterwell/sogive-app/config/stripe.properties'
+		scp ~/winterwell/logins/sogive-app/test.stripe.properties winterwell@$server:/home/winterwell/sogive-app/config/stripe.properties
+	fi
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/server/* winterwell@$server:/home/winterwell/sogive-app/server/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
