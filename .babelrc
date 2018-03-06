@@ -1,6 +1,9 @@
 {
-    "presets": [["es2015", { "modules": false}], "react"],
+    "presets": [["es2015", { "modules": false}], "stage-2", react"],
     "env": {
+    	"production": {
+    		"plugins": ["transform-react-remove-prop-types"]
+    	},
     	"test": {
     		"presets": ["es2015", "react"],
     	}
