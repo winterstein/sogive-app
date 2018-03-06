@@ -123,7 +123,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
 		
 		// local DataLog
-		DataLogConfig dlc = AppUtils.getConfig(this.projectName, DataLog.getImplementation().getConfig(), args);
+		DataLogConfig dlc = AppUtils.getConfig(this.appName, DataLog.getImplementation().getConfig(), args);
 		DataLog.init(dlc);
 		
 		return config;
