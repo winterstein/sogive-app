@@ -93,7 +93,9 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
  * Stripe widgets manage their own state.
  
  * @Roscoe: Why can't we use DataStore for state? Thanks, Dan
- * 
+ * @DW: Stripe widgets are wrapped in iframes specifically to promote Stripe's trust model of
+ * "we provide the widgets and the host page can't touch your CC data".
+ * It's conceivable we could pry that data out, but it's not a good idea.
  */	
 class StripeThingsClass extends Component {
 	constructor(props) {
@@ -127,7 +129,7 @@ class StripeThingsClass extends Component {
 		paymentRequest.on('token', ({complete, token, ...data}) => {
 			console.log('paymentRequest received Stripe token: ', token);
 			console.log('paymentRequest received customer information: ', data);
-			onToken({token, ...data});
+			onToken(token);
 			complete('success');
 		});
 
