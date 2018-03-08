@@ -101,7 +101,7 @@ for server in ${TARGET[*]}; do
 	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/web/* winterwell@$server:/home/winterwell/sogive-app/web/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/package.json winterwell@$server:/home/winterwell/sogive-app/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/webpack* winterwell@$server:/home/winterwell/sogive-app/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/.babelrc winterwell@$server:/home/winterwell/sogive-app/web/build/js/
+	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/.babelrc winterwell@$server:/home/winterwell/sogive-app/
 	printf "\ndone syncing\n"
 	printf "\n\n"
 	printf "\nsatisfying NPM dependencies...\n"
