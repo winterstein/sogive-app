@@ -60,9 +60,14 @@ const shareOnFacebook = ({url, shareText, take2}) => {
 }; // ./shareOnFacebook
 
 
-const SocialShare = ({charity, donation, shareText}) => {
+const SocialShare = ({charity, fundraiser, donation, shareText}) => {
 	if ( ! shareText) {
-		shareText = NGO.summaryDescription(charity) || NGO.displayName(charity);
+		if (fundraiser && false) {
+			// FIXME fundraiser text here -- and below!!!
+			// shareText = FundRaiser.summaryDescription(charity) || NGO.displayName(charity);
+		} else {
+			shareText = NGO.summaryDescription(charity) || NGO.displayName(charity);
+		}
 	}
 	let lcn = ""+window.location;
 	let pageInfo = {

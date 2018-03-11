@@ -104,7 +104,8 @@ class StripeThingsClass extends Component {
 		const {amount, credit, onToken, recipient, email} = props;
 
 		let residual = amount;
-		if (credit) {
+		// NB dont add on prior debts
+		if (credit && Money.value(credit) > 0) {
 			residual = Money.sub(amount, credit);		
 		}
 

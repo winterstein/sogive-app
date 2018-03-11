@@ -71,6 +71,11 @@ const ManageDonationsPage = () => {
 			accessor: 'amount',
 			Cell: v => <Misc.Money amount={v} /> // Custom cell components!
 		},
+		{
+			Header: "Contributions",
+			accessor: 'contributions',
+			Cell: cons => cons? cons.map(con => <div className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>) : null
+		},
 		'app',
 		{
 			Header: 'on-credit',

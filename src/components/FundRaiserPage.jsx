@@ -23,7 +23,7 @@ import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
-
+import SocialShare from './SocialShare';
 
 const FundRaiserTop = () => {
 	// which event?	
@@ -213,14 +213,18 @@ const DonationProgress = ({item, charity}) => {
 			</div>
 		</div>
 	);
+	// TODO
+	// 			<div className='share'>
+			// 	<SocialShare charity={charity} fundraiser={item} />
+			// </div>
 }; // DonationProgress
 
 const DonationsSoFar = ({item}) => {
 	// Access the userTarget prop directly, before calling FundRaiser.target, to see if an actual target is set
 	const {userTarget, donationCount } = item;
 	const donated = FundRaiser.donated(item);
-
-	if ( ! donationCount && Money.value(donated) !== 0) {
+	
+	if ( ! donationCount && Money.value(donated) === 0) {
 		return (
 			<div className='details-input'>
 				Be the first to donate to {item.name}!

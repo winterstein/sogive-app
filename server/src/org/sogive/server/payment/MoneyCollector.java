@@ -52,6 +52,7 @@ public class MoneyCollector {
 		}		
 		Money credit = Transfer.getTotalCredit(user);
 		if (credit!=null && credit.getValue() > 0) {
+			// NB if your account is in debt i.e. < 0, then you cant pay on credit
 			Money residual = doCollectMoney2(credit, allOnCredit);
 			if (residual==null || residual.getValue()==0) {
 				return transfers;
