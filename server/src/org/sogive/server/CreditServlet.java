@@ -42,7 +42,6 @@ import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.SField;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
-import com.winterwell.youagain.plugins.EmailPlugin;
 
 /**
  * Status: hack

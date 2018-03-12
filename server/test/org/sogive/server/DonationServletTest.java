@@ -33,7 +33,6 @@ import com.winterwell.web.data.XId;
 import com.winterwell.web.test.TestHttpServletRequest;
 import com.winterwell.web.test.TestHttpServletResponse;
 import com.winterwell.youagain.client.AuthToken;
-import com.winterwell.youagain.data.DBAuth;
 
 /**
  * Integration test for {@link DonationServlet}

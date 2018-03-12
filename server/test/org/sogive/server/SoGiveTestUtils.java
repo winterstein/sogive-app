@@ -27,7 +27,6 @@ import com.winterwell.web.data.XId;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
-import com.winterwell.youagain.data.DBAuth;
 
 public class SoGiveTestUtils {
 

@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="/middleware/stripe/stripe-java.jar" sourcepath="/middleware/stripe/stripe-java-2.8.0.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
 	<classpathentry kind="lib" path="/middleware/gson/gson-original.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/youagain-server"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.webappbase"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/youagain-java-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.depot"/>

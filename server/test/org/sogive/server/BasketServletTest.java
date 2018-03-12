@@ -47,7 +47,6 @@ import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.test.TestHttpServletRequest;
 import com.winterwell.web.test.TestHttpServletResponse;
 import com.winterwell.youagain.client.AuthToken;
-import com.winterwell.youagain.data.DBAuth;
 
 /**
  * TODO Integration test for {@link BasketServlet}
