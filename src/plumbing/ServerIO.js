@@ -56,10 +56,11 @@ ServerIO.donate = function(data) {
 	return ServerIO.post('/donation', data);
 };
 
-ServerIO.getDonations = function({from, to}) {	
+ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {	
 	const params = {
 		data: {
 			from, to,
+			status,
 			sort:'date-desc'
 		}
 	};

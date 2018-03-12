@@ -57,6 +57,7 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
+		// TODO use ServerIO.getDonations
 		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
 	});
 	const donations = pvDonations.value && pvDonations.value.hits;
