@@ -139,6 +139,21 @@ public class DonationServlet extends CrudServlet {
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
+		if (donation.getStatus() != KStatus.PUBLISHED) {
+			doPublishFirstTime(state, donation);
+		} else {
+			Log.d(LOGTAG, "doPublish - but update not first time "+state);
+		}
+		
+		// store in the database TODO use an actor which can retry
+		super.doPublish(state, true, true);
+				
+		// Done
+		return jthing;
+	}
+
+	private void doPublishFirstTime(WebRequest state, Donation donation) {
+		Log.d(LOGTAG, "doPublishFirstTime "+donation+" "+state);
 		// who
 		XId user = state.getUserId();
 		XId from = donation.getFrom(); // you can donate w/o logging in
@@ -156,18 +171,16 @@ public class DonationServlet extends CrudServlet {
 		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
 		// make sure it has a date and some donor info
-		if (donation.getDate()==null) {
-			donation.setDate(new Time().toISOString());
-			jthing.setJava(donation); // Is this needed to avoid any stale json?
-		}
+//		if (donation.getDate()==null) { // date = published date not draft creation date
+		donation.setDate(new Time().toISOString());		
 		if (donation.getDonor()==null) {
 			Map info = new ArrayMap(
 					"name", donation.getDonorName()
 					);
 			PersonLite peepLite = AppUtils.getCreatePersonLite(from, info);
 			donation.setDonor(peepLite);
-			jthing.setJava(donation); // Is this needed to avoid any stale json?
 		}
+		jthing.setJava(donation); // Is this needed to avoid any stale json?
 								
 		// collect the money
 		if (donation.isPaidElsewhere()) {
@@ -188,12 +201,6 @@ public class DonationServlet extends CrudServlet {
 		} else {
 			Log.d(LOGTAG, "no fundraiser for "+donation);
 		}
-		
-		// store in the database TODO use an actor which can retry
-		super.doPublish(state, true, true);
-				
-		// Done
-		return jthing;
 	}
 
 	

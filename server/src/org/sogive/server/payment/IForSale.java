@@ -19,5 +19,7 @@ public interface IForSale {
 	void setPaymentId(String id);
 
 	void setPaymentCollected(boolean b);
+	
+	boolean getPaymentCollected();
 
 }

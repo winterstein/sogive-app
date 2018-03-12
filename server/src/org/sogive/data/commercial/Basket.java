@@ -88,4 +88,9 @@ public class Basket extends AThing implements IForSale {
 		this.collected = b;
 	}
 
+	@Override
+	public boolean getPaymentCollected() {
+		return collected;
+	}
+
 }

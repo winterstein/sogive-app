@@ -62,7 +62,12 @@ const ManageDonationsPage = () => {
 			Header: 'From',
 			accessor: 'from',
 			Cell: v => XId.dewart(v)
-		}, {
+		}, 
+		{
+			Header: 'Donor',
+			accessor: 'donorName'
+		},
+		{
 			Header: 'To',
 			accessor: 'to'
 		}, 
@@ -74,7 +79,13 @@ const ManageDonationsPage = () => {
 		{
 			Header: "Contributions",
 			accessor: 'contributions',
-			Cell: cons => cons? cons.map(con => <div className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>) : null
+			Cell: cons => cons? cons.map((con,i) => <div key={i} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>) : null
+		},
+		'via',
+		{
+			Header: "Fund-Raiser",
+			accessor: 'fundRaiser',
+			Cell: fr => fr? <a href={'/#fundraiser/'+escape(fr)}>{fr}</a> : null
 		},
 		'app',
 		{

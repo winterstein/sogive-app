@@ -20,7 +20,7 @@ public class Event extends AThing {
 	 */
 	List<Ticket> extras;
 	String date;
-	Integer matchedFunding;
+	Integer matchedFunding;  
 	
 	public Integer getMatchedFunding() {
 		return matchedFunding;

@@ -169,6 +169,10 @@ public class Donation extends AThing implements IForSale {
 	public void setPaymentCollected(boolean b) {
 		this.collected = b;
 	}
+	@Override
+	public boolean getPaymentCollected() {
+		return collected;
+	}
 	
 	/**
 	 * from - who provided this info. There can be multiple sources

@@ -141,6 +141,8 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
 		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
 		<Misc.PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
+		<Misc.PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>

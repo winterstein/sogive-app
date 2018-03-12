@@ -38,9 +38,16 @@ public class MoneyCollector {
 	
 	public List<Transfer> run() {
 		Money total = basket.getAmount();
+		
+		// already paid?
+		if (basket.getPaymentCollected()) {
+			Log.d(LOGTAG, "no money collection - payment already collected for "+basket);
+			return transfers;
+		}
 
 		// nothing to pay?
 		if (total.getValue()==0) {
+			Log.d(LOGTAG, "no money collection - £0 for "+basket);
 			return transfers;
 		}
 		

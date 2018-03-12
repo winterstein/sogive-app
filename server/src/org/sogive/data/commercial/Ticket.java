@@ -20,6 +20,12 @@ public class Ticket extends AThing {
 	 */
 	Boolean sameAsFirst = true;
 	
+	/**
+	 * defaults to the user's fundraiser page
+	 */
+	String postPurchaseLink;
+	String postPurchaseCTA; 
+	
 	String eventId;
 	
 	/** e.g. "a gentle 10 mile walk" 

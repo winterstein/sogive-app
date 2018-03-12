@@ -538,6 +538,19 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
+	// did the event specify a next page?
+	if (ticket.postPurchaseLink) {
+		let url = ticket.postPurchaseLink;
+		let cta = ticket.postPurchaseCTA || url;
+		return (<div className='clear padded-block'>
+			<Misc.Col2>
+				<h3>{ticket.attendeeName}</h3>			
+				<div>
+					<a href={url}>{cta}</a>
+				</div>
+			</Misc.Col2>
+		</div>);		
+	}
 	// TODO how can we make a page for no email??
 	// (a) use a temp id, and have a way for the user to claim it
 	// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
@@ -546,7 +559,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 	let frid = FundRaiser.getIdForTicket(ticket);	
 	return (<div className='clear padded-block'>
 		<Misc.Col2>
-			<h3>{ticket.attendeeName}</h3>
+			<h3>{ticket.attendeeName}</h3>			
 			<div>
 				{ ticket.attendeeEmail? 
 					<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
