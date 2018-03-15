@@ -28,7 +28,7 @@ const isNumeric = value => {
  */
 Money.value = ma => {
 	if ( ! ma) return 0;
-	if ( ! ma.value) {
+	if (ma.value === undefined) {
 		// Patch bad server data?
 		if (ma.value100) ma.value = ma.value100 / 100;
 		else return 0;

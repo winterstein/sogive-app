@@ -66,6 +66,8 @@ public class MoneyCollector {
 			}
 			Log.d(LOGTAG, "part payment on credit "+basket+" residual: "+residual);
 			total = residual;
+		} else if (allOnCredit) {
+			throw new PaymentException("Cannot pay with credit of "+credit+" (basket: "+basket+")");
 		}
 		
 		// TODO Less half-assed handling of Stripe exceptions
@@ -111,8 +113,6 @@ public class MoneyCollector {
 			if (allOnCredit) {
 				throw new PaymentException("Cannot pay "+amount+" with credit of "+credit+" (basket: "+basket+")");
 			}
-		} else {
-			// pay it all
 		}
 		// reduce credit
 		Transfer t = new Transfer(user, to, paidOnCredit);

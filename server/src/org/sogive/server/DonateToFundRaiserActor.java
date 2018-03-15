@@ -56,8 +56,9 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
 						Log.w(getName(), "Not published?! "+donation+" to "+frid);
-					}				
-					if (status==KStatus.PUBLISHED) { // only save this the once 
+					}	
+					// save the update to donation
+					if (status==KStatus.PUBLISHED) { // this method is called twice for status=draft/published), but we only save Donation the once 
 						AppUtils.doPublish(donation, false, true);
 					}
 				}			
