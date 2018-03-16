@@ -63,6 +63,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 					}
 				}			
 			} catch(Throwable ex) {
+				Log.e(getName(), ex);
 				hackex = ex;
 			}
 			

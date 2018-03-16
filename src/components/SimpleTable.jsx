@@ -20,6 +20,12 @@ const str = printer.str;
 // class ErrorBoundary extends React.Component {
 // https://reactjs.org/docs/error-boundaries.html
 
+/**
+ * 
+ * dataObject a {key: value} object, which will be converted into rows [{key:k1, value:v1}, {}...]
+ * So the columns should use accessors 'key' and 'value'
+ * 
+ */
 class SimpleTable extends React.Component {
 
 	constructor(props) {
@@ -32,8 +38,13 @@ class SimpleTable extends React.Component {
 	}
 
 	render() {
-		let {tableName='SimpleTable', data, columns, className, csv} = this.props;
+		let {tableName='SimpleTable', data, dataObject, columns, className, csv} = this.props;		
 		assert(_.isArray(columns), "SimpleTable.jsx - columns", columns);
+		if (dataObject) {
+			// flatten an object into rows
+			assert( ! data, "SimpleTable.jsx - data or dataObject - not both");
+			data = Object.keys(dataObject).map(k => { return {key:k, value:dataObject[k]}; });
+		}
 		assert( ! data || _.isArray(data), "SimpleTable.jsx - data must be an array of objects", data);
 
 		let tableSettings = this.state; // DataStore.getValue('widget', tableName);
@@ -46,8 +57,8 @@ class SimpleTable extends React.Component {
 			let column = columns[tableSettings.sortBy];
 			let sortFn = (a,b) => {
 				let ia = {item:a, column:column};
-				let av = ""+getValue(ia);
-				let bv = ""+getValue({item:b, column:column});
+				let av = getValue(ia);
+				let bv = getValue({item:b, column:column});
 				// // avoid undefined 'cos it messes up ordering
 				// if (av === undefined || av === null) av = "";
 				// if (bv === undefined || bv === null) bv = "";
