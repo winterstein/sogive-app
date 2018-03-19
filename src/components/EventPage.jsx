@@ -16,6 +16,7 @@ import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../data/DataClass';
 import ListLoad from './ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
+import ShareWidget, {ShareLink} from './ShareWidget';
 
 const EventPage = () => {
 	// which event?	
@@ -55,6 +56,11 @@ const Event = ({id}) => {
 			</center>
 
 			<Register event={item} />
+
+			<div>Experimental!
+				<ShareLink />
+				<ShareWidget thingId={id} name={item.name} />
+			</div>
 
 		</div>
 	);

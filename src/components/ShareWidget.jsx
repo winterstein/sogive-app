@@ -8,7 +8,9 @@ import DataStore from '../plumbing/DataStore';
 import Misc from './Misc';
 import C from '../C';
 
-
+/**
+ * a Share This button
+ */
 const ShareLink = () => {
 	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow('ShareWidget', true); } } >
 		<Misc.Icon glyph='share' /> Share
@@ -47,8 +49,10 @@ const deleteShare = ({share}) => {
  * A dialog for adding and managing shares
  * {
  * 	thingId: {!String} id for the share
- * 	name: {?String} optional name
+ * 	name: {?String} optional name for the thing
  * }
+ * 
+ * Note: This does NOT include the share button -- see ShareLink for that
 */
 const ShareWidget = ({thingId, name}) => {
 	if ( ! thingId) {
@@ -112,8 +116,8 @@ const ListShares = ({list}) => {
 const SharedWith = ({share}) => {
 	return (<div>
 		{share._to}
-		<button title="remove this person's access"
-			onClick={() => deleteShare(share)}
+		<button title="remove this person's access"		
+			onClick={ () => deleteShare({share}) }
 		>
 			<Misc.Icon glyph='remove'/>
 		</button>
