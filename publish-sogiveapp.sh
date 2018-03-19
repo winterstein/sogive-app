@@ -19,10 +19,12 @@ case $1 in
 	production|PRODUCTION)
 	printf "\nthis is a PRODUCTION pushout\n"
 	TARGET=$PRODUCTIONSERVERS
+	PUBLISH_TYPE='production'
 	;;
 	test|TEST)
 	printf "\nthis is a TEST pushout\n"
 	TARGET=$TESTSERVERS
+	PUBLISH_TYPE='test'
 	;;
 	*)
 	printf "\nThe script couldn't discern if this was a production or a test pushout.\n\n$USAGE\n\nEXITING...\n"
@@ -117,3 +119,11 @@ for server in ${TARGET[*]}; do
 done
 
 printf "\nPublishing process completed\n"
+
+if [[ $PUBLISH_TYPE = 'test' ]]; then
+	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
+	bash test/screenshots/take-test-screenshots.sh 10
+else
+	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
+	bash test/screenshots/take-production-screenshots.sh 10
+fi
