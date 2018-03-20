@@ -100,9 +100,11 @@ const ShareWidget = ({thingId, name}) => {
 			</Modal.Body>
 			<Modal.Footer>
 				<div className="row MessageForm">
-					<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox'></input>
+					<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox' onChange={() => 
+						{$('#MessageCheckbox').is(':checked') ? $('#OptionalMessage').removeAttr('disabled') : $('#OptionalMessage').attr('disabled', 'disabled');}}
+					></input>
 					<label htmlFor='MessageCheckbox'>Send notification emails</label>
-					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' label='Attached message' type='textarea' />
+					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled='disabled'/>
 					<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
 				</div>
 			</Modal.Footer>
