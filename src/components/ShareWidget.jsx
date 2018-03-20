@@ -96,6 +96,12 @@ const ShareWidget = ({thingId, name}) => {
 						<h4>Shared with</h4>
 						<ListShares list={sharesPV.value} />
 					</div>
+					<div className="row MessageForm">
+						<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox'></input>
+						<label htmlFor='MessageCheckbox'>Send notification emails to the addresses provided</label>
+						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' label='Attached message' type='textarea' />
+						<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
+					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
@@ -114,14 +120,15 @@ const ListShares = ({list}) => {
 };
 
 const SharedWith = ({share}) => {
-	return (<div>
-		{share._to}
-		<button title="remove this person's access"		
-			onClick={ () => deleteShare({share}) }
-		>
-			<Misc.Icon glyph='remove'/>
-		</button>
-	</div>);
+	return (
+		<div className='EmailListing'>
+			<button title="remove this person's access"		
+				onClick={ () => deleteShare({share}) }
+			>
+				<Misc.Icon glyph='remove'/>
+			</button>
+			<p>{share._to}</p>
+		</div>);
 };
 
 export default ShareWidget;
