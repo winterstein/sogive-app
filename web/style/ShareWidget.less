@@ -1,7 +1,13 @@
+@import "colours.less";
+
 .ListShares button{
     float: left;
-	font-size: 0.8em;
-	margin-right: 10px;
+	font-size: 1.2em;
+    margin-right: 5px;
+    padding: 0;
+    border: none;
+    color: #86608e;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .ListShares{
@@ -16,6 +22,36 @@
 	word-wrap: break-word;
 }
 
+.MessageForm{
+    margin: auto;
+    text-align: initial;
+    width: 100%;
+}
+
+.MessageForm label{
+    display: inline-block;
+}
+
+.MessageForm label[for='MessageCheckbox']{
+    margin: 10px 0;
+}
+
+.MessageForm button{
+    display: block;
+    font-size: 1.5em;
+    padding-left: 20px;
+    padding-right: 5px;
+    background-color: #86608e;
+    border: 1px solid #674d6d;
+    margin: 0 auto;
+}
+
+.MessageForm button:hover{
+    background-color: #4c3850;
+    border: 1px solid #000;  
+}
+
 .form-group label{
-	margin-right: 10px;
+    margin-right: 10px;
+    font-weight: normal;
 }

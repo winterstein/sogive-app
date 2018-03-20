@@ -93,18 +93,18 @@ const ShareWidget = ({thingId, name}) => {
 						</button>
 					</div>
 					<div className="row">
-						<h4>Shared with</h4>
+						<h3>Shared with</h3>
 						<ListShares list={sharesPV.value} />
-					</div>
-					<div className="row MessageForm">
-						<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox'></input>
-						<label htmlFor='MessageCheckbox'>Send notification emails to the addresses provided</label>
-						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' label='Attached message' type='textarea' />
-						<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
 					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
+				<div className="row MessageForm">
+					<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox'></input>
+					<label htmlFor='MessageCheckbox'>Send notification emails</label>
+					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' label='Attached message' type='textarea' />
+					<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
+				</div>
 			</Modal.Footer>
 		</Modal>
 	);
