@@ -68,6 +68,8 @@ const ShareWidget = ({thingId, name}) => {
 		let req = Login.getShareList(thingId);
 		return req;
 	});
+
+	const textAreaDisabled = !(DataStore.getValue(['widget', 'ShareWidget', 'form', 'enableNotification']));
 	// TODO share by url on/off
 	// TODO share message email for new sharers
 
@@ -100,11 +102,8 @@ const ShareWidget = ({thingId, name}) => {
 			</Modal.Body>
 			<Modal.Footer>
 				<div className="row MessageForm">
-					<input type='checkbox' name='MessageCheckbox' id='MessageCheckbox' onChange={() => 
-						{$('#MessageCheckbox').is(':checked') ? $('#OptionalMessage').removeAttr('disabled') : $('#OptionalMessage').attr('disabled', 'disabled');}}
-					></input>
-					<label htmlFor='MessageCheckbox'>Send notification emails</label>
-					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled='disabled'/>
+					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='enableNotification' label='Send notification emails' type='checkbox'/>
+					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={textAreaDisabled}/>
 					<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
 				</div>
 			</Modal.Footer>
