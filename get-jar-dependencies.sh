@@ -41,3 +41,60 @@ wget -cO - http://central.maven.org/maven2/org/apache/commons/commons-math3/3.6.
 #commons-net
 wget -cO - http://central.maven.org/maven2/commons-net/commons-net/3.2/commons-net-3.2.jar >> $TMP_LIB/commons-net.jar
 
+#dnsjava -- not sure which version
+wget -cO - http://central.maven.org/maven2/dnsjava/dnsjava/2.1.8/dnsjava-2.1.8.jar >> $TMP_LIB/dnsjava.jar
+
+#ejb3-persistence
+wget -cO - http://central.maven.org/maven2/org/hibernate/ejb3-persistence/1.0.2.GA/ejb3-persistence-1.0.2.GA.jar >> $TMP_LIB/ejb3-persistence.jar
+
+#elasticsearch-5.1.2.jar
+wget -cO - http://central.maven.org/maven2/org/elasticsearch/elasticsearch/5.1.2/elasticsearch-5.1.2.jar >> $TMP_LIB/elasticsearch-5.1.2.jar
+
+#gson-original.jar
+wget -cO - http://central.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar >> $TMP_LIB/gson-original.jar
+
+#guava.jar
+wget -cO - http://central.maven.org/maven2/com/google/guava/guava/21.0/guava-21.0.jar >> $TMP_LIB/guava.jar
+
+#HdrHistogram-2.1.6.jar
+wget -cO - http://central.maven.org/maven2/org/hdrhistogram/HdrHistogram/2.1.6/HdrHistogram-2.1.6.jar >> $TMP_LIB/HdrHistogram-2.1.6.jar
+
+#hppc-0.7.1.jar
+wget -cO - http://central.maven.org/maven2/com/carrotsearch/hppc/0.7.1/hppc-0.7.1.jar >> $TMP_LIB/hppc-0.7.1.jar
+
+#httpclient-4.X.jar
+wget -cO - http://central.maven.org/maven2/org/apache/httpcomponents/httpclient/4.1.2/httpclient-4.1.2.jar >> $TMP_LIB/httpclient-4.X.jar
+
+#httpclient-cache-4.X.jar
+wget -cO - http://central.maven.org/maven2/org/apache/httpcomponents/httpclient-cache/4.1.2/httpclient-cache-4.1.2.jar >> $TMP_LIB/httpclient-cache-4.X.jar
+
+#httpcore-4.X.jar
+wget -cO - http://central.maven.org/maven2/org/apache/httpcomponents/httpcore/4.1.2/httpcore-4.1.2.jar >> $TMP_LIB/httpcore-4.X.jar
+
+#httpmime-4.X.jar
+wget -cO - http://central.maven.org/maven2/org/apache/httpcomponents/httpmime/4.1.2/httpmime-4.1.2.jar >> $TMP_LIB/httpmime-4.X.jar
+
+#jackson-core-2.8.1.jar
+wget -cO - http://central.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.8.1/jackson-core-2.8.1.jar >> $TMP_LIB/jackson-core-2.8.1.jar
+
+#jackson-dataformat-cbor-2.8.1.jar
+wget -cO - http://central.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.8.1/jackson-dataformat-cbor-2.8.1.jar >> $TMP_LIB/jackson-dataformat-cbor-2.8.1.jar
+
+#jackson-dataformat-smile-2.8.1.jar
+wget -cO - http://central.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-smile/2.8.1/jackson-dataformat-smile-2.8.1.jar >> $TMP_LIB/jackson-dataformat-smile-2.8.1.jar
+
+#jackson-dataformat-yaml-2.8.1.jar
+wget -cO - http://central.maven.org/maven2/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.8.1/jackson-dataformat-yaml-2.8.1.jar >> $TMP_LIB/jackson-dataformat-yaml-2.8.1.jar
+
+#java2html.jar
+wget -cO - http://central.maven.org/maven2/de/java2html/java2html/5.0/java2html-5.0.jar >> $TMP_LIB/java2html.jar
+
+#javax.mail.jar
+wget -cO - http://central.maven.org/maven2/com/sun/mail/javax.mail/1.5.5/javax.mail-1.5.5.jar >> $TMP_LIB/javax.mail.jar
+
+#javax.servlet-api.jar
+wget -cO - http://central.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar >> $TMP_LIB/javax.servlet-api.jar
+
+#jetty-continuation.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-continuation/8.1.3.v20120416/jetty-continuation-8.1.3.v20120416.jar >> $TMP_LIB/jetty-continuation.jar
+
