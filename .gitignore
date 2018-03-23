@@ -5,6 +5,7 @@ tmp-lib
 bin/
 *.class
 *.log
+config/email.properties
 config/stripe.properties
 config/cloudinary.properties
 sogive.log*
