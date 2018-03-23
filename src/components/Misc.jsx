@@ -871,14 +871,14 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 };
 
 /**
- * 
+ * @param {String[]} path Path to a form (that is, a form's data held in DataStore) -- this is what will get sent to the server
  * @param {Boolean} once If set, this button can only be clicked once.
  */
 Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, children}) => {
 	assMatch(url, String);
 	assMatch(path, 'String[]');
 	const tpath = ['transient','SubmitButton'].concat(path);
-
+	
 	let formData = DataStore.getValue(path);
 	// DataStore.setValue(tpath, C.STATUS.loading);
 	const params = {

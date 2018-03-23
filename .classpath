@@ -3,21 +3,21 @@
 	<classpathentry kind="src" path="server/src"/>
 	<classpathentry kind="src" path="server/build"/>
 	<classpathentry kind="src" path="server/test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/elasticsearch-java-client"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.bob"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.datalog"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.web"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/middleware/stripe/stripe-java.jar" sourcepath="/middleware/stripe/stripe-java-2.8.0.zip"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/flexi-gson"/>
-	<classpathentry kind="lib" path="/middleware/gson/gson-original.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.webappbase"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/youagain-java-client"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.depot"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/winterwell.maths"/>
-	<classpathentry kind="lib" path="/middleware/lombok/lombok.jar"/>
-	<classpathentry kind="lib" path="/middleware/mockito/mockito-all.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/elasticsearch-java-client"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.bob"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.datalog"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.utils"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.web"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="lib" path="/middleware/stripe/stripe-java.jar" sourcepath="/middleware/stripe/stripe-java-2.8.0.zip"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flexi-gson"/>
+	<classpathentry exported="true" kind="lib" path="/middleware/gson/gson-original.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.webappbase"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/youagain-java-client"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.depot"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.maths"/>
+	<classpathentry exported="true" kind="lib" path="/middleware/lombok/lombok.jar"/>
+	<classpathentry exported="true" kind="lib" path="/middleware/mockito/mockito-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

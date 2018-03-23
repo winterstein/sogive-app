@@ -45,6 +45,23 @@ const deleteShare = ({share}) => {
 	DataStore.setValue(spath, shares);
 };
 
+//Collate data from form and shares paths, then send this data off to the server
+const sendEmailNotification = (url, formPath, sharesPath) => {
+	assMatch(url, String);
+	assMatch(formPath, 'String[]');
+	assMatch(sharesPath, 'String[]');
+
+	let formData = DataStore.getValue(formPath);
+	let messageData = DataStore.getValue(sharesPath);
+	let senderId = {senderId : Login.getId().split("@")[0]}; //do they already have a function to do this?
+
+	//Throws up an error when formData is undefined. Not sure how much I should worry about this
+	const params = {
+		data: Object.assign({}, formData, messageData, senderId)
+	};
+	ServerIO.load(url, params);
+};
+
 /**
  * A dialog for adding and managing shares
  * {
@@ -86,26 +103,23 @@ const ShareWidget = ({thingId, name}) => {
 					<div className="row form-inline">
 						<Misc.PropControl label='Email to share with' 
 							path={['widget', 'ShareWidget', 'add']} prop={'email'} type='email' />
-						&nbsp;
-						<button className='btn btn-primary' disabled={ ! withXId} 
-							onClick={() => { shareThing({thingId, withXId}); }}
-							title='Share it :)'
-						>						
-							<Misc.Icon glyph='share'/>
-						</button>
+					</div>	
+					<div className="row">
+						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='enableNotification' label='Send notification email' type='checkbox'/>
+						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={textAreaDisabled}/>
+						<button className='btn btn-primary btn-lg btn-block' onClick={()=>{
+								//sendEmailNotification must be called first as shareThing resets the path "['widget', 'ShareWidget', 'add']
+								sendEmailNotification('/testEmail', ['widget', 'ShareWidget', 'form'], ['widget', 'ShareWidget', 'add']);
+								shareThing({thingId, withXId});
+						}}>	Submit	</button>
 					</div>
 					<div className="row">
-						<h3>Shared with</h3>
+						<h4>Shared with</h4>
 						<ListShares list={sharesPV.value} />
 					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
-				<div className="row MessageForm">
-					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='enableNotification' label='Send notification emails' type='checkbox'/>
-					<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='OptionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={textAreaDisabled}/>
-					<Misc.SubmitButton url='/FakeExtension' path={['widget', 'ShareWidget', 'form']}>Submit</Misc.SubmitButton>
-				</div>
 			</Modal.Footer>
 		</Modal>
 	);
