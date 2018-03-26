@@ -64,7 +64,7 @@ const processSubmission = (url, formPath, sharesPath, thingId, withXId) =>{
 	
 	let formData = DataStore.getValue(formPath);
 	let messageData = DataStore.getValue(sharesPath);
-	
+
 	//prevent user submitting a blank string
 	if(messageData == null || !messageData.email){
 		//set invalid email flag -- blank string
@@ -82,8 +82,8 @@ const processSubmission = (url, formPath, sharesPath, thingId, withXId) =>{
 };
 
 const isValidEmail = (email) => {
-	assert(email, 'String');
-	let rex = /.*@.*\..+/;
+	//assert(email, 'String');
+	let rex = /^[.+?@[\w-]+?\.[\w-]+]?$/;
 	return rex.test(email);
 }
 /**
