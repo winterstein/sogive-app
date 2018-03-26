@@ -98,3 +98,28 @@ wget -cO - http://central.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0
 #jetty-continuation.jar
 wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-continuation/8.1.3.v20120416/jetty-continuation-8.1.3.v20120416.jar >> $TMP_LIB/jetty-continuation.jar
 
+#jetty-http.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-http/9.4.8.v20171121/jetty-http-9.4.8.v20171121.jar >> $TMP_LIB/jetty-http.jar
+
+#jetty-io.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-io/9.4.8.v20171121/jetty-io-9.4.8.v20171121.jar >> $TMP_LIB/jetty-io.jar
+
+#jetty-security.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-security/9.4.8.v20171121/jetty-security-9.4.8.v20171121.jar >> $TMP_LIB/jetty-security.jar
+
+#jetty-server.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-server/9.4.8.v20171121/jetty-server-9.4.8.v20171121.jar >> $TMP_LIB/jetty-server.jar
+
+#jetty-servlet.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-servlet/9.4.8.v20171121/jetty-servlet-9.4.8.v20171121.jar >> $TMP_LIB/jetty-servlet.jar
+
+#jetty-util.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-util/9.4.8.v20171121/jetty-util-9.4.8.v20171121.jar >> $TMP_LIB/jetty-util.jar
+
+#jetty-util-ajax.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-util-ajax/9.4.8.v20171121/jetty-util-ajax-9.4.8.v20171121.jar >> $TMP_LIB/jetty-util-ajax.jar
+
+#jetty-websocket.jar
+wget -cO - http://central.maven.org/maven2/org/eclipse/jetty/jetty-websocket/8.1.13.v20130916/jetty-websocket-8.1.13.v20130916.jar >> $TMP_LIB/jetty-websocket.jar
+
+
