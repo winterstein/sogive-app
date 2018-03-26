@@ -12,3 +12,4 @@ sogive.log*
 *.css
 version.properties
 sogive-app.log*
+logins.sogive.properties
