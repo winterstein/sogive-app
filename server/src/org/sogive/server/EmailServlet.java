@@ -37,7 +37,6 @@ public class EmailServlet extends CrudServlet<Event> implements IServlet {
 		String message = generateMessageBody(state);
 		String senderName = state.get("senderId");
 		InternetAddress recipient = state.get(CommonFields.EMAIL);
-		
 		if(enableNotification){
 			sendAnEmail(recipient, message, senderName);
 		}
@@ -61,6 +60,4 @@ public class EmailServlet extends CrudServlet<Event> implements IServlet {
 		if(message == null) return DEFAULT_MESSAGE;
 		else return message;
 	}
-	
-	
 }

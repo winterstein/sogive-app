@@ -46,22 +46,46 @@ const deleteShare = ({share}) => {
 };
 
 //Collate data from form and shares paths, then send this data off to the server
-const sendEmailNotification = (url, formPath, sharesPath) => {
+const sendEmailNotification = (url, emailData) => {
 	assMatch(url, String);
-	assMatch(formPath, 'String[]');
-	assMatch(sharesPath, 'String[]');
 
-	let formData = DataStore.getValue(formPath);
-	let messageData = DataStore.getValue(sharesPath);
-	let senderId = {senderId : Login.getId().split("@")[0]}; //do they already have a function to do this?
-
-	//Throws up an error when formData is undefined. Not sure how much I should worry about this
 	const params = {
-		data: Object.assign({}, formData, messageData, senderId)
+		data: emailData
 	};
 	ServerIO.load(url, params);
 };
 
+//checks validity of inputs, then generates a share and sends an email if appropriate
+//was having trouble keeping calls to sendEmailNotification & shareThing straight as both had come to depend on reading/modifying setDisplay
+//feel that my approach has some room for improvement, but it is at least a bit less error-prone this way
+const processSubmission = (url, formPath, sharesPath, thingId, withXId) =>{
+	assert(thingId, String);
+	assert(withXId, String);	
+	
+	let formData = DataStore.getValue(formPath);
+	let messageData = DataStore.getValue(sharesPath);
+	
+	//prevent user submitting a blank string
+	if(messageData == null || !messageData.email){
+		//set invalid email flag -- blank string
+		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], true);
+	}
+	else if(!isValidEmail(messageData.email)){
+		//set invalid email flag -- email format invalid
+		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], true);
+	}
+	else{
+		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], false);
+		shareThing({thingId, withXId});
+		sendEmailNotification(url, Object.assign({}, formData, messageData, {senderId : Login.getId().split("@")[0]}));	
+	}
+};
+
+const isValidEmail = (email) => {
+	assert(email, 'String');
+	let rex = /.*@.*\..+/;
+	return rex.test(email);
+}
 /**
  * A dialog for adding and managing shares
  * {
@@ -102,16 +126,15 @@ const ShareWidget = ({thingId, name}) => {
 				<div className="container-fluid">
 					<div className="row form-inline">
 						<Misc.PropControl label='Email to share with' 
-							path={['widget', 'ShareWidget', 'add']} prop={'email'} type='email' />
+							className='ng-invalid' path={['widget', 'ShareWidget', 'add']} prop={'email'} type='email' />
+							<Misc.WarningMessage path={['widget', 'Sharewidget', 'add']} text={'Please enter a valid email address'} />
 					</div>	
 					<div className="row">
 						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='enableNotification' label='Send notification email' type='checkbox'/>
 						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={textAreaDisabled}/>
 						<button className='btn btn-primary btn-lg btn-block' onClick={()=>{
-								//sendEmailNotification must be called first as shareThing resets the path "['widget', 'ShareWidget', 'add']
-								sendEmailNotification('/testEmail', ['widget', 'ShareWidget', 'form'], ['widget', 'ShareWidget', 'add']);
-								shareThing({thingId, withXId});
-						}}>	Submit	</button>
+								processSubmission('/testEmail', ['widget', 'ShareWidget', 'form'], ['widget', 'ShareWidget', 'add'], thingId, withXId);
+						}}>Submit</button>
 					</div>
 					<div className="row">
 						<h4>Shared with</h4>

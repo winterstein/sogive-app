@@ -914,6 +914,25 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, c
 	</button>);
 };
 
+//Simple bit of text, hidden by default.
+//Made specifically to display a string when user provides an invalid input to "email" form.
+/*@param path represents full location of setDisplay in Datastore (['widget', 'Sharewidget', 'add', 'setDisplay'])*/
+Misc.WarningMessage = ({path, text}) => {
+	assMatch(path, 'String[]');
+	assMatch(text, String);
+	
+	//Won't this initially return null? Falsy value, will work for that case. Bit concerned about allowing other types of value though.
+	let setDisplay = DataStore.getValue(path.concat('setDisplay'));
+	
+	//Is a label really the most appropriate HTML element to use?
+	if(setDisplay){
+		return (<label className="text-danger">
+			{text}
+		</label>);
+	}
+	else return null;
+};
+
 export default Misc;
 // // TODO rejig for export {
 // 	PropControl: Misc.PropControl
