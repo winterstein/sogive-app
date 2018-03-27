@@ -17,12 +17,12 @@ function isNumeric(value) {
 
 // duck type: needs a value
 Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
-Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not "+obj);
+Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
 
 Donation.getTotal = (don) => {
 	// TODO + contributions - fees
 	// TODO test
-	let ttl = don.amount;
+	let ttl = Donation.amount(don);
 	if (don.contributions) {
 		don.contributions.forEach(money => ttl = ttl+money);
 	}
