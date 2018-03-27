@@ -8,6 +8,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.junit.Test;
 import org.sogive.data.commercial.Event;
+import org.sogive.data.user.DBSoGive;
+import org.sogive.data.user.Person;
 
 import com.winterwell.data.JThing;
 import com.winterwell.utils.Dep;
@@ -19,6 +21,7 @@ import com.winterwell.web.app.EmailConfig;
 import com.winterwell.web.app.Emailer;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.data.XId;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.Checkbox;
 
@@ -35,10 +38,12 @@ public class EmailServlet extends CrudServlet<Event> implements IServlet {
 		//Think it might be better to check enableNotification before the email request is sent. Feels a bit wasteful to send an extraneous request
 		Boolean enableNotification = state.get(new Checkbox("enableNotification"));		
 		String message = generateMessageBody(state);
-		String sender = state.get("senderId");
+		Person sender = DBSoGive.getCreateUser(new XId(state.get("senderId")));
+		String senderName = sender.getName() != null ? sender.getName() : sender.getEmail();
+		
 		InternetAddress recipient = state.get(CommonFields.EMAIL);
 		if(enableNotification){
-			sendAnEmail(recipient, message, sender);
+			sendAnEmail(recipient, message, senderName);
 		}
 	}
 	
