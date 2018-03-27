@@ -58,7 +58,7 @@ const Event = ({id}) => {
 			<Register event={item} />
 
 			<div>Experimental!
-				<ShareLink />
+				<ShareLink thingId={id} />
 				<ShareWidget thingId={id} name={item.name} />
 			</div>
 

@@ -11,8 +11,9 @@ import C from '../C';
 /**
  * a Share This button
  */
-const ShareLink = () => {
-	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setShow('ShareWidget', true); } } >
+const ShareLink = ({thingId}) => {
+	const basePath = ['widget', 'ShareWidget', thingId];
+	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setValue(basePath.concat('show'), true); } } >
 		<Misc.Icon glyph='share' /> Share
 	</a>);
 };
@@ -58,31 +59,28 @@ const sendEmailNotification = (url, emailData) => {
 //checks validity of inputs, then generates a share and sends an email if appropriate
 //was having trouble keeping calls to sendEmailNotification & shareThing straight as both had come to depend on reading/modifying setDisplay
 //feel that my approach has some room for improvement, but it is at least a bit less error-prone this way
-const processSubmission = (url, formPath, sharesPath, thingId, withXId) =>{
-	assert(thingId, String);
-	assert(withXId, String);	
+const processSubmission = (url, widgetPath, thingId, withXId) =>{
+	//assert(thingId, String);
+	//assert(withXId, String);	
 	
-	let formData = DataStore.getValue(formPath);
-	let messageData = DataStore.getValue(sharesPath);
+	const { form } = DataStore.getValue(widgetPath) || {};
+	const { email } = form;
+
 
 	//prevent user submitting a blank string
-	if(messageData == null || !messageData.email){
+	if(!isValidEmail(email)){
 		//set invalid email flag -- blank string
-		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], true);
+		DataStore.setValue(widgetPath.concat('warning'), 'YOUR EMAIL IS BAD AND YOU SHOULD FEEL BAD');
 	}
-	else if(!isValidEmail(messageData.email)){
-		//set invalid email flag -- email format invalid
-		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], true);
-	}
-	else{
-		DataStore.setValue(['widget', 'Sharewidget', 'add', 'setDisplay'], false);
+
+	else {
+		DataStore.setValue(widgetPath.concat('warning'), null);
 		shareThing({thingId, withXId});
-		sendEmailNotification(url, Object.assign({}, formData, messageData, {senderId : Login.getId().split("@")[0]}));	
+		sendEmailNotification(url, {...form, senderId: Login.getId()});
 	}
 };
 
 const isValidEmail = (email) => {
-	//assert(email, 'String');
 	let rex = /^[.+?@[\w-]+?\.[\w-]+]?$/;
 	return rex.test(email);
 }
@@ -95,27 +93,39 @@ const isValidEmail = (email) => {
  * 
  * Note: This does NOT include the share button -- see ShareLink for that
 */
+
 const ShareWidget = ({thingId, name}) => {
+	const basePath = ['widget', 'ShareWidget', thingId];
+	let data = DataStore.getValue(basePath);
+	if (!data) {
+		data = {form: {}};
+		DataStore.setValue(basePath, data);
+	}
+	const {warning, show, form} = data;
+
 	if ( ! thingId) {
 		console.warn("ShareWidget - no thingId");
 		return null;
 	}
-	let showDialog = DataStore.getShow('ShareWidget');
+	
+	const formPath = basePath.concat('form');
+
 	if ( ! name) name = thingId;
 	let title = "Share "+name;
-	let withXId = DataStore.getValue(['widget', 'ShareWidget', 'add', 'email']);
+	
+	let { email: withXId, enableNotification } = form;
+
 	if (withXId) withXId += '@email';
 	let sharesPV = DataStore.fetch(['misc','shares', thingId], () => {
 		let req = Login.getShareList(thingId);
 		return req;
 	});
 
-	const textAreaDisabled = !(DataStore.getValue(['widget', 'ShareWidget', 'form', 'enableNotification']));
 	// TODO share by url on/off
 	// TODO share message email for new sharers
 
 	return (
-		<Modal show={showDialog} className="share-modal" onHide={() => DataStore.setShow('ShareWidget', false)}>
+		<Modal show={show} className="share-modal" onHide={() => DataStore.setValue(basePath.concat('show'), false)}>
 			<Modal.Header closeButton>
 				<Modal.Title>
 					<Misc.Icon glyph='share' size='large' />
@@ -125,15 +135,15 @@ const ShareWidget = ({thingId, name}) => {
 			<Modal.Body>
 				<div className="container-fluid">
 					<div className="row form-inline">
+						{warning ? <div className='text-danger'>{warning}</div> : ''}
 						<Misc.PropControl label='Email to share with' 
-							className='ng-invalid' path={['widget', 'ShareWidget', 'add']} prop={'email'} type='email' />
-							<Misc.WarningMessage path={['widget', 'Sharewidget', 'add']} text={'Please enter a valid email address'} />
+							className='ng-invalid' path={formPath} prop={'email'} type='email' />
 					</div>	
 					<div className="row">
-						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='enableNotification' label='Send notification email' type='checkbox'/>
-						<Misc.PropControl path={['widget', 'ShareWidget', 'form']} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={textAreaDisabled}/>
+						<Misc.PropControl path={formPath} prop='enableNotification' label='Send notification email' type='checkbox'/>
+						<Misc.PropControl path={formPath} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={!enableNotification}/>
 						<button className='btn btn-primary btn-lg btn-block' onClick={()=>{
-								processSubmission('/testEmail', ['widget', 'ShareWidget', 'form'], ['widget', 'ShareWidget', 'add'], thingId, withXId);
+								processSubmission('/testEmail', basePath, thingId, withXId);
 						}}>Submit</button>
 					</div>
 					<div className="row">

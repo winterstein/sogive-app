@@ -169,6 +169,8 @@ Misc.Icon = ({glyph, fa, size, className, ...other}) => {
 * @param validator {?(value, rawValue) => String} Generate an error message if invalid
 * @param https {?Boolean} if true, urls must use https not http (recommended)
  */
+
+
 Misc.PropControl = ({type="text", path, prop, label, help, error, validator, recursing, ...stuff}) => {
 	assMatch(prop, "String|Number");
 	assMatch(path, Array);
@@ -436,6 +438,19 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 	if (type==='autocomplete') {
 		let acprops ={prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
 		return <PropControlAutocomplete {...acprops} />;
+	}
+
+	if (type==='email') {
+		const isValidEmail = (email) => {
+			let rex = /^[.+?@[\w-]+?\.[\w-]+]?$/;
+			return rex.test(email);
+		};
+		const emailEntered = DataStore.getValue(path.concat(prop));
+
+		return (<div>
+					<div className='text-danger'>{isValidEmail(emailEntered) ? '' : 'Please enter a valid email address (e.g. fake@email.com)'}</div>
+					<Misc.PropControl label={label} path={path} prop={prop} />
+				</div>);
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)
@@ -912,25 +927,6 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, c
 		{children}
 		<span className="glyphicon glyphicon-cd spinning" style={vis} />
 	</button>);
-};
-
-//Simple bit of text, hidden by default.
-//Made specifically to display a string when user provides an invalid input to "email" form.
-/*@param path represents full location of setDisplay in Datastore (['widget', 'Sharewidget', 'add', 'setDisplay'])*/
-Misc.WarningMessage = ({path, text}) => {
-	assMatch(path, 'String[]');
-	assMatch(text, String);
-	
-	//Won't this initially return null? Falsy value, will work for that case. Bit concerned about allowing other types of value though.
-	let setDisplay = DataStore.getValue(path.concat('setDisplay'));
-	
-	//Is a label really the most appropriate HTML element to use?
-	if(setDisplay){
-		return (<label className="text-danger">
-			{text}
-		</label>);
-	}
-	else return null;
 };
 
 export default Misc;

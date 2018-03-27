@@ -35,10 +35,10 @@ public class EmailServlet extends CrudServlet<Event> implements IServlet {
 		//Think it might be better to check enableNotification before the email request is sent. Feels a bit wasteful to send an extraneous request
 		Boolean enableNotification = state.get(new Checkbox("enableNotification"));		
 		String message = generateMessageBody(state);
-		String senderName = state.get("senderId");
+		String sender = state.get("senderId");
 		InternetAddress recipient = state.get(CommonFields.EMAIL);
 		if(enableNotification){
-			sendAnEmail(recipient, message, senderName);
+			sendAnEmail(recipient, message, sender);
 		}
 	}
 	
