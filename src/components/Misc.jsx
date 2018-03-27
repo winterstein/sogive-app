@@ -441,16 +441,15 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 	}
 
 	if (type==='email') {
-		const isValidEmail = (email) => {
-			let rex = /^[.+?@[\w-]+?\.[\w-]+]?$/;
-			return rex.test(email);
-		};
+		const isValidEmail = (email) => C.emailRegex.test(email);
 		const emailEntered = DataStore.getValue(path.concat(prop));
 
-		return (<div>
-					<div className='text-danger'>{isValidEmail(emailEntered) ? '' : 'Please enter a valid email address (e.g. fake@email.com)'}</div>
-					<Misc.PropControl label={label} path={path} prop={prop} />
-				</div>);
+		return (
+			<div>
+				<div className='text-danger'>{C.emailRegex.test(emailEntered) ? '' : 'Please enter a valid email address (e.g. fake@email.com)'}</div>
+				<Misc.PropControl label={label} path={path} prop={prop} />
+			</div>
+		);
 	}
 	// normal
 	// NB: type=color should produce a colour picker :)

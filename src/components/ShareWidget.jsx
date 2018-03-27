@@ -60,30 +60,11 @@ const sendEmailNotification = (url, emailData) => {
 //was having trouble keeping calls to sendEmailNotification & shareThing straight as both had come to depend on reading/modifying setDisplay
 //feel that my approach has some room for improvement, but it is at least a bit less error-prone this way
 const processSubmission = (url, widgetPath, thingId, withXId) =>{
-	//assert(thingId, String);
-	//assert(withXId, String);	
-	
 	const { form } = DataStore.getValue(widgetPath) || {};
-	const { email } = form;
 
-
-	//prevent user submitting a blank string
-	if(!isValidEmail(email)){
-		//set invalid email flag -- blank string
-		DataStore.setValue(widgetPath.concat('warning'), 'YOUR EMAIL IS BAD AND YOU SHOULD FEEL BAD');
-	}
-
-	else {
-		DataStore.setValue(widgetPath.concat('warning'), null);
-		shareThing({thingId, withXId});
-		sendEmailNotification(url, {...form, senderId: Login.getId()});
-	}
+	shareThing({thingId, withXId});
+	sendEmailNotification(url, {...form, senderId: Login.getId()});
 };
-
-const isValidEmail = (email) => {
-	let rex = /^[.+?@[\w-]+?\.[\w-]+]?$/;
-	return rex.test(email);
-}
 /**
  * A dialog for adding and managing shares
  * {
@@ -121,6 +102,8 @@ const ShareWidget = ({thingId, name}) => {
 		return req;
 	});
 
+	let validEmailBool = C.emailRegex.test(DataStore.getValue(formPath.concat('email')));
+
 	// TODO share by url on/off
 	// TODO share message email for new sharers
 
@@ -135,16 +118,15 @@ const ShareWidget = ({thingId, name}) => {
 			<Modal.Body>
 				<div className="container-fluid">
 					<div className="row form-inline">
-						{warning ? <div className='text-danger'>{warning}</div> : ''}
 						<Misc.PropControl label='Email to share with' 
 							className='ng-invalid' path={formPath} prop={'email'} type='email' />
 					</div>	
 					<div className="row">
 						<Misc.PropControl path={formPath} prop='enableNotification' label='Send notification email' type='checkbox'/>
 						<Misc.PropControl path={formPath} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={!enableNotification}/>
-						<button className='btn btn-primary btn-lg btn-block' onClick={()=>{
-								processSubmission('/testEmail', basePath, thingId, withXId);
-						}}>Submit</button>
+						<button className='btn btn-primary btn-lg btn-block' disabled={!validEmailBool} onClick={()=>{processSubmission('/testEmail', basePath, thingId, withXId);}}>
+							Submit
+						</button>
 					</div>
 					<div className="row">
 						<h4>Shared with</h4>
