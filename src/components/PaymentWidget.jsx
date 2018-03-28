@@ -40,7 +40,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 		return null; // no amount, no payment
 	}
 	Money.assIsa(amount);
-	assMatch(onToken, Function);
+	assMatch(onToken, Function, "PaymentWidget.jsx");
 	assMatch(recipient, String);
 
 	// Invoke the callback, with a minimal fake token that the servlet will catch

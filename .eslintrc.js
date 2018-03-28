@@ -23,7 +23,7 @@ module.exports = {
 		"jsx-a11y/href-no-hash": "warn",
 		"jsx-a11y/img-has-alt": "warn",
 		"max-depth": ["warn", 4],
-		"max-len": ["warn", 140],
+		"max-len": ["warn", 340],
 		"max-nested-callbacks": ["warn", 4],
 		"no-continue": "off",
 		"no-confusing-arrow": "off",

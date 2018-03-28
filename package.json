@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -9,18 +9,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-stage-2": "^6.24.1",
     "chart.js": "^2.7.2",
     "data-pivot": "^0.3.1",
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
-    "eslint": "^4.18.2",
-    "eslint-plugin-flowtype": "^2.46.1",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-react": "^7.7.0",
+    "eslint": "^4.19.1",
     "hashmap": "^2.1.0",
     "intl": "^1.2.5",
     "jquery": "^3.3.1",
@@ -37,12 +30,9 @@
     "react-markdown": "^2.5.1",
     "react-stripe-checkout": "^2.4.0",
     "react-stripe-elements": "^1.6.0",
-    "sjtest": "^0.4.6",
-    "webpack": "^3.11.0",
+    "sjtest": "^0.4.7",
     "wwutils": "^0.8.8",
-    "you-again": "^0.6.7",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "puppeteer": "^1.2.0"
+    "you-again": "^0.6.10"
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
@@ -66,6 +56,12 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
-    "flow-bin": "^0.53.1"
+    "flow-bin": "^0.53.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "puppeteer": "^1.2.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
+	"webpack": "^3.11.0",
   }
 }
