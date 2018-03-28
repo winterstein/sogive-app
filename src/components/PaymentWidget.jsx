@@ -39,9 +39,9 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
-	Money.assIsa(amount);
+	Money.assIsa(amount, "PaymentWidget.jsx");
 	assMatch(onToken, Function, "PaymentWidget.jsx");
-	assMatch(recipient, String);
+	assMatch(recipient, String, "PaymentWidget.jsx");
 
 	// Invoke the callback, with a minimal fake token that the servlet will catch
 	const skipAction = (event) => (
