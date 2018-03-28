@@ -546,7 +546,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 			<Misc.Col2>
 				<h3>{ticket.attendeeName}</h3>			
 				<div>
-					<a href={url}>{cta}</a>
+					<h3><a href={url}>{cta}</a></h3>
 				</div>
 			</Misc.Col2>
 		</div>);		
