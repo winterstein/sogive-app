@@ -56,15 +56,6 @@ const sendEmailNotification = (url, emailData) => {
 	ServerIO.load(url, params);
 };
 
-//checks validity of inputs, then generates a share and sends an email if appropriate
-//was having trouble keeping calls to sendEmailNotification & shareThing straight as both had come to depend on reading/modifying setDisplay
-//feel that my approach has some room for improvement, but it is at least a bit less error-prone this way
-const processSubmission = (url, widgetPath, thingId, withXId) =>{
-	const { form } = DataStore.getValue(widgetPath) || {};
-
-	shareThing({thingId, withXId});
-	sendEmailNotification(url, {...form, senderId: Login.getId()});
-};
 /**
  * A dialog for adding and managing shares
  * {
@@ -124,7 +115,13 @@ const ShareWidget = ({thingId, name}) => {
 					<div className="row">
 						<Misc.PropControl path={formPath} prop='enableNotification' label='Send notification email' type='checkbox'/>
 						<Misc.PropControl path={formPath} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={!enableNotification}/>
-						<button className='btn btn-primary btn-lg btn-block' disabled={!validEmailBool} onClick={()=>{processSubmission('/testEmail', basePath, thingId, withXId);}}>
+						<button className='btn btn-primary btn-lg btn-block' disabled={!validEmailBool} 
+							onClick={()=>{
+								const {form} = DataStore.getValue(basePath) || {};
+
+								shareThing({thingId, withXId});
+								sendEmailNotification('/testEmail', {...form, senderId: Login.getId()});
+								}}>
 							Submit
 						</button>
 					</div>
