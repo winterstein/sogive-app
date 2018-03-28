@@ -151,7 +151,7 @@ const FundRaiserPage = ({id}) => {
 						{ donations ? (
 							<Supporters item={item} donations={donations} charity={/*charity*/ null} />						
 						) : null}
-						
+						<SocialShare charity={charity} fundraiser={item} />
 					</Col>
 				</Row>
 				{/*
@@ -210,14 +210,10 @@ const DonationProgress = ({item, charity}) => {
 				<DonationsSoFar item={item} />				
 				<ImpactDesc charity={charity} amount={donated} showMoney={false} 
 					beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
-				<DonateButton item={item} />
+				<DonateButton item={item} />				
 			</div>
 		</div>
 	);
-	// TODO
-	// 			<div className='share'>
-			// 	<SocialShare charity={charity} fundraiser={item} />
-			// </div>
 }; // DonationProgress
 
 const DonationsSoFar = ({item}) => {
@@ -278,7 +274,7 @@ const Supporter = ({donation, charity}) => {
 			<Misc.RelativeDate date={donation.date} className='donation-date' />
 			<div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>
 			{donation.contributions? 
-				donation.contributions.map(con => <div className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
+				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (
 				<p>{donation.message}</p>
