@@ -12,6 +12,7 @@ import Roles from '../../Roles';
 
 import Misc from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
+import DonationForm, {DonateButton} from '../NewDonationForm';
 
 const EditFundRaiserPage = () => {
 
@@ -77,9 +78,21 @@ const FundRaiserEditor = ({id}) => {
 			<hr />
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
+			<AddOffSiteDonation fundraiser={item} />
+
 			<Misc.SavePublishDiscard type={type} id={id} />
 			</div>
 	</div>);
+};
+
+const AddOffSiteDonation = ({fundraiser}) => {
+	return (
+		<Misc.Card title='TODO Add off-site donation'>
+			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
+			<DonateButton item={fundraiser} />
+			<DonationForm item={fundraiser} paidElsewhere />
+		</Misc.Card>
+	);
 };
 
 export default EditFundRaiserPage;

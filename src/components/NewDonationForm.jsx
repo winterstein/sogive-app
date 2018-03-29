@@ -66,7 +66,7 @@ const paymentOK = (formData) => true;
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item, charity, causeName}) => {
+const DonationForm = ({item, charity, causeName, paidElsewhere}) => {
 	const id = getId(item);
 	assert(id, "DonationForm", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
@@ -149,7 +149,7 @@ const DonationForm = ({item, charity, causeName}) => {
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false} >
-						<PaymentSection path={path} donation={donationDraft} item={item} />
+						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} />
 					</WizardStage>
 				
 					<WizardStage title='Receipt' previous={false} >
@@ -300,7 +300,7 @@ const doPayment = ({donation}) => {
 };
 
 
-const PaymentSection = ({path, item}) => {
+const PaymentSection = ({path, item, paidElsewhere}) => {
 	const donation = DataStore.getValue(path);
 	if ( ! donation) {
 		return null;
@@ -311,6 +311,22 @@ const PaymentSection = ({path, item}) => {
 		return null;
 	}
 	Money.assIsa(amount);
+
+	// Not the normal payment?
+	if (paidElsewhere && (donation.paymentMethod === 'ask' || ! donation.paymentMethod)) {
+		donation.paidElsewhere = true;
+		return (<div>
+			<p>This form is for donations that have already been paid.</p>
+			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
+			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
+		</div>);
+	}
+	if (donation.paidElsewhere) {
+		console.error("NewDonationForm.jsx - PaymentSection: paidElsewhere?! "+path, donation);
+		donation.paidElsewhere = false; // paranoia
+	}
+	
+
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
 	 * @param {id:String, type:String, token:String} token 

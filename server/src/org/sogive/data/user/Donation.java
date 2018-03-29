@@ -84,6 +84,11 @@ public class Donation extends AThing implements IForSale {
 	boolean paidElsewhere;
 	
 	/**
+	 * Stripe | ask-user | usually null
+	 */
+	String paymentMethod;	
+	
+	/**
 	 * e.g. a stripe charge id
 	 */
 	String paymentId;
