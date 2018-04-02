@@ -199,6 +199,8 @@ wget -cO - http://central.maven.org/maven2/junit/junit/4.12/junit-4.12.jar >> $T
 
 ##jwnl.jar
 wget -cO - http://www.java2s.com/Code/JarDownload/jwnl/jwnl-1.3.3.jar.zip >> $TMP_LIB/jwnl.jar.zip
+cd $TMP_LIB && 7z x jwnl.jar.zip
+rm $TMP_LIB/jwnl.jar.zip
 
 ##log4j-1.2.15.jar
 wget -cO - http://central.maven.org/maven2/log4j/log4j/1.2.15/log4j-1.2.15.jar >> $TMP_LIB/log4j-1.2.15.jar
@@ -352,16 +354,15 @@ git clone git@git.winterwell.com:/winterwell-code
 
 
 
-##########Breakage is somewhere in
+
 
 
 ############################################
 ######## Build Utils
 ############################################
-cd ~/open-code/winterwell.utils/src && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
-cd ~/open-code/winterwell.utils/test && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
-cp ~/open-code/winterwell.utils/test/com/winterwell/datalog/*.class ~/open-code/winterwell.utils/src/com/winterwell/datalog/
+rsync -r ~/open-code/winterwell.utils/test/com/winterwell/datalog/* ~/open-code/winterwell.utils/src/com/winterwell/datalog/
 rsync -r ~/open-code/winterwell.utils/test/com/winterwell/utils/* ~/open-code/winterwell.utils/src/com/winterwell/utils/
+cd ~/open-code/winterwell.utils/src && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
 cd ~/open-code/winterwell.utils/src && find . -iname "*.class" -print | xargs jar cf ~/open-code/winterwell.utils/winterwell.utils.jar
 cp ~/open-code/winterwell.utils/winterwell.utils.jar $TMP_LIB/
 
