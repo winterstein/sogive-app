@@ -43,6 +43,11 @@ public class Donation extends AThing implements IForSale {
 	String donorAddress;
 	String donorPostcode;
 	
+	/**
+	 * Has the user said OK to sharing their details with the charity?
+	 */
+	Boolean consentToSharePII;
+	
 	String message;
 	
 	/**

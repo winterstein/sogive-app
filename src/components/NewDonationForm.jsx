@@ -38,30 +38,18 @@ const stripeKey = (C.SERVER_TYPE) ?
 const DonateButton = ({item}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	// const donationPath; foo
 	return (
-		<button className='btn btn-lg btn-primary' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		<button className='btn btn-lg btn-primary' 
+			onClick={() => {
+				// DataStore.setValue([...donationPath, 'fundRaiser'], getId(item));
+				DataStore.setValue([...widgetPath, 'open'], true);
+			}}
+		>
 			Donate
 		</button>
 	);
 };
-
-/** no donations below a min £1 */
-const amountOK = ({amount}) => amount && amount.value >= 1.0;
-
-const giftAidOK = ({giftAid, giftAidTaxpayer, giftAidOwnMoney, giftAidNoCompensation}) => (
-	!giftAid || (giftAidTaxpayer && giftAidOwnMoney && giftAidNoCompensation)
-);
-
-/** 
- * Minor todo: address & postcode can be optional, unless you have gift aid
-*/
-const detailsOK = ({name, address, postcode}) => (
-	name.trim().length > 0 && address.trim().length > 0 && postcode.trim().length > 0
-);
-
-// Message can't be "bad", payment is final stage so can only be incomplete
-const messageOK = (formData) => true;
-const paymentOK = (formData) => true;
 
 /**
  * item: a FundRaiser or NGO
@@ -240,7 +228,7 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	);
 };
 
-const DetailsSection = ({path, stagePath, setNavStatus}) => {
+const DetailsSection = ({path, stagePath, setNavStatus, charity}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
 	if (setNavStatus) setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
@@ -255,6 +243,10 @@ const DetailsSection = ({path, stagePath, setNavStatus}) => {
 			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
 			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
+			{ ! giftAid? <Misc.PropControl prop='consentToSharePII' 
+				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
+				path={path} type='checkbox' />
+				: null}
 		</div>);
 };
 

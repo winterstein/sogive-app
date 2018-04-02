@@ -356,7 +356,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
+				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label={'Same address and team as first person'} /> : null}
 				{ sameAsFirst? null : 
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
@@ -378,8 +378,8 @@ const TeamControl = ({ticket, path}) => {
 
 	return (<Misc.Col2>
 		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
-			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
+			help='Families or colleagues can fundraise as a team, with a Team Page here.' />
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
 	</Misc.Col2>);
 };
 
@@ -473,20 +473,21 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	const email = getEmail();
 	const bpath = ActionMan.getBasketPath();
 
-	// tip? Default to £1
-	if (basket.hasTip && basket.tip === undefined) {
-		basket.tip = Money.make({value:1});
-	}
+	// tip removed from register page (as requested by Sanjay, march 2018)
+	// // tip? Default to £1
+	// if (basket.hasTip && basket.tip === undefined) {
+	// 	basket.tip = Money.make({value:1});
+	// }
+	// 		<div className='padded-block'>
+	// 			<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
+	// 				label={`Include a tip to cover SoGive's operating costs?`} />
+	// 			{basket.hasTip ? (
+	// 				<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
+	// 			) : ''}
+	// 		</div>
 
 	return (
 		<div>
-			<div className='padded-block'>
-				<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
-					label={`Include a tip to cover SoGive's operating costs?`} />
-				{basket.hasTip ? (
-					<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
-				) : ''}
-			</div>
 			<TicketInvoice basket={basket} />
 			<div className='padded-block'>
 				<PaymentWidget

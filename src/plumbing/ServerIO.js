@@ -86,7 +86,8 @@ ServerIO.getDonationDraft = ({from, charity, fundRaiser}) => {
 	assMatch(charity || fundRaiser, String);
 	let to = charity;
 	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
-	return ServerIO.load('/donation/list.json', {data: {from, to, q}, swallow: true});
+	let status = C.KStatus.DRAFT;
+	return ServerIO.load('/donation/list.json', {data: {from, to, q, status}, swallow: true});
 };
 
 

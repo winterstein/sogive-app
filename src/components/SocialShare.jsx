@@ -84,7 +84,7 @@ const SocialShare = ({charity, fundraiser, donation, shareText}) => {
 	// TODO make this line nicer
 	// TODO just send the charity ID, and load the rest server side, to give a nicer url
 	// Also window.location might contain parameters we dont want to share.
-	let url = "https://app.sogive.org/share?link="+encURI(lcn)+"&title="+encURI(pageInfo.title)+"&image="+encURI(pageInfo.image)+"&desc="+encURI(pageInfo.desc);
+	let url = window.location.protocol+'//'+window.location.host+"/share?link="+encURI(lcn)+"&title="+encURI(pageInfo.title)+"&image="+encURI(pageInfo.image)+"&desc="+encURI(pageInfo.desc);
 	pageInfo.url = url;
 
 	return (

@@ -3,7 +3,7 @@ import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
 import Money from './Money';
 import DataStore from '../../plumbing/DataStore';
-import {XId} from 'wwutils';
+import {XId, blockProp} from 'wwutils';
 
 /** impact utils */
 const Donation = defineType(C.TYPES.Donation);
@@ -17,7 +17,11 @@ function isNumeric(value) {
 
 // duck type: needs a value
 Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
-Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
+Donation.assIsa = (obj) => {
+	assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
+	blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');
+	return true;
+};
 
 Donation.getTotal = (don) => {
 	// TODO + contributions - fees
@@ -51,6 +55,12 @@ Donation.donorName = don => {
  * @returns {Money}
  */
 Donation.amount = don => This.assIsa(don) && don.amount;
+
+/**
+ * @param {Donation} don 
+ * @returns fundraiser ID or null
+ */
+Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
 
 Donation.make = (base = {}) => {
 	// to must be a charity
