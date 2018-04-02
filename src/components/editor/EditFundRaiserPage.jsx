@@ -87,10 +87,10 @@ const FundRaiserEditor = ({id}) => {
 
 const AddOffSiteDonation = ({fundraiser}) => {
 	return (
-		<Misc.Card title='TODO Add off-site donation'>
+		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
 			<DonateButton item={fundraiser} />
-			<DonationForm item={fundraiser} paidElsewhere />
+			<DonationForm item={fundraiser} paidElsewhere fromEditor />
 		</Misc.Card>
 	);
 };

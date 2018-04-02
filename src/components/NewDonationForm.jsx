@@ -21,6 +21,7 @@ import Misc from './Misc';
 import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
 import Wizard, {WizardStage} from './WizardProgressWidget';
+import {notifyUser} from '../plumbing/Messaging';
 
 /**
  * 
@@ -54,7 +55,7 @@ const DonateButton = ({item}) => {
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item, charity, causeName, paidElsewhere}) => {
+const DonationForm = ({item, charity, causeName, paidElsewhere, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "DonationForm", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
@@ -121,7 +122,7 @@ const DonationForm = ({item, charity, causeName, paidElsewhere}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' >
-						<AmountSection path={path} />
+						<AmountSection path={path} fromEditor={fromEditor} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
@@ -151,7 +152,7 @@ const DonationForm = ({item, charity, causeName, paidElsewhere}) => {
 }; // ./DonationForm
 
 
-const AmountSection = ({path}) => {
+const AmountSection = ({path, fromEditor}) => {
 	let credit = Transfer.getCredit();	
 	const dontn = DataStore.getValue(path);
 	console.log("donation", JSON.stringify(dontn));
@@ -163,6 +164,7 @@ const AmountSection = ({path}) => {
 	}
 	return (
 		<div className='section donation-amount'>
+			{fromEditor? <Misc.PropControl path={path} prop='from' /> : null}
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
@@ -305,19 +307,18 @@ const PaymentSection = ({path, item, paidElsewhere}) => {
 	Money.assIsa(amount);
 
 	// Not the normal payment?
-	if (paidElsewhere && (donation.paymentMethod === 'ask' || ! donation.paymentMethod)) {
+	if (paidElsewhere) {
 		donation.paidElsewhere = true;
 		return (<div>
 			<p>This form is for donations that have already been paid.</p>
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
+			<button onClick={e => {
+				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation);
+				notifyUser('Off-site donation published - reload to see');
+			}} className='btn btn-primary'>Publish Donation</button>
 		</div>);
 	}
-	if (donation.paidElsewhere) {
-		console.error("NewDonationForm.jsx - PaymentSection: paidElsewhere?! "+path, donation);
-		donation.paidElsewhere = false; // paranoia
-	}
-	
 
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
