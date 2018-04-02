@@ -31,6 +31,9 @@ if [[ $(which 7z) = '' ]]; then
 	exit 0
 fi
 
+ssh-keyscan git.winterwell.com >> ~/.ssh/known_hosts
+touch ~/.ssh/config
+printf "\nHost\tgit.winterwell.com\n\tHostName\tgit.winterwell.com\n\tUser\twinterwell\n\tIdentityFile\t~/.ssh/winterwell@soda.sh\n" >> ~/.ssh/config
 
 ##########################################
 ###### Starting
@@ -91,7 +94,7 @@ wget -cO - http://central.maven.org/maven2/org/elasticsearch/elasticsearch/5.1.2
 
 ##fasttag
 wget -cO - https://github.com/sodash/custom-middleware/blob/master/fasttag.jar?raw=true >> $TMP_LIB/fasttag.jar
-7z x $TMP_LIB/fasttag.jar
+cd $TMP_LIB && 7z x fasttag.jar
 cd $TMP_LIB && find com/ -iname "*.class" -print | xargs jar -cf $TMP_LIB/fasttag.jar
 rm -rf $TMP_LIB/com
 rm -rf $TMP_LIB/lexicon.txt
@@ -192,17 +195,12 @@ wget -cO - http://central.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.1
 wget -cO - http://central.maven.org/maven2/com/vividsolutions/jts/1.13/jts-1.13.jar >> $TMP_LIB/jts-1.13.jar
 
 ##junit.jar
-mkdir -p /tmp/here/
-wget -cO - http://central.maven.org/maven2/junit/junit/4.12/junit-4.12.jar >> /tmp/here/junit.jar
-cd /tmp/here/ && 7z x junit.jar
-rm junit.jar
-find . -iname "*" -print | xargs jar -cf junit.jar
-mv junit.jar $TMP_LIB/
+wget -cO - http://central.maven.org/maven2/junit/junit/4.12/junit-4.12.jar >> $TMP_LIB/junit.jar
 
 ##jwnl.jar
-wget -cO - http://www.java2s.com/Code/JarDownload/jwnl/jwnl-1.3.3.jar.zip >> /tmp/jwnl.jar.zip
-cd /tmp/ && 7z x /tmp/jwnl.jar.zip
-cp /tmp/jwnl*.jar $TMP_LIB/
+wget -cO - http://www.java2s.com/Code/JarDownload/jwnl/jwnl-1.3.3.jar.zip >> $TMP_LIB/jwnl.jar.zip
+cd $TMP_LIB && 7z x jwnl.jar.zip
+rm $TMP_LIB/jwnl.jar.zip
 
 ##log4j-1.2.15.jar
 wget -cO - http://central.maven.org/maven2/log4j/log4j/1.2.15/log4j-1.2.15.jar >> $TMP_LIB/log4j-1.2.15.jar
@@ -362,10 +360,9 @@ git clone git@git.winterwell.com:/winterwell-code
 ############################################
 ######## Build Utils
 ############################################
-cd ~/open-code/winterwell.utils/src && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
-cd ~/open-code/winterwell.utils/test && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
-cp ~/open-code/winterwell.utils/test/com/winterwell/datalog/*.class ~/open-code/winterwell.utils/src/com/winterwell/datalog/
+rsync -r ~/open-code/winterwell.utils/test/com/winterwell/datalog/* ~/open-code/winterwell.utils/src/com/winterwell/datalog/
 rsync -r ~/open-code/winterwell.utils/test/com/winterwell/utils/* ~/open-code/winterwell.utils/src/com/winterwell/utils/
+cd ~/open-code/winterwell.utils/src && find . -iname "*.java" -print | xargs javac -cp .:$TMP_LIB/*
 cd ~/open-code/winterwell.utils/src && find . -iname "*.class" -print | xargs jar cf ~/open-code/winterwell.utils/winterwell.utils.jar
 cp ~/open-code/winterwell.utils/winterwell.utils.jar $TMP_LIB/
 
@@ -455,4 +452,5 @@ cp ~/sogive-app/sogive.jar $TMP_LIB/
 ###############################################
 ##### Start the JVM to see if it runs?
 ###############################################
+cd ~/sogive-app
 /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -ea -cp /home/winterwell/middleware/winterwell.datalog.jar:/home/winterwell/middleware/* org.sogive.server.SoGiveServer
