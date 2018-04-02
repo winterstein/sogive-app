@@ -240,7 +240,7 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	);
 };
 
-const DetailsSection = ({path, stagePath, setNavStatus}) => {
+const DetailsSection = ({path, stagePath, setNavStatus, charity}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
 	if (setNavStatus) setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
@@ -255,6 +255,10 @@ const DetailsSection = ({path, stagePath, setNavStatus}) => {
 			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
 			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
+			{giftAid? <Misc.PropControl prop='consentToSharePII' 
+				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
+				path={path} type='checkbox' />
+				: null}
 		</div>);
 };
 

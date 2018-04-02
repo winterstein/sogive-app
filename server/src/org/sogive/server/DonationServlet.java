@@ -197,9 +197,9 @@ public class DonationServlet extends CrudServlet {
 //			FundraiserServlet fart = new FundraiserServlet();
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
-			Log.d(LOGTAG, "send to fundraiser actor "+donation);
+			Log.d(LOGTAG, "send to DonateToFundRaiserActor "+donation);
 		} else {
-			Log.d(LOGTAG, "no fundraiser for "+donation);
+			Log.d(LOGTAG, "no fundraiser for "+donation+" so dont call DonateToFundRaiserActor");
 		}
 	}
 
