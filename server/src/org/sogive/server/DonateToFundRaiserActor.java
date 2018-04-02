@@ -77,7 +77,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			fundraiser.setDonationCount(donationCount + 1);
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
-			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal);
+			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId());
 			AppUtils.doSaveEdit2(path, new JThing<FundRaiser>(fundraiser), null);
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {
