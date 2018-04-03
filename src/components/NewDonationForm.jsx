@@ -130,7 +130,7 @@ const DonationForm = ({item, charity, causeName, paidElsewhere, fromEditor}) => 
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' setNavStatus>
-						<DetailsSection path={path} stagePath={stagePath} />
+						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
@@ -163,8 +163,7 @@ const AmountSection = ({path, fromEditor}) => {
 		DataStore.setValue(pathAmount, val);
 	}
 	return (
-		<div className='section donation-amount'>
-			{fromEditor? <Misc.PropControl path={path} prop='from' /> : null}
+		<div className='section donation-amount'>			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
@@ -230,7 +229,7 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	);
 };
 
-const DetailsSection = ({path, stagePath, setNavStatus, charity}) => {
+const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
 	if (setNavStatus) setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
@@ -241,6 +240,7 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity}) => {
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
 				: <p>These details are optional: you can give anonymously.</p>}
+			{fromEditor? <Misc.PropControl label='Donor ID' path={path} prop='from' /> : null}
 			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
 			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
