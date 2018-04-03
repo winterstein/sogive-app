@@ -138,7 +138,7 @@ const DonationForm = ({item, charity, causeName, paidElsewhere, fromEditor}) => 
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false} >
-						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} />
+						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
 				
 					<WizardStage title='Receipt' previous={false} >
@@ -294,7 +294,7 @@ const doPayment = ({donation}) => {
 };
 
 
-const PaymentSection = ({path, item, paidElsewhere}) => {
+const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	const donation = DataStore.getValue(path);
 	if ( ! donation) {
 		return null;
@@ -314,8 +314,11 @@ const PaymentSection = ({path, item, paidElsewhere}) => {
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
 			<button onClick={e => {
-				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation);
-				notifyUser('Off-site donation published - reload to see');
+				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
+				.then(res => {
+					notifyUser('Off-site donation published - reload to see');
+					closeLightbox();
+				});				
 			}} className='btn btn-primary'>Publish Donation</button>
 		</div>);
 	}
