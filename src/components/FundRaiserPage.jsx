@@ -11,14 +11,21 @@ import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import {notifyUser} from '../plumbing/Messaging';
-import Money from '../data/charity/Money';
+import MoneyClass from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
 import C from '../C';
 import Roles from '../Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
-import Misc from './Misc';
+import {
+	Loading,
+	LongDate,
+	AvatarImg,
+	Money,
+	Icon,
+	RelativeDate
+} from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from './ListLoad';
@@ -63,7 +70,7 @@ const FundRaiserPage = ({id}) => {
 	const donations = pvDonations.value && pvDonations.value.hits;
 
 	if ( ! pFundRaiser.resolved) {
-		return <Misc.Loading />;
+		return <Loading />;
 	}
 	const item = pFundRaiser.value;
 	if ( ! item) {
@@ -73,7 +80,7 @@ const FundRaiserPage = ({id}) => {
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
 	if ( ! pEvent.resolved) {
-		return <Misc.Loading />;
+		return <Loading />;
 	}
 	const event = pEvent.value;
 
@@ -102,7 +109,7 @@ const FundRaiserPage = ({id}) => {
 
 				<Row className='title-bar'>
 					<Col md={12}>
-						<h2>{item.name} {item.date? ' - ' : null} {item.date? <Misc.LongDate date={item.date} /> : null}</h2>
+						<h2>{item.name} {item.date? ' - ' : null} {item.date? <LongDate date={item.date} /> : null}</h2>
 					</Col>
 				</Row>
 
@@ -123,7 +130,7 @@ const FundRaiserPage = ({id}) => {
 						<center>
 							<h3>About Me: {item.owner.name}</h3>
 						</center>
-						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
+						<AvatarImg className='pull-left' peep={item.owner} />						
 						<p>{item.owner.description}</p>
 						<p><small><a href={'#event/'+encURI(event.id)}>About the event</a></small></p>
 					</Col>
@@ -173,11 +180,11 @@ const DonationProgress = ({item, charity}) => {
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
 	// nothing?
-	if (Money.value(donated) < 0.1) {
+	if (MoneyClass.value(donated) < 0.1) {
 		return (<div className='DonationProgress no-money'>
 			<p>No money raised yet.</p>
 			{isOwner(item)? <p>Why not kick-start things by making a seed donation yourself?</p> : null}
-			<div className='target'>Target: <Misc.Money amount={target} /></div>
+			<div className='target'>Target: <Money amount={target} /></div>
 			<DonateButton item={item} />
 		</div>);
 	}
@@ -190,18 +197,18 @@ const DonationProgress = ({item, charity}) => {
 	return (
 		<div className='DonationProgress'>
 			<div className='ProgressGraph'>
-				<div className='target'>Target: <Misc.Money amount={target} /></div>
+				<div className='target'>Target: <Money amount={target} /></div>
 				<div className='bar-container'>
 					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
-						<Misc.Money amount={donated} />
-						<Misc.Icon glyph='triangle-right' />
+						<Money amount={donated} />
+						<Icon glyph='triangle-right' />
 					</div>
 					<div className='donation-progress-bar'>
 						<div className='remaining' style={{height: remainingBarHeight+'%'}}>&nbsp;</div>
 						<div className='done' style={{height: donatedBarHeight+'%'}}>&nbsp;</div>
 					</div>
 					<div className='progress-pointer percent' style={{bottom: donatedBarHeight+'%'}}>
-						<Misc.Icon glyph='triangle-left' />
+						<Icon glyph='triangle-left' />
 						{Math.round(donatedPercent)}%
 					</div>
 				</div>
@@ -225,7 +232,7 @@ const DonationsSoFar = ({item}) => {
 	const {userTarget, donationCount } = item;
 	const donated = FundRaiser.donated(item);
 	
-	if ( ! donationCount && Money.value(donated) === 0) {
+	if ( ! donationCount && MoneyClass.value(donated) === 0) {
 		return (
 			<div className='details-input'>
 				Be the first to donate to {item.name}!
@@ -233,14 +240,14 @@ const DonationsSoFar = ({item}) => {
 		);		
 	}
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
-	const diff = Money.sub(target, item.donated);
+	const diff = MoneyClass.sub(target, item.donated);
 
 	if (diff.value <= 0) {
 		return (
 			<div className='details-input'>
 				<p>
-					<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-					We've passed <Misc.Money amount={target} /> in donations - what's next?
+					<big>{donationCount}</big> supporters have already raised <big><Money amount={donated} /></big>.<br />
+					We've passed <Money amount={target} /> in donations - what's next?
 				</p>
 			</div>
 		);
@@ -249,8 +256,8 @@ const DonationsSoFar = ({item}) => {
 	return (
 		<div className='details-input'>
 			<p>
-				<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-				Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
+				<big>{donationCount}</big> supporters have already raised <big><Money amount={donated} /></big>.<br />
+				Just <Money amount={diff} /> more to reach <Money amount={target} />!
 			</p>
 		</div>
 	);
@@ -275,10 +282,10 @@ const Supporter = ({donation, charity}) => {
 				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
-			<Misc.RelativeDate date={donation.date} className='donation-date' />
-			<div><span className='amount-donated'><Misc.Money amount={donation.amount} /></span> donated</div>
+			<RelativeDate date={donation.date} className='donation-date' />
+			<div><span className='amount-donated'><Money amount={donation.amount} /></span> donated</div>
 			{donation.contributions? 
-				donation.contributions.map(con => <div className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
+				donation.contributions.map(con => <div className='contribution'><Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (
 				<p>{donation.message}</p>

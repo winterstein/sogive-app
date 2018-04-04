@@ -7,7 +7,7 @@ import printer from '../../utils/printer.js';
 import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../Roles';
-import Misc from '../Misc';
+import {Loading} from '../Misc';
 import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
@@ -41,7 +41,7 @@ const EventReport = ({id}) => {
 	});
 	if ( ! pvItems.resolved) {
 		return (
-			<Misc.Loading text={'Tickets for event '+id} />
+			<Loading text={'Tickets for event '+id} />
 		);
 	}
 	return <div>TODO list tickets</div>;

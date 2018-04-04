@@ -10,7 +10,7 @@ import printer from '../utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 // import ChartWidget from './ChartWidget';
-import Misc from './Misc';
+import {Loading, Time, Money} from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';
 import Donation from '../data/charity/Donation';
 
@@ -39,7 +39,7 @@ const DashboardPage = () => {
 		return (
 			<div className="page DashboardPage">
 				<h2>My Dashboard</h2>
-				<Misc.Loading />
+				<Loading />
 			</div>
 		);
 	}
@@ -75,8 +75,8 @@ const DonationListItem = ({donation}) => {
 	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
 		<div className='well'>
-			<Misc.Time time={donation.date} />
-			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
+			<Time time={donation.date} />
+			You donated <Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
 			{donation.fundRaiser && donation.via? <span> as part of <a href={'#fundraiser/'+encURI(donation.fundRaiser)}>{XId.prettyName(donation.via)}'s fund-raiser</a></span> : null}
 			.
 			{impact}

@@ -16,11 +16,20 @@ import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO';
 import Ticket from '../data/charity/Ticket';
-import Money from '../data/charity/Money';
+import MoneyClass from '../data/charity/Money';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
-import Misc from './Misc';
+import {
+	Loading,
+	Icon,
+	SavePublishDiscard,
+	Money,
+	PropControl,
+	Col2,
+	LongDate,
+	dateTimeString
+} from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
 import NewDonationForm from './NewDonationForm';
@@ -36,7 +45,7 @@ window.pivot = pivot;
 const RegisterPage = () => {
 	let eventId = DataStore.getValue('location', 'path')[1];
 	const pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED});
-	if ( ! pvEvent.value) return <Misc.Loading />;
+	if ( ! pvEvent.value) return <Loading />;
 	const event = pvEvent.value;
 
 	// const wspath = ['widget', 'RegisterPage', eventId];
@@ -52,14 +61,14 @@ const RegisterPage = () => {
 	console.log('pvbasket', pvbasket);
 
 	if (!basket) {
-		return <Misc.Loading text='Retrieving your basket...' />;
+		return <Loading text='Retrieving your basket...' />;
 	}
 
 	const walkerDetailsOK = Basket.getItems(basket).reduce((done, ticket) => {
 		return done && ticket.attendeeName && ticket.attendeeEmail && ticket.attendeeAddress;
 	}, true);
 
-	const longdate = event.date? Misc.LongDate({date:event.date}) : null;
+	const longdate = event.date? LongDate({date:event.date}) : null;
 	
 	const basketPath = ActionMan.getBasketPath();
 
@@ -90,7 +99,7 @@ const RegisterPage = () => {
 					<TicketInvoice event={event} basket={basket} />
 
 					<button className="btn btn-default btn-sm pull-left" onClick={deleteBasket} >
-						<Misc.Icon glyph='trash' />Empty Basket
+						<Icon glyph='trash' />Empty Basket
 					</button> 
 				</WizardStage>
 
@@ -125,7 +134,7 @@ const RegisterPage = () => {
 				</WizardStage>
 			</Wizard>
 
-			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
+			{basket? <SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 
 		</div>
 	);
@@ -192,9 +201,9 @@ const RegisterTicket = ({ticketType, basket}) => {
 
 	const addRemove = tickets.length ? (
 		<div className='add-remove-controls btn-group' role="group" aria-label="add remove controls">
-			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon glyph='minus' /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Icon glyph='minus' /></button>
 			<span className='ticket-count btn-text'>{tickets.length}</span>
-			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon glyph='plus' /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Icon glyph='plus' /></button>
 		</div>
 	) : (
 		<button className='btn btn-default btn-square add-first-ticket' onClick={addTicketAction}>Add</button>
@@ -210,7 +219,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 			<div className='info'>
 				<div className='top-line'>
 					<div className='type-kind'>{kind || ''} Registration</div>
-					<div className='type-price'><Misc.Money amount={price} /></div>
+					<div className='type-price'><Money amount={price} /></div>
 				</div>
 				<div className='description'>{description || ''}</div>
 			</div>
@@ -229,7 +238,7 @@ const TicketInvoice = ({event, basket}) => {
 		let row = idToRow[item.id];
 		if (row) {
 			row.count += 1;
-			row.cost = Money.add(row.cost, item.price);
+			row.cost = MoneyClass.add(row.cost, item.price);
 		} else {
 			idToRow[item.id] = {
 				item,
@@ -252,10 +261,10 @@ const TicketInvoice = ({event, basket}) => {
 	// 	total = Money.sub(total, basket.tip);
 	// }
 	
-	const tipRow = (basket.hasTip && Money.isa(basket.tip)) ? (
+	const tipRow = (basket.hasTip && MoneyClass.isa(basket.tip)) ? (
 		<tr>
 			<td className='desc-col'>Processing fee</td>
-			<td className='amount-col'><Misc.Money amount={basket.tip} /></td>
+			<td className='amount-col'><Money amount={basket.tip} /></td>
 		</tr>
 	) : null;
 
@@ -268,7 +277,7 @@ const TicketInvoice = ({event, basket}) => {
 					{ tipRow }
 					<tr className='total-row'>
 						<td className='desc-col' >Total</td>
-						<td className='amount-col total-amount'><Misc.Money amount={total} /></td>
+						<td className='amount-col total-amount'><Money amount={total} /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -280,7 +289,7 @@ const InvoiceRow = ({item, label, count, cost}) => {
 	return (
 		<tr>
 			<td className='desc-col'>{count} {label}</td>
-			<td className='amount-col'><Misc.Money amount={cost} /></td>
+			<td className='amount-col'><Money amount={cost} /></td>
 		</tr>
 	);
 };
@@ -296,7 +305,7 @@ const RegisterOrLoginTab = ({stagePath}) => {
 		return (
 			<div className='login-tab padded-block'>
 				<Jumbotron>
-					<p><Misc.Icon glyph='ok' className='text-success' /> You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
+					<p><Icon glyph='ok' className='text-success' /> You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
 					<p>Not you? <Button onClick={() => Login.logout()}>Log out</Button></p>
 				</Jumbotron>
 			</div>
@@ -354,13 +363,13 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			</center>
 			<hr />
 			<div className='AttendeeDetails'>			
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
+				<PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
+				<PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
+				{ i!==0? <PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
 				{ sameAsFirst? null : 
 					<div>
-						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
+						<PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -376,11 +385,11 @@ const TeamControl = ({ticket, path}) => {
 		return null;
 	}
 
-	return (<Misc.Col2>
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
+	return (<Col2>
+		<PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
 			help='Families or colleagues can fundraise and walk as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
-	</Misc.Col2>);
+		<PropControl type='text' item={ticket} path={path} prop='team' label='Create Team' />
+	</Col2>);
 };
 
 const CharityChoiceTab = ({basket}) => {
@@ -413,7 +422,7 @@ const CharityChoiceTab = ({basket}) => {
 			<p>
 				Please choose a charity to support.
 			</p>		
-			<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
+			<PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
 		</div>
 		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
 			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />			
@@ -425,12 +434,12 @@ const PickCTA = ({item, onClick}) => {
 	const basket = DataStore.getValue(bpath);
 	if (Basket.charityId(basket)===getId(item)) {
 		return (<div className='read-more btn btn-default active'>
-			<Misc.Icon glyph='check' /> Selected
+			<Icon glyph='check' /> Selected
 		</div>);
 	}
 	return (
 		<button onClick={onClick} className='read-more btn btn-default'>
-			<Misc.Icon glyph='unchecked' /> Select
+			<Icon glyph='unchecked' /> Select
 		</button>
 	);
 };
@@ -451,7 +460,7 @@ const getEmail = (basket) => {
 };
 
 const CheckoutTab = ({basket, event, stagePath}) => {
-	if ( ! basket) return <Misc.Loading />;
+	if ( ! basket) return <Loading />;
 	if ( ! basket.stripe) basket.stripe = {};
 
 	// does onToken mean on-successful-payment-auth??
@@ -475,16 +484,16 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 
 	// tip? Default to £1
 	if (basket.hasTip && basket.tip === undefined) {
-		basket.tip = Money.make({value:1});
+		basket.tip = MoneyClass.make({value:1});
 	}
 
 	return (
 		<div>
 			<div className='padded-block'>
-				<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
+				<PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
 					label={`Include a tip to cover SoGive's operating costs?`} />
 				{basket.hasTip ? (
-					<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
+					<PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
 				) : ''}
 			</div>
 			<TicketInvoice basket={basket} />
@@ -516,7 +525,7 @@ const Receipt = ({basket, event}) => {
 				<p>Registered in England and Wales, company no. 09966206</p>
 				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
-				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeString(createdDate)}</p> : null}				
+				{stripe && stripe.created? <p>Payment date & time: {dateTimeString(createdDate)}</p> : null}				
 				<p>Customer name: {ticket0 && ticket0.attendeeName}</p>
 				{card? <p>Payment card: **** **** **** {card.last4}</p> : null}
 				{basket.paymentId? <p>Payment ID: {basket.paymentId}</p> : null}
@@ -543,12 +552,12 @@ const ConfirmedTicket = ({ticket, event}) => {
 		let url = ticket.postPurchaseLink;
 		let cta = ticket.postPurchaseCTA || url;
 		return (<div className='clear padded-block'>
-			<Misc.Col2>
+			<Col2>
 				<h3>{ticket.attendeeName}</h3>			
 				<div>
 					<a href={url}>{cta}</a>
 				</div>
-			</Misc.Col2>
+			</Col2>
 		</div>);		
 	}
 	// TODO how can we make a page for no email??
@@ -558,7 +567,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 	// for now: no email = no page
 	let frid = FundRaiser.getIdForTicket(ticket);	
 	return (<div className='clear padded-block'>
-		<Misc.Col2>
+		<Col2>
 			<h3>{ticket.attendeeName}</h3>			
 			<div>
 				{ ticket.attendeeEmail? 
@@ -568,7 +577,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 					: <p>No email provided</p>
 				}
 			</div>
-		</Misc.Col2>
+		</Col2>
 	</div>);
 };
 

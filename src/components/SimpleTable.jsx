@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
-import Misc from './Misc';
+import {Icon, PropControl} from './Misc';
 import printer from '../utils/printer';
 
 import Enum from 'easy-enums';
@@ -115,7 +115,7 @@ const Th = ({column, c, table, tableSettings, dataArray}) => {
 	dataArray[0].push(hText);
 	return (<th onClick={onClick} >
 		{hText}
-		{sortByMe? <Misc.Icon glyph={'triangle-'+(tableSettings.sortByReverse? 'top' :'bottom')} /> : null}
+		{sortByMe? <Icon glyph={'triangle-'+(tableSettings.sortByReverse? 'top' :'bottom')} /> : null}
 	</th>);
 };
 
@@ -191,7 +191,7 @@ const Editor = ({row, column, value, item}) => {
 	}
 
 	let type = column.type;
-	return (<Misc.PropControl type={type} item={dummyItem} path={path} prop={prop} 
+	return (<PropControl type={type} item={dummyItem} path={path} prop={prop} 
 		saveFn={column.saveFn} 
 	/>);
 };
@@ -204,7 +204,7 @@ const CSVDownload = ({tableName, columns, data, dataArray}) => {
 	let csvLink = 'data:text/csv;charset=utf-8,'+csv;
 	return (
 		<a href={csvLink} download={(tableName||'table')+'.csv'} >
-			<Misc.Icon glyph='download-alt' /> .csv
+			<Icon glyph='download-alt' /> .csv
 		</a>
 	);
 };

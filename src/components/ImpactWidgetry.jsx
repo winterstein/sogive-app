@@ -6,11 +6,11 @@ import Enum from 'easy-enums';
 import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
-import Money from '../data/charity/Money';
+import MoneyClass from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import Misc from './Misc.jsx';
+import {Money, TrPlural} from './Misc.jsx';
 import Settings from '../Settings';
 
 /**
@@ -20,7 +20,7 @@ import Settings from '../Settings';
  */
 const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=true, beforeText="may fund"}) => {
 	NGO.assIsa(charity);
-	Money.assIsa(amount);
+	MoneyClass.assIsa(amount);
 	if ( ! project) project = NGO.getProject(charity);
 	// NB: no project = no impact data
 	if ( ! project) return null;
@@ -39,7 +39,7 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 	
 	return (
 		<div className='ImpactDesc'>
-			{showMoney? <b><Misc.Money amount={amount} /></b> : null}
+			{showMoney? <b><Money amount={amount} /></b> : null}
 			{beforeText}
 			{impactDivs}
 			{ Project.isOverall(project)? null : <div><small className='details'>{project.name}</small></div> }
@@ -83,14 +83,14 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = Money.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
-		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
+		cost = MoneyClass.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
+		return Output.make({cost, number: targetCount, name: TrPlural(targetCount, unitName), description: output.description });
 	}
 
-	let impactNum = Money.divide(cost, cpbraw);
+	let impactNum = MoneyClass.divide(cost, cpbraw);
 
 	// Pluralise unit name correctly
-	const plunitName = Misc.TrPlural(impactNum, unitName);
+	const plunitName = TrPlural(impactNum, unitName);
 
 	return Output.make({number:impactNum, name:plunitName, description:output.description});
 }; // ./impactCalc()
@@ -114,7 +114,7 @@ const multipleImpactCalc = ({charity, project, ...params}) => {
  * @param {number} num 
  * @param {String} text Can be undefined (returns undefined)
  */
-Misc.TrPlural = (num, text) => {
+TrPlural = (num, text) => {
 	if ( ! text) return text;
 	let isPlural = Math.round(num) !== 1;
 	// Plural forms: 

@@ -10,7 +10,7 @@ import DataStore from '../../plumbing/DataStore';
 import C from '../../C';
 import Roles from '../../Roles';
 
-import Misc from '../Misc';
+import {Loading, PropControl, SavePublishDiscard} from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
 
 const EditFundRaiserPage = () => {
@@ -32,7 +32,7 @@ const FundRaiserEditor = ({id}) => {
 	let type = C.TYPES.FundRaiser;
 	let pEvent = ActionMan.getDataItem({type, id, status: C.KStatus.DRAFT});
 	if ( ! pEvent.value) {
-		return <Misc.Loading />;
+		return <Loading />;
 	}
 	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
@@ -60,24 +60,24 @@ const FundRaiserEditor = ({id}) => {
 			<p><small>Owner: {FundRaiser.oxid(item)}</small></p>
 			<p><small>Event: {FundRaiser.eventId(item)}</small></p>
 
-			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
-			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
-			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
-			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
+			<PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
+			<PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
+			<PropControl path={path} prop='description' item={item} label='Description' />		
+			<PropControl path={path} prop='charityId' item={item} label='Charity' />
+			<PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
 				placeholder='Leave blank for an automatic target (recommended)'
 			/>
 
-			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
+			<PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
 
-			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
-			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
-			<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
-			<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+			<PropControl path={peepPath} prop='name' label='Your Name' />
+			<PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
+			<PropControl path={peepPath} prop='description' label='About You' type='textarea' />
+			<PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
 			<hr />
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
-			<Misc.SavePublishDiscard type={type} id={id} />
+			<SavePublishDiscard type={type} id={id} />
 			</div>
 	</div>);
 };

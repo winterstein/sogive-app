@@ -7,10 +7,10 @@ import { StripeProvider, Elements, injectStripe,
 	PaymentRequestButtonElement } from 'react-stripe-elements';
 
 import C from '../C';
-import Money from '../data/charity/Money';
+import MoneyClass from '../data/charity/Money';
 import Transfer from '../data/Transfer';
 import {assMatch} from 'sjtest';
-import Misc from './Misc';
+import {Money} from './Misc';
 
 // falsy value for SERVER_TYPE = production
 const stripeKey = (C.SERVER_TYPE) ?
@@ -39,7 +39,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
-	Money.assIsa(amount);
+	MoneyClass.assIsa(amount);
 	assMatch(onToken, Function);
 	assMatch(recipient, String);
 
@@ -59,11 +59,11 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 
 	// pay on credit??
 	let credit = Transfer.getCredit();
-	if (credit && Money.value(credit) > 0) {
-		if (Money.value(credit) >= Money.value(amount)) {
+	if (credit && MoneyClass.value(credit) > 0) {
+		if (MoneyClass.value(credit) >= MoneyClass.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
-					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
+					<p>You have <Money amount={credit} /> in credit which will pay for this.</p>
 					<button onClick={payByCredit} className='btn btn-primary'>Send Payment</button>
 				</div>
 			);					
@@ -105,8 +105,8 @@ class StripeThingsClass extends Component {
 
 		let residual = amount;
 		// NB dont add on prior debts
-		if (credit && Money.value(credit) > 0) {
-			residual = Money.sub(amount, credit);		
+		if (credit && MoneyClass.value(credit) > 0) {
+			residual = MoneyClass.sub(amount, credit);		
 		}
 
 		/* We might be able to forgo the rigmarole of collecting
@@ -177,10 +177,10 @@ class StripeThingsClass extends Component {
 		// TODO an email editor if this.props.email is unset
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
-				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
-				{credit && Money.value(credit) > 0? 
+				<h3>Payment of <Money amount={amount} /> to {recipient}</h3>
+				{credit && MoneyClass.value(credit) > 0? 
 					<FormGroup><Col md={12}>
-						You have <Misc.Money amount={credit} /> in credit which will be used towards this payment.
+						You have <Money amount={credit} /> in credit which will be used towards this payment.
 					</Col></FormGroup>
 				: null}
 				<FormGroup>

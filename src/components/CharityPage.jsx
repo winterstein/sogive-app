@@ -12,8 +12,11 @@ import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
-import Money from '../data/charity/Money';
-import Misc from './Misc';
+import {
+	Loading,
+	Money,
+	TrPlural
+} from './Misc';
 import Login from 'you-again';
 import DonationForm from './DonationForm';
 import SocialShare from './SocialShare';
@@ -25,7 +28,7 @@ const CharityPage = () => {
 		() => ServerIO.getCharity(cid).then(result => result.cargo)
 	);
 	if ( ! charity) {
-		return <Misc.Loading />;
+		return <Loading />;
 	}
 	// let allprojects = charity.projects || [];
 	// split out overall vs projects
@@ -225,7 +228,7 @@ const CharityExtraProject = ({project, showTitle}) => {
 					<h4>Inputs</h4>
 					{ inputs? inputs.filter(input => input.value > 0).map(input => (
 						<div key={"in_"+input.name}>
-							{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} />
+							{COSTNAMES[input.name] || input.name}: <Money precision={false} amount={input} />
 						</div>
 					)) : null }
 				</div>
@@ -233,7 +236,7 @@ const CharityExtraProject = ({project, showTitle}) => {
 					<h4>Outputs</h4>
 					{ outputs? outputs.map(output => (
 						<div key={"out_"+output.name}>
-							{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
+							{TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
 						</div>
 					)) : null }
 				</div>
@@ -343,10 +346,10 @@ const ProjectPanel = ({project}) => {
 				</div>
 				<div className='upper-margin col-md-offset-2 col-md-8 inputs-outputs'>
 					<div className='col-md-6 inputs'><h4>Inputs</h4>
-						{inputs.map(input => <div key={"in_"+input.name}>{COSTNAMES[input.name] || input.name}: <Misc.Money precision={false} amount={input} /></div>)}
+						{inputs.map(input => <div key={"in_"+input.name}>{COSTNAMES[input.name] || input.name}: <Money precision={false} amount={input} /></div>)}
 					</div>
 					<div className='col-md-6 outputs'><h4>Outputs</h4>
-						{outputs.map(output => <div key={"out_"+output.name}>{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}</div>)}
+						{outputs.map(output => <div key={"out_"+output.name}>{TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}</div>)}
 					</div>
 				</div>
 				<div className='upper-padding'>
