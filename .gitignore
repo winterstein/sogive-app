@@ -11,3 +11,4 @@ sogive.log*
 *.css
 version.properties
 sogive-app.log*
+web/uploads
