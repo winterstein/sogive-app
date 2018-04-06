@@ -13,6 +13,7 @@ import DataStore from '../plumbing/DataStore';
 import Misc from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';
 import Donation from '../data/charity/Donation';
+import DonationForm, {DonateButton} from './NewDonationForm';
 
 const DashboardPage = () => {
 	let user = Login.getUser();
@@ -49,7 +50,7 @@ const DashboardPage = () => {
 			<h2>My Dashboard</h2>
 			<div>
 				<DashboardWidget title="Donation History">
-					<DonationList donations={donations} />
+					<DonationList donations={donations} />				
 				</DashboardWidget>
 				{donations.length? null : 
 					<DashboardWidget title='Welcome to SoGive'>

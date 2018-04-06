@@ -15,7 +15,7 @@ import Project from '../data/charity/Project';
 import Money from '../data/charity/Money';
 import Misc from './Misc';
 import Login from 'you-again';
-import DonationForm from './DonationForm';
+import DonationForm, {DonateButton} from './DonationForm';
 import SocialShare from './SocialShare';
 
 const CharityPage = () => {
@@ -81,6 +81,7 @@ const CharityPage = () => {
 				{spacerColumn}
 				{infoColumn}
 			</div>
+			<AddOffSiteDonation item={charity} />;
 		</div>
 	);
 }; // ./CharityPage
@@ -366,5 +367,21 @@ const ProjectImage = ({images, title}) => {
 	let image = _.isArray(images)? images[0] : images;
 	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
 };
+
+/**
+ * 
+ copy paste modify from EditFundraiserPage
+ */
+const AddOffSiteDonation = ({item}) => {
+	return (
+		<Misc.Card title='Add an off-site donation'>
+			<p>Use this form to record a donation which has already been paid for elsewhere. 
+				It will be added to your profile dashboard.</p>
+			<DonateButton item={item} />
+			<DonationForm item={item} paidElsewhere />
+		</Misc.Card>
+	);
+};
+
 
 export default CharityPage;
