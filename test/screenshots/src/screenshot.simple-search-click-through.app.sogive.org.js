@@ -22,6 +22,6 @@ function timeout(ms) {
   await timeout(3000)
   await mouse.click(530,460);
   await timeout(2000)
-  await page.screenshot({path: 'simple-search.test.sogive.org.png'});
+  await page.screenshot({path: 'click-through.test.sogive.org.png'});
   await browser.close();
 })();
