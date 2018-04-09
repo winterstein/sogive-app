@@ -9,7 +9,7 @@ else
 	sleep $1
 fi
 
-SOURCE_JS=("/home/$USER/winterwell/sogive-app/test/screenshots/compiled/test.sogive.org.js")
+SOURCE_JS=("/home/$USER/winterwell/sogive-app/test/screenshots/test.sogive.org.js")
 
 for js_file in ${SOURCE_JS[*]}; do
 	printf "\n"
