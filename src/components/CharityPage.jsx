@@ -18,7 +18,7 @@ import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import DonationForm from './DonationForm';
 import SocialShare from './SocialShare';
-
+import {CreateButton} from './ListLoad';
 
 const CharityPage = () => {
 	// fetch data
@@ -67,6 +67,7 @@ const CharityPage = () => {
 				<Tab eventKey={2} title='Extra Info'>
 					<CharityExtra charity={charity} />
 					<LogOffSiteDonation item={charity} />
+					<MakeDirectFundRaiser charity={charity} />
 				</Tab>
 			</Tabs>
 		</div>
@@ -387,6 +388,16 @@ const LogOffSiteDonation = ({item}) => {
 			<NewDonationForm item={item} paidElsewhere />
 		</Misc.Card>
 	);
+};
+
+const MakeDirectFundRaiser = ({charity}) => {
+	if ( ! charity) return null;
+	NGO.assIsa(charity);
+	return (<Misc.Card title='Create a Fund-raiser'>
+		Create a Fund-Raiser for you to raise money for this charity
+		(do not use this if you want a fund-raiser as part of an event)
+		<CreateButton type={C.TYPES.FundRaiser} />
+	</Misc.Card>);
 };
 
 export default CharityPage;
