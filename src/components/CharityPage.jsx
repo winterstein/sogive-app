@@ -15,14 +15,16 @@ import Project from '../data/charity/Project';
 import Money from '../data/charity/Money';
 import Misc from './Misc';
 import Login from 'you-again';
-import DonationForm, {DonateButton} from './DonationForm';
+import NewDonationForm, {DonateButton} from './NewDonationForm';
+import DonationForm from './DonationForm';
 import SocialShare from './SocialShare';
+
 
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	let {value:charity} = DataStore.fetch(['data', C.TYPES.$NGO(), cid], 
-		() => ServerIO.getCharity(cid).then(result => result.cargo)
+		() => ServerIO.getCharity(cid, C.KStatus.PUBLISHED).then(result => result.cargo)
 	);
 	if ( ! charity) {
 		return <Misc.Loading />;
@@ -64,6 +66,7 @@ const CharityPage = () => {
 				</Tab>
 				<Tab eventKey={2} title='Extra Info'>
 					<CharityExtra charity={charity} />
+					<LogOffSiteDonation item={charity} />
 				</Tab>
 			</Tabs>
 		</div>
@@ -79,9 +82,8 @@ const CharityPage = () => {
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
-				{infoColumn}
-			</div>
-			<AddOffSiteDonation item={charity} />;
+				{infoColumn}				
+			</div>						
 		</div>
 	);
 }; // ./CharityPage
@@ -368,20 +370,23 @@ const ProjectImage = ({images, title}) => {
 	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
 };
 
+
 /**
  * 
  copy paste modify from EditFundraiserPage
  */
-const AddOffSiteDonation = ({item}) => {
+const LogOffSiteDonation = ({item}) => {
+	if ( ! item) return null; // probably its loading
+	if ( ! Login.isLoggedIn()) return null;
+	NGO.assIsa(item, "LogOffSiteDonation");
 	return (
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. 
 				It will be added to your profile dashboard.</p>
 			<DonateButton item={item} />
-			<DonationForm item={item} paidElsewhere />
+			<NewDonationForm item={item} paidElsewhere />
 		</Misc.Card>
 	);
 };
-
 
 export default CharityPage;
