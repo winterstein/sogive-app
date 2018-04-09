@@ -392,6 +392,7 @@ const LogOffSiteDonation = ({item}) => {
 
 const MakeDirectFundRaiser = ({charity}) => {
 	if ( ! charity) return null;
+	if ( ! Login.isLoggedIn()) return null;
 	NGO.assIsa(charity);
 	return (<Misc.Card title='Create a Fund-raiser'>
 		Create a Fund-Raiser for you to raise money for this charity
