@@ -388,7 +388,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
 		<div className='form-inline'>
-			<Misc.PropControl prop='url' label='Add Source URL' path={formPath} />
+			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
 				<Glyphicon glyph='plus' />

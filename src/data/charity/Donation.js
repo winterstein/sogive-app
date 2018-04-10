@@ -15,8 +15,11 @@ function isNumeric(value) {
 	return ! isNaN(value - parseFloat(value));
 }
 
-// duck type: needs a value
-Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
+/** crude duck type: needs an amount or total */
+Donation.isa = (obj) => {
+	if ( ! obj) return false;
+	return isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
+};
 Donation.assIsa = (obj) => {
 	assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
 	blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');

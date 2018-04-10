@@ -55,6 +55,10 @@ public class FundRaiser extends AThing {
 	 * store the ticket for audit
 	 */
 	Ticket ticket;
+	
+	public Ticket getTicket() {
+		return ticket;
+	}
 
 	@Override
 	public void init() {
@@ -86,7 +90,8 @@ public class FundRaiser extends AThing {
 
 	public FundRaiser() {
 	}
-	public FundRaiser(Ticket ticket, Basket basket) {		
+	
+	public FundRaiser(Ticket ticket, Basket basket) {
 		setId(getIDForTicket(ticket));		
 		// charity
 		charityId = Utils.or(ticket.charityId, basket.charityId); 
@@ -112,7 +117,11 @@ public class FundRaiser extends AThing {
 		}
 	}
 
+	/**
+	 * @return Can be null if the fundraiser is directly for the charity with no ticketed event.
+	 */
 	public Event getEvent() {
+		if (eventId==null) return null;
 		Event event = AppUtils.get(eventId, Event.class);
 		return event;
 	}

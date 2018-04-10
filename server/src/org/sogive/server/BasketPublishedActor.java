@@ -40,6 +40,7 @@ public class BasketPublishedActor extends Actor<Basket> {
 			Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);
 			return;
 		}
+
 		// make fundraiser
 		FundRaiser fr = new FundRaiser(ticket, basket);
 		JThing draft = new JThing<>(fr);
