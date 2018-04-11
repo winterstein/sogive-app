@@ -39,7 +39,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 	 */
 	private void updateFundRaiser(Donation donation, String frid, KStatus status) {
 		try {
-			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status);
+			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
 					
@@ -50,9 +50,9 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			try {
 				Event event = fundraiser.getEvent();
 				if (event != null && event.getMatchedFunding() != null && event.getMatchedFunding() != 0) {
-					double ma = amount.getValue100() * event.getMatchedFunding() / 100.0;
-					Money matchAmount = new Money(Math.round(ma), amount.getCurrency());
-					MoneyItem mi = new MoneyItem("matched funding", matchAmount.asMoney());
+					double ma = amount.getValue().doubleValue() * event.getMatchedFunding();
+					Money matchAmount = new Money(amount.getCurrency(), Math.round(ma));
+					MoneyItem mi = new MoneyItem("matched funding", matchAmount);
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
 						Log.w(getName(), "Not published?! "+donation+" to "+frid);
@@ -79,7 +79,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			fundraiser.getDonations().add(donation.getId());
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
-			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId());
+			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
 			AppUtils.doSaveEdit2(path, new JThing<FundRaiser>(fundraiser), null);
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {

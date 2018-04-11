@@ -85,7 +85,7 @@ public class StripePlugin {
 			throws Exception
 	{
 		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
-		if (amount.getValue100() <= 0) {
+		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
 		// https://stripe.com/docs/api#create_charge
@@ -95,7 +95,7 @@ public class StripePlugin {
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.id);
-        chargeMap.put("amount", amount.getValue100());
+        chargeMap.put("amount", Math.ceil(amount.getValue100p() / 100)); // pence, rounding up
         chargeMap.put("description", description); // ??
 //        metadata key value
         chargeMap.put("receipt_email", sa.email);

@@ -65,10 +65,10 @@ public class Donation extends AThing implements IForSale {
 	 * The total amount the charity will receive.
 	 */
 	public Money getTotal() {
-		Mutable.Ref<Money> ttl = new Mutable.Ref<>(amount);
+		Mutable.Ref<com.goodloop.data.Money> ttl = new Mutable.Ref<>(amount);
 		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c.money));
 		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c.money));
-		total = ttl.value;
+		total = new Money(ttl.value);
 		return total;
 	}
 	

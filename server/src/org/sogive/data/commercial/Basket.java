@@ -75,10 +75,10 @@ public class Basket extends AThing implements IForSale {
 		Money ttl = Money.pound(0.0);
 		for (Ticket ticket : items) {
 			if (ticket.getPrice()==null) continue;
-			ttl = ttl.plus(ticket.getPrice());
+			ttl = new Money(ttl.plus(ticket.getPrice()));
 		}
 		if (hasTip && tip != null) {
-			ttl = ttl.plus(tip);
+			ttl = new Money(ttl.plus(tip));
 		}
 		return ttl;
 	}
