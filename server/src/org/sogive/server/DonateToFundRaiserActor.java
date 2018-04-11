@@ -75,6 +75,8 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Integer donationCount = fundraiser.getDonationCount();
 			if (donationCount == null) donationCount = 0;
 			fundraiser.setDonationCount(donationCount + 1);
+			// for debugging -- a rough log of who has donated
+			fundraiser.getDonations().add(donation.getId());
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId());

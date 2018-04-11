@@ -1,5 +1,6 @@
 package org.sogive.data.commercial;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,16 @@ public class FundRaiser extends AThing {
 	 * store the ticket for audit
 	 */
 	Ticket ticket;
+	
+	/**
+	 * Donation IDs -- for debugging purposes
+	 */
+	List<String> donations = new ArrayList<>();
+		
+	public List<String> getDonations() {
+		if (donations==null) donations = new ArrayList(); // backfill old objects
+		return donations;
+	}
 	
 	public Ticket getTicket() {
 		return ticket;
