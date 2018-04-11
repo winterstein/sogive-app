@@ -1,3 +1,6 @@
+/**
+	Money NB: based on the thing.org type MonetaryAmount
+*/
 import {assert} from 'sjtest';
 import {isa} from '../DataClass';
 import C from '../../C';
@@ -28,13 +31,21 @@ const isNumeric = value => {
  */
 Money.value = ma => {
 	if ( ! ma) return 0;
-	if (ma.value === undefined) {
-		// Patch bad server data?
-		if (ma.value100) ma.value = ma.value100 / 100;
-		else return 0;
+	if (ma.value100p) {
+		return ma.value100p / 10000;
 	}
-	return parseFloat(ma.value);
+	if (ma.value) {
+		return parseFloat(ma.value);
+	}	
+	// Patch old server data?
+	if (ma.value100) {
+		ma.value100p = ma.value100 * 100;
+		return ma.value100p / 10000;
+	}
+	return 0;
 };
+
+
 
 // duck type: needs a value
 Money.isa = (obj) => {

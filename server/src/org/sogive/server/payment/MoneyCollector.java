@@ -77,7 +77,8 @@ public class MoneyCollector {
 			String ikey = basket.getId();
 			Person userObj = DBSoGive.getCreateUser(user);
 
-			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { // TODO security check!
+			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { 
+				// TODO security check!
 				Log.d(LOGTAG, "skip payment: "+basket);
 				return transfers; 
 			}
