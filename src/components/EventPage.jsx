@@ -9,7 +9,7 @@ import { Button, Well } from 'react-bootstrap';
 import printer from '../utils/printer.js';
 import C from '../C';
 import Roles from '../Roles';
-import {Loading} from './Misc';
+import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import ActionMan from '../plumbing/ActionMan';
@@ -42,7 +42,7 @@ const Event = ({id}) => {
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT});
 
 	if ( ! pEvent.value) {
-		return <Loading />;
+		return <Misc.Loading />;
 	}
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;

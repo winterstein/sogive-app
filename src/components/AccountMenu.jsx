@@ -8,7 +8,7 @@ import {LoginLink} from './LoginWidget/LoginWidget.jsx';
 
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';
 
-import {Loading} from './Misc';
+import Misc from './Misc';
 
 const doLogout = () => {
 	Login.logout();
@@ -18,7 +18,7 @@ const doLogout = () => {
 The top-right menu
 */
 const AccountMenu = ({pending, active}) => {
-	if (pending) return <Loading />;
+	if (pending) return <Misc.Loading />;
 	if ( ! Login.isLoggedIn()) {
 		return (<ul id='top-right-menu' className="nav navbar-nav navbar-right">
 			<li>

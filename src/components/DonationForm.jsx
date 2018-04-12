@@ -26,7 +26,7 @@ import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Money from '../data/charity/Money';
 
-import {PropControl} from './Misc';
+import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare.jsx';
@@ -121,7 +121,7 @@ class DonationForm extends Component {
 						</div>
 						<div className='donation-input'>
 							<div className='amount-input'>
-								<PropControl type='Money' prop='amount' 
+								<Misc.PropControl type='Money' prop='amount' 
 									path={['widget', 'DonationForm', NGO.id(charity)]} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>

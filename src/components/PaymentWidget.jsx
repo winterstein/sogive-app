@@ -10,7 +10,7 @@ import C from '../C';
 import MoneyClass from '../data/charity/Money';
 import Transfer from '../data/Transfer';
 import {assMatch} from 'sjtest';
-import {Money} from './Misc';
+import Misc from './Misc';
 
 // falsy value for SERVER_TYPE = production
 const stripeKey = (C.SERVER_TYPE) ?
@@ -63,7 +63,7 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 		if (MoneyClass.value(credit) >= MoneyClass.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
-					<p>You have <Money amount={credit} /> in credit which will pay for this.</p>
+					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
 					<button onClick={payByCredit} className='btn btn-primary'>Send Payment</button>
 				</div>
 			);					
@@ -177,10 +177,10 @@ class StripeThingsClass extends Component {
 		// TODO an email editor if this.props.email is unset
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
-				<h3>Payment of <Money amount={amount} /> to {recipient}</h3>
+				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
 				{credit && MoneyClass.value(credit) > 0? 
 					<FormGroup><Col md={12}>
-						You have <Money amount={credit} /> in credit which will be used towards this payment.
+						You have <Misc.Money amount={credit} /> in credit which will be used towards this payment.
 					</Col></FormGroup>
 				: null}
 				<FormGroup>

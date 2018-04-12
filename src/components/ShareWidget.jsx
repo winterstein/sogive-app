@@ -5,11 +5,7 @@ import {Modal} from 'react-bootstrap';
 import { XId, uid } from 'wwutils';
 import Cookies from 'js-cookie';
 import DataStore from '../plumbing/DataStore';
-import {
-	Loading,
-	Icon,
-	PropControl
-} from './Misc';
+import Misc from './Misc';
 import C from '../C';
 
 /**
@@ -18,7 +14,7 @@ import C from '../C';
 const ShareLink = ({thingId}) => {
 	const basePath = ['widget', 'ShareWidget', thingId];
 	return (<a href={window.location} onClick={ e => { e.preventDefault(); e.stopPropagation(); DataStore.setValue(basePath.concat('show'), true); } } >
-		<Icon glyph='share' /> Share
+		<Misc.Icon glyph='share' /> Share
 	</a>);
 };
 
@@ -106,19 +102,19 @@ const ShareWidget = ({thingId, name}) => {
 		<Modal show={show} className="share-modal" onHide={() => DataStore.setValue(basePath.concat('show'), false)}>
 			<Modal.Header closeButton>
 				<Modal.Title>
-					<Icon glyph='share' size='large' />
+					<Misc.Icon glyph='share' size='large' />
 					{title}
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="container-fluid">
 					<div className="row form-inline">
-						<PropControl label='Email to share with' 
+						<Misc.PropControl label='Email to share with' 
 							className='ng-invalid' path={formPath} prop={'email'} type='email' />
 					</div>	
 					<div className="row">
-						<PropControl path={formPath} prop='enableNotification' label='Send notification email' type='checkbox'/>
-						<PropControl path={formPath} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={!enableNotification}/>
+						<Misc.PropControl path={formPath} prop='enableNotification' label='Send notification email' type='checkbox'/>
+						<Misc.PropControl path={formPath} prop='optionalMessage' id='OptionalMessage' label='Attached message' type='textarea' disabled={!enableNotification}/>
 						<button className='btn btn-primary btn-lg btn-block' disabled={!validEmailBool} 
 							onClick={()=>{
 								const {form} = DataStore.getValue(basePath) || {};
@@ -142,7 +138,7 @@ const ShareWidget = ({thingId, name}) => {
 }; // ./ShareWidget
 
 const ListShares = ({list}) => {
-	if ( ! list) return <Loading text='Loading current shares' />;
+	if ( ! list) return <Misc.Loading text='Loading current shares' />;
 	console.warn('ListShares', list);
 	if ( ! list.length) return <div className='ListShares'>Not shared.</div>;
 	return (<div className='ListShares'>
@@ -156,7 +152,7 @@ const SharedWith = ({share}) => {
 			<button title="remove this person's access"		
 				onClick={ () => deleteShare({share}) }
 			>
-				<Icon glyph='remove'/>
+				<Misc.Icon glyph='remove'/>
 			</button>
 			<p>{share._to}</p>
 		</div>);

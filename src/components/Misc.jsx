@@ -16,19 +16,21 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
 import C from '../C';
-import MoneyClass from '../data/charity/Money';
+import Money from '../data/charity/Money';
 import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId, nonce} from '../data/DataClass';
 import md5 from 'md5';
 import Settings from '../Settings';
 
+const Misc = {};
+
 /**
 E.g. "Loading your settings...""
 See https://www.w3schools.com/howto/howto_css_loader.asp
 http://tobiasahlin.com/spinkit/
 */
-const Loading = ({text}) => {
+Misc.Loading = ({text}) => {
 	return (<div className='loader-box'><center>	
 		<div className="loader" />
 		{text===undefined? 'Loading...' : text}
@@ -45,7 +47,7 @@ const Loading = ({text}) => {
  * 	TODO?? noPadding: {Boolean} switch off Bootstrap's row padding.
  * }
  */
-const Col2 = ({children}) => (
+Misc.Col2 = ({children}) => (
 	<div className='container-fluid'>
 		<div className='row'>
 			<div className='col-md-6 col-sm-6'>{children[0]}</div><div className='col-md-6 col-sm-6'>{children[1]}</div>
@@ -62,7 +64,7 @@ const CURRENCY = {
  * 
  * @param amount {Money|Number}
  */
-const Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
+Misc.Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumSignificantDigits}) => {
 	if ( ! amount) amount = 0;
 	if (_.isNumber(amount) || _.isString(amount)) {
 		amount = {value: amount, currency:'GBP'};
@@ -102,7 +104,7 @@ const Money = ({amount, minimumFractionDigits, maximumFractionDigits=2, maximumS
  * Handle a few formats, inc gson-turned-a-Time.java-object-into-json
  * null is also accepted.
  */
-const Time = ({time}) => {
+Misc.Time = ({time}) => {
 	if ( ! time) return null;
 	try {
 		if (_.isString(time)) {
@@ -118,10 +120,10 @@ const Time = ({time}) => {
 };
 
 /** eg a Twitter logo */
-const Logo = ({service, size, transparent, bgcolor, color}) => {
-	assert(service, 'Logo');
+Misc.Logo = ({service, size, transparent, bgcolor, color}) => {
+	assert(service, 'Misc.Logo');
 	if (service==='twitter' || service==='facebook'|| service==='instagram') {
-		return <span className={'color-'+service}><Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} /></span>;
+		return <span className={'color-'+service}><Misc.Icon fa={service+"-square"} size={size==='small'? '2x' : '4x'} /></span>;
 	}
 	let klass = "img-rounded logo";
 	if (size) klass += " logo-"+size;
@@ -139,7 +141,7 @@ const Logo = ({service, size, transparent, bgcolor, color}) => {
 /**
  * Font-Awesome or Glyphicon icons
  */
-const Icon = ({glyph, fa, size, className, ...other}) => {	
+Misc.Icon = ({glyph, fa, size, className, ...other}) => {	
 	if (glyph) {
 		return (<span className={'glyphicon glyphicon-'+glyph
 								+ (size? ' fa-'+size : '')
@@ -167,16 +169,14 @@ const Icon = ({glyph, fa, size, className, ...other}) => {
 * @param validator {?(value, rawValue) => String} Generate an error message if invalid
 * @param https {?Boolean} if true, urls must use https not http (recommended)
  */
-
-
-const PropControl = ({type="text", path, prop, label, help, error, validator, recursing, ...stuff}) => {
+Misc.PropControl = ({type="text", path, prop, label, help, error, validator, recursing, ...stuff}) => {
 	assMatch(prop, "String|Number");
 	assMatch(path, Array);
 	const proppath = path.concat(prop);
 
 	// HACK: catch bad dates and make an error message
 	// TODO generalise this with a validation function
-	if (ControlTypes.isdate(type) && ! validator) {
+	if (Misc.ControlTypes.isdate(type) && ! validator) {
 		validator = (v, rawValue) => {
 			if ( ! v) {
 				// raw but no date suggests the server removed it
@@ -194,7 +194,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 		};
 	} // date
 	// url: https
-	if (stuff.https !== false && (ControlTypes.isurl(type) || ControlTypes.isimg(type) || ControlTypes.isimgUpload(type))
+	if (stuff.https !== false && (Misc.ControlTypes.isurl(type) || Misc.ControlTypes.isimg(type) || Misc.ControlTypes.isimgUpload(type))
 			&& ! validator)
 	{
 		validator = v => {
@@ -214,16 +214,16 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 
 	// label / help? show it and recurse
 	// NB: Checkbox has a different html layout :( -- handled below
-	if ((label || help || error) && ! ControlTypes.ischeckbox(type) && ! recursing) {
+	if ((label || help || error) && ! Misc.ControlTypes.ischeckbox(type) && ! recursing) {
 		// Minor TODO help block id and aria-described-by property in the input
 		const labelText = label || '';
-		const helpIcon = help ? <Icon glyph='question-sign' title={help} /> : '';
+		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : '';
 		// NB: The label and PropControl are on the same line to preserve the whitespace in between for inline forms.
 		// NB: pass in recursing error to avoid an infinite loop with the date error handling above.
 		return (
 			<div className={'form-group' + (error? ' has-error' : '')}>
 				<label htmlFor={stuff.name}>{labelText} {helpIcon}</label>
-				<PropControl
+				<Misc.PropControl
 					type={type} path={path} prop={prop} error={error} {...stuff} recursing 
 				/>
 				{error? <span className="help-block">{error}</span> : null}
@@ -234,9 +234,9 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 	// unpack
 	let {item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff} = stuff;
 	if ( ! modelValueFromInput) modelValueFromInput = standardModelValueFromInput;
-	assert( ! type || ControlTypes.has(type), 'PropControl: '+type);
-	assert(_.isArray(path), 'PropControl: not an array:'+path);
-	assert(path.indexOf(null)===-1 && path.indexOf(undefined)===-1, 'PropControl: null in path '+path);
+	assert( ! type || Misc.ControlTypes.has(type), 'Misc.PropControl: '+type);
+	assert(_.isArray(path), 'Misc.PropControl: not an array:'+path);
+	assert(path.indexOf(null)===-1 && path.indexOf(undefined)===-1, 'Misc.PropControl: null in path '+path);
 	// // item ought to match what's in DataStore - but this is too noisy when it doesn't
 	// if (item && item !== DataStore.getValue(path)) {
 	// 	console.warn("Misc.PropControl item != DataStore version", "path", path, "item", item);
@@ -247,7 +247,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 	let value = item[prop]===undefined? dflt : item[prop];
 
 	// Checkbox?
-	if (ControlTypes.ischeckbox(type)) {
+	if (Misc.ControlTypes.ischeckbox(type)) {
 		const onChange = e => {
 			// console.log("onchange", e); // minor TODO DataStore.onchange recognise and handle events
 			const val = e && e.target && e.target.checked;
@@ -255,7 +255,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 			if (saveFn) saveFn({path, prop, item, value: val});		
 		};
 		if (value===undefined) value = false;
-		const helpIcon = help ? <Icon glyph='question-sign' title={help} /> : null;
+		const helpIcon = help ? <Misc.Icon glyph='question-sign' title={help} /> : null;
 		return (<div>
 			<Checkbox checked={value} onChange={onChange} {...otherStuff}>{label} {helpIcon}</Checkbox>
 			{error? <span className="help-block">{error}</span> : null}
@@ -353,7 +353,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 		delete otherStuff.https;
 		return (<div>
 				<FormControl type='url' name={prop} value={value} onChange={onChange} {...otherStuff} />
-			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><ImgThumbnail url={value} style={{background:bg}} /></div>
+			<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail url={value} style={{background:bg}} /></div>
 				<div className='clearfix' />
 			</div>);
 	}
@@ -389,7 +389,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 						Drop a JPG or PNG image here
 					</Dropzone>
 				</div>
-				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><ImgThumbnail style={{background: bg}} url={value} /></div>
+				<div className='pull-right' style={{background: bg, padding:bg?'20px':'0'}}><Misc.ImgThumbnail style={{background: bg}} url={value} /></div>
 				<div className='clearfix' />
 			</div>
 		);
@@ -407,7 +407,7 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 	// date
 	// NB dates that don't fit the mold yyyy-MM-dd get ignored by the date editor. But we stopped using that
 	//  && value && ! value.match(/dddd-dd-dd/)
-	if (ControlTypes.isdate(type)) {
+	if (Misc.ControlTypes.isdate(type)) {
 		const acprops = {prop, item, value, onChange, ...otherStuff};
 		return <PropControlDate {...acprops} />;
 	}
@@ -415,8 +415,8 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 	if (type==='select') {
 		const { options, defaultValue, labels, ...rest} = otherStuff;
 
-		assert(options, 'PropControl: no options for select '+[prop, otherStuff]);
-		assert(options.map, 'PropControl: options not an array '+options);
+		assert(options, 'Misc.PropControl: no options for select '+[prop, otherStuff]);
+		assert(options.map, 'Misc.PropControl: options not an array '+options);
 		// Make an option -> nice label function
 		// the labels prop can be a map or a function
 		let labeller = v => v;
@@ -437,13 +437,12 @@ const PropControl = ({type="text", path, prop, label, help, error, validator, re
 		let acprops ={prop, value, path, proppath, item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff};
 		return <PropControlAutocomplete {...acprops} />;
 	}
-
 	// normal
 	// NB: type=color should produce a colour picker :)
 	return <FormControl type={type} name={prop} value={value} onChange={onChange} {...otherStuff} />;
 }; //./PropControl
 
-const ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
+Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
 /**
@@ -469,7 +468,7 @@ const PropControlMoney = ({prop, value, path, proppath,
 	// Which stores its value in two ways, straight and as a x100 no-floats format for the backend
 	// Convert null and numbers into MA objects
 	if ( ! value || _.isString(value) || _.isNumber(value)) {
-		value = MoneyClass.make({value});
+		value = Money.make({value});
 	}
 	// prefer raw, so users can type incomplete answers!
 	let v = value.raw || value.value;
@@ -554,7 +553,7 @@ const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 const YEAR = 365 * DAY;
 
-const RelativeDate = ({date, ...rest}) => {
+Misc.RelativeDate = ({date, ...rest}) => {
 	const dateObj = new Date(date);
 	const now = new Date();
 
@@ -605,7 +604,7 @@ const shortMonths = months.map(month => month.substr(0, 3));
 
 const oh = (n) => n<10? '0'+n : n;
 
-const LongDate = ({date}) => {
+Misc.LongDate = ({date}) => {
 	if (_.isString(date)) date = new Date(date);
 	return <span>{`${weekdays[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`}</span>;
 };
@@ -613,11 +612,11 @@ const LongDate = ({date}) => {
 /**
  * Human-readable, unambiguous date+time string which doesn't depend on toLocaleString support
  */
-const dateTimeString = (d) => (
+Misc.dateTimeString = (d) => (
 	`${d.getDate()} ${shortMonths[d.getMonth()]} ${d.getFullYear()} ${oh(d.getHours())}:${oh(d.getMinutes())}`
 );
 
-const AvatarImg = ({peep, ...props}) => {
+Misc.AvatarImg = ({peep, ...props}) => {
 	if ( ! peep) return null;
 	let { img, name } = peep;
 	let { className, alt, ...rest} = props;
@@ -699,7 +698,7 @@ const PropControlAutocomplete = ({prop, value, options, getItemValue, renderItem
  * 
  * ??maybe phase this out in favour of just the direct use?? ^DW
  */
-const SetButton = ({path, value, children, className}) => {
+Misc.SetButton = ({path, value, children, className}) => {
 	assert(path && path.length);
 	const doSet = () => {
 		DataStore.setValue(path, value);
@@ -745,14 +744,14 @@ const isoDate = (d) => d.toISOString().replace(/T.+/, '');
  * 	style: {?Object}
  * }
  */
-const ImgThumbnail = ({url, style}) => {
+Misc.ImgThumbnail = ({url, style}) => {
 	if ( ! url) return null;
 	// add in base (NB this works with style=null)
 	style = Object.assign({width:'100px', maxHeight:'200px'}, style);
 	return (<img className='img-thumbnail' style={style} alt='thumbnail' src={url} />);
 };
 
-const VideoThumbnail = ({url}) => url? <video width={200} height={150} src={url} controls /> : null;
+Misc.VideoThumbnail = ({url}) => url? <video width={200} height={150} src={url} controls /> : null;
 
 /**
  * This replaces the react-bootstrap version 'cos we saw odd bugs there. 
@@ -781,9 +780,9 @@ const saveDraftFn = _.debounce(
 /**
  * Just a convenience for a Bootstrap panel
  */
-const Card = ({title, glyph, icon, children, onHeaderClick, collapse, titleChildren, ...props}) => {
-	const h3 = (<h3 className="panel-title">{icon? <Icon glyph={glyph} fa={icon} /> : null} 
-		{title || ''} {onHeaderClick? <Icon className='pull-right' glyph={'triangle-'+(collapse?'bottom':'top')} /> : null}
+Misc.Card = ({title, glyph, icon, children, onHeaderClick, collapse, titleChildren, ...props}) => {
+	const h3 = (<h3 className="panel-title">{icon? <Misc.Icon glyph={glyph} fa={icon} /> : null} 
+		{title || ''} {onHeaderClick? <Misc.Icon className='pull-right' glyph={'triangle-'+(collapse?'bottom':'top')} /> : null}
 	</h3>);
 	return (<div className="Card panel panel-default">
 		<div className={onHeaderClick? "panel-heading btn-link" : "panel-heading"} onClick={onHeaderClick} >
@@ -799,9 +798,9 @@ const Card = ({title, glyph, icon, children, onHeaderClick, collapse, titleChild
 /**
  * 
  * @param {?String} widgetName - Best practice is to give the widget a name.
- * @param {Card[]} children
+ * @param {Misc.Card[]} children
  */
-const CardAccordion = ({widgetName, children, multiple, start}) => {
+Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
 	// NB: React-BS provides Accordion, but it does not work with modular panel code. So sod that.
 	// TODO manage state
 	const wcpath = ['widget', widgetName || 'CardAccordion', 'open'];
@@ -833,8 +832,8 @@ const CardAccordion = ({widgetName, children, multiple, start}) => {
  * save buttons
  * TODO auto-save on edit -- copy from sogive
  */
-const SavePublishDiscard = ({type, id, hidden }) => {
-	assert(C.TYPES.has(type), 'SavePublishDiscard');
+Misc.SavePublishDiscard = ({type, id, hidden }) => {
+	assert(C.TYPES.has(type), 'Misc.SavePublishDiscard');
 	assMatch(id, String);
 	let localStatus = DataStore.getLocalEditsStatus(type, id);
 	let isSaving = C.STATUS.issaving(localStatus);	
@@ -872,14 +871,14 @@ const SavePublishDiscard = ({type, id, hidden }) => {
 };
 
 /**
- * @param {String[]} path Path to a form (that is, a form's data held in DataStore) -- this is what will get sent to the server
+ * 
  * @param {Boolean} once If set, this button can only be clicked once.
  */
-const SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, children}) => {
+Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, children}) => {
 	assMatch(url, String);
 	assMatch(path, 'String[]');
 	const tpath = ['transient','SubmitButton'].concat(path);
-	
+
 	let formData = DataStore.getValue(path);
 	// DataStore.setValue(tpath, C.STATUS.loading);
 	const params = {
@@ -915,24 +914,7 @@ const SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, 
 	</button>);
 };
 
-export {
-	Loading,
-	PropControl,
-	ImgThumbnail,
-	VideoThumbnail,
-	AvatarImg,
-	dateTimeString,
-	LongDate,
-	RelativeDate,
-	ControlTypes,
-	Icon,
-	Logo,
-	Time,
-	Money,
-	Col2,
-	Card,
-	CardAccordion,
-	SavePublishDiscard,
-	SubmitButton
-};
-
+export default Misc;
+// // TODO rejig for export {
+// 	PropControl: Misc.PropControl
+// };

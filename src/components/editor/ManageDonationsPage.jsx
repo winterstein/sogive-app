@@ -11,7 +11,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Roles from '../../Roles';
 import {getId} from '../../data/DataClass';
-import {Loading, Money} from '../Misc';
+import Misc from '../Misc';
 import SimpleTable from '../SimpleTable';
 
 const onEditPaidOut = ({item, value, event, row, column}) => {
@@ -42,7 +42,7 @@ const ManageDonationsPage = () => {
 			});
 	});
 	if ( ! pvDonations.resolved) {
-		return <Loading />;
+		return <Misc.Loading />;
 	}
 	let rdons = pvDonations.value;
 	console.warn('rdons', rdons);
@@ -74,12 +74,12 @@ const ManageDonationsPage = () => {
 		{
 			Header: "Amount",
 			accessor: 'amount',
-			Cell: v => <Money amount={v} /> // Custom cell components!
+			Cell: v => <Misc.Money amount={v} /> // Custom cell components!
 		},
 		{
 			Header: "Contributions",
 			accessor: 'contributions',
-			Cell: cons => cons? cons.map((con,i) => <div key={i} className='contribution'><Money amount={con.money} /> {con.text}</div>) : null
+			Cell: cons => cons? cons.map((con,i) => <div key={i} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>) : null
 		},
 		'via',
 		{

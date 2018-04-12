@@ -17,12 +17,7 @@ import Transfer from '../data/Transfer';
 import MoneyClass from '../data/charity/Money';
 import Basket from '../data/Basket';
 
-import {
-	Loading,
-	SavePublishDiscard,
-	PropControl,
-	Money
-} from './Misc';
+import Misc from './Misc';
 import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
 import Wizard, {WizardStage} from './WizardProgressWidget';
@@ -112,7 +107,7 @@ const DonationForm = ({item, charity, causeName}) => {
 		return (
 			<Modal show className="donate-modal" onHide={closeLightbox}>
 				<Modal.Body>
-					<Loading />
+					<Misc.Loading />
 				</Modal.Body>
 			</Modal>
 		);
@@ -162,7 +157,7 @@ const DonationForm = ({item, charity, causeName}) => {
 					</WizardStage>
 				</Wizard>
 			</Modal.Body>
-			<SavePublishDiscard type={type} id={donationDraft.id} hidden />
+			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
 	);
 }; // ./DonationForm
@@ -180,8 +175,8 @@ const AmountSection = ({path}) => {
 	}
 	return (
 		<div className='section donation-amount'>
-			<PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
-			{MoneyClass.value(credit)? <p><i>You have <Money amount={credit} /> in credit.</i></p> : null}
+			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
+			{MoneyClass.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 		</div>);
 };
 
@@ -225,20 +220,20 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 				GiftAid can add considerably to your donation at no extra cost.<br />
 				Please answer the questions below to see if this donation qualifies for GiftAid.
 			</p>
-			<PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
+			<Misc.PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
 				label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.`}
 			/>
-			<PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
+			<Misc.PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
 				label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`}
 			/>
-			<PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
+			<Misc.PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
 				label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`}
 			/>
-			<PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
+			<Misc.PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
 				label={`I am a UK taxpayer.`}
 			/>
 			{giftAidMessage}
-			<PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
+			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
 				label='I want to Gift Aid this donation, and agree to sharing my details for this.'
 			/>
 		</div>
@@ -256,16 +251,16 @@ const DetailsSection = ({path, stagePath, setNavStatus}) => {
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
 				: <p>These details are optional: you can give anonymously.</p>}
-			<PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
-			<PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
-			<PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
-			<PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
+			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
+			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
+			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
+			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
 		</div>);
 };
 
 const MessageSection = ({path, recipient}) => (
 	<div className='section donation-amount'>
-		<PropControl 
+		<Misc.PropControl 
 			prop='message' 
 			label='Message' 
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
@@ -336,7 +331,7 @@ const ThankYouSection = ({path, item}) => {
 			<h3>Thank You!</h3>
 			<big>
 				<p>
-					We've received your donation of <Money amount={donation.amount} /> to {item.name}.<br />
+					We've received your donation of <Misc.Money amount={donation.amount} /> to {item.name}.<br />
 					A receipt for your donation will be emailed to {Login.getEmail()}.
 				</p>
 				<p>

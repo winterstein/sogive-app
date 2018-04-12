@@ -11,7 +11,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 // import ChartWidget from './ChartWidget';
-import {Card, PropControl} from '../Misc';
+import Misc from '../Misc';
 
 
 class EditorDashboardPage extends React.Component {
@@ -36,13 +36,13 @@ const AddCharityWidget = () => {
 	if (id) {
 		return <a href={'/#edit?charityId='+encURI(id)}>Edit {DataStore.getValue(['widget','AddCharityWidget','form','name'])}</a>;
 	}
-	return (<Card title='Add Charity'>
+	return (<Misc.Card title='Add Charity'>
 		<div className='alert alert-warning'>
 			ALWAYS <a href='#search'>search</a> first to check the charity isn't already in the database. 
 			Otherwise we will have ugly merge problems.</div>
-		<PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
+		<Misc.PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
 		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add Charity</button>
-	</Card>);
+	</Misc.Card>);
 };
 
 const doAddEditor = function() {
@@ -53,21 +53,21 @@ const doAddEditor = function() {
 };
 
 const AddEditorWidget = () => {
-	return (<Card title='Add a new Editor' >
+	return (<Misc.Card title='Add a new Editor' >
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
-		<PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
+		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
-	</Card>);
+	</Misc.Card>);
 };
 
 const ImportDataWidget = () => {
-	return (<Card title='Import Data Set' >		
+	return (<Misc.Card title='Import Data Set' >		
 		<p>Do NOT repeat click these.</p>
 		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('OSCR')}>Import OSCR Data</button>
 
 		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('oldSpreadsheet')}>Import Old Spreadsheet Data</button>
 
-	</Card>);
+	</Misc.Card>);
 };
 
 

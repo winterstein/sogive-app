@@ -10,7 +10,7 @@ import MoneyClass from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import {Money, TrPlural} from './Misc.jsx';
+import Misc from './Misc.jsx';
 import Settings from '../Settings';
 
 /**
@@ -39,7 +39,7 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 	
 	return (
 		<div className='ImpactDesc'>
-			{showMoney? <b><Money amount={amount} /></b> : null}
+			{showMoney? <b><Misc.Money amount={amount} /></b> : null}
 			{beforeText}
 			{impactDivs}
 			{ Project.isOverall(project)? null : <div><small className='details'>{project.name}</small></div> }
@@ -84,13 +84,13 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
 		cost = MoneyClass.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
-		return Output.make({cost, number: targetCount, name: TrPlural(targetCount, unitName), description: output.description });
+		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
 	}
 
 	let impactNum = MoneyClass.divide(cost, cpbraw);
 
 	// Pluralise unit name correctly
-	const plunitName = TrPlural(impactNum, unitName);
+	const plunitName = Misc.TrPlural(impactNum, unitName);
 
 	return Output.make({number:impactNum, name:plunitName, description:output.description});
 }; // ./impactCalc()
@@ -114,7 +114,7 @@ const multipleImpactCalc = ({charity, project, ...params}) => {
  * @param {number} num 
  * @param {String} text Can be undefined (returns undefined)
  */
-TrPlural = (num, text) => {
+Misc.TrPlural = (num, text) => {
 	if ( ! text) return text;
 	let isPlural = Math.round(num) !== 1;
 	// Plural forms: 

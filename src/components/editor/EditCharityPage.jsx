@@ -15,13 +15,7 @@ import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import MoneyClass from '../../data/charity/Money';
-import {
-	Loading,
-	PropControl,
-	Money,
-	Col2,
-	Icon
-} from '../Misc';
+import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
@@ -36,7 +30,7 @@ const EditCharityPage = () => {
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);
 	if ( ! charity) {
-		return <Loading />;
+		return <Misc.Loading />;
 	}
 
 	// projects
@@ -75,6 +69,7 @@ const EditCharityPage = () => {
 					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
 					: null
 				}
+
 			</Panel>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
@@ -251,7 +246,7 @@ const AddProject = ({charity, isOverall}) => {
 			<div className='form-inline well'>
 				<h4>Add Year</h4>
 				<p>Create a new annual record</p>
-				<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 				&nbsp;
 				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
 					<Glyphicon glyph='plus' /> Add
@@ -263,9 +258,9 @@ const AddProject = ({charity, isOverall}) => {
 		<div className='form-inline well'>
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
-			<PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
+			<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
 			&nbsp;
-			<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
 			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
 				<Glyphicon glyph='plus' /> Add
@@ -306,7 +301,7 @@ const AddIO = ({list, pio, ioPath}) => {
 	
 	return (
 		<div className='form-inline'>
-			<PropControl prop='name' label='Impact unit / Name' path={formPath} />
+			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
 				<Glyphicon glyph='plus' />
@@ -356,10 +351,7 @@ const ProjectEditor = ({charity, project}) => {
 
 // See and edit the list of data-sources for this project
 const ProjectDataSources = ({charity, project}) => {
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
+
 	const projIndex = charity.projects.indexOf(project);
 	const dataSrcPath = ['draft', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
 	const sourceList = project['data-src'] || [];
@@ -370,7 +362,7 @@ const ProjectDataSources = ({charity, project}) => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
-					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
+					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} />
 				);
 			}) }
 			<AddDataSource dataId={'p'+projIndex+'data-src'} list={sourceList} srcPath={dataSrcPath} />
@@ -382,7 +374,7 @@ const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) =
 	return (
 		<div className='row'>
 			<div className='col-md-6'>
-				<PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
+				<Misc.PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
 			</div>
 		</div>
 	);
@@ -394,7 +386,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
 		<div className='form-inline'>
-			<PropControl prop='url' label='Add Source URL' path={formPath} />
+			<Misc.PropControl prop='url' label='Add Source URL' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
 				<Glyphicon glyph='plus' />
@@ -520,15 +512,11 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	}
 	assert(ii !== -1, "EditCharityPage.ProjectInputEditor");
 	assert(pid !== -1, "EditCharityPage.ProjectInputEditor");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
 	return (<tr>
 		<td>{STD_INPUTS[input.name] || input.name}</td>
 		<td>
-			{ isOverall || input.name==='projectCosts'? null : <PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
+			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
+			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -547,27 +535,24 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};		
+	
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><PropControl prop='number' type='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='name' path={inputPath} item={output} /></td>
+		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} /></td>
 		<td>
-			<PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
-			<small>Calculated: <Money amount={cpbraw} /></small>
+			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
+			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
-				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap}
+			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
+				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
-			<PropControl prop='description' type='textarea'
-				path={inputPath} item={output} saveFn={saveDraftFnWrap}
+			<Misc.PropControl prop='description' type='textarea'
+				path={inputPath} item={output}
 			/>
 		</td>
 		<td>
@@ -603,20 +588,6 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
-// TODO delete and just use Crud.js
-const saveDraftFn = _.debounce(
-	({path, parentItem}) => {
-		if ( ! parentItem) parentItem = DataStore.getValue(path);
-		assert(NGO.isa(parentItem), "EditCharityPage.saveDraftFn: ! isa: "+parentItem, path);
-		ServerIO.saveCharity(parentItem, C.KStatus.$DRAFT())
-		.then((result) => {
-			let modCharity = result.cargo;
-			assert(NGO.isa(modCharity), "EditCharityPage.saveDraftFn: "+modCharity);
-			DataStore.setValue(['draft', C.TYPES.NGO, NGO.id(modCharity)], modCharity);
-		});
-		return true;
-	}, 1000);
-
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
 	// some controls are not for all users e.g. goodloop
 	if (userFilter) {
@@ -624,27 +595,19 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 			return null;
 		}
 	}
-	let saveDraftFnWrap = saveDraftFn;
-	if (parentItem) {
-		saveDraftFnWrap = (context) => {
-			context.parentItem = parentItem;
-			return saveDraftFn(context);
-		};
-	}
 	// console.log('EditField2', props);
 	assMatch(field, "String|Number");
 
 	return (
 		<div>			
-			<Col2>
-				<PropControl label={label || field} type={type} prop={field} 
+			<Misc.Col2>
+				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
-					saveFn={saveDraftFnWrap}
 					help={help}
 					{ ...other}
 					/>
-				<MetaEditor item={item} itemPath={path} field={field} help={help} saveFn={saveDraftFnWrap} />
-			</Col2>
+				<MetaEditor item={item} itemPath={path} field={field} help={help} />
+			</Misc.Col2>
 		</div>
 	);
 };
@@ -666,7 +629,7 @@ const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 	}
 	return (<div className='flexbox'>
 		<div className='TODO'>
-			<Icon fa='user' title='Last editor' />
+			<Misc.Icon fa='user' title='Last editor' />
 			{meta.lastEditor}
 		</div>
 		<div>
@@ -689,7 +652,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	assert(meta && itemField && metaField && icon, "EditCharityPage.MetaEditorItem");
 	let widgetNotesPath = ['widget', 'EditCharity', 'meta'].concat([itemField, metaField]);
 	// icon with click->open behaviour
-	let ricon = <Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
+	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
 	let v = meta[metaField];
 	// green if set
 	if (v) ricon = <span className='text-success'>{ricon}</span>;
@@ -699,7 +662,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	return (
 		<div className='MetaEditorItem'>
 			{ricon} 
-			<PropControl label={title} prop={metaField}
+			<Misc.PropControl label={title} prop={metaField}
 				path={metaPath}
 				item={meta} type={type}
 				saveFn={saveFn}

@@ -7,11 +7,7 @@ import printer from '../utils/printer.js';
 import {modifyHash} from 'wwutils';
 import C from '../C';
 import Roles from '../Roles';
-import {
-	Loading,
-	PropControl,
-	Icon
-} from './Misc';
+import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import {getType, getId, nonce} from '../data/DataClass';
@@ -57,7 +53,7 @@ const ListLoad = ({type, status, servlet, navpage, q, ListItem, checkboxes}) => 
 	});
 	if ( ! pvItems.resolved) {
 		return (
-			<Loading text={type.toLowerCase()+'s'} />
+			<Misc.Loading text={type.toLowerCase()+'s'} />
 		);
 	}
 	if ( ! ListItem) {
@@ -97,12 +93,12 @@ const DefaultListItem = ({type, servlet, navpage, item, checkboxes}) => {
 	let checkedPath = ['widget', 'ListLoad', type, 'checked'];
 	return (
 		<div className='ListItemWrapper'>
-			{checkboxes? <div className='pull-left'><PropControl title='TODO mass actions' path={checkedPath} type='checkbox' prop={id} /></div> : null}
+			{checkboxes? <div className='pull-left'><Misc.PropControl title='TODO mass actions' path={checkedPath} type='checkbox' prop={id} /></div> : null}
 			<a 	href={itemUrl} 
 				onClick={event => onPick({ event, navpage, id })}
 				className={'ListItem btn btn-default status-'+item.status}
 			>
-				{C.KStatus.isPUBLISHED(item.status)? <span className='text-success'><Icon glyph='tick' /></span> : item.status} 
+				{C.KStatus.isPUBLISHED(item.status)? <span className='text-success'><Misc.Icon glyph='tick' /></span> : item.status} 
 				{item.name || id}<br/>
 				<small>id: {id}</small>
 			</a>
@@ -144,7 +140,7 @@ const CreateButton = ({type, navpage, base, make}) => {
 	if ( ! navpage) navpage = DataStore.getValue('location', 'path')[0];
 	return (
 		<button className='btn btn-default' onClick={() => createBlank({type,navpage,base,make})}>
-			<Icon glyph='plus' /> Create
+			<Misc.Icon glyph='plus' /> Create
 		</button>
 	);
 };

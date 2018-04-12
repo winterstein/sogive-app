@@ -11,12 +11,7 @@ import DataStore from '../plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import {
-	PropControl,
-	SubmitButton,
-	Loading,
-	Money
-} from './Misc';
+import Misc from './Misc';
 import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../data/DataClass';
@@ -270,24 +265,24 @@ const SuggestCharityForm = () => {
 			Can't find the charity you want? If you fill in the details below, we'll try to add it to the database.
 			If you're registering for an event, you can go ahead - enter "TBD" and you can come back and set the charity later.
 		</p>
-		<PropControl path={fpath} prop='charityName' label='Name of charity' />		
-		<PropControl path={fpath} prop='website' label='Charity website' />
-		<PropControl path={fpath} prop='facebook' label='Charity Facebook page (if applicable)' />
-		<PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
-		<PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
-		<PropControl path={fpath} prop='email' label='Your email' />
-		<SubmitButton url={profilerEndpoint} path={fpath} 
+		<Misc.PropControl path={fpath} prop='charityName' label='Name of charity' />		
+		<Misc.PropControl path={fpath} prop='website' label='Charity website' />
+		<Misc.PropControl path={fpath} prop='facebook' label='Charity Facebook page (if applicable)' />
+		<Misc.PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
+		<Misc.PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
+		<Misc.PropControl path={fpath} prop='email' label='Your email' />
+		<Misc.SubmitButton url={profilerEndpoint} path={fpath} 
 			onSuccess={<p>Thank you for suggesting this charity.</p>} 
 		>
 			Submit
-		</SubmitButton>
+		</Misc.SubmitButton>
 	</div>);
 };
 
 const SearchResultsNum = ({results, total, query}) => {
 	if (total===undefined) total = results.length; // fallback
 	let loading = DataStore.getValue('widget', 'Search', 'loading');
-	if (loading) return <div className='num-results'><Loading /></div>;
+	if (loading) return <div className='num-results'><Misc.Loading /></div>;
 	if (results.length || query) {
 		const plural = total !== 1 ? 'charities found' : 'charity found';
 		return <div className='num-results'>{total} {plural}</div>;
@@ -375,7 +370,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<h3>Impact Summary</h3>
-				<Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
+				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
 				fund <span className='impact-count'>{Output.number(impact)}</span> {Output.name(impact)}
 			</div>
 			<div className='impact-detail'>

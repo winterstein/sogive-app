@@ -4,7 +4,7 @@ import { FormGroup } from 'react-bootstrap';
 
 import DataStore from '../plumbing/DataStore';
 
-import {PropControl} from './Misc';
+import Misc from './Misc';
 
 const giftAidTaxpayerLabel = 'I confirm that I am a UK taxpayer and I understand that if I pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount of Gift Aid claimed on all my donations it is my responsibility to pay the difference.';
 const giftAidOwnMoneyLabel = 'This is my own money. I am not paying in donations made by a third party e.g. money collected at an event, in the pub, a company donation or a donation from a friend or family member.';
@@ -18,20 +18,20 @@ const GiftAidForm = ({ formPath }) => {
 	const giftAidChecks = giftAid ? (
 		<FormGroup>
 			<p>Please tick all the following to confirm your donation is eligible for Gift Aid.</p>
-			<PropControl prop='giftAidTaxpayer' label={giftAidTaxpayerLabel} path={formPath} type='checkbox' />
-			<PropControl prop='giftAidOwnMoney' label={giftAidOwnMoneyLabel} path={formPath} type='checkbox' />
-			<PropControl prop='giftAidNoCompensation' label={giftAidNoCompensationLabel} path={formPath} type='checkbox' />
+			<Misc.PropControl prop='giftAidTaxpayer' label={giftAidTaxpayerLabel} path={formPath} type='checkbox' />
+			<Misc.PropControl prop='giftAidOwnMoney' label={giftAidOwnMoneyLabel} path={formPath} type='checkbox' />
+			<Misc.PropControl prop='giftAidNoCompensation' label={giftAidNoCompensationLabel} path={formPath} type='checkbox' />
 			<p>Please provide the following details to enable your selected charity to process Gift Aid.</p>
-			<PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='text' />
-			<PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='address' />
-			<PropControl prop='postcode' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
+			<Misc.PropControl prop='name' label='Name' placeholder='Enter your name' path={formPath} type='text' />
+			<Misc.PropControl prop='address' label='Address' placeholder='Enter your address' path={formPath} type='address' />
+			<Misc.PropControl prop='postcode' label='Postcode' placeholder='Enter your postcode' path={formPath} type='postcode' />
 			<small>I understand that my name and address may be shared with the charity for processing Gift Aid.</small>
 		</FormGroup>
 	) : '';
 
 	return (
 		<div className='col-xs-12 gift-aid'>
-			<PropControl prop='giftAid' label='Yes, add Gift Aid' path={formPath} type='checkbox' />
+			<Misc.PropControl prop='giftAid' label='Yes, add Gift Aid' path={formPath} type='checkbox' />
 			{ giftAidChecks }
 			<small><a target='_blank' href='https://www.gov.uk/donating-to-charity/gift-aid'>
 				Find out more about Gift Aid

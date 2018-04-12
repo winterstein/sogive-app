@@ -1,6 +1,6 @@
 import React from 'react';
 import DataStore from '../plumbing/DataStore';
-import {Icon} from './Misc';
+import Misc from './Misc';
 import {assMatch, assert} from 'sjtest';
 import {is} from 'wwutils';
 
@@ -91,11 +91,11 @@ const NextButton = ({complete, stagePath, maxStage, ...rest}) => {
 	const bsClass = complete ? 'primary' : null;
 	assMatch(maxStage, Number);
 	return (<NextPrevTab stagePath={stagePath} bsClass={bsClass} diff={1} 
-		text={<span>Next <Icon glyph='menu-right' /></span>} 
+		text={<span>Next <Misc.Icon glyph='menu-right' /></span>} 
 		maxStage={maxStage} {...rest} />);
 };
 const PrevButton = ({stagePath, ...rest}) => {
-	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Icon glyph='menu-left' /> Previous</span>} {...rest} />;
+	return <NextPrevTab stagePath={stagePath} diff={-1} text={<span><Misc.Icon glyph='menu-left' /> Previous</span>} {...rest} />;
 };
 
 const NextPrevTab = ({stagePath, diff, text, bsClass='default', maxStage, ...rest}) => {

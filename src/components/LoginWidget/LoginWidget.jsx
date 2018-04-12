@@ -6,7 +6,7 @@ import { XId, uid, stopEvent, toTitleCase} from 'wwutils';
 import Cookies from 'js-cookie';
 import DataStore from '../../plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
-import {Logo, PropControl} from '../Misc';
+import Misc from '../Misc';
 import C from '../../C';
 
 // For testing
@@ -56,7 +56,7 @@ const SocialSignInButton = ({ service, verb}) => {
 	return (
 		<div className='form-group'>
 			<button onClick={() => socialLogin(service)} className="btn btn-default signin">
-				<Logo size='small' service={service} bgcolor /> <span>{toTitleCase(verb)} with {toTitleCase(service)}</span>
+				<Misc.Logo size='small' service={service} bgcolor /> <span>{toTitleCase(verb)} with {toTitleCase(service)}</span>
 			</button>
 		</div>
 	);
@@ -141,11 +141,11 @@ const EmailSignin = ({verb, onLogin}) => {
 			{verb==='reset'? <p>Forgotten your password? No problem - we will email you a link to reset it.</p> : null}
 			<div className="form-group">
 				<label>Email</label>
-				<PropControl type='email' path={path} item={person} prop='email' />
+				<Misc.PropControl type='email' path={path} item={person} prop='email' />
 			</div>
 			{verb==='reset'? null : <div className="form-group">
 				<label>Password</label>
-				<PropControl type='password' path={path} item={person} prop='password' />
+				<Misc.PropControl type='password' path={path} item={person} prop='password' />
 			</div>}
 			{verb==='reset' && DataStore.getValue('widget', C.show.LoginWidget, 'reset-requested')? <div className="alert alert-info">A password reset email has been sent out.</div> : null}
 			<div className="form-group">
@@ -212,7 +212,7 @@ const LoginWidget = ({showDialog, logo, title, services}) => {
 		<Modal show={showDialog} className="login-modal" onHide={() => DataStore.setShow(C.show.LoginWidget, false)}>
 			<Modal.Header closeButton>
 				<Modal.Title>
-					<Logo service={logo} size='large' transparent={false} />
+					<Misc.Logo service={logo} size='large' transparent={false} />
 					{title}					
 				</Modal.Title>
 			</Modal.Header>
