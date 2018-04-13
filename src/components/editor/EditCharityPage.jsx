@@ -69,7 +69,7 @@ const EditCharityPage = () => {
 					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
 					: null
 				}
-
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={charity.id} />
 			</Panel>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
