@@ -1,6 +1,6 @@
 
 import Enum from 'easy-enums';
-import Roles from './Roles';
+import Roles from './base/Roles';
 
 const C = {};
 export default C;

@@ -19,7 +19,7 @@ import Ticket from '../data/charity/Ticket';
 import Money from '../data/charity/Money';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';

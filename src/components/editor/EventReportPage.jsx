@@ -6,7 +6,7 @@ import Login from 'you-again';
 import printer from '../../utils/printer.js';
 import {modifyHash} from 'wwutils';
 import C from '../../C';
-import Roles from '../../Roles';
+import Roles from '../../base/Roles';
 import Misc from '../Misc';
 import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';

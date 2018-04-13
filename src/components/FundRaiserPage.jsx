@@ -15,7 +15,7 @@ import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
 import C from '../C';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Misc from './Misc';

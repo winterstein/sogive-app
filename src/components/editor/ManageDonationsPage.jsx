@@ -9,7 +9,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
-import Roles from '../../Roles';
+import Roles from '../../base/Roles';
 import {getId} from '../../data/DataClass';
 import Misc from '../Misc';
 import SimpleTable from '../SimpleTable';

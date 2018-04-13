@@ -7,7 +7,7 @@ import printer from '../utils/printer.js';
 import C from '../C';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import {XId} from 'wwutils';

@@ -16,7 +16,7 @@ import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Money from '../../data/charity/Money';
 import Misc from '../Misc';
-import Roles from '../../Roles';
+import Roles from '../../base/Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
 

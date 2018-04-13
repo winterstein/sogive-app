@@ -8,7 +8,7 @@ import { Button, Well } from 'react-bootstrap';
 
 import printer from '../utils/printer.js';
 import C from '../C';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import Misc from './Misc';
 import DataStore from '../plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';

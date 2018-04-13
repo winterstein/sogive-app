@@ -14,7 +14,7 @@
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
     "eslint": "^4.19.1",
-    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-import": "^2.11.0",
     "hashmap": "^2.1.0",
     "intl": "^1.2.5",
     "jquery": "^3.3.1",
