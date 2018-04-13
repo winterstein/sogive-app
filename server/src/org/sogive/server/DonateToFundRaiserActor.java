@@ -1,5 +1,7 @@
 package org.sogive.server;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
@@ -11,6 +13,7 @@ import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
@@ -41,7 +44,8 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 		try {
 			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
-			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
+			AtomicLong versionf = new AtomicLong();			
+			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class, versionf);
 					
 			Money amount = donation.getAmount();
 			
@@ -80,7 +84,9 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
-			AppUtils.doSaveEdit2(path, new JThing<FundRaiser>(fundraiser), null);
+			JThing<FundRaiser> jthing = new JThing<FundRaiser>(fundraiser);
+			jthing.version = versionf;
+			AppUtils.doSaveEdit2(path, jthing, null);
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {
 			Log.e(getName(), ex);
