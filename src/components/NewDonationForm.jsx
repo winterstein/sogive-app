@@ -166,6 +166,7 @@ const AmountSection = ({path, fromEditor}) => {
 		<div className='section donation-amount'>			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+			<Misc.PropControl prop='anonAmount' label={'Hide my donation amount?'} path={path} type='checkbox' />
 		</div>);
 };
 
@@ -249,6 +250,7 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) =>
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
 				path={path} type='checkbox' />
 				: null}
+			<Misc.PropControl prop='anonymous' label={'Keep this donation anonymous?'} path={path} type='checkbox' />
 		</div>);
 };
 

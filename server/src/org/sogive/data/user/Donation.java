@@ -27,6 +27,7 @@ import lombok.EqualsAndHashCode;
 public class Donation extends AThing implements IForSale {
 		
 	Boolean anonymous;
+	Boolean anonAmount;
 	
 	/**
 	 * The user who donated

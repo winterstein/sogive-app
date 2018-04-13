@@ -262,17 +262,20 @@ const Supporters = ({item, donations = [], charity}) => {
 };
 
 const Supporter = ({donation, charity}) => {
-	const name = Donation.donorName(donation) || 'Anonymous Donor';
+	let name = Donation.donorName(donation) || 'Anonymous Donor';
+	if (donation.anonymous) {
+		name = 'Anonymous Donor';
+	}
 	const personImg = donation.donor && donation.donor.img;
 
 	return (
 		<li className='donation'>
-			{ personImg ? (
+			{ personImg && ! donation.anonymous? (
 				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
-			<Misc.RelativeDate date={donation.date} className='donation-date' />
-			<div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>
+			<Misc.RelativeDate date={donation.date} className='donation-date' />			
+			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
 			{donation.contributions? 
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
