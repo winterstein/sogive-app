@@ -7,6 +7,7 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: ['*', '.js', '.jsx'],
+	symlinks: false
   },
   module: {
     loaders: [
