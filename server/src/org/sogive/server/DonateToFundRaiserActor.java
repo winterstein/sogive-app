@@ -97,7 +97,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
 			JThing<FundRaiser> jthing = new JThing<FundRaiser>(fundraiser);
 			jthing.version = versionf;
-			AppUtils.doSaveEdit2(path, jthing, null);
+			AppUtils.doSaveEdit2(path, jthing, null, true);
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {
 			Log.e(getName(), ex);

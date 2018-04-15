@@ -100,7 +100,9 @@ public class FundRaiser extends AThing {
 		String uname = ticket.getOwnerXId().getName();
 		// avoid exposing the persons email
 		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
-		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+Utils.getRandomString(4);	
+		// so repeat calls give the same answer (no random), but it should be unique enough
+		String predictableNonce = StrUtils.md5(uname+ticket.getId()).substring(0, 6);
+		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
 
 	public FundRaiser() {
