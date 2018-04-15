@@ -17,6 +17,7 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.app.AppUtils;
@@ -95,8 +96,11 @@ public class FundRaiser extends AThing {
 	public static String getIDForTicket(Ticket ticket) {
 		assert ! Utils.isBlank(ticket.getEventId()) : "no event?! "+ticket;
 		assert ticket.getOwnerXId() != null: ticket;
-		// NB: hash with salt to protect the users email
-		return ticket.getEventId()+'.'+StrUtils.md5("user:"+ticket.getOwnerXId());	
+		// pick a "nice" but unique id - e.g. daniel.moonwalk.uydx
+		String uname = ticket.getOwnerXId().getName();
+		// avoid exposing the persons email
+		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
+		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+Utils.getRandomString(4);	
 	}
 
 	public FundRaiser() {

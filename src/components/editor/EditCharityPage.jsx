@@ -184,7 +184,7 @@ const ProfileEditor = ({charity}) => {
 			</div>
 			: null
 		}
-		<EditField item={charity} type='img' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
+		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
@@ -320,7 +320,7 @@ const ProjectEditor = ({charity, project}) => {
 			{isOverall? null : (
 				<div>
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+					<EditProjectField charity={charity} project={project} type='imgUpload' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
 					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
 						help='A story from this project, e.g. about a beneficiary.' />					

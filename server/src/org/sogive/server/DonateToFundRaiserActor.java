@@ -2,6 +2,8 @@ package org.sogive.server;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import java.util.List;
+
 import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
@@ -46,7 +48,16 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 			AtomicLong versionf = new AtomicLong();			
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class, versionf);
-					
+			
+			// avoid double counting
+			List<String> dons = fundraiser.getDonations();
+			if (dons.contains(donation.getId())) {
+				Log.d(getName(), "skip (already seen) updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
+				return;
+			}
+			dons.add(donation.getId());
+			
+			// How much?
 			Money amount = donation.getAmount();
 			
 			Throwable hackex = null;
