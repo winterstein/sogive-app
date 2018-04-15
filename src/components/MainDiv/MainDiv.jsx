@@ -5,7 +5,7 @@ import { getUrlVars, toTitleCase, modifyHash } from 'wwutils';
 import _ from 'lodash';
 
 // Plumbing
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
 import CRUD from '../../plumbing/Crud';
 import C from '../../C';

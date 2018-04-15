@@ -11,7 +11,7 @@ import { setHash, XId } from 'wwutils';
 import PV from 'promise-value';
 import Dropzone from 'react-dropzone';
 
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import printer from '../utils/printer';
@@ -21,7 +21,7 @@ import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
 import {getType, getId, nonce} from '../data/DataClass';
 import md5 from 'md5';
-import Settings from '../Settings';
+import Settings from '../base/Settings';
 
 const Misc = {};
 

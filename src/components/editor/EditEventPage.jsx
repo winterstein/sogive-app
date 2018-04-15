@@ -8,7 +8,7 @@ import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../base/Roles';
 import Misc from '../Misc';
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../data/DataClass';

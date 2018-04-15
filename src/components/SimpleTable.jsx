@@ -13,7 +13,7 @@ import Misc from './Misc';
 import printer from '../utils/printer';
 
 import Enum from 'easy-enums';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 
 const str = printer.str;
 

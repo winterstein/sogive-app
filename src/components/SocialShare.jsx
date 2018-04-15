@@ -5,7 +5,7 @@ import React from 'react';
 import {assert, assMatch} from 'sjtest';
 import {encURI} from 'wwutils';
 
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import C from '../C';
 
 import Money from '../data/charity/Money';

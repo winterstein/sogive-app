@@ -6,7 +6,7 @@ import {uid, blockProp} from 'wwutils';
 import Money from './charity/Money';
 import C from '../C';
 import Login from 'you-again';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 
 const Transfer = defineType(C.TYPES.Transfer);

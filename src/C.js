@@ -2,7 +2,9 @@
 import Enum from 'easy-enums';
 import Roles from './base/Roles';
 
-const C = {};
+// share the base C object
+import C from './base/C';
+
 export default C;
 // also for debug
 window.C = C;

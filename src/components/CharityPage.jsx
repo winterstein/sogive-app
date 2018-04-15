@@ -7,7 +7,7 @@ import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';

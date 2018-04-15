@@ -3,7 +3,7 @@ import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
 
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import printer from '../utils/printer';
 import C from '../C';
 import Money from '../data/charity/Money';
@@ -11,7 +11,7 @@ import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Misc from './Misc.jsx';
-import Settings from '../Settings';
+import Settings from '../base/Settings';
 
 /**
  * @param charity {NGO}

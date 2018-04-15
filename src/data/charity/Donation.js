@@ -2,7 +2,7 @@ import {assert} from 'sjtest';
 import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
 import Money from './Money';
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import {XId, blockProp} from 'wwutils';
 
 /** impact utils */

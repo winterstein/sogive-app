@@ -1,5 +1,5 @@
 import React from 'react';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import Misc from './Misc';
 import {assMatch, assert} from 'sjtest';
 import {is} from 'wwutils';

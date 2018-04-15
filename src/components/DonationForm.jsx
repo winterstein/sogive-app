@@ -20,7 +20,7 @@ import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
 import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';

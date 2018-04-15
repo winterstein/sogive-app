@@ -6,7 +6,7 @@ import Login from 'you-again';
 import {encURI} from 'wwutils';
 
 import ActionMan from '../../plumbing/ActionMan';
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import C from '../../C';
 import Roles from '../../base/Roles';
 

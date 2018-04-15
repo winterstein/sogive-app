@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormGroup } from 'react-bootstrap';
 
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 
 import Misc from './Misc';
 

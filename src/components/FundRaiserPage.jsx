@@ -7,7 +7,7 @@ import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 import printer from '../utils/printer.js';
 import _ from 'lodash';
 import {encURI} from 'wwutils';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import {notifyUser} from '../plumbing/Messaging';

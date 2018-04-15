@@ -8,7 +8,7 @@ import {Panel} from 'react-bootstrap';
 import printer from '../../utils/printer';
 // import C from '../C';
 import ServerIO from '../../plumbing/ServerIO';
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 // import ChartWidget from './ChartWidget';
 import Misc from '../Misc';

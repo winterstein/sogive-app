@@ -3,7 +3,7 @@ import { Nav, NavItem } from 'react-bootstrap';
 import Login from 'you-again';
 
 import C from '../C';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import {LoginLink} from './LoginWidget/LoginWidget.jsx';
 
 // import {XId,yessy,uid} from '../js/util/orla-utils.js';

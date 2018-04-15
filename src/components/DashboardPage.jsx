@@ -8,7 +8,7 @@ window.wwutils = wwutils;
 import printer from '../utils/printer';
 // import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 // import ChartWidget from './ChartWidget';
 import Misc from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';

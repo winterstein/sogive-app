@@ -8,7 +8,7 @@ import {XId, encURI, yessy} from 'wwutils';
 import Login from 'you-again';
 import printer from '../utils/printer.js';
 import C from '../C';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../data/DataClass';

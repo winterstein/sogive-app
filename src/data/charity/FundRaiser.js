@@ -5,7 +5,7 @@ import {blockProp} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
 import Ticket from './Ticket';
-import DataStore from '../../plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 
 /** impact utils */

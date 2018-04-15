@@ -9,7 +9,7 @@ import { Modal } from 'react-bootstrap';
 import C from '../C';
 import printer from '../utils/printer';
 import ActionMan from '../plumbing/ActionMan';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';

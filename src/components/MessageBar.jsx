@@ -5,7 +5,7 @@ import SJTest from 'sjtest';
 const assert = SJTest.assert;
 import printer from '../utils/printer.js';
 // Plumbing
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import C from '../C.js';
 import Messaging from '../plumbing/Messaging';
 

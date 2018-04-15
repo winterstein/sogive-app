@@ -7,7 +7,7 @@ import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
 
 import ServerIO from '../plumbing/ServerIO';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
