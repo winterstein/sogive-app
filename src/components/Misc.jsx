@@ -915,6 +915,7 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, c
 };
 
 export default Misc;
-// // TODO rejig for export {
-// 	PropControl: Misc.PropControl
+
+// // TODO maybe rejig for export {
+// 	PropControl, Icon, etc
 // };

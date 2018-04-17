@@ -50,8 +50,9 @@ Money.value = ma => {
 // duck type: needs a value
 Money.isa = (obj) => {
 	if ( ! obj) return false;
-	if (isa(obj, C.TYPES.Money)) return true;
+	if (isa(obj, C.TYPES.Money)) return true;	
 	// allow blank values
+	if (obj.value100p) return true;
 	if (isNumeric(obj.value) || obj.value==='') return true;
 };
 
@@ -89,10 +90,11 @@ Money.add = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
 	assCurrencyEq(amount1, amount2, "add()");
-	return Money.make({
+	let added = Money.make({
 		...amount1,
-		value: amount1.value + amount2.value,
+		value: Money.value(amount1) + Money.value(amount2),
 	});
+	return added;
 };
 
 // Will fail if not called on 2 Moneys of the same currency
@@ -102,7 +104,7 @@ Money.sub = (amount1, amount2) => {
 	assCurrencyEq(amount1, amount2, "sub");
 	return Money.make({
 		...amount1,
-		value: amount1.value - amount2.value,
+		value: Money.value(amount1) - Money.value(amount2),
 	});
 };
 
@@ -113,7 +115,7 @@ Money.mul = (amount, multiplier) => {
 	// TODO Assert that multiplier is numeric (kind of painful in JS)
 	return Money.make({
 		...amount,
-		value: amount.value * multiplier,
+		value: Money.value(amount) * multiplier,
 	});
 };
 

@@ -7,14 +7,7 @@ import printer from '../../utils/printer.js';
 import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../Roles';
-import {
-	Loading,
-	Card,
-	PropControl,
-	SavePublishDiscard,
-	Col2,
-	Icon
-} from '../Misc';
+import Misc from '../Misc';
 import DataStore from '../../plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
@@ -44,7 +37,7 @@ const EventEditor = ({id}) => {
 	let type = C.TYPES.Event;
 	let pEvent = ActionMan.getDataItem({type:type, id:id, status:C.KStatus.DRAFT});
 	if ( ! pEvent.value) {
-		return <Loading />;
+		return <Misc.Loading />;
 	}
 	let item = pEvent.value;
 
@@ -77,51 +70,51 @@ const EventEditor = ({id}) => {
 		<h2>Event {item.name || id} </h2>		
 		<small>ID: {id}</small>
 
-		<Card title='Event Details'>
-			<PropControl path={path} prop='name' item={item} label='Event Name' />
+		<Misc.Card title='Event Details'>
+			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
-			<PropControl path={path} prop='date' item={item} label='Event Date' type='date' />
+			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' />
 			
-			<PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
+			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
-			<PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' 
+			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' 
 				type='number' />
 
-			<PropControl path={path} prop='pickCharity' item={item} 
+			<Misc.PropControl path={path} prop='pickCharity' item={item} 
 				label='Allow users to pick their charity?' type='checkbox' 
 				dflt 
 			/>
 
-			<PropControl path={path} prop='teams' item={item} 
+			<Misc.PropControl path={path} prop='teams' item={item} 
 				label='User teams?' type='checkbox' />
-		</Card>
+		</Misc.Card>
 
-		<Card icon='camera' title='Images & Branding'>
-			<PropControl path={path} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
+		<Misc.Card icon='camera' title='Images & Branding'>
+			<Misc.PropControl path={path} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
 			
-			<PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
+			<Misc.PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
 
-			<PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
-		</Card>
+			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
+		</Misc.Card>
 
-		<Card title='Ticket Types' icon='ticket'>
+		<Misc.Card title='Ticket Types' icon='ticket'>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
 				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />) 
 				: <p>No tickets yet!</p>
 			}
-			<button className='btn btn-default' onClick={addTicketType}><Icon glyph='plus' /> Create</button>
-		</Card>
+			<button className='btn btn-default' onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
 
-		<Card title='Merchandise & Extras' icon='gift'>
+		<Misc.Card title='Merchandise & Extras' icon='gift'>
 			{item.extras? item.extras.map( (tt, i) => 
 				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
 				: <p>No extras yet!</p>
 			}
-			<button className='btn btn-default' onClick={addExtra}><Icon glyph='plus' /> Create</button>
-		</Card>
+			<button className='btn btn-default' onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
 
 
-		<SavePublishDiscard type={type} id={id} />
+		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
 };
 
@@ -132,27 +125,27 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	};
 	return (<div className='well'>
 		<small>{ticketType.id}</small>
-		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
-		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
-		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
-		<PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
-		<Col2>
+		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
+		<Misc.PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
+		<Misc.PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
+		<Misc.PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
+		<Misc.Col2>
 			<div>
-				<PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
+				<Misc.PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
 					help='The maximum number that can be sold - normally left blank for unlimited' />
-				<PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only' 
+				<Misc.PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only' 
 					help='TODO only those invited by the organiser can attend' />
 			</div>
 			<div><label>Sold so far: {ticketType.sold || 0}</label></div>
-		</Col2>
-		<PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
-		<PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
-		<PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
-		<PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
-		<PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
-		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Icon glyph='arrow-up' /> up</button>
-		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Icon glyph='arrow-down' /> down</button>
-		<button className='btn btn-danger' onClick={removeTicketType}><Icon glyph='trash' /></button>
+		</Misc.Col2>
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
+		<Misc.PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
+		<Misc.PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
+		<Misc.PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
+		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };
 
@@ -164,17 +157,17 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 	};
 	return (<div className='well'>
 		<small>{getId(extra)}</small>
-		<PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
-		<PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
-		<PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
-		<PropControl type='text' item={extra} path={path} prop='description' label='Description' />
-		<Col2>
-			<PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
+		<Misc.PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
+		<Misc.PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
+		<Misc.PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
+		<Misc.PropControl type='text' item={extra} path={path} prop='description' label='Description' />
+		<Misc.Col2>
+			<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
 			<div><label>Sold so far: {extra.sold || 0}</label></div>
-		</Col2>
-		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Icon glyph='arrow-up' /> up</button>
-		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Icon glyph='arrow-down' /> down</button>
-		<button className='btn btn-danger' onClick={removeThing}><Icon glyph='trash' /></button>
+		</Misc.Col2>
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
+		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon glyph='trash' /></button>
 	</div>);
 };
 

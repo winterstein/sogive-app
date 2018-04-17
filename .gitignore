@@ -14,3 +14,4 @@ version.properties
 sogive-app.log*
 logins.sogive.properties
 web/uploads
+test/screenshots
