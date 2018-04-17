@@ -2,7 +2,7 @@
 	Money NB: based on the thing.org type MonetaryAmount
 */
 import {assert} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa} from '../../base/data/DataClass';
 import C from '../../C';
 
 /** impact utils */

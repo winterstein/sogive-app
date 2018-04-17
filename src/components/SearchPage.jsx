@@ -15,7 +15,7 @@ import Money from '../data/charity/Money';
 import Misc from './Misc';
 import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
-import {getId} from '../data/DataClass';
+import {getId} from '../base/data/DataClass';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
 

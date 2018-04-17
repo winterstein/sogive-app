@@ -1,7 +1,7 @@
 /** Data model functions for the NGO data-type */
 
 import _ from 'lodash';
-import {isa, defineType} from '../DataClass';
+import {isa, defineType} from '../../base/data/DataClass';
 import {assert, assMatch} from 'sjtest';
 import {ellipsize} from 'wwutils';
 import Project from './Project';

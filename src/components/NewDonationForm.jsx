@@ -7,7 +7,7 @@ import {XId } from 'wwutils';
 import { Modal } from 'react-bootstrap';
 
 import C from '../C';
-import printer from '../utils/printer';
+import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
@@ -18,10 +18,10 @@ import Money from '../data/charity/Money';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';
-import {nonce, getId, getType} from '../data/DataClass';
-import PaymentWidget from './PaymentWidget';
-import Wizard, {WizardStage} from './WizardProgressWidget';
-import {notifyUser} from '../plumbing/Messaging';
+import {nonce, getId, getType} from '../base/data/DataClass';
+import PaymentWidget from '../base/components/PaymentWidget';
+import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
+import {notifyUser} from '../base/plumbing/Messaging';
 
 /**
  * 

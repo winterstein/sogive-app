@@ -18,7 +18,7 @@ import StripeCheckout from 'react-stripe-checkout';
 import { uid, XId } from 'wwutils';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 
-import printer from '../utils/printer';
+import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
@@ -29,7 +29,7 @@ import Money from '../data/charity/Money';
 import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
-import SocialShare from './SocialShare.jsx';
+import SocialShare from '../base/components/SocialShare';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 
 

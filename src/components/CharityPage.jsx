@@ -8,7 +8,7 @@ import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import printer from '../utils/printer';
+import printer from '../base/utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
@@ -17,8 +17,8 @@ import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import DonationForm from './DonationForm';
-import SocialShare from './SocialShare';
-import {CreateButton} from './ListLoad';
+import SocialShare from '../base/components/SocialShare';
+import {CreateButton} from '../base/components/ListLoad';
 
 const CharityPage = () => {
 	// fetch data

@@ -10,9 +10,9 @@ import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Roles from '../../base/Roles';
-import {getId} from '../../data/DataClass';
+import {getId} from '../../base/data/DataClass';
 import Misc from '../Misc';
-import SimpleTable from '../SimpleTable';
+import SimpleTable from '../../base/components/SimpleTable';
 
 const onEditPaidOut = ({item, value, event, row, column}) => {
 	item.paidOut = value;

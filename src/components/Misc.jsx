@@ -14,12 +14,12 @@ import Dropzone from 'react-dropzone';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
-import printer from '../utils/printer';
+import printer from '../base/utils/printer';
 import C from '../C';
 import Money from '../data/charity/Money';
 import Autocomplete from 'react-autocomplete';
 // import I18n from 'easyi18n';
-import {getType, getId, nonce} from '../data/DataClass';
+import {getType, getId, nonce} from '../base/data/DataClass';
 import md5 from 'md5';
 import Settings from '../base/Settings';
 

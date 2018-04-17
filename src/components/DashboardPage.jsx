@@ -5,11 +5,11 @@ import _ from 'lodash';
 import wwutils, { XId, encURI } from 'wwutils';
 window.wwutils = wwutils;
 
-import printer from '../utils/printer';
+import printer from '../base/utils/printer';
 // import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-// import ChartWidget from './ChartWidget';
+// import ChartWidget from './../base/components/ChartWidget';
 import Misc from './Misc';
 import {LoginLink} from './LoginWidget/LoginWidget';
 import Donation from '../data/charity/Donation';

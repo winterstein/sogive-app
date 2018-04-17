@@ -6,15 +6,15 @@ import Login from 'you-again';
 import { modifyHash, encURI, uid } from 'wwutils';
 import { Button, Well } from 'react-bootstrap';
 
-import printer from '../utils/printer.js';
+import printer from '../base/utils/printer.js';
 import C from '../C';
 import Roles from '../base/Roles';
 import Misc from './Misc';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import ActionMan from '../plumbing/ActionMan';
-import {getType, getId, nonce} from '../data/DataClass';
-import ListLoad from './ListLoad';
+import {getType, getId, nonce} from '../base/data/DataClass';
+import ListLoad from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
 
 const EventPage = () => {

@@ -10,7 +10,7 @@ import Enum from 'easy-enums';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
-import printer from '../../utils/printer';
+import printer from '../../base/utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
@@ -18,7 +18,7 @@ import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
-import Crud from '../../plumbing/Crud'; //publish
+import Crud from '../../base/plumbing/Crud'; //publish
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {

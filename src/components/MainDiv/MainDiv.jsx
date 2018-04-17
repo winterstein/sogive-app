@@ -7,17 +7,17 @@ import _ from 'lodash';
 // Plumbing
 import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
-import CRUD from '../../plumbing/Crud';
+import CRUD from '../../base/plumbing/Crud';
 import C from '../../C';
 // Templates
-import MessageBar from '../MessageBar';
-import NavBar from '../NavBar';
+import MessageBar from '../../base/components/MessageBar';
+import NavBar from '../../base/components/NavBar';
 import LoginWidget from '../LoginWidget/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
-import AccountPage from '../AccountPage';
-import AboutPage from '../AboutPage';
+import AccountPage from '../../base/components/AccountPage';
+import AboutPage from '../../base/components/AboutPage';
 import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
 import EditorDashboardPage from '../editor/EditorDashboardPage';
@@ -29,7 +29,7 @@ import EditEventPage from '../editor/EditEventPage';
 import EventPage from '../EventPage';
 import EventReportPage from '../editor/EventReportPage';
 import RegisterPage from '../RegisterPage';
-import E404Page from '../E404Page';
+import E404Page from '../../base/components/E404Page';
 // Actions
 
 const PAGES = {

@@ -4,13 +4,13 @@ import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
 
-import printer from '../utils/printer.js';
+import printer from '../base/utils/printer.js';
 import _ from 'lodash';
 import {encURI} from 'wwutils';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
-import {notifyUser} from '../plumbing/Messaging';
+import {notifyUser} from '../base/plumbing/Messaging';
 import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
@@ -21,9 +21,9 @@ import Donation from '../data/charity/Donation';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
-import ListLoad from './ListLoad';
+import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
-import SocialShare from './SocialShare';
+import SocialShare from '../base/components/SocialShare';
 
 const FundRaiserTop = () => {
 	// which event?	

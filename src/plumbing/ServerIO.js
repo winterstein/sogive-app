@@ -12,8 +12,8 @@ import Login from 'you-again';
 import NGO from '../data/charity/NGO';
 
 // Try to avoid using this for modularity!
-import DataStore from './DataStore';
-import Messaging, {notifyUser} from './Messaging';
+import DataStore from '../base/plumbing/DataStore';
+import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
 // Error Logging - but only the first error
 window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {

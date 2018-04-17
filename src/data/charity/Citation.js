@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa} from '../../base/data/DataClass';
 
 const Citation = {};
 export default Citation;

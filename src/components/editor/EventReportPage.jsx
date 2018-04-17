@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
-import printer from '../../utils/printer.js';
+import printer from '../../base/utils/printer.js';
 import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../base/Roles';
@@ -11,10 +11,10 @@ import Misc from '../Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
-import {getType, getId, nonce} from '../../data/DataClass';
+import {getType, getId, nonce} from '../../base/data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import Event from '../../data/charity/Event';
-import ListLoad, {CreateButton} from '../ListLoad';
+import ListLoad, {CreateButton} from '../../base/components/ListLoad';
 
 const EventReportPage = () => {
 	if ( ! Login.isLoggedIn()) {

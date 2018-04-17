@@ -1,5 +1,5 @@
 import {assert} from 'sjtest';
-import {isa, defineType} from '../DataClass';
+import {isa, defineType} from '../../base/data/DataClass';
 import C from '../../C';
 
 /** impact utils */
