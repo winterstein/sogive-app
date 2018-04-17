@@ -3,13 +3,22 @@
 #sogive-app uploads directory backup script
 
 #remove older backups:
-rm -rf /mnt/common-backup/sogive-app-uploads/*.7z
+NUMBACKUPS=$(find /mnt/common-backup/sogive-app-uploads/ -iname "*.7z" | wc | awk '{print $1}')
+if [[ $NUMBACKUPS -lt 8 ]]; then
+	SKIPREMOVAL='true'
+else
+	SKIPREMOVAL='false'
+fi
+
+if [[ $SKIPREMOVAL='false' ]]; then
+	find /mnt/common-backup/sogive-app-uploads/*.7z -mtime +8 -exec rm {} \; >/dev/null 2>&1
+fi
 
 #Function to send alert email if something goes wrong
 function send_alert {
 	message=$1
 	time=`date`
-	body="Hi,\nThe backup-server script encountered a problem at $time:\n\n$message\n\nLots of love,\n$USER@$HOSTNAME."
+	body="Hi,\nThe backup-sogive-uploads script encountered a problem at $time:\n\n$message\n\nLots of love,\n$USER@$HOSTNAME."
 	title="[$HOSTNAME] $message"
 	echo -e $body | mutt -s "$title" sysadmin@sodash.com
 }

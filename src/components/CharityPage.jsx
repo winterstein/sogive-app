@@ -14,14 +14,16 @@ import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Misc from './Misc';
 import Login from 'you-again';
+import NewDonationForm, {DonateButton} from './NewDonationForm';
 import DonationForm from './DonationForm';
 import SocialShare from './SocialShare';
+import {CreateButton} from './ListLoad';
 
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	let {value:charity} = DataStore.fetch(['data', C.TYPES.$NGO(), cid], 
-		() => ServerIO.getCharity(cid).then(result => result.cargo)
+		() => ServerIO.getCharity(cid, C.KStatus.PUBLISHED).then(result => result.cargo)
 	);
 	if ( ! charity) {
 		return <Misc.Loading />;
@@ -63,6 +65,8 @@ const CharityPage = () => {
 				</Tab>
 				<Tab eventKey={2} title='Extra Info'>
 					<CharityExtra charity={charity} />
+					<LogOffSiteDonation item={charity} />
+					<MakeDirectFundRaiser charity={charity} />
 				</Tab>
 			</Tabs>
 		</div>
@@ -78,8 +82,8 @@ const CharityPage = () => {
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
-				{infoColumn}
-			</div>
+				{infoColumn}				
+			</div>						
 		</div>
 	);
 }; // ./CharityPage
@@ -364,6 +368,36 @@ const ProjectImage = ({images, title}) => {
 	if ( ! yessy(images)) return null;
 	let image = _.isArray(images)? images[0] : images;
 	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
+};
+
+
+/**
+ * 
+ copy paste modify from EditFundraiserPage
+ */
+const LogOffSiteDonation = ({item}) => {
+	if ( ! item) return null; // probably its loading
+	if ( ! Login.isLoggedIn()) return null;
+	NGO.assIsa(item, "LogOffSiteDonation");
+	return (
+		<Misc.Card title='Add an off-site donation'>
+			<p>Use this form to record a donation which has already been paid for elsewhere. 
+				It will be added to your profile dashboard.</p>
+			<DonateButton item={item} />
+			<NewDonationForm item={item} paidElsewhere />
+		</Misc.Card>
+	);
+};
+
+const MakeDirectFundRaiser = ({charity}) => {
+	if ( ! charity) return null;
+	if ( ! Login.isLoggedIn()) return null;
+	NGO.assIsa(charity);
+	return (<Misc.Card title='Create a Fund-raiser'>
+		Create a Fund-Raiser for you to raise money for this charity
+		(do not use this if you want a fund-raiser as part of an event)
+		<CreateButton type={C.TYPES.FundRaiser} />
+	</Misc.Card>);
 };
 
 export default CharityPage;

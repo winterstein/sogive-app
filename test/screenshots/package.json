@@ -1,0 +1,14 @@
+{
+  "name": "SoGive",
+  "version": "0.4.1",
+  "description": "Charity app",
+  "author": "Daniel Winterstein",
+  "repository": {
+    "url": "https://github.com/winterstein/sogive-app",
+    "type": "git"
+  },  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "puppeteer": "^1.2.0"
+  }
+}

@@ -31,10 +31,10 @@ public class ShareServlet implements IServlet {
 		if (link==null) link = "https://app.sogive.org";
 		// build page info
 		String title = state.get("title"); // Maximum length 60-70 characters
-		if (title==null) title = "My Title :)";
+		if (title==null) title = "SoGive";
 		String image = state.get("image");
 //		if (image==null) image = "https://wi-images.condecdn.net/image/jOZ1xYp2vVz/crop/405";
-		String desc = Utils.or(state.get("desc"), "Good stuff, oh yes."); // 155 chars??
+		String desc = Utils.or(state.get("desc"), "Raising money for charity."); // 155 chars??
 		page.setTitle(title);		
 //		<meta name="description" content="Page description. No longer than 155 characters." />
 		page.appendToHeader("<meta property=\"og:title\" content=\""+title+"\" />\n" + 

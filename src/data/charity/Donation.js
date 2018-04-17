@@ -3,7 +3,7 @@ import {isa, nonce, defineType} from '../DataClass';
 import C from '../../C';
 import Money from './Money';
 import DataStore from '../../plumbing/DataStore';
-import {XId} from 'wwutils';
+import {XId, blockProp} from 'wwutils';
 
 /** impact utils */
 const Donation = defineType(C.TYPES.Donation);
@@ -15,14 +15,21 @@ function isNumeric(value) {
 	return ! isNaN(value - parseFloat(value));
 }
 
-// duck type: needs a value
-Donation.isa = (obj) => isa(obj, C.TYPES.Donation) || (obj && isNumeric(obj.value));
-Donation.assIsa = (obj) => assert(Donation.isa(obj), "Donation.js - not "+obj);
+/** crude duck type: needs an amount or total */
+Donation.isa = (obj) => {
+	if ( ! obj) return false;
+	return isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
+};
+Donation.assIsa = (obj) => {
+	assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
+	blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');
+	return true;
+};
 
 Donation.getTotal = (don) => {
 	// TODO + contributions - fees
 	// TODO test
-	let ttl = don.amount;
+	let ttl = Donation.amount(don);
 	if (don.contributions) {
 		don.contributions.forEach(money => ttl = ttl+money);
 	}
@@ -51,6 +58,12 @@ Donation.donorName = don => {
  * @returns {Money}
  */
 Donation.amount = don => This.assIsa(don) && don.amount;
+
+/**
+ * @param {Donation} don 
+ * @returns fundraiser ID or null
+ */
+Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
 
 Donation.make = (base = {}) => {
 	// to must be a charity

@@ -14,13 +14,14 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Transfer from '../data/Transfer';
-import MoneyClass from '../data/charity/Money';
+import Money from '../data/charity/Money';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';
 import {nonce, getId, getType} from '../data/DataClass';
 import PaymentWidget from './PaymentWidget';
 import Wizard, {WizardStage} from './WizardProgressWidget';
+import {notifyUser} from '../plumbing/Messaging';
 
 /**
  * 
@@ -38,35 +39,23 @@ const stripeKey = (C.SERVER_TYPE) ?
 const DonateButton = ({item}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	// const donationPath; foo
 	return (
-		<button className='btn btn-lg btn-primary' onClick={() => DataStore.setValue([...widgetPath, 'open'], true)}>
+		<button className='btn btn-lg btn-primary' 
+			onClick={() => {
+				// DataStore.setValue([...donationPath, 'fundRaiser'], getId(item));
+				DataStore.setValue([...widgetPath, 'open'], true);
+			}}
+		>
 			Donate
 		</button>
 	);
 };
 
-/** no donations below a min £1 */
-const amountOK = ({amount}) => amount && amount.value >= 1.0;
-
-const giftAidOK = ({giftAid, giftAidTaxpayer, giftAidOwnMoney, giftAidNoCompensation}) => (
-	!giftAid || (giftAidTaxpayer && giftAidOwnMoney && giftAidNoCompensation)
-);
-
-/** 
- * Minor todo: address & postcode can be optional, unless you have gift aid
-*/
-const detailsOK = ({name, address, postcode}) => (
-	name.trim().length > 0 && address.trim().length > 0 && postcode.trim().length > 0
-);
-
-// Message can't be "bad", payment is final stage so can only be incomplete
-const messageOK = (formData) => true;
-const paymentOK = (formData) => true;
-
 /**
  * item: a FundRaiser or NGO
  */
-const DonationForm = ({item, charity, causeName}) => {
+const DonationForm = ({item, charity, causeName, paidElsewhere, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "DonationForm", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
@@ -133,7 +122,7 @@ const DonationForm = ({item, charity, causeName}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' >
-						<AmountSection path={path} />
+						<AmountSection path={path} fromEditor={fromEditor} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
@@ -141,7 +130,7 @@ const DonationForm = ({item, charity, causeName}) => {
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' setNavStatus>
-						<DetailsSection path={path} stagePath={stagePath} />
+						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
@@ -149,7 +138,7 @@ const DonationForm = ({item, charity, causeName}) => {
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false} >
-						<PaymentSection path={path} donation={donationDraft} item={item} />
+						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
 				
 					<WizardStage title='Receipt' previous={false} >
@@ -163,20 +152,21 @@ const DonationForm = ({item, charity, causeName}) => {
 }; // ./DonationForm
 
 
-const AmountSection = ({path}) => {
+const AmountSection = ({path, fromEditor}) => {
 	let credit = Transfer.getCredit();	
 	const dontn = DataStore.getValue(path);
 	console.log("donation", JSON.stringify(dontn));
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
 	if ( ! val) {
-		val = credit || MoneyClass.make({value:10});
+		val = credit || Money.make({value:10});
 		DataStore.setValue(pathAmount, val);
 	}
 	return (
-		<div className='section donation-amount'>
+		<div className='section donation-amount'>			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
-			{MoneyClass.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+			<Misc.PropControl prop='anonAmount' label={'Hide my donation amount?'} path={path} type='checkbox' />
 		</div>);
 };
 
@@ -240,7 +230,7 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	);
 };
 
-const DetailsSection = ({path, stagePath, setNavStatus}) => {
+const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
 	if (setNavStatus) setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
@@ -251,10 +241,16 @@ const DetailsSection = ({path, stagePath, setNavStatus}) => {
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
 				: <p>These details are optional: you can give anonymously.</p>}
+			{fromEditor? <Misc.PropControl label='Donor ID' path={path} prop='from' /> : null}
 			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
 			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
 			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
+			{ ! giftAid? <Misc.PropControl prop='consentToSharePII' 
+				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
+				path={path} type='checkbox' />
+				: null}
+			<Misc.PropControl prop='anonymous' label={'Keep this donation anonymous?'} path={path} type='checkbox' />
 		</div>);
 };
 
@@ -280,7 +276,7 @@ const doPayment = ({donation}) => {
 
 	// invalidate credit if some got spent	
 	let credit = Transfer.getCredit();
-	if (credit && MoneyClass.value(credit) > 0) {
+	if (credit && Money.value(credit) > 0) {
 		DataStore.invalidateList(C.TYPES.Transfer);
 	}
 
@@ -300,7 +296,7 @@ const doPayment = ({donation}) => {
 };
 
 
-const PaymentSection = ({path, item}) => {
+const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	const donation = DataStore.getValue(path);
 	if ( ! donation) {
 		return null;
@@ -310,7 +306,25 @@ const PaymentSection = ({path, item}) => {
 	if ( ! amount) {
 		return null;
 	}
-	MoneyClass.assIsa(amount);
+	Money.assIsa(amount);
+
+	// Not the normal payment?
+	if (paidElsewhere) {
+		donation.paidElsewhere = true;
+		return (<div>
+			<p>This form is for donations that have already been paid.</p>
+			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
+			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
+			<button onClick={e => {
+				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
+				.then(res => {
+					notifyUser('Off-site donation published - reload to see');
+					closeLightbox();
+				});				
+			}} className='btn btn-primary'>Publish Donation</button>
+		</div>);
+	}
+
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
 	 * @param {id:String, type:String, token:String} token 

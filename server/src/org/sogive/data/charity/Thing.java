@@ -93,11 +93,11 @@ implements IInit
 		return (String) get("name");
 	}
 	
-	public <T extends Thing> List<T> addOrMerge(String property, T thing) {
+	public <T extends IInit> List<T> addOrMerge(String property, T thing) {
 		return addOrMerge(property, thing, Utils::equals);
 	}
 	
-	<T extends Thing> List<T> addOrMerge(String property, T thing, BiPredicate<T,T> matcher) {
+	<T extends IInit> List<T> addOrMerge(String property, T thing, BiPredicate<T,T> matcher) {
 		assert ! Utils.isBlank(property);
 		List<T> projects = list(getThings(property, thing.getClass()));
 		if (projects==null) {
@@ -106,14 +106,16 @@ implements IInit
 		}
 		for (T pold : projects) {
 			if ( ! matcher.test(pold, thing)) continue;
-			pold.mergeIn(thing);
+			if (pold instanceof Thing) {
+				((Thing)pold).mergeIn((Thing) thing);
+			}
 			return projects;
 		}
 		projects.add(thing);
 		return projects;
 	}
 	
-	private <T extends Thing> List<T> getThings(String property, Class<T> klass) {
+	private <T extends IInit> List<T> getThings(String property, Class<T> klass) {
 		List list = list(get(property));
 		if (list==null) return null;
 		List<T> things = getThings(list, klass);
@@ -153,13 +155,13 @@ implements IInit
 		return getLong("year");
 	}
 
-	public static <X extends Thing> List<X> getThings(List list, Class<X> klass) {
+	public static <X extends IInit> List<X> getThings(List list, Class<X> klass) {
 		if (list==null) return null;
-		List<X> things = Containers.apply(Containers.filterNulls(list), obj -> getThing(obj, klass));
+		List things = Containers.apply(Containers.filterNulls(list), obj -> getThing(obj, klass));
 		return things;
 	}
 	
-	public static <X extends Thing> X getThing(Object obj, Class<X> klass) {
+	public static <X extends IInit> X getThing(Object obj, Class<X> klass) {
 		if (obj==null) {
 			Log.w("Thing", "null input = null for "+klass+" at "+ReflectionUtils.getSomeStack(12));
 			return null;
@@ -177,7 +179,13 @@ implements IInit
 //			Constructor<X> cons = klass.getConstructor();
 			deccons.setAccessible(true);
 			X thing = deccons.newInstance();
-			thing.putAll(map);
+			if (thing instanceof Thing) {
+				((Thing) thing).putAll(map);
+			} else {
+				Map<String, Object> thingmap = Containers.objectAsMap(thing);
+				map.remove("@type");
+				thingmap.putAll(map);
+			}
 			thing.init();
 			return thing;
 		} catch(Exception ex) {

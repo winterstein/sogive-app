@@ -96,7 +96,7 @@ public class Output extends Thing<Output> {
 	 * @param costPerBen
 	 */
 	public void setCostPerOutput(Money costPerBen) {
-		assert costPerBen.getValue() >= 0 : this;
+		assert costPerBen.getValue100p() >= 0 : this;
 		put("costPerOutput", costPerBen);
 	}
 

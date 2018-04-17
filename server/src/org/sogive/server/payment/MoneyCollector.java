@@ -46,7 +46,7 @@ public class MoneyCollector {
 		}
 
 		// nothing to pay?
-		if (total.getValue()==0) {
+		if (total.getValue100p()==0) {
 			Log.d(LOGTAG, "no money collection - £0 for "+basket);
 			return transfers;
 		}
@@ -58,10 +58,10 @@ public class MoneyCollector {
 			allOnCredit = true;
 		}		
 		Money credit = Transfer.getTotalCredit(user);
-		if (credit!=null && credit.getValue() > 0) {
+		if (credit!=null && credit.getValue100p() > 0) {
 			// NB if your account is in debt i.e. < 0, then you cant pay on credit
 			Money residual = doCollectMoney2(credit, allOnCredit);
-			if (residual==null || residual.getValue()==0) {
+			if (residual==null || residual.getValue100p()==0) {
 				return transfers;
 			}
 			Log.d(LOGTAG, "part payment on credit "+basket+" residual: "+residual);
@@ -77,7 +77,8 @@ public class MoneyCollector {
 			String ikey = basket.getId();
 			Person userObj = DBSoGive.getCreateUser(user);
 
-			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { // TODO security check!
+			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { 
+				// TODO security check!
 				Log.d(LOGTAG, "skip payment: "+basket);
 				return transfers; 
 			}
@@ -107,7 +108,7 @@ public class MoneyCollector {
 		Money amount = basket.getAmount();
 		Money paidOnCredit = amount;
 		Money residual = Money.pound(0);
-		if (amount.getValue() > credit.getValue()) {
+		if (amount.getValue100p() > credit.getValue100p()) {
 			residual = amount.minus(credit);
 			paidOnCredit = credit;
 			if (allOnCredit) {

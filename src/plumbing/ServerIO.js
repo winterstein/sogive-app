@@ -25,6 +25,12 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	}});
 });
 
+// Allow for local to point at live for debugging
+window.APIBASE = 
+	// ''; Normally use this!
+	'https://test.sogive.org';
+	// 'https://app.sogive.org';
+
 const ServerIO = {};
 export default ServerIO;
 // for debug
@@ -86,7 +92,8 @@ ServerIO.getDonationDraft = ({from, charity, fundRaiser}) => {
 	assMatch(charity || fundRaiser, String);
 	let to = charity;
 	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
-	return ServerIO.load('/donation/list.json', {data: {from, to, q}, swallow: true});
+	let status = C.KStatus.DRAFT;
+	return ServerIO.load('/donation/list.json', {data: {from, to, q, status}, swallow: true});
 };
 
 
@@ -154,6 +161,10 @@ ServerIO.upload = function(file, progress, load) {
 **/
 ServerIO.load = function(url, params) {
 	assMatch(url,String);
+	// prepend the API base url? e.g. to route all traffic from a local dev build to the live app.sogive.org backend.
+	if (APIBASE && url.indexOf('http') === -1) {
+		url = APIBASE+url;
+	}
 	console.log("ServerIO.load", url, params);
 	params = ServerIO.addDefaultParams(params);
 	// sanity check: no Objects except arrays

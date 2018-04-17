@@ -190,10 +190,10 @@ public class Transfer extends AThing {
 		SearchResponse sr = s.get();
 		List<Transfer> hits = sr.getSearchResults(Transfer.class);
 		// minor glitch: a transfer from:alice to:alice is only one result, and it gets counted as positive!
-		Money sum = new Money(0);
+		Money sum = Money.pound(0);
 		for (Transfer t : hits) {
 			if (t.getTo().equals(user)) {
-				sum = sum.plus(t.getAmount());
+				sum = new Money(sum.plus(t.getAmount()));
 			} else {
 				sum = sum.minus(t.getAmount());
 			}
