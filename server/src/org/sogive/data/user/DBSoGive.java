@@ -10,6 +10,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
@@ -20,7 +21,6 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.utils.io.SqlUtils;
-import com.goodloop.data.Money;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;

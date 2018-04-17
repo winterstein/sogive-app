@@ -19,10 +19,12 @@ case $1 in
 	production|PRODUCTION)
 	printf "\nthis is a PRODUCTION pushout\n"
 	TARGET=$PRODUCTIONSERVERS
+	PUBLISH_TYPE='production'
 	;;
 	test|TEST)
 	printf "\nthis is a TEST pushout\n"
 	TARGET=$TESTSERVERS
+	PUBLISH_TYPE='test'
 	;;
 	*)
 	printf "\nThe script couldn't discern if this was a production or a test pushout.\n\n$USAGE\n\nEXITING...\n"
@@ -117,3 +119,19 @@ for server in ${TARGET[*]}; do
 done
 
 printf "\nPublishing process completed\n"
+
+printf "\nGetting Ready to take Screenshots\n"
+if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
+fi
+
+if [[ $PUBLISH_TYPE = 'test' ]]; then
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
+	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
+else
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
+	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
+	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
+fi

@@ -184,6 +184,8 @@ const getBasketPath = (uxid) => {
 };
 
 /**
+ * TODO due to bugs (April 2018) this feature was switched off!
+ * 
  * NB: uses a pseudo id of `draft-to:X`
  * 
  * {
@@ -212,27 +214,27 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 	// use a pseudo id to keep it in the local DataStore
 	let from = Login.getId();
 	return DataStore.fetch(['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId], () => {
-		return ServerIO.getDonationDraft({from, charity, fundRaiser})
-			.then(res => {
-				console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
-				let cargo = res.cargo;			
-				let dontn = cargo.hits && cargo.hits[0];
-				if ( ! dontn) {
-					// make a new draft donation
-					dontn = Donation.make({
-						to: charity,
-						fundRaiser: fundRaiser,
-						via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
-						from: from,
-						amount: Money.make({ value: 10, currency: 'gbp' }),
-						coverCosts: true,
-					});
-					console.warn('donationDraft-new', dontn);
-				}
-				// store in data by ID (the fetch stores under draft-to)
-				DataStore.setData(dontn);
-				return dontn;
-			}); // ./then()
+		// return ServerIO.getDonationDraft({from, charity, fundRaiser})
+		// 	.then(res => {
+		// 		console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
+		// 		let cargo = res.cargo;			
+		// 		let dontn = cargo.hits && cargo.hits[0];
+		// 		if ( ! dontn) {
+		// make a new draft donation
+		let dontn = Donation.make({
+			to: charity,
+			fundRaiser: fundRaiser,
+			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
+			from: from,
+			amount: Money.make({ value: 10, currency: 'gbp' }),
+			coverCosts: true,
+		});
+		console.warn('donationDraft-new', dontn);
+		// }
+		// store in data by ID (the fetch stores under draft-to)
+		DataStore.setData(dontn);
+		return dontn;
+		// }); // ./then()
 	}); // ./fetch()
 };
 

@@ -183,9 +183,19 @@ public class DonationServlet extends CrudServlet {
 		jthing.setJava(donation); // Is this needed to avoid any stale json?
 								
 		// collect the money
+		if (Utils.isBlank(donation.getTo())) {
+			Log.w(LOGTAG, "doPublishFirstTime null to?! "+donation+" "+state);
+			String frid = donation.getFundRaiser();
+			FundRaiser fr = AppUtils.get(frid, FundRaiser.class);
+			assert fr != null : "doPublishFirstTime null to and no fundRaiser?! "+donation+" "+state;
+			String cid = fr.getCharityId();
+			assert ! Utils.isBlank(cid) : fr;
+			donation.setTo(cid);
+			Log.w(LOGTAG, "doPublishFirstTime null to - set to "+cid+" Donation: "+donation);
+		}
 		if (donation.isPaidElsewhere()) {
 			Log.d(LOGTAG, "paid elsewhere "+donation);
-		} else {
+		} else {			
 			XId to = NGO.xidFromId(donation.getTo());
 			MoneyCollector mc = new MoneyCollector(donation, user, to, state);
 			mc.run();
@@ -197,9 +207,9 @@ public class DonationServlet extends CrudServlet {
 //			FundraiserServlet fart = new FundraiserServlet();
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
 			dtfa.send(donation);
-			Log.d(LOGTAG, "send to fundraiser actor "+donation);
+			Log.d(LOGTAG, "send to DonateToFundRaiserActor "+donation);
 		} else {
-			Log.d(LOGTAG, "no fundraiser for "+donation);
+			Log.d(LOGTAG, "no fundraiser for "+donation+" so dont call DonateToFundRaiserActor");
 		}
 	}
 

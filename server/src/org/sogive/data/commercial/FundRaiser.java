@@ -1,5 +1,6 @@
 package org.sogive.data.commercial;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.app.AppUtils;
@@ -55,6 +57,20 @@ public class FundRaiser extends AThing {
 	 * store the ticket for audit
 	 */
 	Ticket ticket;
+	
+	/**
+	 * Donation IDs -- for debugging purposes
+	 */
+	List<String> donations = new ArrayList<>();
+		
+	public List<String> getDonations() {
+		if (donations==null) donations = new ArrayList(); // backfill old objects
+		return donations;
+	}
+	
+	public Ticket getTicket() {
+		return ticket;
+	}
 
 	@Override
 	public void init() {
@@ -80,13 +96,19 @@ public class FundRaiser extends AThing {
 	public static String getIDForTicket(Ticket ticket) {
 		assert ! Utils.isBlank(ticket.getEventId()) : "no event?! "+ticket;
 		assert ticket.getOwnerXId() != null: ticket;
-		// NB: hash with salt to protect the users email
-		return ticket.getEventId()+'.'+StrUtils.md5("user:"+ticket.getOwnerXId());	
+		// pick a "nice" but unique id - e.g. daniel.moonwalk.uydx
+		String uname = ticket.getOwnerXId().getName();
+		// avoid exposing the persons email
+		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
+		// so repeat calls give the same answer (no random), but it should be unique enough
+		String predictableNonce = StrUtils.md5(uname+ticket.getId()).substring(0, 6);
+		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
 
 	public FundRaiser() {
 	}
-	public FundRaiser(Ticket ticket, Basket basket) {		
+	
+	public FundRaiser(Ticket ticket, Basket basket) {
 		setId(getIDForTicket(ticket));		
 		// charity
 		charityId = Utils.or(ticket.charityId, basket.charityId); 
@@ -112,7 +134,11 @@ public class FundRaiser extends AThing {
 		}
 	}
 
+	/**
+	 * @return Can be null if the fundraiser is directly for the charity with no ticketed event.
+	 */
 	public Event getEvent() {
+		if (eventId==null) return null;
 		Event event = AppUtils.get(eventId, Event.class);
 		return event;
 	}

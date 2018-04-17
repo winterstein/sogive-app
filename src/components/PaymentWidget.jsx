@@ -7,7 +7,7 @@ import { StripeProvider, Elements, injectStripe,
 	PaymentRequestButtonElement } from 'react-stripe-elements';
 
 import C from '../C';
-import MoneyClass from '../data/charity/Money';
+import Money from '../data/charity/Money';
 import Transfer from '../data/Transfer';
 import {assMatch} from 'sjtest';
 import Misc from './Misc';
@@ -39,9 +39,9 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 	if ( ! amount) {
 		return null; // no amount, no payment
 	}
-	MoneyClass.assIsa(amount);
-	assMatch(onToken, Function);
-	assMatch(recipient, String);
+	Money.assIsa(amount, "PaymentWidget.jsx");
+	assMatch(onToken, Function, "PaymentWidget.jsx");
+	assMatch(recipient, String, "PaymentWidget.jsx");
 
 	// Invoke the callback, with a minimal fake token that the servlet will catch
 	const skipAction = (event) => (
@@ -59,8 +59,8 @@ const PaymentWidget = ({amount, onToken, recipient, email}) => {
 
 	// pay on credit??
 	let credit = Transfer.getCredit();
-	if (credit && MoneyClass.value(credit) > 0) {
-		if (MoneyClass.value(credit) >= MoneyClass.value(amount)) {
+	if (credit && Money.value(credit) > 0) {
+		if (Money.value(credit) >= Money.value(amount)) {
 			return (
 				<div className='section donation-amount'>			
 					<p>You have <Misc.Money amount={credit} /> in credit which will pay for this.</p>
@@ -105,8 +105,8 @@ class StripeThingsClass extends Component {
 
 		let residual = amount;
 		// NB dont add on prior debts
-		if (credit && MoneyClass.value(credit) > 0) {
-			residual = MoneyClass.sub(amount, credit);		
+		if (credit && Money.value(credit) > 0) {
+			residual = Money.sub(amount, credit);		
 		}
 
 		/* We might be able to forgo the rigmarole of collecting
@@ -178,7 +178,7 @@ class StripeThingsClass extends Component {
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
 				<h3>Payment of <Misc.Money amount={amount} /> to {recipient}</h3>
-				{credit && MoneyClass.value(credit) > 0? 
+				{credit && Money.value(credit) > 0? 
 					<FormGroup><Col md={12}>
 						You have <Misc.Money amount={credit} /> in credit which will be used towards this payment.
 					</Col></FormGroup>

@@ -25,6 +25,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class Donation extends AThing implements IForSale {
+		
+	Boolean anonymous;
+	Boolean anonAmount;
 	
 	/**
 	 * The user who donated
@@ -43,6 +46,11 @@ public class Donation extends AThing implements IForSale {
 	String donorAddress;
 	String donorPostcode;
 	
+	/**
+	 * Has the user said OK to sharing their details with the charity?
+	 */
+	Boolean consentToSharePII;
+	
 	String message;
 	
 	/**
@@ -60,10 +68,10 @@ public class Donation extends AThing implements IForSale {
 	 * The total amount the charity will receive.
 	 */
 	public Money getTotal() {
-		Mutable.Ref<Money> ttl = new Mutable.Ref<>(amount);
+		Mutable.Ref<com.goodloop.data.Money> ttl = new Mutable.Ref<>(amount);
 		if (contributions!=null) contributions.forEach(c -> ttl.value = ttl.value.plus(c.money));
 		if (fees!=null) fees.forEach(c -> ttl.value = ttl.value.minus(c.money));
-		total = ttl.value;
+		total = new Money(ttl.value);
 		return total;
 	}
 	
@@ -77,11 +85,19 @@ public class Donation extends AThing implements IForSale {
 	
 	boolean paidOut;
 	
+	List<String> done;
+	List<String> todo;
+	
 	/**
 	 * If true, the money was paid outside of the SoGive system.
 	 * E.g. cash paid in directly. Then this record is just to log the donation in SoGive.
 	 */
 	boolean paidElsewhere;
+	
+	/**
+	 * Stripe | ask-user | usually null
+	 */
+	String paymentMethod;	
 	
 	/**
 	 * e.g. a stripe charge id

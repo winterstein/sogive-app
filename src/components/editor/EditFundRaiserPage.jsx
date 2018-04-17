@@ -12,6 +12,7 @@ import Roles from '../../Roles';
 
 import Misc from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
+import DonationForm, {DonateButton} from '../NewDonationForm';
 
 const EditFundRaiserPage = () => {
 
@@ -66,9 +67,10 @@ const FundRaiserEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
 			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
 				placeholder='Leave blank for an automatic target (recommended)'
-			/>
+			/>			
 
 			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
+			<Misc.PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
 
 			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
 			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
@@ -77,9 +79,21 @@ const FundRaiserEditor = ({id}) => {
 			<hr />
 			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
+			<AddOffSiteDonation fundraiser={item} />
+
 			<Misc.SavePublishDiscard type={type} id={id} />
 			</div>
 	</div>);
+};
+
+const AddOffSiteDonation = ({fundraiser}) => {
+	return (
+		<Misc.Card title='Add an off-site donation'>
+			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
+			<DonateButton item={fundraiser} />
+			<DonationForm item={fundraiser} paidElsewhere fromEditor />
+		</Misc.Card>
+	);
 };
 
 export default EditFundRaiserPage;

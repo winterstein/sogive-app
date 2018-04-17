@@ -116,7 +116,7 @@ public class Project extends Thing<Project> {
 
 	
 	public void addInput(String costName, Money ac) {
-		ac.put("name", costName);
+		ac.setName(costName);
 		addOrMerge("inputs", ac);
 	}
 
@@ -151,7 +151,7 @@ public class Project extends Thing<Project> {
 			// can't calc anything
 			return null;
 		}
-		if (cost.getValue()==0) {
+		if (cost.isZero()) {
 			Log.i("data", "0 cost for "+this);
 			return null;
 		}

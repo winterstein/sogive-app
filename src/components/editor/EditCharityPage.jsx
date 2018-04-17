@@ -14,7 +14,7 @@ import printer from '../../utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
-import MoneyClass from '../../data/charity/Money';
+import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
@@ -185,7 +185,7 @@ const ProfileEditor = ({charity}) => {
 			</div>
 			: null
 		}
-		<EditField item={charity} type='img' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
+		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
@@ -321,7 +321,7 @@ const ProjectEditor = ({charity, project}) => {
 			{isOverall? null : (
 				<div>
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+					<EditProjectField charity={charity} project={project} type='imgUpload' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
 					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
 						help='A story from this project, e.g. about a beneficiary.' />					
@@ -386,7 +386,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
 		<div className='form-inline'>
-			<Misc.PropControl prop='url' label='Add Source URL' path={formPath} />
+			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
 				<Glyphicon glyph='plus' />
@@ -403,10 +403,10 @@ const ProjectInputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = ['draft',C.TYPES.NGO, cid, 'projects', pid];
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || MoneyClass.make({name: 'annualCosts'});	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || MoneyClass.make({name: 'projectCosts'});
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || MoneyClass.make({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || MoneyClass.make({name: "incomeFromBeneficiaries"});
+	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || Money.make({name: 'annualCosts'});	
+	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || Money.make({name: 'projectCosts'});
+	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || Money.make({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || Money.make({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>

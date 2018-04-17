@@ -322,7 +322,7 @@ public class ImportCharityDataFromCSV {
 				Money ac = cost(get(row, col(cost)));
 				ac.setPeriod(start, end);
 				String costName = StrUtils.toCamelCase(cost);
-				ac.put("name", costName);
+				ac.setName(costName);
 				inputs.add(ac);
 			}
 			project.put("inputs", inputs);

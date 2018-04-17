@@ -11,7 +11,7 @@ import DataStore from '../plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import {notifyUser} from '../plumbing/Messaging';
-import MoneyClass from '../data/charity/Money';
+import Money from '../data/charity/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
 import C from '../C';
@@ -151,7 +151,7 @@ const FundRaiserPage = ({id}) => {
 						{ donations ? (
 							<Supporters item={item} donations={donations} charity={/*charity*/ null} />						
 						) : null}
-						
+						<SocialShare charity={charity} fundraiser={item} />
 					</Col>
 				</Row>
 				{/*
@@ -173,7 +173,7 @@ const DonationProgress = ({item, charity}) => {
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
 	// nothing?
-	if (MoneyClass.value(donated) < 0.1) {
+	if (Money.value(donated) < 0.1) {
 		return (<div className='DonationProgress no-money'>
 			<p>No money raised yet.</p>
 			{isOwner(item)? <p>Why not kick-start things by making a seed donation yourself?</p> : null}
@@ -210,14 +210,10 @@ const DonationProgress = ({item, charity}) => {
 				<DonationsSoFar item={item} />				
 				<ImpactDesc charity={charity} amount={donated} showMoney={false} 
 					beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
-				<DonateButton item={item} />
+				<DonateButton item={item} />				
 			</div>
 		</div>
 	);
-	// TODO
-	// 			<div className='share'>
-			// 	<SocialShare charity={charity} fundraiser={item} />
-			// </div>
 }; // DonationProgress
 
 const DonationsSoFar = ({item}) => {
@@ -225,7 +221,7 @@ const DonationsSoFar = ({item}) => {
 	const {userTarget, donationCount } = item;
 	const donated = FundRaiser.donated(item);
 	
-	if ( ! donationCount && MoneyClass.value(donated) === 0) {
+	if ( ! donationCount && Money.value(donated) === 0) {
 		return (
 			<div className='details-input'>
 				Be the first to donate to {item.name}!
@@ -233,7 +229,7 @@ const DonationsSoFar = ({item}) => {
 		);		
 	}
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
-	const diff = MoneyClass.sub(target, item.donated);
+	const diff = Money.sub(target, item.donated);
 
 	if (diff.value <= 0) {
 		return (
@@ -266,19 +262,22 @@ const Supporters = ({item, donations = [], charity}) => {
 };
 
 const Supporter = ({donation, charity}) => {
-	const name = Donation.donorName(donation) || 'Anonymous Donor';
+	let name = Donation.donorName(donation) || 'Anonymous Donor';
+	if (donation.anonymous) {
+		name = 'Anonymous Donor';
+	}
 	const personImg = donation.donor && donation.donor.img;
 
 	return (
 		<li className='donation'>
-			{ personImg ? (
+			{ personImg && ! donation.anonymous? (
 				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
-			<Misc.RelativeDate date={donation.date} className='donation-date' />
-			<div><span className='amount-donated'><Misc.Money amount={donation.amount} /></span> donated</div>
+			<Misc.RelativeDate date={donation.date} className='donation-date' />			
+			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
 			{donation.contributions? 
-				donation.contributions.map(con => <div className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
+				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (
 				<p>{donation.message}</p>
