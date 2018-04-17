@@ -82,8 +82,16 @@ This.donated = item => {
 FundRaiser.getIdForTicket = (ticket) => {
 	// NB: hash with salt to protect the users email
 	assMatch(Ticket.eventId(ticket), String, ticket);
-	assMatch(ticket.attendeeEmail, String, ticket);
-	return Ticket.eventId(ticket)+'.'+md5('user:'+Ticket.oxid(ticket));
+	// assMatch(ticket.attendeeEmail, String, ticket);
+	// pick a "nice" but unique id - e.g. daniel.moonwalk.uydx
+	let uname = XId.id(Ticket.oxid(ticket));
+	// avoid exposing the persons email
+	if (uname.indexOf("@") !== -1) uname = uname.substring(0, uname.indexOf("@"));
+	let safeuname = uname.replace(/\W/g, '');
+	// so repeat calls give the same answer (no random), but it should be unique enough
+	let predictableNonce = md5(uname+ticket.getId()).substring(0, 6);
+	return safeuname+'.'+ticket.getEventId()+'.'+predictableNonce;	
+	// old: return Ticket.eventId(ticket)+'.'+md5('user:'+Ticket.oxid(ticket));
 };
 
 FundRaiser.make = (base) => {

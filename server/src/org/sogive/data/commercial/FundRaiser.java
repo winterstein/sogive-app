@@ -89,7 +89,7 @@ public class FundRaiser extends AThing {
 	}
 	
 	/**
-	 * Important: this is copied in js
+	 * Important: this is copied in js!!
 	 * @param ticket
 	 * @return
 	 */
@@ -102,7 +102,8 @@ public class FundRaiser extends AThing {
 		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
 		// so repeat calls give the same answer (no random), but it should be unique enough
 		String predictableNonce = StrUtils.md5(uname+ticket.getId()).substring(0, 6);
-		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+predictableNonce;	
+		String safeuname = uname.replaceAll("\\W+", "");
+		return safeuname+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
 
 	public FundRaiser() {
