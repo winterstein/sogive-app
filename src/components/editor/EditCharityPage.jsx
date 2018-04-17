@@ -19,6 +19,7 @@ import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
+import { ImpactDesc } from '../ImpactWidgetry';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -71,6 +72,9 @@ const EditCharityPage = () => {
 				}
 
 			</Panel>
+			<Misc.Card title='Preview: Impact'>
+				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+			</Misc.Card>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 					<ProfileEditor charity={charity} />
@@ -217,9 +221,10 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
+	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Panel key={'project_'+i} eventKey={i+1} 
-			header={<div><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+			header={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Panel>)
 		);

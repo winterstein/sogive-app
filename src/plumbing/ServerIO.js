@@ -27,9 +27,9 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 
 // Allow for local to point at live for debugging
 window.APIBASE = 
-	// ''; Normally use this!
-	'https://test.sogive.org';
-	// 'https://app.sogive.org';
+	// ''; Normally use this for "my server"!
+	// 'https://test.sogive.org'; // use for testing
+	'https://app.sogive.org'; // use in testing to access live data
 
 const ServerIO = {};
 export default ServerIO;
@@ -197,32 +197,33 @@ ServerIO.load = function(url, params) {
 		return defrd;
 	}
 	defrd = defrd
-		.then(ServerIO.handleMessages)
-		.fail(function(response, huh, bah) {
-			console.error('fail',url,params,response,huh,bah);
-			// error message
-			let text = response.status===404? 
-				"404: Sadly that content could not be found."
-				: "Could not load "+params.url+" from the server";
-			if (response.responseText && ! (response.status >= 500)) {
-				// NB: dont show the nginx error page for a 500 server fail
-				text = response.responseText;
-			}
-			let msg = {
-				id: 'error from '+params.url,
-				type:'error', 
-				text
-			};
-			// HACK hide details
-			if (msg.text.indexOf('\n----') !== -1) {
-				let i = msg.text.indexOf('\n----');
-				msg.details = msg.text.substr(i);
-				msg.text = msg.text.substr(0, i);
-			}
-			// bleurgh - a frameworky dependency
-			notifyUser(msg);
-			return response;
-		});
+		.then(ServerIO.handleMessages,
+			// onfail (not factored out to allow easy access to local vars)
+			function(response, huh, bah) {
+				console.error('fail',url,params,response,huh,bah);
+				// error message
+				let text = response.status===404? 
+					"404: Sadly that content could not be found."
+					: "Could not load "+params.url+" from the server";
+				if (response.responseText && ! (response.status >= 500)) {
+					// NB: dont show the nginx error page for a 500 server fail
+					text = response.responseText;
+				}
+				let msg = {
+					id: 'error from '+params.url,
+					type:'error', 
+					text
+				};
+				// HACK hide details
+				if (msg.text.indexOf('\n----') !== -1) {
+					let i = msg.text.indexOf('\n----');
+					msg.details = msg.text.substr(i);
+					msg.text = msg.text.substr(0, i);
+				}
+				// bleurgh - a frameworky dependency
+				notifyUser(msg);
+				return response;
+			});
 	return defrd;
 };
 

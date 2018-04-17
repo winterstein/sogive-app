@@ -388,7 +388,7 @@ class Store {
 				res = res.cargo;
 			}			
 			return res;
-		}).fail(response => {
+		}).catch(response => {
 			// what if anything to do here??
 			console.warn("DataStore fetch fail", path, response);
 			// Typically ServerIO will call notifyUser
