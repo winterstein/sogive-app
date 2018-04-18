@@ -20,7 +20,7 @@
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.5",
     "md5": "^2.2.1",
-    "promise-value": "^1.0.8",
+    "promise-value": "^1.1.0",
     "react": "^16.3.2",
     "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^0.31.5",

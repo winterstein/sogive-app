@@ -101,7 +101,8 @@ public class FundRaiser extends AThing {
 		// avoid exposing the persons email
 		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
 		// so repeat calls give the same answer (no random), but it should be unique enough
-		String predictableNonce = StrUtils.md5(uname+ticket.getId()).substring(0, 6);
+		String hashme = uname+ticket.getId();
+		String predictableNonce = StrUtils.md5(hashme).substring(0, 6);
 		String safeuname = uname.replaceAll("\\W+", "");
 		return safeuname+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
