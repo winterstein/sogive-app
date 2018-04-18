@@ -18,7 +18,7 @@ import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
-import Crud from '../../base/plumbing/Crud'; //publish
+import Crud from '../../plumbing/Crud'; //publish
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {

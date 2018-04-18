@@ -17,7 +17,7 @@ import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import DonationForm from './DonationForm';
-import SocialShare from '../base/components/SocialShare';
+import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 
 const CharityPage = () => {

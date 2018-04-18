@@ -29,7 +29,7 @@ import Money from '../data/charity/Money';
 import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
-import SocialShare from '../base/components/SocialShare';
+import SocialShare from './SocialShare';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 
 

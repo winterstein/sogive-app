@@ -23,7 +23,7 @@ import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
-import SocialShare from '../base/components/SocialShare';
+import SocialShare from './SocialShare';
 
 const FundRaiserTop = () => {
 	// which event?	

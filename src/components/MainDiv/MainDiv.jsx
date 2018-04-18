@@ -7,7 +7,7 @@ import _ from 'lodash';
 // Plumbing
 import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
-import CRUD from '../../base/plumbing/Crud';
+import CRUD from '../../plumbing/Crud';
 import C from '../../C';
 // Templates
 import MessageBar from '../../base/components/MessageBar';

@@ -22,8 +22,7 @@ import Autocomplete from 'react-autocomplete';
 import {getType, getId, nonce} from '../base/data/DataClass';
 import md5 from 'md5';
 import Settings from '../base/Settings';
-
-const Misc = {};
+import Misc from '../base/components/Misc';
 
 /**
 E.g. "Loading your settings...""
