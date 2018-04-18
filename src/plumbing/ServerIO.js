@@ -25,10 +25,16 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	}});
 });
 
-// Allow for local to point at live for debugging
+/** The initial part of an API call. Allows for local to point at live for debugging */
 window.APIBASE = ''; // Normally use this for "my server"!
-window.APIBASE = 'https://test.sogive.org'; // use for testing
-	// 'https://app.sogive.org'; // use in testing to access live data
+// Comment out the lines below when deploying!
+// window.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
+// window.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
+
+// Safety check - if we deploy test code, it will complain
+if (window.APIBASE && C.isProduction()) {
+	throw new Error("ServerIO.js - window.APIBASE is using a test setting! Argh! "+window.APIBASE);
+}
 
 const ServerIO = {};
 export default ServerIO;
