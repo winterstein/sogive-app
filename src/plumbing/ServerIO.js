@@ -28,7 +28,7 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 /** The initial part of an API call. Allows for local to point at live for debugging */
 window.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
-// window.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
+window.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
 // window.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
 
 // Safety check - if we deploy test code, it will complain
