@@ -1,7 +1,7 @@
 import {assert, assMatch} from 'sjtest';
 import {isa, defineType} from '../DataClass';
 import Money from './Money';
-import {blockProp} from 'wwutils';
+import {blockProp, XId} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
 import Ticket from './Ticket';
