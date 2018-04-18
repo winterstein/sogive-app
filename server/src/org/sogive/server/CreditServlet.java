@@ -152,7 +152,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 				String nu = "";
 				if (t.toPerson!=null && t.toPerson.isFresh) {
 					// TODO create a password-reset link with YA so they can click through to claim it.
-					nu = "Welcome to Soive - we have setup a blank account to hold your credit.";
+					nu = "Welcome to SoGive - we have setup a blank account to hold your credit.";
 				}
 				String bodyHtml = "<div><h2>Hooray!</h2><p>"+nu+"</p><p>Your credit is: "+t.toString()+"</p></div>"; // FIXME
 				String bodyPlain = WebUtils2.getPlainText(bodyHtml);
