@@ -59,7 +59,8 @@ const DonateButton = ({item, paidElsewhere}) => {
  * 
  * Warning: Only have ONE of these on a page! Otherwise both will open at once!
  */
-const DonationForm = ({item, charity, causeName, fromEditor}) => {
+const DonationForm = ({item, charity, causeName, fromEditor}) => {	
+
 	const id = getId(item);
 	assert(id, "DonationForm", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
@@ -71,6 +72,14 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 	}
 	let charityId = charity? getId(charity) : item.charityId;
 	const widgetPath = ['widget', 'NewDonationForm', id];
+	
+	// There can only be one!
+	// TODO move this to Misc for reuse TODO reuse this safety test with other only-one-per-page dialogs
+	// ?? maybe replace the assert with a more lenient return null??
+	const rpath = ['transient', 'render'].concat(widgetPath);
+	const already = DataStore.getValue(rpath);	
+	assert( ! already, "NewDonationForm.jsx - duplicate "+widgetPath);
+	DataStore.setValue(rpath, true, false);
 
 	// what stage?
 	const stagePath = ['location', 'params', 'dntnStage'];
