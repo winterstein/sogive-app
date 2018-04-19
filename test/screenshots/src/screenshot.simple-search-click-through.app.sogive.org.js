@@ -15,7 +15,7 @@ function timeout(ms) {
   await loaded;
   await mouse.click(700,133);
   await loaded;
-  await keyboard.type('malaria');
+  await keyboard.type('oxfam');
   await loaded;
   await mouse.click(1424,130);
   await loaded;
