@@ -19,9 +19,9 @@ function timeout(ms) {
   await loaded;
   await mouse.click(1424,130);
   await loaded;
-  await timeout(3000)
+  await timeout(3000);
   await mouse.click(530,460);
-  await timeout(2000)
+  await timeout(2000);
   await page.screenshot({path: 'test/click-through/' + new Date().toISOString() + '.png'});
   await browser.close();
 })();
