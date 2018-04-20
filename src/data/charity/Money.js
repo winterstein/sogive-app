@@ -35,7 +35,9 @@ Money.value = ma => {
 		return ma.value100p / 10000;
 	}
 	if (ma.value) {
-		return parseFloat(ma.value);
+		let v = parseFloat(ma.value);
+		ma.value100p = v * 10000;
+		return v;
 	}	
 	// Patch old server data?
 	if (ma.value100) {

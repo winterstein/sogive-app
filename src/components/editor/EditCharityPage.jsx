@@ -172,7 +172,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url. 
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element". 
