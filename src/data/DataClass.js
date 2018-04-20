@@ -89,7 +89,13 @@ const nonce = (n=6) => {
 };
 
 /**
- * Setup the "standard" DataClass functions.
+ * Setup the "standard" DataClass functions:
+ * isa()
+ * assIsa()
+ * id()
+ * name()
+ * make()
+ * And a type.
  * @param {!String} type 
  */
 const defineType = (type) => {

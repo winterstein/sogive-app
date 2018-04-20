@@ -25,9 +25,9 @@ const AccountPage = () => {
 	});	
 	// TODO link into My-Loop, and vice-versa
 	// TODO store gift aid settings
-			// 	<Misc.Card title='Gift Aid'>
+			// 	<Card title='Gift Aid'>
 			// 	<GiftAidForm />
-			// </Misc.Card>
+			// </Card>
 	return (
 		<div className=''>
 			<h2>My Account</h2>

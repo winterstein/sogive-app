@@ -129,7 +129,7 @@ const getBasketPV = (uxid) => {
 	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT, swallow:true});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket
-	let pGetMake = pvbasket.promise.fail(err => {
+	let pGetMake = pvbasket.promise.catch(err => {
 		console.log("make a new basket");
 		let basket = Basket.make({id: bid});
 		DataStore.setData(basket);

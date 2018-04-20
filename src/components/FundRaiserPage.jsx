@@ -69,7 +69,11 @@ const FundRaiserPage = ({id}) => {
 	if ( ! item) {
 		return null; // 404 :(
 	}
-	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
+	let charity = FundRaiser.charity(item);
+	if ( ! charity) {
+		charity = NGO.make(); 
+		console.warn("FundRaiser with no charity set?!");
+	}
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
 	if ( ! pEvent.resolved) {

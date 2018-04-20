@@ -144,6 +144,10 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new CreditServlet();
 				s.process(request);
 				return;
+			case "testEmail":
+				s = new EmailServlet();
+				s.process(request);
+				return;
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {

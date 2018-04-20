@@ -95,6 +95,9 @@ class MainDiv extends Component {
 	}
 
 	render() {
+		// HACK clear render info
+		DataStore.setValue(['transient', 'render'], null, false);	
+
 		let path = DataStore.getValue('location', 'path');	
 		let page = (path && path[0]);
 		if ( ! page) {

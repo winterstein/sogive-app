@@ -12,7 +12,6 @@ import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
-import Money from '../data/charity/Money';
 import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
@@ -384,8 +383,7 @@ const LogOffSiteDonation = ({item}) => {
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. 
 				It will be added to your profile dashboard.</p>
-			<DonateButton item={item} />
-			<NewDonationForm item={item} paidElsewhere />
+			<DonateButton item={item} paidElsewhere />
 		</Misc.Card>
 	);
 };

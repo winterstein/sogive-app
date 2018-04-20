@@ -11,17 +11,17 @@ function timeout(ms) {
   const mouse = page.mouse;
   const keyboard = page.keyboard;
   await page.setViewport({width: 1920,height: 1080});
-  await page.goto('https://test.sogive.org');
+  await page.goto('https://app.sogive.org');
   await loaded;
   await mouse.click(700,133);
   await loaded;
-  await keyboard.type('malaria');
+  await keyboard.type('oxfam');
   await loaded;
   await mouse.click(1424,130);
   await loaded;
-  await timeout(3000)
+  await timeout(3000);
   await mouse.click(530,460);
-  await timeout(2000)
-  await page.screenshot({path: 'simple-search.test.sogive.org.png'});
+  await timeout(2000);
+  await page.screenshot({path: 'production/charity-select/' + new Date().toISOString() + '.png'});
   await browser.close();
 })();

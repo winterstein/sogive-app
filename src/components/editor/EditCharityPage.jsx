@@ -19,6 +19,7 @@ import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
+import { ImpactDesc } from '../ImpactWidgetry';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -69,7 +70,11 @@ const EditCharityPage = () => {
 					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
 					: null
 				}
+
 			</Panel>
+			<Misc.Card title='Preview: Impact'>
+				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+			</Misc.Card>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 					<ProfileEditor charity={charity} />
@@ -167,7 +172,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url. 
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element". 
@@ -216,9 +221,10 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
+	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Panel key={'project_'+i} eventKey={i+1} 
-			header={<div><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+			header={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Panel>)
 		);
@@ -350,10 +356,7 @@ const ProjectEditor = ({charity, project}) => {
 
 // See and edit the list of data-sources for this project
 const ProjectDataSources = ({charity, project}) => {
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
+
 	const projIndex = charity.projects.indexOf(project);
 	const dataSrcPath = ['draft', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
 	const sourceList = project['data-src'] || [];
@@ -364,7 +367,7 @@ const ProjectDataSources = ({charity, project}) => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
-					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
+					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} />
 				);
 			}) }
 			<AddDataSource dataId={'p'+projIndex+'data-src'} list={sourceList} srcPath={dataSrcPath} />
@@ -514,15 +517,11 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	}
 	assert(ii !== -1, "EditCharityPage.ProjectInputEditor");
 	assert(pid !== -1, "EditCharityPage.ProjectInputEditor");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
 	return (<tr>
 		<td>{STD_INPUTS[input.name] || input.name}</td>
 		<td>
 			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
+			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -541,27 +540,24 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};		
+	
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='name' path={inputPath} item={output} /></td>
+		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} /></td>
 		<td>
-			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
+			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
-				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap}
+				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
 			<Misc.PropControl prop='description' type='textarea'
-				path={inputPath} item={output} saveFn={saveDraftFnWrap}
+				path={inputPath} item={output}
 			/>
 		</td>
 		<td>
@@ -597,33 +593,12 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
-// TODO delete and just use Crud.js
-const saveDraftFn = _.debounce(
-	({path, parentItem}) => {
-		if ( ! parentItem) parentItem = DataStore.getValue(path);
-		assert(NGO.isa(parentItem), "EditCharityPage.saveDraftFn: ! isa: "+parentItem, path);
-		ServerIO.saveCharity(parentItem, C.KStatus.$DRAFT())
-		.then((result) => {
-			let modCharity = result.cargo;
-			assert(NGO.isa(modCharity), "EditCharityPage.saveDraftFn: "+modCharity);
-			DataStore.setValue(['draft', C.TYPES.NGO, NGO.id(modCharity)], modCharity);
-		});
-		return true;
-	}, 1000);
-
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
 	// some controls are not for all users e.g. goodloop
 	if (userFilter) {
 		if ( ! Roles.iCan(userFilter).value ) {
 			return null;
 		}
-	}
-	let saveDraftFnWrap = saveDraftFn;
-	if (parentItem) {
-		saveDraftFnWrap = (context) => {
-			context.parentItem = parentItem;
-			return saveDraftFn(context);
-		};
 	}
 	// console.log('EditField2', props);
 	assMatch(field, "String|Number");
@@ -633,11 +608,10 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 			<Misc.Col2>
 				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
-					saveFn={saveDraftFnWrap}
 					help={help}
 					{ ...other}
 					/>
-				<MetaEditor item={item} itemPath={path} field={field} help={help} saveFn={saveDraftFnWrap} />
+				<MetaEditor item={item} itemPath={path} field={field} help={help} />
 			</Misc.Col2>
 		</div>
 	);

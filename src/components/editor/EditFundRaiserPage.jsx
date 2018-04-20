@@ -12,7 +12,7 @@ import Roles from '../../Roles';
 
 import Misc from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
-import DonationForm, {DonateButton} from '../NewDonationForm';
+import NewDonationForm, {DonateButton} from '../NewDonationForm';
 
 const EditFundRaiserPage = () => {
 
@@ -90,8 +90,8 @@ const AddOffSiteDonation = ({fundraiser}) => {
 	return (
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
-			<DonateButton item={fundraiser} />
-			<DonationForm item={fundraiser} paidElsewhere fromEditor />
+			<DonateButton item={fundraiser} paidElsewhere />
+			<NewDonationForm item={fundraiser} fromEditor />
 		</Misc.Card>
 	);
 };

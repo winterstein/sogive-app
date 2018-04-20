@@ -189,7 +189,9 @@ public class DonationServlet extends CrudServlet {
 			FundRaiser fr = AppUtils.get(frid, FundRaiser.class);
 			assert fr != null : "doPublishFirstTime null to and no fundRaiser?! "+donation+" "+state;
 			String cid = fr.getCharityId();
-			assert ! Utils.isBlank(cid) : fr;
+			if (Utils.isBlank(cid)) {
+				throw new IllegalStateException("Donation fail: FundRaiser with no charity? "+fr);
+			}
 			donation.setTo(cid);
 			Log.w(LOGTAG, "doPublishFirstTime null to - set to "+cid+" Donation: "+donation);
 		}

@@ -127,11 +127,9 @@ if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; the
 fi
 
 if [[ $PUBLISH_TYPE = 'test' ]]; then
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
 	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
 else
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
 	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
 fi
