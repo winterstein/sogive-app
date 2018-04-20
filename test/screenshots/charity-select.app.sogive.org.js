@@ -17,7 +17,7 @@ _asyncToGenerator(function* () {
   yield loaded;
   yield mouse.click(700, 133);
   yield loaded;
-  yield keyboard.type('malaria');
+  yield keyboard.type('oxfam');
   yield loaded;
   yield mouse.click(1424, 130);
   yield loaded;
