@@ -6,6 +6,8 @@ import com.goodloop.data.KCurrency;
 
 public class Money extends com.goodloop.data.Money {
 	
+	String raw;
+	
 	public Money() {
 		super();
 	}
