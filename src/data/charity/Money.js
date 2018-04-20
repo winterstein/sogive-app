@@ -30,23 +30,30 @@ const isNumeric = value => {
  * @returns {Number}
  */
 Money.value = ma => {
-	if ( ! ma) return 0;
-	if (ma.value100p) {
-		return ma.value100p / 10000;
-	}
-	if (ma.value) {
-		let v = parseFloat(ma.value);
-		ma.value100p = v * 10000;
-		return v;
-	}	
+	return v100p(ma) / 10000;
+};
+
+/**
+ * 
+ * @returns {Number} in hundredth of a penny. Defaults to 0.
+ */
+const v100p = m => {
+	if ( ! m) return 0;
 	// Patch old server data?
-	if (ma.value100) {
-		ma.value100p = ma.value100 * 100;
-		return ma.value100p / 10000;
+	if (m.value100) {
+		if ( ! m.value100p) m.value100p = m.value100 * 100;
+		delete m.value100; // remove so it cant cause confusion esp if value becomes 0
+	}		
+	if (m.value100p) {
+		return m.value100p;
+	}
+	if (m.value) {
+		let v = parseFloat(m.value);
+		m.value100p = v * 10000;
+		return m.value100p;
 	}
 	return 0;
 };
-
 
 
 // duck type: needs a value
@@ -92,9 +99,11 @@ Money.add = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
 	assCurrencyEq(amount1, amount2, "add()");
+	const b100p = v100p(amount1) + v100p(amount2);
 	let added = Money.make({
 		...amount1,
-		value: Money.value(amount1) + Money.value(amount2),
+		value: b100p/10000,
+		value100p: b100p
 	});
 	return added;
 };
@@ -104,9 +113,11 @@ Money.sub = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
 	assCurrencyEq(amount1, amount2, "sub");
+	const b100p = v100p(amount1) - v100p(amount2);
 	return Money.make({
 		...amount1,
-		value: Money.value(amount1) - Money.value(amount2),
+		value: b100p/10000,
+		value100p: b100p
 	});
 };
 
@@ -115,9 +126,11 @@ Money.mul = (amount, multiplier) => {
 	Money.assIsa(amount);
 	assert(isNumeric(multiplier), "Money.js - mul() "+multiplier);
 	// TODO Assert that multiplier is numeric (kind of painful in JS)
+	const b100p = v100p(amount) * multiplier;
 	return Money.make({
-		...amount,
-		value: Money.value(amount) * multiplier,
+		...amount,		
+		value: b100p/10000,
+		value100p: b100p
 	});
 };
 
