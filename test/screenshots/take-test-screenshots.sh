@@ -1,8 +1,7 @@
 #!/bin/bash
-
 # Take test Screenshots
 
-#First argument is optional,  it is an int of how many seconds to wait before running this script.  Default value is 0.5
+#First argument is optional,  it can be an integer or floating integer of how many seconds to wait before running this script.  Default value is 0.5
 if [[ $1 = '' ]]; then
 	sleep 0.5
 else
@@ -17,3 +16,6 @@ for js_file in ${SOURCE_JS[*]}; do
 	node $js_file
 	printf "\n"
 done
+
+printf "\nSyncing screenshots to server ..."
+rsync -rhP /home/$USER/winterwell/sogive-app/test/screenshots/test/* winterwell@hugh.soda.sh:/home/winterwell/sogive-app-screenshots/test/
