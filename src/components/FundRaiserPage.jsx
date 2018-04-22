@@ -280,7 +280,7 @@ const Supporter = ({donation, charity}) => {
 			<h4>{name}</h4>
 			<Misc.RelativeDate date={donation.date} className='donation-date' />			
 			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
-			{donation.contributions? 
+			{donation.contributions && ! donation.anonAmount? 
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (
