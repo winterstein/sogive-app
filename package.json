@@ -31,7 +31,7 @@
     "react-stripe-checkout": "^2.4.0",
     "react-stripe-elements": "^1.6.0",
     "sjtest": "^0.4.7",
-    "wwutils": "^0.8.9",
+    "wwutils": "^0.9.1",
     "you-again": "^0.6.10"
   },
   "scripts": {

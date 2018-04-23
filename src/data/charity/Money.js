@@ -6,6 +6,7 @@
 */
 import {assert, assMatch} from 'sjtest';
 import {isa, defineType} from '../DataClass';
+import {asNum} from 'wwutils';
 import C from '../../C';
 
 /** impact utils */
@@ -61,7 +62,18 @@ const v100p = m => {
 	if (m.value100) {
 		if ( ! m.value100p) m.value100p = m.value100 * 100;
 		delete m.value100; // remove so it cant cause confusion esp if value becomes 0
-	}		
+	}
+	// historical bug, seen April 2018 in SoGive: value edits lost! But preserved in .raw
+	if (m.raw) {
+		try {
+			let v = asNum(m.raw);
+			m.value = v;
+			m.value100p = v;
+		} catch(err) {
+			console.warn("Money.js", err, m);
+		}
+	}
+	// end of patching
 	if (m.value100p) {
 		return m.value100p;
 	}
@@ -127,7 +139,7 @@ Money.add = (amount1, amount2) => {
 };
 
 Money.total = amounts => {
-	assMatch(amounts, "Money[]", "Money.js - total()");
+	// assMatch(amounts, "Money[]", "Money.js - total()");
 	let ttl = amounts.reduce( (acc, m) => Money.add(acc, m), Money.make());
 	return ttl;
 };
