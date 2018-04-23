@@ -28,7 +28,8 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 // Allow for local to point at live for debugging
 window.APIBASE = 
 	// ''; Normally use this!
-	'https://test.sogive.org';
+	'http://local.sogive.org';
+	//'https://test.sogive.org';
 	// 'https://app.sogive.org';
 
 const ServerIO = {};

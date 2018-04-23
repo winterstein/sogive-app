@@ -52,24 +52,14 @@ const EditCharityPage = () => {
 	// put it together
 	console.log("EditCharity", charity);
 	return (
-		<div className='EditCharityPage'>				
+		<div className='EditCharityPage'>			
 			<Panel>
 				<h2>Editing: {charity.name}</h2>			
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
 				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				{Roles.iCan(C.CAN.publish).value ? 
-					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
-					: <div><button className='btn btn-primary' disabled>Publish</button><br /><small>Please ask a senior editor</small></div>
-				}
-				&nbsp;
-				<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
-				{Roles.iCan(C.CAN.publish).value ? 
-					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
-					: null
-				}
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={charity.id} />
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={charity['@id']} />
 			</Panel>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
