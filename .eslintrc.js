@@ -44,6 +44,7 @@ module.exports = {
 		"react/jsx-indent": ["warn", "tab"],
 		"react/jsx-indent-props": ["warn", "tab"],
 		"react/jsx-max-props-per-line": "off",
+		"jsx-a11y/media-has-caption": "warn",
 		"react/no-multi-comp": "warn",
 		"react/prefer-stateless-function": "warn",
 		"react/self-closing-comp": "warn",

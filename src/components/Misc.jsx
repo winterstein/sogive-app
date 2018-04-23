@@ -7,7 +7,7 @@ import { Checkbox, Radio, FormGroup, InputGroup, DropdownButton, MenuItem} from 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
-import { setHash, XId } from 'wwutils';
+import { setHash, XId, asNum } from 'wwutils';
 import PV from 'promise-value';
 import Dropzone from 'react-dropzone';
 
@@ -445,22 +445,6 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
-/**
- * Strip commas £/$/euro and parse float
- * @param {*} v 
- * @returns Number. undefined/null are returned as-is.
- */
-const numFromAnything = v => {
-	if (v===undefined || v===null) return v;
-	if (_.isNumber(v)) return v;
-	// strip any commas, e.g. 1,000
-	if (_.isString(v)) {
-		v = v.replace(/,/g, "");
-		// £ / $ / euro
-		v = v.replace(/^(-)?[£$\u20AC]/, "$1");
-	}
-	return parseFloat(v);
-};
 
 const PropControlMoney = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
@@ -479,7 +463,7 @@ const PropControlMoney = ({prop, value, path, proppath,
 	// handle edits
 	const onMoneyChange = e => {		
 		// TODO move more of this into Money.js as Money.setValue()
-		let newVal = numFromAnything(e.target.value);		
+		let newVal = asNum(e.target.value);		
 		value = Money.setValue(value, newVal);
 		value.raw = e.target.value;
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
@@ -720,7 +704,7 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 		return parseInt(inputValue);
 	}
 	if (type==='number') {		
-		return numFromAnything(inputValue);
+		return asNum(inputValue);
 	}
 	// url: add in https:// if missing
 	if (type==='url' && eventType==='blur') {
