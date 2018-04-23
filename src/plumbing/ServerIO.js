@@ -15,6 +15,17 @@ import NGO from '../data/charity/NGO';
 import DataStore from './DataStore';
 import Messaging, {notifyUser} from './Messaging';
 
+const ServerIO = {};
+export default ServerIO;
+// for debug
+window.ServerIO = ServerIO;
+
+/** The initial part of an API call. Allows for local to point at live for debugging */
+ServerIO.APIBASE = ''; // Normally use this for "my server"!
+// Comment out the lines below when deploying!
+// ServerIO.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
+// ServerIO.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
+
 // Error Logging - but only the first error
 window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	// NB: source & line num are not much use in a minified file
@@ -25,27 +36,10 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	}});
 });
 
-/** The initial part of an API call. Allows for local to point at live for debugging */
-window.APIBASE = ''; // Normally use this for "my server"!
-// Comment out the lines below when deploying!
-window.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
-// window.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
-
 // Safety check - if we deploy test code, it will complain
-if (window.APIBASE && C.isProduction()) {
-	throw new Error("ServerIO.js - window.APIBASE is using a test setting! Argh! "+window.APIBASE);
+if (ServerIO.APIBASE && C.isProduction()) {
+	throw new Error("ServerIO.js - ServerIO.APIBASE is using a test setting! Argh! "+ServerIO.APIBASE);
 }
-
-const ServerIO = {};
-export default ServerIO;
-// for debug
-window.ServerIO = ServerIO;
-
-// allow switching backend during testing
-ServerIO.base = 
-	null;
-	// 'https://app.sogive.org';
-
 
 /**
  * @param query {!String} query string
@@ -165,11 +159,7 @@ ServerIO.upload = function(file, progress, load) {
  * @returns A <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR object</a>.
 **/
 ServerIO.load = function(url, params) {
-	assMatch(url,String);
-	// prepend the API base url? e.g. to route all traffic from a local dev build to the live app.sogive.org backend.
-	if (APIBASE && url.indexOf('http') === -1) {
-		url = APIBASE+url;
-	}
+	assMatch(url,String);	
 	console.log("ServerIO.load", url, params);
 	params = ServerIO.addDefaultParams(params);
 	// sanity check: no Objects except arrays
@@ -178,9 +168,9 @@ ServerIO.load = function(url, params) {
 	);
 	// sanity check: status
 	assert( ! params.data.status || C.KStatus.has(params.data.status), params.data.status);
-	// add the base
-	if (url.substring(0,4) !== 'http' && ServerIO.base) {
-		url = ServerIO.base + url;
+	// prepend the API base url? e.g. to route all traffic from a local dev build to the live app.sogive.org backend.
+	if (url.substring(0,4) !== 'http' && ServerIO.APIBASE) {
+		url = ServerIO.APIBASE + url;
 	}
 	params.url = url;
 	// send cookies & add auth
