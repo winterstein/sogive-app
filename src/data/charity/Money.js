@@ -5,11 +5,11 @@
 
 */
 import {assert, assMatch} from 'sjtest';
-import {isa} from '../DataClass';
+import {isa, defineType} from '../DataClass';
 import C from '../../C';
 
 /** impact utils */
-const Money = {};
+const Money = defineType(C.TYPES.Money);
 const This = Money;
 export default Money;
 
@@ -82,8 +82,6 @@ Money.isa = (obj) => {
 	if (obj.value100p) return true;
 	if (isNumeric(obj.value) || obj.value==='') return true;
 };
-
-Money.assIsa = (obj, msg) => assert(Money.isa(obj), "Money.js - not Money "+(msg||'')+" "+JSON.stringify(obj));
 
 Money.make = (base = {}) => {
 	const item = {
