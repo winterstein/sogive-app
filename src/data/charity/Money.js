@@ -1,7 +1,10 @@
 /**
 	Money NB: based on the thing.org type MonetaryAmount
+
+	TODO It'd be nice to make this immutable (can we use Object.freeze to drive that thrgough??)
+
 */
-import {assert} from 'sjtest';
+import {assert, assMatch} from 'sjtest';
 import {isa} from '../DataClass';
 import C from '../../C';
 
@@ -31,6 +34,21 @@ const isNumeric = value => {
  */
 Money.value = ma => {
 	return v100p(ma) / 10000;
+};
+
+/**
+ * 
+ * @param {!Money} m 
+ * @param {!Number} newVal 
+ * @returns {Money} value and value100p set to newVal
+ */
+Money.setValue = (m, newVal) => {
+	Money.assIsa(m);
+	assMatch(newVal, Number, "Money.js - setValue() "+newVal);
+	m.value = newVal;
+	m.value100p = newVal * 10000;
+	assert(Money.value(m) === newVal, "Money.js - setValue() "+newVal, m);
+	return m;
 };
 
 /**
@@ -94,7 +112,9 @@ const assCurrencyEq = (a, b, msg) => {
 	assert(a.currency.toUpperCase() === b.currency.toUpperCase(), m);
 };
 
-// Will fail if not called on 2 Moneys of the same currency
+/** Will fail if not called on 2 Moneys of the same currency
+ * @returns {Money} a fresh object
+ */
 Money.add = (amount1, amount2) => {
 	Money.assIsa(amount1);
 	Money.assIsa(amount2);
@@ -106,6 +126,12 @@ Money.add = (amount1, amount2) => {
 		value100p: b100p
 	});
 	return added;
+};
+
+Money.total = amounts => {
+	assMatch(amounts, "Money[]", "Money.js - total()");
+	let ttl = amounts.reduce( (acc, m) => Money.add(acc, m), Money.make());
+	return ttl;
 };
 
 // Will fail if not called on 2 Moneys of the same currency

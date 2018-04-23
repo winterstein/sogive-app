@@ -133,8 +133,7 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	}
 	assMatch(outputCount, Number, "NGO.js outputCount not a Number?! "+outputCount);
 	let costPerOutput = Money.make(projectCost);
-	costPerOutput.value = projectCost.value / outputCount;
-	costPerOutput.value100 = Math.round(100 * costPerOutput.value);
+	Money.setValue(costPerOutput, projectCost.value / outputCount);
 	return costPerOutput;
 };
 

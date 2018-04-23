@@ -478,9 +478,10 @@ const PropControlMoney = ({prop, value, path, proppath,
 	//Money.assIsa(value); // type can be blank
 	// handle edits
 	const onMoneyChange = e => {		
-		let newVal = numFromAnything(e.target.value);
+		// TODO move more of this into Money.js as Money.setValue()
+		let newVal = numFromAnything(e.target.value);		
+		value = Money.setValue(value, newVal);
 		value.raw = e.target.value;
-		value.value = newVal;
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});

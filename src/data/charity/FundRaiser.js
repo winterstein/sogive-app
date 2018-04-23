@@ -54,9 +54,9 @@ const nextTarget = (number) => {
 This.target = item => {
 	This.assIsa(item);
 	
-	if (item.userTarget && item.userTarget.value) return item.userTarget;
+	if (item.userTarget && Money.value(item.userTarget)) return item.userTarget;
 
-	if (item.target && item.target.value) return item.target;
+	if (item.target && Money.value(item.target)) return item.target;
 
 	item.target = Money.make({value: nextTarget(This.donated(item).value)});
 	

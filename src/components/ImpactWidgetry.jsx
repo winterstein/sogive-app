@@ -78,12 +78,13 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	if (!cpbraw || !cpbraw.value) {
 		return null; // Not a quantified output?
 	}
+	Money.assIsa(cpbraw);
 	const unitName = Output.name(output) || '';
 
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = Money.make({currency: cpbraw.currency, value: cpbraw.value * targetCount});
+		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});
 		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
 	}
 

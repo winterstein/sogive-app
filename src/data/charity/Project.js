@@ -49,14 +49,19 @@ Project.getLatest = (projects) => {
 };
 
 Project.getTotalCost = (project) => {
+	const ttl = Money.total(project.inputs);
+
+	// TODO delete old code
 	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);
 	const value = project.inputs.reduce((total, input) => {
 		if (deductibleInputs.indexOf(input.name) < 0) {
-			return total + (input.value || 0);
+			return total + (Money.value(input) || 0);
 		} 
 		return total - (input.value || 0);
 	}, 0);
-	return Money.make({currency, value});
+	// return Money.make({currency, value});
+	
+	return ttl;
 };
 
 const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];

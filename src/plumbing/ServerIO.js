@@ -29,7 +29,7 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 window.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
 // window.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
-// window.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
+window.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
 
 // Safety check - if we deploy test code, it will complain
 if (window.APIBASE && C.isProduction()) {
