@@ -83,7 +83,7 @@ const EditCharityPage = () => {
 					<EditorialEditor charity={charity} />
 				</Panel>
 				<Panel header={<h3>References</h3>} eventKey="6">
-					<ol>{refs}</ol>
+					<ol>{rrefs}</ol>
 				</Panel>
 			</Accordion>
 		</div>
