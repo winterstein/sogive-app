@@ -26,7 +26,7 @@ const EditCharityPage = () => {
 	}
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(['draft', C.TYPES.NGO, cid], 
+	let {value:charity} = DataStore.fetch(['data', C.TYPES.NGO, cid], 
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);
 	if ( ! charity) {
@@ -83,7 +83,7 @@ const EditCharityPage = () => {
 					<EditorialEditor charity={charity} />
 				</Panel>
 				<Panel header={<h3>References</h3>} eventKey="6">
-					<ol>{rrefs}</ol>
+					<ol>{refs}</ol>
 				</Panel>
 			</Accordion>
 		</div>
@@ -343,7 +343,7 @@ const ProjectEditor = ({charity, project}) => {
 const ProjectDataSources = ({charity, project}) => {
 
 	const projIndex = charity.projects.indexOf(project);
-	const dataSrcPath = ['draft', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
+	const dataSrcPath = ['data', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
 	const sourceList = project['data-src'] || [];
 	return (
 		<div className='well'>
@@ -392,7 +392,7 @@ const ProjectInputs = ({charity, project}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft',C.TYPES.NGO, cid, 'projects', pid];
+	let projectPath = ['data',C.TYPES.NGO, cid, 'projects', pid];
 	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || Money.make({name: 'annualCosts'});	
 	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || Money.make({name: 'projectCosts'});
 	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || Money.make({name: 'tradingCosts'});
@@ -415,7 +415,7 @@ const ProjectInputs = ({charity, project}) => {
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft', C.TYPES.NGO, cid, 'projects', pid];
+	let projectPath = ['data', C.TYPES.NGO, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (
@@ -492,7 +492,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let readonly = ! manualEntry;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let inputsPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
+	let inputsPath = ['data',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
 	assert(DataStore.getValue(inputsPath) === project.inputs, "EditCharityPage.ProjectInputEditor");
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
@@ -521,7 +521,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
-	let inputPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
+	let inputPath = ['data',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
@@ -551,21 +551,9 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	</tr>);
 };
 
-
-const publishDraftFn = _.throttle((e, charity) => {
-	return ActionMan.publishEdits(C.TYPES.NGO, NGO.id(charity), charity);
-}, 250);
-const discardDraftFn = _.throttle((e, charity) => {
-	return ActionMan.discardEdits(C.TYPES.NGO, NGO.id(charity));
-}, 250);
-const deleteFn = _.throttle((e, charity) => {
-	return ActionMan.delete(C.TYPES.NGO, NGO.id(charity));
-}, 250);
-
-
 const EditField = ({item, ...stuff}) => {
 	let id = NGO.id(item);
-	let path = ['draft',C.TYPES.NGO,id];
+	let path = ['data',C.TYPES.NGO,id];
 	return <EditField2 item={item} path={path} {...stuff} />;
 };
 
@@ -574,7 +562,7 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	assert(pid!==-1, "EditCharityPage.EditProjectField: "+project);
-	let path = ['draft',C.TYPES.NGO,cid,'projects', pid];
+	let path = ['data',C.TYPES.NGO,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 
