@@ -7,8 +7,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.junit.Test;
+import org.sogive.data.DBSoGive;
 import org.sogive.data.commercial.Event;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.JThing;
