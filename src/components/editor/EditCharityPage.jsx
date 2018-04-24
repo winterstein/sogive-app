@@ -59,7 +59,7 @@ const EditCharityPage = () => {
 				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={charity['@id']} />
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} />
 			</Panel>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
