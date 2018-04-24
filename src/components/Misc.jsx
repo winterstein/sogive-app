@@ -7,7 +7,7 @@ import { Checkbox, Radio, FormGroup, InputGroup, DropdownButton, MenuItem} from 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
-import { setHash, XId } from 'wwutils';
+import { setHash, XId, asNum } from 'wwutils';
 import PV from 'promise-value';
 import Dropzone from 'react-dropzone';
 
@@ -479,9 +479,10 @@ const PropControlMoney = ({prop, value, path, proppath,
 	// handle edits
 	const onMoneyChange = e => {		
 		// TODO move more of this into Money.js as Money.setValue()
-		let newVal = numFromAnything(e.target.value);		
+		let newVal = e.target.value === '' ? '' : asNum(e.target.value);	
 		value = Money.setValue(value, newVal);
-		value.raw = e.target.value;
+		value.raw = e.target.value;	
+		assert(value.raw === e.target.value);
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});

@@ -34,6 +34,7 @@ const isNumeric = value => {
  * @returns {Number}
  */
 Money.value = ma => {
+	if(ma && ma.value === '') return '';
 	return v100p(ma) / 10000;
 };
 
@@ -45,9 +46,11 @@ Money.value = ma => {
  */
 Money.setValue = (m, newVal) => {
 	Money.assIsa(m);
-	assMatch(newVal, Number, "Money.js - setValue() "+newVal);
+	if(newVal !== '') assMatch(newVal, Number, "Money.js - setValue() "+newVal);
 	m.value = newVal;
 	m.value100p = newVal * 10000;
+	// remove the raw field 'cos otherwise v100p() will use it to overwrite the new value!
+	delete m.raw;
 	assert(Money.value(m) === newVal, "Money.js - setValue() "+newVal, m);
 	return m;
 };
@@ -68,7 +71,7 @@ const v100p = m => {
 		try {
 			let v = asNum(m.raw);
 			m.value = v;
-			m.value100p = v;
+			m.value100p = v*10000;
 		} catch(err) {
 			console.warn("Money.js", err, m);
 		}
