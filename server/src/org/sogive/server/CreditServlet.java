@@ -55,6 +55,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 
 	public CreditServlet() {
 		super(Transfer.class);
+		defaultSort = "date-desc";
 	}
 	
 

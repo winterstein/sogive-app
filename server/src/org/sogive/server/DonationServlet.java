@@ -92,6 +92,7 @@ public class DonationServlet extends CrudServlet {
 
 	public DonationServlet() {
 		super(Donation.class);
+		defaultSort = "date-desc";
 	}
 
 	/*public void process(WebRequest state) throws Exception {
