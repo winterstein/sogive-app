@@ -34,24 +34,24 @@ const isNumeric = value => {
  * @returns {Number}
  */
 Money.value = ma => {
-	if(ma && ma.value === '') return '';
+	// if(ma && ma.value === '') return '';
 	return v100p(ma) / 10000;
 };
 
 /**
  * 
  * @param {!Money} m 
- * @param {!Number} newVal 
+ * @param {!Number|falsy} newVal Can be null or '' for unset -- which will produce a value of 0
  * @returns {Money} value and value100p set to newVal
  */
 Money.setValue = (m, newVal) => {
 	Money.assIsa(m);
-	if(newVal !== '') assMatch(newVal, Number, "Money.js - setValue() "+newVal);
+	if (newVal) assMatch(newVal, Number, "Money.js - setValue() "+newVal);
 	m.value = newVal;
-	m.value100p = newVal * 10000;
+	m.value100p = newVal? newVal * 10000 : 0; // NB: null x Number = 0 nut undefined x Number = NaN. So let's standardise on 0
 	// remove the raw field 'cos otherwise v100p() will use it to overwrite the new value!
 	delete m.raw;
-	assert(Money.value(m) === newVal, "Money.js - setValue() "+newVal, m);
+	if (newVal) assert(Money.value(m) === newVal, "Money.js - setValue() "+newVal, m);
 	return m;
 };
 
@@ -63,7 +63,7 @@ const v100p = m => {
 	if ( ! m) return 0;
 	// Patch old server data?
 	if (m.value100) {
-		if ( ! m.value100p) m.value100p = m.value100 * 100;
+		if ( ! m.value100p && ! m.raw) m.value100p = m.value100 * 100;
 		delete m.value100; // remove so it cant cause confusion esp if value becomes 0
 	}
 	// historical bug, seen April 2018 in SoGive: value edits lost! But preserved in .raw
@@ -71,7 +71,7 @@ const v100p = m => {
 		try {
 			let v = asNum(m.raw);
 			m.value = v;
-			m.value100p = v*10000;
+			m.value100p = v? v*10000 : 0;
 		} catch(err) {
 			console.warn("Money.js", err, m);
 		}

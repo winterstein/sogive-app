@@ -463,10 +463,10 @@ const PropControlMoney = ({prop, value, path, proppath,
 	// handle edits
 	const onMoneyChange = e => {		
 		// TODO move more of this into Money.js as Money.setValue()
-		let newVal = e.target.value === '' ? '' : asNum(e.target.value);	
+		// keep blank as blank (so we can have unset inputs), otherwise convert to number/undefined
+		let newVal = asNum(e.target.value);			// e.target.value===''? '' : 
 		value = Money.setValue(value, newVal);
-		value.raw = e.target.value;	
-		assert(value.raw === e.target.value);
+		value.raw = e.target.value; // Store raw, so we can display blank strings
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});
