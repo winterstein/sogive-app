@@ -119,7 +119,10 @@ public class DBSoGive {
 							new ESType()
 								.property("from", ESType.keyword)
 								.property("to", ESType.keyword)
-								.property("date", new ESType().date()),
+								.property("date", new ESType().date())
+								.property("amount", money)
+								.property("total", money)
+								,
 					
 					Ticket.class, 
 							new ESType()
