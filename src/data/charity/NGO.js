@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import {isa, defineType} from '../DataClass';
 import {assert, assMatch} from 'sjtest';
-import {ellipsize} from 'wwutils';
+import {ellipsize, asNum} from 'wwutils';
 import Project from './Project';
 import Output from './Output';
 import Money from './Money';
@@ -119,7 +119,8 @@ NGO.costPerBeneficiary = ({charity, project, output}) => {
  * This ignores the override (if set)
  */
 NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {	
-	let outputCount = output.number;
+	// NB: asNum is paranoia
+	let outputCount = asNum(output.number);
 	if ( ! outputCount) return null;
 	let projectCost = Project.getTotalCost(project);
 	if ( ! projectCost) {

@@ -445,22 +445,6 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
-/**
- * Strip commas £/$/euro and parse float
- * @param {*} v 
- * @returns Number. undefined/null are returned as-is.
- */
-const numFromAnything = v => {
-	if (v===undefined || v===null) return v;
-	if (_.isNumber(v)) return v;
-	// strip any commas, e.g. 1,000
-	if (_.isString(v)) {
-		v = v.replace(/,/g, "");
-		// £ / $ / euro
-		v = v.replace(/^(-)?[£$\u20AC]/, "$1");
-	}
-	return parseFloat(v);
-};
 
 const PropControlMoney = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
@@ -721,7 +705,7 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 		return parseInt(inputValue);
 	}
 	if (type==='number') {		
-		return numFromAnything(inputValue);
+		return asNum(inputValue);
 	}
 	// url: add in https:// if missing
 	if (type==='url' && eventType==='blur') {

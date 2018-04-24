@@ -138,6 +138,7 @@ Money.add = (amount1, amount2) => {
 		value: b100p/10000,
 		value100p: b100p
 	});
+	delete added.raw;
 	return added;
 };
 
@@ -153,11 +154,13 @@ Money.sub = (amount1, amount2) => {
 	Money.assIsa(amount2);
 	assCurrencyEq(amount1, amount2, "sub");
 	const b100p = v100p(amount1) - v100p(amount2);
-	return Money.make({
+	let subd = Money.make({
 		...amount1,
 		value: b100p/10000,
 		value100p: b100p
 	});
+	delete subd.raw;
+	return subd;
 };
 
 /** Must be called on a Money and a scalar */
@@ -166,11 +169,13 @@ Money.mul = (amount, multiplier) => {
 	assert(isNumeric(multiplier), "Money.js - mul() "+multiplier);
 	// TODO Assert that multiplier is numeric (kind of painful in JS)
 	const b100p = v100p(amount) * multiplier;
-	return Money.make({
+	const muld = Money.make({
 		...amount,		
 		value: b100p/10000,
 		value100p: b100p
 	});
+	delete muld.raw;
+	return muld;
 };
 
 /** 
