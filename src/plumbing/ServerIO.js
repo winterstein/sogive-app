@@ -23,7 +23,7 @@ window.ServerIO = ServerIO;
 /** The initial part of an API call. Allows for local to point at live for debugging */
 ServerIO.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
-// ServerIO.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
+ServerIO.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
 // ServerIO.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
 
 // Error Logging - but only the first error
