@@ -64,7 +64,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			// Add in matched funding?
 			try {
 				Event event = fundraiser.getEvent();
-				if (event != null && event.getMatchedFunding() != null && event.getMatchedFunding() != 0) {
+				if (event != null && event.getMatchedFunding() != 0) {
 					double ma = amount.getValue().doubleValue() * event.getMatchedFunding();
 					Money matchAmount = new Money(amount.getCurrency(), Math.round(ma));
 					MoneyItem mi = new MoneyItem("matched funding", matchAmount);

@@ -61,7 +61,8 @@ ServerIO.donate = function(data) {
 	return ServerIO.post('/donation', data);
 };
 
-ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {	
+// TODO add fundRaiser
+ServerIO.getDonations = function({from, to, fundRaiser, status=C.KStatus.PUBLISHED}) {		
 	const params = {
 		data: {
 			from, to,
@@ -69,6 +70,10 @@ ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {
 			sort:'date-desc'
 		}
 	};
+	// if (fundRaiser) { TODO
+	// 	assMatch(fundRaiser, String);
+	// 	params.data.q = 'fundRaiser:'+fundRaiser;
+	// }
 	return ServerIO.load('/donation/list', params);
 };
 
