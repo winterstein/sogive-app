@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -60,6 +60,7 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
     "babel-polyfill": "^6.26.0",
+    "babel-cli": "^6.26.0",
     "babel-preset-stage-2": "^6.24.1"
   }
 }
