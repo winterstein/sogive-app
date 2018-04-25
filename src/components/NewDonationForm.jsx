@@ -102,6 +102,11 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 	const closeLightbox = () => {
 		DataStore.setValue([...widgetPath, 'open'], false);
 		DataStore.setValue(stagePath, null);
+
+		//Check if donation is draft
+		if(C.KStatus.isPUBLISHED(donationDraft.status)) {
+			ActionMan.clearDonationDraft({donation: donationDraft});
+		}
 	};
 
 	// get/make the draft donation
@@ -289,7 +294,6 @@ const MessageSection = ({path, recipient}) => (
  */
 const doPayment = ({donation}) => {
 	DataStore.setData(donation);
-
 	// invalidate credit if some got spent	
 	let credit = Transfer.getCredit();
 	if (credit && Money.value(credit) > 0) {
@@ -304,6 +308,8 @@ const doPayment = ({donation}) => {
 			DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
 			// do a fresh load of the fundraiser?
 			if (donation.fundRaiser) {
+				//ActionMan.clearDonationDraft({donation});
+				//This function appears to have been lost somewhere along the way.
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
 				console.log("NewDonationForm doPayment - no fundraiser to refresh", donation);
@@ -314,6 +320,8 @@ const doPayment = ({donation}) => {
 
 const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	const donation = DataStore.getValue(path);
+	console.warn('Donation value in doPayment', donation);
+	console.warn('Item value in doPayment', item);
 	if ( ! donation) {
 		return null;
 	}
@@ -355,7 +363,7 @@ const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 
 const ThankYouSection = ({path, item}) => {
 	const donation = DataStore.getValue(path);
-
+	console.warn('Final donation value after submission', donation);
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
