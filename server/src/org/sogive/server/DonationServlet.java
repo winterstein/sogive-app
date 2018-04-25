@@ -31,6 +31,7 @@ import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
+import com.winterwell.datalog.server.TrackingPixelServlet;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
@@ -166,10 +167,24 @@ public class DonationServlet extends CrudServlet {
 		if (user==null) {
 			String e = Utils.or(email, email2);
 			if (e != null) {
-				user = new XId(e, "Email");
+				user = YouAgainClient.xidFromEmail(e);
+			} else {
+				String trck = TrackingPixelServlet.getCreateCookieTrackerId(state);
+				if (trck!=null) { 
+					user = new XId(trck);
+				} else {
+					user = XId.ANON;
+				}
 			}
-		}
+		} // ./null user
 		donation.setF(new XId[]{user}); // who reported this? audit trail
+		// make sure from is set
+		if (from==null) {			
+			from = user;
+			donation.setFrom(from);
+			Log.d(LOGTAG, "set from to "+from+" for "+donation.getId()+" in publish "+state);
+		}
+		Utils.check4null(from, user);
 		
 		// make sure it has a date and some donor info
 //		if (donation.getDate()==null) { // date = published date not draft creation date
