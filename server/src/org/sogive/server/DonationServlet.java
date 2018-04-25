@@ -236,7 +236,12 @@ public class DonationServlet extends CrudServlet {
 		}
 		
 		// Send an email
-		doUploadTransfers2_email(donation, Utils.or(email3, email));
+		try {
+			doUploadTransfers2_email(donation, Utils.or(email3, email));
+		} catch(Throwable ex) {
+			Log.e(LOGTAG, ex);
+			// don't choke though, carry on
+		}
 	}
 
 	/**
