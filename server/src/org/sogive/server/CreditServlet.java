@@ -138,8 +138,6 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 		WebUtils2.sendJson(output, state);
 	}
 
-
-	// TODO test this
 	void doUploadTransfers2_email(List<Transfer> transfers) {
 		Emailer emailer = Dep.get(Emailer.class);
 		Throwable err = null;
