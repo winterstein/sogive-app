@@ -42,9 +42,23 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * @deprecated This is a "temp" storage, used during drafts, which is then copied into the donor object
 	 */
-	String donorName;
+	private String donorName;
+	
+	/**
+	 * @Deprecated This should be copied into the donor object
+	 */
+	private String donorEmail;	
+	
 	String donorAddress;
 	String donorPostcode;
+	
+
+	public String getDonorName() {
+		return donorName;
+	}
+	public String getDonorEmail() {
+		return donorEmail;
+	}
 	
 	/**
 	 * Has the user said OK to sharing their details with the charity?

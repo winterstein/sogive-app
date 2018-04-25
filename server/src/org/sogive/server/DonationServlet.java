@@ -161,11 +161,12 @@ public class DonationServlet extends CrudServlet {
 		XId from = donation.getFrom(); // you can donate w/o logging in
 		String email = donation.getStripe()==null? null : donation.getStripe().getEmail();
 		String email2 = state.get("stripeEmail");
+		String email3 = donation.getDonorEmail();
 		if (user==null) {
 			user = from;
 		}
 		if (user==null) {
-			String e = Utils.or(email, email2);
+			String e = Utils.or(email, email2, email3);
 			if (e != null) {
 				user = YouAgainClient.xidFromEmail(e);
 			} else {
