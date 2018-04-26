@@ -247,6 +247,7 @@ const clearDonationDraft = ({donation}) => {
 	const forId = fundRaiser || charity;
 
 	const path = ['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId];
+	console.warn("Values before deletion", DataStore.getValue(path));
 	DataStore.setValue(path, null);
 };
 

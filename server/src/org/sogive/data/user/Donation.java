@@ -190,11 +190,7 @@ public class Donation extends AThing implements IForSale {
 		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
 		this.id = userContribution.getValue()+" from "+from+" to "+to+" at "+(tmin);
 	}
-
-	public String getId() {
-		return id;
-	}
-
+	
 	@Override
 	public void setPaymentCollected(boolean b) {
 		this.collected = b;
