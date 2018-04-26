@@ -77,6 +77,8 @@ const EventEditor = ({id}) => {
 			
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
+			<Misc.PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
+
 			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
 				type='number' />
 

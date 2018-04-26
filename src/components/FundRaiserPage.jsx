@@ -129,7 +129,7 @@ const FundRaiserPage = ({id}) => {
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
 						<p>{item.owner.description}</p>
-						<p><small><a href={'#event/'+encURI(event.id)}>About the event</a></small></p>
+						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
