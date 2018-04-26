@@ -274,34 +274,50 @@ const CharityProfile = ({charity}) => {
 		</p>
 	);
 	return (<div className='CharityProfile-div'>
-				<EditLink charity={charity} />
-				<h4 className='CharityProfile'>Charity Profile</h4>
-				<div className='col-md-12'>
-					<div className='col-md-2 charity-logo-div'>
-						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
-					</div>
-					<div className='col-md-7 charity-name-div'>
-						<h2>{charity.displayName || charity.name}</h2>
-						<br />
-						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
-						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					</div>
-					<div className='col-md-3'>
-						<ProjectImage images={charity.images} />
-					</div>
-					<div className='col-md-12 charity-data-div'>
-						{ tags }
-						{ turnover }
-						{ employees }
-						{ website }
-					</div>
-				</div>
+		<EditLink charity={charity} />
+		<h4 className='CharityProfile'>Charity Profile</h4>
+		<div className='col-md-12'>
+			<div className='col-md-2 charity-logo-div'>
+				<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+			</div>
+			<div className='col-md-7 charity-name-div'>
+				<h2>{charity.displayName || charity.name}</h2>
+				<br />
+				<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
+				<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
+			</div>
+			<div className='col-md-3'>
+				<ProjectImage images={charity.images} />
+			</div>
+			<div className='col-md-12 charity-data-div'>
+				{ tags }
+				{ turnover }
+				{ employees }
+				{ website }
+			</div>
+		</div>
 	</div>);
 };
 
 
 // TODO only for registered editors!!!
-const EditLink = ({charity}) => Login.isLoggedIn()? <div className='pull-right'><a href={'#edit?charityId='+charity['@id']}>edit</a></div> : null;
+const EditLink = ({charity}) => {
+	if ( ! Login.isLoggedIn()) return null;
+	const cid = NGO.id(charity);
+	// HACK: clear the datastore before viewing, so that we load the draft
+	// TODO replace once the git branch feature/refactor-crud-data-draft-DW-may-2018 is complete
+	return (<div className='pull-right'>
+		<a href={'#edit?charityId='+escape(cid)} 
+			onClick={() => {
+				// Trying in Edit page instead
+				// DataStore.setValue(DataStore.getPath(charity), null, false);
+				// ServerIO.getCharity(cid, C.KStatus.DRAFT);
+			}}
+		>
+			edit
+		</a>
+	</div>);
+};
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;

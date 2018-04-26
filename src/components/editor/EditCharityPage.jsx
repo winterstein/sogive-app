@@ -29,10 +29,17 @@ const EditCharityPage = () => {
 	let cid = DataStore.getUrlValue('charityId');
 	let {value:charity} = DataStore.fetch(['data', C.TYPES.NGO, cid], 
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
-	);
+	);	
 	if ( ! charity) {
 		return <Misc.Loading />;
 	}
+	if (C.KStatus.isPUBLISHED(charity.status)) {
+		ServerIO.getCharity(cid, C.KStatus.DRAFT)
+		.then(res => {
+			console.warn("res", res);
+			if (res.cargo) DataStore.setData(res.cargo);
+		});
+	}	
 
 	// projects
 	let allprojects = charity.projects || [];

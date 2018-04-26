@@ -109,11 +109,14 @@ class MainDiv extends Component {
 		if ( ! Page) {
 			Page = E404Page;
 		}
+		// caught an error?
 		if (this.state && this.state.error && this.state.errorPath === path) {
-			Page = () => (<div><h3>There was an Error :'(</h3>
-				<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
-				<p>{this.state.error.message}<br/><small>{this.state.error.stack}</small></p>
-			</div>);
+			// Page is an error function
+			Page = () => (
+				<div><h3>There was an Error :'(</h3>
+					<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
+					<p>{this.state.error.message}<br/><small>{this.state.error.stack}</small></p>
+				</div>);
 		}
 
 		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
