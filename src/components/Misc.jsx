@@ -815,8 +815,9 @@ Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
 };
 
 /**
- * save buttons
- * TODO auto-save on edit -- copy from sogive
+ * Save buttons
+ * 
+ * This includes auto-save on edit: localstatus=dirty => saveDraft
  */
 Misc.SavePublishDiscard = ({type, id, hidden, cannotPublish, cannotDelete }) => {
 	assert(C.TYPES.has(type), 'Misc.SavePublishDiscard');

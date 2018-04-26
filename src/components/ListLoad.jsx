@@ -129,7 +129,7 @@ const createBlank = ({type, navpage, base, make}) => {
 	const id = getId(base);
 	if ( ! getType(base)) base['@type'] = type;
 	// poke a new blank into DataStore
-	DataStore.setValue(['data', type, id], base);
+	DataStore.setData(base, true, C.KStatus.DRAFT);
 	// set the id
 	onPick({navpage, id});
 	// invalidate lists

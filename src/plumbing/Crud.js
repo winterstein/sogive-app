@@ -1,10 +1,24 @@
-/** Add "standard crud functions" to ServerIO and ActionMan */
+/** Add "standard crud functions" to ServerIO and ActionMan 
+ * 
+ * 
+ * Architecture and Assumptions
+ * 
+ * Items are stored in DataStore in two places:
+ * 
+ * The published version: data.type.id
+ * The draft version: DRAFT.type.id
+ * 
+ * Either of which may be blank.
+ * 
+ * 
+*/
+
 
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
-import DataStore from './DataStore';
+import xDataStore from './DataStore';
 import {getId, getType} from '../data/DataClass';
 import Login from 'you-again';
 import {XId, encURI} from 'wwutils';
@@ -22,7 +36,11 @@ ActionMan.crud = (type, id, action, item) => {
 	assMatch(id, String);
 	assert(C.TYPES.has(type), type);
 	assert(C.CRUDACTION.has(action), type);
-	if ( ! item) item = DataStore.getData(type, id);
+	if ( ! item) {
+		// we normally operate on the draft
+		item = DataStore.getData(type, id, C.KStatus.DRAFT);
+		if ( ! item) item = DataStore.getData(type, id);
+	}
 	if ( ! item) {
 		// No item? fine for action=delete. Make a transient dummy here
 		assert(action==='delete', action+" "+type+" "+id);

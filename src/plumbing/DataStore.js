@@ -114,30 +114,46 @@ class Store {
 	 * Warning: This does NOT load data from the server.
 	 * @returns a "data-item", such as a person or document, or undefined.
 	 */
-	getData(type, id) {
+	getData(type, id, status=C.KStatus.PUBLISHED) {
 		assert(C.TYPES.has(type), "DataStore.getData bad type: "+type);
 		assert(id, "DataStore.getData - No id?! getData "+type);
-		let item = this.appstate.data[type][id];
+		const ipath = this.getPath2(status, type, id);
+		const item = this.getValue(ipath);
 		return item;
 	}
 
 	/**
 	 * 
 	 */
-	setData(item, update = true) {
+	setData(item, update = true, status=C.KStatus.PUBLISHED) {
 		assert(item && getType(item) && getId(item), item, "DataStore.js setData()");
 		assert(C.TYPES.has(getType(item)), item);
-		this.setValue(['data', getType(item), getId(item)], item, update);
+		let ipath = this.getPath(item, status);
+		assert(ipath, "DataStore.js setData()", item);
+		this.setValue(ipath, item, update);
 	}
 
 	/**
 	 * the DataStore path for this item, or null
+	 * @returns {String[]} e.g. ['data', 'User', 'dan@foo']
 	 */
-	getPath(item) {
+	getPath(item, status=C.KStatus.PUBLISHED) {
 		if ( ! item) return null;
 		if ( ! C.TYPES.has(getType(item))) return null;
-		if ( ! getId(item)) return null;
-		return ['data', getType(item), getId(item)];
+		if ( ! getId(item)) return null;		
+		return this.getPath2(status, getType(item), getId(item));
+	}
+
+	/**
+	 * 
+	 * @param {C.KStatus} status 
+	 * @param {C.TYPES} type 
+	 * @param {String} id 
+	 * @returns {String[]} e.g. ['data', 'User', 'dan@foo']
+	 */
+	getPath2(status, type, id) {
+		let d = C.KStatus.isPUBLISHED(status)? 'data' : C.KStatus.DRAFT; // NB: modified = draft
+		return [d, type, id];
 	}
 
 	getValue(...path) {
@@ -309,34 +325,35 @@ class Store {
 		if ( ! hits && res.cargo) {			
 			hits = [res.cargo]; // just the one?
 		}
-		let itemstate = {data:{}};
+		// build an update
+		let itemstate = {data:{}, DRAFT:{}};
 		hits.forEach(item => {
 			try {
-				let type = getType(item);
+				const type = getType(item);
+				const id = getId(item);
 				if ( ! type) {
-					// 
 					console.log("skip server object w/o type", item);
 					return;
 				}
+				if ( ! id) {
+					console.warn("No id?!", item, "from", res);
+					return;
+				}
 				assert(C.TYPES.has(type), "DataStore.updateFromServer: type:"+type, item);
-				let typemap = itemstate.data[type];
+				const ipath = this.getPath(item);
+				assert(ipath.length===3 && ipath[1]===type, "DataStore.js updateFromServer "+ipath);
+				let typemap = itemstate[ipath[0]][type];
 				if ( ! typemap) {
 					typemap = {};
-					itemstate.data[type] = typemap;
+					itemstate[ipath[0]][type] = typemap;
 				}
-				if (item.id) {
-					typemap[item.id] = item;
-				} else if (item["@id"]) {
-					// bleurgh, thing.org style ids -- which are asking for trouble :(
-					typemap[item["@id"]] = item;
-				} else {
-					console.warn("No id?!", item, "from", res);
-				}
+				typemap[id] = item;
 			} catch(err) {
 				// swallow and carry on
 				console.error(err);
 			}
 		});
+		// make the update
 		this.update(itemstate);
 		return res;
 	} //./updateFromServer()
@@ -455,7 +472,8 @@ DataStore.update({
 		User: {},
 		Donation: {}
 	},
-	draft: {
+	// NB: caps to match C.KStatus.DRAFT
+	DRAFT: {
 		NGO: {},
 		User: {}
 	},
