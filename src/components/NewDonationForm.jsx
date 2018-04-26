@@ -370,7 +370,6 @@ const ThankYouSection = ({path, item}) => {
 			<big>
 				<p>
 					We've received your donation of <Misc.Money amount={donation.amount} /> to {item.name}.<br />
-					A receipt for your donation will be emailed to {Login.getEmail()}.
 				</p>
 				<p>
 					Thanks for using SoGive!
