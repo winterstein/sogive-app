@@ -6,10 +6,19 @@
  * Items are stored in DataStore in two places:
  * 
  * The published version: data.type.id
- * The draft version: DRAFT.type.id
+ * TODO The draft version: DRAFT.type.id
+ * 
+ * TODO clean out the old approach: which was one version held in 'data' (no separate DRAFT)
+ * TODO Check all uses of 'data', getData(), setData() to see that they fit!
  * 
  * Either of which may be blank.
+ 
+ * The lifecycle is:
  * 
+ * New objects are in DRAFT.
+ * On publish, the DRAFT is deleted, and they move to data.
+ * On edit of a published item -- two versions are held in memory (data and DRAFT). 
+ * The DRAFT version is used for preference by editors.
  * 
 */
 
