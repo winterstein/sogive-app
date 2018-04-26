@@ -66,7 +66,9 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 				Event event = fundraiser.getEvent();
 				if (event != null && event.getMatchedFunding() != 0) {
 					double ma = amount.getValue().doubleValue() * event.getMatchedFunding();
-					Money matchAmount = new Money(amount.getCurrency(), Math.round(ma));
+					// round to the penny
+					ma = Math.round(ma*100)/100;
+					Money matchAmount = new Money(amount.getCurrency(), ma);
 					MoneyItem mi = new MoneyItem("matched funding", matchAmount);
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
