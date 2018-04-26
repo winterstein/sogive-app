@@ -383,8 +383,7 @@ const LogOffSiteDonation = ({item}) => {
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. 
 				It will be added to your profile dashboard.</p>
-			<DonateButton item={item} />
-			<NewDonationForm item={item} paidElsewhere />
+			<DonateButton item={item} paidElsewhere />
 		</Misc.Card>
 	);
 };

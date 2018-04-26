@@ -2,10 +2,10 @@ package org.sogive.server;
 
 import java.io.File;
 
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 

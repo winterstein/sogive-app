@@ -6,8 +6,8 @@ import java.util.Map;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.user.DBSoGive;
 
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;

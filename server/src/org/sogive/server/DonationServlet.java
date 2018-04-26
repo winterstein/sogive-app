@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
+
 import org.eclipse.jetty.util.ajax.JSON;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
@@ -20,7 +23,6 @@ import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.MoneyCollector;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
@@ -31,6 +33,7 @@ import com.stripe.model.Charge;
 import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
+import com.winterwell.datalog.server.TrackingPixelServlet;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
@@ -56,9 +59,11 @@ import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
+import com.winterwell.web.app.Emailer;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.Checkbox;
 import com.winterwell.web.fields.DoubleField;
 import com.winterwell.web.fields.IntField;
@@ -92,6 +97,7 @@ public class DonationServlet extends CrudServlet {
 
 	public DonationServlet() {
 		super(Donation.class);
+		defaultSort = "date-desc";
 	}
 
 	/*public void process(WebRequest state) throws Exception {
@@ -157,18 +163,33 @@ public class DonationServlet extends CrudServlet {
 		// who
 		XId user = state.getUserId();
 		XId from = donation.getFrom(); // you can donate w/o logging in
-		String email = donation.getStripe()==null? null : donation.getStripe().getEmail();
+		String email1 = donation.getStripe()==null? null : donation.getStripe().getEmail();
 		String email2 = state.get("stripeEmail");
+		String email3 = donation.getDonorEmail();
+		String email = Utils.or(email1, email2, email3);
 		if (user==null) {
 			user = from;
 		}
-		if (user==null) {
-			String e = Utils.or(email, email2);
-			if (e != null) {
-				user = new XId(e, "Email");
+		if (user==null) {			
+			if (email != null) {
+				user = YouAgainClient.xidFromEmail(email);
+			} else {
+				String trck = TrackingPixelServlet.getCreateCookieTrackerId(state);
+				if (trck!=null) { 
+					user = new XId(trck);
+				} else {
+					user = XId.ANON;
+				}
 			}
-		}
+		} // ./null user
 		donation.setF(new XId[]{user}); // who reported this? audit trail
+		// make sure from is set
+		if (from==null) {			
+			from = user;
+			donation.setFrom(from);
+			Log.d(LOGTAG, "set from to "+from+" for "+donation.getId()+" in publish "+state);
+		}
+		Utils.check4null(from, user);
 		
 		// make sure it has a date and some donor info
 //		if (donation.getDate()==null) { // date = published date not draft creation date
@@ -189,7 +210,9 @@ public class DonationServlet extends CrudServlet {
 			FundRaiser fr = AppUtils.get(frid, FundRaiser.class);
 			assert fr != null : "doPublishFirstTime null to and no fundRaiser?! "+donation+" "+state;
 			String cid = fr.getCharityId();
-			assert ! Utils.isBlank(cid) : fr;
+			if (Utils.isBlank(cid)) {
+				throw new IllegalStateException("Donation fail: FundRaiser with no charity? "+fr);
+			}
 			donation.setTo(cid);
 			Log.w(LOGTAG, "doPublishFirstTime null to - set to "+cid+" Donation: "+donation);
 		}
@@ -211,7 +234,48 @@ public class DonationServlet extends CrudServlet {
 		} else {
 			Log.d(LOGTAG, "no fundraiser for "+donation+" so dont call DonateToFundRaiserActor");
 		}
+		
+		// Send an email
+		try {
+			doUploadTransfers2_email(donation, Utils.or(email3, email));
+		} catch(Throwable ex) {
+			Log.e(LOGTAG, ex);
+			// don't choke though, carry on
+		}
 	}
 
+	/**
+	 * copy pasta code TODO refactor
+	 * @param email 
+	 * @param transfers
+	 */
+	void doUploadTransfers2_email(Donation donation, String emailAddress) {
+		if (emailAddress==null) {
+			Log.d(LOGTAG, "no email for recipt "+donation);
+			return;
+		}
+		Emailer emailer = Dep.get(Emailer.class);
+		Throwable err = null;
+		try {
+			SimpleMessage email = new SimpleMessage(emailer.getBotEmail());			
+			XId txid = YouAgainClient.xidFromEmail(emailAddress);			
+			InternetAddress to = new InternetAddress(txid.getName());
+			email.addTo(to);
+			email.setSubject("Thank you for donating :)");
+			String amount = donation.getAmount().toString();
+			String cid = donation.getTo();
+			NGO charity = AppUtils.get(cid, NGO.class);
+			String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
+					+amount+" to "+charity.getDisplayName()
+					+".</p><p>Payment ID: "+donation.getPaymentId()+"<br>Donation ID: "+donation.getId()+"</p></div>";
+			String bodyPlain = WebUtils2.getPlainText(bodyHtml);
+			email.setHtmlContent(bodyHtml, bodyPlain);
+			emailer.send(email);
+		} catch(Throwable ex) {
+			err = ex;
+			Log.e(ex);
+		}
+		if (err!=null) throw Utils.runtime(err);
+	}
 	
 }

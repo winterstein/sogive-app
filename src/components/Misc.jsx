@@ -7,7 +7,7 @@ import { Checkbox, Radio, FormGroup, InputGroup, DropdownButton, MenuItem} from 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
-import { setHash, XId } from 'wwutils';
+import { setHash, XId, asNum } from 'wwutils';
 import PV from 'promise-value';
 import Dropzone from 'react-dropzone';
 
@@ -445,22 +445,6 @@ Misc.PropControl = ({type="text", path, prop, label, help, error, validator, rec
 Misc.ControlTypes = new Enum("img imgUpload textarea text select autocomplete password email url color Money checkbox"
 							+" yesNo location date year number arraytext address postcode json");
 
-/**
- * Strip commas £/$/euro and parse float
- * @param {*} v 
- * @returns Number. undefined/null are returned as-is.
- */
-const numFromAnything = v => {
-	if (v===undefined || v===null) return v;
-	if (_.isNumber(v)) return v;
-	// strip any commas, e.g. 1,000
-	if (_.isString(v)) {
-		v = v.replace(/,/g, "");
-		// £ / $ / euro
-		v = v.replace(/^(-)?[£$\u20AC]/, "$1");
-	}
-	return parseFloat(v);
-};
 
 const PropControlMoney = ({prop, value, path, proppath, 
 									item, bg, dflt, saveFn, modelValueFromInput, ...otherStuff}) => {
@@ -478,9 +462,11 @@ const PropControlMoney = ({prop, value, path, proppath,
 	//Money.assIsa(value); // type can be blank
 	// handle edits
 	const onMoneyChange = e => {		
-		let newVal = numFromAnything(e.target.value);
-		value.raw = e.target.value;
-		value.value = newVal;
+		// TODO move more of this into Money.js as Money.setValue()
+		// keep blank as blank (so we can have unset inputs), otherwise convert to number/undefined
+		let newVal = asNum(e.target.value);			// e.target.value===''? '' : 
+		value = Money.setValue(value, newVal);
+		value.raw = e.target.value; // Store raw, so we can display blank strings
 		DataStore.setValue(proppath, value, true); // force update 'cos editing the object makes this look like a no-op
 		// console.warn("£", value, proppath);
 		if (saveFn) saveFn({path, value});
@@ -719,7 +705,7 @@ const standardModelValueFromInput = (inputValue, type, eventType) => {
 		return parseInt(inputValue);
 	}
 	if (type==='number') {		
-		return numFromAnything(inputValue);
+		return asNum(inputValue);
 	}
 	// url: add in https:// if missing
 	if (type==='url' && eventType==='blur') {
@@ -832,7 +818,7 @@ Misc.CardAccordion = ({widgetName, children, multiple, start}) => {
  * save buttons
  * TODO auto-save on edit -- copy from sogive
  */
-Misc.SavePublishDiscard = ({type, id, hidden }) => {
+Misc.SavePublishDiscard = ({type, id, hidden, cannotPublish, cannotDelete }) => {
 	assert(C.TYPES.has(type), 'Misc.SavePublishDiscard');
 	assMatch(id, String);
 	let localStatus = DataStore.getLocalEditsStatus(type, id);
@@ -846,6 +832,9 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 	// NB: modified is a persistent marker, managed by the server, for draft != published
 	let noEdits = item && C.KStatus.isPUBLISHED(item.status) && C.STATUS.isclean(localStatus) && ! item.modified;
 
+	let disablePublish = isSaving || noEdits || cannotPublish;
+	let publishTooltip = cannotPublish? 'Your account cannot publish this.' : (noEdits? 'Nothing to publish' : 'Publish your edits!');
+	let disableDelete = isSaving || cannotDelete;
 	// Sometimes we just want to autosave drafts!
 	if (hidden) return <span />;
 	const vis ={visibility: isSaving? 'visible' : 'hidden'};
@@ -856,7 +845,7 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 			Save Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
-		<button className='btn btn-primary' disabled={isSaving || noEdits} onClick={() => ActionMan.publishEdits(type, id)}>
+		<button className='btn btn-primary' disabled={disablePublish} title={publishTooltip} onClick={() => ActionMan.publishEdits(type, id)}>
 			Publish Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
@@ -864,7 +853,7 @@ Misc.SavePublishDiscard = ({type, id, hidden }) => {
 			Discard Edits <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 		&nbsp;
-		<button className='btn btn-danger' disabled={isSaving} onClick={() => ActionMan.delete(type, id)} >
+		<button className='btn btn-danger' disabled={disableDelete} onClick={() => ActionMan.delete(type, id)} >
 			Delete <span className="glyphicon glyphicon-cd spinning" style={vis} />
 		</button>
 	</div>);
@@ -915,6 +904,7 @@ Misc.SubmitButton = ({path, url, once, className='btn btn-primary', onSuccess, c
 };
 
 export default Misc;
-// // TODO rejig for export {
-// 	PropControl: Misc.PropControl
+
+// // TODO maybe rejig for export {
+// 	PropControl, Icon, etc
 // };

@@ -57,8 +57,9 @@ ActionMan.crud = (type, id, action, item) => {
 			// clear the saving flag
 			DataStore.setLocalEditsStatus(type, id, C.STATUS.clean);
 			return res;
-		})
-		.fail((err) => {
+		},
+		// fail?
+		(err) => {
 			// bleurgh
 			console.warn(err);
 			// TODO factor out message code

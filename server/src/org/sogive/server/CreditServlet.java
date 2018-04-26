@@ -13,9 +13,9 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Transfer;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.JThing;
@@ -55,6 +55,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 
 	public CreditServlet() {
 		super(Transfer.class);
+		defaultSort = "date-desc";
 	}
 	
 
@@ -137,8 +138,6 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 		WebUtils2.sendJson(output, state);
 	}
 
-
-	// TODO test this
 	void doUploadTransfers2_email(List<Transfer> transfers) {
 		Emailer emailer = Dep.get(Emailer.class);
 		Throwable err = null;
@@ -152,7 +151,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 				String nu = "";
 				if (t.toPerson!=null && t.toPerson.isFresh) {
 					// TODO create a password-reset link with YA so they can click through to claim it.
-					nu = "Welcome to Soive - we have setup a blank account to hold your credit.";
+					nu = "Welcome to SoGive - we have setup a blank account to hold your credit.";
 				}
 				String bodyHtml = "<div><h2>Hooray!</h2><p>"+nu+"</p><p>Your credit is: "+t.toString()+"</p></div>"; // FIXME
 				String bodyPlain = WebUtils2.getPlainText(bodyHtml);

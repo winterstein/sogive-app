@@ -19,6 +19,7 @@ import Misc from '../Misc';
 import Roles from '../../Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
+import { ImpactDesc } from '../ImpactWidgetry';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -59,8 +60,13 @@ const EditCharityPage = () => {
 				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} />
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
+					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
+					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Panel>
+			<Misc.Card title='Preview: Impact'>
+				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+			</Misc.Card>
 			<Accordion>
 				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
 					<ProfileEditor charity={charity} />
@@ -158,7 +164,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url. 
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element". 
@@ -207,9 +213,10 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
+	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Panel key={'project_'+i} eventKey={i+1} 
-			header={<div><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+			header={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Panel>)
 		);

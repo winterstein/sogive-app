@@ -58,9 +58,10 @@ class DonationForm extends Component {
 			.sort((a, b) => a - b)
 			.find((key) => sign > 0 ? key > amount.value : key >= amount.value); // so that £20+ goes to £25, £20- goes to £19
 		const increment = donationIncrements[incrementKey];
-		const rawValue = amount.value + (increment * Math.sign(sign));
+		// use Money.add/sub instead??
+		const rawValue = Money.value(amount) + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
-		const newAmount = Money.make({ value, currency: 'gbp' });
+		const newAmount = Money.make({ value, currency: 'GBP' });
 		DataStore.setValue(['widget', 'DonationForm', NGO.id(charity), 'amount'], newAmount);
 	}
 

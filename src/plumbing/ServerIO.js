@@ -15,6 +15,17 @@ import NGO from '../data/charity/NGO';
 import DataStore from './DataStore';
 import Messaging, {notifyUser} from './Messaging';
 
+const ServerIO = {};
+export default ServerIO;
+// for debug
+window.ServerIO = ServerIO;
+
+/** The initial part of an API call. Allows for local to point at live for debugging */
+ServerIO.APIBASE = ''; // Normally use this for "my server"!
+// Comment out the lines below when deploying!
+// ServerIO.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
+// ServerIO.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
+
 // Error Logging - but only the first error
 window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	// NB: source & line num are not much use in a minified file
@@ -25,23 +36,11 @@ window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {
 	}});
 });
 
-// Allow for local to point at live for debugging
-window.APIBASE = 
-	// ''; Normally use this!
-	'http://local.sogive.org';
-	//'https://test.sogive.org';
-	// 'https://app.sogive.org';
 
-const ServerIO = {};
-export default ServerIO;
-// for debug
-window.ServerIO = ServerIO;
-
-// allow switching backend during testing
-ServerIO.base = 
-	null;
-	// 'https://app.sogive.org';
-
+// Safety check - if we deploy test code, it will complain
+if (ServerIO.APIBASE && C.isProduction()) {
+	throw new Error("ServerIO.js - ServerIO.APIBASE is using a test setting! Argh! "+ServerIO.APIBASE);
+}
 
 /**
  * @param query {!String} query string
@@ -63,7 +62,8 @@ ServerIO.donate = function(data) {
 	return ServerIO.post('/donation', data);
 };
 
-ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {	
+// TODO add fundRaiser
+ServerIO.getDonations = function({from, to, fundRaiser, status=C.KStatus.PUBLISHED}) {		
 	const params = {
 		data: {
 			from, to,
@@ -71,6 +71,10 @@ ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {
 			sort:'date-desc'
 		}
 	};
+	// if (fundRaiser) { TODO
+	// 	assMatch(fundRaiser, String);
+	// 	params.data.q = 'fundRaiser:'+fundRaiser;
+	// }
 	return ServerIO.load('/donation/list', params);
 };
 
@@ -161,11 +165,7 @@ ServerIO.upload = function(file, progress, load) {
  * @returns A <a href="http://api.jquery.com/jQuery.ajax/#jqXHR">jqXHR object</a>.
 **/
 ServerIO.load = function(url, params) {
-	assMatch(url,String);
-	// prepend the API base url? e.g. to route all traffic from a local dev build to the live app.sogive.org backend.
-	if (APIBASE && url.indexOf('http') === -1) {
-		url = APIBASE+url;
-	}
+	assMatch(url,String);	
 	console.log("ServerIO.load", url, params);
 	params = ServerIO.addDefaultParams(params);
 	// sanity check: no Objects except arrays
@@ -174,9 +174,9 @@ ServerIO.load = function(url, params) {
 	);
 	// sanity check: status
 	assert( ! params.data.status || C.KStatus.has(params.data.status), params.data.status);
-	// add the base
-	if (url.substring(0,4) !== 'http' && ServerIO.base) {
-		url = ServerIO.base + url;
+	// prepend the API base url? e.g. to route all traffic from a local dev build to the live app.sogive.org backend.
+	if (url.substring(0,4) !== 'http' && ServerIO.APIBASE) {
+		url = ServerIO.APIBASE + url;
 	}
 	params.url = url;
 	// send cookies & add auth
@@ -198,32 +198,33 @@ ServerIO.load = function(url, params) {
 		return defrd;
 	}
 	defrd = defrd
-		.then(ServerIO.handleMessages)
-		.fail(function(response, huh, bah) {
-			console.error('fail',url,params,response,huh,bah);
-			// error message
-			let text = response.status===404? 
-				"404: Sadly that content could not be found."
-				: "Could not load "+params.url+" from the server";
-			if (response.responseText && ! (response.status >= 500)) {
-				// NB: dont show the nginx error page for a 500 server fail
-				text = response.responseText;
-			}
-			let msg = {
-				id: 'error from '+params.url,
-				type:'error', 
-				text
-			};
-			// HACK hide details
-			if (msg.text.indexOf('\n----') !== -1) {
-				let i = msg.text.indexOf('\n----');
-				msg.details = msg.text.substr(i);
-				msg.text = msg.text.substr(0, i);
-			}
-			// bleurgh - a frameworky dependency
-			notifyUser(msg);
-			return response;
-		});
+		.then(ServerIO.handleMessages,
+			// onfail (not factored out to allow easy access to local vars)
+			function(response, huh, bah) {
+				console.error('fail',url,params,response,huh,bah);
+				// error message
+				let text = response.status===404? 
+					"404: Sadly that content could not be found."
+					: "Could not load "+params.url+" from the server";
+				if (response.responseText && ! (response.status >= 500)) {
+					// NB: dont show the nginx error page for a 500 server fail
+					text = response.responseText;
+				}
+				let msg = {
+					id: 'error from '+params.url,
+					type:'error', 
+					text
+				};
+				// HACK hide details
+				if (msg.text.indexOf('\n----') !== -1) {
+					let i = msg.text.indexOf('\n----');
+					msg.details = msg.text.substr(i);
+					msg.text = msg.text.substr(0, i);
+				}
+				// bleurgh - a frameworky dependency
+				notifyUser(msg);
+				return response;
+			});
 	return defrd;
 };
 

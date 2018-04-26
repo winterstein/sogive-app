@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.AThing;
@@ -89,7 +89,7 @@ public class FundRaiser extends AThing {
 	}
 	
 	/**
-	 * Important: this is copied in js
+	 * Important: this is copied in js!!
 	 * @param ticket
 	 * @return
 	 */
@@ -101,8 +101,10 @@ public class FundRaiser extends AThing {
 		// avoid exposing the persons email
 		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
 		// so repeat calls give the same answer (no random), but it should be unique enough
-		String predictableNonce = StrUtils.md5(uname+ticket.getId()).substring(0, 6);
-		return FileUtils.safeFilename(uname, false)+'.'+ticket.getEventId()+'.'+predictableNonce;	
+		String hashme = uname+ticket.getId();
+		String predictableNonce = StrUtils.md5(hashme).substring(0, 6);
+		String safeuname = uname.replaceAll("\\W+", "");
+		return safeuname+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
 
 	public FundRaiser() {

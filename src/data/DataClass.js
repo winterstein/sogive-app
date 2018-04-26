@@ -89,7 +89,13 @@ const nonce = (n=6) => {
 };
 
 /**
- * Setup the "standard" DataClass functions.
+ * Setup the "standard" DataClass functions:
+ * isa()
+ * assIsa()
+ * id()
+ * name()
+ * make()
+ * And a type.
  * @param {!String} type 
  */
 const defineType = (type) => {
@@ -98,7 +104,7 @@ const defineType = (type) => {
 	This.type = type;
 	This['@type'] = 'DataClass';
 	This.isa = (obj) => isa(obj, type);
-	This.assIsa = (obj, msg) => assert(This.isa(obj), (msg||'')+" "+type+" expected, but got "+obj);
+	This.assIsa = (obj, msg) => assert(This.isa(obj), (msg||'')+" "+type+" expected, but got "+JSON.stringify(obj));
 	This.name = obj => obj && obj.name;
 	/** convenience for getId() */
 	This.id = obj => This.assIsa(obj) && getId(obj);
@@ -108,8 +114,13 @@ const defineType = (type) => {
 			...base
 		};
 	};
+	// for debug use only
+	window.dataclass[type] = This;
 	return This;
 };
+
+// Debug hack: export classes to global! Don't use this in code - use import!
+window.dataclass = {};
 
 export {defineType, isa, getType, getId, Meta, nonce};
 	

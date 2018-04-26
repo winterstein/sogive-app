@@ -3,10 +3,10 @@ package org.sogive.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Ticket;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.MoneyCollector;

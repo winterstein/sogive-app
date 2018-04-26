@@ -21,9 +21,7 @@ import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../Roles';
 import Misc from './Misc';
-import GiftAidForm from './GiftAidForm';
 import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
-import NewDonationForm from './NewDonationForm';
 import Wizard, {WizardStage} from './WizardProgressWidget';
 import PaymentWidget from './PaymentWidget';
 

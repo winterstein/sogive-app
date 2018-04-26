@@ -129,7 +129,7 @@ const getBasketPV = (uxid) => {
 	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT, swallow:true});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket
-	let pGetMake = pvbasket.promise.fail(err => {
+	let pGetMake = pvbasket.promise.catch(err => {
 		console.log("make a new basket");
 		let basket = Basket.make({id: bid});
 		DataStore.setData(basket);
@@ -226,7 +226,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 			fundRaiser: fundRaiser,
 			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
 			from: from,
-			amount: Money.make({ value: 10, currency: 'gbp' }),
+			amount: Money.make({ value: 10 }),
 			coverCosts: true,
 		});
 		console.warn('donationDraft-new', dontn);
@@ -237,13 +237,25 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 		// }); // ./then()
 	}); // ./fetch()
 };
+/**Clears donation draft held in ActionMan Datastore
+ * Hacky fix to deal with seperate donations in the same session overriding each other
+ */
+const clearDonationDraft = ({donation}) => {
+	let from = Login.getId();
+	let charity = donation.to;
+	let fundRaiser = donation.fundRaiser;
+	const forId = fundRaiser || charity;
 
+	const path = ['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId];
+	DataStore.setValue(path, null);
+};
 
 const ActionMan = {
 	addCharity,
 	addProject, removeProject,
 	addInputOrOutput,
 	addDataSource,
+	clearDonationDraft,
 	donate,
 	getDonationDraft,
 	getBasketPV,

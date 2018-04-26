@@ -57,8 +57,8 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
-		// TODO use ServerIO.getDonations
-		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
+		// minor TODO use ServerIO.getDonations		
+		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, sort:"date-desc", status: C.KStatus.PUBLISHED}});
 	});
 	const donations = pvDonations.value && pvDonations.value.hits;
 
@@ -69,7 +69,11 @@ const FundRaiserPage = ({id}) => {
 	if ( ! item) {
 		return null; // 404 :(
 	}
-	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
+	let charity = FundRaiser.charity(item);
+	if ( ! charity) {
+		charity = NGO.make(); 
+		console.warn("FundRaiser with no charity set?!");
+	}
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
 	if ( ! pEvent.resolved) {
@@ -276,7 +280,7 @@ const Supporter = ({donation, charity}) => {
 			<h4>{name}</h4>
 			<Misc.RelativeDate date={donation.date} className='donation-date' />			
 			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
-			{donation.contributions? 
+			{donation.contributions && ! donation.anonAmount? 
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (

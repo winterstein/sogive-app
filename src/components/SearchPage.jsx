@@ -79,6 +79,9 @@ export default class SearchPage extends React.Component {
 
 const FeaturedCharities = () => null; 
 
+/**
+ * TODO change into a Misc.PropControl??
+ */
 class SearchForm extends React.Component {
 	constructor(...params) {
 		super(...params);
