@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.eclipse.jetty.util.ajax.JSON;
@@ -166,7 +167,8 @@ public class DonationServlet extends CrudServlet {
 		String email1 = donation.getStripe()==null? null : donation.getStripe().getEmail();
 		String email2 = state.get("stripeEmail");
 		String email3 = donation.getDonorEmail();
-		String email = Utils.or(email1, email2, email3);
+		String email4 = user.isService("email")? user.getName() : null;
+		String email = Utils.or(email1, email2, email3, email4);
 		if (user==null) {
 			user = from;
 		}
@@ -248,34 +250,29 @@ public class DonationServlet extends CrudServlet {
 	 * copy pasta code TODO refactor
 	 * @param email 
 	 * @param transfers
+	 * @throws AddressException 
 	 */
-	void doUploadTransfers2_email(Donation donation, String emailAddress) {
+	void doUploadTransfers2_email(Donation donation, String emailAddress) throws AddressException {
 		if (emailAddress==null) {
 			Log.d(LOGTAG, "no email for recipt "+donation);
 			return;
 		}
 		Emailer emailer = Dep.get(Emailer.class);
-		Throwable err = null;
-		try {
-			SimpleMessage email = new SimpleMessage(emailer.getBotEmail());			
-			XId txid = YouAgainClient.xidFromEmail(emailAddress);			
-			InternetAddress to = new InternetAddress(txid.getName());
-			email.addTo(to);
-			email.setSubject("Thank you for donating :)");
-			String amount = donation.getAmount().toString();
-			String cid = donation.getTo();
-			NGO charity = AppUtils.get(cid, NGO.class);
-			String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
-					+amount+" to "+charity.getDisplayName()
-					+".</p><p>Payment ID: "+donation.getPaymentId()+"<br>Donation ID: "+donation.getId()+"</p></div>";
-			String bodyPlain = WebUtils2.getPlainText(bodyHtml);
-			email.setHtmlContent(bodyHtml, bodyPlain);
-			emailer.send(email);
-		} catch(Throwable ex) {
-			err = ex;
-			Log.e(ex);
-		}
-		if (err!=null) throw Utils.runtime(err);
+		
+		SimpleMessage email = new SimpleMessage(emailer.getBotEmail());			
+		XId txid = YouAgainClient.xidFromEmail(emailAddress);			
+		InternetAddress to = new InternetAddress(txid.getName());
+		email.addTo(to);
+		email.setSubject("Thank you for donating :)");
+		String amount = donation.getAmount().toString();
+		String cid = donation.getTo();
+		NGO charity = AppUtils.get(cid, NGO.class);
+		String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
+				+amount+" to "+Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
+				+".</p><p>Payment ID: "+donation.getPaymentId()+"<br>Donation ID: "+donation.getId()+"</p></div>";
+		String bodyPlain = WebUtils2.getPlainText(bodyHtml);
+		email.setHtmlContent(bodyHtml, bodyPlain);
+		emailer.send(email);
 	}
 	
 }
