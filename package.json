@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -13,7 +13,6 @@
     "data-pivot": "^0.3.1",
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
-    "eslint-plugin-flowtype": "^2.46.3",
     "hashmap": "^2.1.0",
     "intl": "^1.2.5",
     "jquery": "^3.3.1",
@@ -52,7 +51,7 @@
     "babel-preset-react": "^6.24.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-flowtype": "^2.46.3",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
