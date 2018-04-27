@@ -42,11 +42,12 @@ const EditCharityPage = () => {
 				if (res.cargo) {
 					res.cargo.status = C.KStatus.DRAFT;
 					res.cargo.uptodatedraft = "yes";
+					console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
 					DataStore.setData(res.cargo);
 				}
 			});
 		}
-	} else if (C.KStatus.isDRAFT(charity)) {
+	} else if (C.KStatus.isDRAFT(charity.status)) {
 		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
 	}
 
