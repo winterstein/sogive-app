@@ -33,13 +33,22 @@ const EditCharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading />;
 	}
+	// HACK load a fresh draft the first time.
 	if (C.KStatus.isPUBLISHED(charity.status)) {
-		ServerIO.getCharity(cid, C.KStatus.DRAFT)
-		.then(res => {
-			console.warn("res", res);
-			if (res.cargo) DataStore.setData(res.cargo);
-		});
-	}	
+		if ( ! charity.uptodatedraft) {
+			ServerIO.getCharity(cid, C.KStatus.DRAFT)
+			.then(res => {
+				console.warn("res", res);
+				if (res.cargo) {
+					res.cargo.status = C.KStatus.DRAFT;
+					res.cargo.uptodatedraft = "yes";
+					DataStore.setData(res.cargo);
+				}
+			});
+		}
+	} else if (C.KStatus.isDRAFT(charity)) {
+		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
+	}
 
 	// projects
 	let allprojects = charity.projects || [];
