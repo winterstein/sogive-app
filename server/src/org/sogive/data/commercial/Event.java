@@ -34,7 +34,7 @@ public class Event extends AThing {
 	 */
 	public double getMatchedFunding() {
 		if (matchedFunding==null) return 0;
-		return matchedFunding / 100;
+		return matchedFunding.doubleValue() / 100;
 	}
 	
 	String logoImage;
