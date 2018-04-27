@@ -272,7 +272,8 @@ public class DonationServlet extends CrudServlet {
 		NGO charity = AppUtils.get(cid, NGO.class);
 		String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
 				+amount+" to "+Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
-				+".</p><p>Payment ID: "+donation.getPaymentId()+"<br>Donation ID: "+donation.getId()+"</p></div>";
+				+".</p><p>Payment ID: "+Utils.or(donation.getPaymentId(),donation.getPaymentMethod(),donation.getId())
+				+"<br>Donation ID: "+donation.getId()+"</p></div>";
 		String bodyPlain = WebUtils2.getPlainText(bodyHtml);
 		email.setHtmlContent(bodyHtml, bodyPlain);
 		emailer.send(email);
