@@ -51,7 +51,9 @@ Money.setValue = (m, newVal) => {
 	m.value100p = newVal? newVal * 10000 : 0; // NB: null x Number = 0 nut undefined x Number = NaN. So let's standardise on 0
 	// remove the raw field 'cos otherwise v100p() will use it to overwrite the new value!
 	delete m.raw;
-	if (newVal) assert(Money.value(m) === newVal, "Money.js - setValue() "+newVal, m);
+	if (Money.value(m) != newVal) {
+		console.warn("Money.js - setValue() mismatch "+newVal+" != "+Money.value(m), m);
+	}
 	return m;
 };
 
