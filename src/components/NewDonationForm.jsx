@@ -40,7 +40,7 @@ const DonateButton = ({item, paidElsewhere}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
 	// no donations to draft fundraisers or charities
-	if (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED) {
+	if (false && (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED)) {
 		return (
 			<button className='btn btn-lg btn-primary disabled' title='This is a draft preview page - publish to actually donate'>Donate</button>
 		);	
