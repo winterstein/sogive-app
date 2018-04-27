@@ -1,5 +1,7 @@
 package org.sogive.server;
 
+import java.util.List;
+
 import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
@@ -42,7 +44,15 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
-					
+			// once only			
+			final List<String> dons = fundraiser.getDonations();
+			if (dons.contains(donation.getId())) {
+				Log.w(getName(), "Skip repeat fundraiser update?! "+donation.getId()+" to "+fundraiser.getId());
+				return;
+			}
+			// a rough log of who has donated
+			dons.add(donation.getId()); // WARNING: If there is then an exception below, this code will not get re-run
+			
 			Money amount = donation.getAmount();
 			
 			Throwable hackex = null;
@@ -75,8 +85,6 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Integer donationCount = fundraiser.getDonationCount();
 			if (donationCount == null) donationCount = 0;
 			fundraiser.setDonationCount(donationCount + 1);
-			// for debugging -- a rough log of who has donated
-			fundraiser.getDonations().add(donation.getId());
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
