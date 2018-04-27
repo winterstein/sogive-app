@@ -41,6 +41,7 @@ module.exports = {
 		"no-nested-ternary": "warn",
 		"function-paren-newline": "off",
 		"object-curly-newline": "off",
+		"jsx-a11y/anchor-is-valid": "warn",
 		"react/jsx-closing-bracket-location": "warn",
 		"react/jsx-first-prop-new-line": "off",
 		"react/jsx-indent": ["warn", "tab"],

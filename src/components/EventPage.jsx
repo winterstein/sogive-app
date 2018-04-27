@@ -68,6 +68,10 @@ const Event = ({id}) => {
 
 const Register = ({event}) => {
 	assert(event);
+	// published?
+	if (event.status !== C.KStatus.PUBLISHED) {
+		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);	
+	}
 	// just a big CTA
 	return (<center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center>);
 };
