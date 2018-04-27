@@ -39,7 +39,13 @@ const stripeKey = (C.SERVER_TYPE) ?
 const DonateButton = ({item, paidElsewhere}) => {
 	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
 	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
-	// const donationPath; foo
+	// no donations to draft fundraisers or charities
+	if (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED) {
+		return (
+			<button className='btn btn-lg btn-primary disabled' title='This is a draft preview page - publish to actually donate'>Donate</button>
+		);	
+	}
+	
 	return (
 		<button className='btn btn-lg btn-primary' 
 			onClick={() => {
