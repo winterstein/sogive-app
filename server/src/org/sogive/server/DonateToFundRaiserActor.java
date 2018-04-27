@@ -79,6 +79,8 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 							throw new IllegalStateException("Skip Duplicate matched funding in "+donation.getId()+" "+donation);
 						}
 					}
+					// end paranoia
+					// Add the matched funding
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
 						Log.w(getName(), "Not published?! "+donation+" to "+frid);
