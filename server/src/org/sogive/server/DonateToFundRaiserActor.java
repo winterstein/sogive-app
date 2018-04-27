@@ -17,6 +17,7 @@ import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.web.app.AppUtils;
@@ -55,7 +56,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 				Log.d(getName(), "skip (already seen) updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 				return;
 			}
-			dons.add(donation.getId());
+			dons.add(donation.getId()); // NB: WARNING: If there is then an exception below, this code will not get re-run
 			
 			// How much?
 			Money amount = donation.getAmount();
@@ -70,6 +71,14 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 					ma = Math.round(ma*100)/100;
 					Money matchAmount = new Money(amount.getCurrency(), ma);
 					MoneyItem mi = new MoneyItem("matched funding", matchAmount);
+					// debug paranoia: check for a dupe
+					List<MoneyItem> cons = donation.getContributions();
+					if (cons!=null) {
+						MoneyItem dupe = Containers.first(cons, con -> con !=null && "matched funding".equals(con.getText()));
+						if (dupe != null) {
+							throw new IllegalStateException("Skip Duplicate matched funding in "+donation.getId()+" "+donation);
+						}
+					}
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
 						Log.w(getName(), "Not published?! "+donation+" to "+frid);
@@ -92,14 +101,13 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			Integer donationCount = fundraiser.getDonationCount();
 			if (donationCount == null) donationCount = 0;
 			fundraiser.setDonationCount(donationCount + 1);
-			// for debugging -- a rough log of who has donated
-			fundraiser.getDonations().add(donation.getId());
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
 			JThing<FundRaiser> jthing = new JThing<FundRaiser>(fundraiser);
 			jthing.version = versionf;
 			AppUtils.doSaveEdit2(path, jthing, null, true);
+			
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {
 			Log.e(getName(), ex);
