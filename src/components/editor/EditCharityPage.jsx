@@ -3,7 +3,6 @@ import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
-// import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Misc.Icon } from 'react-bootstrap';
 import Login from 'you-again';
 import Enum from 'easy-enums';
 
