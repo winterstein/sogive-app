@@ -91,8 +91,8 @@ FundRaiser.getIdForTicket = (ticket) => {
 	let safeuname = uname.replace(/\W/g, '');
 	// so repeat calls give the same answer (no random), but it should be unique enough
 	let predictableNonce = md5(uname+ticket.id).substring(0, 6);
-	return safeuname+'.'+Ticket.eventId(ticket)+'.'+predictableNonce;	
-	// old: return Ticket.eventId(ticket)+'.'+md5('user:'+Ticket.oxid(ticket));
+	console.log("FundRaiser idForTicket from ", safeuname, Ticket.eventId(ticket), ticket.id, ticket);
+	return safeuname+'.'+Ticket.eventId(ticket)+'.'+predictableNonce;		
 };
 
 FundRaiser.make = (base) => {
