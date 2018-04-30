@@ -24,7 +24,7 @@ window.ServerIO = ServerIO;
 ServerIO.APIBASE = ''; // Normally use this for "my server"!
 // Comment out the lines below when deploying!
 // ServerIO.APIBASE = 'https://test.sogive.org'; // uncomment to let local use the test server's backend
-// ServerIO.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
+ServerIO.APIBASE = 'https://app.sogive.org'; // use in testing to access production data
 
 // Error Logging - but only the first error
 window.onerror = _.once(function(messageOrEvent, source, lineno, colno, error) {

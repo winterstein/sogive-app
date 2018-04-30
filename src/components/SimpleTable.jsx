@@ -21,10 +21,27 @@ const str = printer.str;
 // https://reactjs.org/docs/error-boundaries.html
 
 /**
+ * Column definitions:
+ * Can be just a string!
+ * Object format (all properties are optional)
+ * {
+ * 	accessor: string|function
+ * 	Cell: function: value -> jsx
+ * 	Header: string
+ * 	editable: boolean
+* 		saveFn: ({item,...}) -> {}
+ * 	sortMethod: function
+ * 	sortAccessor: function
+ * 	type: Used for providing an editor - see Misc.PropControl* 	
+ * }
+ */
+
+/**
  * 
  * dataObject a {key: value} object, which will be converted into rows [{key:k1, value:v1}, {}...]
  * So the columns should use accessors 'key' and 'value'
  * 
+ * columns: {Column[]}
  */
 class SimpleTable extends React.Component {
 
@@ -55,21 +72,19 @@ class SimpleTable extends React.Component {
 		if (tableSettings.sortBy !== undefined) {
 			// TODO pluck the right column
 			let column = columns[tableSettings.sortBy];
-			let sortFn = (a,b) => {
-				let ia = {item:a, column:column};
-				let av = getValue(ia);
-				let bv = getValue({item:b, column:column});
-				// // avoid undefined 'cos it messes up ordering
-				// if (av === undefined || av === null) av = "";
-				// if (bv === undefined || bv === null) bv = "";
-				console.log("sortFn", av, bv, a, b);
-				return (av < bv) ? -1 : (av > bv) ? 1 : 0;
-			};
+			// sort fn
+			let sortFn = column.sortMethod;
+			if ( ! sortFn) {
+				let getter = column.sortAccessor;
+				if ( ! getter) getter = a => getValue({item:a, column:column});
+				sortFn = (a,b) => defaultSortMethodForGetter(a,b,getter);
+			}
+			// sort!
 			data = data.sort(sortFn);
 			if (tableSettings.sortByReverse) {
 				data = data.reverse();
 			}
-		} // sort
+		}
 		let cn = 'table'+(className? ' '+className : '');
 
 		// HACK build up an array view of the table
@@ -136,6 +151,28 @@ const getValue = ({item, row, column}) => {
 	let accessor = column.accessor || column; 
 	let v = _.isFunction(accessor)? accessor(item) : item[accessor];
 	return v;
+};
+
+/**
+ * A default sort
+ * NOTE: this must have the column object passed in
+ * @param {*} a 
+ * @param {*} b 
+ * @param {Column} column 
+ */
+const defaultSortMethodForGetter = (a, b, getter) => {
+	assert(_.isFunction(getter), "SimpleTable.jsx defaultSortMethodForGetter", getter);
+	// let ia = {item:a, column:column};
+	let av = getter(a);
+	let bv = getter(b);
+	// // avoid undefined 'cos it messes up ordering
+	if (av === undefined || av === null) av = "";
+	if (bv === undefined || bv === null) bv = "";
+	// case insensitive
+	if (_.isString(av)) av = av.toLowerCase();
+	if (_.isString(bv)) bv = bv.toLowerCase();
+	// console.log("sortFn", av, bv, a, b);
+	return (av < bv) ? -1 : (av > bv) ? 1 : 0;
 };
 
 const defaultCellRender = (v, column) => {

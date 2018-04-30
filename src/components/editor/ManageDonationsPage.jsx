@@ -11,6 +11,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Roles from '../../Roles';
 import {getId} from '../../data/DataClass';
+import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import SimpleTable from '../SimpleTable';
 
@@ -74,7 +75,8 @@ const ManageDonationsPage = () => {
 		{
 			Header: "Amount",
 			accessor: 'amount',
-			Cell: v => <Misc.Money amount={v} /> // Custom cell components!
+			Cell: v => <Misc.Money amount={v} />, // Custom cell components!
+			sortAccessor: a => Money.value(a.amount)
 		},
 		{
 			Header: "Contributions",
