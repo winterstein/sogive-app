@@ -133,10 +133,10 @@ const FundRaiserPage = ({id}) => {
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
-							<h3>The Charity: {NGO.shortDescription(charity)}</h3>
+							<h3>The Charity: {NGO.displayName(charity)}</h3>							
 						</center>
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
-						<p></p>
+						<p>{NGO.shortDescription(charity)}</p>						
 					</Col>
 				</Row>
 
