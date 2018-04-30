@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
-import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Glyphicon } from 'react-bootstrap';
+// import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Misc.Icon } from 'react-bootstrap';
 import Login from 'you-again';
 import Enum from 'easy-enums';
 
@@ -71,44 +71,43 @@ const EditCharityPage = () => {
 	console.log("EditCharity", charity);
 	return (
 		<div className='EditCharityPage'>			
-			<Panel>
-				<h2>Editing: {charity.name}</h2>			
+			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
 				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
-			</Panel>
+			</Misc.Card>
 			<Misc.Card title='Preview: Impact'>
 				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
 			</Misc.Card>
-			<Accordion>
-				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
+			<Misc.CardAccordion widgetName='topLevelCharityEditor'>
+				<Misc.Card title='Charity Profile'>
 					<ProfileEditor charity={charity} />
-				</Panel>
-				<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
+				</Misc.Card>
+				<Misc.Card title='Donations &amp; Tax'>
 					<EditField item={charity} 
 						field='noPublicDonations' label='No public donations' type='checkbox' 
 						help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
 					<EditField item={charity} 
 						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
-				</Panel>
-				<Panel header={<h3>Overall finances and impact</h3>} eventKey="3">
+				</Misc.Card>
+				<Misc.Card title='Overall finances and impact'>
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
-				</Panel>
-				<Panel header={<h3>Project finances and impact ({projectProjects.length} projects)</h3>} eventKey="4">
+				</Misc.Card>
+				<Misc.Card title={'Project finances and impact ('+projectProjects.length+' projects)'}>
 					<ProjectsEditor charity={charity} projects={projectProjects} />
-				</Panel>
-				<Panel header={<h3>Editorial</h3>} eventKey="5">
+				</Misc.Card>
+				<Misc.Card title='Editorial'>
 					<EditorialEditor charity={charity} />
-				</Panel>
-				<Panel header={<h3>References</h3>} eventKey="6">
+				</Misc.Card>
+				<Misc.Card title='References'>
 					<ol>{rrefs}</ol>
-				</Panel>
-			</Accordion>
+				</Misc.Card>
+			</Misc.CardAccordion>
 		</div>
 	);
 }; // ./EditCharityPage
@@ -232,10 +231,10 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	}
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
-		<Panel key={'project_'+i} eventKey={i+1} 
-			header={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+		<Misc.Card key={'project_'+i} 
+			title={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
-		</Panel>)
+		</Misc.Card>)
 		);
 	return (
 		<div>
@@ -246,7 +245,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
 				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
 			</ul>
-			<Accordion>{rprojects}</Accordion>
+			<Misc.CardAccordion widgetName={isOverall? 'overalls' : 'projects'}>{rprojects}</Misc.CardAccordion>
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>
 	);
@@ -263,7 +262,7 @@ const AddProject = ({charity, isOverall}) => {
 				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 				&nbsp;
 				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Glyphicon glyph='plus' /> Add
+					<Misc.Icon glyph='plus' /> Add
 				</button>
 			</div>
 		);		
@@ -277,7 +276,7 @@ const AddProject = ({charity, isOverall}) => {
 			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
 			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
-				<Glyphicon glyph='plus' /> Add
+				<Misc.Icon glyph='plus' /> Add
 			</button>
 		</div>
 	);
@@ -297,7 +296,7 @@ const RemoveProject = ({charity, project}) => {
 			title='Delete this project!'
 			onClick={deleteProject}
 		>
-			<Glyphicon glyph='trash' />
+			<Misc.Icon glyph='trash' />
 		</button>
 	);
 };
@@ -318,7 +317,7 @@ const AddIO = ({list, pio, ioPath}) => {
 			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
-				<Glyphicon glyph='plus' />
+				<Misc.Icon glyph='plus' />
 			</button>
 		</div>
 	);
@@ -403,7 +402,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
-				<Glyphicon glyph='plus' />
+				<Misc.Icon glyph='plus' />
 			</button>
 		</div>
 	);
@@ -449,25 +448,24 @@ const ProjectOutputs = ({charity, project}) => {
 				<tbody>			
 					<tr>
 						<th>
-							Impact units <Glyphicon glyph='question-sign' title={
+							Impact units <Misc.Icon glyph='question-sign' title={
 `These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Be aware that the SoGive code will calculate the amount of impact attributable to a donor, and then append these words after that number (eg wording like "case(s) of malaria averted" would work if you put a number in front, but "reduction in malaria prevalence" wouldn't work). Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
 							/>
 						</th>
 						<th>
-							Amount <Glyphicon glyph='question-sign' title={
+							Amount <Misc.Icon glyph='question-sign' title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
 ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
 							/>
 						</th>
 						<th>
-							Override cost per beneficiary <Glyphicon glyph='question-sign' title={
-								`Usually auto-calculated based on the costs and the amount. An override value can be put in here.`}
-							/>
+							Override cost per beneficiary 
+							<Misc.Icon glyph='question-sign' title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
 						</th>
 						<th>
-							Confidence <Glyphicon glyph='question-sign' title={
+							Confidence <Misc.Icon glyph='question-sign' title={
 `How confident are we in this cost-per-beneficiary estimate?   
 
 - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.   
@@ -477,7 +475,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							/>
 						</th>
 						<th>
-							Description <Glyphicon glyph='question-sign' title={
+							Description <Misc.Icon glyph='question-sign' title={
 `An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>
