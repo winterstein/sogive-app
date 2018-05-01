@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ReactMarkdown from 'react-markdown';
+
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
@@ -128,7 +130,7 @@ const FundRaiserPage = ({id}) => {
 							<h3>About Me: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
-						<p>{item.owner.description}</p>
+						<p>{item.owner.description? <ReactMarkdown source={item.owner.description} /> : null}</p>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -146,7 +148,7 @@ const FundRaiserPage = ({id}) => {
 				<Row>
 					<Col md={6}>
 						{item.story? 
-							<div><h3>Story:</h3>{item.story}</div>
+							<div><h3>Story:</h3><ReactMarkdown source={item.story} /></div>
 							: null}
 						{item.updates? 
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>

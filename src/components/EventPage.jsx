@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ReactMarkdown from 'react-markdown';
+
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
 import { modifyHash, encURI, uid } from 'wwutils';
@@ -56,7 +58,7 @@ const Event = ({id}) => {
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
 			<center>
-				{item.description}
+				{item.description? <ReactMarkdown source={item.description} /> : null}
 				{item.url? <div><a href={item.url}>Event website</a></div> : null}
 			</center>
 
