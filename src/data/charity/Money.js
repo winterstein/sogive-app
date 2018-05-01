@@ -5,7 +5,7 @@
 
 */
 import {assert, assMatch} from 'sjtest';
-import {isa, defineType} from '../DataClass';
+import {isa, defineType, getType} from '../DataClass';
 import {asNum} from 'wwutils';
 import C from '../../C';
 
@@ -94,7 +94,9 @@ const v100p = m => {
 // duck type: needs a value
 Money.isa = (obj) => {
 	if ( ! obj) return false;
-	if (isa(obj, C.TYPES.Money)) return true;	
+	if (isa(obj, C.TYPES.Money)) return true;
+	// OLD format
+	if (getType(obj) === 'MonetaryAmount') return true;	
 	// allow blank values
 	if (obj.value100p) return true;
 	if (isNumeric(obj.value) || obj.value==='') return true;
