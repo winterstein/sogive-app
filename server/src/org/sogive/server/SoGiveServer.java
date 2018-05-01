@@ -100,7 +100,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
-		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter())
+		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))
 //		.registerTypeHierarchyAdapter(AThing.class, new AThingAdapter())		
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
