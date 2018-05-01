@@ -13,6 +13,7 @@ import Roles from '../../Roles';
 import Misc from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
 import NewDonationForm, {DonateButton} from '../NewDonationForm';
+import ShareWidget, {ShareLink} from '../ShareWidget';
 
 const EditFundRaiserPage = () => {
 
@@ -61,6 +62,8 @@ const FundRaiserEditor = ({id}) => {
 				ID: {id} <br/>
 				Owner: {FundRaiser.oxid(item)} <br/>
 				Event: {FundRaiser.eventId(item)} <br/>
+				<ShareLink thingId={id} />
+				<ShareWidget thingId={id} name={item.name} />
 			</small></p>
 
 			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />

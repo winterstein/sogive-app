@@ -15,6 +15,7 @@ import {getType, getId, nonce} from '../../data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../ListLoad';
+import ShareWidget, {ShareLink} from '../ShareWidget';
 
 const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -117,7 +118,10 @@ const EventEditor = ({id}) => {
 			<button className='btn btn-default' onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
-
+		<div>
+			<ShareLink thingId={item.id} />
+			<ShareWidget thingId={item.id} name={item.name} />
+		</div>
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
 };
