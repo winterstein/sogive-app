@@ -55,7 +55,7 @@ class SimpleTable extends React.Component {
 	}
 
 	render() {
-		let {tableName='SimpleTable', data, dataObject, columns, className, csv} = this.props;		
+		let {tableName='SimpleTable', data, dataObject, columns, headerRender, className, csv, addTotalRow} = this.props;		
 		assert(_.isArray(columns), "SimpleTable.jsx - columns", columns);
 		if (dataObject) {
 			// flatten an object into rows
@@ -84,7 +84,7 @@ class SimpleTable extends React.Component {
 			if (tableSettings.sortByReverse) {
 				data = data.reverse();
 			}
-		}
+		} // sort
 		let cn = 'table'+(className? ' '+className : '');
 
 		// HACK build up an array view of the table
@@ -95,7 +95,17 @@ class SimpleTable extends React.Component {
 			<div className={className}>
 				<table className={cn}>
 					<thead>
-						<tr>{columns.map((col, c) => <Th table={this} tableSettings={tableSettings} key={JSON.stringify(col)} column={col} c={c} dataArray={dataArray} />)}</tr>
+						<tr>{columns.map((col, c) => 
+							<Th table={this} tableSettings={tableSettings} key={c} column={col} c={c} dataArray={dataArray} headerRender={headerRender} />)}
+						</tr>
+						{addTotalRow? 
+							<tr>
+								<th>Total</th>
+								{columns.slice(1).map((col, c) => 
+									<TotalCell data={data} table={this} tableSettings={tableSettings} key={c} column={col} c={c} />)
+								}
+							</tr>
+							: null}
 					</thead>
 					<tbody>					
 						{data? data.map( (d,i) => <Row key={"r"+i} item={d} row={i} columns={columns} dataArray={dataArray} />) : null}
@@ -111,7 +121,8 @@ class SimpleTable extends React.Component {
 } // ./SimpleTable
 
 // TODO onClick={} sortBy
-const Th = ({column, c, table, tableSettings, dataArray}) => {
+const Th = ({column, c, table, tableSettings, dataArray, headerRender}) => {
+	assert(column, "SimpleTable.jsx - Th - no column?!");
 	let sortByMe = (""+tableSettings.sortBy) === (""+c);
 	let onClick = e => { 
 		console.warn('sort click', c, sortByMe, tableSettings);
@@ -126,8 +137,10 @@ const Th = ({column, c, table, tableSettings, dataArray}) => {
 		table.setState({sortBy: c});
 		// tableSettings.sortBy = c;
 	};
-	let hText = column.Header || column.name || column.id || str(column);
-	dataArray[0].push(hText);
+	let hText;
+	if (headerRender) hText = headerRender(column);
+	else hText = column.Header || column.accessor || str(column);
+	dataArray[0].push(column.Header || column.accessor || str(column)); // csv gets the text, never jsx!
 	return (<th onClick={onClick} >
 		{hText}
 		{sortByMe? <Misc.Icon glyph={'triangle-'+(tableSettings.sortByReverse? 'top' :'bottom')} /> : null}
@@ -176,14 +189,18 @@ const defaultSortMethodForGetter = (a, b, getter) => {
 };
 
 const defaultCellRender = (v, column) => {
+	if (v===undefined || Number.isNaN(v)) return null;
 	if (column.format) {
 		if (CellFormat.ispercent(column.format)) {
-			if (Math.abs(v) < 0.1) {
-				return (100*v) + "%"; // no rounding for tiny %s
+			// 2 sig figs
+			return printer.prettyNumber(100*v, 2)+"%";
 			}
-			// to 1 decimal place, e.g. "0.5%"
-			return (Math.round(1000*v)/10) + "%";
 		}
+	if (_.isNumber(v)) {
+		// 1 decimal place
+		v = Math.round(v*10)/10;
+		// commas
+		v = printer.prettyNumber(v, 10);
 	}
 	return str(v);
 };
@@ -210,6 +227,15 @@ const Cell = ({item, row, column, dataRow}) => {
 	}
 };
 
+const TotalCell = ({data, column}) => {
+	// sum the data for this column
+	let total = 0;
+	data.forEach((rItem, row) => {
+		const v = getValue({item:rItem, row, column});
+		if (_.isNumber(v)) total += v;
+	});
+	return <td>{defaultCellRender(total, column)}</td>;
+};
 const Editor = ({row, column, value, item}) => {
 	let path = column.path || DataStore.getPath(item);
 	let prop = column.prop || (_.isString(column.accessor) && column.accessor);
@@ -248,6 +274,7 @@ const CSVDownload = ({tableName, columns, data, dataArray}) => {
 
 const csvEscCell = s => {
 	if ( ! s) return "";
+	assMatch(s, String, "SimpleTable.jsx - csvEscCell not a String "+str(s));
 	// do we have to quote?
 	if (s.indexOf('"')===-1 && s.indexOf(',')===-1 && s.indexOf('\r')===-1 && s.indexOf('\n')===-1) {
 		return s;
