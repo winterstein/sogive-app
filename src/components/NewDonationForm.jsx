@@ -193,7 +193,7 @@ const AmountSection = ({path, fromEditor}) => {
 		<div className='section donation-amount'>			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
-			<Misc.PropControl prop='anonAmount' label={'Hide my donation amount?'} path={path} type='checkbox' />
+			<Misc.PropControl prop='anonAmount' label='Hide my donation amount?' path={path} type='checkbox' />
 		</div>);
 };
 
@@ -238,16 +238,16 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 				Please answer the questions below to see if this donation qualifies for GiftAid.
 			</p>
 			<Misc.PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
-				label={`This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.`}
+				label='This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.'
 			/>
 			<Misc.PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
-				label={`This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.`}
+				label='This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.'
 			/>
 			<Misc.PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
-				label={`I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.`}
+				label='I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.'
 			/>
 			<Misc.PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
-				label={`I am a UK taxpayer.`}
+				label='I am a UK taxpayer.'
 			/>
 			{giftAidMessage}
 			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
@@ -277,7 +277,7 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) =>
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
 				path={path} type='checkbox' />
 				: null}
-			<Misc.PropControl prop='anonymous' label={'Keep this donation anonymous?'} path={path} type='checkbox' />
+			<Misc.PropControl prop='anonymous' label='Keep this donation anonymous?' path={path} type='checkbox' />
 		</div>);
 };
 
@@ -326,8 +326,8 @@ const onToken_doPayment = ({donation}) => {
 
 const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	const donation = DataStore.getValue(path);
-	console.warn('Donation value in doPayment', donation);
-	console.warn('Item value in doPayment', item);
+	// console.warn('Donation value in doPayment', donation);
+	// console.warn('Item value in doPayment', item);
 	if ( ! donation) {
 		return null;
 	}
