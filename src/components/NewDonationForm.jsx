@@ -298,7 +298,7 @@ const MessageSection = ({path, recipient}) => (
  * PaymentWidget talks to Stripe, then passes over to this method for the actual payment.
  * TODO refactor this into PaymentWidget
  */
-const doPayment = ({donation}) => {
+const onToken_doPayment = ({donation}) => {
 	DataStore.setData(donation);
 	// invalidate credit if some got spent	
 	let credit = Transfer.getCredit();
@@ -361,7 +361,7 @@ const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	 */
 	const onToken = (token) => {
 		donation.stripe = token;
-		doPayment({donation});
+		onToken_doPayment({donation});
 	};
 
 	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
