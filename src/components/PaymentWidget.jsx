@@ -123,7 +123,7 @@ class StripeThingsClass extends Component {
 			currency: (amount.currency || 'gbp').toLowerCase(),
 			total: {
 				label: `Payment to ${recipient}`,
-				amount: residual.value*100, // uses pence
+				amount: Math.round(residual.value * 100), // uses pence
 			},
 		});
 
