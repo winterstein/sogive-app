@@ -150,6 +150,8 @@ class StripeThingsClass extends Component {
 		console.log("PaymentWidget - handleSubmit", event);
 		// Don't submit and cause a pageload!
 		event.preventDefault();
+		// block repeat clicks
+		this.setState({isSaving: true});
 
 		// Within the context of `Elements`, this call to createToken knows which Element to
 		// tokenize, since there's only one in this group.
@@ -157,7 +159,12 @@ class StripeThingsClass extends Component {
 			name: this.props.username,
 			email: this.state.email
 		};
-		this.props.stripe.createToken(tokenInfo).then(({token, ...data}) => this.props.onToken(token));
+		// get the token from stripe
+		this.props.stripe.createToken(tokenInfo)		
+			// then call custom processing (e.g. publish donation)
+			.then(({token, ...data}) => this.props.onToken(token))
+			// on success or failure, mark the form as active again
+			.finally(() => this.setState({isSaving: false}));
 	
 		// However, this line of code will do the same thing:
 		// this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
@@ -174,6 +181,7 @@ class StripeThingsClass extends Component {
 		}
 
 		const {amount, recipient, credit} = this.props;
+		const isSaving = this.state.isSaving;
 		// TODO an email editor if this.props.email is unset
 		return (
 			<Form horizontal onSubmit={(event) => this.handleSubmit(event)}>
@@ -205,7 +213,7 @@ class StripeThingsClass extends Component {
 						</div>
 					</Col>
 				</FormGroup>
-				<button className='btn btn-primary btn-lg pull-right' type='submit'>Submit Payment</button>
+				<button className='btn btn-primary btn-lg pull-right' type='submit' disabled={isSaving} >Submit Payment</button>
 			</Form>
 		);
 	} // ./render()
