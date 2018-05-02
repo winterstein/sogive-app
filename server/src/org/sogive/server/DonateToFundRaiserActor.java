@@ -68,7 +68,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 				if (event != null && event.getMatchedFunding() != 0) {
 					double ma = amount.getValue().doubleValue() * event.getMatchedFunding();
 					// round to the penny
-					ma = Math.round(ma*100)/100;
+					ma = Math.round(ma * 100) / 100.0; // trailing .0 coerces divisor to a float so we don't get long/int division
 					Money matchAmount = new Money(amount.getCurrency(), ma);
 					MoneyItem mi = new MoneyItem("matched funding", matchAmount);
 					// debug paranoia: check for a dupe
