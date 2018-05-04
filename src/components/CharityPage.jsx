@@ -12,6 +12,7 @@ import printer from '../utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
+import Output from '../data/charity/Output';
 import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
@@ -232,17 +233,25 @@ const CharityExtraProject = ({project, showTitle}) => {
 						</div>
 					)) : null }
 				</div>
-				<div className='project-outputs'>
-					<h4>Outputs</h4>
-					{ outputs? outputs.map(output => (
-						<div key={"out_"+output.name}>
-							{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
-						</div>
-					)) : null }
-				</div>
+				<CharityExtraProjectOutputs outputs={outputs} />
 			</div>
 		</div>
 	);
+};
+
+const CharityExtraProjectOutputs = ({outputs}) => {
+	if ( ! outputs || ! outputs.length) return null;
+	const outs = outputs.filter(o => Output.number(o));
+	return (
+		<div className='project-outputs'>
+			<h4>Outputs</h4>
+			{outs.map(output => (
+				<div key={"out_"+output.name}>
+					{Misc.TrPlural(Output.number(output), output.name || 'beneficiaries')}: 
+					{printer.prettyNumber(Output.number(output))}
+				</div>
+			))}
+		</div>);
 };
 
 
