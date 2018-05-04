@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
-
+import Roles from '../Roles';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../plumbing/DataStore';
 import printer from '../utils/printer';
@@ -164,9 +164,13 @@ const CharityExtra = ({charity}) => {
 		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
 	));
 	let refs = NGO.getCitations(charity);
+
+	// hide extra-info from most users -- only senior editors and admins
+	let showProjectInfo = Roles.iCan(C.CAN.publish).value;
+
 	return (
 		<div className='charity-extra'>
-			{yearDivs}
+			{showProjectInfo? yearDivs : null}
 			{refs.length? <Citations citations={refs} /> : null}
 		</div>
 	);
