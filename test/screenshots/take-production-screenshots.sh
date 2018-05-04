@@ -18,5 +18,8 @@ for js_file in ${SOURCE_JS[*]}; do
 	printf "\n"
 done
 
-printf "\nSyncing images to server ..."
+printf "\nSyncing images to server ...\n"
 rsync -rhP /home/$USER/winterwell/sogive-app/test/screenshots/production/* winterwell@hugh.soda.sh:/home/winterwell/sogive-app-screenshots/production/
+
+printf "\nRemoving Screenshot(s) from your local machine\n"
+rm /home/$USER/winterwell/sogive-app/test/screenshots/test/*
