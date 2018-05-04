@@ -10,6 +10,9 @@ export default Citation;
 Citation.isa = (obj) => isa(obj, 'Citation') || (obj.url && asNum(obj.year));
 Citation.assIsa = (obj) => assert(Citation.isa(obj));
 
+// HACK support old data format
+Citation.url = (obj) => obj.url || obj.source;
+
 Citation.make = (base = {}) => {
 	let cit = {};
 	Object.assign(cit, base);

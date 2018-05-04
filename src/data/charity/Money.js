@@ -91,7 +91,7 @@ const v100p = m => {
 };
 
 
-// duck type: needs a value
+// duck type: needs a value or currency
 Money.isa = (obj) => {
 	if ( ! obj) return false;
 	if (isa(obj, C.TYPES.Money)) return true;
@@ -100,6 +100,7 @@ Money.isa = (obj) => {
 	// allow blank values
 	if (obj.value100p) return true;
 	if (isNumeric(obj.value) || obj.value==='') return true;
+	if (obj.currency) return true;
 };
 
 Money.make = (base = {}) => {

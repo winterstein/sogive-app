@@ -13,6 +13,7 @@ import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
+import Citation from '../data/charity/Citation';
 import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
@@ -187,7 +188,7 @@ const Citations = ({citations}) => (
 
 const Cite = ({citation, i}) => {
 	return (<li>
-		<a href={citation.url} target='_blank'>{citation.url}</a>
+		<a href={Citation.url(citation)} target='_blank'>{Citation.url(citation)}</a>
 	</li>);
 };
 
