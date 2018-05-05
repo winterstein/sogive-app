@@ -5,7 +5,7 @@ import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import printer from '../base/utils/printer';

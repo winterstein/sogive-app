@@ -16,8 +16,8 @@ import Project from '../../data/charity/Project';
 import Money from '../../data/charity/Money';
 import Misc from '../Misc';
 import Roles from '../../base/Roles';
-import {LoginLink} from '../LoginWidget/LoginWidget';
-import Crud from '../../plumbing/Crud'; //publish
+import {LoginLink} from '../../base/components/LoginWidget';
+import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 
 const EditCharityPage = () => {

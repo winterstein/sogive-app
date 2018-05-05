@@ -19,10 +19,10 @@ import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
-import ActionMan from '../../base/plumbing/ActionManBase';
+import ActionMan from '../base/plumbing/ActionManBase';
 
 
-const addCharity = () => {
+ActionMan.addCharity = () => {
 	// TODO search the database for potential matches, and confirm with the user
 	// get the info (just the name)
 	let item = DataStore.appstate.widget.AddCharityWidget.form;
@@ -37,7 +37,7 @@ const addCharity = () => {
 };
 
 
-const addProject = ({charity, isOverall}) => {
+ActionMan.addProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity));
 	let item = DataStore.appstate.widget.AddProject.form;
 	if (isOverall) item.name = Project.overall;
@@ -49,7 +49,7 @@ const addProject = ({charity, isOverall}) => {
 	DataStore.setValue(['widget', 'AddProject', 'form'], {});
 };
 
-const removeProject = ({charity, project}) => {
+ActionMan.removeProject = ({charity, project}) => {
 	assert(NGO.isa(charity));
 	let i = charity.projects.indexOf(project);
 	charity.projects.splice(i,1);
@@ -57,7 +57,7 @@ const removeProject = ({charity, project}) => {
 	DataStore.update();
 };
 
-const addInputOrOutput = ({list, ioPath, formPath}) => {
+ActionMan.addInputOrOutput = ({list, ioPath, formPath}) => {
 	assert(_.isArray(list), list);
 	let item = DataStore.getValue(formPath);
 	// Copy the form value to be safe against shared state? Not needed now setValue {} works.
@@ -68,7 +68,7 @@ const addInputOrOutput = ({list, ioPath, formPath}) => {
 	DataStore.setValue(formPath, {});
 };
 
-const addDataSource = ({list, srcPath, formPath}) => {
+ActionMan.addDataSource = ({list, srcPath, formPath}) => {
 	assert(_.isArray(list), list);
 	let citation = Citation.make(DataStore.getValue(formPath));
 	
@@ -79,7 +79,7 @@ const addDataSource = ({list, srcPath, formPath}) => {
 	DataStore.setValue(formPath, {});
 };
 
-const donate = ({charity, formPath, formData, stripeResponse}) => {
+ActionMan.donate = ({charity, formPath, formData, stripeResponse}) => {
 	const donationParams = {
 		action: 'donate',
 		charityId: NGO.id(charity),
@@ -122,7 +122,7 @@ const donate = ({charity, formPath, formData, stripeResponse}) => {
 /**
  * id=for{user.id}, becuase a user only has one basket
  */
-const getBasketPV = (uxid) => {
+ActionMan.getBasketPV = (uxid) => {
 	if ( ! uxid) {
 		uxid = Login.getId() || Login.getTempId();		
 	}
@@ -145,7 +145,7 @@ const getBasketPV = (uxid) => {
  * @param {!Basket} basket 
  * @param {!Ticket} item 
  */
-const addToBasket = (basket, item) => {
+ActionMan.addToBasket = (basket, item) => {
 	console.log("addFromBasket",basket, item);
 	assert(item, basket);
 	Basket.assIsa(basket);
@@ -163,7 +163,7 @@ const addToBasket = (basket, item) => {
 	return basket;
 };
 
-const removeFromBasket = (basket, item) => {
+ActionMan.removeFromBasket = (basket, item) => {
 	console.log("removeFromBasket",basket, item);
 	assert(item);
 	Basket.assIsa(basket);
@@ -177,7 +177,7 @@ const removeFromBasket = (basket, item) => {
 	return basket;
 };
 
-const getBasketPath = (uxid) => {
+ActionMan.getBasketPath = (uxid) => {
 	if ( ! uxid) {
 		uxid = Login.getId() || Login.getTempId();		
 	}
@@ -196,7 +196,7 @@ const getBasketPath = (uxid) => {
  * 	fundRaiser: {?String} id
  * }
  */
-const getDonationDraft = ({item, charity, fundRaiser}) => {
+ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 	assMatch(charity, "?String");
 	assMatch(fundRaiser, "?String");
 	// ID info from item
@@ -242,7 +242,7 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 /**Clears donation draft held in ActionMan Datastore
  * Hacky fix to deal with seperate donations in the same session overriding each other
  */
-const clearDonationDraft = ({donation}) => {
+ActionMan.clearDonationDraft = ({donation}) => {
 	let from = Login.getId();
 	let charity = donation.to;
 	let fundRaiser = donation.fundRaiser;
@@ -251,19 +251,6 @@ const clearDonationDraft = ({donation}) => {
 	const path = ['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId];
 	console.warn("Values before deletion", DataStore.getValue(path));
 	DataStore.setValue(path, null);
-};
-
-	addCharity,
-	addProject, removeProject,
-	addInputOrOutput,
-	addDataSource,
-	clearDonationDraft,
-	donate,
-	getDonationDraft,
-	getBasketPV,
-	addToBasket, 
-	removeFromBasket,
-	getBasketPath,
 };
 
 export default ActionMan;

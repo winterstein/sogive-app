@@ -7,12 +7,11 @@ import _ from 'lodash';
 // Plumbing
 import DataStore from '../../base/plumbing/DataStore';
 import Roles from '../../base/Roles';
-import CRUD from '../../plumbing/Crud';
 import C from '../../C';
 // Templates
 import MessageBar from '../../base/components/MessageBar';
 import NavBar from '../../base/components/NavBar';
-import LoginWidget from '../LoginWidget/LoginWidget';
+import LoginWidget from '../../base/components/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';

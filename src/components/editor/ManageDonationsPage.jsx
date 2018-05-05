@@ -12,7 +12,7 @@ import C from '../../C';
 import Roles from '../../base/Roles';
 import {getId} from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
-import Misc from '../base/components/Misc';
+import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
 
 const onEditPaidOut = ({item, value, event, row, column}) => {
