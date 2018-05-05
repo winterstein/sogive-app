@@ -13,14 +13,7 @@
     "data-pivot": "^0.3.1",
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
-<<<<<<< HEAD
-    "eslint": "^4.19.1",
-    "eslint-plugin-flowtype": "^2.46.3",
-    "eslint-plugin-import": "^2.11.0",
-    "hashmap": "^2.1.0",
-=======
     "hashmap": "^2.3.0",
->>>>>>> master
     "intl": "^1.2.5",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
@@ -38,11 +31,7 @@
     "react-stripe-elements": "^1.6.0",
     "sjtest": "^0.4.7",
     "wwutils": "^0.9.1",
-<<<<<<< HEAD
-    "you-again": "^0.6.10"
-=======
     "you-again": "^0.7.0"
->>>>>>> master
   },
   "scripts": {
     "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
@@ -60,19 +49,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-<<<<<<< HEAD
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.13",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-flowtype": "^2.35.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.3.0",
-    "flow-bin": "^0.53.1"
-=======
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-flowtype": "^2.46.3",
@@ -85,6 +61,5 @@
     "babel-polyfill": "^6.26.0",
     "babel-cli": "^6.26.0",
     "babel-preset-stage-2": "^6.24.1"
->>>>>>> master
   }
 }

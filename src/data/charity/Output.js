@@ -1,11 +1,7 @@
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
-<<<<<<< HEAD
-import {isa, defineType} from '../../base/data/DataClass';
-=======
-import {isa, defineType, getType} from '../DataClass';
->>>>>>> master
+import {isa, defineType, getType} from '../../base/data/DataClass';
 
 /* Output type, which also does Impact: 
 {

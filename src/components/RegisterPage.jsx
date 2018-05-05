@@ -16,20 +16,15 @@ import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO';
 import Ticket from '../data/charity/Ticket';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../base/Roles';
 import Misc from './Misc';
-import { LoginWidgetEmbed } from './LoginWidget/LoginWidget';
-<<<<<<< HEAD
+import { LoginWidgetEmbed } from '../base/components/LoginWidget';
 import NewDonationForm from './NewDonationForm';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
-=======
-import Wizard, {WizardStage} from './WizardProgressWidget';
-import PaymentWidget from './PaymentWidget';
->>>>>>> master
 
 import pivot from 'data-pivot';
 window.pivot = pivot;

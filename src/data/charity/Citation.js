@@ -1,11 +1,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
-<<<<<<< HEAD
 import {isa} from '../../base/data/DataClass';
-=======
-import {isa} from '../DataClass';
 import {asNum} from 'wwutils';
->>>>>>> master
 
 const Citation = {};
 export default Citation;
