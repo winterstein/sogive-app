@@ -2,7 +2,7 @@
  * Wrapper for server calls.
  *
  */
-import ServerIO from '../base/plumbing/ServerIO';
+import ServerIO from '../base/plumbing/ServerIOBase';
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
@@ -16,6 +16,7 @@ import NGO from '../data/charity/NGO';
 import DataStore from '../base/plumbing/DataStore';
 import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
+compare
 /**
  * @param query {!String} query string
  * @param status {?KStatus} optional to request draft
@@ -31,11 +32,6 @@ ServerIO.getCharity = function(charityId, status) {
 };
 
 
-ServerIO.donate = function(data) {
-	// Anything to assert here?
-	return ServerIO.post('/donation', data);
-};
-
 ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {	
 	const params = {
 		data: {
@@ -46,18 +42,6 @@ ServerIO.getDonations = function({from, to, status=C.KStatus.PUBLISHED}) {
 	};
 	return ServerIO.load('/donation/list', params);
 };
-
-/**
- * TODO delete and just use Crud.js
- */
-ServerIO.saveCharity = function(charity, status) {
-	assert(NGO.isa(charity), charity);
-	let params = {		
-		data: {action: 'save', item: JSON.stringify(charity), status: status},
-		method: 'PUT'};
-	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
-};
-
 
 /**
  * TODO handle charity or fundraiser
@@ -79,14 +63,6 @@ ServerIO.addCharity = function(charity, status=C.KStatus.DRAFT) {
 		data: {action: 'new', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
 	return ServerIO.load('/charity.json', params);
-};
-
-ServerIO.discardEdits = function(charity, status) {
-	assert(NGO.isa(charity), charity);
-	let params = {		
-		data: {action: 'discard-edits', status: status}
-	};
-	return ServerIO.load('/charity/'+encURI(NGO.id(charity))+'.json', params);
 };
 
 export default ServerIO;

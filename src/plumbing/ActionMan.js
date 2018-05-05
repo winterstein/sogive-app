@@ -19,6 +19,8 @@ import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
+import ActionMan from '../../base/plumbing/ActionManBase';
+
 
 const addCharity = () => {
 	// TODO search the database for potential matches, and confirm with the user
@@ -239,7 +241,6 @@ const getDonationDraft = ({item, charity, fundRaiser}) => {
 };
 
 
-const ActionMan = {
 	addCharity,
 	addProject, removeProject,
 	addInputOrOutput,
