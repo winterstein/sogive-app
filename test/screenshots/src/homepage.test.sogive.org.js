@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
   await page.setViewport({width: 1920,height: 1080});
   await page.goto('https://test.sogive.org');
   await loaded;
-  await page.screenshot({path: 'test.sogive.org.png'});
+  await page.screenshot({path: 'test/homepage/' + new Date().toISOString() + '.png'});
 
   await browser.close();
 })();

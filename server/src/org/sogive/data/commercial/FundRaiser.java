@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.AThing;
@@ -17,6 +17,7 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.app.AppUtils;
@@ -88,15 +89,22 @@ public class FundRaiser extends AThing {
 	}
 	
 	/**
-	 * Important: this is copied in js
+	 * Important: this is copied in js!!
 	 * @param ticket
 	 * @return
 	 */
 	public static String getIDForTicket(Ticket ticket) {
 		assert ! Utils.isBlank(ticket.getEventId()) : "no event?! "+ticket;
 		assert ticket.getOwnerXId() != null: ticket;
-		// NB: hash with salt to protect the users email
-		return ticket.getEventId()+'.'+StrUtils.md5("user:"+ticket.getOwnerXId());	
+		// pick a "nice" but unique id - e.g. daniel.moonwalk.uydx
+		String uname = ticket.getOwnerXId().getName();
+		// avoid exposing the persons email
+		if (uname.contains("@")) uname = uname.substring(0, uname.indexOf("@"));
+		// so repeat calls give the same answer (no random), but it should be unique enough
+		String hashme = uname+ticket.getId();
+		String predictableNonce = StrUtils.md5(hashme).substring(0, 6);
+		String safeuname = uname.replaceAll("\\W+", "");
+		return safeuname+'.'+ticket.getEventId()+'.'+predictableNonce;	
 	}
 
 	public FundRaiser() {

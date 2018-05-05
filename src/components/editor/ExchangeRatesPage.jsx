@@ -8,8 +8,12 @@ import { assert } from 'sjtest';
 import {uid, yessy, encURI} from 'wwutils';
 
 import ServerIO from '../../plumbing/ServerIO';
+<<<<<<< HEAD
 import DataStore from '../../base/plumbing/DataStore';
 import Misc from '../Misc.jsx';
+=======
+import DataStore from '../../plumbing/DataStore';
+>>>>>>> master
 import C from '../../C';
 
 

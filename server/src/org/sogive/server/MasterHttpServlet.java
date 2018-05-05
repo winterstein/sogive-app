@@ -81,12 +81,14 @@ public class MasterHttpServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String servletName = null;
 		try {
 			WebRequest request = new WebRequest(null, req, resp);
 			Log.d("servlet", request);
 			String path = request.getRequestPath();
 			String[] pathBits = path.split("/");
-			String servletName = FileUtils.getBasename(pathBits[1]);
+			servletName = FileUtils.getBasename(pathBits[1]);
+			Thread.currentThread().setName("servlet: "+servletName);
 			IServlet s;
 			switch(servletName) {
 			case "search":
@@ -144,11 +146,16 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new CreditServlet();
 				s.process(request);
 				return;
+			case "testEmail":
+				s = new EmailServlet();
+				s.process(request);
+				return;
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
 			HttpServletWrapper.doCatch(ex, resp);
 		} finally {
+			Thread.currentThread().setName("...done servlet: "+servletName);
 			WebRequest.close(req, resp);
 		}
 	}

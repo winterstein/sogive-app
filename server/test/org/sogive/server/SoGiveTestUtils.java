@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mockito.Mockito;
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.data.user.Person;
 
 import com.winterwell.data.JThing;

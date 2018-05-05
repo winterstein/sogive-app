@@ -14,7 +14,12 @@ import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../base/data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import Event from '../../data/charity/Event';
+<<<<<<< HEAD
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
+=======
+import ListLoad, {CreateButton} from '../ListLoad';
+import ShareWidget, {ShareLink} from '../ShareWidget';
+>>>>>>> master
 
 const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -77,8 +82,12 @@ const EventEditor = ({id}) => {
 			
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
-			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. 40% for The Kiltwalk' 
+			<Misc.PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
+
+			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
 				type='number' />
+
+			<Misc.PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
 
 			<Misc.PropControl path={path} prop='pickCharity' item={item} 
 				label='Allow users to pick their charity?' type='checkbox' 
@@ -113,7 +122,10 @@ const EventEditor = ({id}) => {
 			<button className='btn btn-default' onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
-
+		<div>
+			<ShareLink thingId={item.id} />
+			<ShareWidget thingId={item.id} name={item.name} />
+		</div>
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
 };

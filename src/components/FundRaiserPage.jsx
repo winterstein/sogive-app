@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ReactMarkdown from 'react-markdown';
+
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
 import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
@@ -57,8 +59,8 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
-		// TODO use ServerIO.getDonations
-		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, status: C.KStatus.PUBLISHED}});
+		// minor TODO use ServerIO.getDonations		
+		return ServerIO.load('/donation/list.json', {data: {q:"fundRaiser:"+id, sort:"date-desc", status: C.KStatus.PUBLISHED}});
 	});
 	const donations = pvDonations.value && pvDonations.value.hits;
 
@@ -69,7 +71,11 @@ const FundRaiserPage = ({id}) => {
 	if ( ! item) {
 		return null; // 404 :(
 	}
-	let charity = FundRaiser.charity(item) || NGO.make({name:'Kiltwalk'});
+	let charity = FundRaiser.charity(item);
+	if ( ! charity) {
+		charity = NGO.make(); 
+		console.warn("FundRaiser with no charity set?!");
+	}
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
 	if ( ! pEvent.resolved) {
@@ -124,22 +130,25 @@ const FundRaiserPage = ({id}) => {
 							<h3>About Me: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
-						<p>{item.owner.description}</p>
-						<p><small><a href={'#event/'+encURI(event.id)}>About the event</a></small></p>
+						<p>{item.owner.description? <ReactMarkdown source={item.owner.description} /> : null}</p>
+						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
-							<h3>The Charity: {NGO.shortDescription(charity)}</h3>
+							<h3>The Charity: {NGO.displayName(charity)}</h3>							
 						</center>
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
-						<p></p>
+						<p>
+							{NGO.shortDescription(charity)} &nbsp;
+							<small><a href={charity.url || '#charity?charityId='+encURI(charity.id)} target={charity.url? '_blank': ''}>More info</a></small>
+						</p>					
 					</Col>
 				</Row>
 
 				<Row>
 					<Col md={6}>
 						{item.story? 
-							<div><h3>Story:</h3>{item.story}</div>
+							<div><h3>Story:</h3><ReactMarkdown source={item.story} /></div>
 							: null}
 						{item.updates? 
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
@@ -276,7 +285,7 @@ const Supporter = ({donation, charity}) => {
 			<h4>{name}</h4>
 			<Misc.RelativeDate date={donation.date} className='donation-date' />			
 			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
-			{donation.contributions? 
+			{donation.contributions && ! donation.anonAmount? 
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
 			{ donation.message ? (

@@ -20,10 +20,21 @@ public class Event extends AThing {
 	 */
 	List<Ticket> extras;
 	String date;
-	Integer matchedFunding;  
-	
-	public Integer getMatchedFunding() {
-		return matchedFunding;
+	/**
+	 * 0 - 100
+	 */
+	private Integer matchedFunding;  
+	/**
+	 * If there is matched funding - who provides it?
+	 */
+	String matchedFundingSponsor;
+	/**
+	 * 
+	 * @return [0, 1]
+	 */
+	public double getMatchedFunding() {
+		if (matchedFunding==null) return 0;
+		return matchedFunding.doubleValue() / 100;
 	}
 	
 	String logoImage;

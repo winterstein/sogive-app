@@ -1,5 +1,10 @@
 package org.sogive.server;
 
+<<<<<<< HEAD
+=======
+import java.util.concurrent.atomic.AtomicLong;
+
+>>>>>>> master
 import java.util.List;
 
 import org.sogive.data.charity.Money;
@@ -13,7 +18,9 @@ import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.web.app.AppUtils;
@@ -43,6 +50,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 		try {
 			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
+<<<<<<< HEAD
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
 			// once only			
 			final List<String> dons = fundraiser.getDonations();
@@ -53,16 +61,42 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			// a rough log of who has donated
 			dons.add(donation.getId()); // WARNING: If there is then an exception below, this code will not get re-run
 			
+=======
+			AtomicLong versionf = new AtomicLong();			
+			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class, versionf);
+			
+			// avoid double counting
+			List<String> dons = fundraiser.getDonations();
+			if (dons.contains(donation.getId())) {
+				Log.d(getName(), "skip (already seen) updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
+				return;
+			}
+			dons.add(donation.getId()); // NB: WARNING: If there is then an exception below, this code will not get re-run
+			
+			// How much?
+>>>>>>> master
 			Money amount = donation.getAmount();
 			
 			Throwable hackex = null;
 			// Add in matched funding?
 			try {
 				Event event = fundraiser.getEvent();
-				if (event != null && event.getMatchedFunding() != null && event.getMatchedFunding() != 0) {
+				if (event != null && event.getMatchedFunding() != 0) {
 					double ma = amount.getValue().doubleValue() * event.getMatchedFunding();
-					Money matchAmount = new Money(amount.getCurrency(), Math.round(ma));
+					// round to the penny
+					ma = Math.round(ma * 100) / 100.0; // trailing .0 coerces divisor to a float so we don't get long/int division
+					Money matchAmount = new Money(amount.getCurrency(), ma);
 					MoneyItem mi = new MoneyItem("matched funding", matchAmount);
+					// debug paranoia: check for a dupe
+					List<MoneyItem> cons = donation.getContributions();
+					if (cons!=null) {
+						MoneyItem dupe = Containers.first(cons, con -> con !=null && "matched funding".equals(con.getText()));
+						if (dupe != null) {
+							throw new IllegalStateException("Skip Duplicate matched funding in "+donation.getId()+" "+donation);
+						}
+					}
+					// end paranoia
+					// Add the matched funding
 					donation.addContribution(mi);
 					if (donation.getStatus() != KStatus.PUBLISHED) {
 						Log.w(getName(), "Not published?! "+donation+" to "+frid);
@@ -88,7 +122,10 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			// FIXME race condition vs edits or other donations!
 			// TODO use an update script, and handle conflict exceptions
 			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
-			AppUtils.doSaveEdit2(path, new JThing<FundRaiser>(fundraiser), null);
+			JThing<FundRaiser> jthing = new JThing<FundRaiser>(fundraiser);
+			jthing.version = versionf;
+			AppUtils.doSaveEdit2(path, jthing, null, true);
+			
 			if (hackex != null) throw Utils.runtime(hackex);
 		} catch(Throwable ex) {
 			Log.e(getName(), ex);

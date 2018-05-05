@@ -5,14 +5,15 @@ import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
-
+import Roles from '../Roles';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import printer from '../base/utils/printer';
 import C from '../C';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
-import Money from '../data/charity/Money';
+import Output from '../data/charity/Output';
+import Citation from '../data/charity/Citation';
 import Misc from './Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
@@ -164,9 +165,13 @@ const CharityExtra = ({charity}) => {
 		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
 	));
 	let refs = NGO.getCitations(charity);
+
+	// hide extra-info from most users -- only senior editors and admins
+	let showProjectInfo = Roles.iCan(C.CAN.publish).value;
+
 	return (
 		<div className='charity-extra'>
-			{yearDivs}
+			{showProjectInfo? yearDivs : null}
 			{refs.length? <Citations citations={refs} /> : null}
 		</div>
 	);
@@ -183,7 +188,7 @@ const Citations = ({citations}) => (
 
 const Cite = ({citation, i}) => {
 	return (<li>
-		<a href={citation.url} target='_blank'>{citation.url}</a>
+		<a href={Citation.url(citation)} target='_blank'>{Citation.url(citation)}</a>
 	</li>);
 };
 
@@ -233,17 +238,25 @@ const CharityExtraProject = ({project, showTitle}) => {
 						</div>
 					)) : null }
 				</div>
-				<div className='project-outputs'>
-					<h4>Outputs</h4>
-					{ outputs? outputs.map(output => (
-						<div key={"out_"+output.name}>
-							{Misc.TrPlural(output.number, output.name)}: {printer.prettyNumber(output.number)}
-						</div>
-					)) : null }
-				</div>
+				<CharityExtraProjectOutputs outputs={outputs} />
 			</div>
 		</div>
 	);
+};
+
+const CharityExtraProjectOutputs = ({outputs}) => {
+	if ( ! outputs || ! outputs.length) return null;
+	const outs = outputs.filter(o => Output.number(o));
+	return (
+		<div className='project-outputs'>
+			<h4>Outputs</h4>
+			{outs.map(output => (
+				<div key={"out_"+output.name}>
+					{Misc.TrPlural(Output.number(output), output.name || 'beneficiaries')}: 
+					{printer.prettyNumber(Output.number(output))}
+				</div>
+			))}
+		</div>);
 };
 
 
@@ -275,34 +288,50 @@ const CharityProfile = ({charity}) => {
 		</p>
 	);
 	return (<div className='CharityProfile-div'>
-				<EditLink charity={charity} />
-				<h4 className='CharityProfile'>Charity Profile</h4>
-				<div className='col-md-12'>
-					<div className='col-md-2 charity-logo-div'>
-						<Image src={charity.logo} responsive thumbnail className="charity-logo" />
-					</div>
-					<div className='col-md-7 charity-name-div'>
-						<h2>{charity.displayName || charity.name}</h2>
-						<br />
-						<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
-						<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
-					</div>
-					<div className='col-md-3'>
-						<ProjectImage images={charity.images} />
-					</div>
-					<div className='col-md-12 charity-data-div'>
-						{ tags }
-						{ turnover }
-						{ employees }
-						{ website }
-					</div>
-				</div>
+		<EditLink charity={charity} />
+		<h4 className='CharityProfile'>Charity Profile</h4>
+		<div className='col-md-12'>
+			<div className='col-md-2 charity-logo-div'>
+				<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+			</div>
+			<div className='col-md-7 charity-name-div'>
+				<h2>{charity.displayName || charity.name}</h2>
+				<br />
+				<a href={'/#charity/'+charity['@id']}>{charity.id}</a>
+				<p dangerouslySetInnerHTML={{ __html: printer.textToHtml(charity.description) }} />
+			</div>
+			<div className='col-md-3'>
+				<ProjectImage images={charity.images} />
+			</div>
+			<div className='col-md-12 charity-data-div'>
+				{ tags }
+				{ turnover }
+				{ employees }
+				{ website }
+			</div>
+		</div>
 	</div>);
 };
 
 
 // TODO only for registered editors!!!
-const EditLink = ({charity}) => Login.isLoggedIn()? <div className='pull-right'><a href={'#edit?charityId='+charity['@id']}>edit</a></div> : null;
+const EditLink = ({charity}) => {
+	if ( ! Login.isLoggedIn()) return null;
+	const cid = NGO.id(charity);
+	// HACK: clear the datastore before viewing, so that we load the draft
+	// TODO replace once the git branch feature/refactor-crud-data-draft-DW-may-2018 is complete
+	return (<div className='pull-right'>
+		<a href={'#edit?charityId='+escape(cid)} 
+			onClick={() => {
+				// Trying in Edit page instead
+				// DataStore.setValue(DataStore.getPath(charity), null, false);
+				// ServerIO.getCharity(cid, C.KStatus.DRAFT);
+			}}
+		>
+			edit
+		</a>
+	</div>);
+};
 
 const ProjectList = ({projects, charity}) => {
 	if ( ! projects) return <div />;
@@ -384,8 +413,7 @@ const LogOffSiteDonation = ({item}) => {
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. 
 				It will be added to your profile dashboard.</p>
-			<DonateButton item={item} />
-			<NewDonationForm item={item} paidElsewhere />
+			<DonateButton item={item} paidElsewhere />
 		</Misc.Card>
 	);
 };

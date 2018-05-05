@@ -8,6 +8,7 @@ module.exports = {
 	"rules": {
 		/* off because we dont agree with AirBnB's settings */
 		"radix": "off",
+		"prefer-destructuring": "off",
 		"arrow-body-style": "off",
 		"react/no-array-index-key": "warn",
 		"arrow-parens": "off",
@@ -39,11 +40,16 @@ module.exports = {
 		"jsx-a11y/img-redundant-alt": "warn",
 		"quote-props": "warn",
 		"no-nested-ternary": "warn",
+		"function-paren-newline": "off",
+		"object-curly-newline": "off",
+		"jsx-a11y/anchor-is-valid": "warn",
 		"react/jsx-closing-bracket-location": "warn",
 		"react/jsx-first-prop-new-line": "off",
 		"react/jsx-indent": ["warn", "tab"],
 		"react/jsx-indent-props": ["warn", "tab"],
 		"react/jsx-max-props-per-line": "off",
+		"react/jsx-closing-tag-location": "warn",
+		"jsx-a11y/media-has-caption": "warn",
 		"react/no-multi-comp": "warn",
 		"react/prefer-stateless-function": "warn",
 		"react/self-closing-comp": "warn",
@@ -56,6 +62,8 @@ module.exports = {
 		/* broken - seems to cause errors in linting */
 		"no-multi-assign": "off",
 		/* off because the warnings are more noise than signal i.e. we might switch them on sometime*/
+		"react/no-unused-state": "warn",
+		"no-restricted-globals": "warn", // triggers on isNan()
 		"jsx-a11y/alt-text": "warn",
 		"comma-spacing": "off",
 		"consistent-return": "off",

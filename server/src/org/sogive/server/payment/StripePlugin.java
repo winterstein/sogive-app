@@ -95,7 +95,9 @@ public class StripePlugin {
 		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.id);
-        chargeMap.put("amount", Math.ceil(amount.getValue100p() / 100)); // pence, rounding up
+        // pence, rounding up
+        int pence = (int) Math.ceil(amount.getValue100p() / 100);
+        chargeMap.put("amount", pence);
         chargeMap.put("description", description); // ??
 //        metadata key value
         chargeMap.put("receipt_email", sa.email);

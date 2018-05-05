@@ -3,8 +3,11 @@ package org.sogive.data.charity;
 import java.math.BigDecimal;
 
 import com.goodloop.data.KCurrency;
+import com.winterwell.utils.MathUtils;
 
 public class Money extends com.goodloop.data.Money {
+	
+	String raw;
 	
 	public Money() {
 		super();
@@ -12,6 +15,8 @@ public class Money extends com.goodloop.data.Money {
 	
 	public Money(KCurrency gbp, Number bigDecimal) {
 		super(gbp, bigDecimal);
+		// Keep raw in sync with value and value100p - SoGive front end depends on it
+		raw = MathUtils.cast(BigDecimal.class, bigDecimal).toPlainString();
 	}
 
 	public Money(com.goodloop.data.Money money) {

@@ -1,7 +1,11 @@
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
+<<<<<<< HEAD
 import {isa, defineType} from '../../base/data/DataClass';
+=======
+import {isa, defineType, getType} from '../DataClass';
+>>>>>>> master
 
 /* Output type, which also does Impact: 
 {
@@ -23,6 +27,11 @@ import {isa, defineType} from '../../base/data/DataClass';
 const Output = defineType('Output');
 const This = Output;
 export default Output;
+
+// something is making outputs without a type. oh well -- also allow a duck type test for costPerBen
+Output.isa = (obj) => {
+	return getType(obj)==='Output' || obj.costPerBeneficiary;
+};
 
 Output.number = obj => This.assIsa(obj) && obj.number;
 Output.cost = obj => This.assIsa(obj) && obj.cost;

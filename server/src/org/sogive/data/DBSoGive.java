@@ -1,4 +1,4 @@
-package org.sogive.data.user;
+package org.sogive.data;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,6 +19,9 @@ import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Ticket;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
+import org.sogive.data.user.Donation;
+import org.sogive.data.user.Person;
+import org.sogive.data.user.Team;
 
 import com.winterwell.utils.io.SqlUtils;
 import com.winterwell.data.JThing;
@@ -106,13 +109,20 @@ public class DBSoGive {
 						new ESType()
 							.property("from", ESType.keyword)
 							.property("to", ESType.keyword)
-							.property("date", new ESType().date()),
+							.property("fundRaiser", ESType.keyword)
+							.property("via", ESType.keyword)
+							.property("date", new ESType().date())
+							.property("amount", money)
+							.property("total", money),
 					
 					Transfer.class,
 							new ESType()
 								.property("from", ESType.keyword)
 								.property("to", ESType.keyword)
-								.property("date", new ESType().date()),
+								.property("date", new ESType().date())
+								.property("amount", money)
+								.property("total", money)
+								,
 					
 					Ticket.class, 
 							new ESType()

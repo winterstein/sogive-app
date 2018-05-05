@@ -42,9 +42,23 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * @deprecated This is a "temp" storage, used during drafts, which is then copied into the donor object
 	 */
-	String donorName;
+	private String donorName;
+	
+	/**
+	 * @Deprecated This should be copied into the donor object
+	 */
+	private String donorEmail;	
+	
 	String donorAddress;
 	String donorPostcode;
+	
+
+	public String getDonorName() {
+		return donorName;
+	}
+	public String getDonorEmail() {
+		return donorEmail;
+	}
 	
 	/**
 	 * Has the user said OK to sharing their details with the charity?
@@ -84,6 +98,9 @@ public class Donation extends AThing implements IForSale {
 	boolean collected;
 	
 	boolean paidOut;
+	
+	List<String> done;
+	List<String> todo;
 	
 	/**
 	 * If true, the money was paid outside of the SoGive system.
@@ -173,11 +190,7 @@ public class Donation extends AThing implements IForSale {
 		long tmin = new Time(date).getTime() / (5*TUnit.MINUTE.millisecs);
 		this.id = userContribution.getValue()+" from "+from+" to "+to+" at "+(tmin);
 	}
-
-	public String getId() {
-		return id;
-	}
-
+	
 	@Override
 	public void setPaymentCollected(boolean b) {
 		this.collected = b;

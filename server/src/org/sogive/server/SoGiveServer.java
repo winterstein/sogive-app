@@ -2,10 +2,10 @@ package org.sogive.server;
 
 import java.io.File;
 
+import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.user.DBSoGive;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 
@@ -99,7 +99,8 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		Gson gson = new FlexiGsonBuilder()
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
-		.registerTypeAdapter(XId.class, new XIdTypeAdapter())	
+		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
+		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))
 //		.registerTypeHierarchyAdapter(AThing.class, new AThingAdapter())		
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")

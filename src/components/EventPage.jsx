@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ReactMarkdown from 'react-markdown';
+
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
 import { modifyHash, encURI, uid } from 'wwutils';
@@ -16,6 +18,7 @@ import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../base/data/DataClass';
 import ListLoad from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
+import ShareWidget, {ShareLink} from './ShareWidget';
 
 const EventPage = () => {
 	// which event?	
@@ -45,23 +48,32 @@ const Event = ({id}) => {
 	}
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
+	// <div>Experimental - 
+	// 			<ShareLink thingId={id} />
+	// 			<ShareWidget thingId={id} name={item.name} />
+	// 		</div>
 	return (
 		<div className="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
 			<center>
-				{item.description}
+				{item.description? <ReactMarkdown source={item.description} /> : null}
+				{item.url? <div><a href={item.url}>Event website</a></div> : null}
 			</center>
 
 			<Register event={item} />
-
+	
 		</div>
 	);
 };
 
 const Register = ({event}) => {
 	assert(event);
+	// published?
+	if (false && event.status !== C.KStatus.PUBLISHED) {
+		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);	
+	}
 	// just a big CTA
 	return (<center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center>);
 };

@@ -1,4 +1,5 @@
-import "babel-polyfill";
+
+//import "babel-polyfill"; ??Is this needed?? ^DW April 2018
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';

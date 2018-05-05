@@ -3,7 +3,6 @@ import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {yessy} from 'wwutils';
-import { Panel, Image, Well, Label, Grid, Row, Col, Accordion, Glyphicon } from 'react-bootstrap';
 import Login from 'you-again';
 import Enum from 'easy-enums';
 
@@ -19,6 +18,7 @@ import Misc from '../Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../LoginWidget/LoginWidget';
 import Crud from '../../plumbing/Crud'; //publish
+import { ImpactDesc } from '../ImpactWidgetry';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -26,11 +26,28 @@ const EditCharityPage = () => {
 	}
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(['draft', C.TYPES.NGO, cid], 
+	let {value:charity} = DataStore.fetch(['data', C.TYPES.NGO, cid], 
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
-	);
+	);	
 	if ( ! charity) {
 		return <Misc.Loading />;
+	}
+	// HACK load a fresh draft the first time.
+	if (C.KStatus.isPUBLISHED(charity.status)) {
+		if ( ! charity.uptodatedraft) {
+			ServerIO.getCharity(cid, C.KStatus.DRAFT)
+			.then(res => {
+				console.warn("res", res);
+				if (res.cargo) {
+					res.cargo.status = C.KStatus.DRAFT;
+					res.cargo.uptodatedraft = "yes";
+					console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
+					DataStore.setData(res.cargo);
+				}
+			});
+		}
+	} else if (C.KStatus.isDRAFT(charity.status)) {
+		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
 	}
 
 	// projects
@@ -52,49 +69,44 @@ const EditCharityPage = () => {
 	// put it together
 	console.log("EditCharity", charity);
 	return (
-		<div className='EditCharityPage'>				
-			<Panel>
-				<h2>Editing: {charity.name}</h2>			
+		<div className='EditCharityPage'>			
+			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-				<p>NOTE: Please hover over the <Glyphicon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				{Roles.iCan(C.CAN.publish).value ? 
-					<button onClick={(e) => publishDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-primary'>Publish</button> 
-					: <div><button className='btn btn-primary' disabled>Publish</button><br /><small>Please ask a senior editor</small></div>
-				}
-				&nbsp;
-				<button onClick={(e) => discardDraftFn(e, charity)} disabled={ ! charity.modified} className='btn btn-warning'>Discard Edits</button>
-				{Roles.iCan(C.CAN.publish).value ? 
-					<button onClick={(e) => deleteFn(e, charity)} disabled={ ! charity.modified} className='btn btn-danger'>Delete Charity</button>
-					: null
-				}
-			</Panel>
-			<Accordion>
-				<Panel header={<h3>Charity Profile</h3>} eventKey="1">
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
+					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
+					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
+			</Misc.Card>
+			<Misc.Card title='Preview: Impact'>
+				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+			</Misc.Card>
+			<Misc.CardAccordion widgetName='topLevelCharityEditor'>
+				<Misc.Card title='Charity Profile'>
 					<ProfileEditor charity={charity} />
-				</Panel>
-				<Panel header={<h3>Donations &amp; Tax</h3>} eventKey="2">
+				</Misc.Card>
+				<Misc.Card title='Donations &amp; Tax'>
 					<EditField item={charity} 
 						field='noPublicDonations' label='No public donations' type='checkbox' 
 						help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
 					<EditField item={charity} 
 						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
-				</Panel>
-				<Panel header={<h3>Overall finances and impact</h3>} eventKey="3">
+				</Misc.Card>
+				<Misc.Card title='Overall finances and impact'>
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
-				</Panel>
-				<Panel header={<h3>Project finances and impact ({projectProjects.length} projects)</h3>} eventKey="4">
+				</Misc.Card>
+				<Misc.Card title={'Project finances and impact ('+projectProjects.length+' projects)'}>
 					<ProjectsEditor charity={charity} projects={projectProjects} />
-				</Panel>
-				<Panel header={<h3>Editorial</h3>} eventKey="5">
+				</Misc.Card>
+				<Misc.Card title='Editorial'>
 					<EditorialEditor charity={charity} />
-				</Panel>
-				<Panel header={<h3>References</h3>} eventKey="6">
+				</Misc.Card>
+				<Misc.Card title='References'>
 					<ol>{rrefs}</ol>
-				</Panel>
-			</Accordion>
+				</Misc.Card>
+			</Misc.CardAccordion>
 		</div>
 	);
 }; // ./EditCharityPage
@@ -167,7 +179,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='img' field='logo' help={`Enter a url for the logo image. 
+		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url. 
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element". 
@@ -184,7 +196,7 @@ const ProfileEditor = ({charity}) => {
 			</div>
 			: null
 		}
-		<EditField item={charity} type='img' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
+		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
@@ -216,11 +228,12 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>);
 	}
+	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
-		<Panel key={'project_'+i} eventKey={i+1} 
-			header={<div><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+		<Misc.Card key={'project_'+i} 
+			title={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
-		</Panel>)
+		</Misc.Card>)
 		);
 	return (
 		<div>
@@ -231,7 +244,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
 				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
 			</ul>
-			<Accordion>{rprojects}</Accordion>
+			<Misc.CardAccordion widgetName={isOverall? 'overalls' : 'projects'}>{rprojects}</Misc.CardAccordion>
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>
 	);
@@ -248,7 +261,7 @@ const AddProject = ({charity, isOverall}) => {
 				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 				&nbsp;
 				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Glyphicon glyph='plus' /> Add
+					<Misc.Icon glyph='plus' /> Add
 				</button>
 			</div>
 		);		
@@ -262,7 +275,7 @@ const AddProject = ({charity, isOverall}) => {
 			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
 			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
-				<Glyphicon glyph='plus' /> Add
+				<Misc.Icon glyph='plus' /> Add
 			</button>
 		</div>
 	);
@@ -282,7 +295,7 @@ const RemoveProject = ({charity, project}) => {
 			title='Delete this project!'
 			onClick={deleteProject}
 		>
-			<Glyphicon glyph='trash' />
+			<Misc.Icon glyph='trash' />
 		</button>
 	);
 };
@@ -303,7 +316,7 @@ const AddIO = ({list, pio, ioPath}) => {
 			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
-				<Glyphicon glyph='plus' />
+				<Misc.Icon glyph='plus' />
 			</button>
 		</div>
 	);
@@ -320,7 +333,7 @@ const ProjectEditor = ({charity, project}) => {
 			{isOverall? null : (
 				<div>
 					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-					<EditProjectField charity={charity} project={project} type='img' field='image' label='Photo' />
+					<EditProjectField charity={charity} project={project} type='imgUpload' field='image' label='Photo' />
 					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
 					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
 						help='A story from this project, e.g. about a beneficiary.' />					
@@ -350,12 +363,9 @@ const ProjectEditor = ({charity, project}) => {
 
 // See and edit the list of data-sources for this project
 const ProjectDataSources = ({charity, project}) => {
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
+
 	const projIndex = charity.projects.indexOf(project);
-	const dataSrcPath = ['draft', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
+	const dataSrcPath = ['data', C.TYPES.NGO, NGO.id(charity), 'projects', projIndex, 'data-src'];
 	const sourceList = project['data-src'] || [];
 	return (
 		<div className='well'>
@@ -364,7 +374,7 @@ const ProjectDataSources = ({charity, project}) => {
 				const srcIndex = project['data-src'].indexOf(src);
 				const citationPath = dataSrcPath.concat(srcIndex);
 				return (
-					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} saveFn={saveDraftFnWrap} />
+					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} />
 				);
 			}) }
 			<AddDataSource dataId={'p'+projIndex+'data-src'} list={sourceList} srcPath={dataSrcPath} />
@@ -391,7 +401,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
-				<Glyphicon glyph='plus' />
+				<Misc.Icon glyph='plus' />
 			</button>
 		</div>
 	);
@@ -404,7 +414,7 @@ const ProjectInputs = ({charity, project}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft',C.TYPES.NGO, cid, 'projects', pid];
+	let projectPath = ['data',C.TYPES.NGO, cid, 'projects', pid];
 	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || Money.make({name: 'annualCosts'});	
 	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || Money.make({name: 'projectCosts'});
 	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || Money.make({name: 'tradingCosts'});
@@ -427,7 +437,7 @@ const ProjectInputs = ({charity, project}) => {
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = ['draft', C.TYPES.NGO, cid, 'projects', pid];
+	let projectPath = ['data', C.TYPES.NGO, cid, 'projects', pid];
 	// NB: use the array index as key 'cos the other details can be edited
 	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (
@@ -437,25 +447,24 @@ const ProjectOutputs = ({charity, project}) => {
 				<tbody>			
 					<tr>
 						<th>
-							Impact units <Glyphicon glyph='question-sign' title={
+							Impact units <Misc.Icon glyph='question-sign' title={
 `These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Be aware that the SoGive code will calculate the amount of impact attributable to a donor, and then append these words after that number (eg wording like "case(s) of malaria averted" would work if you put a number in front, but "reduction in malaria prevalence" wouldn't work). Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
 							/>
 						</th>
 						<th>
-							Amount <Glyphicon glyph='question-sign' title={
+							Amount <Misc.Icon glyph='question-sign' title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
 ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
 							/>
 						</th>
 						<th>
-							Override cost per beneficiary <Glyphicon glyph='question-sign' title={
-								`Usually auto-calculated based on the costs and the amount. An override value can be put in here.`}
-							/>
+							Override cost per beneficiary 
+							<Misc.Icon glyph='question-sign' title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
 						</th>
 						<th>
-							Confidence <Glyphicon glyph='question-sign' title={
+							Confidence <Misc.Icon glyph='question-sign' title={
 `How confident are we in this cost-per-beneficiary estimate?   
 
 - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.   
@@ -465,7 +474,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							/>
 						</th>
 						<th>
-							Description <Glyphicon glyph='question-sign' title={
+							Description <Misc.Icon glyph='question-sign' title={
 `An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>
@@ -504,7 +513,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let readonly = ! manualEntry;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let inputsPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
+	let inputsPath = ['data',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
 	assert(DataStore.getValue(inputsPath) === project.inputs, "EditCharityPage.ProjectInputEditor");
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
@@ -514,15 +523,11 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	}
 	assert(ii !== -1, "EditCharityPage.ProjectInputEditor");
 	assert(pid !== -1, "EditCharityPage.ProjectInputEditor");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};
 	return (<tr>
 		<td>{STD_INPUTS[input.name] || input.name}</td>
 		<td>
 			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} saveFn={saveDraftFnWrap} readOnly={readonly} />
+			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -537,31 +542,28 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
-	let inputPath = ['draft',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
+	let inputPath = ['data',C.TYPES.NGO,cid,'projects', pid, 'outputs', ii];
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
-	let saveDraftFnWrap = (context) => {
-		context.parentItem = charity;
-		return saveDraftFn(context);
-	};		
+	
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><Misc.PropControl prop='name' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
-		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} saveFn={saveDraftFnWrap} /></td>
+		<td><Misc.PropControl prop='name' path={inputPath} item={output} /></td>
+		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} /></td>
 		<td>
-			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} saveFn={saveDraftFnWrap} size={4} />
+			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
 			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
-				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output} saveFn={saveDraftFnWrap}
+				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
 			<Misc.PropControl prop='description' type='textarea'
-				path={inputPath} item={output} saveFn={saveDraftFnWrap}
+				path={inputPath} item={output}
 			/>
 		</td>
 		<td>
@@ -570,21 +572,9 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	</tr>);
 };
 
-
-const publishDraftFn = _.throttle((e, charity) => {
-	return ActionMan.publishEdits(C.TYPES.NGO, NGO.id(charity), charity);
-}, 250);
-const discardDraftFn = _.throttle((e, charity) => {
-	return ActionMan.discardEdits(C.TYPES.NGO, NGO.id(charity));
-}, 250);
-const deleteFn = _.throttle((e, charity) => {
-	return ActionMan.delete(C.TYPES.NGO, NGO.id(charity));
-}, 250);
-
-
 const EditField = ({item, ...stuff}) => {
 	let id = NGO.id(item);
-	let path = ['draft',C.TYPES.NGO,id];
+	let path = ['data',C.TYPES.NGO,id];
 	return <EditField2 item={item} path={path} {...stuff} />;
 };
 
@@ -593,23 +583,9 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	assert(pid!==-1, "EditCharityPage.EditProjectField: "+project);
-	let path = ['draft',C.TYPES.NGO,cid,'projects', pid];
+	let path = ['data',C.TYPES.NGO,cid,'projects', pid];
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
-
-// TODO delete and just use Crud.js
-const saveDraftFn = _.debounce(
-	({path, parentItem}) => {
-		if ( ! parentItem) parentItem = DataStore.getValue(path);
-		assert(NGO.isa(parentItem), "EditCharityPage.saveDraftFn: ! isa: "+parentItem, path);
-		ServerIO.saveCharity(parentItem, C.KStatus.$DRAFT())
-		.then((result) => {
-			let modCharity = result.cargo;
-			assert(NGO.isa(modCharity), "EditCharityPage.saveDraftFn: "+modCharity);
-			DataStore.setValue(['draft', C.TYPES.NGO, NGO.id(modCharity)], modCharity);
-		});
-		return true;
-	}, 1000);
 
 const EditField2 = ({item, field, type, help, label, path, parentItem, userFilter, ...other}) => {
 	// some controls are not for all users e.g. goodloop
@@ -617,13 +593,6 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 		if ( ! Roles.iCan(userFilter).value ) {
 			return null;
 		}
-	}
-	let saveDraftFnWrap = saveDraftFn;
-	if (parentItem) {
-		saveDraftFnWrap = (context) => {
-			context.parentItem = parentItem;
-			return saveDraftFn(context);
-		};
 	}
 	// console.log('EditField2', props);
 	assMatch(field, "String|Number");
@@ -633,11 +602,10 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 			<Misc.Col2>
 				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
-					saveFn={saveDraftFnWrap}
 					help={help}
 					{ ...other}
 					/>
-				<MetaEditor item={item} itemPath={path} field={field} help={help} saveFn={saveDraftFnWrap} />
+				<MetaEditor item={item} itemPath={path} field={field} help={help} />
 			</Misc.Col2>
 		</div>
 	);
