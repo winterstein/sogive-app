@@ -1,6 +1,6 @@
 import {assert, assMatch} from 'sjtest';
 import {isa, defineType} from '../../base/data/DataClass';
-import Money from './Money';
+import Money from '../../base/data/Money';
 import {blockProp, XId} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';

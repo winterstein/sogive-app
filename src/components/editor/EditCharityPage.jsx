@@ -13,7 +13,7 @@ import printer from '../../base/utils/printer';
 import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
-import Money from '../../data/charity/Money';
+import Money from '../../base/data/Money';
 import Misc from '../Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
@@ -144,7 +144,7 @@ const EditorialEditor = ({charity}) => {
 const ProfileEditor = ({charity}) => {
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-		<EditField item={charity} disabled type='text' field='name' label='Official name (temporarily locked)' help='The official name, usually as registered with the Charity Commission.' />
+		<EditField item={charity} disabled type='text' field='name' label='Official name (locked)' help='The official name, usually as registered with the Charity Commission.' />
 		<EditField item={charity} type='text' field='displayName' label='Display name'
 			help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
 		
@@ -602,7 +602,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 			<Misc.Col2>
 				<Misc.PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
-					help={help}
+					tooltip={help}
 					{ ...other}
 					/>
 				<MetaEditor item={item} itemPath={path} field={field} help={help} />

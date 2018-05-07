@@ -6,7 +6,7 @@ import {assert, assMatch} from 'sjtest';
 import {ellipsize, asNum} from 'wwutils';
 import Project from './Project';
 import Output from './Output';
-import Money from './Money';
+import Money from '../../base/data/Money';
 import HashMap from 'hashmap';
 import Citation from './Citation';
 import Enum from 'easy-enums';

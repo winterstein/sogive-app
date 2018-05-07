@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {isa, defineType} from '../../base/data/DataClass';
-import Money from './Money';
+import Money from '../../base/data/Money';
 
 const Project = defineType('Project');
 const This = Project;

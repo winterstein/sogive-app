@@ -24,7 +24,7 @@ import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 
 import Misc from './Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';

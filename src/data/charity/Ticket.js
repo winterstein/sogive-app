@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import {isa, nonce, defineType} from '../../base/data/DataClass';
 import {uid, blockProp} from 'wwutils';
-import Money from './Money';
+import Money from '../../base/data/Money';
 
 const Ticket = defineType('Ticket');
 const This = Ticket;

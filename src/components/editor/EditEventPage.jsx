@@ -15,7 +15,7 @@ import {getType, getId, nonce} from '../../base/data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
-import ShareWidget, {ShareLink} from '../ShareWidget';
+import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
 
 const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {

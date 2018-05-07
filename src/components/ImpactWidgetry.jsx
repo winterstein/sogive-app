@@ -6,7 +6,7 @@ import Enum from 'easy-enums';
 import DataStore from '../base/plumbing/DataStore';
 import printer from '../base/utils/printer';
 import C from '../C';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';

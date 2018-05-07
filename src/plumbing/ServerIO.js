@@ -2,7 +2,6 @@
  * Wrapper for server calls.
  *
  */
-import ServerIO from '../base/plumbing/ServerIOBase';
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
@@ -16,11 +15,24 @@ import NGO from '../data/charity/NGO';
 import DataStore from '../base/plumbing/DataStore';
 import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
+import ServerIO from '../base/plumbing/ServerIOBase';
+
+ServerIO.APIBASE = 
+	// '';
+	'https://test.sogive.org';
+
+ServerIO.getServletForType = (type) => {
+	if (C.TYPES.isNGO(type)) {
+		return 'charity';
+	}
+	return type.toLowerCase();
+};
+
 /**
  * @param query {!String} query string
  * @param status {?KStatus} optional to request draft
  */
-ServerIO.search = function({q, prefix, from, size, status, recommended}) {
+ServerIO.searchCharities = function({q, prefix, from, size, status, recommended}) {
 	// assMatch( q || prefix, String);
 	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended}} );
 };
@@ -69,5 +81,3 @@ ServerIO.addCharity = function(charity, status=C.KStatus.DRAFT) {
 };
 
 export default ServerIO;
-// for debug
-window.ServerIO = ServerIO;

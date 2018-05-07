@@ -129,7 +129,7 @@ class SearchForm extends React.Component {
 		const all = !recommended && !query;
 
 		// hack to allow status=DRAFT
-		ServerIO.search({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
+		ServerIO.searchCharities({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
 			.then(function(res) {
 				console.warn(res);
 				let charities = res.cargo.hits;

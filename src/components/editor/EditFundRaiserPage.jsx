@@ -13,7 +13,7 @@ import Roles from '../../base/Roles';
 import Misc from '../Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
 import NewDonationForm, {DonateButton} from '../NewDonationForm';
-import ShareWidget, {ShareLink} from '../ShareWidget';
+import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
 
 const EditFundRaiserPage = () => {
 

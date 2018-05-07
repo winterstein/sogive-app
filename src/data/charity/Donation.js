@@ -1,7 +1,7 @@
 import {assert} from 'sjtest';
 import {isa, nonce, defineType} from '../../base/data/DataClass';
 import C from '../../C';
-import Money from './Money';
+import Money from '../../base/data/Money';
 import DataStore from '../../base/plumbing/DataStore';
 import {XId, blockProp} from 'wwutils';
 

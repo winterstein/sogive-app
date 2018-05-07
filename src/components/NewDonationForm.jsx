@@ -14,7 +14,7 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Transfer from '../base/data/Transfer';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 
 import Misc from './Misc';

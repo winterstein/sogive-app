@@ -13,7 +13,7 @@ import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import {notifyUser} from '../base/plumbing/Messaging';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 import NGO from '../data/charity/NGO';
 import Output from '../data/charity/Output';
 import C from '../C';

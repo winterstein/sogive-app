@@ -13,7 +13,7 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Project from '../data/charity/Project';
-import Money from '../data/charity/Money';
+import Money from '../base/data/Money';
 import Ticket from '../data/charity/Ticket';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';

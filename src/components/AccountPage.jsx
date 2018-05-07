@@ -3,23 +3,22 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
-import printer from '../utils/printer.js';
+import printer from '../base/utils/printer.js';
 import C from '../C';
-import DataStore from '../plumbing/DataStore';
+import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 import Misc from './Misc';
 import GiftAidForm from './GiftAidForm';
 import {XId} from 'wwutils';
-import Transfer from '../data/Transfer';
-import {LoginLink} from './LoginWidget/LoginWidget';
+import Transfer from '../base/data/Transfer';
+import {LoginLink} from '../base/components/LoginWidget';
+import {RolesCard, LoginCard} from '../base/components/AccountPageWidgets';
 
 const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div><h2>My Account: Please login</h2><LoginLink title='Login' /></div>;
 	}
-	let proles =Roles.getRoles();
-	let roles = proles.value;
 	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {	
 		return ServerIO.load('/credit/list', {data: {to: Login.getId()} });
 	});	
@@ -31,15 +30,8 @@ const AccountPage = () => {
 	return (
 		<div className=''>
 			<h2>My Account</h2>
-			<Misc.Card title='Login'>
-				ID: {Login.getId()} <br />
-				My donations: shown on the <a href='#dashboard'>Dashboard</a>
-			</Misc.Card>			
-			<Misc.Card title='Roles'>
-				<p>Roles determine what you can do. E.g. only editors can publish changes.</p>
-				{proles.resolved? <p>No role</p> : <Misc.Loading />}
-				{roles? roles.map((role, i) => <RoleLine key={i+role} role={role} />) : null}				
-			</Misc.Card>
+			<LoginCard />
+			<RolesCard />
 			{pvCreditToMe.value && pvCreditToMe.value.hits? <CreditToMe credits={pvCreditToMe.value.hits} /> : null}
 			{Roles.iCan(C.CAN.uploadCredit).value ? <UploadCredit /> : null}
 		</div>

@@ -15,7 +15,7 @@ import LoginWidget from '../../base/components/LoginWidget';
 // Pages
 import DashboardPage from '../DashboardPage';
 import SearchPage from '../SearchPage';
-import AccountPage from '../../base/components/AccountPage';
+import AccountPage from '../AccountPage';
 import AboutPage from '../../base/components/AboutPage';
 import CharityPage from '../CharityPage';
 import EditCharityPage from '../editor/EditCharityPage';
@@ -29,7 +29,38 @@ import EventPage from '../EventPage';
 import EventReportPage from '../editor/EventReportPage';
 import RegisterPage from '../RegisterPage';
 import E404Page from '../../base/components/E404Page';
-// Actions
+
+
+/**
+ * init DataStore
+ */
+DataStore.update({
+	data: {
+		NGO: {},
+		User: {},
+		Donation: {}
+	},
+	draft: {
+		NGO: {},
+		User: {}
+	},
+	// Use list to store search results
+	list: {
+
+	},
+	focus: {
+		NGO: null,
+		User: null,
+	},	
+	widget: {},
+	misc: {
+	},
+	/** status of server requests, for displaying 'loading' spinners 
+	 * Normally: transient.$item_id.status
+	*/
+	transient: {}
+});
+
 
 const PAGES = {
 	event: EventPage,
@@ -117,11 +148,16 @@ class MainDiv extends Component {
 					<p>{this.state.error.message}<br/><small>{this.state.error.stack}</small></p>
 				</div>);
 		}
-
+		// which pages?
+		let pages = ['dashboard', 'search'];
+		if (Roles.iCan(C.CAN.test).value) { // TODO for everyone, not just dev
+			pages = pages.concat(['event', 'fundraiser']);
+		}
+		
 		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
 		return (
 			<div>
-				<NavBar page={page} />
+				<NavBar page={page} pages={pages} />
 				<div className="container avoid-navbar">
 					<MessageBar messages={msgs} />
 					<div className='page' id={page}>

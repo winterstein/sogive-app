@@ -389,7 +389,7 @@ const CharityChoiceTab = ({basket}) => {
 	const recommended = ! charityId; // limit to recommended charities if the input is blank
 	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
 		() => {
-			return ServerIO.search({prefix: charityId, size: 20, recommended})
+			return ServerIO.searchCharities({prefix: charityId, size: 20, recommended})
 				.then(res => {
 					let hits = res.cargo && res.cargo.hits;
 					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
