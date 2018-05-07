@@ -146,6 +146,12 @@ public class DonationServlet extends CrudServlet {
 		// make/save Donation
 		super.doSave(state);
 		Donation donation = (Donation) jthing.java();
+		// donations must be positive
+		if (donation.getAmount().getValue100p() <= 0) {
+			throw new WebEx.E400(
+				"Donations must be for a positive amount: "+donation.getAmount()+" (donation id: "+donation.getId()
+			);
+		}
 		if (donation.getStatus() != KStatus.PUBLISHED) {
 			doPublishFirstTime(state, donation);
 		} else {
