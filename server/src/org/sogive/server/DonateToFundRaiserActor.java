@@ -1,10 +1,7 @@
 package org.sogive.server;
 
-<<<<<<< HEAD
-=======
 import java.util.concurrent.atomic.AtomicLong;
 
->>>>>>> master
 import java.util.List;
 
 import org.sogive.data.charity.Money;
@@ -50,7 +47,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 		try {
 			Log.d(getName(), "updateFundRaiser "+donation+" frid: "+frid+" status: "+status+" ...");
 			ESPath path = Dep.get(IESRouter.class).getPath(FundRaiser.class, frid, status);
-<<<<<<< HEAD
+
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class);
 			// once only			
 			final List<String> dons = fundraiser.getDonations();
@@ -61,7 +58,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			// a rough log of who has donated
 			dons.add(donation.getId()); // WARNING: If there is then an exception below, this code will not get re-run
 			
-=======
+
 			AtomicLong versionf = new AtomicLong();			
 			FundRaiser fundraiser = AppUtils.get(path, FundRaiser.class, versionf);
 			
@@ -74,7 +71,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			dons.add(donation.getId()); // NB: WARNING: If there is then an exception below, this code will not get re-run
 			
 			// How much?
->>>>>>> master
+
 			Money amount = donation.getAmount();
 			
 			Throwable hackex = null;
