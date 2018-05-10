@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const {onFail} = require('../res/UtilityFunctions');
 
 const DONATE_BUTTON = `#charity div.donate-button button`;
 

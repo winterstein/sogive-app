@@ -3,15 +3,19 @@
  */
 const puppeteer = require('puppeteer');
 const firstTest = require('./sogive-make-donation');
-
+const {onFail} = require('./res/UtilityFunctions');
 /**TODO
  * Read headless from console
  * Find a better way of sharing page throughout system
  * Produce report of successes/failures of all tests run
+ * Build on error given to include more detailed stack-trace
  */
 const headless = false;
 let browser;
 let page;
+
+const tests = [firstTest];
+const test_results = [];
 
 async function init() {
     browser = await puppeteer.launch({headless});
@@ -19,16 +23,36 @@ async function init() {
 }
 
 async function startTests() {
+    //Probably want to warn rather than throw error
+    //Might be very annoying if it shuts-down a time-consuming build process
     if(!page) throw new Error('test-manager.js -- invalid page object. Check that init() has been called first');
+    if(!tests) throw new Error('test-manager.js -- no tests provided (tests[] is falsy)');
 
-    //Just manually adding these in right now. Could possibly have script compile all scripts to run into a single js file and call it here.
-    //Would be a bit less hassle in the long run
-    await firstTest.run(page);
+    for (let i=0; i < tests.length; i++) {
+        try {
+            await tests[i].run(page);
+            test_results[i] = {
+                success : true
+            };
+        }
+        catch (e) {
+            onFail({error: e, page});
+            test_results[i] = {
+                success: false,
+                error: e,
+            };
+        }
+    }
 }
 
 async function run() {
     await init();
     await startTests();
+    browser.close();
+    //Output test report
+    //Error thrown currently doesn't make clear where it's coming from
+    //Would be nice if it could be more descriptive for output to log
+    console.log(test_results);
 }
 
 run();

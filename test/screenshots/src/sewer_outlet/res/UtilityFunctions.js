@@ -2,9 +2,24 @@
 
 /**Currently want to take screenshot and take a note of any errors */
 //Any circumstance under which call to process.arg[1] would return something bad?
+//Probably will discontinue use of this function. Lot of functionality needed on success as well as failure.
 let onFail = (() => {
-    var _ref = _asyncToGenerator(function* ({ error, page, caller = process.argv[1].split("/").pop() }) {
-        const folderPath = `test/${caller}`;
+    var _ref = _asyncToGenerator(function* ({ error, page }) {
+        yield takeScreenshot(page);
+    });
+
+    return function onFail(_x) {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+//Maybe save screenshots to directory named after test run?
+//Going to be quite difficult figuring out what's what in there
+
+
+let takeScreenshot = (() => {
+    var _ref2 = _asyncToGenerator(function* (page) {
+        const folderPath = `test-screenshots`;
 
         try {
             yield page.screenshot({ path: `${folderPath}/${new Date().toISOString()}.png` });
@@ -13,17 +28,15 @@ let onFail = (() => {
             //Shouldn't give infinite loop: mkdirSync throws error if directory can't be created
             if (e.code === 'ENOENT') {
                 fs.mkdirSync(folderPath);
-                yield onFail({ error, page, caller });
+                yield takeScreenshot(page);
             } else {
                 console.log('Screenshot failed: ' + e.message);
             }
-            //TODO write to log
-            //Possible to get chromium console output?
         }
     });
 
-    return function onFail(_x) {
-        return _ref.apply(this, arguments);
+    return function takeScreenshot(_x2) {
+        return _ref2.apply(this, arguments);
     };
 })();
 
@@ -37,4 +50,8 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = { onFail, timeout };
+module.exports = {
+    onFail,
+    timeout,
+    takeScreenshot
+};

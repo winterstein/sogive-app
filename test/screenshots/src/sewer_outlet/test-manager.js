@@ -11,11 +11,25 @@ let init = (() => {
 
 let startTests = (() => {
     var _ref2 = _asyncToGenerator(function* () {
+        //Probably want to warn rather than throw error
+        //Might be very annoying if it shuts-down a time-consuming build process
         if (!page) throw new Error('test-manager.js -- invalid page object. Check that init() has been called first');
+        if (!tests) throw new Error('test-manager.js -- no tests provided (tests[] is falsy)');
 
-        //Just manually adding these in right now. Could possibly have script compile all scripts to run into a single js file and call it here.
-        //Would be a bit less hassle in the long run
-        yield firstTest.run(page);
+        for (let i = 0; i < tests.length; i++) {
+            try {
+                yield tests[i].run(page);
+                test_results[i] = {
+                    success: true
+                };
+            } catch (e) {
+                test_results[i] = {
+                    success: false,
+                    error: e
+                };
+                onFail({ error: e, page });
+            }
+        }
     });
 
     return function startTests() {
@@ -27,6 +41,11 @@ let run = (() => {
     var _ref3 = _asyncToGenerator(function* () {
         yield init();
         yield startTests();
+        browser.close();
+        //Output test report
+        //Error thrown currently doesn't make clear where it's coming from
+        //Would be nice if it could be more descriptive for output to log
+        console.log(test_results);
     });
 
     return function run() {
@@ -41,10 +60,18 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  */
 const puppeteer = require('puppeteer');
 const firstTest = require('./sogive-make-donation');
-
-//TODO read headless from console.
+const { onFail } = require('./res/UtilityFunctions');
+/**TODO
+ * Read headless from console
+ * Find a better way of sharing page throughout system
+ * Produce report of successes/failures of all tests run
+ * Build on error given to include more detailed stack-trace
+ */
 const headless = false;
 let browser;
 let page;
+
+const tests = [firstTest];
+const test_results = [];
 
 run();
