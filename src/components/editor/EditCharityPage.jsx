@@ -14,7 +14,7 @@ import C from '../../C';
 import NGO from '../../data/charity/NGO';
 import Project from '../../data/charity/Project';
 import Money from '../../base/data/Money';
-import Misc from '../Misc';
+import Misc from '../../base/components/Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
 import Crud from '../../base/plumbing/Crud'; //publish

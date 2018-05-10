@@ -10,7 +10,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import C from '../../C';
 import Roles from '../../base/Roles';
 
-import Misc from '../Misc';
+import Misc from '../../base/components/Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
 import NewDonationForm, {DonateButton} from '../NewDonationForm';
 import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';

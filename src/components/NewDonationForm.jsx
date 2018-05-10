@@ -17,7 +17,7 @@ import Transfer from '../base/data/Transfer';
 import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 
-import Misc from './Misc';
+import Misc from '../base/components/Misc'
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';

@@ -20,7 +20,7 @@ import C from '../C';
 import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from '../base/components/ListLoad';

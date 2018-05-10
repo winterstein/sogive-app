@@ -11,7 +11,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 // import ChartWidget from './../base/components/ChartWidget';
-import Misc from '../Misc';
+import Misc from '../../base/components/Misc';
 
 
 class EditorDashboardPage extends React.Component {

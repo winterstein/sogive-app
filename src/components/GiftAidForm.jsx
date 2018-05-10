@@ -4,7 +4,7 @@ import { FormGroup } from 'react-bootstrap';
 
 import DataStore from '../base/plumbing/DataStore';
 
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 
 const giftAidTaxpayerLabel = 'I confirm that I am a UK taxpayer and I understand that if I pay less Income Tax and/or Capital Gains Tax in the current tax year than the amount of Gift Aid claimed on all my donations it is my responsibility to pay the difference.';
 const giftAidOwnMoneyLabel = 'This is my own money. I am not paying in donations made by a third party e.g. money collected at an event, in the pub, a company donation or a donation from a friend or family member.';

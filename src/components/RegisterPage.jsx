@@ -20,7 +20,7 @@ import Money from '../base/data/Money';
 import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../base/Roles';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
 import NewDonationForm from './NewDonationForm';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';

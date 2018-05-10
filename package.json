@@ -27,7 +27,7 @@
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",
-    "react-markdown": "^3.3.0",
+    "react-markdown": "^3.3.2",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^1.6.0",
     "sjtest": "^0.4.7",

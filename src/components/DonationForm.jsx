@@ -26,7 +26,7 @@ import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Money from '../base/data/Money';
 
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare';
