@@ -3,18 +3,22 @@
  */
 const puppeteer = require('puppeteer');
 const firstTest = require('./sogive-make-donation');
-const {onFail} = require('./res/UtilityFunctions');
+const {onFail, writeToLog} = require('./res/UtilityFunctions');
 /**TODO
  * Read headless from console
  * Find a better way of sharing page throughout system
  * Produce report of successes/failures of all tests run
+ * How to decide if a final state should be counted as a success/failure?
  * Build on error given to include more detailed stack-trace
+ * Basic log writing. Easier in console or from Node?
  */
 const headless = false;
 let browser;
 let page;
 
+//Objects in tests[] should contain a run(page) method.
 const tests = [firstTest];
+//[{success: true}, {success: false, error: ErrorObject}]
 const test_results = [];
 
 async function init() {
@@ -48,11 +52,11 @@ async function startTests() {
 async function run() {
     await init();
     await startTests();
-    browser.close();
+    await browser.close();
     //Output test report
     //Error thrown currently doesn't make clear where it's coming from
     //Would be nice if it could be more descriptive for output to log
-    console.log(test_results);
+    writeToLog(`\n${new Date().toISOString()}: ${JSON.stringify(test_results) || 'test_results[] is blank'}`);
 }
 
 run();
