@@ -186,7 +186,12 @@ const AmountSection = ({path, fromEditor}) => {
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
 	if ( ! val) {
-		val = credit || Money.make({value:10});
+		// HACK: grab the amount from the impact widget of DonationForm?
+		let cid = Donation.to(dontn);
+		val = DataStore.getValue(['widget', 'NewDonationForm', cid, 'amount']); 		
+		if ( ! val || Money.value(val)==10) {
+			val = credit || Money.make({value:10});
+		}
 		DataStore.setValue(pathAmount, val);
 	}
 	return (
