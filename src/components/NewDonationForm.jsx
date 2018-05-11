@@ -185,10 +185,10 @@ const AmountSection = ({path, fromEditor}) => {
 	console.log("donation", JSON.stringify(dontn));
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
-	if ( ! val) {
+	if ( ! val || ! Money.value(val)) {
 		// HACK: grab the amount from the impact widget of DonationForm?
 		let cid = Donation.to(dontn);
-		val = DataStore.getValue(['widget', 'NewDonationForm', cid, 'amount']); 		
+		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']); 		
 		if ( ! val || Money.value(val)==10) {
 			val = credit || Money.make({value:10});
 		}
@@ -329,35 +329,34 @@ const onToken_doPayment = ({donation}) => {
 };
 
 
-const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
-	if ( ! item) item = DataStore.getValue(path);
-	// console.warn('Donation value in doPayment', donation);
-	// console.warn('Item value in doPayment', item);
-	if ( ! item) {
+const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) => {
+	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
+	if ( ! donation) {
 		return null;
 	}
-	assert(C.TYPES.isDonation(getType(item)), ['path',path,'item',item]);
-	const {amount} = item;
+	
+	const {amount} = donation;
 	if ( ! amount) {
 		return null;
 	}
 	Money.assIsa(amount);
 	// tip?
 	// default: £1
-	if (item.hasTip === undefined) item.hasTip = true;
-	if (item.tip===undefined) item.tip = Money.make({currency:'GBP', value:1});
+	if (donation.hasTip === undefined) donation.hasTip = true;
+	if (donation.tip===undefined) donation.tip = Money.make({currency:'GBP', value:1});
 	let amountPlusTip = amount;
-	if (item.tip && item.hasTip) amountPlusTip = Money.add(amount, item.tip);
+	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
 
 	// Not the normal payment?
 	if (paidElsewhere) {
-		item.paidElsewhere = true;
+		donation.paidElsewhere = true;
 		return (<div>
 			<p>This form is for donations that have already been paid.</p>
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
 			<button onClick={e => {
-				ActionMan.publishEdits(C.TYPES.Donation, item.id, item)
+				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
 				.then(res => {
 					notifyUser('Off-site donation published - reload to see');
 					closeLightbox();
@@ -371,14 +370,14 @@ const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	 * @param {id:String, type:String, token:String} token 
 	 */
 	const onToken = (token) => {
-		item.stripe = token;
-		onToken_doPayment({item});
+		donation.stripe = token;
+		onToken_doPayment({donation});
 	};
 
 	return (<div>
 		<div className='padded-block'>
-			<Misc.PropControl type='checkbox' path={path} item={item} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
-			<Misc.PropControl type='Money' path={path} item={item} prop='tip' label='Tip amount' disabled={item.hasTip===false} />			
+			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
+			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} />
 	</div>);

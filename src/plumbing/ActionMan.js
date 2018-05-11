@@ -228,7 +228,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 			fundRaiser: fundRaiser,
 			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
 			from: from,
-			amount: Money.make({ value: 10 }),
+			// amount: Money.make({ value: 10 }),
 			coverCosts: true,
 		});
 		console.warn('donationDraft-new', dontn);

@@ -274,10 +274,17 @@ public class DonationServlet extends CrudServlet {
 		email.addTo(to);
 		email.setSubject("Thank you for donating :)");
 		String amount = donation.getAmount().toString();
+		String tip = "";
+		if (Utils.yes(donation.getHasTip())) {
+			tip = " (including a tip of "+donation.getTip()+" to cover SoGive's costs)";
+		}
 		String cid = donation.getTo();
 		NGO charity = AppUtils.get(cid, NGO.class);
+		
 		String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
-				+amount+" to "+Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
+				+amount
+				+" to "+Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
+				+tip
 				+".</p><p>Payment ID: "+Utils.or(donation.getPaymentId(),donation.getPaymentMethod(),donation.getId())
 				+"<br>Donation ID: "+donation.getId()+"</p></div>";
 		String bodyPlain = WebUtils2.getPlainText(bodyHtml);
