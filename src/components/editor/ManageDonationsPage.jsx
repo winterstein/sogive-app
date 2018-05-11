@@ -79,6 +79,11 @@ const ManageDonationsPage = () => {
 			sortAccessor: a => Money.value(a.amount)
 		},
 		{
+			Header: "Tip",
+			accessor: row => row.hasTip && row.tip, // check it was included
+			Cell: v => <Misc.Money amount={v} />
+		},
+		{
 			Header: "Contributions",
 			accessor: 'contributions',
 			Cell: cons => cons? cons.map((con,i) => <div key={i} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>) : null
