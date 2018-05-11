@@ -330,28 +330,34 @@ const onToken_doPayment = ({donation}) => {
 
 
 const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
-	const donation = DataStore.getValue(path);
+	if ( ! item) item = DataStore.getValue(path);
 	// console.warn('Donation value in doPayment', donation);
 	// console.warn('Item value in doPayment', item);
-	if ( ! donation) {
+	if ( ! item) {
 		return null;
 	}
-	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
-	const {amount} = donation;
+	assert(C.TYPES.isDonation(getType(item)), ['path',path,'item',item]);
+	const {amount} = item;
 	if ( ! amount) {
 		return null;
 	}
 	Money.assIsa(amount);
+	// tip?
+	// default: £1
+	if (item.hasTip === undefined) item.hasTip = true;
+	if (item.tip===undefined) item.tip = Money.make({currency:'GBP', value:1});
+	let amountPlusTip = amount;
+	if (item.tip && item.hasTip) amountPlusTip = Money.add(amount, item.tip);
 
 	// Not the normal payment?
 	if (paidElsewhere) {
-		donation.paidElsewhere = true;
+		item.paidElsewhere = true;
 		return (<div>
 			<p>This form is for donations that have already been paid.</p>
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
 			<button onClick={e => {
-				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
+				ActionMan.publishEdits(C.TYPES.Donation, item.id, item)
 				.then(res => {
 					notifyUser('Off-site donation published - reload to see');
 					closeLightbox();
@@ -365,11 +371,17 @@ const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 	 * @param {id:String, type:String, token:String} token 
 	 */
 	const onToken = (token) => {
-		donation.stripe = token;
-		onToken_doPayment({donation});
+		item.stripe = token;
+		onToken_doPayment({item});
 	};
 
-	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
+	return (<div>
+		<div className='padded-block'>
+			<Misc.PropControl type='checkbox' path={path} item={item} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
+			<Misc.PropControl type='Money' path={path} item={item} prop='tip' label='Tip amount' disabled={item.hasTip===false} />			
+		</div>
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} />
+	</div>);
 };
 
 const ThankYouSection = ({path, item}) => {

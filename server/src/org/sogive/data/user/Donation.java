@@ -157,10 +157,26 @@ public class Donation extends AThing implements IForSale {
 	 */
 	List<MoneyItem> fees;
 	
+	Boolean hasTip;
+	Money tip;
+	
+	
 	/**
 	 * The user's contribution
 	 */
-	Money amount;
+	private Money amount;
+	
+	/**
+	 * HACK: amount plus tip!
+	 * TODO move tip into fees.
+	 */
+	public Money getAmount() {
+		// HACK plus tip
+		if (Utils.yes(hasTip) && tip!=null && tip.getValue100p() > 0) {
+			return amount.plus(tip);
+		}
+		return amount;
+	}
 	
 	/**
 	 * Extra money! gift-aid boost + matched funding.
