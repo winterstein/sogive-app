@@ -23,11 +23,15 @@ let startTests = (() => {
 					success: true
 				};
 			} catch (e) {
-				onFail({ error: e, page });
+				yield onFail({ error: e, page });
 				test_results[i] = {
 					success: false,
 					error: e
 				};
+			} finally {
+				//won't want it to do this when multiple tests are running
+				yield timeout(3000);
+				//browser.close();
 			}
 		}
 	});
@@ -62,17 +66,26 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
  */
 const puppeteer = require('puppeteer');
 const firstTest = require('./sogive-make-donation');
-const { onFail, writeToLog } = require('./res/UtilityFunctions');
+const { onFail, writeToLog, timeout } = require('./res/UtilityFunctions');
 /**TODO
  * Read headless from console
- * Find a better way of sharing page throughout system
  * Produce report of successes/failures of all tests run
  * How to decide if a final state should be counted as a success/failure?
  * Build on error given to include more detailed stack-trace
- * Have tests time-out -- seen it get stuck a couple of times
  * Possibly reattempt test? Best of three maybe? Balance between accuracy/speed to be struck
+ * 
+ * Have tests time-out -- seen it get stuck a couple of times
  * How to marry .txt log and screenshots?
+ * Investigate if DOM loading before elements are actually clickable is a concern
+ * 
+ * For README
+ * 1) There is an issue with animations disrupting tests. Have created script to avoid this,
+ * but it has to be inserted onto the page each time that page.goto('url') is called.
+ * Have created a goto() method in each pages corresponding js file.
+ * This method handles this and any other future weirdness that may appear
+ * Hopefully puppeteer will have turning off animations as a standard feature later.
  */
+
 const headless = false;
 let browser;
 let page;
@@ -83,6 +96,7 @@ const tests = [firstTest];
 const test_results = [];
 
 function generateTestReport() {
+	console.log(JSON.stringify(test_results)); //for debugging
 	if (!test_results) writeToLog(`\n${new Date().toISOString()}: 'test_results[] is blank'}`);else writeToLog(`\n${new Date().toISOString()}: ${JSON.stringify(test_results)}`);
 }
 
@@ -95,3 +109,4 @@ run();
 //Move common non-site specific bits in symlink
 // Destructuring assignment in function args
 // Import instead of require
+//Screenshot on success as well as failure

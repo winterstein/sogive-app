@@ -4,9 +4,7 @@
 
 //Page-specific actions likely to be used during testing
 let search = (() => {
-    var _ref = _asyncToGenerator(function* (args) {
-        const { page, search_term } = args;
-
+    var _ref = _asyncToGenerator(function* ({ page, search_term }) {
         yield page.click(SEARCH_FIELD);
         yield page.keyboard.type(search_term);
         yield page.click(SEARCH_BUTTON);
@@ -22,9 +20,7 @@ let search = (() => {
 
 
 let gotoResult = (() => {
-    var _ref2 = _asyncToGenerator(function* (args) {
-        const { page } = args;
-        const { selectorOrInteger } = args || 1; //Attempts to retrieve first result by default
+    var _ref2 = _asyncToGenerator(function* ({ page, selectorOrInteger = 1 }) {
         let result_selector = RESULTS_LIST;
 
         if (Number.isInteger(selectorOrInteger)) result_selector += ` div:nth-child(${selectorOrInteger})`;
@@ -47,6 +43,7 @@ let gotoResult = (() => {
 let goto = (() => {
     var _ref3 = _asyncToGenerator(function* (page) {
         yield page.goto('http://test.sogive.org/#search?q=');
+        yield page.addScriptTag(disableAnimations);
     });
 
     return function goto(_x3) {
@@ -57,6 +54,7 @@ let goto = (() => {
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const puppeteer = require('puppeteer');
+const { disableAnimations } = require('../res/UtilityFunctions');
 
 //CSS selectors for important elements on page
 //Concerned that these are too susceptible to changes in DOM structure
