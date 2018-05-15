@@ -1,0 +1,8 @@
+Run ./compile.sh to babel files in res folder to here.
+
+Your Jest configuration should point to files in here rather than to the originals in res.
+This is due to a wonderful little feature of Jest where it won't run babel on files "outside of its runtime"
+(seems to mean anything that isn't a test file). Simplest solution is to babel these files yourself.
+
+ Believe that only jest.config.json will need to use anything in here. In particular, any of globalSetup, globalTeardown and testEnvironment
+ need to be babeled before they can be used.
