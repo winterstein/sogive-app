@@ -3,7 +3,8 @@
 let setup = (() => {
   var _ref = _asyncToGenerator(function* () {
     const browser = yield puppeteer.launch({ headless: false });
-    global.__BROWSER__ = browser;
+    mkdirp.sync(DIR);
+    fs.writeFileSync(path.join(DIR, 'wsEndpoint'), browser.wsEndpoint());
   });
 
   return function setup() {
@@ -15,5 +16,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const chalk = require('chalk');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const os = require('os');
+const path = require('path');
+
+const headless = false;
+const DIR = path.join(os.tmpdir(), 'jest_puppeteer_global_setup');
 
 module.exports = setup;

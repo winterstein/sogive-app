@@ -6,15 +6,16 @@ class PuppeteerEnvironment extends JSDOMEnvironment {
     super(config);
   }
 
-  async setup() {
-    await JSDOMEnvironment.prototype.setup();
-    this.window.__BROWSER__ = await puppeteer.launch({headless: false});
+  setup() {
+    JSDOMEnvironment.prototype.setup()
+    .then(puppeteer.launch({headless: false}))
+    .then((r) => this.window.__BROWSER__ = r);
     // console.log("Called");
     // this.global.__BROWSER__ = await puppeteer.launch({headless: false});
   }
 
-  async teardown() {   
-    await JSDOMEnvironment.prototype.teardown();
+  teardown() {   
+    JSDOMEnvironment.prototype.teardown();
   }
 
   runScript(script) {
@@ -22,4 +23,4 @@ class PuppeteerEnvironment extends JSDOMEnvironment {
   }
 }
 
-export default PuppeteerEnvironment;
+module.exports = {PuppeteerEnvironment};

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Thinking that we can insert beforeAll() afterAll() code
+# into each of the test files from here. Saves difficulty of
+# working with setup()/teardown() without putting onus on tester
+# to remember to include these things. Might just work.
+
 #compile/transpile/translate the source JS' for screenshots (from es2016 to es2015)
 #Can't get jest-babel to work. Going to try babelling files manually
 #Does it make sense to maintain previous setup of sending everything to sewer_outlet?

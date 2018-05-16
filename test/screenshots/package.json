@@ -11,6 +11,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "chalk": "^2.4.1",
+    "jest-environment-jsdom": "^22.4.3",
     "jest-environment-node": "^22.4.3",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
@@ -27,9 +28,11 @@
     "jest": "^22.4.3",
     "jest-cli": "^22.4.3",
     "puppeteer": "^1.2.0",
-    "regenerator-runtime": "^0.11.1"
+    "regenerator-runtime": "^0.11.1",
+    "ts-jest": "^22.4.3",
+    "typescript": "^2.8.3"
   },
   "scripts": {
-    "test": "NODE_ENV=test jest --config jest.config.json"
+    "test": "jest --config jest.config.json"
   }
 }

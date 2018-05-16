@@ -1,11 +1,19 @@
 {
   "presets": [
     ["env", {
+      "exclude": ["transform-es2015-classes"],
       "targets": {
         "node": "current"
       }
     }]
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [["env", {
+        "exclude": ["transform-es2015-classes"]   
+      }]]
+    }
+  }
 }
 /**Figured it out: config files are considered to be "outside jest's runtime"
 and are therefore not babeled
