@@ -5,7 +5,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const headless = false;
+const headless = true;
 const SCREENSHOT_FOLDER_BASE = `test-screenshots`;
 
 /**Setup functions run before each test

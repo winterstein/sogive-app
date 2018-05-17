@@ -55,11 +55,13 @@ async function login({page, username, password}) {
     await page.click('#loginByEmail > div:nth-child(1) > input');
     await page.keyboard.type(username);  
     await page.click('#loginByEmail > div:nth-child(2) > input');
-    await page.keyboard.type(password);        
+    await page.keyboard.type(password); 
+    await page.keyboard.press('Enter');       
 }
 
 module.exports = {
     disableAnimations,
+    login,
     onFail, 
     timeout,  
     writeToLog

@@ -16,6 +16,9 @@ class CustomReporter {
         // console.warn("Test", test);
         // console.warn("TestResult", testResult);
         // console.warn("AggregatedTestResult", aggregatedTestResult);
+        
+        //Suppress default console output
+        //console.log();
     }
 
     onRunComplete(contexts, results) {

@@ -29,6 +29,7 @@ let login = (() => {
         yield page.keyboard.type(username);
         yield page.click('#loginByEmail > div:nth-child(2) > input');
         yield page.keyboard.type(password);
+        yield page.keyboard.press('Enter');
     });
 
     return function login(_x2) {
@@ -74,6 +75,7 @@ function timeout(ms) {
 
 module.exports = {
     disableAnimations,
+    login,
     onFail,
     timeout,
     writeToLog

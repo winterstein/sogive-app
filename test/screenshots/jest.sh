@@ -1,4 +1,3 @@
-#!/bin/bash
 cd /home/$USER/winterwell/sogive-app/test/screenshots
 RES=$(cd res/ && find -iname "*.js")
 #Jest will babel any test files itself,
