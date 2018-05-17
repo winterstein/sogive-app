@@ -11,7 +11,8 @@
 //Probably will discontinue use of this function. Lot of functionality needed on success as well as failure.
 let onFail = (() => {
     var _ref = _asyncToGenerator(function* ({ error, page }) {
-        yield takeScreenshot(page);
+        console.log(`Utility functions onFail is deprecated. So is test-manager for that matter.`);
+        //await takeScreenshot(page);
     });
 
     return function onFail(_x) {
@@ -19,36 +20,9 @@ let onFail = (() => {
     };
 })();
 
-//Maybe save screenshots to directory named after test run?
-//Going to be quite difficult figuring out what's what in there
-
-
-let takeScreenshot = (() => {
-    var _ref2 = _asyncToGenerator(function* (page) {
-        const folderPath = `test-screenshots`;
-
-        try {
-            yield page.screenshot({ path: `${folderPath}/${new Date().toISOString()}.png` });
-        } catch (e) {
-            //dir not found
-            //Shouldn't give infinite loop: mkdirSync throws error if directory can't be created
-            if (e.code === 'ENOENT') {
-                fs.mkdirSync(folderPath);
-                yield takeScreenshot(page);
-            } else {
-                console.log('Screenshot failed: ' + e.message);
-            }
-        }
-    });
-
-    return function takeScreenshot(_x2) {
-        return _ref2.apply(this, arguments);
-    };
-})();
-
 /**Login to app. Should work for both SoGive and Good-loop */
 let login = (() => {
-    var _ref3 = _asyncToGenerator(function* ({ page, username, password }) {
+    var _ref2 = _asyncToGenerator(function* ({ page, username, password }) {
         if (!username || !password) throw new Error('UtilityFunctions -- no username/password provided to login');
         yield page.click('#top-right-menu > li > a');
         yield page.click('#loginByEmail > div:nth-child(1) > input');
@@ -57,8 +31,8 @@ let login = (() => {
         yield page.keyboard.type(password);
     });
 
-    return function login(_x3) {
-        return _ref3.apply(this, arguments);
+    return function login(_x2) {
+        return _ref2.apply(this, arguments);
     };
 })();
 
@@ -101,7 +75,6 @@ function timeout(ms) {
 module.exports = {
     disableAnimations,
     onFail,
-    takeScreenshot,
     timeout,
     writeToLog
 };

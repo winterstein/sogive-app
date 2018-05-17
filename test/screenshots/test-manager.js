@@ -29,6 +29,15 @@ const {onFail, writeToLog, timeout} = require('./res/UtilityFunctions');
  * 3) Currently have "jest-style" test acting as a wrapper for original test file. Will probably
  * discourage this practice. Should be very straightforward just to write the test within
  * the Jest wrapper.
+ * 
+ * 4) Figured out that, despite what the Jest devs may claim, window works and global doesn't.
+	Setting browser object to window.__BROWSER__ allows it to be accessed
+	by test files and teardown. Still need to figure out how to get setup to run for
+	each test though.
+
+	5) Where there are multiple tests in the same file, Jest seems to choose to run these in series
+	   rather than parallel. Splitting slower tests across multiple files seems to force parallel tetsing
+	   Information on how Jest decides whether to use series or parallel available at https://github.com/facebook/jest/issues/5818
  */
 
 const headless = false;

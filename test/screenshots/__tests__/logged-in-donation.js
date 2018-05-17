@@ -1,35 +1,62 @@
 const puppeteer = require('puppeteer');
-const {run} = require('../res/sogive-make-donation.js');
-const {takeScreenshot} = require('../res/UtilityFunctions');
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const os = require('os');
-const path = require('path');
+const {run} = require('../sogive-make-donation');
+const Search = require('../sogive-scripts/sogive.org_search');
+const Donation = require('../sogive-scripts/sogive.org_charity');
 
-//This setup isn't going to work for parallel tests.
-//They'll all be trying to access the same browser object.
-//Quick fix would be to force tests to run in series.
+//Only Jest-specific actions you need to take here are
+//to wrap your test in a test() function, and
+//grab the browser instance from window.
+//test("Title", async () => {}, timeout_in_ms)
+test("Example stub", async () => {
+    //Browser is set up in setup_script.js
+    const browser = await window.__BROWSER__;
+    window.__TESTNAME__ = "Example stub";
+    //Do the test
+    const page = await browser.newPage();
+    await run(page);
+}, 10000);
 
-//Must be a nicer alternative. Official Jest example had suggested using global, 
-//but that just doesn't work. Suggestion has been dismissed by Jest devs
-//If we could get setup.js working, would still need to find some way of
-//passing that browser object to test and teardown.js. Not so simple
+const firstTestName = "Makes a donation";  
+test(firstTestName, async () => {
+    /**Passing test name to window not strictly necessary.
+     * Used to name screenshot repositry in setup_script.
+     * Might need to be careful about setting of the test block
+     */
+    window.__TESTNAME__ = firstTestName;
+    
+    const browser = window.__BROWSER__;
+    const page = await browser.newPage();
+    
+    await Search.goto(page);  
+    await Search.search({
+        page, 
+        search_term: 'oxfam'
+    });
+    await Search.gotoResult({
+        page, 
+        selectorOrInteger: 1
+    });
+    await page.waitFor(3000);//Possible to eliminate this? Issue is with image loading in late
+    await Donation.donate({page, amount: 100});   
+    await Donation.testSubmit({page});   
+}, 10000);
 
-//Will work as long as each file contains only one test.
-//More that it should only require a single browser instance
-//Must be a better way of doing this. Just want each test to have
-//a browser bound to it. Got to be some way of achieving this
+//Describe block is used to scope test environment.
+//Could, for example, set a different beforeEach/afterEach
+//function only to be used by tests within the descibe block.
+//These unfortunately don't seem to override before/afterEach
+//defined in setup_script. Might be a way of doing that.
+describe('Description', async () => {
+    beforeEach(async () => {
 
-//Figured out that, despite what the Jest devs may claim, window works and global doesn't.
-//Setting browser object to window.__BROWSER__ allows it to be accessed
-//by test files and teardown. Still need to figure out how to get setup to run for
-//each test though.
+    });
+    afterEach(async () => {
+        console.log("Shouldn't be taking a screenshot anymore");
+    });
 
-const headless = false;
-
-describe('Descirption', async () => {  
-    it("Makes a donation", async () => {
+    test("Description example", async () => {
         const browser = await window.__BROWSER__;
+        window.__TESTNAME__ = "Description example";
         const page = await browser.newPage();
         await run(page);
     }, 10000);
