@@ -4,7 +4,7 @@ const Search = require('../sogive-scripts/sogive.org_search');
 const Donation = require('../sogive-scripts/sogive.org_charity');
 
 //Only Jest-specific actions you need to take here are
-//to wrap your test in a test() function, and
+//to wrap your test in a test() function and
 //grab the browser instance from window.
 //test("Title", async () => {}, timeout_in_ms)
 test("Example stub", async () => {
@@ -19,8 +19,8 @@ test("Example stub", async () => {
 const firstTestName = "Make a donation";  
 test(firstTestName, async () => {
     /**Passing test name to window not strictly necessary.
-     * Used to name screenshot repositry in setup_script.
-     * Might need to be careful about setting of the test block
+     * Variable used to name screenshot repositry in setup_script.
+     * Might need to be careful about setting outside of the test block
      */
     window.__TESTNAME__ = firstTestName;
     
@@ -30,13 +30,13 @@ test(firstTestName, async () => {
     await Search.goto(page);  
     await Search.search({
         page, 
-        search_term: 'oxfam'
+        search_term: 'oxfamgfgfgfgfgf'
     });
     await Search.gotoResult({
         page, 
         selectorOrInteger: 1
     });
-    await page.waitFor(3000);//Possible to eliminate this? Issue is with image loading in late
+    await page.waitFor(1000);//Possible to eliminate this? Issue is with image loading in late
     await Donation.donate({page, amount: 100});   
     await Donation.testSubmit({page});   
 }, 10000);

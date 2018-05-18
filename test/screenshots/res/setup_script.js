@@ -5,7 +5,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const headless = true;
+const headless = false;
 const SCREENSHOT_FOLDER_BASE = `test-screenshots`;
 
 /**Setup functions run before each test
@@ -15,30 +15,42 @@ const SCREENSHOT_FOLDER_BASE = `test-screenshots`;
 beforeEach(async () => {
     //Can't access global from tests
     window.__BROWSER__ = await puppeteer.launch({headless});
+    //Could set API.ENDPOINT here.
 });
 
 /**Cleanup after each test is completed
  * Note: some after-test functionality is 
  * written in custom-reporter.js
  * Reporters get more info on tests.
+ * 
+ * Bit annoying: useful test info can only be
+ * accessed through reporter. Browser can't be
+ * accessed from there for taking screenshots though.
+ * Might need to screenshot here and write to log over there.
+ * How barbaric.
  */
 afterEach(async () => {
     const browser = window.__BROWSER__;
     const pages = await browser.pages();
-
+    const date = new Date().toISOString();
+    //fs.appendFileSync('this_log.txt', this);
     //Start at 1 to skip over chrome home page
     for(let i=1; i<pages.length; i++) {
-        await takeScreenshot(pages[i]);
+        await takeScreenshot({page: pages[i], date});
+        await writeToLog({
+            string: '',
+            date
+        });
     }
     await window.__BROWSER__.close();
-});
+}, 10000);
 
 //Maybe save screenshots to directory named after test run?
 //Going to be quite difficult figuring out what's what in there
-async function takeScreenshot(page) {
-    const screenshot_folder_path = `${SCREENSHOT_FOLDER_BASE}/${new Date().toISOString().slice(0,10)} : ${window.__TESTNAME__ || 'UnknownTest'}`;
+async function takeScreenshot({page, date = new Date().toISOString()}) {
+    const screenshot_folder_path = `${SCREENSHOT_FOLDER_BASE}/${date.slice(0,10)} : ${window.__TESTNAME__ || 'UnknownTest'}`;
     try {
-        await page.screenshot({path: `${screenshot_folder_path}/${new Date().toISOString()}.png`});
+        await page.screenshot({path: `${screenshot_folder_path}/${date}.png`});
     }
     catch(e) {
         //dir not found
@@ -51,4 +63,8 @@ async function takeScreenshot(page) {
             console.log('setup_script.js -- screenshot failed ' + e.code + ': ' + e.message);
         }
     }
+}
+
+async function writeToLog({string, date}) {
+    fs.appendFileSync(`${SCREENSHOT_FOLDER_BASE}/${date.slice(0,10)} : ${window.__TESTNAME__ || 'UnknownTest'}/${date}.txt`, string);
 }

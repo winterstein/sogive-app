@@ -21,7 +21,7 @@ async function run(page) {
         page, 
         selectorOrInteger: 1
     });
-    await page.waitFor(3000);//Possible to eliminate this? Issue is with image loading in late
+    await page.waitFor(1000);//Possible to eliminate this? Issue is with image loading in late
     await Donation.donate({page, amount: 100});   
     await Donation.testSubmit({page});   
 }

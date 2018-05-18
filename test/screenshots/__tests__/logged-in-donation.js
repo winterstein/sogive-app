@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const {run} = require('../sogive-make-donation');
 const {login} = require('../res/UtilityFunctions');
 const {username, password} = require('../credentials');
 const Search = require('../sogive-scripts/sogive.org_search');
@@ -21,7 +20,7 @@ test(firstTestName, async () => {
         page, 
         selectorOrInteger: 1
     });
-    await page.waitFor(3000);//Possible to eliminate this? Issue is with image loading in late
+    await page.waitFor(1000);//Possible to eliminate this? Issue is with image loading in late
     await Donation.donate({
         page, 
         amount: 100, 

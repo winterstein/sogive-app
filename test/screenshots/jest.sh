@@ -10,3 +10,5 @@ done
 printf "\nLaunching Jest... \n"
 #Runs script as defined in package.json
 npm run jest
+
+#Process for running a single Jest test

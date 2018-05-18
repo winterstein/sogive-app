@@ -9,7 +9,7 @@ const NEXT_BUTTON = `div.WizardStage div.nav-buttons.clearfix button.pull-right`
 const AMOUNT_FIELD = `div.WizardStage > div.section.donation-amount > div.form-group > span > input`;
 const HIDE_AMOUNT = `div.WizardStage > div.section.donation-amount > div:nth-child(2) > div > label > input[type="checkbox"]`;
 //Details
-const NAME_FIELD = `body > div:nth-child(14) > div.fade.donate-modal.in.modal > div > div > div.modal-body > div > div.WizardStage > div.section.donation-amount > div:nth-child(2) > input`;
+const NAME_FIELD = `div.WizardStage > div.section.donation-amount > div:nth-child(2) > input`;
 const EMAIL_FIELD = `div.WizardStage > div.section.donation-amount > div:nth-child(3) > input`;
 const ADDRESS_FIELD = `div.WizardStage > div.section.donation-amount > div:nth-child(4) > input`;
 const POSTCODE_FIELD = `div.WizardStage > div.section.donation-amount > div:nth-child(5) > input`;
@@ -54,7 +54,6 @@ async function donate({
     await next({page});
 
     if(details) {
-        //{name: '', email: '', address: '', postcode: '', charityConsent: bool, anon: bool}
         const keys = Object.keys(details);
         //fill in form with corresponding details        
         for(let i = 0; i<keys.length; i++) {

@@ -1,7 +1,7 @@
 {
   "reporters": [
     "default",
-    "/home/mark/winterwell/sogive-app/test/screenshots/res/custom-reporter.js"
+    "/home/mark/winterwell/sogive-app/test/screenshots/babeled-res/custom-reporter.js"
   ],
   "setupTestFrameworkScriptFile": "./babeled-res/setup_script.js",
   "verbose": true
