@@ -13,7 +13,7 @@ import NGO from '../data/charity/NGO';
 import FundRaiser from '../data/charity/FundRaiser';
 import Project from '../data/charity/Project';
 
-import Misc from './Misc.jsx';
+import Misc from '../base/components/Misc.jsx';
 
 
 const shareOnFacebook = ({url, shareText, take2}) => {

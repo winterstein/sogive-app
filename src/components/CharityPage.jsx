@@ -14,7 +14,7 @@ import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import Login from 'you-again';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import DonationForm from './DonationForm';

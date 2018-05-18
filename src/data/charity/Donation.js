@@ -65,6 +65,11 @@ Donation.amount = don => This.assIsa(don) && don.amount;
  */
 Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
 
+/**
+ * @returns {String} the charity ID
+ */
+Donation.to = don => This.assIsa(don) && don.to;
+
 Donation.make = (base = {}) => {
 	// to must be a charity
 	if (base.to) {

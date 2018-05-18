@@ -17,7 +17,7 @@ import Transfer from '../base/data/Transfer';
 import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 
-import Misc from './Misc';
+import Misc from '../base/components/Misc'
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -185,8 +185,13 @@ const AmountSection = ({path, fromEditor}) => {
 	console.log("donation", JSON.stringify(dontn));
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
-	if ( ! val) {
-		val = credit || Money.make({value:10});
+	if ( ! val || ! Money.value(val)) {
+		// HACK: grab the amount from the impact widget of DonationForm?
+		let cid = Donation.to(dontn);
+		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']); 		
+		if ( ! val || Money.value(val)==10) {
+			val = credit || Money.make({value:10});
+		}
 		DataStore.setValue(pathAmount, val);
 	}
 	return (
@@ -324,19 +329,24 @@ const onToken_doPayment = ({donation}) => {
 };
 
 
-const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
-	const donation = DataStore.getValue(path);
-	// console.warn('Donation value in doPayment', donation);
-	// console.warn('Item value in doPayment', item);
+const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) => {
+	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
 	if ( ! donation) {
 		return null;
 	}
-	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
+	
 	const {amount} = donation;
 	if ( ! amount) {
 		return null;
 	}
 	Money.assIsa(amount);
+	// tip?
+	// default: £1
+	if (donation.hasTip === undefined) donation.hasTip = true;
+	if (donation.tip===undefined) donation.tip = Money.make({currency:'GBP', value:1});
+	let amountPlusTip = amount;
+	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
 
 	// Not the normal payment?
 	if (paidElsewhere) {
@@ -364,7 +374,13 @@ const PaymentSection = ({path, item, paidElsewhere, closeLightbox}) => {
 		onToken_doPayment({donation});
 	};
 
-	return <PaymentWidget onToken={onToken} amount={amount} recipient={item.name} />;
+	return (<div>
+		<div className='padded-block'>
+			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
+			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
+		</div>
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} />
+	</div>);
 };
 
 const ThankYouSection = ({path, item}) => {

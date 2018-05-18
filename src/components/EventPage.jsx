@@ -10,7 +10,7 @@ import { Button, Well } from 'react-bootstrap';
 import printer from '../base/utils/printer.js';
 import C from '../C';
 import Roles from '../base/Roles';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../base/data/DataClass';

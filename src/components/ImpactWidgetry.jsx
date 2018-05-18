@@ -10,7 +10,7 @@ import Money from '../base/data/Money';
 import NGO from '../data/charity/NGO';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
-import Misc from './Misc.jsx';
+import Misc from '../base/components/Misc.jsx';
 import Settings from '../base/Settings';
 
 /**

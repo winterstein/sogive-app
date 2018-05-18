@@ -20,7 +20,7 @@ import C from '../C';
 import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import GiftAidForm from './GiftAidForm';
 import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from '../base/components/ListLoad';
@@ -140,7 +140,7 @@ const FundRaiserPage = ({id}) => {
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>
 							{NGO.shortDescription(charity)} &nbsp;
-							<small><a href={charity.url || '#charity?charityId='+encURI(charity.id)} target={charity.url? '_blank': ''}>More info</a></small>
+							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.getId(charity))} target={charity.url? '_blank': ''}>More info</a></small>
 						</p>					
 					</Col>
 				</Row>

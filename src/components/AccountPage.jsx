@@ -8,7 +8,7 @@ import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ServerIO from '../plumbing/ServerIO';
 import Roles from '../base/Roles';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import GiftAidForm from './GiftAidForm';
 import {XId} from 'wwutils';
 import Transfer from '../base/data/Transfer';

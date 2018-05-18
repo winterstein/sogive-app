@@ -9,7 +9,7 @@ import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 // import ChartWidget from './../base/components/ChartWidget';
-import Misc from './Misc';
+import Misc from '../base/components/Misc';
 import {LoginLink} from '../base/components/LoginWidget';
 import Donation from '../data/charity/Donation';
 import DonationForm, {DonateButton} from './NewDonationForm';

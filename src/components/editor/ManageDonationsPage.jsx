@@ -35,7 +35,7 @@ const ManageDonationsPage = () => {
 			.then(res => {
 				let dons = res.cargo.hits;
 				dons.forEach(don => {
-					console.log("setData", don);
+					// console.log("setData", don);
 					DataStore.setValue(['data', C.TYPES.Donation, getId(don)], don, false);
 					// DataStore.setData(don); // handle missing type
 				});
@@ -77,6 +77,11 @@ const ManageDonationsPage = () => {
 			accessor: 'amount',
 			Cell: v => <Misc.Money amount={v} />, // Custom cell components!
 			sortAccessor: a => Money.value(a.amount)
+		},
+		{
+			Header: "Tip",
+			accessor: row => row.hasTip && row.tip, // check it was included
+			Cell: v => <Misc.Money amount={v} />
 		},
 		{
 			Header: "Contributions",
@@ -124,7 +129,7 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 
-			<SimpleTable data={dons} columns={columns} csv />
+			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow />
 
 		</div>
 	);
