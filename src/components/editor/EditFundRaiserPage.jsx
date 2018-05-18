@@ -13,7 +13,8 @@ import Roles from '../../base/Roles';
 import Misc from '../../base/components/Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
 import NewDonationForm, {DonateButton} from '../NewDonationForm';
-import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
+import ShareWidget, {ShareLink, canWrite} from '../../base/components/ShareWidget';
+import {notifyUser} from '../../base/plumbing/Messaging';
 
 const EditFundRaiserPage = () => {
 
@@ -40,6 +41,11 @@ const FundRaiserEditor = ({id}) => {
 	let item = pEvent.value;
 	FundRaiser.assIsa(item);	
 
+	let pvcw = canWrite(id);
+	if (pvcw.resolved && ! pvcw.value) {
+		notifyUser("Sorry - You cannot edit this.");
+	}
+
 	let event = null;
 	if (item.eventId) {
 		let pvEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
@@ -64,8 +70,7 @@ const FundRaiserEditor = ({id}) => {
 				Event: {FundRaiser.eventId(item)} <br/>
 				<ShareLink thingId={id} />
 				<ShareWidget thingId={id} name={item.name} />
-			</small></p>
-
+			</small></p>			
 			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
 			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
