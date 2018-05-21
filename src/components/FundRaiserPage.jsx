@@ -26,6 +26,7 @@ import NewDonationForm, {DonateButton} from './NewDonationForm';
 import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
 import SocialShare from './SocialShare';
+import {canWrite} from '../base/components/ShareWidget';
 
 const FundRaiserTop = () => {
 	// which event?	
@@ -85,12 +86,21 @@ const FundRaiserPage = ({id}) => {
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = isOwner(item);
+	const cw = canWrite(item.id).value;
 	if (ownerViewing) {
 		_.defer(notifyUser, {
 			type:'info',
 			id: 'welcome-you',
 			text:'Welcome to your fundraiser page',
 			jsx: <a href={'#editFundraiser/'+item.id}>Edit Fundraiser</a>,
+			onePageOnly: true
+		});
+	} else if (cw) {
+		_.defer(notifyUser, {
+			type:'info',
+			id: 'welcome-editor',
+			text: 'You can edit this fundraiser page',
+			jsx: <a href={'#editFundraiser/'+escape(item.id)}>Edit Fundraiser</a>,
 			onePageOnly: true
 		});
 	}
