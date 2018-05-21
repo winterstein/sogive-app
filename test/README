@@ -41,6 +41,8 @@ TODO
 
  7) jest.config.json reads file paths relative to the --rootDir provided with npm command (defaults to directory containing config file).
 
+ 8) Important that you make use of UtilityFunctions.APIBASE for any goto() method calls you use. This is necessary to allow the bash script
+    to switch between local, test and production.
 
 Notes:
     Should we require that test names are not repeated? Might derease risk of screenshot/log overwriting ouput of other tests.
@@ -62,4 +64,12 @@ Notes:
     21/05/18
     TODO: 
         Add ability to easily switch between test/production/local when running tests
+
+        Need someway of inserting a base URL into the test environment. Would be nice if this could be accomplished via the console.
+        Simplest way of achieving this might be to have variable in setup_scripts that is trickled down to actual puppeteer files.
+        Only methods that require a URL are page.goto() and our own goto() methods. Could be a fair amount of flexibility here
+        Those lower level files aren't going to have direct access to the Jest run environment. Variable would have to be passed through as an arg.
+
+        Seems we can just set testURL to be whatever we want the APIBASE to be. Variable is accessible everywhere via window.location
+
         Hook up screenshot/log outputs

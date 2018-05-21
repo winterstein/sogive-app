@@ -8,11 +8,6 @@ async function run(page) {
     //everytime that goto() is used.
     //Could give each page a goto() method to be used instead.
     //easy to insert script from there
-    // await login({
-    //     page, 
-    //     username: 'mark@winterwell.com', 
-    //     //password: 'soGive1368'
-    // });    
     await Search.search({
         page, 
         search_term: 'oxfam'

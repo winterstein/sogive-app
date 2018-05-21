@@ -1,5 +1,9 @@
 const puppeteer = require('puppeteer');
-const {disableAnimations} = require('../test-base/res/UtilityFunctions');
+const fs = require('fs');
+const {
+    APIBASE,
+    disableAnimations
+} = require('../test-base/res/UtilityFunctions');
 
 //CSS selectors for important elements on page
 //Concerned that these are too susceptible to changes in DOM structure
@@ -33,7 +37,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
  * Would be nice to find a better way of sharing the page object around. Bit of a pain in the arse
 */
 async function goto(page) {
-    await page.goto('http://test.sogive.org/#search?q=');  
+    await page.goto(APIBASE + '/#search?q=');  
     await page.addScriptTag(disableAnimations);
 }
 

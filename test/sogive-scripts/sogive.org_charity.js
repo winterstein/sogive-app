@@ -1,5 +1,8 @@
 const puppeteer = require('puppeteer');
-const {disableAnimations} = require('../test-base/res/UtilityFunctions');
+const {
+    APIBASE,
+    disableAnimations
+} = require('../test-base/res/UtilityFunctions');
 
 const DONATE_BUTTON = `div.donate-button button`;
 //For fields/buttons in wizard
@@ -105,7 +108,7 @@ async function testSubmit({page}) {
 }
 
 async function goto({page, charityId}) {
-    await page.goto(`https://test.sogive.org/#charity?charityId=${charityId}`);
+    await page.goto(`${APIBASE}/#charity?charityId=${charityId}`);
     await page.addScirptTag(disableAnimations);
 }
 
