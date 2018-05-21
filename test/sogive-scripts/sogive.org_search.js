@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {disableAnimations} = require('../res/UtilityFunctions');
+const {disableAnimations} = require('../test-base/res/UtilityFunctions');
 
 //CSS selectors for important elements on page
 //Concerned that these are too susceptible to changes in DOM structure

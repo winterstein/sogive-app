@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
-const {login} = require('../res/UtilityFunctions');
-const {username, password} = require('../credentials');
+const {login} = require('../test-base/res/UtilityFunctions');
+const {username, password} = require('../test-base/credentials');
 const Search = require('../sogive-scripts/sogive.org_search');
 const Donation = require('../sogive-scripts/sogive.org_charity');
 

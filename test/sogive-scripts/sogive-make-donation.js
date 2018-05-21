@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
-const Search = require('./sogive-scripts/sogive.org_search');
-const Donation = require('./sogive-scripts/sogive.org_charity');
+const Search = require('../sogive-scripts/sogive.org_search');
+const Donation = require('../sogive-scripts/sogive.org_charity');
 
 async function run(page) {
     await Search.goto(page);

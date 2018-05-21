@@ -1,0 +1,8 @@
+Explanation of folder structure:
+
+System is currently configured to either take a screenshot (when a test passes),
+or to write a log entry with details of the last error encountered (when a test fails).
+
+There was a bit of bother around getting timestamps/name of logs and screenshots to match
+as these have to be done in different files (setup_script and custom-reporter). Dan decided
+that you'd only want one or the other depening on how the test went anyway. 

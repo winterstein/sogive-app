@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {disableAnimations} = require('../res/UtilityFunctions');
+const {disableAnimations} = require('../test-base/res/UtilityFunctions');
 
 const DONATE_BUTTON = `div.donate-button button`;
 //For fields/buttons in wizard

@@ -1,0 +1,65 @@
+TODO
+    Read headless from console
+    Possibly reattempt test? Best of three maybe? Balance between accuracy/speed to be struck
+    How to marry .txt log and screenshots?
+    Investigate if DOM loading before elements are actually clickable is a concern
+ 
+    Script to run/compile
+    Alert if something's gone wrong
+    Simple "everything fine" if nothing wrong. Sends out "flag" with details if something's wrong (email to office).
+    true/false output for overall results
+    Move common non-site specific bits in symlink
+    Destructuring assignment in function args
+    Import instead of require
+    Screenshot on success as well as failure
+
+ For README
+ 1) There is an issue with animations disrupting tests. Have created script to avoid this,
+    but it has to be inserted onto the page each time that page.goto('url') is called.
+    Have created a goto() method in each pages corresponding js file.
+    This method handles this and any other future weirdness that may appear
+    Hopefully puppeteer will have turning off animations as a standard feature later.
+ 
+ 2) Config files need to be babeled. Had hoped to simply write these in Node 6, 
+    but puppeteer only works with Node 7 and above. Pay attention to babelrc config too. 
+    Bit of a pain in the arse, but process fairly painless. Should add babeling to final bash script.
+ 
+ 3) Currently have "jest-style" test acting as a wrapper for original test file. Will probably
+    discourage this practice. Should be very straightforward just to write the test within
+    the Jest wrapper.
+ 
+ 4) Figured out that, despite what the Jest devs may claim, window works and global doesn't.
+	Setting browser object to window.__BROWSER__ allows it to be accessed
+	by test files and teardown. Still need to figure out how to get setup to run for
+	each test though.
+
+ 5) Where there are multiple tests in the same file, Jest seems to choose to run these in series
+    rather than parallel. Splitting slower tests across multiple files seems to force parallel tetsing
+    Information on how Jest decides whether to use series or parallel available at https://github.com/facebook/jest/issues/5818 
+
+ 6) jest.config.json and package.json need to be symlinked from test-base to test folder before things will work.
+
+ 7) jest.config.json reads file paths relative to the --rootDir provided with npm command (defaults to directory containing config file).
+
+
+Notes:
+    Should we require that test names are not repeated? Might derease risk of screenshot/log overwriting ouput of other tests.
+    Could take screenshots in afterEach and cache in temp directory. Reporter could retrieve these. Seems like this would just add overhead.
+    Migtht be slightly neater to rename/repackage screenshots rather than mess about with a temp directory.
+
+    Reporter waits until all tests in a suite have been completed before running => can assume that anything in afterEach has been called
+    before we reach the reporter. Would there be any advantage in having afterEach generate the logfile (with the appropriate time-stamp),
+    and then setting the reporter to detect and override?
+
+    Would be nicer if reporter could handle creating/naming of eventual outputs. Is the only part that has automatic access to names of test files.
+    Can we do away with strict timestamp requirements? Would still need some way of uniquely indentifying tests. Timestamp is a nice way of doing that.
+
+    Told to only screenshot on success, only write log on fail. Simplifies things a good deal.
+
+    Jest/Puppeteer will sometimes fail for silly reasons (page didn't load on time/element appeared after starting). If we're going to send out an email with error to office,
+    might be worthwhile to have a later version retest the page a certain number of times. Only sends email if failure witnessed a certain percentage of the time.
+
+    21/05/18
+    TODO: 
+        Add ability to easily switch between test/production/local when running tests
+        Hook up screenshot/log outputs
