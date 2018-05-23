@@ -73,3 +73,8 @@ Notes:
         Seems we can just set testURL to be whatever we want the APIBASE to be. Variable is accessible everywhere via window.location
 
         Hook up screenshot/log outputs
+
+    23/05/18
+        Feel that tests need to be more reliable. Issue is with puppeteer, sometimes fails for no good reason.
+        Known issues: slow-loading elements (large images), slow connection speed. 
+        Wonder if using less strict selectors will help with slow-loading elements. Possible that they alter the DOM structure such that elements can no longer be found

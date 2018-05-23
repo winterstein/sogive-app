@@ -37,7 +37,13 @@ test(firstTestName, async () => {
         selectorOrInteger: 1
     });
     await page.waitFor(1000);//Possible to eliminate this? Issue is with image loading in late
-    await Donation.donate({page, amount: 100});   
+    await Donation.donate({
+        page, 
+        Amount: {
+            amount: 100,
+            "hide-amount-checkbox": true
+        }
+    });   
     await Donation.testSubmit({page});   
 }, 10000);
 

@@ -9,7 +9,7 @@ case $1 in
 		ENDPOINT=https://app.sogive.org 
 		;;
 	*) 
-		ENDPOINT=https://test.sogive.org 
+		ENDPOINT=http://local.sogive.org 
 		;;
 esac
 
