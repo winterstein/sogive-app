@@ -10,12 +10,15 @@ const {General} = require('./Selectors');
  * All of these can be left blank for a £10 anonymous donation
  * @param Amount {amount: 0, hide-amount-checkbox: true}
  * @param Details {name: '', email: '', address: '', postcode: '', consent-checkbox: true, anon-checkbox: true}
+ * @param Message turns out that charity and fundraiser donation forms are different. This is a hack to allow donate() to be used in both places.
+ *  Will consider splitting this up if too many changes are needed.
  */
 async function donate({
     page, 
     Amount, 
     GiftAid,
     Details,
+    Message,
     Payment
 }) {
 	await page.click(General.DonationForm.DonationButton);
@@ -36,12 +39,12 @@ async function donate({
     await next({page});
 
     if(GiftAid) {
-
+        
     }
     await next({page});
 
-    if(Details) {
-        fillInForm({
+    if(Details) { 
+        await fillInForm({
             page,
             data: Details,
             Selectors: General.DonationForm
@@ -49,10 +52,25 @@ async function donate({
     }
     await next({page});
     
-    if(Payment) {
-        //fill in payment form and submit
+    if(Message) {
+        await fillInForm({
+            page,
+            data: Message,
+            Selectors: General.DonationForm
+        });
+        await next({page});
     }
-    //page.click("deliberately-break");
+
+    //Need to make Selectors for this
+    if(Payment) {    
+        await fillInForm({
+            page,
+            data: Payment,
+            Selectors: General.DonationForm
+        });
+        await submit({page});
+    }
+    await testSubmit({page});
 }
 
 /**Advances through the donation form wizard */
@@ -60,6 +78,7 @@ async function next({page}) {
     await page.click(General.DonationForm.Next);
 }
 
+//Should maybe change submit and testSubmit to wait until the Thank You! page has appeared before returning control
 async function submit({page}) {
     await page.click(General.DonationForm.Submit);
 }
@@ -70,7 +89,5 @@ async function testSubmit({page}) {
 }
 
 module.exports = {
-    donate,
-    submit,
-    testSubmit
+    donate
 };

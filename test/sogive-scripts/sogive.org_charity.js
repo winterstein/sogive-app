@@ -5,18 +5,15 @@ const {
 } = require('../test-base/res/UtilityFunctions');
 const {
     donate,
-    submit,
-    testSubmit
 } = require('./donation-form');
 
 async function goto({page, charityId}) {
-    await page.goto(`${APIBASE}/#charity?charityId=${charityId}`);
-    await page.addScirptTag(disableAnimations);
+    page.goto(`${APIBASE}/#charity?charityId=${charityId}`);
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true}); 
 }
 
 module.exports = {
     donate,
-    goto,
-	submit,
-	testSubmit
+    goto
 };

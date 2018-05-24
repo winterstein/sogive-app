@@ -78,3 +78,9 @@ Notes:
         Feel that tests need to be more reliable. Issue is with puppeteer, sometimes fails for no good reason.
         Known issues: slow-loading elements (large images), slow connection speed. 
         Wonder if using less strict selectors will help with slow-loading elements. Possible that they alter the DOM structure such that elements can no longer be found
+
+    24/05/18
+        See that there is an issue in that "DOM Loaded" event is fired as soon as the page appears with loading circle. Cheap workaround might be to make page wait until
+        loader class is no longer present.
+        Confirm that, with a minor addendum, the above does work nicely. Issue with the fact that page doesn't have loading div upon initial load => looking only for
+        the absense of the loader doesn't work. Solution is to make the page wait until the loader has appeared then dissapeared.

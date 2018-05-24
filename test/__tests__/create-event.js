@@ -10,7 +10,6 @@ test('Create an event', async() => {
 
     await Event.goto({page});
     await login({page, username, password});  
-    await page.waitFor(500);  
     await Event.createNewEvent({
         page,
         event: {
@@ -32,6 +31,5 @@ test('Create an event', async() => {
         }
     });
     await Event.goto({page});
-    await page.waitFor(3000);
     await Event.deleteEvent({page, eventName: 'You will be assimilated'});
 }, 30000);

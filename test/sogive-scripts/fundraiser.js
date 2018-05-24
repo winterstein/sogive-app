@@ -3,16 +3,13 @@ const {
     disableAnimations,
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
-const {
-    donate,
-    submit,
-    testSubmit
-} = require('./donation-form');
+const {donate} = require('./donation-form');
 const {Fundraiser} = require('./Selectors');
 
 async function goto({page, fundId}) {
-    await page.goto(`${APIBASE}#fundraiser/${fundId || ''}`);  
-    await page.addScriptTag(disableAnimations);
+    page.goto(`${APIBASE}#fundraiser/${fundId || ''}`);  
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true}); 
 }
 
 async function gotoResult({page, selectorOrInteger = 1}) {
@@ -27,8 +24,6 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 
 module.exports = {
     donate,
-    submit,
-    testSubmit,
     goto,
     gotoResult
 };

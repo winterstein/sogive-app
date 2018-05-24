@@ -13,6 +13,9 @@ async function search({page, search_term}) {
     await page.click(Search.Main.SearchField);
     await page.keyboard.type(search_term);
     await page.click(Search.Main.SearchButton);
+
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true}); 
 }
 /**Can specify result to click by either charityId or position in results list. 
  * NOTE: will throw an error if specified result is not found
@@ -23,8 +26,10 @@ async function gotoResult({page, selectorOrInteger = 1}) {
     if(Number.isInteger(selectorOrInteger)) result_selector += ` div:nth-child(${selectorOrInteger})`;
     if(typeof selectorOrInteger === 'string') result_selector += ` ${selectorOrInteger}`;
     result_selector += ` a`;
-
     await page.click(result_selector);
+    
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true}); 
 }
 
 /**Loads page to which the current js file pertains  
@@ -32,7 +37,6 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 */
 async function goto(page) {
     await page.goto(APIBASE + '/#search?q=');  
-    await page.addScriptTag(disableAnimations);
 }
 
 module.exports = {

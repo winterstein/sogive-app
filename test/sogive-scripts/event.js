@@ -10,8 +10,9 @@ const {
 } = require("./Selectors");
 
 async function goto({page, eventId = ''}) {
-    await page.goto(`${APIBASE}#event/${eventId}`);  
-    await page.addScriptTag(disableAnimations);
+    page.goto(`${APIBASE}#event/${eventId}`);   
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true}); 
 }
 
 async function gotoResult({page, selectorOrInteger = 1}) {
@@ -22,6 +23,12 @@ async function gotoResult({page, selectorOrInteger = 1}) {
     event_selector += ` a`;
 
     await page.click(event_selector);
+}
+
+async function gotoEditEvent({page, eventId}) {
+    page.goto(`${APIBASE}#editEvent/${eventId}`);   
+    await page.waitForSelector('.loader-box');    
+    await page.waitForSelector('.loader-box', {hidden: true});   
 }
 
 async function registerForEvent({
@@ -83,9 +90,7 @@ async function createNewEvent({
 /**Deletes the given event. Returns true/false on success/failure */
 async function deleteEvent({page, eventId, eventName}) {
     if(eventId) {
-        await page.goto(`${APIBASE}#editEvent/${eventId}`);  
-        await page.addScriptTag(disableAnimations);
-        await page.waitFor(1000);
+        await gotoEditEvent({page, eventId});
         await page.click(General.CRUD.Delete);
         return true;
     }
@@ -119,6 +124,7 @@ module.exports = {
     createNewEvent,
     deleteEvent,
     goto,
+    gotoEditEvent,
     gotoResult,
     registerForEvent
 };

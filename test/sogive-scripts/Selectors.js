@@ -45,7 +45,7 @@ Event.Register = {
 const Fundraiser = {};
 Fundraiser.Main = {
     FundraiserList: `#fundraiser > div > div:nth-child(2)`,
-    DonationButton: `#FundRaiserPage > div.vitals.row > div:nth-child(2) > div > button`
+    DonationButton: `#FundRaiserPage > div.vitals.row > div:nth-child(2) > div > div.progress-details > button`
 };
 
 const General = {};
@@ -56,7 +56,7 @@ General.CRUD = {
     Delete: `div.SavePublishDiscard > button.btn.btn-danger`
 };
 General.DonationForm = {
-    DonationButton: `div.donate-button button`,
+    DonationButton: `button.btn.btn-lg.btn-primary`,//Unforunately isn't anything more concrete to identify donation button specifically
     Next: `div.WizardStage div.nav-buttons.clearfix button.pull-right`,
     Submit: `div.WizardStage > div.section.donation-amount > form > button`,
     TestSubmit: `div.WizardStage > div.section.donation-amount > small > button`,
@@ -68,7 +68,9 @@ General.DonationForm = {
     postcode: `div.WizardStage > div.section.donation-amount > div:nth-child(5) > input`,
     "consent-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(6) > div > label > input[type="checkbox"]`,
     "anon-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(7) > div > label > input[type="checkbox"]`,
+    message: `div.WizardStage > div.section.donation-amount > div > textarea`,
 };
+General.Loading = `div.loader-box`;
 
 const Search = {};
 Search.Main = {
