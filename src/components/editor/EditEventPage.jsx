@@ -119,8 +119,8 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<div>
-			<ShareLink thingId={item.id} />
-			<ShareWidget thingId={item.id} name={item.name} />
+			<ShareLink item={item} />
+			<ShareWidget item={item} />
 		</div>
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
