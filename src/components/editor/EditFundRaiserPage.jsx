@@ -68,8 +68,8 @@ const FundRaiserEditor = ({id}) => {
 				ID: {id} <br/>
 				Owner: {FundRaiser.oxid(item)} <br/>
 				Event: {FundRaiser.eventId(item)} <br/>
-				<ShareLink thingId={id} />
-				<ShareWidget thingId={id} name={item.name} />
+				<ShareLink item={item} />
+				<ShareWidget item={item} />
 			</small></p>			
 			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
 			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />

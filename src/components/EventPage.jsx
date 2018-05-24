@@ -45,10 +45,6 @@ const Event = ({id}) => {
 	}
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
-	// <div>Experimental - 
-	// 			<ShareLink thingId={id} />
-	// 			<ShareWidget thingId={id} name={item.name} />
-	// 		</div>
 	return (
 		<div className="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
