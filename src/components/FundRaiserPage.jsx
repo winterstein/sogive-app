@@ -86,7 +86,7 @@ const FundRaiserPage = ({id}) => {
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = isOwner(item);
-	const cw = canWrite(item.id).value;
+	const cw = canWrite(type, item.id).value;
 	if (ownerViewing) {
 		_.defer(notifyUser, {
 			type:'info',
