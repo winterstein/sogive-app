@@ -150,7 +150,7 @@ const FundRaiserPage = ({id}) => {
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>
 							{NGO.shortDescription(charity)} &nbsp;
-							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.getId(charity))} target={charity.url? '_blank': ''}>More info</a></small>
+							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.id(charity))} target={charity.url? '_blank': ''}>More info</a></small>
 						</p>					
 					</Col>
 				</Row>

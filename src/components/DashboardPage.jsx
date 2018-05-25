@@ -76,7 +76,8 @@ const DonationListItem = ({donation}) => {
 	return (
 		<div className='well'>
 			<Misc.Time time={donation.date} />
-			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
+			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> 
+			to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
 			{donation.fundRaiser && donation.via? <span> as part of <a href={'#fundraiser/'+encURI(donation.fundRaiser)}>{XId.prettyName(donation.via)}'s fund-raiser</a></span> : null}
 			.
 			{impact}
