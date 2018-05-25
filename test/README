@@ -44,6 +44,9 @@ TODO
  8) Important that you make use of UtilityFunctions.APIBASE for any goto() method calls you use. This is necessary to allow the bash script
     to switch between local, test and production.
 
+ 9) Can filter tests by running script with optional parameter "--testNamePattern=<regex>" (https://facebook.github.io/jest/docs/en/cli.html#testnamepattern-regex).
+    Note that this filters by the name given to each test function and not by filename.
+
 Notes:
     Should we require that test names are not repeated? Might derease risk of screenshot/log overwriting ouput of other tests.
     Could take screenshots in afterEach and cache in temp directory. Reporter could retrieve these. Seems like this would just add overhead.
@@ -84,3 +87,5 @@ Notes:
         loader class is no longer present.
         Confirm that, with a minor addendum, the above does work nicely. Issue with the fact that page doesn't have loading div upon initial load => looking only for
         the absense of the loader doesn't work. Solution is to make the page wait until the loader has appeared then dissapeared.
+
+        *Could we switch scraping for event IDs to just pulling from JSON endpoint? If that data is reachable, would be a much nicer solution

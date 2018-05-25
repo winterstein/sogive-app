@@ -1,6 +1,8 @@
 /**
  * Collection of CSS selectors for various elements across Sogive
  * Organised into object by page/widget
+ * Could maybe add a '-defualt' to denote a field that contains a default value
+ * Safer way would be to have fillInForm check for an entry in the field
  */
 const Event = {};
 Event.Main = {
@@ -47,11 +49,24 @@ Fundraiser.Main = {
     FundraiserList: `#fundraiser > div > div:nth-child(2)`,
     DonationButton: `#FundRaiserPage > div.vitals.row > div:nth-child(2) > div > div.progress-details > button`
 };
+Fundraiser.EditFundraiser = {
+    name: `#editFundraiser > div > div.padded-block > div:nth-child(4) > input`,
+    photo: `#editFundraiser > div > div.padded-block > div:nth-child(5) > div > input`,
+    description: `#editFundraiser > div > div.padded-block > div:nth-child(6) > input`,
+    charity: `#editFundraiser > div > div.padded-block > div:nth-child(7) > input`,
+    target: `#editFundraiser > div > div.padded-block > div:nth-child(8) > span > input`,
+    "set-donated": `#editFundraiser > div > div.padded-block > div:nth-child(9) > span > input`,
+    "set-donor-count": `#editFundraiser > div > div.padded-block > div:nth-child(10) > input`,
+    "your-name": `#editFundraiser > div > div.padded-block > div:nth-child(11) > input`,
+    "your-photo": `#editFundraiser > div > div.padded-block > div:nth-child(12) > div > input`,
+    about: `#editFundraiser > div > div.padded-block > div:nth-child(13) > textarea`,
+    story: `#editFundraiser > div > div.padded-block > div:nth-child(14) > textarea`
+};
 
 const General = {};
 General.CRUD = {
     Save: `div.SavePublishDiscard > button.btn.btn-default`,
-    Publish: `#editEvent > div > div.SavePublishDiscard > button.btn.btn-primary`,
+    Publish: `div.SavePublishDiscard > button.btn.btn-primary`,
     Discard: `div.SavePublishDiscard > button.btn.btn-warning`,
     Delete: `div.SavePublishDiscard > button.btn.btn-danger`
 };
@@ -69,8 +84,28 @@ General.DonationForm = {
     "consent-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(6) > div > label > input[type="checkbox"]`,
     "anon-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(7) > div > label > input[type="checkbox"]`,
     message: `div.WizardStage > div.section.donation-amount > div > textarea`,
+    "card-number": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(2) > div > div`,
+    "expiry-date": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(3) > div:nth-child(1) > div`,
+    cvc: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(3) > div:nth-child(2) > div`
 };
 General.Loading = `div.loader-box`;
+
+const Register = {
+    Add: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > ul > li > div.controls > button`,
+    EmptyBasket: `#register > div > div.Wizard > div.WizardStage > button`,
+    Next: `#register > div > div.Wizard > div.WizardStage > div.nav-buttons.clearfix > button.pull-right`,
+    SetupFundraiser: `#register > div > div.Wizard > div.WizardStage > div.ConfirmedTicketList > div > div > div > div:nth-child(2) > div > a`,
+    Submit: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > button`,
+    TestSubmit: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > small > button`,
+    name: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(1) > input`,
+    email: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(2) > input`,
+    address: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div:nth-child(1) > textarea`,
+    "phone-number": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div:nth-child(2) > input`,
+    "join-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(1) > div > input`,
+    "create-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(2) > div > input`,
+    charity: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > input`,
+    'select-first-charity-checkbox': `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.SearchResults > div.results-list > div:nth-child(2) > div > button`,
+};
 
 const Search = {};
 Search.Main = {
@@ -83,5 +118,6 @@ module.exports = {
     Event,
     Fundraiser,
     General,
+    Register,
     Search
 };

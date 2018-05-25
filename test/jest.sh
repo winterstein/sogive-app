@@ -1,18 +1,20 @@
-case $1 in
-	test) 
-		ENDPOINT=https://test.sogive.org 
-		;;
-	local) 
-		ENDPOINT=http://local.sogive.org 
-		;;
-	production) 
-		ENDPOINT=https://app.sogive.org 
-		;;
-	*) 
-		ENDPOINT=http://local.sogive.org 
-		;;
-esac
-
+JestOptionsBlob=""
+ENDPOINT=http://local.sogive.org 
+for var in $@
+do
+	if [ $var = "test" ]
+	then
+		ENDPOINT=https://test.sogive.org 		
+	elif [ $var = "local" ]
+	then
+		ENDPOINT=http://local.sogive.org 		
+	elif [ $var = "production" ]
+	then
+		ENDPOINT=https://app.sogive.org 		
+	else
+		JestOptionsBlob="$JestOptionsBlob $var"
+	fi
+done
 
 RES=$(cd ~/winterwell/wwappbase.js/test-base/res/ && find -iname "*.js")
 #Jest will babel any test files itself,
@@ -25,4 +27,4 @@ done
 
 printf "\nLaunching Jest... \n"
 cd /home/$USER/winterwell/sogive-app/test/ 
-npm run jest -- --config ./jest.config.json --testURL $ENDPOINT
+npm run jest -- --config ./jest.config.json --testURL $ENDPOINT $JestOptionsBlob

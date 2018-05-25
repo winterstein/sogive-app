@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const {
     fillInForm,
+    eventIdFromName,
     disableAnimations,
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
@@ -27,8 +28,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 
 async function gotoEditEvent({page, eventId}) {
     page.goto(`${APIBASE}#editEvent/${eventId}`);   
-    await page.waitForSelector('.loader-box');    
-    await page.waitForSelector('.loader-box', {hidden: true});   
+    await page.waitForSelector(General.CRUD.Delete);     
 }
 
 async function registerForEvent({
@@ -83,8 +83,9 @@ async function createNewEvent({
             Selectors: Event.TicketTypes
         });   
     }
+    //Wait for publish to go through before returning control. Quite a crude method, using waitForNavigation wasn't working
     await page.click(General.CRUD.Publish);
-    //await page.waitForNavigation({waitUntil: "networkidle0"});
+    await page.waitForSelector(`${General.CRUD.Publish}[disabled]`, {hidden: true});
 }
 
 /**Deletes the given event. Returns true/false on success/failure */
@@ -101,23 +102,6 @@ async function deleteEvent({page, eventId, eventName}) {
     else{
         return false;
     }
-}
-
-//Event name unfortunately can't be selected via CSS tags: it's not within a tag
-//Can, however, scrape all data within anchor tag. Once found, can make a valid selector
-//based on the position of the button within the event list (div:nth-child(i)).
-async function eventIdFromName({page, eventName}) {
-    return page.evaluate((event) => {
-        const iDRegex = /id:\s(.*)/;
-        const numberOfEvents = document.querySelectorAll(`#event > div > div:nth-child(2) > div.ListItemWrapper`).length;
-        for(let i = 1; i <= numberOfEvents; i++) {
-            const innerText = document.querySelector(`#event > div > div:nth-child(2) > div:nth-child(${i})`).innerText;
-            if(innerText.includes(event)) {
-                return iDRegex.exec(innerText)[1];
-            }
-        }
-        return '';
-    }, eventName);
 }
 
 module.exports = {
