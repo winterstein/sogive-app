@@ -227,8 +227,8 @@ const DonationProgress = ({item, charity}) => {
 			</div>
 			<div className='progress-details'>
 				<DonationsSoFar item={item} />				
-				<ImpactDesc charity={charity} amount={donated} showMoney={false} 
-					beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
+				{charity && charity.hideImpact? null 
+					: <ImpactDesc charity={charity} amount={donated} showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />}
 				<DonateButton item={item} />				
 			</div>
 		</div>
