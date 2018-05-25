@@ -120,16 +120,16 @@ done
 
 printf "\nPublishing process completed\n"
 
-printf "\nGetting Ready to take Screenshots\n"
-if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
-fi
+# printf "\nGetting Ready to take Screenshots\n"
+# if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
+# fi
 
-if [[ $PUBLISH_TYPE = 'test' ]]; then
-	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
-else
-	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
-fi
+# if [[ $PUBLISH_TYPE = 'test' ]]; then
+# 	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
+# else
+# 	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
+# fi
