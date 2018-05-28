@@ -91,7 +91,7 @@ for server in ${TARGET[*]}; do
 	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/logins/sogive-app/email.properties winterwell@$server:/home/winterwell/sogive-app/config/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/data/* winterwell@$server:/home/winterwell/sogive-app/data/
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/server/* winterwell@$server:/home/winterwell/sogive-app/server/
-	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
+	rsync -rhLPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/src/* winterwell@$server:/home/winterwell/sogive-app/src/
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/test/* winterwell@$server:/home/winterwell/sogive-app/test/
 #	somewhat painful rsync of web, which does not delete files from the uploads directory
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/web/build/* winterwell@$server:/home/winterwell/sogive-app/web/build/
@@ -120,16 +120,16 @@ done
 
 printf "\nPublishing process completed\n"
 
-printf "\nGetting Ready to take Screenshots\n"
-if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
-fi
+# printf "\nGetting Ready to take Screenshots\n"
+# if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
+# fi
 
-if [[ $PUBLISH_TYPE = 'test' ]]; then
-	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
-else
-	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
-	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
-fi
+# if [[ $PUBLISH_TYPE = 'test' ]]; then
+# 	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
+# else
+# 	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
+# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
+# fi

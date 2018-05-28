@@ -137,6 +137,10 @@ const EditorialEditor = ({charity}) => {
 			help="A sentence or two on why SoGive recommends (or not) this charity." 
 		/>
 
+		<EditField item={charity} type='checkbox' field='hideImpact'
+			label='Hide impact'
+			help="If the charity objects to showing impact info, this can be used to hide it on fund-raisers." />
+
 	</div>);
 };
 

@@ -41,7 +41,7 @@ const FundRaiserEditor = ({id}) => {
 	let item = pEvent.value;
 	FundRaiser.assIsa(item);	
 
-	let pvcw = canWrite(id);
+	let pvcw = canWrite(type, id);
 	if (pvcw.resolved && ! pvcw.value) {
 		notifyUser("Sorry - You cannot edit this.");
 	}

@@ -86,7 +86,7 @@ const FundRaiserPage = ({id}) => {
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = isOwner(item);
-	const cw = canWrite(item.id).value;
+	const cw = canWrite(type, item.id).value;
 	if (ownerViewing) {
 		_.defer(notifyUser, {
 			type:'info',
@@ -150,7 +150,7 @@ const FundRaiserPage = ({id}) => {
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>
 							{NGO.shortDescription(charity)} &nbsp;
-							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.getId(charity))} target={charity.url? '_blank': ''}>More info</a></small>
+							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.id(charity))} target={charity.url? '_blank': ''}>More info</a></small>
 						</p>					
 					</Col>
 				</Row>
@@ -227,8 +227,8 @@ const DonationProgress = ({item, charity}) => {
 			</div>
 			<div className='progress-details'>
 				<DonationsSoFar item={item} />				
-				<ImpactDesc charity={charity} amount={donated} showMoney={false} 
-					beforeText='Your donations so far are enough to fund' maxImpacts={2} />				
+				{charity && charity.hideImpact? null 
+					: <ImpactDesc charity={charity} amount={donated} showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />}
 				<DonateButton item={item} />				
 			</div>
 		</div>

@@ -98,7 +98,7 @@ class MainDiv extends Component {
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
-				DataStore.setShow(C.show.LoginWidget, false);
+				LoginWidget.hide();
 			} else {
 				// poke React via DataStore (e.g. for Login.error)
 				DataStore.update({});
