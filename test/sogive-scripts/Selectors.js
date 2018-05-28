@@ -73,7 +73,7 @@ General.CRUD = {
 General.DonationForm = {
     DonationButton: `button.btn.btn-lg.btn-primary`,//Unforunately isn't anything more concrete to identify donation button specifically
     Next: `div.WizardStage div.nav-buttons.clearfix button.pull-right`,
-    Submit: `div.WizardStage > div.section.donation-amount > form > button`,
+    Submit: `div.section.donation-amount > form > button`,
     TestSubmit: `div.section.donation-amount > small > button`,
     amount: `div.WizardStage > div.section.donation-amount > div.form-group > span > input`,
     "hide-amount-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(2) > div > label > input[type="checkbox"]`,
@@ -84,9 +84,11 @@ General.DonationForm = {
     "consent-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(6) > div > label > input[type="checkbox"]`,
     "anon-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(7) > div > label > input[type="checkbox"]`,
     message: `div.WizardStage > div.section.donation-amount > div > textarea`,
+    "include-tip-checkbox": `div.WizardStage > div:nth-child(1) > div.padded-block > div:nth-child(1) > div > label > input[type="checkbox"]`,
+    tip: `div.WizardStage > div:nth-child(1) > div.padded-block > div.form-group > span > input`,
     "card-number": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(2) > div > div`,
     "expiry-date": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(3) > div:nth-child(1) > div`,
-    cvc: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(3) > div:nth-child(2) > div`
+    cvc: `form > div:nth-child(3) > div:nth-child(2) > div`
 };
 General.Loading = `div.loader-box`;
 //#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > button

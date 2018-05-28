@@ -37,11 +37,13 @@ async function donate({
         await page.click(General.DonationForm["hide-amount-checkbox"]);
     }
     await next({page});
+    await page.waitForSelector(General.DonationForm.Next);
 
     if(GiftAid) {
         
     }
     await next({page});
+    await page.waitForSelector(General.DonationForm.Next);
 
     if(Details) { 
         await fillInForm({
@@ -51,6 +53,7 @@ async function donate({
         });
     }
     await next({page});
+    await page.waitForSelector(General.DonationForm.Next);
     
     if(Message) {
         await fillInForm({
@@ -59,18 +62,24 @@ async function donate({
             Selectors: General.DonationForm
         });
         await next({page});
+        await page.waitForSelector(General.DonationForm.Submit);        
     }
 
-    //Need to make Selectors for this
-    if(Payment) {    
+    if(Payment) {
         await fillInForm({
             page,
             data: Payment,
             Selectors: General.DonationForm
         });
+    }
+
+    //Click actual submit button if card details were provided.
+    if(Payment && Payment["card-number"]) {    
         await submit({page});
     }
-    await testSubmit({page});
+    else{
+        await testSubmit({page});
+    }
 }
 
 /**Advances through the donation form wizard */

@@ -9,7 +9,7 @@ test('Logged-out fundraiser donation', async() => {
     const page = await browser.newPage();
 
     await Fundraiser.goto({page, fundId: 'mark.Piz7VKuA.541930'});
-    await Fundraiser.donate({page, Message: {message:''}});
+    await Fundraiser.donate({page, Message: {message:''}, Payment: {tip: 0.15, "include-tip-checkbox": false}});
 }
 , 30000);
 
