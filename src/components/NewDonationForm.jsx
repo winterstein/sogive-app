@@ -17,7 +17,7 @@ import Transfer from '../base/data/Transfer';
 import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 
-import Misc from '../base/components/Misc'
+import Misc from '../base/components/Misc';
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -185,7 +185,8 @@ const AmountSection = ({path, fromEditor}) => {
 	console.log("donation", JSON.stringify(dontn));
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
-	if ( ! val || ! Money.value(val)) {
+	//&& (val.raw === undefined) is a patch fix to allow the field to be blank/0.
+	if ( (!val || !Money.value(val)) && (val.raw === undefined)) {
 		// HACK: grab the amount from the impact widget of DonationForm?
 		let cid = Donation.to(dontn);
 		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']); 		
