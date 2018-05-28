@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const {login, eventIdFromName} = require('../test-base/res/UtilityFunctions');
-const {username, password} = require('../test-base/credentials');
+const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
 const Event = require('../sogive-scripts/event');
 const Fundraiser = require('../sogive-scripts/fundraiser');
 const Register = require('../sogive-scripts/register');

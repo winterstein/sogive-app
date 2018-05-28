@@ -20,6 +20,8 @@ async function goto({page, fundName, eventId}) {
 /**
  * 
  * @param Charity {charity} 
+ * The second part of this, setting up the fundraiser, should maybe be split of into another function
+ * Having them together makes it a bit harder to understand what this function is actually doing
  */
 async function completeForm({
     page, 
@@ -28,6 +30,8 @@ async function completeForm({
     Payment,
     EditFundraiser
 }) {
+    await page.click(Register.EmptyBasket);
+    await page.waitForSelector(Register.Add);
     await page.click(Register.Add);
 
     await page.click(Register.Next);
@@ -38,7 +42,7 @@ async function completeForm({
 
     //fill in Details
     await page.click(Register.Next);
-    await page.waitForSelector(Register.Next);  
+    await page.waitForSelector(Register.charity);  
     
     //Your Charity
     if(Charity) await fillInForm({page, data: Charity, Selectors: Register});
