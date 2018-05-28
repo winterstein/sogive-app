@@ -26,30 +26,6 @@ case $1 in
 	JestOptionsBlob="$JestOptionsBlob $1"
 esac
 
-
-
-
-
-
-
-# ENDPOINT=http://local.sogive.org 
-# for var in $@
-# do
-# 	if [ $var = "test" ]
-# 	then
-# 		ENDPOINT=https://test.sogive.org 		
-# 	elif [ $var = "local" ]
-# 	then
-# 		ENDPOINT=http://local.sogive.org 		
-# 	elif [ $var = "production" ]
-# 	then
-# 		ENDPOINT=https://app.sogive.org 		
-# 	else
-# 		JestOptionsBlob="$JestOptionsBlob $var"
-# 	fi
-# done
-
-
 ########
 ### Satisfy NPM contingencies
 #######
@@ -57,6 +33,10 @@ printf "\nGetting NPM Packages to Run Jest Tests...\n"
 npm i
 
 
+
+#########
+### Run the tests
+#########
 RES=$(cd ~/winterwell/wwappbase.js/test-base/res/ && find -iname "*.js")
 #Jest will babel any test files itself,
 #but anything it sees as "outside of its runtime" (config files)
