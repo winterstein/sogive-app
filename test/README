@@ -1,8 +1,5 @@
 TODO
     Read headless from console
-    Possibly reattempt test? Best of three maybe? Balance between accuracy/speed to be struck
-    How to marry .txt log and screenshots?
-    Investigate if DOM loading before elements are actually clickable is a concern
  
     Script to run/compile
     Alert if something's gone wrong
@@ -44,8 +41,8 @@ TODO
  8) Important that you make use of UtilityFunctions.APIBASE for any goto() method calls you use. This is necessary to allow the bash script
     to switch between local, test and production.
 
- 9) Can filter tests by running script with optional parameter "--testNamePattern=<regex>" (https://facebook.github.io/jest/docs/en/cli.html#testnamepattern-regex).
-    Note that this filters by the name given to each test function and not by filename.
+ 9) Can filter tests by running script with optional parameter "-t=<regex>" or "--testNamePattern=<regex>" (https://facebook.github.io/jest/docs/en/cli.html#testnamepattern-regex).
+    Note that this filters by the name given to each test function and not by filename. 
 
 Notes:
     Should we require that test names are not repeated? Might derease risk of screenshot/log overwriting ouput of other tests.
@@ -89,3 +86,6 @@ Notes:
         the absense of the loader doesn't work. Solution is to make the page wait until the loader has appeared then dissapeared.
 
         *Could we switch scraping for event IDs to just pulling from JSON endpoint? If that data is reachable, would be a much nicer solution
+    
+    25/05/18
+        Login still seems a bit off. Will ocassionaly not type in the email field.

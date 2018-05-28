@@ -16,7 +16,7 @@ async function run(page) {
         page, 
         selectorOrInteger: 1
     });
-    await Donation.donate({page, amount: 100});  
+    await Donation.donate({page});  
 }
 
 //Still need to define conditions for success/failure

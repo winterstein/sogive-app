@@ -12,8 +12,8 @@ const {Search} = require("./Selectors");
 async function search({page, search_term}) {
     await page.click(Search.Main.SearchField);
     await page.keyboard.type(search_term);
-    await page.click(Search.Main.SearchButton);
-
+    
+    page.click(Search.Main.SearchButton);
     await page.waitForSelector('.loader-box');    
     await page.waitForSelector('.loader-box', {hidden: true}); 
 }
@@ -37,6 +37,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 */
 async function goto(page) {
     await page.goto(APIBASE + '/#search?q=');  
+    await page.waitForSelector(Search.Main.ResultsList);
 }
 
 module.exports = {

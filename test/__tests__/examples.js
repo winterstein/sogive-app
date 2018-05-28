@@ -36,7 +36,7 @@ test(firstTestName, async () => {
         page, 
         selectorOrInteger: 1
     });
-    await Donation.donate({page, amount: 100});      
+    await Donation.donate({page});      
 }, 10000);
 
 //Describe block is used to scope test environment.
