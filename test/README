@@ -89,3 +89,11 @@ Notes:
     
     25/05/18
         Login still seems a bit off. Will ocassionaly not type in the email field.
+    
+    28/05/18
+        Want to add --debug option -- switches headless off and prevents automatic closing of browser. Not quite sure how to go about this. Jest does allow for setting
+        globals, but this didn't seem to work properly last time I tried to use it. Aim is really just to pass some boolean variable to setup_scripts via console.
+
+        Doesn't seem to be native way to pass argument to setup/config files. Is possible to set globals in Jest config. Hacky way to do this might be to set Global to 
+        headless by default; if user gives --debug argument, have script edit line in script. Not the nicest way of doing things -- would need to remember to set it back/
+        ensure that file isn't left in weird state.
