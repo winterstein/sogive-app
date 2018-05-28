@@ -178,7 +178,6 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 	);
 }; // ./DonationForm
 
-
 const AmountSection = ({path, fromEditor}) => {
 	let credit = Transfer.getCredit();	
 	const dontn = DataStore.getValue(path);
