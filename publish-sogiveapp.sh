@@ -32,13 +32,14 @@ if [ ! -f ~/.msmtprc ]; then
 fi
 if [ ! -d ~/msmtp ]; then
         printf "\nCreating a directory for the msmpt logs to live in\n"
-        mkdir -p ~/msmtp
-        touch ~/msmtp/msmtp.log
+        mkdir -p /tmp/msmtp
+        touch /tmp/msmtp/msmtp.log
         chmod 777 ~/msmtp/msmtp.log
 fi
 if [ ! -f ~/.muttrc ]; then
         printf "\nPlacing the .muttrc file in your home directory so that I can send emails\n"
         cp ~/winterwell/logins/.muttrc ~/
+		mkdir -p /home/$USER/spool/mail/
         printf "\nYou must now run mutt for the first time in order to create a maildir\nRun mutt with \n\t$ mutt\n"
         exit 0
 fi
