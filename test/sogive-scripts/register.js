@@ -30,15 +30,18 @@ async function completeForm({
     Payment,
     EditFundraiser
 }) {
-    await page.click(Register.EmptyBasket);
-    await page.waitForSelector(Register.Add);
+    await page.waitForSelector(Register.EmptyBasket);
+    page.click(Register.EmptyBasket);
+    await page.waitForSelector(General.Loading);
+    await page.waitForSelector(General.Loading, {hidden: true});
+
     await page.click(Register.Add);
 
     await page.click(Register.Next);
     await page.waitForSelector(Register.Next);        
     //Will fail if user is not already logged-in
     await page.click(Register.Next);
-    await page.waitForSelector(Register.Next);     
+    await page.waitForSelector(Register.Next);//Not working properly. Try change to something unique to details page
 
     //fill in Details
     await page.click(Register.Next);
@@ -50,8 +53,9 @@ async function completeForm({
     await page.click(Register.Next);
 
     //Checkout
-    await page.waitForSelector(Register.Submit);    
-    if(Payment) {
+    //Special case to deal with button being different where event ticket price is set to £0
+    if (await page.$(Register.FreeTicketSubmit) !== null) await page.click(Register.FreeTicketSubmit);    
+    else if(Payment) {
         await fillInForm({page, data: Payment, Selectors: General.DonationForm});
         await page.click(Register.Submit);
     }

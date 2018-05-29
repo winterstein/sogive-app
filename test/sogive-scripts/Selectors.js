@@ -99,6 +99,7 @@ const Register = {
     SetupFundraiser: `#register > div > div.Wizard > div.WizardStage > div.ConfirmedTicketList > div > div > div > div:nth-child(2) > div > a`,
     Submit: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > button`,
     TestSubmit: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > small > button`,
+    FreeTicketSubmit: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > button`,
     name: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(1) > input`,
     email: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(2) > input`,
     address: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div:nth-child(1) > textarea`,
@@ -106,7 +107,7 @@ const Register = {
     "join-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(1) > div > input`,
     "create-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(2) > div > input`,
     charity: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > input`,
-    'select-first-charity-checkbox': `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.SearchResults > div.results-list > div:nth-child(1) > div > button`,
+    'select-first-charity-checkbox': `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.SearchResults > div.results-list > div.SearchResult.row > a.text-summary.col-md-4.col-xs-8`,
 };
 
 const Search = {};

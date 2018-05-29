@@ -34,7 +34,9 @@ test('Create a fundraiser', async() => {
     await Register.goto({page, fundName:"You will be assimilated"});
     await Register.completeForm({
         page, 
-        Charity: {charity:'puppet'},
+        Charity: {
+            charity:"puppet",
+        },
         EditFundraiser: {
             name: "You will be assimilated",
             description: "I really hope so"
@@ -42,7 +44,7 @@ test('Create a fundraiser', async() => {
     });
 }, 45000);
 
-//Seperated out deleting events. Was meaning that screenshot taken for above is completely useless
+// Seperated out deleting events. Was meaning that screenshot taken for above is completely useless
 test('Delete fundraiser and event', async() => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
