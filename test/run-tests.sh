@@ -1,6 +1,12 @@
 # !/bin/bash
 
 ########
+### Whom shall receive the emails?:: Add new recipients with a comma separating the addresses
+########
+EMAIL_RECIPIENTS='sysadmin@sodash.com'
+
+
+########
 ### Check to see if you have mutt an msmtp installed so that you can send emails
 ########
 if [[ $(which mutt) = '' ]]; then
@@ -43,7 +49,7 @@ function send_alert {
 	message="Jest Detected Failure for -- $1 --sogive tests"
 	body="Hi,\nThe sogive-app jest/puppeteer script threw out a FAIL notice at $TIME:\n\n$line\n"
 	title="[$HOSTNAME] $message"
-	printf "$body" | mutt -s "$title" ${ATTACHMENTS[@]} -- sysadmin@sodash.com
+	printf "$body" | mutt -s "$title" ${ATTACHMENTS[@]} -- $EMAIL_RECIPIENTS
 }
 
 ATTACHMENTS=()
