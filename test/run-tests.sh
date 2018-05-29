@@ -35,10 +35,11 @@ if [ ! -f ~/.muttrc ]; then
 fi
 
 
-TIME=$(date +%Y%m%d-%H:%M:%S-%Z)
+bash jest.sh $1
 
 
 function send_alert {
+        TIME=$(date +%Y%m%d-%H:%M:%S-%Z)
 	message="Jest Detected Failure for -- $1 --sogive tests"
 	body="Hi,\nThe sogive-app jest/puppeteer script threw out a FAIL notice at $TIME:\n\n$line\n"
 	title="[$HOSTNAME] $message"
