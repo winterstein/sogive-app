@@ -91,7 +91,7 @@ General.DonationForm = {
     cvc: `form > div:nth-child(3) > div:nth-child(2) > div`
 };
 General.Loading = `div.loader-box`;
-//#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > button
+
 const Register = {
     Add: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > ul > li > div.controls > button`,
     EmptyBasket: `#register > div > div.Wizard > div.WizardStage > button`,

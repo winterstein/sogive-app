@@ -21,6 +21,7 @@ async function donate({
     Message,
     Payment
 }) {
+    await page.waitForSelector(General.DonationForm.DonationButton);
 	await page.click(General.DonationForm.DonationButton);
     //Amount is a bit of a special case as the field has a default value set.
     //Might want to make fillInForm clear fields by default. Could also pass it a param to say that a field should be cleared.
@@ -43,7 +44,7 @@ async function donate({
         
     }
     await next({page});
-    await page.waitForSelector(General.DonationForm.Next);
+    await page.waitForSelector(General.DonationForm.name);
 
     if(Details) { 
         await fillInForm({
@@ -53,7 +54,7 @@ async function donate({
         });
     }
     await next({page});
-    await page.waitForSelector(General.DonationForm.Next);
+    await page.waitForSelector(General.DonationForm.name, {hidden: true});//Can't wait for element to appear because we don't know if the next pane will be message or payment.
     
     if(Message) {
         await fillInForm({
@@ -62,7 +63,7 @@ async function donate({
             Selectors: General.DonationForm
         });
         await next({page});
-        await page.waitForSelector(General.DonationForm.Submit);        
+        await page.waitForSelector(General.DonationForm.message, {hidden: true});
     }
 
     if(Payment) {
