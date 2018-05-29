@@ -35,31 +35,29 @@ if [ ! -f ~/.muttrc ]; then
 fi
 
 
-#### The failure is happening one process deeper than the IFS is reading.
-
-
 TIME=$(date +%Y%m%d-%H:%M:%S-%Z)
-
-TEST_TYPE=$1
-checkforfail() {
-        while IFS= read -r line; do
-                printf "\n$TIME $line"
-                if [[ $line == *"FAIL"* ]]; then
-                        numbroken+=1
-                        broken+=" $line"
-                fi
-                if [ ! -z "$broken" ]; then
-                        printf "\nFound a failure:\n\t$line"
-                        send_alert
-                fi
-        done
-}
-bash jest.sh $1 | checkforfail >> run-tests.log
 
 
 function send_alert {
-	message="Jest Detected Failure for $1 --sogive tests"
+	message="Jest Detected Failure for -- $1 --sogive tests"
 	body="Hi,\nThe sogive-app jest/puppeteer script threw out a FAIL notice at $TIME:\n\n$line\n"
 	title="[$HOSTNAME] $message"
-	printf "$body" | mutt -s "$title" sysadmin@sodash.com
+	printf "$body" | mutt -s "$title" ${ATTACHMENTS[@]} sysadmin@sodash.com
 }
+
+ATTACHMENTS=()
+
+NEW_FAIL_LOGS=$(find test-results/Logs\(failure\)/ -type f -iname "*.txt" -amin +0 -amin -2)
+
+if [[ $NEW_FAIL_LOGS = '' ]]; then
+        printf "\nNo Failures Detected\n"
+else
+        printf "\nFailures Detected:\n"
+        for log_file in ${NEW_FAIL_LOGS[@]}; do
+                ATTACHMENTS+=("-a $log_file")
+                printf "\n$log_file"
+        done
+        printf "\n\nSending out Email with New Log Files Attached...\n"
+        send_alert
+        printf "\nDone\n"
+fi
