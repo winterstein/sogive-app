@@ -120,16 +120,18 @@ done
 
 printf "\nPublishing process completed\n"
 
-# printf "\nGetting Ready to take Screenshots\n"
-# if [ ! -d /home/$USER/winterwell/sogive-app/test/screenshots/node_modules ]; then
-# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && npm i
-# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash compile.sh
-# fi
+printf "\nGetting Ready to take Screenshots...\n"
+TIMEOUT_SECONDS='10'
+while [ $TIMEOUT_SECONDS -gt 0 ]; do
+	printf "$TIMEOUT_SECONDS\033[0K\r"
+	sleep 1
+	: $((TIMEOUT_SECONDS--))
+done
 
-# if [[ $PUBLISH_TYPE = 'test' ]]; then
-# 	printf "Taking screenshot of test.sogive.org in 10 seconds\n"
-# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-test-screenshots.sh 10
-# else
-# 	printf "Taking screenshot of app.sogive.org in 10 seconds\n"
-# 	cd /home/$USER/winterwell/sogive-app/test/screenshots/ && bash take-production-screenshots.sh 10
-# fi
+if [[ $PUBLISH_TYPE = 'test' ]]; then
+	cd test && bash run-tests.sh test
+	cd ../
+else
+	cd test && bash run-tests.sh production
+	cd ../
+fi
