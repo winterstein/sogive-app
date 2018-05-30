@@ -188,9 +188,11 @@ const AmountSection = ({path, fromEditor}) => {
 	if ( (!val || !Money.value(val)) && (val.raw === undefined)) {
 		// HACK: grab the amount from the impact widget of DonationForm?
 		let cid = Donation.to(dontn);
-		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']); 		
-		if ( ! val || Money.value(val)==10) {
-			val = credit || Money.make({value:10});
+		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']);
+		// stored donation is zero or default? Set to amount of user's credit if present
+		const valValue = Money.value(val);
+		if (valValue === 0 || valValue === 10) {
+			val = credit || Money.make({value: 10});
 		}
 		DataStore.setValue(pathAmount, val);
 	}
