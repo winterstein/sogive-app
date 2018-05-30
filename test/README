@@ -1,3 +1,20 @@
+<!--USER GUIDE-->
+
+-- Run command syntax --
+Jest can be initiated by calling ./jest.sh $ENDPOINT $JESTOPTIONS    
+
+$ENDPOINT options -- local, test, production. Tests are set to point to a local SoGive instance default.
+$JESTOPTIONS -- a list of optional Jest commands can be found at . These can be called 
+
+Example command to test test server, while only running __tests__ files that contain some keyword 
+    ./jest.sh test -t="some\skeyword"
+
+Explain that Jest runs all files in __tests__ by default.
+Can give regex pattern to -t="" in order to limit files tested. Note that this is based not on file name, but on name given to test().
+
+
+<!--ROUGH NOTES-->
+
 TODO
     Read headless from console
  
@@ -97,3 +114,6 @@ Notes:
         Doesn't seem to be native way to pass argument to setup/config files. Is possible to set globals in Jest config. Hacky way to do this might be to set Global to 
         headless by default; if user gives --debug argument, have script edit line in script. Not the nicest way of doing things -- would need to remember to set it back/
         ensure that file isn't left in weird state.
+
+        Tip does not seem to be displayed when full amount of donation is shown to user. Value is recorded though; would guess that it's doing Display(amount)
+        rather than Display(amount + tip)

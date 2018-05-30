@@ -22,3 +22,7 @@ test('Logged-in fundraiser donation', async() => {
     await Fundraiser.donate({page, Message: {message:''}});
 }
 , 30000);
+
+//Want to create an additional test that checks to see if the donation total has been correctly incremented
+//Could do this either by scraping from page, or reading directly from JSON. Will be testing two seperate things:
+//perfectly possible for the total displayed to be screwey while the JSON data is perfectly fine.

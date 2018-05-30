@@ -41,7 +41,7 @@ async function completeForm({
     await page.waitForSelector(Register.Next);        
     //Will fail if user is not already logged-in
     await page.click(Register.Next);
-    await page.waitForSelector(Register.Next);//Not working properly. Try change to something unique to details page
+    await page.waitForSelector(`div.AttendeeDetails`);
 
     //fill in Details
     await page.click(Register.Next);
@@ -51,10 +51,13 @@ async function completeForm({
     if(Charity) await fillInForm({page, data: Charity, Selectors: Register});
     if(await page.$eval(Register['select-first-charity-checkbox'], e => e)) await page.click(Register['select-first-charity-checkbox']);
     await page.click(Register.Next);
+    await page.waitForSelector(`div.invoice`);
 
     //Checkout
     //Special case to deal with button being different where event ticket price is set to £0
-    if (await page.$(Register.FreeTicketSubmit) !== null) await page.click(Register.FreeTicketSubmit);    
+    if (await page.$(Register.FreeTicketSubmit) !== null) {
+        await page.click(Register.FreeTicketSubmit);
+    }    
     else if(Payment) {
         await fillInForm({page, data: Payment, Selectors: General.DonationForm});
         await page.click(Register.Submit);
