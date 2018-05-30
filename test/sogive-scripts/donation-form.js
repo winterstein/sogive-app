@@ -23,8 +23,9 @@ async function donate({
 }) {
     await page.waitForSelector(General.DonationForm.DonationButton);
 	await page.click(General.DonationForm.DonationButton);
-    //Amount is a bit of a special case as the field has a default value set.
-    //Might want to make fillInForm clear fields by default. Could also pass it a param to say that a field should be cleared.
+
+    //Should really have an await here.
+    await page.waitForSelector(General.DonationForm.amount);
     if(Amount) {
         await page.click(General.DonationForm.amount);
         //clear field of default value
@@ -37,13 +38,15 @@ async function donate({
     if(Amount && Amount["hide-amount-checkbox"]) {
         await page.click(General.DonationForm["hide-amount-checkbox"]);
     }
-    await next({page});
-    await page.waitForSelector(General.DonationForm.Next);
+    await page.click(General.DonationForm.Next);
 
+    // await page.waitForSelector(General.DonationForm.Previous);//This condition never triggers for some reason. Only seems to happen for logged-out donations
+    // await page.waitForSelector(`label.radio-inline`);
+    await page.waitFor(1000);//Seems to be an issue where the next button is unclickable for a fraction of a second. This is a cheap hack to deal with that.
     if(GiftAid) {
-        
+        //need to make selectors for fillInForm to work with
     }
-    await next({page});
+    await page.click(General.DonationForm.Next);
     await page.waitForSelector(General.DonationForm.name);
 
     if(Details) { 
@@ -53,7 +56,7 @@ async function donate({
             Selectors: General.DonationForm
         });
     }
-    await next({page});
+    await page.click(General.DonationForm.Next);
     await page.waitForSelector(General.DonationForm.name, {hidden: true});//Can't wait for element to appear because we don't know if the next pane will be message or payment.
     
     if(Message) {
@@ -62,7 +65,7 @@ async function donate({
             data: Message,
             Selectors: General.DonationForm
         });
-        await next({page});
+        await page.click(General.DonationForm.Next);
         await page.waitForSelector(General.DonationForm.message, {hidden: true});
     }
 
@@ -81,11 +84,9 @@ async function donate({
     else{
         await testSubmit({page});
     }
-}
 
-/**Advances through the donation form wizard */
-async function next({page}) {
-    await page.click(General.DonationForm.Next);
+    //Wait for Receipt to appear before closing
+    await page.waitForSelector(`div.WizardStage > div.text-center`);
 }
 
 //Should maybe change submit and testSubmit to wait until the Thank You! page has appeared before returning control

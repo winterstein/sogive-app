@@ -50,7 +50,7 @@ async function completeForm({
     //Your Charity
     if(Charity) await fillInForm({page, data: Charity, Selectors: Register});
     if(await page.$eval(Register['select-first-charity-checkbox'], e => e)) await page.click(Register['select-first-charity-checkbox']);
-    await page.click(Register.Next);
+    page.click(Register.Next);
     await page.waitForSelector(`div.invoice`);
 
     //Checkout

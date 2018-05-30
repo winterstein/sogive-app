@@ -26,7 +26,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
     if(Number.isInteger(selectorOrInteger)) result_selector += ` div:nth-child(${selectorOrInteger})`;
     if(typeof selectorOrInteger === 'string') result_selector += ` ${selectorOrInteger}`;
     result_selector += ` a`;
-    await page.click(result_selector);
+    page.click(result_selector);
     
     await page.waitForSelector('.loader-box');    
     await page.waitForSelector('.loader-box', {hidden: true}); 
@@ -37,7 +37,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 */
 async function goto(page) {
     await page.goto(APIBASE + '/#search?q=');  
-    await page.waitForSelector(Search.Main.ResultsList);
+    await page.waitForSelector(Search.Main.SearchField);
 }
 
 module.exports = {

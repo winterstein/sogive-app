@@ -14,7 +14,7 @@ test("Example stub", async () => {
     //Do the test
     const page = await browser.newPage();
     await run(page);
-}, 10000);
+}, 15000);
 
 const firstTestName = "Make a donation";  
 test(firstTestName, async () => {
@@ -37,7 +37,7 @@ test(firstTestName, async () => {
         selectorOrInteger: 1
     });
     await Donation.donate({page});      
-}, 10000);
+}, 15000);
 
 //Describe block is used to scope test environment.
 //Could, for example, set a different beforeEach/afterEach
@@ -57,5 +57,5 @@ describe('Description', async () => {
         window.__TESTNAME__ = "Description example";
         const page = await browser.newPage();
         await run(page);
-    }, 10000);
+    }, 15000);
 });

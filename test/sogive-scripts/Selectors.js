@@ -73,6 +73,7 @@ General.CRUD = {
 General.DonationForm = {
     DonationButton: `button.btn.btn-lg.btn-primary`,//Unforunately isn't anything more concrete to identify donation button specifically
     Next: `div.WizardStage div.nav-buttons.clearfix button.pull-right`,
+    Previous: `div.WizardStage > div.nav-buttons.clearfix > button.btn-lg.pull-left`,
     Submit: `div.section.donation-amount > form > button`,
     TestSubmit: `div.section.donation-amount > small > button`,
     amount: `div.WizardStage > div.section.donation-amount > div.form-group > span > input`,
@@ -107,7 +108,7 @@ const Register = {
     "join-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(1) > div > input`,
     "create-team": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div > div > div:nth-child(3) > div.container-fluid > div > div:nth-child(2) > div > input`,
     charity: `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > input`,
-    'select-first-charity-checkbox': `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.SearchResults > div.results-list > div.SearchResult.row > a.text-summary.col-md-4.col-xs-8`,
+    'select-first-charity-checkbox': `div.results-list > div.SearchResult.row > a.text-summary`,
 };
 
 const Search = {};

@@ -61,6 +61,10 @@ TODO
  9) Can filter tests by running script with optional parameter "-t=<regex>" or "--testNamePattern=<regex>" (https://facebook.github.io/jest/docs/en/cli.html#testnamepattern-regex).
     Note that this filters by the name given to each test function and not by filename. 
 
+10) Need to be careful about when Puppeteer starts listening for a selector. Found that not waiting for click event to finish (with await) before calling waitForSelector
+    fixed an issue where selectors that absolutely are present aren't being detected.
+    Seems to have some issue with reading selectors that existed before it started listening.
+
 Notes:
     Should we require that test names are not repeated? Might derease risk of screenshot/log overwriting ouput of other tests.
     Could take screenshots in afterEach and cache in temp directory. Reporter could retrieve these. Seems like this would just add overhead.
@@ -117,3 +121,7 @@ Notes:
 
         Tip does not seem to be displayed when full amount of donation is shown to user. Value is recorded though; would guess that it's doing Display(amount)
         rather than Display(amount + tip)
+    
+    30/05/18
+        Add ability to pause steps in test by pushing key. Could also have it pause by default, advances on key press.
+    

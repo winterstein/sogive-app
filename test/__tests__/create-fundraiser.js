@@ -5,7 +5,7 @@ const Event = require('../sogive-scripts/event');
 const Fundraiser = require('../sogive-scripts/fundraiser');
 const Register = require('../sogive-scripts/register');
 
-test('Create a fundraiser', async() => {
+test('Create (and then delete) a fundraiser', async() => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
 
@@ -42,17 +42,19 @@ test('Create a fundraiser', async() => {
             description: "I really hope so"
         }
     });
+    await Fundraiser.deleteFundraiser({page, fundName:"You will be assimilated"});
+    await Event.deleteEvent({page, eventName: "You will be assimilated"}); 
 }, 45000);
 
 // Seperated out deleting events. Was meaning that screenshot taken for above is completely useless
-test('Delete fundraiser and event', async() => {
-    const browser = window.__BROWSER__;
-    const page = await browser.newPage();
+// test('Delete fundraiser and event', async() => {
+//     const browser = window.__BROWSER__;
+//     const page = await browser.newPage();
     
-    //Doesn't really matter which page it goes
-    await Event.goto({page});
-    await login({page, username, password}); 
+//     //Doesn't really matter which page it goes
+//     await Event.goto({page});
+//     await login({page, username, password}); 
     
-    await Fundraiser.deleteFundraiser({page, fundName:"You will be assimilated"});
-    await Event.deleteEvent({page, eventName: "You will be assimilated"}); 
-}, 15000);
+//     await Fundraiser.deleteFundraiser({page, fundName:"You will be assimilated"});
+//     await Event.deleteEvent({page, eventName: "You will be assimilated"}); 
+// }, 15000);
