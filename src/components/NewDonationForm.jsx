@@ -387,14 +387,16 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 const ThankYouSection = ({path, item}) => {
 	const donation = DataStore.getValue(path);
-	console.warn('Final donation value after submission', donation);
+    let amountPlusTip;
+    if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
 			<big>
 				<p>
-					We've received your donation of <Misc.Money amount={donation.amount} /> to {item.name}.<br />
+					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> to {item.name} <br />
 				</p>
+				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
 				<p>
 					Thanks for using SoGive!
 				</p>
