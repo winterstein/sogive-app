@@ -24,7 +24,7 @@ import {CreateButton} from '../base/components/ListLoad';
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(['data', C.TYPES.$NGO(), cid], 
+	let {value:charity} = DataStore.fetch(DataStore.getPath(C.KStatus.PUBLISHED, C.TYPES.$NGO(), cid), 
 		() => ServerIO.getCharity(cid, C.KStatus.PUBLISHED).then(result => result.cargo)
 	);
 	if ( ! charity) {
