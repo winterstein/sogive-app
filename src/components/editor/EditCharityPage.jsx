@@ -518,7 +518,10 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let inputsPath = ['data',C.TYPES.NGO,cid,'projects', pid, 'inputs'];
-	assert(DataStore.getValue(inputsPath) === project.inputs, "EditCharityPage.ProjectInputEditor");
+	{	// sanity check
+		const dspi = DataStore.getValue(inputsPath);
+		assert(dspi === project.inputs, "EditCharityPage.ProjectInputEditor", dspi, project.inputs);
+	}
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
 	if (ii === -1) {
