@@ -32,7 +32,7 @@ test('Logged-in charity donation', async () => {
             'anon-checkbox': true
         }
     });     
-}, 15000);
+}, 20000);
 
 test('Logged-out charity donation', async () => {
     const browser = window.__BROWSER__;
@@ -61,4 +61,4 @@ test('Logged-out charity donation', async () => {
             'anon-checkbox': true
         }
     });       
-}, 15000);
+}, 20000);

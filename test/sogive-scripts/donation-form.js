@@ -55,7 +55,6 @@ async function donate({
         });
     }
     await advanceWizard({page});
-    await page.waitForSelector(General.DonationForm.message);
 
     if(Message) {
         await fillInForm({
