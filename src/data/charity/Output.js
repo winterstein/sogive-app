@@ -26,7 +26,7 @@ export default Output;
 
 // something is making outputs without a type. oh well -- also allow a duck type test for costPerBen
 Output.isa = (obj) => {
-	return getType(obj)==='Output' || obj.costPerBeneficiary;
+	return getType(obj)==='Output' || obj.costPerBeneficiary || obj.number;
 };
 
 Output.number = obj => This.assIsa(obj) && obj.number;
