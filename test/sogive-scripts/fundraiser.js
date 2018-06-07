@@ -6,10 +6,16 @@ const {
 const {donate} = require('./donation-form');
 const {General, Fundraiser} = require('./Selectors');
 
-async function goto({page, fundId}) {
-    page.goto(`${APIBASE}#fundraiser/${fundId || ''}`);  
-    await page.waitForSelector('.loader-box');    
-    await page.waitForSelector('.loader-box', {hidden: true}); 
+async function goto({page, fundId, fundName}) {
+    if(fundName) {
+        const ID = await fundIdByName({page, fundName});
+        await goto({page, fundId: ID});
+    }
+    else{
+        page.goto(`${APIBASE}#fundraiser/${fundId || ''}`);  
+        await page.waitForSelector('.loader-box');    
+        await page.waitForSelector('.loader-box', {hidden: true}); 
+    }
 }
 
 async function gotoEditFundraiser({page, fundId}) {

@@ -38,17 +38,15 @@ async function donate({
     if(Amount && Amount["hide-amount-checkbox"]) {
         await page.click(General.DonationForm["hide-amount-checkbox"]);
     }
-    await page.click(General.DonationForm.Next);
+    await advanceWizard({page});
 
     // await page.waitForSelector(General.DonationForm.Previous);//This condition never triggers for some reason. Only seems to happen for logged-out donations
     // await page.waitForSelector(`label.radio-inline`);
-    await page.waitFor(1000);//Seems to be an issue where the next button is unclickable for a fraction of a second. This is a cheap hack to deal with that.
     if(GiftAid) {
         //need to make selectors for fillInForm to work with
+        await advanceWizard({page});
     }
-    await page.click(General.DonationForm.Next);
-    await page.waitForSelector(General.DonationForm.name);
-
+    
     if(Details) { 
         await fillInForm({
             page,
@@ -56,47 +54,59 @@ async function donate({
             Selectors: General.DonationForm
         });
     }
-    await page.click(General.DonationForm.Next);
-    await page.waitForSelector(General.DonationForm.name, {hidden: true});//Can't wait for element to appear because we don't know if the next pane will be message or payment.
-    
+    await advanceWizard({page});
+    await page.waitForSelector(General.DonationForm.message);
+
     if(Message) {
         await fillInForm({
             page,
             data: Message,
             Selectors: General.DonationForm
         });
-        await page.click(General.DonationForm.Next);
-        await page.waitForSelector(General.DonationForm.message, {hidden: true});
+        await advanceWizard({page});
     }
 
+    //Sometimes Stripe button appears, sometimes not
+    // if(!await page.$(General.DonationForm.Submit)) {    
+    //     await page.click(General.DonationForm.Stripe);
+    //     //Not possible to use selectors for emergent menu. Need to use coordinates
+        
+    // }
+    //For traditional (non-Stripe) page
     if(Payment) {
+        await page.waitForSelector(General.DonationForm.cvc);
         await fillInForm({
             page,
             data: Payment,
             Selectors: General.DonationForm
         });
     }
-
-    //Click actual submit button if card details were provided.
-    if(Payment && Payment["card-number"]) {    
-        await submit({page});
+    //Click actual submit button if card details were provided.    
+    if(Payment && Payment["card-number"]) {
+        await page.click(General.DonationForm.Submit);
     }
     else{
-        await testSubmit({page});
+        await page.click(General.DonationForm.TestSubmit);
     }
 
     //Wait for Receipt to appear before closing
     await page.waitForSelector(`div.WizardStage > div.text-center`);
 }
 
-//Should maybe change submit and testSubmit to wait until the Thank You! page has appeared before returning control
-async function submit({page}) {
-    await page.click(General.DonationForm.Submit);
-}
-
-/**Submit payment form via "test: pretend I paid" */
-async function testSubmit({page}) {
-    await page.click(General.DonationForm.TestSubmit);
+async function advanceWizard({page}) {
+    const url = await page.evaluate(() => window.location.href);
+    const stage = url.match(/.*dntnStage=(.?).*/)? url.match(/.*dntnStage=(.?).*/)[1] : 0;
+    let gotoURL;
+    if(url.includes('dntnStage')) {
+        gotoURL = url.replace(/(.*)(dntnStage=.?)(.*)/, `$1dntnStage=${+stage+1}$3`);
+    }
+    else if(url.includes('?')) {
+        gotoURL = url + `&dntnStage=${+stage+1}`;
+    }
+    else{
+        gotoURL = url+`?dntnStage=${+stage+1}`;
+    }
+    await page.goto(gotoURL);
 }
 
 module.exports = {

@@ -76,6 +76,7 @@ General.DonationForm = {
     Previous: `div.WizardStage > div.nav-buttons.clearfix > button.btn-lg.pull-left`,
     Submit: `div.section.donation-amount > form > button`,
     TestSubmit: `div.section.donation-amount > small > button`,
+    Stripe: `div.PaymentRequestButton`,
     amount: `div.WizardStage > div.section.donation-amount > div.form-group > span > input`,
     "hide-amount-checkbox": `div.WizardStage > div.section.donation-amount > div:nth-child(2) > div > label > input[type="checkbox"]`,
     name: `div.WizardStage > div.section.donation-amount > div:nth-child(2) > input`,
@@ -87,8 +88,8 @@ General.DonationForm = {
     message: `div.WizardStage > div.section.donation-amount > div > textarea`,
     "include-tip-checkbox": `div.WizardStage > div:nth-child(1) > div.padded-block > div:nth-child(1) > div > label > input[type="checkbox"]`,
     tip: `div.WizardStage > div:nth-child(1) > div.padded-block > div.form-group > span > input`,
-    "card-number": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(2) > div > div`,
-    "expiry-date": `#register > div > div.Wizard > div.WizardStage > div:nth-child(1) > div.padded-block > div > form > div:nth-child(3) > div:nth-child(1) > div`,
+    "card-number": `div.WizardStage > div:nth-child(1) > div > form > div:nth-child(2) > div > div`,
+    "expiry-date": `div.WizardStage > div:nth-child(1) > div > form > div:nth-child(3) > div:nth-child(1) > div`,
     cvc: `form > div:nth-child(3) > div:nth-child(2) > div`
 };
 General.Loading = `div.loader-box`;

@@ -124,4 +124,18 @@ Notes:
     
     30/05/18
         Add ability to pause steps in test by pushing key. Could also have it pause by default, advances on key press.
+        
+        Could get this effect by having puppeteer insert a million breakpoints all over the place. Not sure that puppeteer has ability to set breakpoints like that.
+        Not a very nice solution. Doesn't seem to be anything inbuilt that we can take advantage of here. Hm. Cheaty way would be to insert statements into test. Not sure
+        how to link to console input though. Could assign to a specific keypress in browser environment. If you're using this, you almost certainly are running headless: false.
+
+        Ah, that would be a good condition to latch onto: if {headless: false}, switch on press-key-to-advance functionality.
+
+        Main issue is thinking of some way to insert pause statements in appropriate places. Really don't want to have to insert breaks in manually. Seems like a non-trivial task. 
     
+    31/05/18
+        Might need to address issue with waitForSelector where it appears to have trouble indentifying elements that exist on page. Can't be too sure of why/when this happens,
+        suspect that it might be where element exists and there are no further DOM mutations on page. Feel that it can't be that simple, but there's something around this
+        behaviour. Interesting that it only happens occasionaly.
+        Suggested that I might write a wrapper function that explicitly checks for existance of element on page before making call to waitForSelector. A good idea, but
+        we probably need to do a bit more research as to the cause of the issue before we get too into this.
