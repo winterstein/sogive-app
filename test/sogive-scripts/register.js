@@ -38,17 +38,26 @@ async function completeForm({
     await page.click(Register.Add);
 
     await advanceWizard({page});      
+    await page.waitForSelector(Register.Next);
     //Will fail if user is not already logged-in
     await advanceWizard({page});      
-
+    await page.waitForSelector(`div.AttendeeDetails`);
     //fill in Details
-    await advanceWizard({page});      
+    await advanceWizard({page});     
+    await page.waitForSelector(Register.charity);
     
     //Your Charity
     if(Charity) await fillInForm({page, data: Charity, Selectors: Register});
-    if(await page.$eval(Register['select-first-charity-checkbox'], e => e)) await page.click(Register['select-first-charity-checkbox']);
+    try{
+        await page.waitFor(1000);
+        await page.click(Register['select-first-charity-checkbox']);
+    } catch(e) {
+        console.log('No valid charity found');
+    }
+    // if(await page.$(Register['select-first-charity-checkbox'])) await page.click(Register['select-first-charity-checkbox']);
     await advanceWizard({page});      
-
+    await page.waitForSelector(`div.invoice`);
+    
     //Checkout
     //Special case to deal with button being different where event ticket price is set to £0
     if (await page.$(Register.FreeTicketSubmit) !== null) {
