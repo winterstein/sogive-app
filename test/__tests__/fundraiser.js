@@ -51,7 +51,7 @@ test('Logged-out fundraiser donation', async() => {
     const page = await browser.newPage();
 
     await Fundraiser.goto({page, fundName});
-    await Fundraiser.donate({page, Message: {message:'???'}});
+    await Fundraiser.donate({page, GiftAid: {}, Message: {message:'???'}});
 }, 15000);
 
 test('Logged-in fundraiser donation', async() => {
@@ -60,7 +60,7 @@ test('Logged-in fundraiser donation', async() => {
 
     await Fundraiser.goto({page, fundName});
     await login({page, username, password});    
-    await Fundraiser.donate({page, Message: {message:'???'}});
+    await Fundraiser.donate({page, GiftAid: {}, Message: {message:'???'}});
 }, 15000);
 
 test('Delete fundraiser', async() => {

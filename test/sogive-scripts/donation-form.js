@@ -46,7 +46,8 @@ async function donate({
         //need to make selectors for fillInForm to work with
         await advanceWizard({page});
     }
-    
+
+    await page.waitForSelector(General.DonationForm.name);
     if(Details) { 
         await fillInForm({
             page,
@@ -57,6 +58,7 @@ async function donate({
     await advanceWizard({page});
 
     if(Message) {
+        await page.waitForSelector(General.DonationForm.message);
         await fillInForm({
             page,
             data: Message,
@@ -72,6 +74,7 @@ async function donate({
         
     // }
     //For traditional (non-Stripe) page
+    await page.waitForSelector(General.DonationForm.TestSubmit);
     if(Payment) {
         await fillInForm({
             page,
