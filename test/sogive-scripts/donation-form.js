@@ -74,15 +74,11 @@ async function donate({
     // }
     //For traditional (non-Stripe) page
     if(Payment) {
-        await page.waitForSelector(General.DonationForm.cvc);
         await fillInForm({
             page,
             data: Payment,
             Selectors: General.DonationForm
         });
-    }
-    //Click actual submit button if card details were provided.    
-    if(Payment && Payment["card-number"]) {
         await page.click(General.DonationForm.Submit);
     }
     else{

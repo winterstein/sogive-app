@@ -5,7 +5,7 @@ const Event = require('../sogive-scripts/event');
 const Fundraiser = require('../sogive-scripts/fundraiser');
 const Register = require('../sogive-scripts/register');
 
-const fundName = "You will be assimilated";
+const fundName = new Date().toISOString();//"You will be assimilated";
 
 test('Create a fundraiser', async() => {
     const browser = window.__BROWSER__;
