@@ -49,6 +49,9 @@ public class SoGiveConfig implements IESRouter, ISiteConfig {
 		case DRAFT: case PENDING: case REQUEST_PUBLISH: case MODIFIED:
 			index += ".draft";
 			break;
+		case TRASH:
+			index += ".trash";
+			break;
 		default:
 			throw new IllegalArgumentException(type+" "+status);
 		}

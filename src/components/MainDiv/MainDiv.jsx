@@ -38,11 +38,16 @@ DataStore.update({
 	data: {
 		NGO: {},
 		User: {},
-		Donation: {}
+		Donation: {},
+		Fundraiser: {},
+		Basket: {}
 	},
 	draft: {
 		NGO: {},
-		User: {}
+		User: {},
+		Donation: {},
+		Fundraiser: {},
+		Basket: {}
 	},
 	// Use list to store search results
 	list: {

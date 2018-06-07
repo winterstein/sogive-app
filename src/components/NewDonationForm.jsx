@@ -157,7 +157,7 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' setNavStatus>
-						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
+						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} setNavStatus />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
@@ -267,7 +267,10 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
 	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
-	if (setNavStatus) setNavStatus({sufficient: allDetails || ! giftAid, complete: allDetails});
+	if (setNavStatus) {
+		let sufficient = allDetails || ! giftAid;
+		setNavStatus({sufficient, complete: allDetails});
+	}
 	// dflt={Login.getUser() && Login.getUser().name} 
 	// dflt={Login.getEmail()}
 	return (
