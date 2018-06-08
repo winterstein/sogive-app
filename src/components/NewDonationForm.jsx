@@ -192,7 +192,7 @@ const AmountSection = ({path, fromEditor}) => {
 		// stored donation is zero or default? Set to amount of user's credit if present
 		const valValue = Money.value(val);
 		if (valValue === 0 || valValue === 10) {
-			val = credit || Money.make({value: 10});
+			val = credit&&credit.value ? credit : Money.make({value: 10});//Ternary fixes issue where credit= {value:0, ...} was causing an infinite update loop
 		}
 		DataStore.setValue(pathAmount, val);
 	}
