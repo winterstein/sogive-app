@@ -37,8 +37,8 @@ const stripeKey = (C.SERVER_TYPE) ?
  * NB: We can have several DonateButtons, but only one model form
  */
 const DonateButton = ({item, paidElsewhere}) => {
-	assert(item && getId(item), "NewDonationForm.js - DonateButton: no item "+item);
-	const widgetPath = ['widget', 'NewDonationForm', getId(item)];
+	assert(item && getId(item), "DonationWizard.js - DonateButton: no item "+item);
+	const widgetPath = ['widget', 'DonationWizard', getId(item)];
 	// no donations to draft fundraisers or charities
 	if (false && (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED)) {
 		return (
@@ -65,11 +65,11 @@ const DonateButton = ({item, paidElsewhere}) => {
  * 
  * Warning: Only have ONE of these on a page! Otherwise both will open at once!
  */
-const DonationForm = ({item, charity, causeName, fromEditor}) => {	
+const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {	
 
 	const id = getId(item);
-	assert(id, "DonationForm", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
+	assert(id, "CharityPageImpactAndDonate", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 
 	if ( ! charity) {
@@ -77,14 +77,14 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 		else if (FundRaiser.isa(item)) charity = FundRaiser.charity(item);
 	}
 	let charityId = charity? getId(charity) : item.charityId;
-	const widgetPath = ['widget', 'NewDonationForm', id];
+	const widgetPath = ['widget', 'DonationWizard', id];
 	
 	// There can only be one!
 	// TODO move this to Misc for reuse TODO reuse this safety test with other only-one-per-page dialogs
 	// ?? maybe replace the assert with a more lenient return null??
 	const rpath = ['transient', 'render'].concat(widgetPath);
 	const already = DataStore.getValue(rpath);	
-	assert( ! already, "NewDonationForm.jsx - duplicate "+widgetPath);
+	assert( ! already, "DonationWizard.jsx - duplicate "+widgetPath);
 	DataStore.setValue(rpath, true, false);
 
 	// what stage?
@@ -176,7 +176,7 @@ const DonationForm = ({item, charity, causeName, fromEditor}) => {
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
 	);
-}; // ./DonationForm
+}; // ./CharityPageImpactAndDonate
 
 const AmountSection = ({path, fromEditor}) => {
 	let credit = Transfer.getCredit();	
@@ -186,9 +186,9 @@ const AmountSection = ({path, fromEditor}) => {
 	let val = DataStore.getValue(pathAmount);
 	//&& (val.raw === undefined) is a patch fix to allow the field to be blank/0.
 	if ( (!val || !Money.value(val)) && (val.raw === undefined)) {
-		// HACK: grab the amount from the impact widget of DonationForm?
+		// HACK: grab the amount from the impact widget of CharityPageImpactAndDonate?
 		let cid = Donation.to(dontn);
-		val = DataStore.getValue(['widget', 'DonationForm', cid, 'amount']);
+		val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
 		// stored donation is zero or default? Set to amount of user's credit if present
 		const valValue = Money.value(val);
 		if (valValue === 0 || valValue === 10) {
@@ -328,7 +328,7 @@ const onToken_doPayment = ({donation}) => {
 				//This function appears to have been lost somewhere along the way.
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
-				console.log("NewDonationForm doPayment - no fundraiser to refresh", donation);
+				console.log("DonationWizard doPayment - no fundraiser to refresh", donation);
 			}
 		});
 };
@@ -336,7 +336,7 @@ const onToken_doPayment = ({donation}) => {
 
 const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) => {
 	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "NewDonationForm.jsx", item);	
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
 	if ( ! donation) {
 		return null;
 	}
@@ -409,4 +409,4 @@ const ThankYouSection = ({path, item}) => {
 };
 
 export {DonateButton};
-export default DonationForm;
+export default CharityPageImpactAndDonate;

@@ -30,7 +30,7 @@ import Misc from '../base/components/Misc';
 import { impactCalc } from './ImpactWidgetry.jsx';
 import GiftAidForm from './GiftAidForm';
 import SocialShare from './SocialShare';
-import NewDonationForm, {DonateButton} from './NewDonationForm';
+import DonationWizard, {DonateButton} from './DonationWizard';
 
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps
@@ -47,7 +47,7 @@ const donationIncrements = {
 	Infinity: 10000,
 };
 
-class DonationForm extends Component {
+class CharityPageImpactAndDonate extends Component {
 
 	// Bump the donation up or down by a "reasonable" amount for current value
 	// ...and round it to a clean multiple of the increment used
@@ -62,7 +62,7 @@ class DonationForm extends Component {
 		const rawValue = Money.value(amount) + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
 		const newAmount = Money.make({ value, currency: 'GBP' });
-		DataStore.setValue(['widget', 'DonationForm', NGO.id(charity), 'amount'], newAmount);
+		DataStore.setValue(['widget', 'CharityPageImpactAndDonate', NGO.id(charity), 'amount'], newAmount);
 	}
 
 
@@ -74,7 +74,7 @@ class DonationForm extends Component {
 		if (charity.noPublicDonations) {
 			const reason = charity.meta && charity.meta.noPublicDonations && charity.meta.noPublicDonations.notes;
 			return (
-				<div className="DonationForm noPublicDonations">
+				<div className="CharityPageImpactAndDonate noPublicDonations">
 					<p>Sorry: This charity does not accept public donations.</p>
 					{reason ? (<p>The stated reason is: {reason}</p>) : ''}
 				</div>
@@ -82,7 +82,7 @@ class DonationForm extends Component {
 		}
 
 		// donation info
-		const formPath = ['widget', 'DonationForm', NGO.id(charity)];
+		const formPath = ['widget', 'CharityPageImpactAndDonate', NGO.id(charity)];
 		const formData = DataStore.getValue(formPath) || {};
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
@@ -123,7 +123,7 @@ class DonationForm extends Component {
 						<div className='donation-input'>
 							<div className='amount-input'>
 								<Misc.PropControl type='Money' prop='amount' 
-									path={['widget', 'DonationForm', NGO.id(charity)]} changeCurrency={false} />
+									path={['widget', 'CharityPageImpactAndDonate', NGO.id(charity)]} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>
 							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
@@ -140,14 +140,14 @@ class DonationForm extends Component {
 				<div className='below-arrow'>
 					<div className='donate-button'>
 						<DonateButton item={charity} />
-						<NewDonationForm item={charity} />
+						<DonationWizard item={charity} />
 					</div>
 				</div>
 				<div className='clearfix' />
 			</div>
 		);
 	}
-} // ./DonationForm
+} // ./CharityPageImpactAndDonate
 
 const DonationOutput = ({impact, charity}) => {
 	if ( ! impact) {
@@ -169,4 +169,4 @@ const DonationOutput = ({impact, charity}) => {
 	</div>);
 };
 
-export default DonationForm;
+export default CharityPageImpactAndDonate;

@@ -21,7 +21,7 @@ import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Misc from '../base/components/Misc';
-import NewDonationForm, {DonateButton} from './NewDonationForm';
+import DonationWizard, {DonateButton} from './DonationWizard';
 import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
 import SocialShare from './SocialShare';
@@ -107,7 +107,7 @@ const FundRaiserPage = ({id}) => {
 	return (
 		<div>
 			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
-			<NewDonationForm item={item} />
+			<DonationWizard item={item} />
 			<Grid id='FundRaiserPage'>
 				{event.bannerImage? <Row>
 					<Col md={12} className='event-banner'>

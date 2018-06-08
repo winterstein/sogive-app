@@ -64,7 +64,7 @@ async function completeForm({
         await page.click(Register.FreeTicketSubmit);
     }    
     else if(Payment) {
-        await fillInForm({page, data: Payment, Selectors: General.DonationForm});
+        await fillInForm({page, data: Payment, Selectors: General.CharityPageImpactAndDonate});
         await page.click(Register.Submit);
     }
     else{

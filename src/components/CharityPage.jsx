@@ -16,8 +16,8 @@ import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 import Misc from '../base/components/Misc';
 import Login from 'you-again';
-import NewDonationForm, {DonateButton} from './NewDonationForm';
-import DonationForm from './DonationForm';
+import DonationWizard, {DonateButton} from './DonationWizard';
+import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 
@@ -105,7 +105,7 @@ const CharityTags = ({className, tagsString = ''}) => (
 
 const CharityDonate = ({charity}) => (
 	<div className='donation-column'>
-		<DonationForm charity={charity} />
+		<CharityPageImpactAndDonate charity={charity} />
 		<SocialShare charity={charity} />
 	</div>
 );
