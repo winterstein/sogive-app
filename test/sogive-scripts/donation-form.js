@@ -21,13 +21,13 @@ async function donate({
     Message,
     Payment
 }) {
-    await page.waitForSelector(General.DonationForm.DonationButton);
-	await page.click(General.DonationForm.DonationButton);
+    await page.waitForSelector(General.CharityPageImpactAndDonate.DonationButton);
+	await page.click(General.CharityPageImpactAndDonate.DonationButton);
 
     //Should really have an await here.
-    await page.waitForSelector(General.DonationForm.amount);
+    await page.waitForSelector(General.CharityPageImpactAndDonate.amount);
     if(Amount) {
-        await page.click(General.DonationForm.amount);
+        await page.click(General.CharityPageImpactAndDonate.amount);
         //clear field of default value
         await page.keyboard.down('Control');
         await page.keyboard.press('Backspace');
@@ -36,55 +36,55 @@ async function donate({
         await page.keyboard.type(`${Amount.amount}`);
     }
     if(Amount && Amount["hide-amount-checkbox"]) {
-        await page.click(General.DonationForm["hide-amount-checkbox"]);
+        await page.click(General.CharityPageImpactAndDonate["hide-amount-checkbox"]);
     }
     await advanceWizard({page});
 
-    // await page.waitForSelector(General.DonationForm.Previous);//This condition never triggers for some reason. Only seems to happen for logged-out donations
+    // await page.waitForSelector(General.CharityPageImpactAndDonate.Previous);//This condition never triggers for some reason. Only seems to happen for logged-out donations
     // await page.waitForSelector(`label.radio-inline`);
     if(GiftAid) {
         //need to make selectors for fillInForm to work with
         await advanceWizard({page});
     }
 
-    await page.waitForSelector(General.DonationForm.name);
+    await page.waitForSelector(General.CharityPageImpactAndDonate.name);
     if(Details) { 
         await fillInForm({
             page,
             data: Details,
-            Selectors: General.DonationForm
+            Selectors: General.CharityPageImpactAndDonate
         });
     }
     await advanceWizard({page});
 
     if(Message) {
-        await page.waitForSelector(General.DonationForm.message);
+        await page.waitForSelector(General.CharityPageImpactAndDonate.message);
         await fillInForm({
             page,
             data: Message,
-            Selectors: General.DonationForm
+            Selectors: General.CharityPageImpactAndDonate
         });
         await advanceWizard({page});
     }
 
     //Sometimes Stripe button appears, sometimes not
-    // if(!await page.$(General.DonationForm.Submit)) {    
-    //     await page.click(General.DonationForm.Stripe);
+    // if(!await page.$(General.CharityPageImpactAndDonate.Submit)) {    
+    //     await page.click(General.CharityPageImpactAndDonate.Stripe);
     //     //Not possible to use selectors for emergent menu. Need to use coordinates
         
     // }
     //For traditional (non-Stripe) page
-    await page.waitForSelector(General.DonationForm.TestSubmit);
+    await page.waitForSelector(General.CharityPageImpactAndDonate.TestSubmit);
     if(Payment) {
         await fillInForm({
             page,
             data: Payment,
-            Selectors: General.DonationForm
+            Selectors: General.CharityPageImpactAndDonate
         });
-        await page.click(General.DonationForm.Submit);
+        await page.click(General.CharityPageImpactAndDonate.Submit);
     }
     else{
-        await page.click(General.DonationForm.TestSubmit);
+        await page.click(General.CharityPageImpactAndDonate.TestSubmit);
     }
 
     //Wait for Receipt to appear before closing

@@ -12,7 +12,7 @@ import Roles from '../../base/Roles';
 
 import Misc from '../../base/components/Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
-import NewDonationForm, {DonateButton} from '../NewDonationForm';
+import DonationWizard, {DonateButton} from '../DonationWizard';
 import ShareWidget, {ShareLink, canWrite} from '../../base/components/ShareWidget';
 import {notifyUser} from '../../base/plumbing/Messaging';
 
@@ -101,7 +101,7 @@ const AddOffSiteDonation = ({fundraiser}) => {
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
 			<DonateButton item={fundraiser} paidElsewhere />
-			<NewDonationForm item={fundraiser} fromEditor />
+			<DonationWizard item={fundraiser} fromEditor />
 		</Misc.Card>
 	);
 };
