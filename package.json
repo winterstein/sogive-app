@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -34,7 +34,7 @@
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^1.6.0",
     "sjtest": "^0.4.7",
-    "webpack": "^3.12.0",
+    "webpack": "^3.11.0",
     "wwutils": "^0.9.1",
     "you-again": "^0.7.0"
   },
