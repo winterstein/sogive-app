@@ -25,12 +25,12 @@
     "react-bootstrap": "^0.32.1",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.4.0",
-    "react-dropzone": "^4.2.10",
+    "react-dropzone": "^4.2.11",
     "react-markdown": "^3.3.2",
     "react-stripe-checkout": "^2.6.3",
-    "react-stripe-elements": "^1.6.0",
+    "react-stripe-elements": "^1.7.0",
     "sjtest": "^0.4.7",
-    "wwutils": "^0.9.1",
+    "wwutils": "^0.9.2",
     "you-again": "^0.7.0"
   },
   "scripts": {

@@ -37,29 +37,34 @@ async function completeForm({
 
     await page.click(Register.Add);
 
-    await page.click(Register.Next);
-    await page.waitForSelector(Register.Next);        
+    await advanceWizard({page});      
+    await page.waitForSelector(Register.Next);
     //Will fail if user is not already logged-in
-    await page.click(Register.Next);
+    await advanceWizard({page});      
     await page.waitForSelector(`div.AttendeeDetails`);
-
     //fill in Details
-    await page.click(Register.Next);
-    await page.waitForSelector(Register.charity);  
+    await advanceWizard({page});     
+    await page.waitForSelector(Register.charity);
     
     //Your Charity
     if(Charity) await fillInForm({page, data: Charity, Selectors: Register});
-    if(await page.$eval(Register['select-first-charity-checkbox'], e => e)) await page.click(Register['select-first-charity-checkbox']);
-    page.click(Register.Next);
+    try{
+        await page.waitFor(1000);
+        await page.click(Register['select-first-charity-checkbox']);
+    } catch(e) {
+        console.log('No valid charity found');
+    }
+    // if(await page.$(Register['select-first-charity-checkbox'])) await page.click(Register['select-first-charity-checkbox']);
+    await advanceWizard({page});      
     await page.waitForSelector(`div.invoice`);
-
+    
     //Checkout
     //Special case to deal with button being different where event ticket price is set to £0
     if (await page.$(Register.FreeTicketSubmit) !== null) {
         await page.click(Register.FreeTicketSubmit);
     }    
     else if(Payment) {
-        await fillInForm({page, data: Payment, Selectors: General.DonationForm});
+        await fillInForm({page, data: Payment, Selectors: General.CharityPageImpactAndDonate});
         await page.click(Register.Submit);
     }
     else{
@@ -73,6 +78,23 @@ async function completeForm({
     await page.click(General.CRUD.Publish);
     await page.waitForSelector(`${General.CRUD.Publish}[disabled]`, {hidden: true});
 }
+
+async function advanceWizard({page}) {
+    const url = await page.evaluate(() => window.location.href);
+    const stage = url.match(/.*registerStage=(.?).*/)? url.match(/.*registerStage=(.?).*/)[1] : 0;
+    let gotoURL;
+    if(url.includes('registerStage')) {
+        gotoURL = url.replace(/(.*)(registerStage=.?)(.*)/, `$1registerStage=${+stage+1}$3`);
+    }
+    else if(url.includes('?')) {
+        gotoURL = url + `&registerStage=${+stage+1}`;
+    }
+    else{
+        gotoURL = url+`?registerStage=${+stage+1}`;
+    }
+    await page.goto(gotoURL);
+}
+
 
 module.exports = {
     completeForm,

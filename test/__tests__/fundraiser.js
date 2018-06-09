@@ -5,7 +5,9 @@ const Event = require('../sogive-scripts/event');
 const Fundraiser = require('../sogive-scripts/fundraiser');
 const Register = require('../sogive-scripts/register');
 
-test('Create (and then delete) a fundraiser', async() => {
+const fundName = new Date().toISOString();//"You will be assimilated";
+
+test('Create a fundraiser', async() => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
 
@@ -14,7 +16,7 @@ test('Create (and then delete) a fundraiser', async() => {
     await Event.createNewEvent({
         page,
         event: {
-            name: "You will be assimilated",
+            name: fundName,
             description: "Resistance is futile",
             "web-page": 'https://developers.google.com/web/tools/puppeteer/',
             "matched-funding": 10,
@@ -31,22 +33,53 @@ test('Create (and then delete) a fundraiser', async() => {
             "attendee-icon": 'https://h5p.org/sites/default/files/h5p/content/10583/images/file-56f540bfae28b.jpg'
         }
     });    
-    await Register.goto({page, fundName:"You will be assimilated"});
+    await Register.goto({page, fundName});
     await Register.completeForm({
         page, 
         Charity: {
-            charity:"puppet",
+            charity: "puppet",
         },
         EditFundraiser: {
-            name: "You will be assimilated",
+            name: fundName,
             description: "I really hope so"
         }
     });
-    await Fundraiser.deleteFundraiser({page, fundName:"You will be assimilated"});
-    await Event.deleteEvent({page, eventName: "You will be assimilated"}); 
 }, 45000);
 
-// Seperated out deleting events. Was meaning that screenshot taken for above is completely useless
+test('Logged-out fundraiser donation', async() => {
+    const browser = window.__BROWSER__;
+    const page = await browser.newPage();
+
+    await Fundraiser.goto({page, fundName});
+    await Fundraiser.donate({page, GiftAid: {}, Message: {message:'???'}});
+}, 15000);
+
+test('Logged-in fundraiser donation', async() => {
+    const browser = window.__BROWSER__;
+    const page = await browser.newPage();
+
+    await Fundraiser.goto({page, fundName});
+    await login({page, username, password});    
+    await Fundraiser.donate({page, GiftAid: {}, Message: {message:'???'}});
+}, 15000);
+
+test('Delete fundraiser', async() => {
+    const page = await window.__BROWSER__.newPage();
+
+    await Fundraiser.goto({page, fundName});
+    await login({page, username, password});
+    await Fundraiser.deleteFundraiser({page, fundName});
+}, 15000);
+
+test('Delete event', async() => {
+    const page = await window.__BROWSER__.newPage();
+
+    await Event.goto({page});
+    await login({page, username, password});
+    await Event.deleteEvent({page, eventName: fundName});
+}, 15000);
+
+// Separated out deleting events. Was meaning that screenshot taken for above is completely useless
 // test('Delete fundraiser and event', async() => {
 //     const browser = window.__BROWSER__;
 //     const page = await browser.newPage();

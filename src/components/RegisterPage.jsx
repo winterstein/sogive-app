@@ -22,7 +22,7 @@ import { SearchResults } from './SearchPage';
 import Roles from '../base/Roles';
 import Misc from '../base/components/Misc';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
-import NewDonationForm from './NewDonationForm';
+import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 

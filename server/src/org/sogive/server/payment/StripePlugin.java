@@ -92,7 +92,7 @@ public class StripePlugin {
 		String secretKey = secretKey();
 //		// Charge them!
 		Stripe.apiKey = secretKey;
-		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
+//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("source", sa.id);
         // pence, rounding up

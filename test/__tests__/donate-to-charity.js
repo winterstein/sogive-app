@@ -11,7 +11,7 @@ test('Logged-in charity donation', async () => {
     await login({page, username, password});  
     await Search.search({
         page, 
-        search_term: 'oxfam'
+        search_term: 'AMF'
     });
     await Search.gotoResult({
         page, 
@@ -20,8 +20,9 @@ test('Logged-in charity donation', async () => {
     await Donation.donate({
         page, 
         Amount: {
-            amount: 100
+            amount: 1
         }, 
+        GiftAid: {},
         Details: {
             'name': 'Human Realman',
             'email': 'mark@winterwell.com',
@@ -31,7 +32,7 @@ test('Logged-in charity donation', async () => {
             'anon-checkbox': true
         }
     });     
-}, 15000);
+}, 20000);
 
 test('Logged-out charity donation', async () => {
     const browser = window.__BROWSER__;
@@ -39,11 +40,25 @@ test('Logged-out charity donation', async () => {
     await Search.goto(page);
     await Search.search({
         page, 
-        search_term: 'oxfam'
+        search_term: 'AMF'
     });
     await Search.gotoResult({
         page, 
         selectorOrInteger: 1
     });
-    await Donation.donate({page});     
-}, 15000);
+    await Donation.donate({
+        page, 
+        Amount: {
+            amount: 1
+        }, 
+        GiftAid: {},
+        Details: {
+            'name': 'Human Realman',
+            'email': 'mark@winterwell.com',
+            'address': '123 Clown Shoes Avenue',
+            'postcode': 'CS20AD',
+            'consent-checkbox': true,
+            'anon-checkbox': true
+        }
+    });       
+}, 20000);

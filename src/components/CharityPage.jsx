@@ -16,8 +16,8 @@ import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 import Misc from '../base/components/Misc';
 import Login from 'you-again';
-import NewDonationForm, {DonateButton} from './NewDonationForm';
-import DonationForm from './DonationForm';
+import DonationWizard, {DonateButton} from './DonationWizard';
+import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 
@@ -105,7 +105,7 @@ const CharityTags = ({className, tagsString = ''}) => (
 
 const CharityDonate = ({charity}) => (
 	<div className='donation-column'>
-		<DonationForm charity={charity} />
+		<CharityPageImpactAndDonate charity={charity} />
 		<SocialShare charity={charity} />
 	</div>
 );
@@ -148,6 +148,9 @@ const CharityAboutImage = ({charity}) => {
 	</div>);
 };
 
+/**
+ * The charity extra tab
+ */
 const CharityExtra = ({charity}) => {
 	if (!charity || !charity.projects || !charity.projects.length) return null;
 	const projectsByYear = {};
@@ -161,18 +164,21 @@ const CharityExtra = ({charity}) => {
 		projectsByYear[project.year] = projectsForYear;
 	});
 
-	const yearDivs = Object.keys(projectsByYear).sort().reverse().map(year => (
-		<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
-	));
+	// const yearDivs = Object.keys(projectsByYear).sort().reverse().map(year => (
+	// 	<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
+	// ));
+
 	let refs = NGO.getCitations(charity);
 
-	// hide extra-info from most users -- only senior editors and admins
-	let showProjectInfo = Roles.iCan(C.CAN.publish).value;
+	// // hide extra-info from most users -- only senior editors and admins
+	// let showProjectInfo = Roles.iCan(C.CAN.publish).value;
+	// {showProjectInfo? yearDivs : null}
 
 	return (
 		<div className='charity-extra'>
-			{showProjectInfo? yearDivs : null}
+			<Quote text={charity.recommendation} />			
 			{refs.length? <Citations citations={refs} /> : null}
+			<p>Join the SoGive team as a volunteer editor to help us turn charity reporting into meaningful impact models.</p>
 		</div>
 	);
 };
@@ -205,30 +211,29 @@ const CharityExtraYear = ({year, projects}) => {
 	);
 };
 
+
+/** Markdown swallows single line breaks - but normal people processing text don't expect this!
+Using a regex to normalise all strings of CRs to \n\n before sending to printer so the story formatting behaves more intuitively for now. */
+const Quote = ({text}) => {
+	if ( ! text || ! text.replace) return null;
+	const storiesProcessed = text.replace(/\n+/g, '\n\n');
+	return (
+		<p className='quote'>
+			<span className='quote-marks fa fa-quote-left' />
+			<span dangerouslySetInnerHTML={{ __html: printer.textToHtml(storiesProcessed) }} />
+			<span className='quote-marks fa fa-quote-right' />
+		</p>
+	);
+};
+
 const CharityExtraProject = ({project, showTitle}) => {
 	if ( ! project) return null;
 	const {inputs, outputs} = project;
-
-	/* Markdown swallows single line breaks - but normal people processing text don't expect this!
-	Using a regex to normalise all strings of CRs to \n\n before sending to printer so the story formatting behaves more intuitively for now. */
-	let stories = '';
-	if (project.stories && project.stories.replace) {
-		window.story = project.stories;
-
-		const storiesProcessed = project.stories.replace(/\n+/g, '\n\n');
-		stories = (
-			<p className='project-stories'>
-				<span className='quote fa fa-quote-left' /> <span dangerouslySetInnerHTML={{ __html: printer.textToHtml(storiesProcessed) }} /> <span className='quote fa fa-quote-right' />
-			</p>
-		);
-	}
-
-
 	return (
 		<div className='extra-project'>
 			{ showTitle ? <h3 className='project-name'>{project.name}</h3> : null }
 			{ project.images ? <img className='project-image' src={project.images} alt='project' /> : null }
-			{ stories }
+			<Quote text={project.stories} />
 			<div className='project-io'>
 				<div className='project-inputs'>
 					<h4>Inputs</h4>

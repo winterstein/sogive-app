@@ -12,7 +12,7 @@ import DataStore from '../base/plumbing/DataStore';
 import Misc from '../base/components/Misc';
 import {LoginLink} from '../base/components/LoginWidget';
 import Donation from '../data/charity/Donation';
-import DonationForm, {DonateButton} from './NewDonationForm';
+import CharityPageImpactAndDonate, {DonateButton} from './DonationWizard';
 
 const DashboardPage = () => {
 	let user = Login.getUser();
