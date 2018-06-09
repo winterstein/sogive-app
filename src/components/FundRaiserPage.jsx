@@ -21,8 +21,7 @@ import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Misc from '../base/components/Misc';
-import GiftAidForm from './GiftAidForm';
-import NewDonationForm, {DonateButton} from './NewDonationForm';
+import DonationWizard, {DonateButton} from './DonationWizard';
 import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
 import SocialShare from './SocialShare';
@@ -108,7 +107,7 @@ const FundRaiserPage = ({id}) => {
 	return (
 		<div>
 			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
-			<NewDonationForm item={item} />
+			<DonationWizard item={item} />
 			<Grid id='FundRaiserPage'>
 				{event.bannerImage? <Row>
 					<Col md={12} className='event-banner'>
@@ -140,7 +139,7 @@ const FundRaiserPage = ({id}) => {
 							<h3>About Me: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
-						<p>{item.owner.description? <ReactMarkdown source={item.owner.description} /> : null}</p>
+						<div>{item.owner.description? <ReactMarkdown source={item.owner.description} /> : null}</div>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -248,7 +247,7 @@ const DonationsSoFar = ({item}) => {
 		);		
 	}
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
-	const diff = Money.sub(target, item.donated);
+	const diff = Money.sub(target, donated);
 
 	if (diff.value <= 0) {
 		return (

@@ -19,6 +19,10 @@ import ServerIO from '../base/plumbing/ServerIOBase';
 
 ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
+<<<<<<< HEAD
+=======
+// ServerIO.APIBASE = 'https://app.sogive.org';
+>>>>>>> 9fe3c2d2c1f194dbf22444cf3a06d85747c235b8
 
 
 ServerIO.checkBase();
