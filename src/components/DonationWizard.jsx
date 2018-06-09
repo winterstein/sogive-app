@@ -132,7 +132,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	let donationDraft = pDonation.value;
 	Donation.assIsa(donationDraft);
 	
-	const path = ['data', type, donationDraft.id];
+	const path = DataStore.getPath(C.KStatus.DRAFT, type, donationDraft.id);
 	assert(donationDraft === DataStore.getValue(path), DataStore.getValue(path));
 	// Don't ask for gift-aid details if the charity doesn't support it
 	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];

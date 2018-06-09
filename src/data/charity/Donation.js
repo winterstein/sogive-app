@@ -70,12 +70,13 @@ Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
  */
 Donation.to = don => This.assIsa(don) && don.to;
 
+/**
+ * @param {
+ * 	to: {?String} charity ID
+ * 	amount: {?Money}
+ * }
+ */
 Donation.make = (base = {}) => {
-	// to must be a charity
-	if (base.to) {
-		let charity = DataStore.getValue('data',C.TYPES.NGO, base.to);
-		if ( ! charity) console.error("Donation not to a charity?! "+base.to, base);
-	}
 	let ma = {
 		'@type': C.TYPES.Donation,
 		/* The user's contribution (this is what the user pays; not what the charity recieves) */
