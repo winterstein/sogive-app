@@ -17,9 +17,8 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
 
-ServerIO.APIBASE = 
-	// '';
-	'https://test.sogive.org';
+ServerIO.APIBASE = '';
+// ServerIO.APIBASE = 'https://test.sogive.org';
 
 
 ServerIO.checkBase();
