@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import SJTest from 'sjtest';
-import MainDiv from './components/MainDiv/MainDiv';
+import MainDiv from './components/MainDiv';
 import {getUrlVars, addScript} from 'wwutils';
 
 ReactDOM.render(

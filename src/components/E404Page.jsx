@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
-import printer from '../utils/printer.js';
+import printer from '../base/utils/printer.js';
 import C from '../C';
-import Roles from '../Roles';
+import Roles from '../base/Roles';
 
 const E404Page = () => {
 	return (
