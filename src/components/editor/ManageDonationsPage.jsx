@@ -36,8 +36,7 @@ const ManageDonationsPage = () => {
 				let dons = res.cargo.hits;
 				dons.forEach(don => {
 					// console.log("setData", don);
-					DataStore.setValue(['data', C.TYPES.Donation, getId(don)], don, false);
-					// DataStore.setData(don); // handle missing type
+					DataStore.setData(null, don, false); // handle missing type
 				});
 				return res;
 			});

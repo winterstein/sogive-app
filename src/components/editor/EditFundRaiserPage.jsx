@@ -6,7 +6,7 @@ import Login from 'you-again';
 import {encURI} from 'wwutils';
 
 import ActionMan from '../../plumbing/ActionMan';
-import DataStore from '../../base/plumbing/DataStore';
+import DataStore, {getPath} from '../../base/plumbing/DataStore';
 import C from '../../C';
 import Roles from '../../base/Roles';
 
@@ -54,7 +54,7 @@ const FundRaiserEditor = ({id}) => {
 
 	// TODO charity reuses register form control
 
-	const path = ['data', type, id];
+	const path = getPath(C.KStatus.DRAFT, type, id);
 	const peepPath = path.concat('owner');
 
 	return (<div className='padded-page'>

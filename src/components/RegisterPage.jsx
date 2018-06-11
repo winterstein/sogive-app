@@ -355,7 +355,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label={'Same address and team as first person'} /> : null}
+				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
 				{ sameAsFirst? null : 
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
@@ -370,7 +370,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 
 const TeamControl = ({ticket, path}) => {
 	// does this event support teams?
-	let event = Ticket.eventId(ticket)? DataStore.getData(C.TYPES.Event, Ticket.eventId(ticket)) : null;
+	let event = Ticket.eventId(ticket)? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, Ticket.eventId(ticket)) : null;
 	if (event && event.teams === false) {
 		return null;
 	}

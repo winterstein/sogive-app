@@ -8,7 +8,7 @@ import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../base/Roles';
 import Misc from '../../base/components/Misc';
-import DataStore from '../../base/plumbing/DataStore';
+import DataStore, {getPath} from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../base/data/DataClass';
@@ -66,7 +66,7 @@ const EventEditor = ({id}) => {
 		DataStore.update();
 	};
 
-	const path = ['data', type, id];
+	const path = getPath(C.KStatus.DRAFT, type, id);
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
 		<small>ID: {id}</small>

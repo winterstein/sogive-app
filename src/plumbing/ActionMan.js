@@ -182,7 +182,7 @@ ActionMan.getBasketPath = (uxid) => {
 		uxid = Login.getId() || Login.getTempId();		
 	}
 	const bid = Basket.idForUxid(uxid);
-	return ['data', C.TYPES.Basket, bid];
+	return DataStore.getPath(C.KStatus.DRAFT, C.TYPES.Basket, bid);
 };
 
 /**
@@ -215,7 +215,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 	assMatch(forId, String, "getDonationDraft() expects an id string");
 	// use a pseudo id to keep it in the local DataStore
 	let from = Login.getId();
-	return DataStore.fetch(['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId], () => {
+	return DataStore.fetch(['draft', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId], () => {
 		// return ServerIO.getDonationDraft({from, charity, fundRaiser})
 		// 	.then(res => {
 		// 		console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
@@ -248,7 +248,7 @@ ActionMan.clearDonationDraft = ({donation}) => {
 	let fundRaiser = donation.fundRaiser;
 	const forId = fundRaiser || charity;
 
-	const path = ['data', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId];
+	const path = ['draft', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId];
 	console.warn("Values before deletion", DataStore.getValue(path));
 	DataStore.setValue(path, null);
 };

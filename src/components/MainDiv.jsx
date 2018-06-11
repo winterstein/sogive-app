@@ -5,30 +5,30 @@ import { getUrlVars, toTitleCase, modifyHash } from 'wwutils';
 import _ from 'lodash';
 
 // Plumbing
-import DataStore from '../../base/plumbing/DataStore';
-import Roles from '../../base/Roles';
-import C from '../../C';
+import DataStore from '../base/plumbing/DataStore';
+import Roles from '../base/Roles';
+import C from '../C';
 // Templates
-import MessageBar from '../../base/components/MessageBar';
-import NavBar from '../../base/components/NavBar';
-import LoginWidget from '../../base/components/LoginWidget';
+import MessageBar from '../base/components/MessageBar';
+import NavBar from '../base/components/NavBar';
+import LoginWidget from '../base/components/LoginWidget';
 // Pages
-import DashboardPage from '../DashboardPage';
-import SearchPage from '../SearchPage';
-import AccountPage from '../AccountPage';
-import AboutPage from '../../base/components/AboutPage';
-import CharityPage from '../CharityPage';
-import EditCharityPage from '../editor/EditCharityPage';
-import EditorDashboardPage from '../editor/EditorDashboardPage';
-import ExchangeRatesPage from '../editor/ExchangeRatesPage';
-import FundRaiserPage from '../FundRaiserPage';
-import EditFundRaiserPage from '../editor/EditFundRaiserPage';
-import ManageDonationsPage from '../editor/ManageDonationsPage';
-import EditEventPage from '../editor/EditEventPage';
-import EventPage from '../EventPage';
-import EventReportPage from '../editor/EventReportPage';
-import RegisterPage from '../RegisterPage';
-import E404Page from '../../base/components/E404Page';
+import DashboardPage from './DashboardPage';
+import SearchPage from './SearchPage';
+import AccountPage from './AccountPage';
+import AboutPage from '../base/components/AboutPage';
+import CharityPage from './CharityPage';
+import EditCharityPage from './editor/EditCharityPage';
+import EditorDashboardPage from './editor/EditorDashboardPage';
+import ExchangeRatesPage from './editor/ExchangeRatesPage';
+import FundRaiserPage from './FundRaiserPage';
+import EditFundRaiserPage from './editor/EditFundRaiserPage';
+import ManageDonationsPage from './editor/ManageDonationsPage';
+import EditEventPage from './editor/EditEventPage';
+import EventPage from './EventPage';
+import EventReportPage from './editor/EventReportPage';
+import RegisterPage from './RegisterPage';
+import E404Page from '../base/components/E404Page';
 
 
 /**
