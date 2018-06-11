@@ -11,7 +11,7 @@ test('Logged-in charity donation', async () => {
     await login({page, username, password});  
     await Search.search({
         page, 
-        search_term: 'AMF'
+        search_term: 'oxfam'
     });
     await Search.gotoResult({
         page, 
@@ -40,7 +40,7 @@ test('Logged-out charity donation', async () => {
     await Search.goto(page);
     await Search.search({
         page, 
-        search_term: 'AMF'
+        search_term: 'oxfam'
     });
     await Search.gotoResult({
         page, 

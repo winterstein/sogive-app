@@ -19,11 +19,12 @@ async function search({page, search_term}) {
 }
 /**Can specify result to click by either charityId or position in results list. 
  * NOTE: will throw an error if specified result is not found
+ * Selecting result by integer needs to be fixed (11/06/18)
 */
 async function gotoResult({page, selectorOrInteger = 1}) {
     let result_selector = Search.Main.ResultsList;
 
-    if(Number.isInteger(selectorOrInteger)) result_selector += ` div:nth-child(${selectorOrInteger})`;
+    if(Number.isInteger(selectorOrInteger)) result_selector += ` div.SearchResult`;//Hard-set to click on first result. Needs to be fixed -- issue is that there are sibling divs that don't contain results
     if(typeof selectorOrInteger === 'string') result_selector += ` ${selectorOrInteger}`;
     result_selector += ` a`;
     page.click(result_selector);
