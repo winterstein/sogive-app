@@ -42,7 +42,7 @@ const EditCharityPage = () => {
 					res.cargo.status = C.KStatus.DRAFT;
 					res.cargo.uptodatedraft = "yes";
 					console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
-					DataStore.setData(res.cargo);
+					DataStore.setData(C.KStatus.DRAFT, res.cargo);
 				}
 			});
 		}

@@ -309,7 +309,7 @@ const MessageSection = ({path, recipient}) => (
  * TODO refactor this into PaymentWidget
  */
 const onToken_doPayment = ({donation}) => {
-	DataStore.setData(donation);
+	DataStore.setData(C.KStatus.DRAFT, donation);
 	// invalidate credit if some got spent	
 	let credit = Transfer.getCredit();
 	if (credit && Money.value(credit) > 0) {

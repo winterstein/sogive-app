@@ -134,7 +134,7 @@ ActionMan.getBasketPV = (uxid) => {
 	let pGetMake = pvbasket.promise.catch(err => {
 		console.log("make a new basket");
 		let basket = Basket.make({id: bid});
-		DataStore.setData(basket);
+		DataStore.setData(C.KStatus.DRAFT, basket);
 		return basket;
 	});
 	return PV(pGetMake);
@@ -159,7 +159,7 @@ ActionMan.addToBasket = (basket, item) => {
 		item = _.cloneDeep(item);
 	}
 	basket.items = (basket.items || []).concat(item);
-	DataStore.setData(basket);
+	DataStore.setData(C.KStatus.DRAFT, basket);
 	return basket;
 };
 
@@ -173,7 +173,7 @@ ActionMan.removeFromBasket = (basket, item) => {
 		return;
 	}
 	basket.items.splice(i, 1);
-	DataStore.setData(basket);
+	DataStore.setData(C.KStatus.DRAFT, basket);
 	return basket;
 };
 
@@ -234,7 +234,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 		console.warn('donationDraft-new', dontn);
 		// }
 		// store in data by ID (the fetch stores under draft-to)
-		DataStore.setData(dontn);
+		DataStore.setData(C.KStatus.DRAFT, dontn);
 		return dontn;
 		// }); // ./then()
 	}); // ./fetch()

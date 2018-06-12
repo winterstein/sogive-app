@@ -15,11 +15,11 @@ import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
 
-const onEditPaidOut = ({item, value, event, row, column}) => {
-	item.paidOut = value;
-	console.warn('onEditPaidOut', item, row, column, value, event);
-	DataStore.setData(item);
-};
+// const onEditPaidOut = ({item, value, event, row, column}) => {
+// 	item.paidOut = value;
+// 	console.warn('onEditPaidOut', item, row, column, value, event);
+// 	DataStore.setData(item);
+// };
 
 const ManageDonationsPage = () => {
 
