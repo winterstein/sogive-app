@@ -49,19 +49,17 @@ Project.getLatest = (projects) => {
 };
 
 Project.getTotalCost = (project) => {
-	const ttl = Money.total(project.inputs);
-
-	// TODO delete old code
+	// total - but some inputs are actually negatives
 	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);
 	const value = project.inputs.reduce((total, input) => {
-		if (deductibleInputs.indexOf(input.name) < 0) {
-			return total + (Money.value(input) || 0);
-		} 
-		return total - (input.value || 0);
+		if (deductibleInputs.indexOf(input.name) !== -1) {
+			// These count against the total
+			// NB: Use abs in case an overly smart editor put them in as -ives
+			return total - Math.abs(input.value || 0);
+		}
+		return total + (Money.value(input) || 0); // normal
 	}, 0);
-	// return Money.make({currency, value});
-	
-	return ttl;
+	return Money.make({currency, value});
 };
 
 const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];
