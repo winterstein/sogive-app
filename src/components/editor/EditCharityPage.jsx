@@ -220,25 +220,13 @@ const ProfileEditor = ({charity}) => {
 
 const ProjectsEditor = ({charity, projects, isOverall}) => {
 	assert(NGO.isa(charity), 'ProjectsEditor', charity);
-	if (projects.length===0) {
-		return (<div>
-			<p>How does SoGive use projects data?</p>
-			<ul>
-				<li>There are some charities which do just one thing – single-project charities. For those charities, the projects section can be left blank.</li>
-				<li>If the charity does several things, we will use a split of the costs between different projects to understand how the charity allocates its funds between different activities.</li>
-				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
-				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
-			</ul>
-			<AddProject charity={charity} isOverall={isOverall} />
-		</div>);
-	}
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Misc.Card key={'project_'+i} 
 			title={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Misc.Card>)
-		);
+	);
 	return (
 		<div>
 			<p>How does SoGive use projects data?</p>
@@ -248,7 +236,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
 				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
 			</ul>
-			<Misc.CardAccordion widgetName={isOverall? 'overalls' : 'projects'}>{rprojects}</Misc.CardAccordion>
+			{projects.length? <Misc.CardAccordion widgetName={isOverall? 'overalls' : 'projects'}>{rprojects}</Misc.CardAccordion> : null}
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>
 	);
@@ -520,7 +508,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let inputsPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid, 'inputs']);
 	{	// sanity check
 		const dspi = DataStore.getValue(inputsPath);
-		assert(dspi === project.inputs, "EditCharityPage.ProjectInputEditor", dspi, project.inputs);
+		assert( ! dspi || dspi === project.inputs, "EditCharityPage.ProjectInputEditor", inputsPath, dspi, project.inputs);
 	}
 	// where in the list are we?
 	let ii = project.inputs.indexOf(input);
