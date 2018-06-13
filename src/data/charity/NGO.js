@@ -139,25 +139,11 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	}
 	// overheads?
 	if ( ! Project.isOverall(project)) {
-		try {
-			// get the overall for that year
-			let yr = Project.year(project);
-			let overall = NGO.getOverall(charity, yr);
-			// get all the projects for that year
-			let thatYearsProjects = charity.projects.filter(p => ! Project.isOverall(p) && Project.year(p) == yr);
-			// sum project costs
-			let overallCosts = Project.getTotalCost(overall);
-			let thatYearsProjectCosts = thatYearsProjects.map(p => Project.getTotalCost(p));
-			const totalProjectCost = Money.total(thatYearsProjectCosts);
-			let adjustment = Money.divide(overallCosts, totalProjectCost);
-			let adjustedProjectCost = Money.mul(projectCost, adjustment);
-			let v = Money.value(adjustedProjectCost);
-			if (isFinite(v)) {
-				projectCost = adjustedProjectCost;
-			}
-		} catch(err) {
-			console.warn("NGO.js costPerBen overheads adjustment failed ", err, charity, project);
-		}
+		let year = Project.year(project);
+		const adjustment = NGO.getOverheadAdjustment({charity, year});
+		let adjustedProjectCost = Money.mul(projectCost, adjustment);
+		let v = Money.value(adjustedProjectCost);
+		projectCost = adjustedProjectCost;		
 	}
 	Money.assIsa(projectCost);
 	if ( ! _.isNumber(outputCount)) {
@@ -168,6 +154,27 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	let costPerOutput = Money.make(projectCost);
 	Money.setValue(costPerOutput, projectCost.value / outputCount);
 	return costPerOutput;
+};
+
+NGO.getOverheadAdjustment = ({year, charity}) => {
+	try {
+		// get the overall for that year
+		let overall = NGO.getOverall(charity, year);
+		// get all the projects for that year
+		let thatYearsProjects = charity.projects.filter(p => ! Project.isOverall(p) && Project.year(p) == year);
+		// sum project costs
+		let overallCosts = Project.getTotalCost(overall);
+		let thatYearsProjectCosts = thatYearsProjects.map(p => Project.getTotalCost(p));
+		const totalProjectCost = Money.total(thatYearsProjectCosts);
+		let adjustment = Money.divide(overallCosts, totalProjectCost);
+		if ( ! isFinite(adjustment)) {
+			return 1;
+		}
+		return adjustment;
+	} catch(err) {
+		console.warn("NGO.js costPerBen overheads adjustment failed ", err, charity, year);		
+		return 1;
+	}
 };
 
 /**
