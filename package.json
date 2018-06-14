@@ -10,7 +10,6 @@
   "license": "MIT",
   "dependencies": {
     "chart.js": "^2.7.2",
-    "data-pivot": "^0.3.1",
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
     "hashmap": "^2.3.0",

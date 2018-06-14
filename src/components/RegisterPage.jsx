@@ -26,9 +26,6 @@ import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 
-import pivot from 'data-pivot';
-window.pivot = pivot;
-
 /**
  * Sign up for an event!
  */
@@ -138,7 +135,6 @@ const TicketTypes = ({event, basket}) => {
 	if ( ! event.ticketTypes) {
 		return <div className='alert alert-warning'>No tickets have been setup for this event. Please speak to the event organiser.</div>;
 	}
-	// pivot data ??why/to-what
 	const nameToTickets = {};
 	event.ticketTypes.forEach(tt => {
 		const ticketsForName = nameToTickets[tt.name];
