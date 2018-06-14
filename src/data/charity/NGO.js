@@ -160,11 +160,15 @@ NGO.getOverheadAdjustment = ({year, charity}) => {
 	try {
 		// get the overall for that year
 		let overall = NGO.getOverall(charity, year);
+		if ( ! overall) {
+			return 1;
+		}
 		// get all the projects for that year
 		let thatYearsProjects = charity.projects.filter(p => ! Project.isOverall(p) && Project.year(p) == year);
-		// sum project costs
+		// sum project costs, subtracting income
 		let overallCosts = Project.getTotalCost(overall);
-		let thatYearsProjectCosts = thatYearsProjects.map(p => Project.getTotalCost(p));
+		// ?? how to handle project level inputs c.f. emails "Overheads calculation"
+		let thatYearsProjectCosts = thatYearsProjects.map(p => p.inputs.projectCosts || p.inputs.annualCosts);
 		const totalProjectCost = Money.total(thatYearsProjectCosts);
 		let adjustment = Money.divide(overallCosts, totalProjectCost);
 		if ( ! isFinite(adjustment)) {

@@ -48,6 +48,9 @@ Project.getLatest = (projects) => {
 	return psorted[psorted.length - 1];
 };
 
+/**
+ * Actually, this is "get the total cost minus certain categories, so its more like total costs covered by donations"
+ */
 Project.getTotalCost = (project) => {
 	// total - but some inputs are actually negatives
 	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);

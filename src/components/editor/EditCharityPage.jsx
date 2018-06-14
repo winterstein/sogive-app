@@ -518,10 +518,11 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	}
 	assert(ii !== -1, "EditCharityPage.ProjectInputEditor");
 	assert(pid !== -1, "EditCharityPage.ProjectInputEditor");
+	const iname = STD_INPUTS[input.name] || input.name;
 	return (<tr>
-		<td>{STD_INPUTS[input.name] || input.name}</td>
+		<td>{iname}</td>
 		<td>
-			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label='Manual entry' type='checkbox' prop='manualEntry' path={widgetPath} /> }
+			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label={'Manual entry for '+iname} type='checkbox' prop='manualEntry' path={widgetPath} /> }
 			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
