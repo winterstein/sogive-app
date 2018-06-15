@@ -11,7 +11,7 @@ import org.sogive.data.DBSoGive;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.user.Person;
 
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.utils.Dep;
 import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.AppUtils;

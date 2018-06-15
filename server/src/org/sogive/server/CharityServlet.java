@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.DeleteRequestBuilder;

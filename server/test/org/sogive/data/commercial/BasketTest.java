@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.sogive.server.SoGiveServer;
 
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 
 public class BasketTest {
 

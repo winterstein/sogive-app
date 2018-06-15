@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.ESUtils;

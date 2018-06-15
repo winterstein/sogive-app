@@ -31,7 +31,7 @@ import org.sogive.server.payment.StripePlugin;
 import com.goodloop.data.PaymentException;
 import com.stripe.exception.APIException;
 import com.stripe.model.Charge;
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.datalog.server.TrackingPixelServlet;

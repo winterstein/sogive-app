@@ -6,7 +6,6 @@ import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Ticket;
 
-import com.winterwell.data.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
@@ -15,6 +14,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.Emailer;
 import com.winterwell.web.email.SimpleMessage;

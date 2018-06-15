@@ -15,7 +15,7 @@ import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
