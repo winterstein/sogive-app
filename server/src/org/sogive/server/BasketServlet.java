@@ -16,7 +16,7 @@ import org.sogive.server.payment.StripePlugin;
 import com.stripe.model.Charge;
 import com.stripe.model.Event;
 import com.sun.corba.se.impl.protocol.NotLocalLocalCRDImpl;
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.utils.Dep;

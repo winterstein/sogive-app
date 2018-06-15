@@ -13,7 +13,7 @@ import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Person;
 
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;

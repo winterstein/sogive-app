@@ -20,7 +20,7 @@ import org.sogive.data.charity.Thing;
 import org.sogive.server.CharityServlet;
 import org.sogive.server.SoGiveServer;
 
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.depot.Depot;
 import com.winterwell.depot.Desc;

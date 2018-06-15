@@ -24,7 +24,7 @@ import org.sogive.data.user.Person;
 import org.sogive.data.user.Team;
 
 import com.winterwell.utils.io.SqlUtils;
-import com.winterwell.data.JThing;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
