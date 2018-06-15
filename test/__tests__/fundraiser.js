@@ -33,6 +33,7 @@ test('Create a fundraiser', async() => {
             "attendee-icon": 'https://h5p.org/sites/default/files/h5p/content/10583/images/file-56f540bfae28b.jpg'
         }
     });    
+    await page.waitFor(3000);//DELETE ME: Hack to deal with elastic search needing a second to register the event (15/06)
     await Register.goto({page, fundName});
     await Register.completeForm({
         page, 
