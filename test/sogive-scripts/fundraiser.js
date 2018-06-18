@@ -37,6 +37,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 async function deleteFundraiser({page, fundName, fundId}) {
     if(fundName) {
         const ID = await fundIdByName({page, fundName});
+        if(!ID) console.warn(`Could not retrieve ID for fundraiser with name ${fundName} from back-end`);
         await deleteFundraiser({page, fundId: ID});
     }
     else{
