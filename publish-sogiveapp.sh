@@ -114,6 +114,8 @@ for server in ${TARGET[*]}; do
 			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/package.json'
 			ssh winterwell@$server 'rm -rf /home/winterwell/sogive-app/webpack*'
 		fi
+	printf "\nsyncing webpack config file...\n"
+	rsync -hPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/webpack.config.js winterwell@$server:/home/winterwell/sogive-app/
 	printf "\nsyncing the new Jars...\n"
 	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' --delete-before ~/winterwell/sogive-app/tmp-lib/* winterwell@$server:/home/winterwell/sogive-app/lib/
 #	rsync -rhPe 'ssh -i ~/.ssh/winterwell@soda.sh' ~/winterwell/sogive-app/bin/* winterwell@$server:/home/winterwell/sogive-app/bin/
