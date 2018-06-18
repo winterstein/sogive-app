@@ -10,7 +10,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Roles from '../../base/Roles';
-import {getId} from '../../base/data/DataClass';
+import {getId,getType} from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
@@ -35,6 +35,12 @@ const ManageDonationsPage = () => {
 			.then(res => {
 				let dons = res.cargo.hits;
 				dons.forEach(don => {
+					if ( ! getId(don)) {
+						console.warn("ManageDonationsPage skip no id", don);
+						return;
+					}
+					// patch old patchy data
+					if ( ! getType(don)) don['@type'] = C.TYPES.Donation;
 					// console.log("setData", don);
 					DataStore.setData(null, don, false); // handle missing type
 				});

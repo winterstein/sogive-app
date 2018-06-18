@@ -15,7 +15,8 @@ C.app = {
 	service: "sogive",
 	logo: "/img/SoGive-Light-70px.png",
 	homeLogo: "/img/logo-white-sm.png",
-	facebookAppId: "1847521215521290"
+	facebookAppId: "1847521215521290",
+	version: {app: '1.0.0'}
 };
 
 C.TYPES = new Enum("NGO User Donation Project Event FundRaiser Basket Ticket Money Transfer");
