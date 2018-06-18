@@ -10,7 +10,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import C from '../../C';
 import Roles from '../../base/Roles';
-import {getId,getType} from '../../base/data/DataClass';
+import {getId,getType,getStatus} from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
@@ -41,6 +41,7 @@ const ManageDonationsPage = () => {
 					}
 					// patch old patchy data
 					if ( ! getType(don)) don['@type'] = C.TYPES.Donation;
+					if ( ! getStatus(don)) don.status = C.KStatus.PUBLISHED;
 					// console.log("setData", don);
 					DataStore.setData(null, don, false); // handle missing type
 				});
