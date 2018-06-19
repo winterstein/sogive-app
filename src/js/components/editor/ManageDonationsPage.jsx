@@ -124,6 +124,10 @@ const ManageDonationsPage = () => {
 			accessor: 'giftAid'
 		},
 		{
+			Header: 'Consent to share PII',
+			accessor: 'consentToSharePII'
+		},
+		{
 			Header: "Donor details",
 			accessor: d => (d.donorAddress||'') + " " + (d.donorPostcode||'')
 		},
