@@ -4,6 +4,14 @@
 ### Whom shall receive the emails?:: Add new recipients with a comma separating the addresses
 ########
 EMAIL_RECIPIENTS='sysadmin@sodash.com'
+DELAY_SECONDS='10'
+
+printf "\nGetting Ready to take Screenshots...\n"
+while [ $DELAY_SECONDS -gt 0 ]; do
+	printf "$DELAY_SECONDS\033[0K\r"
+	sleep 1
+	: $((DELAY_SECONDS--))
+done
 
 bash jest.sh $1
 

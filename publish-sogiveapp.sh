@@ -160,14 +160,6 @@ done
 
 printf "\nPublishing process completed\n"
 
-printf "\nGetting Ready to take Screenshots...\n"
-TIMEOUT_SECONDS='10'
-while [ $TIMEOUT_SECONDS -gt 0 ]; do
-	printf "$TIMEOUT_SECONDS\033[0K\r"
-	sleep 1
-	: $((TIMEOUT_SECONDS--))
-done
-
 if [[ $PUBLISH_TYPE = 'test' ]]; then
 	cd test && bash run-tests.sh test
 	cd ../
