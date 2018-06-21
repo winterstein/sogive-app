@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="server/src"/>
-	<classpathentry kind="src" path="server/build"/>
-	<classpathentry kind="src" path="server/test"/>
+	<classpathentry kind="src" path="test/java"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="builder"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/elasticsearch-java-client"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.bob"/>
