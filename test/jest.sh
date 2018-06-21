@@ -34,13 +34,7 @@ esac
 printf "\nGetting NPM Packages to Run Jest Tests...\n"
 npm i
 
-########
-### Ensuring that local repo of 'logins' is up-to-date
-########
-printf "\nEnsuring that your 'logins' are up-to-date\n"
-git --git-dir=/home/$USER/winterwell/logins/.git/ --work-tree=/home/$USER/winterwell/logins gc --prune=now
-git --git-dir=/home/$USER/winterwell/logins/.git/ --work-tree=/home/$USER/winterwell/logins pull origin master
-git --git-dir=/home/$USER/winterwell/logins/.git/ --work-tree=/home/$USER/winterwell/logins reset --hard FETCH_HEAD
+
 
 
 
