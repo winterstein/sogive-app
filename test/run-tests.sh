@@ -38,6 +38,11 @@ if [[ -f /home/$USER/.msmtprc ]]; then
 else
         cp /home/$USER/winterwell/logins/.msmtprc /home/$USER/.msmtprc
 fi
+if [[ ! -f /tmp/msmtp/msmtp.log ]]; then
+        mkdir -p /tmp/msmtp/
+        touch /tmp/msmtp/msmtp.log
+        chmod 777 /tmp/msmtp/msmtp.log
+fi
 if [[ -f /home/$USER/.muttrc ]]; then
         rm /home/$USER/.muttrc
         ln -s /home/$USER/winterwell/logins/.muttrc /home/$USER/.muttrc
