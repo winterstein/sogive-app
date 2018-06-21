@@ -34,9 +34,9 @@ git --git-dir=/home/$USER/winterwell/logins/.git/ --work-tree=/home/$USER/winter
 ########
 if [[ -f /home/$USER/.msmtprc ]]; then
         rm /home/$USER/.msmtprc
-        ln -s /home/$USER/winterwell/logins/.msmtprc /home/$USER/.msmtprc
+        cp /home/$USER/winterwell/logins/.msmtprc /home/$USER/.msmtprc
 else
-        ln -s /home/$USER/winterwell/logins/.msmtprc /home/$USER/.msmtprc
+        cp /home/$USER/winterwell/logins/.msmtprc /home/$USER/.msmtprc
 fi
 if [[ -f /home/$USER/.muttrc ]]; then
         rm /home/$USER/.muttrc
