@@ -12,6 +12,7 @@ import C from '../../C';
 import Roles from '../../base/Roles';
 import {getId,getType,getStatus} from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
+import MoneyItem from '../../base/data/MoneyItem';
 import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
 
