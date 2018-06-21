@@ -33,12 +33,8 @@
     "you-again": "^0.7.0"
   },
   "scripts": {
-    "test-watch": "webpack --config webpack.config.test.js --progress --colors --watch",
     "compile-watch": "webpack --config webpack.config.js --progress --colors --watch",
-    "compile": "webpack -p",
-    "compile-dev": "webpack --config webpack.config.js",
-    "compile-mocha": "webpack --config webpack.config.mocha.js",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "compile": "webpack -p"
   },
   "devDependencies": {
     "webpack": "^3.12.0",

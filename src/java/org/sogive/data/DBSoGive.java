@@ -78,7 +78,8 @@ public class DBSoGive {
 		
 		// dates also have a "raw" string field, for storing badly formatted input
 		// This is handled in Project.init()
-		ESType raw = new ESType().text().noIndex().noAnalyzer();
+		ESType raw = new ESType().text().noAnalyzer();
+//				.noIndex() not for type:text
 		ESType money = Money.ESTYPE;
 		
 		ESType charitymapping = new ESType()
