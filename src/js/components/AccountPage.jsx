@@ -31,6 +31,7 @@ const AccountPage = () => {
 		<div className=''>
 			<h2>My Account</h2>
 			<LoginCard />
+			<Misc.Card title='My donations'>Your donations are shown on the <a href='#dashboard'>Dashboard</a></Misc.Card>
 			<RolesCard />
 			{pvCreditToMe.value && pvCreditToMe.value.hits? <CreditToMe credits={pvCreditToMe.value.hits} /> : null}
 			{Roles.iCan(C.CAN.uploadCredit).value ? <UploadCredit /> : null}
