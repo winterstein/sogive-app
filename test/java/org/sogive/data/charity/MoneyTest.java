@@ -8,10 +8,24 @@ public class MoneyTest {
 
 	@Test
 	public void testPlusMoney() {
-		Money two = Money.pound(2);
-		com.goodloop.data.Money three = com.goodloop.data.Money.pound(3);
-		Money five = two.plus(three);
-		assert five.getValue().doubleValue() == 5 : five;
+		{
+			Money two = Money.pound(2);
+			com.goodloop.data.Money three = com.goodloop.data.Money.pound(3);
+			Money five = two.plus(three);
+			assert five.getValue().doubleValue() == 5 : five;
+		}
+		{
+			Money two = Money.pound(2);
+			Money three = Money.pound(3);
+			Money five = two.plus(three);
+			assert five.getValue().doubleValue() == 5 : five;
+		}
+		{
+			Money two = Money.pound(20);
+			Money three = Money.pound(0.5);
+			Money five = two.plus(three);
+			assert five.getValue().doubleValue() == 20.5 : five;
+		}
 	}
 
 	@Test
