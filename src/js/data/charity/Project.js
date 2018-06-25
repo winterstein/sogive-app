@@ -18,12 +18,16 @@ Project.isOverall = (project) => Project.assIsa(project) && project.name && proj
 
 /**
  * 
- @return {Output[]} never null
+ @return {Output[]} never null, can be empty
  */
 Project.outputs = project => {
 	Project.assIsa(project);
 	return project.outputs || [];
 };
+/** 
+ * @return {Money[]} never null, can be empty
+ */
+Project.inputs = project => project.inputs || [];
 
 Project.make = function(base) {
 	let proj = {
@@ -46,6 +50,17 @@ Project.getLatest = (projects) => {
 	if ( ! projects) return null;
 	const psorted = _.sortBy(projects, Project.year);
 	return psorted[psorted.length - 1];
+};
+
+/**
+ * Find the projectCosts or annualCosts input
+ * @returns {Money}
+ */
+Project.getCost = (project) => {
+	Project.assIsa(project);
+	let inputs = Project.inputs(project);
+	let costs = inputs.filter(input => input.name==='projectCosts' || input.name==='annualCosts');
+	return costs[0]; // can be null
 };
 
 /**
