@@ -243,5 +243,9 @@ public class Donation extends AThing implements IForSale {
 		if (contributions==null) contributions = new ArrayList();
 		contributions.add(matchAmount);
 	}
+	@Override
+	public String getDescription() {
+		return "to "+to;
+	}
 
 }

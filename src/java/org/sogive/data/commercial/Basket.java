@@ -69,6 +69,11 @@ public class Basket extends AThing implements IForSale {
 	 * Remember whether the user wanted to add a tip
 	 */
 	boolean hasTip;
+	
+	@Override
+	public String getDescription() {
+		return "Charity "+getCharityId()+" Event "+eventId+" Items "+items.size();
+	}
 
 	public Money getAmount() {
 		if (items==null) return Money.pound(0);

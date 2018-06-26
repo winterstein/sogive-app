@@ -22,4 +22,5 @@ public interface IForSale {
 	
 	boolean getPaymentCollected();
 
+	String getDescription();
 }

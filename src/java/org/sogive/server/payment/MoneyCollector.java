@@ -86,7 +86,8 @@ public class MoneyCollector {
 				sa = new StripeAuth(userObj, state);
 			}
 			
-			Charge charge = StripePlugin.collect(total, basket.getClass().getSimpleName()+" "+basket.getId(), sa, userObj, ikey);
+			String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
+			Charge charge = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 			Log.d("stripe.collect", charge);
 			basket.setPaymentId(charge.getId());
 			basket.setPaymentCollected(true);					
