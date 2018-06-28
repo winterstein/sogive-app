@@ -43,8 +43,7 @@ const ManageDonationsPage = () => {
 					// patch old patchy data
 					if ( ! getType(don)) don['@type'] = C.TYPES.Donation;
 					if ( ! getStatus(don)) don.status = C.KStatus.PUBLISHED;
-					// console.log("setData", don);
-					DataStore.setData(null, don, false); // handle missing type
+					DataStore.setData(null, don, false);
 				});
 				return res;
 			});
@@ -55,6 +54,8 @@ const ManageDonationsPage = () => {
 	let rdons = pvDonations.value;
 	console.warn('rdons', rdons);
 	let dons = rdons.hits;
+	// resolve from list version to latest (so edits can be seen)
+	dons = dons.map(don => DataStore.getData(getStatus(don), getType(don), getId(don)));
 
 	const columns = [
 		{
