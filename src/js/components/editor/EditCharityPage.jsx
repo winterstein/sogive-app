@@ -59,6 +59,8 @@ const EditCharityPage = () => {
 	overalls = _.sortBy(overalls, p => - (p.year || 0) );
 	projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );
 
+	const repProj = NGO.getProject(charity);
+
 	let refs = NGO.getCitations(charity);
 	const rrefs = refs.map((r, i) => (
 		<li key={'r'+i}>
@@ -81,6 +83,10 @@ const EditCharityPage = () => {
 			</Misc.Card>
 			<Misc.Card title='Preview: Impact'>
 				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+				<small><ul>
+					<li>Representative project: {repProj? repProj.name+' '+repProj.year : "none"}</li>
+					<li>Outputs: {repProj? Project.outputs(repProj).map(o => o.number+" "+o.name) : null}</li>
+				</ul></small>
 			</Misc.Card>
 			<Misc.CardAccordion widgetName='topLevelCharityEditor'>
 				<Misc.Card title='Charity Profile'>
