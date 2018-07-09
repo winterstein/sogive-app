@@ -57,43 +57,52 @@ const FundRaiserEditor = ({id}) => {
 	const path = getPath(C.KStatus.DRAFT, type, id);
 	const peepPath = path.concat('owner');
 
-	return (<div className='padded-page'>
-		{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity:0.5}} /> : null}
-		<div className='padded-block'>
-			<center>
-				<h2>Fundraiser for {item.name || id} </h2>
-			</center>
-			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
-			<p><small>
-				ID: {id} <br/>
-				Owner: {FundRaiser.oxid(item)} <br/>
-				Event: {FundRaiser.eventId(item)} <br/>
-				<ShareLink item={item} />
-				<ShareWidget item={item} />
-			</small></p>			
-			<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-			<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
-			<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
-			<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
-			<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
-				placeholder='Leave blank for an automatic target (recommended)'
-			/>			
+	return (
+		<div className='padded-page'>
+			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`, opacity:0.5}} /> : null}
+			<div className='padded-block'>
+				<center>
+					<h2>Fundraiser for {item.name || id} </h2>
+				</center>
+				<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
+				<p><small>
+					ID: {id} <br/>
+					Owner: {FundRaiser.oxid(item)} <br/>
+					Event: {FundRaiser.eventId(item)} <br/>
+					<ShareLink item={item} />
+					<ShareWidget item={item} />
+				</small></p>			
+				<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
+				<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
+				<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
+				<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
+				<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
+					placeholder='Leave blank for an automatic target (recommended)'
+				/>			
 
-			<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
-			<Misc.PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
+				<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
+				<Misc.PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
 
-			<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
-			<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
-			<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
-			<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
-			<hr />
-			<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
+				<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
+				<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
+				<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
+				<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+				<hr />
+				<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
-			<AddOffSiteDonation fundraiser={item} />
-
-			<Misc.SavePublishDiscard type={type} id={id} />
+				<AddOffSiteDonation fundraiser={item} />
+				{/* 
+					Publish button disabled if no charity ID has been entered. This doesn't check if the ID is valid or not --
+					thought that might exclude smaller, local charities that we don't track.
+					*/}
+				<Misc.SavePublishDiscard 
+					type={type} 
+					id={id} 
+					cannotPublish={!DataStore.getValue(path.concat('charityId'))} 
+					publishTooltipText="Please enter the name of the charity that you would like to support"
+				/>
 			</div>
-	</div>);
+		</div>);
 };
 
 const AddOffSiteDonation = ({fundraiser}) => {
