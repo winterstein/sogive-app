@@ -1,12 +1,7 @@
 
 
-
-import java.util.Arrays;
-import java.util.List;
-
-import com.winterwell.bob.tasks.TestWebsiteTask;
-import com.winterwell.web.app.KPubType;
-import com.winterwell.web.app.PublishProjectTask;
+import com.winterwell.web.app.build.KPubType;
+import com.winterwell.web.app.build.PublishProjectTask;
 
 
 /**
