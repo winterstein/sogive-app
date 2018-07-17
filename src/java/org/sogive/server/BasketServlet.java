@@ -38,7 +38,9 @@ public class BasketServlet extends CrudServlet<Basket> {
 	}
 
 	@Override
-	protected JThing<Basket> doPublish(WebRequest state) {
+	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, boolean forceRefresh,
+			boolean deleteDraft) 
+	{
 		Basket basket = getThing(state);
 		if (basket==null) {
 			jthing = getThingFromDB(state);
@@ -69,7 +71,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 		mc.run();
 						
 		// store in the database (this will save the edited basket)
-		super.doPublish(state);
+		super.doPublish(state, forceRefresh, deleteDraft);
 		// store the tickets
 		List<Ticket> items = basket.getItems();
 		List<JThing<Ticket>> pubTickets = new ArrayList();
