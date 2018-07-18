@@ -60,7 +60,7 @@ ServerIO.getDonations = function({from, to, fundRaiser, status=C.KStatus.PUBLISH
 	// 	assMatch(fundRaiser, String);
 	// 	params.data.q = 'fundRaiser:'+fundRaiser;
 	// }
-	return ServerIO.load('/donation/list', params);
+	return ServerIO.load('/donation/_list.json', params);
 };
 
 /**
@@ -71,7 +71,7 @@ ServerIO.getDonationDraft = ({from, charity, fundRaiser}) => {
 	let to = charity;
 	let q = fundRaiser? "fundRaiser:"+fundRaiser : null;
 	let status = C.KStatus.DRAFT;
-	return ServerIO.load('/donation/list.json', {data: {from, to, q, status}, swallow: true});
+	return ServerIO.load('/donation/_list.json', {data: {from, to, q, status}, swallow: true});
 };
 
 
