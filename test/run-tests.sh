@@ -50,6 +50,7 @@ else
         ln -s /home/$USER/winterwell/logins/.muttrc /home/$USER/.muttrc
 fi
 
+chmod 0600 /home/$USER/.msmtprc
 
 
 #########

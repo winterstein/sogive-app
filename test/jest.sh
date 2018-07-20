@@ -33,8 +33,8 @@ esac
 #######
 printf "\nGetting NPM Packages to Run Jest Tests...\n"
 npm i
-
-
+cd ~/winterwell/wwappbase.js/test-base && npm i
+cd ~/winterwell/sogive-app/test
 
 
 
