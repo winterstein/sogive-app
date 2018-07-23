@@ -32,7 +32,8 @@ const ManageDonationsPage = () => {
 	}
 
 	const pvDonations = DataStore.fetch(['list', 'Donations', 'all'], () => {
-		return ServerIO.load('/donation/list/all.json', {data: {status: 'ALL_BAR_TRASH'}} )
+		// minor: refactor into ServerIO.getDonations
+		return ServerIO.load('/donation/_list/all.json', {data: {status: 'ALL_BAR_TRASH'}} )
 			.then(res => {
 				let dons = res.cargo.hits;
 				dons.forEach(don => {

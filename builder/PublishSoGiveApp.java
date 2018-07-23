@@ -11,7 +11,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 	public PublishSoGiveApp() throws Exception {
 		super("sogive", "/home/winterwell/sogive-app");
 		bashScript = "./publish-sogiveapp.sh";
-		typeOfPublish = KPubType.local;
+		typeOfPublish = KPubType.test;
 //		codePart = "backend";
 //		compile = false;	
 	}
