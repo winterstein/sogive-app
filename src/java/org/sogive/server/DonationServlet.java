@@ -114,12 +114,12 @@ public class DonationServlet extends CrudServlet {
 		
 	@Override
 	protected ESQueryBuilder doList2_query(WebRequest state) {
-		if ("all".equals(state.getSlugBits(2))) {
-			return null; // All!
-		}
 		// a donations request MUST provide from or q, to avoid listing all
 		String from = state.get("from");
-		String q = state.get("q");
+		String q = state.get("q"); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
+		if ("ALL".equals(q)) {
+			return null; // All! 
+		}
 		if (from==null && q==null) {
 			throw new WebEx.E40X(400, state.getRequestUrl(), "No from or q to query by");
 		}
