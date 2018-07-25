@@ -10,7 +10,7 @@
 
 // @Flow
 import React, { Component } from 'react';
-import ReactMarkdown from 'react-markdown';
+import MDText from '../base/components/MDText'
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
@@ -153,7 +153,7 @@ const DonationOutput = ({impact, charity}) => {
 	if ( ! impact) {
 		return (<div className='donation-output'>
 			<h3>{NGO.name(charity)}</h3>
-			<ReactMarkdown source={NGO.shortDescription(charity)} />
+			<MDText source={NGO.shortDescription(charity)} />
 		</div>);	
 	}
 

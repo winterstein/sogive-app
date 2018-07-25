@@ -1,6 +1,6 @@
 // @Flow
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
+import MDText from '../base/components/MDText'
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import {yessy, encURI} from 'wwutils';
@@ -121,10 +121,10 @@ const CharityAbout = ({charity}) => {
 			<CharityAboutImage charity={charity} />
 			<div className='descriptions'>
 				<div className='description-short'>
-					{charity.summaryDescription? <ReactMarkdown source={charity.summaryDescription} /> : null}
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
 				<div className='description-long'>
-					{charity.description? <ReactMarkdown source={charity.description} /> : null}
+					{charity.description? <MDText source={charity.description} /> : null}
 				</div>
 			</div>
 			<div className='url'>

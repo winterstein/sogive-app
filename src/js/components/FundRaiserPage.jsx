@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReactMarkdown from 'react-markdown';
+import MDText from '../base/components/MDText';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
@@ -139,7 +139,7 @@ const FundRaiserPage = ({id}) => {
 							<h3>About Me: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
-						<div>{item.owner.description? <ReactMarkdown source={item.owner.description} /> : null}</div>
+						<div>{item.owner.description? <MDText source={item.owner.description} /> : null}</div>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
@@ -157,7 +157,7 @@ const FundRaiserPage = ({id}) => {
 				<Row>
 					<Col md={6}>
 						{item.story? 
-							<div><h3>Story:</h3><ReactMarkdown source={item.story} /></div>
+							<div><h3>Story:</h3><MDText source={item.story} /></div>
 							: null}
 						{item.updates? 
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
