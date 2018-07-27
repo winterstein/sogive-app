@@ -11,7 +11,7 @@
   "dependencies": {
     "chart.js": "^2.7.2",
     "easy-enums": "^1.1.6",
-	 "easyi18n": "^1.1.1",
+    "easyi18n": "^1.1.1",
     "hashmap": "^2.3.0",
     "intl": "^1.2.5",
     "jquery": "^3.3.1",
@@ -25,7 +25,7 @@
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.4.1",
     "react-dropzone": "^4.2.13",
-    "react-markdown": "^3.3.4",
+    "react-markdown": "^3.4.1",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^1.7.0",
     "sjtest": "^0.4.7",
