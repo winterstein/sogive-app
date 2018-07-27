@@ -14,6 +14,7 @@ C.app = {
 	name: "SoGive",
 	service: "sogive",
 	logo: "/img/SoGive-Light-70px.png",
+	website: "https://sogive.org",
 	homeLogo: "/img/logo-white-sm.png",
 	facebookAppId: "1847521215521290",
 	version: {app: '1.0.0'}

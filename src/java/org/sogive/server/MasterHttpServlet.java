@@ -26,9 +26,11 @@ import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Range;
 import com.winterwell.utils.io.FileUtils;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.FileServlet;
 import com.winterwell.web.app.HttpServletWrapper;
 import com.winterwell.web.app.IServlet;
+import com.winterwell.web.app.KServerType;
 import com.winterwell.web.app.LogServlet;
 import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.UploadServlet;
@@ -115,8 +117,10 @@ public class MasterHttpServlet extends HttpServlet {
 				// upload
 				UploadServlet us = new UploadServlet();
 				SoGiveConfig conf = Dep.get(SoGiveConfig.class);
-				if (conf.uploadDir!=null) us.setUploadDir(conf.uploadDir);
-				us.process(request);				
+				if (conf.uploadDir!=null) us.setUploadDir(conf.uploadDir);				
+				KServerType serverType = AppUtils.getServerType(request);
+				us.setServer(AppUtils.getServerUrl(serverType, "app.sogive.org").toString());				
+				us.process(request);
 				return;			
 			case "log":
 				s = new LogServlet();
