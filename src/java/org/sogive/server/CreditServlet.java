@@ -98,6 +98,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 
 	private void doUploadTransfers(WebRequest state) throws IOException {
 		String csv = state.get(new SField("csv"));
+		if (csv==null) return;
 		StringReader input = new StringReader(csv.trim());
 		CSVSpec spec = new CSVSpec();
 		CSVReader r = new CSVReader(input, spec);
