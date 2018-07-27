@@ -119,8 +119,14 @@ Search.Main = {
     ResultsList: `#search div.results-list`
 };
 
+// sogive.org/#edit
+const Editor = {
+    story: '#edit > div > div.CardAccordion > div:nth-child(1) > div.panel-body > div > div:nth-child(22) > div > div > div:nth-child(1) > div > textarea'
+};
+
 module.exports = {
     Event,
+    Editor,
     Fundraiser,
     General,
     Register,
