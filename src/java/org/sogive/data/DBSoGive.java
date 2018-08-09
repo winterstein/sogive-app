@@ -21,6 +21,7 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
+import org.sogive.data.user.RepeatDonation;
 import org.sogive.data.user.Team;
 
 import com.winterwell.utils.io.SqlUtils;
@@ -64,7 +65,8 @@ public class DBSoGive {
 			Person.class, Team.class, Event.class, 
 			FundRaiser.class,
 			Basket.class, Donation.class, Ticket.class,
-			Transfer.class
+			Transfer.class,
+			RepeatDonation.class
 			};
 
 	public static void init() {

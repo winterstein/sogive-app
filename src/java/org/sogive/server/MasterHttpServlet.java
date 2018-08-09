@@ -105,6 +105,10 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new DonationServlet();
 				s.process(request);
 				return;
+			case "repeatDonation":
+				s = new RepeatDonationServlet();
+				s.process(request);
+				return;
 			case "stripe":
 				s = new StripeWebhookServlet();
 				s.process(request);

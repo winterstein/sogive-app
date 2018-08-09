@@ -3,6 +3,7 @@ package org.sogive.data.user;
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 import com.winterwell.ical.ICalEvent;
+import com.winterwell.ical.Repeat;
 
 /**
  * Use ical code
@@ -24,6 +25,13 @@ public class RepeatDonation extends AThing {
 		id = idForDonation(donation);
 		did = donation.getId();
 		ical.start = donation.getTime();
+		
+		String rrule = "FREQ="+donation.repeat.toUpperCase()+";";
+		if (donation.repeatUntil != null) {
+			rrule += "UNTIL="+repeatUntil.toISOStringDateOnly()+";";
+		}
+		Repeat repeater = new Repeat(rrule);
+		ical.repeat = repeater;
 	}
 
 	public static String idForDonation(Donation donation) {

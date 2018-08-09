@@ -31,6 +31,8 @@ public class Donation extends AThing implements IForSale {
 	
 	String repeat;
 	
+	Time repeatUntil;
+	
 	/**
 	 * The user who donated
 	 */

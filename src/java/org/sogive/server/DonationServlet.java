@@ -165,10 +165,7 @@ public class DonationServlet extends CrudServlet {
 			Log.d(LOGTAG, "doPublish - but update not first time "+state);
 		}
 		// repeat?
-		String repeat = state.get("repeat");
-		ICallable<Time> cuntil = state.get(CommonFields.END);
-		Time until = cuntil==null? null : cuntil.call();
-		setupRepeat(donation, repeat, until);
+		setupRepeat(donation);
 		
 		// store in the database TODO use an actor which can retry
 		super.doPublish(state, true, true);
@@ -177,22 +174,15 @@ public class DonationServlet extends CrudServlet {
 		return jthing;
 	}
 
-	private void setupRepeat(Donation donation, String repeat, Time until) {
+	private void setupRepeat(Donation donation) {
 		ESPath path = AppUtils.getPath(null, RepeatDonation.class, RepeatDonation.idForDonation(donation), KStatus.PUBLISHED);
-		RepeatDonation rep = AppUtils.get(path, RepeatDonation.class);
+//		RepeatDonation rep = AppUtils.get(path, RepeatDonation.class);
+		String repeat = donation.getRepeat();
 		if (repeat==null || "one-off".equals(repeat)) {
 			AppUtils.doDelete(path);
 			return;
 		}
-		if (rep==null) {
-			rep = new RepeatDonation(donation);
-		}
-		String rrule = "FREQ="+repeat.toUpperCase()+";";
-		if (until != null) {
-			rrule += "UNTIL="+until.toISOStringDateOnly()+";";
-		}
-		Repeat repeater = new Repeat(rrule);
-		rep.ical.repeat = repeater;
+		RepeatDonation rep = new RepeatDonation(donation);		
 		
 		List<ICalEvent> reps = rep.ical.getRepeats(new Time(), new Time().plus(TUnit.YEAR));
 		
