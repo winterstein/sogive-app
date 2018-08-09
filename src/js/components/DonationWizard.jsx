@@ -18,6 +18,7 @@ import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 
 import Misc from '../base/components/Misc';
+import PropControl from '../base/components/Input';
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -61,7 +62,10 @@ const DonateButton = ({item, paidElsewhere}) => {
 };
 
 /**
- * item: a FundRaiser or NGO
+ * The main donation wizard 
+ * 
+ * @param item: a FundRaiser or NGO
+ * @param fromEditor ??
  * 
  * Warning: Only have ONE of these on a page! Otherwise both will open at once!
  */
@@ -149,7 +153,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' >
-						<AmountSection path={path} fromEditor={fromEditor} />
+						<AmountSection path={path} fromEditor={fromEditor} item={item} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
@@ -178,31 +182,61 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	);
 }; // ./CharityPageImpactAndDonate
 
-const AmountSection = ({path, fromEditor}) => {
+
+const AmountSection = ({path, item, fromEditor}) => {
 	let credit = Transfer.getCredit();	
-	const dontn = DataStore.getValue(path);
-	console.log("donation", JSON.stringify(dontn));
-	const pathAmount = path.concat('amount');
-	let val = DataStore.getValue(pathAmount);
-	//&& (val.raw === undefined) is a patch fix to allow the field to be blank/0.
-	if ( (!val || !Money.value(val)) && (val.raw === undefined)) {
-		// HACK: grab the amount from the impact widget of CharityPageImpactAndDonate?
-		let cid = Donation.to(dontn);
-		val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
-		// stored donation is zero or default? Set to amount of user's credit if present
-		const valValue = Money.value(val);
-		if (valValue === 0 || valValue === 10) {
-			val = credit&&credit.value ? credit : Money.make({value: 10});//Ternary fixes issue where credit= {value:0, ...} was causing an infinite update loop
-		}
-		DataStore.setValue(pathAmount, val);
+	const val = getDonationAmount({path,item,credit});
+
+	let repeatDonations;
+	let eid = FundRaiser.eventId(item);
+	if (eid) {
+		let event = DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);
+		repeatDonations = event && event.repeatDonations;
 	}
+	if ( ! repeatDonations) repeatDonations = ['monthly','annual'];
+
 	return (
 		<div className='section donation-amount'>			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
-			<Misc.PropControl prop='anonAmount' label='Hide my donation amount?' path={path} type='checkbox' />
+			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />);			
 		</div>);
+}; // ./AmountSection
+
+
+/**
+ * @returns Money
+ */
+const getDonationAmount = ({path, item, credit}) => {
+	const pathAmount = path.concat('amount');
+	let val = DataStore.getValue(pathAmount);
+	if (val && (Money.value(val) || val.raw)) {
+		return val;
+	}
+	val = getDonationAmount2({path, pathAmount, item, credit});
+	DataStore.setValue(pathAmount, val);
+	return val;
 };
+
+const getDonationAmount2 = ({path, pathAmount, item, credit}) => {
+	// Set to amount of user's credit if present
+	if (credit && credit.value) {		
+		return credit;
+	}
+	// fundraiser target?
+	let target = item.target;	
+	// divide by weekly??
+	// HACK: grab the amount from the impact widget of CharityPageImpactAndDonate?
+	const dontn = DataStore.getValue(path);
+	let cid = Donation.to(dontn);
+	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
+	// stored donation is zero or default? 
+	// Set to amount of user's credit if present
+	const valValue = Money.value(val);
+	if (valValue) return val;
+	return val;
+};
+
 
 const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	assert(stagePath, "GiftAidSection no stagePath");
@@ -287,9 +321,9 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) =>
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
 				path={path} type='checkbox' />
 				: null}
-			<Misc.PropControl prop='anonymous' label='Keep this donation anonymous?' path={path} type='checkbox' />
 		</div>);
 };
+
 
 const MessageSection = ({path, recipient}) => (
 	<div className='section donation-amount'>
@@ -298,6 +332,12 @@ const MessageSection = ({path, recipient}) => (
 			label='Message' 
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
 			path={path} type='textarea' />
+
+		<p>It is up to you what information </p>
+		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' />
+
+		<Misc.PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
+
 	</div>
 );
 

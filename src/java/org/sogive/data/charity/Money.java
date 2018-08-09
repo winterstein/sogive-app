@@ -5,6 +5,13 @@ import java.math.BigDecimal;
 import com.goodloop.data.KCurrency;
 import com.winterwell.utils.MathUtils;
 
+/**
+ * ??why cant we just use the base class Money??
+ * NB - be careful with any change though!
+ * 
+ * @author daniel
+ *
+ */
 public class Money extends com.goodloop.data.Money {
 	
 	String raw;

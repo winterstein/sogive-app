@@ -6,6 +6,7 @@ package org.sogive.data.commercial;
 import java.util.List;
 import java.util.Map;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 
 /**
@@ -13,6 +14,19 @@ import com.winterwell.data.AThing;
  *
  */
 public class Event extends AThing {
+	
+	/**
+	 * Events can have per-person (attendee) fundraising targets, and whole-event targets.
+	 * This is independent from paid tickets.
+	 */
+	Money perPersonTarget = Money.pound(10);
+	
+	List<String> repeatDonations;
+	
+	/**
+	 * status NOT used
+	 */
+	Money target = Money.pound(100);
 	
 	List<Ticket> ticketTypes;
 	/**

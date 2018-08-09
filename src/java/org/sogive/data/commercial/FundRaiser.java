@@ -40,9 +40,17 @@ public class FundRaiser extends AThing {
 	 */
 	PersonLite owner;
 	String description;
+	/**
+	 * fund-raising target
+	 */
 	Money target = Money.pound(100);
+	
+	/**
+	 * target set by the user (takes precedence)
+	 */
 	Money userTarget = Money.pound(100);
 	Money donated = Money.pound(0);
+	
 	Integer donationCount;
 	String charityId;
 	/**
@@ -133,6 +141,12 @@ public class FundRaiser extends AThing {
 			}			
 		} else {
 			setName(owner.getName()+"'s "+event.name);
+			// target?
+			if (event.perPersonTarget != null) {
+				Log.d(LOGTAG(), "set target "+event.perPersonTarget+" for "+this);
+				setTarget(new Money(event.perPersonTarget));
+				// set recommended donation??
+			}
 		}
 	}
 
