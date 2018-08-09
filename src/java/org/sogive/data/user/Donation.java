@@ -29,6 +29,8 @@ public class Donation extends AThing implements IForSale {
 	Boolean anonymous;
 	Boolean anonAmount;
 	
+	String repeat;
+	
 	/**
 	 * The user who donated
 	 */
@@ -246,6 +248,14 @@ public class Donation extends AThing implements IForSale {
 	@Override
 	public String getDescription() {
 		return "to "+to;
+	}
+	
+	/**
+	 * COnvenience for {@link #date}
+	 * @return
+	 */
+	public Time getTime() {
+		return new Time(date);
 	}
 
 }

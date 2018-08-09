@@ -6,7 +6,7 @@ import C from '../../C';
 const Event = defineType(C.TYPES.Event);
 export default Event;
 
-
+Event.date = e => e && e.date;
 
 Event.make = (base = {}) => {
 	let ma = {

@@ -24,6 +24,7 @@ import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
+import org.sogive.data.user.RepeatDonation;
 import org.sogive.server.payment.MoneyCollector;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
@@ -37,6 +38,7 @@ import com.winterwell.data.PersonLite;
 import com.winterwell.datalog.server.TrackingPixelServlet;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
@@ -47,6 +49,8 @@ import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.FlexiGson;
 import com.winterwell.gson.Gson;
+import com.winterwell.ical.ICalEvent;
+import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Key;
 import com.winterwell.utils.TodoException;
@@ -54,11 +58,14 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.threads.ICallable;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.AppUtils;
+import com.winterwell.web.app.CommonFields;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.Emailer;
 import com.winterwell.web.app.IServlet;
@@ -157,12 +164,42 @@ public class DonationServlet extends CrudServlet {
 		} else {
 			Log.d(LOGTAG, "doPublish - but update not first time "+state);
 		}
+		// repeat?
+		String repeat = state.get("repeat");
+		ICallable<Time> cuntil = state.get(CommonFields.END);
+		Time until = cuntil==null? null : cuntil.call();
+		setupRepeat(donation, repeat, until);
 		
 		// store in the database TODO use an actor which can retry
 		super.doPublish(state, true, true);
 				
 		// Done
 		return jthing;
+	}
+
+	private void setupRepeat(Donation donation, String repeat, Time until) {
+		ESPath path = AppUtils.getPath(null, RepeatDonation.class, RepeatDonation.idForDonation(donation), KStatus.PUBLISHED);
+		RepeatDonation rep = AppUtils.get(path, RepeatDonation.class);
+		if (repeat==null || "one-off".equals(repeat)) {
+			AppUtils.doDelete(path);
+			return;
+		}
+		if (rep==null) {
+			rep = new RepeatDonation(donation);
+		}
+		String rrule = "FREQ="+repeat.toUpperCase()+";";
+		if (until != null) {
+			rrule += "UNTIL="+until.toISOStringDateOnly()+";";
+		}
+		Repeat repeater = new Repeat(rrule);
+		rep.ical.repeat = repeater;
+		
+		List<ICalEvent> reps = rep.ical.getRepeats(new Time(), new Time().plus(TUnit.YEAR));
+		
+		ESHttpClient esjc = new ESHttpClient(Dep.get(ESConfig.class));
+		IndexRequestBuilder index = esjc.prepareIndex(path);
+		index.setBodyDoc(rep);
+		index.execute();
 	}
 
 	private void doPublishFirstTime(WebRequest state, Donation donation) {

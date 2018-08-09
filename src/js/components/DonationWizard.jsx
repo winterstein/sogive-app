@@ -185,13 +185,18 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 const AmountSection = ({path, item, fromEditor}) => {
 	let credit = Transfer.getCredit();	
+	const dntn = DataStore.getValue(path) || {};
 	const val = getDonationAmount({path,item,credit});
 
 	let repeatDonations;
 	let eid = FundRaiser.eventId(item);
+	let event = null;
 	if (eid) {
-		let event = DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);
-		repeatDonations = event && event.repeatDonations;		
+		event = DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);
+		repeatDonations = event && event.repeatDonations;
+		if (event && ! dntn.end) {
+			DataStore.setValue(path.concat('end'), event.date, false);
+		}
 	}
 	if ( ! repeatDonations) repeatDonations = ['monthly','annual'];
 	let suggestedDonations = item.suggestedDonations;
@@ -199,10 +204,12 @@ const AmountSection = ({path, item, fromEditor}) => {
 	return (
 		<div className='section donation-amount'>
 			{suggestedDonations? <PropControl prop='amount' path={path} type='radio' options={suggestedDonations} />
-			 : null}		
+				: null}		
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
-			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />);			
+			
+			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />
+			{dntn.repeat? <PropControl label='Optional end date (you can also cancel at any time)' type='date' path={path} prop='end' defaultValue={event && event.date} /> : null}
 		</div>);
 }; // ./AmountSection
 
@@ -217,7 +224,7 @@ const getDonationAmount = ({path, item, credit}) => {
 		return val;
 	}
 	val = getDonationAmount2({path, pathAmount, item, credit});
-	DataStore.setValue(pathAmount, val);
+	DataStore.setValue(pathAmount, val, false);
 	return val;
 };
 

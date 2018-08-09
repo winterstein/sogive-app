@@ -19,5 +19,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.maths"/>
 	<classpathentry exported="true" kind="lib" path="/middleware/lombok/lombok.jar"/>
 	<classpathentry exported="true" kind="lib" path="/middleware/mockito/mockito-all.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/calstat"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
