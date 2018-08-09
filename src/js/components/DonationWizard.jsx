@@ -191,12 +191,15 @@ const AmountSection = ({path, item, fromEditor}) => {
 	let eid = FundRaiser.eventId(item);
 	if (eid) {
 		let event = DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);
-		repeatDonations = event && event.repeatDonations;
+		repeatDonations = event && event.repeatDonations;		
 	}
 	if ( ! repeatDonations) repeatDonations = ['monthly','annual'];
+	let suggestedDonations = item.suggestedDonations;
 
 	return (
-		<div className='section donation-amount'>			
+		<div className='section donation-amount'>
+			{suggestedDonations? <PropControl prop='amount' path={path} type='radio' options={suggestedDonations} />
+			 : null}		
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />);			
