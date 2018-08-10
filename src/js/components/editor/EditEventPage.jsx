@@ -82,11 +82,9 @@ const EventEditor = ({id}) => {
 
 			<Misc.PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
 
-			also TODO ask Sanjay re walk-the-walk payments - whcih should be linked to Becca n Lizzies numbers
-
 			<Misc.PropControl path={path} prop='repeatDonations' item={item} label='Offer repeating donations?' 
 				options={['off', 'hourly', 'weekly', 'monthly', 'annual']} 
-				type='checkbox' />
+				type='checkboxes' />
 
 			<Misc.PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
 
