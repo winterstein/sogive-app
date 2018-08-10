@@ -29,7 +29,7 @@ import EventPage from './EventPage';
 import EventReportPage from './editor/EventReportPage';
 import RegisterPage from './RegisterPage';
 import E404Page from '../base/components/E404Page';
-
+import TestPage from '../base/components/TestPage';
 
 /**
  * init DataStore
@@ -82,7 +82,8 @@ const PAGES = {
 	charity: CharityPage,
 	edit: EditCharityPage,
 	exchangeRates: ExchangeRatesPage,
-	about: AboutPage
+	about: AboutPage,
+	test: TestPage	
 };
 
 const DEFAULT_PAGE = 'search';
