@@ -21,7 +21,7 @@ public class Event extends AThing {
 	 */
 	Money perPersonTarget = Money.pound(10);
 	
-	List<String> repeatDonations;
+	List<SuggestedDonation> suggestedDonations;
 	
 	/**
 	 * status NOT used

@@ -188,21 +188,16 @@ const AmountSection = ({path, item, fromEditor}) => {
 	const dntn = DataStore.getValue(path) || {};
 	const val = getDonationAmount({path,item,credit});
 
-	let repeatDonations;
 	let eid = FundRaiser.eventId(item);
-	let event = null;
-	if (eid) {
-		event = DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);
-		repeatDonations = event && event.repeatDonations;
-		if (event && ! dntn.end) {
-			DataStore.setValue(path.concat('end'), event.date, false);
-		}
-	}
-	if ( ! repeatDonations) repeatDonations = ['monthly','annual'];
-	let suggestedDonations = item.suggestedDonations;
+	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
+	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations);
+	let repeatDonations = ['one-off', 'weekly', 'monthly']; // TODO only if set by event!
 
 	return (
 		<div className='section donation-amount'>
+		TODO suggestedDonations
+		TODO repeatDonations
+		TODO end date checkbox
 			{suggestedDonations? <PropControl prop='amount' path={path} type='radio' options={suggestedDonations} />
 				: null}		
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />

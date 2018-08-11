@@ -14,24 +14,28 @@ import Misc from '../base/components/Misc';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../base/data/DataClass';
-import ListLoad from '../base/components/ListLoad';
+import ListLoad, {CreateButton} from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
 
 const EventPage = () => {
 	// which event?	
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
-	if (eventId) return <Event id={eventId} />;
+	if (eventId) {
+		return <Event id={eventId} />;
+	}
+	// list
 	let type = C.TYPES.Event;
-
-	// which event?	
-
+	let pvCanEdit = Roles.iCan(C.CAN.editEvent);
 	return (
 		<div>
 			<h2>Pick an Event</h2>
-			<ListLoad type={type} />
-			<hr />
-			<div><a href='#editEvent'>Create / edit events</a></div>
+			<ListLoad type={type} status={C.KStatus.PUBLISHED} />
+			{pvCanEdit.value? <div><h4>Draft Events</h4>
+				<ListLoad type={type} status={C.KStatus.DRAFT} />
+				<CreateButton type={type} />
+			</div> 
+				: null}
 		</div>
 	);
 };
@@ -45,6 +49,7 @@ const Event = ({id}) => {
 	}
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
+	let canEdit = Roles.iCan(C.CAN.editEvent).value;
 	return (
 		<div className="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
@@ -57,6 +62,7 @@ const Event = ({id}) => {
 
 			<Register event={item} />
 	
+			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, false)}>edit</a></small></div> : null}
 		</div>
 	);
 };

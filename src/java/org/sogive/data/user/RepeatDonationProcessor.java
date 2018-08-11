@@ -3,6 +3,7 @@ package org.sogive.data.user;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.utils.time.TUnit;
 
@@ -29,8 +30,9 @@ class RepeatTask extends TimerTask {
 
 	@Override
 	public void run() {
-		poll ES
-		send to actor
+		Log.d("RepeatTask", "run...");
+		// FIXME poll ES
+		// FIXME send to actor
 	}
 	 
 }
@@ -39,6 +41,6 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 	
 	@Override
 	protected void consume(RepeatDonation msg, Actor from) throws Exception {
-		TODO
+		Log.d(getName(), "consume "+msg);
 	}
 }

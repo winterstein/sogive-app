@@ -52,6 +52,11 @@ const EventEditor = ({id}) => {
 		item.extras = (item.extras || []).concat(tt);
 		DataStore.update();
 	};
+	const addSuggestedDonation = () => {
+		const tt = {};
+		item.suggestedDonations = (item.suggestedDonations || []).concat(tt);
+		DataStore.update();
+	};
 
 	/**
 	 * alter the ticket order 
@@ -70,7 +75,7 @@ const EventEditor = ({id}) => {
 	return (<div>
 		<h2>Event {item.name || id} </h2>		
 		<small>ID: {id}</small>
-
+		
 		<Misc.Card title='Event Details'>
 			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
@@ -118,6 +123,15 @@ const EventEditor = ({id}) => {
 			<button className='btn btn-default' onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
+		<Misc.Card title='Suggested Donation'>
+			{item.suggestedDonations? item.suggestedDonations.map( (tt, i) => 
+				<SuggestedDonationEditor key={'tt'+i} i={i} 
+					path={path.concat(['suggestedDonations', i])} event={item} />) 
+				: <p>No Suggested Donations</p>
+			}
+			<button className='btn btn-default' onClick={addSuggestedDonation}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
+
 		<Misc.Card title='Merchandise & Extras' icon='gift'>
 			{item.extras? item.extras.map( (tt, i) => 
 				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
@@ -132,7 +146,18 @@ const EventEditor = ({id}) => {
 		</div>
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
+}; // ./EventEditor
+
+
+const SuggestedDonationEditor = ({path}) => {
+	return (<div className='well'>		
+		<Misc.PropControl path={path} prop='amount' label='Amount' type='Money' />
+		<Misc.PropControl path={path} prop='repeat' label='Repeating?' type='select' options={['OFF','HOUR','DAY','WEEK','MONTH','YEAR']} />
+		<Misc.PropControl path={path} prop='name' label='Name (optional)' />
+		<Misc.PropControl path={path} prop='text' label='Text (optional)' />
+	</div>);
 };
+
 
 const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	const removeTicketType = () => {

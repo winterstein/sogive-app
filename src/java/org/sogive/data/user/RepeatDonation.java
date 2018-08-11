@@ -28,7 +28,7 @@ public class RepeatDonation extends AThing {
 		
 		String rrule = "FREQ="+donation.repeat.toUpperCase()+";";
 		if (donation.repeatUntil != null) {
-			rrule += "UNTIL="+repeatUntil.toISOStringDateOnly()+";";
+			rrule += "UNTIL="+donation.repeatUntil.toISOStringDateOnly()+";";
 		}
 		Repeat repeater = new Repeat(rrule);
 		ical.repeat = repeater;
@@ -37,4 +37,10 @@ public class RepeatDonation extends AThing {
 	public static String idForDonation(Donation donation) {
 		return "repeat"+donation.getId();
 	}
+
+	@Override
+	public String toString() {
+		return "RepeatDonation[amount=" + amount + ", did=" + did + ", ical=" + ical + "]";
+	}
+	
 }
