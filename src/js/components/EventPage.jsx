@@ -62,7 +62,7 @@ const Event = ({id}) => {
 
 			<Register event={item} />
 	
-			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, false)}>edit</a></small></div> : null}
+			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
 		</div>
 	);
 };

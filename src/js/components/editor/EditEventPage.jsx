@@ -73,10 +73,11 @@ const EventEditor = ({id}) => {
 
 	const path = getPath(C.KStatus.DRAFT, type, id);
 	return (<div>
-		<h2>Event {item.name || id} </h2>		
+		<h2>Event {item.name || id} </h2>
+		<div><a href={"/#event/"+escape(id)}>View event</a></div>		
 		<small>ID: {id}</small>
 		
-		<Misc.Card title='Event Details'>
+		<Misc.Card title='Event Details'>			
 			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
 			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' />
@@ -86,10 +87,6 @@ const EventEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
 
 			<Misc.PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
-
-			<Misc.PropControl path={path} prop='repeatDonations' item={item} label='Offer repeating donations?' 
-				options={['off', 'hourly', 'weekly', 'monthly', 'annual']} 
-				type='checkboxes' />
 
 			<Misc.PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
 
@@ -115,7 +112,7 @@ const EventEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
 		</Misc.Card>
 
-		<Misc.Card title='Ticket Types' icon='ticket'>
+		<Misc.Card title='Ticket Types' icon='ticket' warning={item.ticketTypes? null : "Define a ticket type so people can register for your event"}>
 			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
 				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />) 
 				: <p>No tickets yet!</p>

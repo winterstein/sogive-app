@@ -190,7 +190,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 
 	let eid = FundRaiser.eventId(item);
 	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
-	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations);
+	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	let repeatDonations = ['one-off', 'weekly', 'monthly']; // TODO only if set by event!
 
 	return (
@@ -198,13 +198,19 @@ const AmountSection = ({path, item, fromEditor}) => {
 		TODO suggestedDonations
 		TODO repeatDonations
 		TODO end date checkbox
-			{suggestedDonations? <PropControl prop='amount' path={path} type='radio' options={suggestedDonations} />
-				: null}		
+			{suggestedDonations.map(sd => <button>{JSON.stringify(sd)}</button>)}		
+			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />
-			{dntn.repeat? <PropControl label='Optional end date (you can also cancel at any time)' type='date' path={path} prop='end' defaultValue={event && event.date} /> : null}
+			
+			{event? 
+				<PropControl disabled={ ! dntn.repeat} 					
+					label='Stop recurring donations after the event? (you can also cancel at any time)' 
+					type='checkbox' 
+					path={path} prop='stopAfterEvent' />
+				: null}
 		</div>);
 }; // ./AmountSection
 
