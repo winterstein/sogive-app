@@ -198,7 +198,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 		TODO suggestedDonations
 		TODO repeatDonations
 		TODO end date checkbox
-			{suggestedDonations.map(sd => <button>{JSON.stringify(sd)}</button>)}		
+			{suggestedDonations.map(sd => <SDButton sd={sd} path={path} />)}		
 			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
@@ -214,6 +214,13 @@ const AmountSection = ({path, item, fromEditor}) => {
 		</div>);
 }; // ./AmountSection
 
+const SDButton = ({path,sd}) => {
+	if ( ! sd.amount) return; // defend against bad data
+	return <button onClick={e => {
+		DataStore.setValue([], sd.amount);
+		DataStore.setValue([], sd.repeat);
+	}}>{sd.name} <Misc.Money amount={sd.amount} /> {sd.repeat}</button>;
+};
 
 /**
  * @returns Money
