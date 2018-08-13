@@ -191,35 +191,44 @@ const AmountSection = ({path, item, fromEditor}) => {
 	let eid = FundRaiser.eventId(item);
 	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	let repeatDonations = ['one-off', 'weekly', 'monthly']; // TODO only if set by event!
+	let repeatDonations = ['one-off', 'WEEK', 'MONTH']; // TODO only if set by event!
 
 	return (
 		<div className='section donation-amount'>
-		TODO suggestedDonations
-		TODO repeatDonations
-		TODO end date checkbox
-			{suggestedDonations.map(sd => <SDButton sd={sd} path={path} />)}		
+			
+			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
+			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} />)}		
 			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} />
+			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} />
 			
 			{event? 
 				<PropControl disabled={ ! dntn.repeat} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
 					type='checkbox' 
-					path={path} prop='stopAfterEvent' />
+					path={path} prop='repeatStopsAfterEvent' />
 				: null}
 		</div>);
 }; // ./AmountSection
 
 const SDButton = ({path,sd}) => {
 	if ( ! sd.amount) return; // defend against bad data
-	return <button onClick={e => {
-		DataStore.setValue([], sd.amount);
-		DataStore.setValue([], sd.repeat);
-	}}>{sd.name} <Misc.Money amount={sd.amount} /> {sd.repeat}</button>;
+	Money.assIsa(sd.amount, "SDButton");
+	return <button className='btn btn-default' onClick={e => {
+		DataStore.setValue(path.concat('amount'), sd.amount);
+		DataStore.setValue(path.concat('repeat'), sd.repeat);
+	}}>{sd.name} <Misc.Money amount={sd.amount} /> {strRepeat(sd.repeat)}</button>;
+};
+
+const strRepeat = rep => {
+	const srep = {
+		'WEEK': 'weekly',
+		'MONTH': 'monthly',
+		'YEAR': 'annual'
+	}[rep];
+	return srep || rep;
 };
 
 /**

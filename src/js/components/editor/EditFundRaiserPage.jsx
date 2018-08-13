@@ -47,8 +47,9 @@ const FundRaiserEditor = ({id}) => {
 	}
 
 	let event = null;
-	if (item.eventId) {
-		let pvEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
+	const eid = FundRaiser.eventId(item);
+	if (eid) {
+		let pvEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: eid, status: C.KStatus.PUBLISHED});
 		event = pvEvent.value;
 	}
 
@@ -68,7 +69,7 @@ const FundRaiserEditor = ({id}) => {
 				<p><small>
 					ID: {id} <br/>
 					Owner: {FundRaiser.oxid(item)} <br/>
-					Event: {FundRaiser.eventId(item)} <br/>
+					Event: <a href={'#event/'+encURI(eid)}>{eid}</a> <br/>
 					<ShareLink item={item} />
 					<ShareWidget item={item} />
 				</small></p>			

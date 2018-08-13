@@ -14,13 +14,14 @@ import {XId} from 'wwutils';
 import Transfer from '../base/data/Transfer';
 import {LoginLink} from '../base/components/LoginWidget';
 import {RolesCard, LoginCard} from '../base/components/AccountPageWidgets';
+import ListLoad from '../base/components/ListLoad';
 
 const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div><h2>My Account: Please login</h2><LoginLink title='Login' /></div>;
 	}
 	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {	
-		return ServerIO.load('/credit/list', {data: {to: Login.getId()} });
+		return ServerIO.load('/credit/_list', {data: {to: Login.getId()} });
 	});	
 	// TODO link into My-Loop, and vice-versa
 	// TODO store gift aid settings
@@ -33,11 +34,24 @@ const AccountPage = () => {
 			<LoginCard />
 			<Misc.Card title='My donations'>Your donations are shown on the <a href='#dashboard'>Dashboard</a></Misc.Card>
 			<RolesCard />
+			<Misc.Card title='Repeating Donations'><RepeatingDonations /></Misc.Card>
 			{pvCreditToMe.value && pvCreditToMe.value.hits? <CreditToMe credits={pvCreditToMe.value.hits} /> : null}
 			{Roles.iCan(C.CAN.uploadCredit).value ? <UploadCredit /> : null}
 		</div>
 	);
 };
+
+const RepeatingDonations = () => {
+	let ListItem = 'TODO';
+	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation' 
+		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH} />;
+	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {	
+	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });
+	// });
+	// if ( ! pvRDons.resolved) return <Misc.Loading />;
+	// return (<div>{JSON.stringify(pvRDons.value)}</div>);
+};
+
 
 const CreditToMe = ({credits}) => {
 	let totalCred = Transfer.getCredit();
@@ -51,7 +65,7 @@ const CreditToMe = ({credits}) => {
 
 const UploadCredit = () => {
 	const pvCredits = DataStore.fetch(['list', 'Transfer', 'from:'+Login.getId()], () => {	
-		return ServerIO.load('/credit/list', {data: {from: Login.getId()} });
+		return ServerIO.load('/credit/_list', {data: {from: Login.getId()} });
 	});
 	let path = ['widget', 'UploadCredit' ,'form'];
 	return (<Misc.Card title='Upload Credit'>

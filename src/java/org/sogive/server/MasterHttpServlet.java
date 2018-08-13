@@ -105,8 +105,8 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new DonationServlet();
 				s.process(request);
 				return;
-			case "repeatDonation":
-				s = new RepeatDonationServlet();
+			case "repeatdonation":
+				s = new RepeatdonationServlet();
 				s.process(request);
 				return;
 			case "stripe":

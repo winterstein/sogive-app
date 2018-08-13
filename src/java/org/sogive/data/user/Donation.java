@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
+import org.sogive.data.commercial.Event;
+import org.sogive.data.commercial.FundRaiser;
 import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 
@@ -14,6 +16,7 @@ import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.app.AppUtils;
@@ -25,13 +28,24 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class Donation extends AThing implements IForSale {
-		
+	
 	Boolean anonymous;
 	Boolean anonAmount;
 	
+	/**
+	 * used to create RepeatDonation
+	 */
 	String repeat;
+	/**
+	 * stop repeating
+	 */
+	Boolean repeatStopsAfterEvent;
 	
-	Time repeatUntil;
+	/**
+	 * If set, this donation was a repeat.
+	 * This is not set for the first in the chain.
+	 */
+	RepeatDonation.Id generator;
 	
 	/**
 	 * The user who donated
@@ -236,6 +250,12 @@ public class Donation extends AThing implements IForSale {
 	 * The app that created this - e.g. sogive or goodloop.
 	 */
 	String a;
+	
+	
+	/**
+	 * convenience for look up via {@link #fundRaiser} and ES
+	 */
+	private transient Event event;
 
 	@Override
 	public String toString() {
@@ -259,5 +279,16 @@ public class Donation extends AThing implements IForSale {
 	public Time getTime() {
 		return new Time(date);
 	}
-
+	public Event getEvent() {
+		if (event!=null) return event;
+		if (fundRaiser==null) return null;
+		FundRaiser fr = AppUtils.get(fundRaiser, FundRaiser.class);
+		if (fr==null) {
+			Log.d("Donation", "fundraiser but no event: "+fundRaiser+" "+this);
+			return null;
+		}
+		event = fr.getEvent();
+		return event;
+	}
+	
 }

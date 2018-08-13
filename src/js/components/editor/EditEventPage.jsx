@@ -52,11 +52,6 @@ const EventEditor = ({id}) => {
 		item.extras = (item.extras || []).concat(tt);
 		DataStore.update();
 	};
-	const addSuggestedDonation = () => {
-		const tt = {};
-		item.suggestedDonations = (item.suggestedDonations || []).concat(tt);
-		DataStore.update();
-	};
 
 	/**
 	 * alter the ticket order 
@@ -121,12 +116,7 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<Misc.Card title='Suggested Donation'>
-			{item.suggestedDonations? item.suggestedDonations.map( (tt, i) => 
-				<SuggestedDonationEditor key={'tt'+i} i={i} 
-					path={path.concat(['suggestedDonations', i])} event={item} />) 
-				: <p>No Suggested Donations</p>
-			}
-			<button className='btn btn-default' onClick={addSuggestedDonation}><Misc.Icon glyph='plus' /> Create</button>
+			<Misc.ListEditor path={path.suggestedDonations} />
 		</Misc.Card>
 
 		<Misc.Card title='Merchandise & Extras' icon='gift'>

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
+import com.winterwell.utils.time.Time;
 
 /**
  * @author daniel
@@ -69,5 +70,9 @@ public class Event extends AThing {
 	 * locked charity?
 	 */
 	String charityId;
+	
+	public Time getDate() {
+		return date==null? null : new Time(date);
+	}
 	
 }	
