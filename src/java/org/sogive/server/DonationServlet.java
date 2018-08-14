@@ -182,10 +182,13 @@ public class DonationServlet extends CrudServlet {
 			AppUtils.doDelete(path);
 			return;
 		}
-		RepeatDonation rep = new RepeatDonation(donation);		
 		
+		// Make it
+		RepeatDonation rep = new RepeatDonation(donation);				
+		// debug
 		List<ICalEvent> reps = rep.ical.getRepeats(new Time(), new Time().plus(TUnit.YEAR));
-		
+		// publish
+//		AppUtils.doPublish(rep, false, true);		
 		ESHttpClient esjc = new ESHttpClient(Dep.get(ESConfig.class));
 		IndexRequestBuilder index = esjc.prepareIndex(path);
 		index.setBodyDoc(rep);
