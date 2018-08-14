@@ -44,7 +44,8 @@ const AccountPage = () => {
 const RepeatingDonations = () => {
 	let ListItem = 'TODO';
 	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation' 
-		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH} />;
+		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH}
+		canDelete />;
 	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {	
 	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });
 	// });
