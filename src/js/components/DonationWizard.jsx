@@ -193,6 +193,11 @@ const AmountSection = ({path, item, fromEditor}) => {
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	let repeatDonations = ['one-off', 'WEEK', 'MONTH']; // TODO only if set by event!
 
+	// HACK default to stopping with the event
+	if (event && dntn.repeat && dntn.repeatStopsAfterEvent===undefined) {
+		dntn.repeatStopsAfterEvent = true;
+	}
+
 	return (
 		<div className='section donation-amount'>
 			
@@ -202,7 +207,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} />
+			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline />
 			
 			{event? 
 				<PropControl disabled={ ! dntn.repeat} 					
