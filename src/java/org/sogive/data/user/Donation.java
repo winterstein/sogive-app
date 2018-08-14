@@ -45,7 +45,7 @@ public class Donation extends AThing implements IForSale {
 	 * If set, this donation was a repeat.
 	 * This is not set for the first in the chain.
 	 */
-	RepeatDonation.Id generator;
+	String generator;
 	
 	/**
 	 * The user who donated
@@ -186,7 +186,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * The user's contribution
 	 */
-	private Money amount;
+	private final Money amount;
 	
 	/**
 	 * HACK: amount plus tip!

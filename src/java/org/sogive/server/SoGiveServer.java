@@ -6,6 +6,7 @@ import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.data.user.RepeatDonationProcessor;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 
@@ -55,6 +56,7 @@ import com.winterwell.gson.StandardAdapters;
 public class SoGiveServer extends AMain<SoGiveConfig> {
 	
 	private static SoGiveServer main;
+	private static RepeatDonationProcessor rdp;
 
 	public SoGiveServer() {
 		super("sogive");
@@ -68,6 +70,14 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 					.setLogRotation(TUnit.WEEK.dt, 8);
 		
 		main.doMain(args);		
+	}
+	
+	@Override
+	protected void doMain2() {
+		if (rdp!=null) {
+			rdp = new RepeatDonationProcessor();
+			rdp.main(null);
+		}
 	}
 	
 	@Override

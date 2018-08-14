@@ -4,6 +4,7 @@ import org.sogive.data.commercial.Event;
 
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
+import com.winterwell.data.KStatus;
 import com.winterwell.es.ESKeyword;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.ical.Repeat;
@@ -11,22 +12,20 @@ import com.winterwell.utils.AString;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.Time;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
+
+import lombok.Data;
 
 /**
  * Use ical code
  * @author daniel
  *
  */
+@Data
 public class RepeatDonation extends AThing {
 	
-	public static final class Id extends AString {
-		public Id(CharSequence name) {
-			super(name);
-		}
-		private static final long serialVersionUID = 1L;		
-	}
-
 	private static final String LOGTAG = "RepeatDonation";
 	
 	Money amount;
@@ -46,14 +45,21 @@ public class RepeatDonation extends AThing {
 	@ESKeyword
 	private String to;
 
-	private XId via;
+	@ESKeyword
+	private String fundRaiser;
+
+	/**
+	 * created time
+	 */
+	private Time date;
 
 	public RepeatDonation(Donation donation) {
 		super();
+		date = donation.getTime();
 		id = idForDonation(donation);
 		did = donation.getId();
 		amount = donation.getAmount();
-		via = donation.getVia();
+		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
 		ical.start = donation.getTime();
 		
@@ -80,5 +86,32 @@ public class RepeatDonation extends AThing {
 	public String toString() {
 		return "RepeatDonation[amount=" + amount + ", did=" + did + ", ical=" + ical + "]";
 	}
+
+
+	public Donation newDraftDonation() {
+		Donation don0 = AppUtils.get(did, Donation.class);
+		Donation don = new Donation(from, to, don0.getAmount());
+		// NB: we cant just copy DOnation as that includes various processing flags :(
+		don.setA(don0.getA());
+		// various settings are left blank as not needed in a repeat
+		Event event = don0.getEvent();
+		don.setEvent(event);
+//		don.setF(f);
+//		don.setFees(fees); // is this set by the payment processor?? Ditto for contibutions??
+		don.setFundRaiser(don0.getFundRaiser());
+		don.setGiftAid(don0.getGiftAid());
+		don.setGenerator(id);
+		don.setHasTip(don0.hasTip);
+		don.setImpacts(don0.getImpacts());
+		don.setPaymentMethod(don0.getPaymentMethod());
+		don.setStripe(don0.getStripe()); // ?? it'd be good if payment handling could update
+		don.setVia(don0.getVia());
+		
+		don.setStatus(KStatus.DRAFT);
+		return don;
+	}
+
+
+	boolean done;
 	
 }

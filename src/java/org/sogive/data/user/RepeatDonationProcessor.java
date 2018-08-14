@@ -1,11 +1,31 @@
 package org.sogive.data.user;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.elasticsearch.search.sort.SortOrder;
+import org.sogive.data.commercial.Event;
+import org.sogive.server.SoGiveServer;
+
+import com.winterwell.es.ESPath;
+import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.data.KStatus;
+import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchResponse;
+import com.winterwell.gson.Gson;
+import com.winterwell.ical.ICalEvent;
+import com.winterwell.utils.Dep;
+import com.winterwell.utils.TodoException;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
+import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.TUnit;
+import com.winterwell.utils.time.Time;
+import com.winterwell.utils.time.TimeUtils;
+import com.winterwell.web.app.AppUtils;
 
 /**
  * TODO thread to poll for repeat donations and process them
@@ -14,14 +34,23 @@ import com.winterwell.utils.time.TUnit;
  */
 public class RepeatDonationProcessor {
 
-	private static RepeatDonationActor rda;
+	static RepeatDonationActor rda;
 	private static Timer timer;
 
-	
-	public static void main(String[] args) {
+	/**
+	 * TODO could be run as a separate JVM process. 
+	 * For now this is run via {@link SoGiveServer}
+	 * @param args
+	 */
+	public static void main(String[] args) {		
+		Log.i("RepeatDonationProcessor", "Starting...");
 		rda = new RepeatDonationActor();
 		timer = new Timer("RepeatDonationTimer");		
-		timer.scheduleAtFixedRate(new RepeatTask(), TUnit.MINUTE.dt.getMillisecs(), TUnit.DAY.dt.getMillisecs());
+		timer.scheduleAtFixedRate(new RepeatTask(), 
+				// start soon!
+				TUnit.MINUTE.dt.getMillisecs(),
+				// check 4x a day
+				new Dt(8, TUnit.HOUR).getMillisecs());
 	}
 	
 }
@@ -31,8 +60,34 @@ class RepeatTask extends TimerTask {
 	@Override
 	public void run() {
 		Log.d("RepeatTask", "run...");
-		// FIXME poll ES
-		// FIXME send to actor
+		// poll ES
+		// TODO checking all every 8 hours is fine for now but not efficient or scalable to the bigtime.
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SearchRequestBuilder s = new SearchRequestBuilder(es);
+		ESPath path = Dep.get(IESRouter.class).getPath(RepeatDonation.class, null, KStatus.PUBLISHED);
+		s.setPath(path);
+		s.setSize(10000); // TODO paging
+		SearchResponse sr = s.get();
+		// NB: dont convert yet - so we can handle bad entries better
+		List<Map<String, Object>> jsonrdons = sr.getSearchResults();
+		
+		// send to actor
+		Gson gson = Dep.get(Gson.class);
+		for (Map<String, Object> map : jsonrdons) {
+			try {
+				String json = gson.toJson(map);
+				RepeatDonation rdon = gson.fromJson(json);
+				if (rdon.isDone()) {
+					Log.d("RepeatTask", "Skip all done "+rdon);
+					continue;
+				}
+				Log.d("RepeatTask", "Send to actor "+rdon);
+				RepeatDonationProcessor.rda.send(rdon);
+			} catch(Throwable ex) {
+				// don't let one bad object kill the whole process
+				Log.e("RepeatTask", ex);
+			}
+		}
 	}
 	 
 }
@@ -41,6 +96,45 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 	
 	@Override
 	protected void consume(RepeatDonation msg, Actor from) throws Exception {
-		Log.d(getName(), "consume "+msg);
+		Log.d(getName(), "consume "+msg);		
+		// ready to repeat? Includes screen by end date
+		Time next = getNextRepeat(msg);
+		if (next==null || next.isAfter(new Time())) {
+			Log.d(getName(), "repeat? not yet - "+next+" for "+msg);
+			if (next==null) {
+				// mark as done
+				msg.setDone(true);
+				Log.d(getName(), "repeats all done for "+msg);
+				AppUtils.doPublish(msg, false, true);
+			}
+			return;
+		}
+		
+		// donate!
+		Donation don = msg.newDraftDonation();
+		Log.d(getName(), "repeat! "+don+" for "+msg);
+		AppUtils.doPublish(don, true, true);
+	}
+	
+
+	Time getNextRepeat(RepeatDonation rdon) {
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SearchRequestBuilder s = new SearchRequestBuilder(es);
+		ESPath path = Dep.get(IESRouter.class).getPath(Donation.class, null, KStatus.PUBLISHED);
+		s.setPath(path);
+		s.setSize(2); // don't need many!
+		s.addSort("date", SortOrder.DESC);
+		SearchResponse sr = s.get();
+		List<Donation> dons = sr.getSearchResults(Donation.class);
+		Time prev = rdon.getDate();
+		if ( ! dons.isEmpty()) {
+			prev = dons.get(0).getTime();
+		}
+		
+		ICalEvent ical = rdon.getIcal();
+		// NB: This includes stop-at-event-date 'cos its in the ical repeat rule
+		Time next = ical.repeat.getNext(prev);		
+		return next;	
 	}
 }
+
