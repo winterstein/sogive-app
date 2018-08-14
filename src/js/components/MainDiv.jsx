@@ -101,13 +101,19 @@ class MainDiv extends Component {
 		Login.app = C.app.service;
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
+			// invalidate all lists!
+			DataStore.setValue(['list'], null);
+			// also remove any promises for these lists -- see fetch()		
+			let ppath = ['transient', 'PromiseValue', 'list'];
+			DataStore.setValue(ppath, null);
+
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
 				LoginWidget.hide();
 			} else {
 				// poke React via DataStore (e.g. for Login.error)
-				DataStore.update({});
+				DataStore.update({}); // is this needed given the setState() below??
 			}
 			this.setState({});
 		});
