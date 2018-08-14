@@ -139,11 +139,26 @@ const EventEditor = ({id}) => {
 const SuggestedDonationEditor = ({item, path}) => {
 	return (<div className='well'>		
 		<Misc.PropControl path={path} prop='amount' label='Amount' type='Money' />
-		<Misc.PropControl path={path} prop='repeat' label='Repeating?' type='select' options={['OFF','HOUR','DAY','WEEK','MONTH','YEAR']} />
+		
+		<Misc.PropControl label='Repeating?' type='radio' path={path} prop='repeat' 
+			options={['OFF','MINUTE','HOUR','DAY','WEEK','MONTH','YEAR']} labels={strRepeat} inline />
+
 		<Misc.PropControl path={path} prop='name' label='Name (optional)' />
 		<Misc.PropControl path={path} prop='text' label='Text (optional)' />
 	</div>);
 };
+
+// NB: copy pasta from DonationWIzard
+const strRepeat = rep => {
+	const srep = {
+		'OFF': 'one-off',
+		'WEEK': 'weekly',
+		'MONTH': 'monthly',
+		'YEAR': 'annual'
+	}[rep];
+	return srep || rep;
+};
+
 
 
 const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {

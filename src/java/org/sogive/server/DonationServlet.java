@@ -178,7 +178,7 @@ public class DonationServlet extends CrudServlet {
 		ESPath path = AppUtils.getPath(null, RepeatDonation.class, RepeatDonation.idForDonation(donation), KStatus.PUBLISHED);
 //		RepeatDonation rep = AppUtils.get(path, RepeatDonation.class);
 		String repeat = donation.getRepeat();
-		if (repeat==null || "one-off".equals(repeat)) {
+		if ( ! Utils.yes(repeat) || "one-off".equals(repeat)) { // NB: "one-off" should not be sent, but harmless to test for it
 			AppUtils.doDelete(path);
 			return;
 		}

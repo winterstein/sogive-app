@@ -50,7 +50,9 @@ public class RepeatDonationProcessor {
 				// start soon!
 				TUnit.MINUTE.dt.getMillisecs(),
 				// check 4x a day
-				new Dt(8, TUnit.HOUR).getMillisecs());
+//				new Dt(8, TUnit.MINUTE).getMillisecs()
+				TUnit.MINUTE.getMillisecs() // FIXME for testing
+				);
 	}
 	
 }

@@ -191,7 +191,10 @@ const AmountSection = ({path, item, fromEditor}) => {
 	let eid = FundRaiser.eventId(item);
 	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	let repeatDonations = ['one-off', 'WEEK', 'MONTH']; // TODO only if set by event!
+	let repeatDonations = ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats
+	suggestedDonations.filter(sd => sd.repeat).forEach(sd => {
+		if (repeatDonations.indexOf(sd.repeat)===-1) repeatDonations.push(sd.repeat); 
+	});
 
 	// HACK default to stopping with the event
 	if (event && dntn.repeat && dntn.repeatStopsAfterEvent===undefined) {
@@ -225,12 +228,13 @@ const SDButton = ({path,sd}) => {
 		let amnt = Object.assign({}, sd.amount);
 		delete amnt['@class'];
 		DataStore.setValue(path.concat('amount'), amnt);
-		DataStore.setValue(path.concat('repeat'), sd.repeat);
+		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
 	}}>{sd.name} <Misc.Money amount={sd.amount} /> {strRepeat(sd.repeat)}</button>;
 };
 
 const strRepeat = rep => {
 	const srep = {
+		'OFF': 'one-off',
 		'WEEK': 'weekly',
 		'MONTH': 'monthly',
 		'YEAR': 'annual'

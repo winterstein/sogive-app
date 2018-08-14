@@ -62,7 +62,7 @@ public class RepeatDonation extends AThing {
 		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
 		ical.start = donation.getTime();
-		
+		// NB: repeat must be valid if we're here
 		String sfreq = Repeat.freqForTUnit(TUnit.valueOf(donation.repeat));
 		String rrule = "FREQ="+sfreq+";";
 		if (Utils.yes(donation.repeatStopsAfterEvent)) {
