@@ -4,6 +4,7 @@ import org.sogive.data.commercial.Event;
 
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
+import com.winterwell.es.ESKeyword;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.AString;
@@ -42,10 +43,18 @@ public class RepeatDonation extends AThing {
 
 	public ICalEvent ical = new ICalEvent();
 
+	@ESKeyword
+	private String to;
+
+	private XId via;
+
 	public RepeatDonation(Donation donation) {
 		super();
 		id = idForDonation(donation);
 		did = donation.getId();
+		amount = donation.getAmount();
+		via = donation.getVia();
+		to = donation.getTo();
 		ical.start = donation.getTime();
 		
 		String sfreq = Repeat.freqForTUnit(TUnit.valueOf(donation.repeat));
@@ -53,7 +62,7 @@ public class RepeatDonation extends AThing {
 		if (Utils.yes(donation.repeatStopsAfterEvent)) {
 			Event event = donation.getEvent();
 			if (event != null && event.getDate()!=null) {
-				rrule += "UNTIL="+event.getDate().toISOStringDateOnly()+";";
+				rrule += "UNTIL="+event.getDate().format("yyyyMMdd")+";"; // not iso format :(
 			} else {
 				Log.e(LOGTAG, "Could not apply event stop date "+donation+" with event: "+event);
 			}

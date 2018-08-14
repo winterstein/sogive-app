@@ -217,7 +217,9 @@ const SDButton = ({path,sd}) => {
 	if ( ! sd.amount) return; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
 	return <button className='btn btn-default' onClick={e => {
-		DataStore.setValue(path.concat('amount'), sd.amount);
+		let amnt = Object.assign({}, sd.amount);
+		delete amnt['@class'];
+		DataStore.setValue(path.concat('amount'), amnt);
 		DataStore.setValue(path.concat('repeat'), sd.repeat);
 	}}>{sd.name} <Misc.Money amount={sd.amount} /> {strRepeat(sd.repeat)}</button>;
 };
@@ -360,7 +362,7 @@ const MessageSection = ({path, recipient}) => (
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
 			path={path} type='textarea' />
 
-		<p>It is up to you what information </p>
+		<p>By default we list your name and the amount.</p>
 		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' />
 
 		<Misc.PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />

@@ -116,7 +116,7 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<Misc.Card title='Suggested Donation'>
-			<Misc.ListEditor path={path.suggestedDonations} />
+			<Misc.ListEditor path={path.concat('suggestedDonations')} ItemEditor={SuggestedDonationEditor} />
 		</Misc.Card>
 
 		<Misc.Card title='Merchandise & Extras' icon='gift'>
@@ -136,7 +136,7 @@ const EventEditor = ({id}) => {
 }; // ./EventEditor
 
 
-const SuggestedDonationEditor = ({path}) => {
+const SuggestedDonationEditor = ({item, path}) => {
 	return (<div className='well'>		
 		<Misc.PropControl path={path} prop='amount' label='Amount' type='Money' />
 		<Misc.PropControl path={path} prop='repeat' label='Repeating?' type='select' options={['OFF','HOUR','DAY','WEEK','MONTH','YEAR']} />
