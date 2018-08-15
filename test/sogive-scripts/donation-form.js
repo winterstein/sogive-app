@@ -7,7 +7,6 @@ const {
 const {General} = require('./Selectors');
 
 /**Fills in the donation form with details provided
- * All of these can be left blank for a £10 anonymous donation
  * @param Amount {amount: 0, hide-amount-checkbox: true}
  * @param Details {name: '', email: '', address: '', postcode: '', consent-checkbox: true, anon-checkbox: true}
  * @param Message turns out that charity and fundraiser donation forms are different. This is a hack to allow donate() to be used in both places.
@@ -22,9 +21,8 @@ async function donate({
     Payment
 }) {
     await page.waitForSelector(General.CharityPageImpactAndDonate.DonationButton);
-	await page.click(General.CharityPageImpactAndDonate.DonationButton);
-
-    //Should really have an await here.
+    await page.click(General.CharityPageImpactAndDonate.DonationButton);
+    
     await page.waitForSelector(General.CharityPageImpactAndDonate.amount);
     if(Amount) {
         await page.click(General.CharityPageImpactAndDonate.amount);
