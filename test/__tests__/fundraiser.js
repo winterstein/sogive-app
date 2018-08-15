@@ -51,6 +51,9 @@ test('Logged-out fundraiser donation', async() => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
 
+    // HACK: give ES a second to add event created above
+    await page.waitFor(3000);
+
     await Fundraiser.goto({page, fundName});
     await Fundraiser.donate({page, Amount: {amount: 10}, GiftAid: {}, Message: {message:'???'}});
 }, 25000);
