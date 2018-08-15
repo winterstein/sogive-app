@@ -102,7 +102,7 @@ class MainDiv extends Component {
 		// Set up login watcher here, at the highest level		
 		Login.change(() => {
 			// invalidate all lists!
-			DataStore.setValue(['list'], null);
+			DataStore.setValue(['list'], {});
 			// also remove any promises for these lists -- see fetch()		
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
