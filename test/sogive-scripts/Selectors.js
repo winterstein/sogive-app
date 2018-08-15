@@ -7,37 +7,37 @@
 const Event = {};
 Event.Main = {
     EventList: `#event > div > div:nth-child(2)`,
-    CreateEditButton: `#event > div > div:nth-child(4) > a`,
-    CreateEvent: `#editEvent > div > div:nth-child(1) > button` //Won't appear in DOM until CREATE_EDIT_EVENT has been clicked. Can also navigate directly to sogive.org/#editEvent
+    CreateEvent: `#event > div > div:nth-child(3) > div:nth-child(3) > button`, //Won't appear in DOM until CREATE_EDIT_EVENT has been clicked. Can also navigate directly to sogive.org/#editEvent
+    CreateEditButton: `#event > div > div > small > a`
 };
 Event.EditEventForm = {
-    name: `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(1) > input`,
-    date: `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(2) > input`,
-    description: `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(3) > textarea`,
-    "web-page": `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(4) > div > input`,
-    "matched-funding": `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(5) > input`,
-    sponsor: `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(6) > input`,
-    "user-picks-charity": `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(7) > div > label > input[type="checkbox"]`,
-    "user-teams": `#editEvent > div > div:nth-child(3) > div.panel-body > div:nth-child(8) > div > label > input[type="checkbox"]`
+    name: `input[name=name]`,
+    date: `input[name=date]`,
+    description: `textarea[name=description]`,
+    "web-page": `input[name=url]`,
+    "matched-funding": `input[name=matchedFunding]`,
+    sponsor: `input[name=matchedFundingSponsor]`,
+    "user-picks-charity": `#editEvent > div > div:nth-child(4) > div.panel-body > div:nth-child(9) > div > label > input[type="checkbox"]`,
+    "user-teams": `#editEvent > div > div:nth-child(4) > div.panel-body > div:nth-child(10) > div > label`
 };
 Event.ImagesAndBranding = {
-    backdrop: `#editEvent > div > div:nth-child(4) > div.panel-body > div:nth-child(1) > div > input`,
-    logo: `#editEvent > div > div:nth-child(4) > div.panel-body > div:nth-child(2) > div > input`,
-    banner: `#editEvent > div > div:nth-child(4) > div.panel-body > div:nth-child(3) > div > input`
+    backdrop: `input[name=backgroundImage]`,
+    logo: `input[name=logoImage]`,
+    banner: `input[name=bannerImage]`
 };
 Event.TicketTypes = {
-    CreateButton: `#editEvent > div > div:nth-child(5) > div.panel-body > button`,
-    name: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(2) > input`,
-    subtitle: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(3) > input`,
-    kind: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(4) > input`,
-    price: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(5) > span > input`,
-    stock: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div.container-fluid > div > div:nth-child(1) > div > div.form-group > input`,
-    description: `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(7) > input`,
-    "attendee-noun": `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(8) > input`,
-    "attendee-icon": `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(9) > div > input`,
-    "invite-only-checkbox": `#editEvent > div > div:nth-child(5) > div.panel-body > div > div.container-fluid > div > div:nth-child(1) > div > div:nth-child(2) > div > label > input[type="checkbox"]`,
-    "post-purchase-link": `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(10) > div > input`,
-    "post-purchase-cta": `#editEvent > div > div:nth-child(5) > div.panel-body > div > div:nth-child(11) > div > input`,
+    CreateButton: `#editEvent > div > div.Card.panel.panel-warning > div.panel-body > button`,
+    name: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(2) > input`,
+    subtitle: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(3) > input`,
+    kind: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(4) > input`,
+    price: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(5) > span > input`,
+    stock: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div.container-fluid > div > div:nth-child(1) > div > div.form-group > input`,
+    description: `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(7) > input`,
+    "attendee-noun": `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(8) > input`,
+    "attendee-icon": `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(9) > div > input`,
+    "invite-only-checkbox": `#editEvent > div > div:nth-child(6) > div.panel-body > div > div.container-fluid > div > div:nth-child(1) > div > div:nth-child(2) > div > label > input[type="checkbox"]`,
+    "post-purchase-link": `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(10) > div > input`,
+    "post-purchase-cta": `#editEvent > div > div:nth-child(6) > div.panel-body > div > div:nth-child(11) > div > input`,
 };
 Event.Register = {
     RegisterButton: `#event > div > center:nth-child(4) > a`,

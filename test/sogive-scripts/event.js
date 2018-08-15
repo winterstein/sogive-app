@@ -58,8 +58,10 @@ async function createNewEvent({
     ticket,
     merch
 }) {
-    await page.click(Event.Main.CreateEditButton);
     await page.click(Event.Main.CreateEvent);
+    
+    await page.waitForSelector(Event.Main.CreateEditButton);
+    await page.click(Event.Main.CreateEditButton);
     //fill in form details
     if(event) {
         await fillInForm({

@@ -29,7 +29,6 @@ test('Logged-in charity donation', async () => {
             'address': '123 Clown Shoes Avenue',
             'postcode': 'CS20AD',
             'consent-checkbox': true,
-            'anon-checkbox': true
         }
     });     
 }, 20000);
@@ -58,7 +57,6 @@ test('Logged-out charity donation', async () => {
             'address': '123 Clown Shoes Avenue',
             'postcode': 'CS20AD',
             'consent-checkbox': true,
-            'anon-checkbox': true
         }
     });       
 }, 20000);
