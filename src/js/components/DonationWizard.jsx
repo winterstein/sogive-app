@@ -145,6 +145,8 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// You don't send messages to charities...
 	const showMessageSection = FundRaiser.isa(item);
 
+	const amount = DataStore.getValue(path.concat("amount"));
+
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
 			<Modal.Header closeButton >
@@ -152,7 +154,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			</Modal.Header>
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
-					<WizardStage title='Amount' >
+					<WizardStage title='Amount' sufficient={amount !== null} complete={amount !== null} >
 						<AmountSection path={path} fromEditor={fromEditor} item={item} />
 					</WizardStage>
 				
