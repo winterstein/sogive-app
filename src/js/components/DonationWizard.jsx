@@ -213,7 +213,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline />
-			
+			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event? 
 				<PropControl disabled={ ! dntn.repeat} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 

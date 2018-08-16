@@ -160,7 +160,6 @@ const strRepeat = rep => {
 };
 
 
-
 const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	const removeTicketType = () => {
 		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
