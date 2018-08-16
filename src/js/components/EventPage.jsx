@@ -56,7 +56,8 @@ const Event = ({id}) => {
 			<small>ID: {id}</small>		
 			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
 			<center>
-				{item.description? <MDText source={item.description} /> : null}
+				{item.date? <Misc.LongDate date={item.date} /> : null}
+				{item.description? <MDText source={item.description} /> : null}				
 				{item.url? <div><a href={item.url}>Event website</a></div> : null}
 			</center>
 

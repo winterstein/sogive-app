@@ -81,7 +81,7 @@ const FundRaiserPage = ({id}) => {
 	if ( ! pEvent.resolved) {
 		return <Misc.Loading />;
 	}
-	const event = pEvent.value;
+	const event = pEvent.value || {};
 
 	// Is this the owner viewing their own page? Show them a few extra items like a link to edit.
 	const ownerViewing = isOwner(item);
@@ -103,10 +103,11 @@ const FundRaiserPage = ({id}) => {
 			onePageOnly: true
 		});
 	}
+	const date = item.date || event.date;
 
 	return (
 		<div>
-			{event ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
+			{event.backgroundImage ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
 			<DonationWizard item={item} />
 			<Grid id='FundRaiserPage'>
 				{event.bannerImage? <Row>
@@ -117,7 +118,7 @@ const FundRaiserPage = ({id}) => {
 
 				<Row className='title-bar'>
 					<Col md={12}>
-						<h2>{item.name} {item.date? ' - ' : null} {item.date? <Misc.LongDate date={item.date} /> : null}</h2>
+						<h2>{item.name} {date? ' - ' : null} {date? <Misc.LongDate date={date} /> : null}</h2>
 					</Col>
 				</Row>
 
