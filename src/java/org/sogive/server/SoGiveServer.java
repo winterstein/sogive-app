@@ -59,7 +59,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	private static RepeatDonationProcessor rdp;
 
 	public SoGiveServer() {
-		super("sogive");
+		super("sogive", SoGiveConfig.class);
 	}
 
 	public static void main(String[] args) {
@@ -128,8 +128,8 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		Dep.setSupplier(ESHttpClient.class, true, 
 				() -> new ESHttpClient(Dep.get(ESConfig.class))
 				);
-		// ES router
-		Dep.set(IESRouter.class, config);
+		// ES router - done in the super method
+
 		// login
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
 		
