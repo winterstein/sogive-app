@@ -55,8 +55,12 @@ const ManageDonationsPage = () => {
 	let rdons = pvDonations.value;
 	console.warn('rdons', rdons);
 	let dons = rdons.hits;
+	// ?? SHould this be made into a utility method in DataStore?? getDataList??
 	// resolve from list version to latest (so edits can be seen)
-	dons = dons.map(don => DataStore.getData(getStatus(don), getType(don), getId(don)));
+	dons = dons.map(
+		// prefer draft, so you can see edits in progress
+		don => DataStore.getData(C.KStatus.DRAFT, getType(don), getId(don)) || DataStore.getData(getStatus(don), getType(don), getId(don))
+	);
 
 	const columns = [
 		{
@@ -113,13 +117,14 @@ const ManageDonationsPage = () => {
 			accessor: 'paidOut',
 			editable: true,
 			type: 'checkbox',
-			saveFn: ({item,...huh}) => {
-				console.warn('huh', huh, item);
-				if (item.status === 'DRAFT') {
-					ActionMan.saveEdits(C.TYPES.Donation, item.id, item);
-				} else {
-					ActionMan.publishEdits(C.TYPES.Donation, item.id, item);
-				}
+			saveFn: ({path,...huh}) => {
+				Misc.publishDraftFn({path});
+				// console.warn('huh', huh, item);
+				// if (item.status === 'DRAFT') {
+				// 	ActionMan.saveEdits(C.TYPES.Donation, item.id, item);
+				// } else {
+				// 	ActionMan.publishEdits(C.TYPES.Donation, item.id, item);
+				// }
 			}
 		},
 		{
@@ -142,8 +147,7 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 
-			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow />
-
+			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow />			
 		</div>
 	);
 };
