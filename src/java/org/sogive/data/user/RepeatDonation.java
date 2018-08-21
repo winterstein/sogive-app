@@ -89,8 +89,9 @@ public class RepeatDonation extends AThing {
 	}
 
 
-	public Donation newDraftDonation() {
+	public Donation newDraftDonation() {		
 		Donation don0 = AppUtils.get(did, Donation.class);
+		Utils.check4null(from, to, don0, this);
 		Donation don = new Donation(from, to, don0.getAmount());
 		// NB: we cant just copy DOnation as that includes various processing flags :(
 		don.setA(don0.getA());

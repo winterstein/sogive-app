@@ -49,7 +49,7 @@ public class RepeatDonationProcessor {
 		timer = new Timer("RepeatDonationTimer", false);	
 		timer.scheduleAtFixedRate(new RepeatTask(), 
 				// start soon!
-				TUnit.MINUTE.dt.getMillisecs(),
+				TUnit.MINUTE.dt.getMillisecs()/6,
 				// check 4x a day
 //				new Dt(8, TUnit.MINUTE).getMillisecs()
 				TUnit.MINUTE.getMillisecs() // FIXME for testing
