@@ -45,7 +45,8 @@ public class RepeatDonationProcessor {
 	public static void main(String[] args) {		
 		Log.i("RepeatDonationProcessor", "Starting...");
 		rda = new RepeatDonationActor();
-		timer = new Timer("RepeatDonationTimer");		
+		// This could be a main process - so stay alive
+		timer = new Timer("RepeatDonationTimer", false);	
 		timer.scheduleAtFixedRate(new RepeatTask(), 
 				// start soon!
 				TUnit.MINUTE.dt.getMillisecs(),
@@ -61,34 +62,38 @@ class RepeatTask extends TimerTask {
 
 	@Override
 	public void run() {
-		Log.d("RepeatTask", "run...");
-		// poll ES
-		// TODO checking all every 8 hours is fine for now but not efficient or scalable to the bigtime.
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequestBuilder s = new SearchRequestBuilder(es);
-		ESPath path = Dep.get(IESRouter.class).getPath(RepeatDonation.class, null, KStatus.PUBLISHED);
-		s.setPath(path);
-		s.setSize(10000); // TODO paging
-		SearchResponse sr = s.get();
-		// NB: dont convert yet - so we can handle bad entries better
-		List<Map<String, Object>> jsonrdons = sr.getSearchResults();
-		
-		// send to actor
-		Gson gson = Dep.get(Gson.class);
-		for (Map<String, Object> map : jsonrdons) {
-			try {
-				String json = gson.toJson(map);
-				RepeatDonation rdon = gson.fromJson(json);
-				if (rdon.isDone()) {
-					Log.d("RepeatTask", "Skip all done "+rdon);
-					continue;
+		try {
+			Log.d("RepeatTask", "run...");
+			// poll ES
+			// TODO checking all every 8 hours is fine for now but not efficient or scalable to the bigtime.
+			ESHttpClient es = Dep.get(ESHttpClient.class);
+			SearchRequestBuilder s = new SearchRequestBuilder(es);
+			ESPath path = Dep.get(IESRouter.class).getPath(RepeatDonation.class, null, KStatus.PUBLISHED);
+			s.setPath(path);
+			s.setSize(10000); // TODO paging
+			SearchResponse sr = s.get();
+			// NB: dont convert yet - so we can handle bad entries better
+			List<Map<String, Object>> jsonrdons = sr.getSearchResults();
+			
+			// send to actor
+			Gson gson = Dep.get(Gson.class);
+			for (Map<String, Object> map : jsonrdons) {
+				try {
+					String json = gson.toJson(map);
+					RepeatDonation rdon = gson.fromJson(json);
+					if (rdon.isDone()) {
+						Log.d("RepeatTask", "Skip all done "+rdon);
+						continue;
+					}
+					Log.d("RepeatTask", "Send to actor "+rdon);
+					RepeatDonationProcessor.rda.send(rdon);
+				} catch(Throwable ex) {
+					// don't let one bad object kill the whole process
+					Log.e("RepeatTask", ex);
 				}
-				Log.d("RepeatTask", "Send to actor "+rdon);
-				RepeatDonationProcessor.rda.send(rdon);
-			} catch(Throwable ex) {
-				// don't let one bad object kill the whole process
-				Log.e("RepeatTask", ex);
 			}
+		} catch(Throwable ex) {
+			Log.e("RepeatTask", ex); // keep on truckin
 		}
 	}
 	 

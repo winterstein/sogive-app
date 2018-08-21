@@ -78,7 +78,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	
 	@Override
 	protected void doMain2() {
-		if (rdp!=null) {
+		if (rdp==null) {
 			rdp = new RepeatDonationProcessor();
 			rdp.main(null);
 		}
