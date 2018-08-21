@@ -68,8 +68,12 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		logFile = new LogFile(new File("sogive.log"))
 					// keep 8 weeks of 1 week log files ??revise this??
 					.setLogRotation(TUnit.WEEK.dt, 8);
-		
-		main.doMain(args);		
+		try {
+			main.doMain(args);
+		} catch(Throwable ex) {
+			Log.e(ex);
+			System.exit(-1);
+		}
 	}
 	
 	@Override
@@ -90,6 +94,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	@Override
 	protected void init2(SoGiveConfig config) {
 		super.init2(config);
+		init3_ES();
 		// data
 		DBSoGive.init();
 		// actors
