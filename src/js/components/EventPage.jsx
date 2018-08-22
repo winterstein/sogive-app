@@ -63,6 +63,8 @@ const Event = ({id}) => {
 
 			<Register event={item} />
 	
+			{item.backgroundImage? <img src={item.backgroundImage} className='img-thumbnail' width='200px' /> : null}
+
 			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
 		</div>
 	);

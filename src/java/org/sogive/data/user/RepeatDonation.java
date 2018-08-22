@@ -37,7 +37,7 @@ public class RepeatDonation extends AThing {
 	/**
 	 * The user who donated
 	 */
-	XId from;
+	final XId from;
 	
 
 	public ICalEvent ical = new ICalEvent();
@@ -61,6 +61,7 @@ public class RepeatDonation extends AThing {
 		amount = donation.getAmount();
 		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
+		from = donation.getFrom();
 		ical.start = donation.getTime();		
 		// NB: repeat must be valid if we're here
 		String sfreq = Repeat.freqForTUnit(TUnit.valueOf(donation.repeat));
@@ -88,8 +89,9 @@ public class RepeatDonation extends AThing {
 	}
 
 
-	public Donation newDraftDonation() {
+	public Donation newDraftDonation() {		
 		Donation don0 = AppUtils.get(did, Donation.class);
+		Utils.check4null(from, to, don0, this);
 		Donation don = new Donation(from, to, don0.getAmount());
 		// NB: we cant just copy DOnation as that includes various processing flags :(
 		don.setA(don0.getA());
