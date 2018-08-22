@@ -193,13 +193,13 @@ const AmountSection = ({path, item, fromEditor}) => {
 	let eid = FundRaiser.eventId(item);
 	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	let repeatDonations = ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats
+	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	suggestedDonations.filter(sd => sd.repeat).forEach(sd => {
 		if (repeatDonations.indexOf(sd.repeat)===-1) repeatDonations.push(sd.repeat); 
 	});
 
 	// HACK default to stopping with the event
-	if (event && dntn.repeat && dntn.repeatStopsAfterEvent===undefined) {
+	if (event && dntn.repeat && dntn.repeat !== 'OFF' && dntn.repeatStopsAfterEvent===undefined) {
 		dntn.repeatStopsAfterEvent = true;
 	}
 
@@ -212,7 +212,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline />
+			{dntn.repeat || repeatDonations.length > 1? <PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event? 
 				<PropControl disabled={ ! dntn.repeat} 					
