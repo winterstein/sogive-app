@@ -23,7 +23,6 @@ public class PublishSoGiveApp extends PublishProjectTask {
 	
 	@Override
 	public List<BuildTask> getDependencies() {
-		wtf();
 		List<BuildTask> deps = super.getDependencies();
 		deps.add(new BuildCalstat());
 		return deps;
@@ -31,15 +30,9 @@ public class PublishSoGiveApp extends PublishProjectTask {
 
 	@Override
 	protected void doTask() throws Exception {
-		wtf();
-		
 		super.doTask();		
 		
-		wtf();
-		
 		doSendEmail("daniel.winterstein@gmail.com,sanjay@sogive.org,daniel.appel.winterwell@gmail.com,roscoe@winterwell.com");
-		
-		wtf();
 	}
 
 
