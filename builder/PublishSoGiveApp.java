@@ -19,7 +19,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 		//bashScript = "./publish-sogiveapp.sh";
 		//
 		// NEW SCRIPT
-		bashScript = "../wwappbase.js/./project-publisher.sh sogive";
+		bashScript = "../wwappbase.js/./test-script.sh sogive";
 		// TODO: Get around this absolute path need.
 		typeOfPublish = KPubType.test;
 //		codePart = "backend";
