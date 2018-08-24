@@ -147,6 +147,8 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	const amount = DataStore.getValue(path.concat("amount"));
 
+	const amountOK = amount !== null && Money.value(amount) > 0;
+
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
 			<Modal.Header closeButton >
@@ -154,7 +156,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			</Modal.Header>
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
-					<WizardStage title='Amount' sufficient={amount !== null} complete={amount !== null} >
+					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK} >
 						<AmountSection path={path} fromEditor={fromEditor} item={item} />
 					</WizardStage>
 				
