@@ -214,7 +214,9 @@ const AmountSection = ({path, item, fromEditor}) => {
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			{dntn.repeat || repeatDonations.length > 1? <PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline /> : null}
+			{dntn.repeat || repeatDonations.length > 1? 
+				<PropControl type='radio' path={path} prop='repeat' 
+					options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event? 
 				<PropControl disabled={ ! dntn.repeat} 					
@@ -233,18 +235,9 @@ const SDButton = ({path,sd}) => {
 		delete amnt['@class'];
 		DataStore.setValue(path.concat('amount'), amnt);
 		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
-	}}>{sd.name} <Misc.Money amount={sd.amount} /> {strRepeat(sd.repeat)}</button>;
+	}}>{sd.name} <Misc.Money amount={sd.amount} /> {Donation.strRepeat(sd.repeat)}</button>;
 };
 
-const strRepeat = rep => {
-	const srep = {
-		'OFF': 'one-off',
-		'WEEK': 'weekly',
-		'MONTH': 'monthly',
-		'YEAR': 'annual'
-	}[rep];
-	return srep || rep;
-};
 
 /**
  * @returns Money

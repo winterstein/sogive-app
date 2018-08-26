@@ -13,6 +13,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../base/data/DataClass';
 import Ticket from '../../data/charity/Ticket';
+import Donation from '../../data/charity/Donation';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
 import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
@@ -141,22 +142,11 @@ const SuggestedDonationEditor = ({item, path}) => {
 		<Misc.PropControl path={path} prop='amount' label='Amount' type='Money' />
 		
 		<Misc.PropControl label='Repeating?' type='radio' path={path} prop='repeat' 
-			options={['OFF','MINUTE','HOUR','DAY','WEEK','MONTH','YEAR']} labels={strRepeat} inline />
+			options={['OFF','MINUTE','HOUR','DAY','WEEK','MONTH','YEAR']} labels={Donation.strRepeat} inline />
 
 		<Misc.PropControl path={path} prop='name' label='Name (optional)' />
 		<Misc.PropControl path={path} prop='text' label='Text (optional)' />
 	</div>);
-};
-
-// NB: copy pasta from DonationWIzard
-const strRepeat = rep => {
-	const srep = {
-		'OFF': 'one-off',
-		'WEEK': 'weekly',
-		'MONTH': 'monthly',
-		'YEAR': 'annual'
-	}[rep];
-	return srep || rep;
 };
 
 
