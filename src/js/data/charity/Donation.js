@@ -88,3 +88,16 @@ Donation.make = (base = {}) => {
 	return ma;
 };
 
+
+/**
+ * change the repeat constants into strings
+ */
+Donation.strRepeat = rep => {
+	const srep = {
+		'OFF': 'one-off',
+		'WEEK': 'weekly',
+		'MONTH': 'monthly',
+		'YEAR': 'annual'
+	}[rep];
+	return srep || rep;
+};

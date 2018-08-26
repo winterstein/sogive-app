@@ -298,7 +298,9 @@ const Supporter = ({donation, charity}) => {
 			{donation.contributions && ! donation.anonAmount? 
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
-			{ donation.message ? (
+			{donation.repeat && donation.repeat!=='OFF'? 
+				<div>Repeats {Donation.strRepeat(donation.repeat)}</div> : null}
+			{donation.message ? (
 				<p>{donation.message}</p>
 			) : null }
 			<Clearfix />
