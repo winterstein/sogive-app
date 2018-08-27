@@ -30,7 +30,7 @@
 		"react-stripe-elements": "^1.7.0",
 		"sjtest": "^0.4.7",
 		"wwutils": "^0.9.2",
-		"you-again": "^0.7.9"
+		"you-again": "^0.8.0"
 	},
 	"scripts": {
 		"compile-watch": "webpack --config webpack.config.js --progress --colors --watch",

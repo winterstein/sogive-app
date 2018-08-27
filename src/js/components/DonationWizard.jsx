@@ -217,7 +217,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 			{dntn.repeat || repeatDonations.length > 1? <PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event? 
-				<PropControl disabled={ ! dntn.repeat} 					
+				<PropControl disabled={ ! dntn.repeat || dntn.repeat==='OFF'} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
 					type='checkbox' 
 					path={path} prop='repeatStopsAfterEvent' />
