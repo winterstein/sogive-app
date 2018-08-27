@@ -147,7 +147,7 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 
-			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow />			
+			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow hideEmpty />			
 		</div>
 	);
 };
