@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.commercial.Event;
+import org.sogive.server.DonationServlet;
 import org.sogive.server.SoGiveServer;
 
 import com.winterwell.es.ESPath;
@@ -19,13 +20,16 @@ import com.winterwell.gson.Gson;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.TodoException;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.time.TimeUtils;
+import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.app.AppUtils;
+import com.winterwell.web.data.XId;
 
 /**
  * TODO thread to poll for repeat donations and process them
@@ -102,7 +106,7 @@ class RepeatTask extends TimerTask {
 class RepeatDonationActor extends Actor<RepeatDonation> {
 	
 	@Override
-	protected void consume(RepeatDonation msg, Actor from) throws Exception {
+	protected void consume(RepeatDonation msg, Actor fromActor) throws Exception {
 		Log.d(getName(), "consume "+msg);		
 		// ready to repeat? Includes screen by end date
 		Time next = getNextRepeat(msg);
@@ -120,7 +124,14 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 		// donate!
 		Donation don = msg.newDraftDonation();
 		Log.d(getName(), "repeat! "+don+" for "+msg);
-		AppUtils.doPublish(don, true, true);
+		AppUtils.doPublish(don, true, true);		
+		// collect money
+		XId from = msg.from;
+		String email = from.getName(); // ?? what if they login by Facebook??
+		if ( ! WebUtils2.isValidEmail(email)) {
+			email = msg.getOriginalDonation().getDonorEmail();
+		}
+		DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
 	}
 	
 

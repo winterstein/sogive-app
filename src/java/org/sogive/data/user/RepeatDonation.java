@@ -23,7 +23,7 @@ import lombok.Data;
  * @author daniel
  *
  */
-@Data
+//@Data
 public class RepeatDonation extends AThing {
 	
 	private static final String LOGTAG = "RepeatDonation";
@@ -39,6 +39,12 @@ public class RepeatDonation extends AThing {
 	 */
 	final XId from;
 	
+	public boolean isDone() {
+		return done;
+	}
+	public void setDone(boolean done) {
+		this.done = done;
+	}
 
 	public ICalEvent ical = new ICalEvent();
 
@@ -53,11 +59,14 @@ public class RepeatDonation extends AThing {
 	 */
 	private Time date;
 
+	private transient Donation originalDonation;
+
 	public RepeatDonation(Donation donation) {
 		super();
 		date = donation.getTime();
 		id = idForDonation(donation);
 		did = donation.getId();
+		originalDonation = donation;
 		amount = donation.getAmount();
 		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
@@ -90,7 +99,7 @@ public class RepeatDonation extends AThing {
 
 
 	public Donation newDraftDonation() {		
-		Donation don0 = AppUtils.get(did, Donation.class);
+		Donation don0 = getOriginalDonation();
 		Utils.check4null(from, to, don0, this);
 		org.sogive.data.charity.Money uc = don0.getRawAmount();
 		Donation don = new Donation(from, to, uc);
@@ -120,6 +129,22 @@ public class RepeatDonation extends AThing {
 	}
 
 
+	public Donation getOriginalDonation() {
+		if (originalDonation==null) {
+			originalDonation = AppUtils.get(did, Donation.class);
+		}
+		return originalDonation;
+	}
+
+
 	boolean done;
+
+	public Time getDate() {
+		return date;
+	}
+	
+	public ICalEvent getIcal() {
+		return ical;
+	}
 	
 }
