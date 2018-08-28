@@ -92,21 +92,27 @@ public class RepeatDonation extends AThing {
 	public Donation newDraftDonation() {		
 		Donation don0 = AppUtils.get(did, Donation.class);
 		Utils.check4null(from, to, don0, this);
-		Donation don = new Donation(from, to, don0.getAmount());
+		org.sogive.data.charity.Money uc = don0.getRawAmount();
+		Donation don = new Donation(from, to, uc);
 		// NB: we cant just copy DOnation as that includes various processing flags :(
 		don.setA(don0.getA());
-		// various settings are left blank as not needed in a repeat
-		Event event = don0.getEvent();
+		// NB: various settings are left blank as not needed in a repeat
+		don.setDonorAddress(don0.getDonorAddress());
+		don.setDonorEmail(don0.getDonorEmail());
+		don.setDonorName(don0.getDonorName());
+		don.setDonorPostcode(don0.getDonorPostcode());
+		Event event = don0.getEvent();		
 		don.setEvent(event);
 //		don.setF(f);
 //		don.setFees(fees); // is this set by the payment processor?? Ditto for contibutions??
 		don.setFundRaiser(don0.getFundRaiser());
 		don.setGiftAid(don0.getGiftAid());
 		don.setGenerator(id);
-		don.setHasTip(don0.hasTip);
+		don.setHasTip(don0.hasTip);		
 		don.setImpacts(don0.getImpacts());
 		don.setPaymentMethod(don0.getPaymentMethod());
 		don.setStripe(don0.getStripe()); // ?? it'd be good if payment handling could update
+		don.setTip(don0.getTip());		
 		don.setVia(don0.getVia());
 		
 		don.setStatus(KStatus.DRAFT);

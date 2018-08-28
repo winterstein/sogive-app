@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+import org.sogive.data.commercial.SuggestedDonation;
+
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
@@ -16,6 +18,7 @@ import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.web.data.XId;
 
 public class NGO extends Thing<NGO> {
+		
 	private static final long serialVersionUID = 1L;
 
 	@Override
