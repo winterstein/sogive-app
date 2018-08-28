@@ -115,6 +115,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 		//Check if donation is draft
 		if(C.KStatus.isPUBLISHED(donationDraft.status)) {
+			// ?? does this duplicate the clear done on publish??
 			ActionMan.clearDonationDraft({donation: donationDraft});
 		}
 	};
@@ -395,10 +396,10 @@ const onToken_doPayment = ({donation}) => {
 			const stagePath = ['location', 'params', 'dntnStage'];
 			const stage = Number.parseInt(DataStore.getValue(stagePath));
 			DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
+			// clear the draft
+			ActionMan.clearDonationDraft({donation});			
 			// do a fresh load of the fundraiser?
-			if (donation.fundRaiser) {
-				//ActionMan.clearDonationDraft({donation});
-				//This function appears to have been lost somewhere along the way.
+			if (donation.fundRaiser) {				
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
 				console.log("DonationWizard doPayment - no fundraiser to refresh", donation);
