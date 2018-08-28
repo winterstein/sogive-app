@@ -17,6 +17,7 @@ import Donation from '../../data/charity/Donation';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
 import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
+import {SuggestedDonationEditor} from './CommonControls';
 
 const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -135,20 +136,6 @@ const EventEditor = ({id}) => {
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
 }; // ./EventEditor
-
-
-const SuggestedDonationEditor = ({item, path}) => {
-	return (<div className='well'>		
-		<Misc.PropControl path={path} prop='amount' label='Amount' type='Money' />
-		
-		<Misc.PropControl label='Repeating?' type='radio' path={path} prop='repeat' 
-			options={['OFF','MINUTE','HOUR','DAY','WEEK','MONTH','YEAR']} labels={Donation.strRepeat} inline />
-
-		<Misc.PropControl path={path} prop='name' label='Name (optional)' />
-		<Misc.PropControl path={path} prop='text' label='Text (optional)' />
-	</div>);
-};
-
 
 const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	const removeTicketType = () => {

@@ -10,6 +10,18 @@ const Donation = defineType(C.TYPES.Donation);
 const This = Donation;
 export default Donation;
 
+
+Donation.strRepeat = rep => {
+	const srep = {
+		'OFF': 'one-off',
+		'WEEK': 'weekly',
+		'MONTH': 'monthly',
+		'YEAR': 'annual'
+	}[rep];
+	return srep || rep;
+};
+
+
 // ref: https://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
 function isNumeric(value) {
 	return ! isNaN(value - parseFloat(value));

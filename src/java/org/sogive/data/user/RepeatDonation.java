@@ -23,7 +23,7 @@ import lombok.Data;
  * @author daniel
  *
  */
-@Data
+//@Data
 public class RepeatDonation extends AThing {
 	
 	private static final String LOGTAG = "RepeatDonation";
@@ -39,6 +39,12 @@ public class RepeatDonation extends AThing {
 	 */
 	final XId from;
 	
+	public boolean isDone() {
+		return done;
+	}
+	public void setDone(boolean done) {
+		this.done = done;
+	}
 
 	public ICalEvent ical = new ICalEvent();
 
@@ -53,11 +59,14 @@ public class RepeatDonation extends AThing {
 	 */
 	private Time date;
 
+	private transient Donation originalDonation;
+
 	public RepeatDonation(Donation donation) {
 		super();
 		date = donation.getTime();
 		id = idForDonation(donation);
 		did = donation.getId();
+		originalDonation = donation;
 		amount = donation.getAmount();
 		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
@@ -90,23 +99,29 @@ public class RepeatDonation extends AThing {
 
 
 	public Donation newDraftDonation() {		
-		Donation don0 = AppUtils.get(did, Donation.class);
+		Donation don0 = getOriginalDonation();
 		Utils.check4null(from, to, don0, this);
-		Donation don = new Donation(from, to, don0.getAmount());
+		org.sogive.data.charity.Money uc = don0.getRawAmount();
+		Donation don = new Donation(from, to, uc);
 		// NB: we cant just copy DOnation as that includes various processing flags :(
 		don.setA(don0.getA());
-		// various settings are left blank as not needed in a repeat
-		Event event = don0.getEvent();
+		// NB: various settings are left blank as not needed in a repeat
+		don.setDonorAddress(don0.getDonorAddress());
+		don.setDonorEmail(don0.getDonorEmail());
+		don.setDonorName(don0.getDonorName());
+		don.setDonorPostcode(don0.getDonorPostcode());
+		Event event = don0.getEvent();		
 		don.setEvent(event);
 //		don.setF(f);
 //		don.setFees(fees); // is this set by the payment processor?? Ditto for contibutions??
 		don.setFundRaiser(don0.getFundRaiser());
 		don.setGiftAid(don0.getGiftAid());
 		don.setGenerator(id);
-		don.setHasTip(don0.hasTip);
+		don.setHasTip(don0.hasTip);		
 		don.setImpacts(don0.getImpacts());
 		don.setPaymentMethod(don0.getPaymentMethod());
 		don.setStripe(don0.getStripe()); // ?? it'd be good if payment handling could update
+		don.setTip(don0.getTip());		
 		don.setVia(don0.getVia());
 		
 		don.setStatus(KStatus.DRAFT);
@@ -114,6 +129,22 @@ public class RepeatDonation extends AThing {
 	}
 
 
+	public Donation getOriginalDonation() {
+		if (originalDonation==null) {
+			originalDonation = AppUtils.get(did, Donation.class);
+		}
+		return originalDonation;
+	}
+
+
 	boolean done;
+
+	public Time getDate() {
+		return date;
+	}
+	
+	public ICalEvent getIcal() {
+		return ical;
+	}
 	
 }

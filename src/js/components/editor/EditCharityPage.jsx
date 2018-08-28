@@ -19,6 +19,7 @@ import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
 import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
+import {SuggestedDonationEditor} from './CommonControls';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -26,7 +27,8 @@ const EditCharityPage = () => {
 	}
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid), 
+	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
+	let {value:charity} = DataStore.fetch(cpath,
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);	
 	if ( ! charity) {
@@ -92,6 +94,7 @@ const EditCharityPage = () => {
 				<Misc.Card title='Charity Profile'>
 					<ProfileEditor charity={charity} />
 				</Misc.Card>
+
 				<Misc.Card title='Donations &amp; Tax'>
 					<EditField item={charity} 
 						field='noPublicDonations' label='No public donations' type='checkbox' 
@@ -99,7 +102,10 @@ const EditCharityPage = () => {
 					<EditField item={charity} 
 						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
+					<h4>Suggested Donations</h4>
+					<Misc.ListEditor path={cpath.concat('suggestedDonations')} ItemEditor={SuggestedDonationEditor} />
 				</Misc.Card>
+
 				<Misc.Card title='Overall finances and impact'>
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
 				</Misc.Card>

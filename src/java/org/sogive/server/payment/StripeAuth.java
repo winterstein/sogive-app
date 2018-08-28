@@ -24,7 +24,13 @@ public class StripeAuth {
 	public StripeAuth() {	
 	}
 	
-	public StripeAuth(Person userObj, WebRequest state) {		
+	/**
+	 * 
+	 * @param userObj
+	 * @param state Can be null.
+	 */
+	public StripeAuth(Person userObj, WebRequest state) {
+		assert userObj!=null || state!=null;
 		if (state!=null) {
 			id = state.get("stripeToken");
 			type = state.get("stripeTokenType");

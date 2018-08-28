@@ -223,14 +223,34 @@ public class DonationServlet extends CrudServlet {
 				}
 			}
 		} // ./null user
-		donation.setF(new XId[]{user}); // who reported this? audit trail
+
 		// make sure from is set
 		if (from==null) {			
 			from = user;
 			donation.setFrom(from);
 			Log.d(LOGTAG, "set from to "+from+" for "+donation.getId()+" in publish "+state);
 		}
-		Utils.check4null(from, user);
+
+		if (user!=null && from!=null && ! user.equals(from)) {
+			Log.e(LOGTAG, "from/user mismatch from:"+from+" user:"+user+" donation:"+donation);
+		}
+		
+		// do it!
+		doPublish3_ShowMeTheMoney(state, donation, from, Utils.or(email3, email));
+		
+		jthing.setJava(donation); // Is this needed to avoid any stale json?
+	}
+
+	/**
+	 * 
+	 * @param state Can be null
+	 * @param donation
+	 * @param user
+	 * @param email
+	 */
+	public static void doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) {
+		Utils.check4null(donation, user, email);
+		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
 		// make sure it has a date and some donor info
 //		if (donation.getDate()==null) { // date = published date not draft creation date
@@ -239,10 +259,9 @@ public class DonationServlet extends CrudServlet {
 			Map info = new ArrayMap(
 					"name", donation.getDonorName()
 					);
-			PersonLite peepLite = AppUtils.getCreatePersonLite(from, info);
+			PersonLite peepLite = AppUtils.getCreatePersonLite(user, info);
 			donation.setDonor(peepLite);
 		}
-		jthing.setJava(donation); // Is this needed to avoid any stale json?
 								
 		// collect the money
 		if (Utils.isBlank(donation.getTo())) {
@@ -278,7 +297,7 @@ public class DonationServlet extends CrudServlet {
 		
 		// Send an email
 		try {
-			doUploadTransfers2_email(donation, Utils.or(email3, email));
+			doUploadTransfers2_email(donation, email);
 		} catch(Throwable ex) {
 			Log.e(LOGTAG, ex);
 			// don't choke though, carry on
@@ -291,7 +310,7 @@ public class DonationServlet extends CrudServlet {
 	 * @param transfers
 	 * @throws AddressException 
 	 */
-	void doUploadTransfers2_email(Donation donation, String emailAddress) throws AddressException {
+	static void doUploadTransfers2_email(Donation donation, String emailAddress) throws AddressException {
 		if (emailAddress==null) {
 			Log.d(LOGTAG, "no email for recipt "+donation);
 			return;

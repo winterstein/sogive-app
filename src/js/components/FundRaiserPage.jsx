@@ -272,9 +272,11 @@ const DonationsSoFar = ({item}) => {
 };
 
 const Supporters = ({item, donations = [], charity}) => {
+	// filter out repeat donations
+	let dons = donations.filter(d => ! d.generator);
 	return (
 		<ul className='supporters'>
-			{donations.map(donation => <Supporter key={`${donation.id}.${donation.amount.value}.${donation.date}`} donation={donation} charity={charity} />)}			
+			{dons.map(donation => <Supporter key={donation.id} donation={donation} charity={charity} />)}
 		</ul>
 	);
 	// TODO <li className='show-more'><Button>show more</Button></li>

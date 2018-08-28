@@ -189,7 +189,7 @@ public class Donation extends AThing implements IForSale {
 	private final Money amount;
 	
 	/**
-	 * HACK: amount plus tip!
+	 * @deprecated HACK: amount plus tip!
 	 * TODO move tip into fees.
 	 */
 	public Money getAmount() {
@@ -197,6 +197,10 @@ public class Donation extends AThing implements IForSale {
 		if (Utils.yes(hasTip) && tip!=null && tip.getValue100p() > 0) {
 			return amount.plus(tip);
 		}
+		return amount;
+	}
+	
+	public Money getRawAmount() {
 		return amount;
 	}
 	

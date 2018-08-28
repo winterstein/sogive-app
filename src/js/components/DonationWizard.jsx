@@ -115,6 +115,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 		//Check if donation is draft
 		if(C.KStatus.isPUBLISHED(donationDraft.status)) {
+			// ?? does this duplicate the clear done on publish??
 			ActionMan.clearDonationDraft({donation: donationDraft});
 		}
 	};
@@ -219,7 +220,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 					options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event? 
-				<PropControl disabled={ ! dntn.repeat} 					
+				<PropControl disabled={ ! dntn.repeat || dntn.repeat==='OFF'} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
 					type='checkbox' 
 					path={path} prop='repeatStopsAfterEvent' />
@@ -237,7 +238,6 @@ const SDButton = ({path,sd}) => {
 		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
 	}}>{sd.name} <Misc.Money amount={sd.amount} /> {Donation.strRepeat(sd.repeat)}</button>;
 };
-
 
 /**
  * @returns Money
@@ -397,10 +397,10 @@ const onToken_doPayment = ({donation}) => {
 			const stagePath = ['location', 'params', 'dntnStage'];
 			const stage = Number.parseInt(DataStore.getValue(stagePath));
 			DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
+			// clear the draft
+			ActionMan.clearDonationDraft({donation});			
 			// do a fresh load of the fundraiser?
-			if (donation.fundRaiser) {
-				//ActionMan.clearDonationDraft({donation});
-				//This function appears to have been lost somewhere along the way.
+			if (donation.fundRaiser) {				
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
 				console.log("DonationWizard doPayment - no fundraiser to refresh", donation);

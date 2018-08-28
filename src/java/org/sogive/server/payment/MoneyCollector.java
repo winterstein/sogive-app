@@ -32,6 +32,9 @@ public class MoneyCollector {
 	final IForSale basket;
 	final XId user;
 	final XId to;
+	/**
+	 * Can be null. StripeAuth gets info from here.
+	 */
 	final WebRequest state;
 	
 	List<Transfer> transfers = new ArrayList();
