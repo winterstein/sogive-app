@@ -223,6 +223,22 @@ public class DonationServlet extends CrudServlet {
 				}
 			}
 		} // ./null user
+
+		// do it!
+		doPublish3_ShowMeTheMoney(state, donation, user, from, email3, email);
+	}
+
+	/**
+	 * 
+	 * @param state Can be null
+	 * @param donation
+	 * @param user
+	 * @param from
+	 * @param email3
+	 * @param email
+	 */
+	private void doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, XId from, String email3,
+			String email) {
 		donation.setF(new XId[]{user}); // who reported this? audit trail
 		// make sure from is set
 		if (from==null) {			
