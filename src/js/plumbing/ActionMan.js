@@ -216,6 +216,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 	// use a pseudo id to keep it in the local DataStore
 	let from = Login.getId();
 	return DataStore.fetch(['draft', C.TYPES.Donation, 'from:'+from, 'draft-to:'+forId], () => {
+		// no load from server - it caused bugs
 		// return ServerIO.getDonationDraft({from, charity, fundRaiser})
 		// 	.then(res => {
 		// 		console.warn("getDonationDraft", res, 'NB: take cargo.hits.0');
@@ -234,7 +235,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 		console.warn('donationDraft-new', dontn);
 		// }
 		// store in data by ID (the fetch stores under draft-to)
-		DataStore.setData(C.KStatus.DRAFT, dontn);
+		DataStore.setData(C.KStatus.DRAFT, dontn, false);
 		return dontn;
 		// }); // ./then()
 	}); // ./fetch()

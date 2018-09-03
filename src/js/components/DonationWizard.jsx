@@ -447,7 +447,8 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	/**
 	 * Add the stripe token to the Donation object and publish the Donation
-	 * @param {id:String, type:String, token:String} token 
+	 * @param {id:String, type:String, token:String} token
+	 *  |source owner: {email, verified_email}
 	 */
 	const onToken = (token) => {
 		donation.stripe = token;

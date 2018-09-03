@@ -11,7 +11,7 @@ import com.winterwell.web.app.WebRequest;
 import lombok.Data;
 
 /**
- * Token for a Customer
+ * Token or Source for a Customer
  * @author daniel
  *
  */
@@ -59,6 +59,21 @@ public class StripeAuth {
 	 */
 	String type;
 	/**
+	 * "token" or "source"?
+	 */
+	String object;
+	
+	/**
+	 * live or test?
+	 */
+	Boolean livemode;
+	
+	/**
+	 * ??
+	 */
+	String client_secret;
+	
+	/**
 	 *  Customer info, may be blank
 	 */
 	String customerId;
@@ -72,6 +87,23 @@ public class StripeAuth {
 	 * country: two-letter code
 	 */
 	Map<String, Object> card;
+	/** SOurce only (not token)
+	 * 
+	 * address
+email
+name
+phone
+verified_address
+verified_email
+verified_name
+verified_phone
+	 */
+	Map<String, Object> owner;
+	
+	/**
+	 * ??
+	 */
+	String statement_descriptor;
 	
 	/**
 	 * Time when this authorisation was created
