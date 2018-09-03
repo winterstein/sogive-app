@@ -17,3 +17,6 @@ web/uploads
 **.png
 bob-all.jar
 lib/
+dependencies/
+.settings
+pom.bob.xml
