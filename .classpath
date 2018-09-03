@@ -11,7 +11,8 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.web"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flexi-gson"/>
-	<classpathentry exported="true" kind="lib" path="/middleware/gson/gson-original.jar"/>
+	<classpathentry kind="lib" path="dependencies/stripe-java.jar"/>
+	<classpathentry kind="lib" path="dependencies/gson.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.webappbase"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/youagain-java-client"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.depot"/>

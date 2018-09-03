@@ -14,8 +14,6 @@ import org.sogive.data.user.Person;
 
 import com.goodloop.data.PaymentException;
 import com.stripe.Stripe;
-import com.stripe.exception.APIConnectionException;
-import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;

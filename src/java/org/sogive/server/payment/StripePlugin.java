@@ -17,8 +17,6 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.WeirdException;
 import com.winterwell.web.fields.SField;
 import com.stripe.Stripe;
-import com.stripe.exception.APIConnectionException;
-import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
@@ -39,24 +37,24 @@ public class StripePlugin {
 	public static final String SERVICE = "stripe";
 	private static final String LOGTAG = "stripe";
 
-	/**
-	 * 
-	 * @param gateway {id: stripe-customer-id}
-	 * @throws Exception
-	 */
-	public static void cancelPlan(Map gateway) throws Exception {
-		Log.i(SERVICE, "cancelPlan "+gateway);
-		String id = (String) gateway.get("id");
-		String secretKey = Dep.get(StripeConfig.class).secretKey;
-		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
-		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
-		Customer customer = Customer.retrieve(id, requestOptions);
-		// TODO just cancel one plan
-//		CustomerSubscriptionCollection subs = customer.getSubscriptions();
-		customer.cancelSubscription(new ArrayMap(
-				"at_period_end", true
-				));
-	}
+//	/**
+//	 * 
+//	 * @param gateway {id: stripe-customer-id}
+//	 * @throws Exception
+//	 */
+//	public static void cancelPlan(Map gateway) throws Exception {
+//		Log.i(SERVICE, "cancelPlan "+gateway);
+//		String id = (String) gateway.get("id");
+//		String secretKey = Dep.get(StripeConfig.class).secretKey;
+//		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
+//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
+//		Customer customer = Customer.retrieve(id, requestOptions);
+//		// TODO just cancel one plan
+////		CustomerSubscriptionCollection subs = customer.getSubscriptions();
+//		customer.cancelSubscription(new ArrayMap(
+//				"at_period_end", true
+//				));
+//	}
 
 	/**
 	 * 
