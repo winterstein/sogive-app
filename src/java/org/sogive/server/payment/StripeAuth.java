@@ -123,4 +123,12 @@ verified_phone
 				+ email + "]";
 	}
 
+	/**
+	 * 
+	 * @return true if this is a (probably reusable) money source
+	 */
+	public boolean isSource() {
+		return "source".equals(object);
+	}
+
 }

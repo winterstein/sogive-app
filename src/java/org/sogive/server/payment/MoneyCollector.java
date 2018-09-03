@@ -17,6 +17,7 @@ import com.stripe.Stripe;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.Plan;
@@ -108,14 +109,21 @@ public class MoneyCollector {
 				Log.d(LOGTAG, "skip payment: "+basket);
 				return transfers; 
 			}						
-						
-			if (basket.getRepeat()!=null) {
-				run2_repeat(sa, userObj);
-				return transfers;
+
+			// attach source to customer
+			if (sa.isSource()) {
+				Customer customer = addStripeSourceToCustomer(sa);
+				Log.d(LOGTAG, "Made customer "+customer);
 			}
 			
-			// simple one off payment
-			String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
+			// Use polling to do repeats
+//			if (basket.getRepeat()!=null) {
+//				run2_repeat(sa, userObj);
+//				return transfers;
+//			}
+			
+			// one off or first payment
+			String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();						
 			Charge charge = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 			Log.d("stripe.collect", charge);
 			basket.setPaymentId(charge.getId());
@@ -131,74 +139,92 @@ public class MoneyCollector {
 		}
 	}
 
-	static String STRIPE_REPEAT_DONATION_PRODUCT = "prod_DXNVdXseaxwEo6";
-	static String STRIPE_REPEAT_DONATION_TESTPRODUCT = "prod_DXNgWKoFs8bs6a";
-
-	private void run2_repeat(StripeAuth sa, Person userObj) throws Exception {
-		Repeat repeat = basket.getRepeat();
-		Money amount = basket.getAmount();
-		String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
-		Log.d("stripe.plan", chargeDescription);
-//		String plan = StripePlugin.makePlan(chargeDescription);
-		
-		String secretKey = StripePlugin.secretKey();
-		// Charge them!
-		Stripe.apiKey = secretKey;
-		// the product/service
-		String product = Dep.get(StripeConfig.class).testStripe? STRIPE_REPEAT_DONATION_TESTPRODUCT : STRIPE_REPEAT_DONATION_PRODUCT; 
-		
-		// pence, rounding up
-		int pence = (int) Math.ceil(amount.getValue100p() / 100);
-		String interval = repeat.getFreq().toString().toLowerCase(); // day / week / month / year
-		Map<String, Object> params = new ArrayMap(
-			"interval", interval,
-			"product", product,
-//			"nickname", "Repeat Donation"
-			"amount", pence,
-	        "currency", Utils.or(amount.getCurrency(), "GBP")
+	/**
+	 * https://stripe.com/docs/sources/customers
+	 * @param sa
+	 * @return
+	 * @throws StripeException
+	 */
+	private Customer addStripeSourceToCustomer(StripeAuth sa) throws StripeException {
+		assert "source".equals(sa.getObject()) : sa;
+		Map<String, Object> customerParams = new ArrayMap<>(
+			"email", getBuyerEmail(),
+			"source", sa.id
 		);
-		Plan plan = Plan.create(params);
-		Log.d(LOGTAG, "Made a plan "+plan.getId()+" for repeating "+basket);
-		
-		// token -> Customer
-//		getCreateCustomerId
-		if (sa.getCustomerId()==null) {
-			Map<String, Object> customerParams = new ArrayMap<>(
-				"email", getBuyerEmail(),
-				"source", sa.id
-			);
-			Customer customer = Customer.create(customerParams);
-			sa.customerId = customer.getId();
-		}
-		
-		// subscribe		
-		String customerId = sa.customerId;
-		Map stripeInfo = null; 
-		if (userObj!=null) {
-			stripeInfo = (Map) userObj.get("stripe");
-		}
-		if (stripeInfo==null) stripeInfo = new ArrayMap();
-		if (userObj!=null) {
-	        userObj.put("stripe", stripeInfo);
-        }
-		stripeInfo.put("customerId", customerId);
-		stripeInfo.put("email", getBuyerEmail());
-		
-		Map<String, Object> subparams = new ArrayMap(
-			"customer", customerId,
-			"items", new ArrayMap(
-				"0", new ArrayMap(
-					"plan", plan.getId()
-					))
-			);
-		Subscription sub = Subscription.create(subparams);
-		
-		List subs = Utils.or((List)stripeInfo.get("subscriptions"), new ArrayList());
-		subs.add(sub.toJson());
-		stripeInfo.put("subscriptions", subs);
-		
-		Log.d("stripe.subscribe", basket+" -> "+sub.toJson());
+		Customer customer = Customer.create(customerParams);
+		sa.customerId = customer.getId();
+		return customer;
 	}
+
+
+//	static String STRIPE_REPEAT_DONATION_PRODUCT = "prod_DXNVdXseaxwEo6";
+//	static String STRIPE_REPEAT_DONATION_TESTPRODUCT = "prod_DXNgWKoFs8bs6a";
+
+//	private void run2_repeat(StripeAuth sa, Person userObj) throws Exception {
+//		Repeat repeat = basket.getRepeat();
+//		Money amount = basket.getAmount();
+//		String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
+//		Log.d("stripe.plan", chargeDescription);
+////		String plan = StripePlugin.makePlan(chargeDescription);
+//		
+//		String secretKey = StripePlugin.secretKey();
+//		// Charge them!
+//		Stripe.apiKey = secretKey;
+//		// the product/service
+//		String product = Dep.get(StripeConfig.class).testStripe? STRIPE_REPEAT_DONATION_TESTPRODUCT : STRIPE_REPEAT_DONATION_PRODUCT; 
+//		
+//		// pence, rounding up
+//		int pence = (int) Math.ceil(amount.getValue100p() / 100);
+//		String interval = repeat.getFreq().toString().toLowerCase(); // day / week / month / year
+//		Map<String, Object> params = new ArrayMap(
+//			"interval", interval,
+//			"product", product,
+////			"nickname", "Repeat Donation"
+//			"amount", pence,
+//	        "currency", Utils.or(amount.getCurrency(), "GBP")
+//		);
+//		Plan plan = Plan.create(params);
+//		Log.d(LOGTAG, "Made a plan "+plan.getId()+" for repeating "+basket);
+//		
+//		// token -> Customer
+////		getCreateCustomerId
+//		if (sa.getCustomerId()==null) {
+//			Map<String, Object> customerParams = new ArrayMap<>(
+//				"email", getBuyerEmail(),
+//				"source", sa.id
+//			);
+//			Customer customer = Customer.create(customerParams);
+//			sa.customerId = customer.getId();
+//		}
+//		
+//		// subscribe		
+//		String customerId = sa.customerId;
+//		Map stripeInfo = null; 
+//		if (userObj!=null) {
+//			stripeInfo = (Map) userObj.get("stripe");
+//		}
+//		if (stripeInfo==null) stripeInfo = new ArrayMap();
+//		if (userObj!=null) {
+//	        userObj.put("stripe", stripeInfo);
+//        }
+//		stripeInfo.put("customerId", customerId);
+//		stripeInfo.put("email", getBuyerEmail());
+//		
+//		Map<String, Object> subparams = new ArrayMap(
+//			"customer", customerId,
+//			"items", new ArrayMap(
+//				"0", new ArrayMap(
+//					"plan", plan.getId()
+//					))
+//			);
+//		Subscription sub = Subscription.create(subparams);
+//		
+//		List subs = Utils.or((List)stripeInfo.get("subscriptions"), new ArrayList());
+//		subs.add(sub.toJson());
+//		stripeInfo.put("subscriptions", subs);
+//		
+//		Log.d("stripe.subscribe", basket+" -> "+sub.toJson());
+//	}
 
 
 	private String getBuyerEmail() {
