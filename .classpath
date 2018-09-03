@@ -10,7 +10,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.utils"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.web"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry exported="true" kind="lib" path="/middleware/stripe/stripe-java.jar" sourcepath="/middleware/stripe/stripe-java-2.8.0.zip"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/flexi-gson"/>
 	<classpathentry exported="true" kind="lib" path="/middleware/gson/gson-original.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.webappbase"/>
@@ -18,7 +17,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.depot"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/winterwell.maths"/>
 	<classpathentry exported="true" kind="lib" path="/middleware/lombok/lombok.jar"/>
-	<classpathentry exported="true" kind="lib" path="/middleware/mockito/mockito-all.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/calstat"/>
+	<classpathentry kind="lib" path="/middleware/mockito/mockito-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
