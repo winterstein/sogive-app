@@ -1,7 +1,9 @@
 package org.sogive.server.payment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
@@ -11,17 +13,37 @@ import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
 import com.goodloop.data.PaymentException;
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Charge;
+import com.stripe.model.Customer;
+import com.stripe.model.Plan;
+import com.stripe.model.Subscription;
+import com.winterwell.ical.Repeat;
+import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 
+/**
+ * TODO handle repeat donations
+ * @author daniel
+ *
+ */
 public class MoneyCollector {
 
-	public MoneyCollector(IForSale basket, XId buyer, XId seller, WebRequest state) {
+	private String buyerEmail;
+
+	public MoneyCollector(IForSale basket, XId buyer, String buyerEmail, XId seller, WebRequest state) {
 		this.basket = basket;
 		this.user = buyer;
+		this.buyerEmail = buyerEmail;
 		this.to = seller;
 		this.state = state;
 		Utils.check4null(basket, buyer);
@@ -79,16 +101,22 @@ public class MoneyCollector {
 			// take payment
 			String ikey = basket.getId();
 			Person userObj = DBSoGive.getCreateUser(user);
-
-			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { 
-				// TODO security check!
-				Log.d(LOGTAG, "skip payment: "+basket);
-				return transfers; 
-			}
 			if (sa == null) {
 				sa = new StripeAuth(userObj, state);
 			}
 			
+			if (StripeAuth.SKIP_TOKEN.equals(sa.id)) { 
+				// TODO security check!
+				Log.d(LOGTAG, "skip payment: "+basket);
+				return transfers; 
+			}						
+						
+			if (basket.getRepeat()!=null) {
+				run2_repeat(sa, userObj);
+				return transfers;
+			}
+			
+			// simple one off payment
 			String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
 			Charge charge = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 			Log.d("stripe.collect", charge);
@@ -100,9 +128,85 @@ public class MoneyCollector {
 //			pi.setOpTypeCreate(true);				
 			// check we haven't done before: done by the op_type=create
 			return transfers;
-		} catch(Exception e) {
-			throw new RuntimeException(e);
+		} catch(Throwable e) {
+			throw Utils.runtime(e);
 		}
+	}
+
+	static String STRIPE_REPEAT_DONATION_PRODUCT = "prod_DXNVdXseaxwEo6";
+	static String STRIPE_REPEAT_DONATION_TESTPRODUCT = "prod_DXNgWKoFs8bs6a";
+
+	private void run2_repeat(StripeAuth sa, Person userObj) throws Exception {
+		Repeat repeat = basket.getRepeat();
+		Money amount = basket.getAmount();
+		String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
+		Log.d("stripe.plan", chargeDescription);
+//		String plan = StripePlugin.makePlan(chargeDescription);
+		
+		String secretKey = StripePlugin.secretKey();
+		// Charge them!
+		Stripe.apiKey = secretKey;
+		// the product/service
+		String product = Dep.get(StripeConfig.class).testStripe? STRIPE_REPEAT_DONATION_TESTPRODUCT : STRIPE_REPEAT_DONATION_PRODUCT; 
+		
+		// pence, rounding up
+		int pence = (int) Math.ceil(amount.getValue100p() / 100);
+		String interval = repeat.getFreq().toString().toLowerCase(); // day / week / month / year
+		Map<String, Object> params = new ArrayMap(
+			"interval", interval,
+			"product", product,
+//			"nickname", "Repeat Donation"
+			"amount", pence,
+	        "currency", Utils.or(amount.getCurrency(), "GBP")
+		);
+		Plan plan = Plan.create(params);
+		Log.d(LOGTAG, "Made a plan "+plan.getId()+" for repeating "+basket);
+		
+		// token -> Customer
+//		getCreateCustomerId
+		if (sa.getCustomerId()==null) {
+			Map<String, Object> customerParams = new ArrayMap<>(
+				"email", getBuyerEmail(),
+				"source", sa.id
+			);
+			Customer customer = Customer.create(customerParams);
+			sa.customerId = customer.getId();
+		}
+		
+		// subscribe		
+		String customerId = sa.customerId;
+		Map stripeInfo = null; 
+		if (userObj!=null) {
+			stripeInfo = (Map) userObj.get("stripe");
+		}
+		if (stripeInfo==null) stripeInfo = new ArrayMap();
+		if (userObj!=null) {
+	        userObj.put("stripe", stripeInfo);
+        }
+		stripeInfo.put("customerId", customerId);
+		stripeInfo.put("email", getBuyerEmail());
+		
+		Map<String, Object> subparams = new ArrayMap(
+			"customer", customerId,
+			"items", new ArrayMap(
+				"0", new ArrayMap(
+					"plan", plan.getId()
+					))
+			);
+		Subscription sub = Subscription.create(subparams);
+		
+		List subs = Utils.or((List)stripeInfo.get("subscriptions"), new ArrayList());
+		subs.add(sub.toJson());
+		stripeInfo.put("subscriptions", subs);
+		
+		Log.d("stripe.subscribe", basket+" -> "+sub.toJson());
+	}
+
+
+	private String getBuyerEmail() {
+		if (buyerEmail!=null) return buyerEmail;		
+		assert user.isService("email") : user;
+		return user.dewart();
 	}
 
 

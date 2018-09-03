@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesAction;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.commercial.Event;
@@ -14,6 +15,7 @@ import org.sogive.server.payment.StripeAuth;
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
+import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
@@ -36,6 +38,21 @@ public class Donation extends AThing implements IForSale {
 	 * used to create RepeatDonation
 	 */
 	String repeat;
+	
+	public Repeat getRepeat() {
+		// stop at fundraiser event?
+		Time stopDate = null;
+		if (Utils.yes(repeatStopsAfterEvent)) {
+			Event event = getEvent();
+			if (event != null && event.getDate()!=null) {
+				stopDate = event.getDate();
+			}
+		}
+		// parse
+		return repeatFromString(repeat, stopDate);
+	}
+	
+
 	/**
 	 * stop repeating
 	 */

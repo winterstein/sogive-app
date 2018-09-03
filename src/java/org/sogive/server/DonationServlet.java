@@ -177,8 +177,8 @@ public class DonationServlet extends CrudServlet {
 	private void setupRepeat(Donation donation) {
 		ESPath path = AppUtils.getPath(null, RepeatDonation.class, RepeatDonation.idForDonation(donation), KStatus.PUBLISHED);
 //		RepeatDonation rep = AppUtils.get(path, RepeatDonation.class);
-		String repeat = donation.getRepeat();
-		if ( ! Utils.yes(repeat, false) || "one-off".equals(repeat)) { // NB: "one-off" should not be sent, but harmless to test for it
+		Repeat repeater = donation.getRepeat();
+		if (repeater==null) {
 			AppUtils.doDelete(path);
 			return;
 		}
@@ -242,7 +242,7 @@ public class DonationServlet extends CrudServlet {
 	}
 
 	/**
-	 * 
+	 * One off or repeat donations are OK
 	 * @param state Can be null
 	 * @param donation
 	 * @param user

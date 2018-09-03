@@ -72,18 +72,7 @@ public class RepeatDonation extends AThing {
 		to = donation.getTo();
 		from = donation.getFrom();
 		ical.start = donation.getTime();		
-		// NB: repeat must be valid if we're here
-		String sfreq = Repeat.freqForTUnit(TUnit.valueOf(donation.repeat));
-		String rrule = "FREQ="+sfreq+";";
-		if (Utils.yes(donation.repeatStopsAfterEvent)) {
-			Event event = donation.getEvent();
-			if (event != null && event.getDate()!=null) {
-				rrule += "UNTIL="+event.getDate().format("yyyyMMdd")+";"; // not iso format :(
-			} else {
-				Log.e(LOGTAG, "Could not apply event stop date "+donation+" with event: "+event);
-			}
-		}
-		Repeat repeater = new Repeat(rrule);
+		Repeat repeater = donation.getRepeat();
 		ical.setRepeat(repeater);		
 	}
 

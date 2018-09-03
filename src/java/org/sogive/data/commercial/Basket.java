@@ -9,6 +9,7 @@ import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
+import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Mutable;
 
 import lombok.Data;
@@ -96,6 +97,13 @@ public class Basket extends AThing implements IForSale {
 	@Override
 	public boolean getPaymentCollected() {
 		return collected;
+	}
+
+	String repeat;
+	
+	@Override
+	public Repeat getRepeat() {
+		return repeatFromString(repeat, null); // no stop date
 	}
 
 }

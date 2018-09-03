@@ -138,9 +138,12 @@ public class StripePlugin {
 		StripeConfig stripeConfig = Dep.get(StripeConfig.class);
 		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
-			return stripeConfig.testSecretKey;
+			String skey = stripeConfig.testSecretKey;
+			assert skey != null : "No Stripe TEST secret key :(";
+			return skey;
 		}
 		String skey = stripeConfig.secretKey;
+		assert skey != null : "No Stripe secret key :(";
 		return skey;
 	}
 	

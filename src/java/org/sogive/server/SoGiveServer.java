@@ -99,8 +99,8 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	@Override
 	public SoGiveConfig init2_config(String[] args) {		
 		if (initFlag) return Dep.get(SoGiveConfig.class);
-		SoGiveConfig config = AppUtils.getConfig("sogive", new SoGiveConfig(), args);
-		StripeConfig sc = AppUtils.getConfig("sogive", new StripeConfig(), args); 
+		SoGiveConfig config = AppUtils.getConfig("sogive", SoGiveConfig.class, args);
+		StripeConfig sc = AppUtils.getConfig("sogive", StripeConfig.class, args); 
 		Log.d("stripe.config", FlexiGson.toJSON(sc));
 		Log.d("stripe.config.key", StripePlugin.secretKey());
 
