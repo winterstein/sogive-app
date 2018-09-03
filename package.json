@@ -25,7 +25,7 @@
 		"react-chartjs2": "^1.2.1",
 		"react-dom": "^16.4.2",
 		"react-dropzone": "^4.3.0",
-		"react-markdown": "^3.4.1",
+		"react-markdown": "^3.5.0",
 		"react-stripe-checkout": "^2.6.3",
 		"react-stripe-elements": "^1.7.0",
 		"sjtest": "^0.4.7",
@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"babel-plugin-transform-react-remove-prop-types": "^0.4.15",
-		"eslint": "^5.4.0",
+		"eslint": "^5.5.0",
 		"eslint-config-airbnb": "^17.1.0",
 		"eslint-plugin-import": "^2.14.0",
 		"eslint-plugin-react": "^7.11.1",

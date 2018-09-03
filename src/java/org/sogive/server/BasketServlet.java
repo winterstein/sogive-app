@@ -50,12 +50,9 @@ public class BasketServlet extends CrudServlet<Basket> {
 		super.doSave(state);
 		Basket donation = basket;
 
-		XId user = state.getUserId();
+		String email = DonationServlet.getEmail(state, basket);
+		XId user = state.getUserId();		
 		if (user==null) {
-			String email = state.get("stripeEmail");
-			if (email==null && donation.getStripe() != null) {
-				email = (String) donation.getStripe().getEmail();
-			}
 			if (email==null) throw new NoAuthException("Stripe requires authentication to process a payment");
 			user = new XId(email, "Email");
 		}
@@ -66,8 +63,8 @@ public class BasketServlet extends CrudServlet<Basket> {
 		if (eventId==null) {
 			eventId = basket.getItems().get(0).getEventId();
 		}
-		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements
-		MoneyCollector mc = new MoneyCollector(basket, user, to, state);
+		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements		
+		MoneyCollector mc = new MoneyCollector(basket, user, email, to, state);
 		mc.run();
 						
 		// store in the database (this will save the edited basket)

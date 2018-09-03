@@ -25,6 +25,7 @@ import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.RepeatDonation;
+import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.MoneyCollector;
 import org.sogive.server.payment.StripeAuth;
 import org.sogive.server.payment.StripePlugin;
@@ -200,13 +201,7 @@ public class DonationServlet extends CrudServlet {
 		// who
 		XId user = state.getUserId();
 		XId from = donation.getFrom(); // you can donate w/o logging in
-		// get an email from somewhere
-		String email1 = donation.getStripe()==null? null : donation.getStripe().getEmail();
-		String email2 = state.get("stripeEmail");
-		String email3 = donation.getDonorEmail();
-		String email4 = user != null && user.isService("email")? user.getName() : null;
-		String email5 = from != null && from.isService("email")? from.getName() : null;		
-		String email = Utils.or(email1, email2, email3, email4, email5); // can still be null
+		String email = getEmail(state, donation);
 		// make sure we have a user
 		if (user==null) {
 			user = from;
@@ -223,10 +218,11 @@ public class DonationServlet extends CrudServlet {
 				}
 			}
 		} // ./null user
-
-		// make sure from is set
+		
+		// make sure `from` is set
 		if (from==null) {			
 			from = user;
+			if (from==null) from = new XId(email, "email");
 			donation.setFrom(from);
 			Log.d(LOGTAG, "set from to "+from+" for "+donation.getId()+" in publish "+state);
 		}
@@ -236,16 +232,30 @@ public class DonationServlet extends CrudServlet {
 		}
 		
 		// do it!
-		doPublish3_ShowMeTheMoney(state, donation, from, Utils.or(email3, email));
+		doPublish3_ShowMeTheMoney(state, donation, from, email);
 		
 		jthing.setJava(donation); // Is this needed to avoid any stale json?
+	}
+
+	static String getEmail(WebRequest state, IForSale donation) {
+		// get an email from somewhere
+		String email1 = donation.getStripe()==null? null : donation.getStripe().getEmail();
+		String email2 = state.get("stripeEmail");
+		String email3 = donation instanceof Donation? ((Donation) donation).getDonorEmail() : null;
+		XId user = state.getUserId();		
+		String email4 = user != null && user.isService("email")? user.getName() : null;
+		XId from = donation instanceof Donation? ((Donation) donation).getFrom() : null;
+		String email5 = from != null && from.isService("email")? from.getName() : null;		
+		// stripe, donor form, user, login
+		String email = Utils.or(email1, email2, email3, email4, email5); // can still be null
+		return email;
 	}
 
 	/**
 	 * One off or repeat donations are OK
 	 * @param state Can be null
 	 * @param donation
-	 * @param user
+	 * @param user Cannot be null (use email if not logged in)
 	 * @param email
 	 */
 	public static void doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) {
@@ -280,7 +290,7 @@ public class DonationServlet extends CrudServlet {
 			Log.d(LOGTAG, "paid elsewhere "+donation);
 		} else {			
 			XId to = NGO.xidFromId(donation.getTo());
-			MoneyCollector mc = new MoneyCollector(donation, user, to, state);
+			MoneyCollector mc = new MoneyCollector(donation, user, email, to, state);
 			mc.run();
 		}
 		

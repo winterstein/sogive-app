@@ -15,3 +15,5 @@ sogive-app.log*
 logins.sogive.properties
 web/uploads
 **.png
+bob-all.jar
+lib/
