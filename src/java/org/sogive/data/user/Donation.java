@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.action.admin.cluster.repositories.get.GetRepositoriesAction;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.commercial.Event;
