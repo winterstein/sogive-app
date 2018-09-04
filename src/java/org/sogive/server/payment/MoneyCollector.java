@@ -149,14 +149,27 @@ public class MoneyCollector {
 	 * @throws StripeException
 	 */
 	private Customer addStripeSourceToCustomer(StripeAuth sa) throws StripeException {
+		if (sa.getCustomerId() != null) {
+			Log.d(LOGTAG, "NOT adding Stripe source to customer 'cos its hopefully already set");
+		}
 		assert "source".equals(sa.getObject()) : sa;
-		Map<String, Object> customerParams = new ArrayMap<>(
-			"email", getBuyerEmail(),
-			"source", sa.id
-		);
-		Customer customer = Customer.create(customerParams);
-		sa.customerId = customer.getId();
-		return customer;
+		try {
+			Map<String, Object> customerParams = new ArrayMap<>(
+				"email", getBuyerEmail(),
+				"source", sa.id
+			);
+			Customer customer = Customer.create(customerParams);
+			sa.setCustomerId(customer.getId());
+			Log.d(LOGTAG, "added Stripe source "+sa.getId()+" to customer "+customer.getId());
+			return customer;
+		} catch(InvalidRequestException ex) {
+			if (ex.toString().contains("already been attached")) {
+				// already done? well that shouldn't happen but it's OK
+				Log.e(LOGTAG, ex);
+				return null;
+			}
+			throw ex;
+		}
 	}
 
 

@@ -91,8 +91,7 @@ public class StripePlugin {
 //		// Charge them!
 		Stripe.apiKey = secretKey;
 //		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
-        Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("source", sa.id);
+        Map<String, Object> chargeMap = new HashMap<String, Object>();        
         // pence, rounding up
         int pence = (int) Math.ceil(amount.getValue100p() / 100);
         chargeMap.put("amount", pence);
@@ -100,6 +99,7 @@ public class StripePlugin {
 //        metadata key value
         chargeMap.put("receipt_email", sa.email);
         chargeMap.put("customer", sa.customerId);
+        chargeMap.put("source", sa.id);
         chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
         chargeMap.put("currency", Utils.or(amount.getCurrency(), "GBP"));
         

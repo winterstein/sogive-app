@@ -39,7 +39,9 @@ public class StripeAuth {
 		if (userObj!=null) {
 			Map stripe = (Map) userObj.get("stripe");
 			if (stripe!=null) {
-				customerId = state.get("customerId"); // @Roscoe - is this right, or should it be stripe.get()?? ^DW
+				// where does this info live??
+				String cid = (String) Utils.or(state.get("customerId"), stripe.get("customerId"));
+				if (cid!=null) setCustomerId(cid);
 			}
 			if (email==null) {
 				email = userObj.getEmail();
@@ -77,6 +79,7 @@ public class StripeAuth {
 	 *  Customer info, may be blank
 	 */
 	String customerId;
+		
 	String email;
 	/**
 	 * Stripe-sanitised card details
