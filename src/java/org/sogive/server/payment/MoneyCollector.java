@@ -94,6 +94,9 @@ public class MoneyCollector {
 			throw new PaymentException("Cannot pay with credit of "+credit+" (basket: "+basket+")");
 		}
 		
+		// Stripe key
+		StripePlugin.prep();
+		
 		// TODO Less half-assed handling of Stripe exceptions
 		try {
 			/** Donation has provision to store a StripeAuth now - may already be on the object */

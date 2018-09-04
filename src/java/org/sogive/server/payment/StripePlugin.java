@@ -144,5 +144,13 @@ public class StripePlugin {
 		assert skey != null : "No Stripe secret key :(";
 		return skey;
 	}
+
+	/**
+	 * set the secret key
+	 */
+	public static void prep() {
+		Utils.check4null(secretKey(), "Stripe secretKey");
+		Stripe.apiKey = secretKey();		
+	}
 	
 }
