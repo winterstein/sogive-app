@@ -142,8 +142,9 @@ public class MoneyCollector {
 //		String plan = StripePlugin.makePlan(chargeDescription);
 		
 		String secretKey = StripePlugin.secretKey();
-		// Charge them!
+		Utils.check4null(secretKey, "Stripe secretKey");
 		Stripe.apiKey = secretKey;
+		
 		// the product/service
 		String product = Dep.get(StripeConfig.class).testStripe? STRIPE_REPEAT_DONATION_TESTPRODUCT : STRIPE_REPEAT_DONATION_PRODUCT; 
 		
