@@ -123,9 +123,10 @@ public class StripePlugin {
 //        Customer c = Customer.create(chargeMap, requestOptions);
         Log.d(LOGTAG, c);
         if (user!=null && c.getCustomer() != null) {
+        	Customer cobj = c.getCustomerObject();
 	        user.put("stripe", new ArrayMap(
 	        			"customerId", c.getCustomer(),
-	        			"email", c.getCustomerObject().getEmail()
+	        			"email", cobj==null? c.getReceiptEmail() : cobj.getEmail()
 	        		));
         }
         // TODO turn into a map
