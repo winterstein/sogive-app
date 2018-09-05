@@ -231,12 +231,17 @@ const AmountSection = ({path, item, fromEditor}) => {
 const SDButton = ({path,sd}) => {
 	if ( ! sd.amount) return; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
-	return <button className='btn btn-default' onClick={e => {
+	return (<button className='btn btn-default' type="button" onClick={e => {
 		let amnt = Object.assign({}, sd.amount);
 		delete amnt['@class'];
 		DataStore.setValue(path.concat('amount'), amnt);
 		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
-	}}>{sd.name} <Misc.Money amount={sd.amount} /> {Donation.strRepeat(sd.repeat)}</button>;
+	}}>
+		{sd.name}
+		<Misc.Money amount={sd.amount} />
+		{Donation.strRepeat(sd.repeat)}
+		{sd.text? <div>{sd.text}</div> : null}
+	</button>);
 };
 
 /**

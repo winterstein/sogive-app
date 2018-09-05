@@ -5,6 +5,7 @@ import com.winterwell.utils.time.TUnit;
 
 public class SuggestedDonation {
 
+	String name;
 	String img;
 	String text;
 	/**

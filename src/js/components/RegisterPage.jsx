@@ -367,6 +367,9 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 const TeamControl = ({ticket, path}) => {
 	// does this event support teams?
 	let event = Ticket.eventId(ticket)? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, Ticket.eventId(ticket)) : null;
+	if ( ! event) {
+		console.warn("TeamControl - No event?! "+Ticket.eventId(ticket), ticket);
+	}
 	if (event && event.teams === false) {
 		return null;
 	}
