@@ -14,20 +14,9 @@ import NavBar from '../base/components/NavBar';
 import LoginWidget from '../base/components/LoginWidget';
 // Pages
 import DashboardPage from './DashboardPage';
-import SearchPage from './SearchPage';
-import AccountPage from './AccountPage';
+import GardenPage from './GardenPage';
+import AccountPage from '../base/components/AccountPageWidgets';
 import AboutPage from '../base/components/AboutPage';
-import CharityPage from './CharityPage';
-import EditCharityPage from './editor/EditCharityPage';
-import EditorDashboardPage from './editor/EditorDashboardPage';
-import ExchangeRatesPage from './editor/ExchangeRatesPage';
-import FundRaiserPage from './FundRaiserPage';
-import EditFundRaiserPage from './editor/EditFundRaiserPage';
-import ManageDonationsPage from './editor/ManageDonationsPage';
-import EditEventPage from './editor/EditEventPage';
-import EventPage from './EventPage';
-import EventReportPage from './editor/EventReportPage';
-import RegisterPage from './RegisterPage';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 
@@ -36,18 +25,8 @@ import TestPage from '../base/components/TestPage';
  */
 DataStore.update({
 	data: {
-		NGO: {},
 		User: {},
-		Donation: {},
-		Fundraiser: {},
-		Basket: {}
-	},
-	draft: {
-		NGO: {},
-		User: {},
-		Donation: {},
-		Fundraiser: {},
-		Basket: {}
+		Sprite: {}
 	},
 	// Use list to store search results
 	list: {
@@ -68,25 +47,14 @@ DataStore.update({
 
 
 const PAGES = {
-	event: EventPage,
-	editEvent: EditEventPage,
-	eventReport: EventReportPage,
-	register: RegisterPage,
-	fundraiser: FundRaiserPage,
-	editFundraiser: EditFundRaiserPage,
-	search: SearchPage,
 	dashboard: DashboardPage,
-	editordashboard: EditorDashboardPage,
-	manageDonations: ManageDonationsPage,
 	account: AccountPage,
-	charity: CharityPage,
-	edit: EditCharityPage,
-	exchangeRates: ExchangeRatesPage,
+	garden: GardenPage,
 	about: AboutPage,
 	test: TestPage	
 };
 
-const DEFAULT_PAGE = 'search';
+const DEFAULT_PAGE = 'garden';
 
 /**
 		Top-level: tabs
