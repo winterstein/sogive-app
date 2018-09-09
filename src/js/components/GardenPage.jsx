@@ -11,47 +11,12 @@ import DataStore from '../base/plumbing/DataStore';
 import Misc from '../base/components/Misc';
 import {LoginLink} from '../base/components/LoginWidget';
 import {DropZone, Draggable, dragstate} from '../base/components/DragDrop';
-import game from './gardenGame';
+import {getActiveSprites, getSprite} from './gardenGame';
 
 // https://www.gamedevmarket.net/asset/animated-insects-6303/
 // https://graphicriver.net/item/funny-flying-bugs/13665994?s_rank=4
 // https://www.gameartguppy.com/shop/red-ant/
 
-const start = new Date().getTime();
-const gameUpdate = () => {
-	let tick = new Date().getTime() - start;
-	// console.log("update", new Date().getTime() - start);
-	DataStore.setValue(['game','tick'], tick);
-	// loop over active sprites
-	const sprites = getActiveSprites();
-	sprites.forEach(s => {
-		spriteUpdate(s);
-	});
-};
-const spriteUpdate = (sprite) => {
-	if (sprite.x) sprite.x += 1;
-};
-
-const gameInit = () => {
-	DataStore.setValue(['data', 'Sprite', 'ant'], 
-		{id:'ant', img:'/img/garden/ant.jpg'}
-	);
-	DataStore.setValue(['data', 'Sprite', 'aphid'], {id:'aphid', img:'/img/garden/aphid.png'});
-	DataStore.setValue(['data', 'Sprite', 'fossil'], {id:'fossil', img:'/img/foss1.jpg'});
-};
-gameInit();
-
-setInterval(gameUpdate, 100);
-
-/**
- * @returns {Sprite[]}
- */
-const getActiveSprites = () => {
-	let spritesm = DataStore.getValue('data', 'Sprite') || {};
-	let sprites = Object.values(spritesm).filter(s => s.active);
-	return sprites;
-};
-const getSprite = (id) => DataStore.getValue('data','Sprite',id);
 
 const GardenPage = () => {
 	return (
@@ -67,6 +32,7 @@ const Garden = () => {
 	return (<div>
 		<DropZone id='garden' onDrop={(e,drop) => {
 			console.log("dropp",e,drop);
+			if ( ! drop.draggable) return;
 			let s = getSprite(drop.draggable);
 			if (s) {
 				s.active = true;
@@ -82,21 +48,26 @@ const Sprite = ({sprite}) => {
 	let style= {position:'absolute', 
 		top:sprite.y+'px', left:sprite.x+'px',
 		border:'1px solid red'};
-	return (<div key={sprite.id} style={style}>
-		{sprite.img? <img src={sprite.img} width='50px' /> : null}
-		{JSON.stringify(sprite)}</div>);
+	return (<div className='Sprite' key={sprite.id} style={style}>
+		{sprite.img? <img src={sprite.img} /> : sprite.id}
+	</div>);
 };
 
 const Hand = () => {
 	const spritesForId = DataStore.getValue('data', 'Sprite');
 	const sprites = Object.values(spritesForId).filter(s => ! s.active);
 	return (<div className='card'>
-		{sprites.map(s => <Draggable key={s.id} id={s.id}><Card sprite={s} /></Draggable>)}
+		<div className='row'>
+		{sprites.map(s => <Draggable className='col-sm-3' key={s.id} id={s.id}><Card sprite={s} /></Draggable>)}
+		</div>
 	</div>);
 };
 
 const Card = ({sprite}) => {
-	return <div className='card'>{sprite.id}</div>;
+	return (<div className='SpriteCard card'>
+		{sprite.img? <img src={sprite.img} /> : null}
+		<p>{sprite.id}</p>
+	</div>);
 };
 
 export default GardenPage;
