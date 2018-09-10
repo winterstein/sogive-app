@@ -107,6 +107,7 @@ Donation.make = (base = {}) => {
 Donation.strRepeat = rep => {
 	const srep = {
 		'OFF': 'one-off',
+		'DAY': 'day',
 		'WEEK': 'weekly',
 		'MONTH': 'monthly',
 		'YEAR': 'annual'

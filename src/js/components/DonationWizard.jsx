@@ -178,7 +178,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage>
 				
 					<WizardStage title='Receipt' previous={false} >
-						<ThankYouSection path={path} item={item} />
+						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
 				</Wizard>
 			</Modal.Body>
@@ -414,8 +414,12 @@ const onToken_doPayment = ({donation}) => {
 		});
 };
 
+const TQ_PATH = ['widget', 'ThankYouSection', 'donation'];
 
 const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) => {
+	// HACK - store info for the TQ section
+	DataStore.setValue(TQ_PATH, donation, false);
+
 	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
 	if ( ! donation) {
@@ -470,16 +474,26 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	</div>);
 };
 
-const ThankYouSection = ({path, item}) => {
-	const donation = DataStore.getValue(path);
-    let amountPlusTip;
-    if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
+/**
+ * 
+ * @param {String} did The donation ID - status: not used!
+ */
+const ThankYouSection = ({path, item, did}) => {
+	let donation = DataStore.getValue(path);
+	// HACK pay->publish can confuse this losing the old donation object
+	if ( ! donation || ! Money.value(donation.amount)) {
+		donation = DataStore.getValue(TQ_PATH);
+	}
+	let amountPlusTip;
+   if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
 			<big>
 				<p>
-					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> to {item.name} <br />
+					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} />
+					{donation.repeat && donation.repeat!=='OFF'? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
+					to {item.name} <br />
 				</p>
 				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
 				<p>
