@@ -29,9 +29,6 @@ DataStore.update({
 		User: {},
 		Sprite: {}
 	},
-	game: {
-		tick: 0
-	},
 	// Use list to store search results
 	list: {
 
