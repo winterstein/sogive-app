@@ -216,13 +216,12 @@ const CharityExtraYear = ({year, projects}) => {
 Using a regex to normalise all strings of CRs to \n\n before sending to printer so the story formatting behaves more intuitively for now. */
 const Quote = ({text}) => {
 	if ( ! text || ! text.replace) return null;
-	const storiesProcessed = text.replace(/\n+/g, '\n\n');
 	return (
-		<p className='quote'>
+		<div className='quote'>
 			<span className='quote-marks fa fa-quote-left' />
-			<span dangerouslySetInnerHTML={{ __html: printer.textToHtml(storiesProcessed) }} />
+			<MDText source={text} />
 			<span className='quote-marks fa fa-quote-right' />
-		</p>
+		</div>
 	);
 };
 
