@@ -29,7 +29,9 @@ DataStore.update({
 		User: {},
 		Sprite: {}
 	},
-	game: {},
+	game: {
+		tick: 0
+	},
 	// Use list to store search results
 	list: {
 
@@ -140,7 +142,8 @@ class MainDiv extends Component {
 		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
 		return (
 			<div>
-				<div className="container-fluid">
+				<NavBar page={page} pages={pages} />
+				<div className="container avoid-navbar">
 					<MessageBar messages={msgs} />
 					<div className='page' id={page}>
 						<Page />
