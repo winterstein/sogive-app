@@ -15,7 +15,6 @@ import LoginWidget from '../base/components/LoginWidget';
 // Pages
 import DashboardPage from './DashboardPage';
 import GardenPage from './GardenPage';
-import FossilPage from './FossilPage';
 import AccountPage from '../base/components/AccountPageWidgets';
 import AboutPage from '../base/components/AboutPage';
 import E404Page from '../base/components/E404Page';
@@ -51,7 +50,6 @@ const PAGES = {
 	dashboard: DashboardPage,
 	account: AccountPage,
 	garden: GardenPage,
-	fossil: FossilPage,
 	about: AboutPage,
 	test: TestPage	
 };
