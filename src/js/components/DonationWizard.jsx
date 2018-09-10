@@ -206,6 +206,8 @@ const AmountSection = ({path, item, fromEditor}) => {
 		dntn.repeatStopsAfterEvent = true;
 	}
 
+	let showRepeatControls = dntn.repeat || repeatDonations.length > 1;
+
 	return (
 		<div className='section donation-amount'>
 			
@@ -215,11 +217,10 @@ const AmountSection = ({path, item, fromEditor}) => {
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			{dntn.repeat || repeatDonations.length > 1? 
-				<PropControl type='radio' path={path} prop='repeat' 
-					options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
+			{showRepeatControls? 
+				<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
-			{event? 
+			{event && showRepeatControls? 
 				<PropControl disabled={ ! dntn.repeat || dntn.repeat==='OFF'} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
 					type='checkbox' 
