@@ -4,6 +4,7 @@ const {
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
 const {donate} = require('./donation-form');
+const {SoGiveSelectors, CommonSelectors} = require('../test-base/utils/SelectorsMaster');
 const {General, Fundraiser} = require('./Selectors');
 
 async function goto({page, fundId, fundName}) {

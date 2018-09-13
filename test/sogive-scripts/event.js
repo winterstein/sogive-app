@@ -5,10 +5,8 @@ const {
     disableAnimations,
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
-const {
-    Event, 
-    General
-} = require("./Selectors");
+const {SoGiveSelectors, CommonSelectors} = require('../test-base/utils/SelectorsMaster');
+const {Event} = SoGiveSelectors;
 
 async function goto({page, eventId = ''}) {
     page.goto(`${APIBASE}#event/${eventId}`);   
@@ -28,7 +26,7 @@ async function gotoResult({page, selectorOrInteger = 1}) {
 
 async function gotoEditEvent({page, eventId}) {
     page.goto(`${APIBASE}#editEvent/${eventId}`);   
-    await page.waitForSelector(General.CRUD.Delete);     
+    await page.waitForSelector(CommonSelectors.Delete);     
 }
 
 async function registerForEvent({
@@ -86,15 +84,15 @@ async function createNewEvent({
         });   
     }
     //Wait for publish to go through before returning control. Quite a crude method, using waitForNavigation wasn't working
-    await page.click(General.CRUD.Publish);
-    await page.waitForSelector(`${General.CRUD.Publish}[disabled]`, {hidden: true});
+    await page.click(CommonSelectors.Publish);
+    await page.waitForSelector(`${CommonSelectors.Publish}[disabled]`, {hidden: true});
 }
 
 /**Deletes the given event. Returns true/false on success/failure */
 async function deleteEvent({page, eventId, eventName}) {
     if(eventId) {
         await gotoEditEvent({page, eventId});
-        await page.click(General.CRUD.Delete);
+        await page.click(CommonSelectors.Delete);
         return true;
     }
     else if(eventName) {

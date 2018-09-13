@@ -4,7 +4,8 @@ const {
     disableAnimations,
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
-const {General} = require('./Selectors');
+const {SoGiveSelectors} = require('../test-base/utils/SelectorsMaster');
+const {General} = SoGiveSelectors;
 
 /**Fills in the donation form with details provided
  * @param Amount {amount: 0, hide-amount-checkbox: true}
