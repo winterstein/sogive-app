@@ -19,6 +19,7 @@ import com.sun.corba.se.impl.protocol.NotLocalLocalCRDImpl;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
@@ -38,7 +39,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 	}
 
 	@Override
-	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, boolean forceRefresh,
+	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, KRefresh forceRefresh,
 			boolean deleteDraft) 
 	{
 		Basket basket = getThing(state);
