@@ -55,7 +55,7 @@ test('Logged-out fundraiser donation', async() => {
     await page.waitFor(3000);
 
     await Fundraiser.goto({page, fundName});
-    await Fundraiser.donate({page, Amount: {amount: 10}, GiftAid: {}, Message: {message:'???'}});
+    await Fundraiser.donate({page, Amount: {amount: 10}, GiftAid: {}, Details: {email: 'thePuppetMaster@winterwell.com'}, Message: {message:'???'}});
 }, 25000);
 
 test('Logged-in fundraiser donation', async() => {
