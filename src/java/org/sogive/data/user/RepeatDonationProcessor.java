@@ -13,6 +13,7 @@ import org.sogive.server.SoGiveServer;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
@@ -116,7 +117,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 				// mark as done
 				msg.setDone(true);
 				Log.d(getName(), "repeats all done for "+msg);
-				AppUtils.doPublish(msg, false, true);
+				AppUtils.doPublish(msg, KRefresh.FALSE, true);
 			}
 			return;
 		}
@@ -124,7 +125,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 		// donate!
 		Donation don = msg.newDraftDonation();
 		Log.d(getName(), "repeat! "+don+" for "+msg);
-		AppUtils.doPublish(don, true, true);		
+		AppUtils.doPublish(don, KRefresh.TRUE, true);		
 		// collect money
 		XId from = msg.from;
 		String email = from.getName(); // ?? what if they login by Facebook??

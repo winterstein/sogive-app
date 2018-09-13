@@ -21,6 +21,7 @@ import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.gson.Gson;
@@ -206,7 +207,7 @@ public class Transfer extends AThing {
 		JThing draft = new JThing(this);
 		ESPath draftPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.DRAFT);
 		ESPath publishPath = Dep.get(IESRouter.class).getPath(Transfer.class, id, KStatus.PUBLISHED);
-		JThing after = AppUtils.doPublish(draft, draftPath, publishPath, true, true);
+		JThing after = AppUtils.doPublish(draft, draftPath, publishPath, KRefresh.TRUE, true);
 		return after;
 	}
 

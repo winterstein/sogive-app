@@ -42,6 +42,7 @@ import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.IndexRequestBuilder;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.UpdateRequestBuilder;
@@ -148,7 +149,7 @@ public class DonationServlet extends CrudServlet {
 	}
 	
 	@Override
-	protected JThing doPublish(WebRequest state, boolean forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) {
+	protected JThing doPublish(WebRequest state, KRefresh forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) {
 		Log.d(LOGTAG, "doPublish "+state);
 		// make/save Donation
 		super.doSave(state);
@@ -168,7 +169,7 @@ public class DonationServlet extends CrudServlet {
 		setupRepeat(donation);
 		
 		// store in the database TODO use an actor which can retry
-		super.doPublish(state, true, true);
+		super.doPublish(state, KRefresh.TRUE, true);
 				
 		// Done
 		return jthing;

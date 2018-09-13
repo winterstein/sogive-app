@@ -14,6 +14,7 @@ import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
@@ -87,7 +88,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 					}	
 					// save the update to donation
 					if (status==KStatus.PUBLISHED) { // this method is called twice for status=draft/published), but we only save Donation the once 
-						AppUtils.doPublish(donation, false, true);
+						AppUtils.doPublish(donation, KRefresh.FALSE, true);
 					}
 				}			
 			} catch(Throwable ex) {
