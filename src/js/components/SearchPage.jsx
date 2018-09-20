@@ -372,7 +372,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	const impactExplanation = impact ? (
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
-				<h3>Impact Summary</h3>
 				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
 				fund <span className='impact-count'>{Output.number(impact)}</span> {Output.name(impact)}
 			</div>
