@@ -2,7 +2,7 @@
 server {
 	listen   80; ## listen for ipv4; this line is default and implied
 
-	root /home/daniel/winterwell/sogive-app/web;
+	root /home/daniel/winterwell/our-react-games/web;
 	index index.html;
 
 	server_name local.sogive.org;
