@@ -106,11 +106,11 @@ public class RepeatDonation extends AThing {
 		don.setFundRaiser(don0.getFundRaiser());
 		don.setGiftAid(don0.getGiftAid());
 		don.setGenerator(id);
-		don.setHasTip(don0.hasTip);		
+//		don.setHasTip(don0.hasTip);	Tip does _not_ get copied -- its one off
 		don.setImpacts(don0.getImpacts());
 		don.setPaymentMethod(don0.getPaymentMethod());
 		don.setStripe(don0.getStripe()); // ?? it'd be good if payment handling could update
-		don.setTip(don0.getTip());		
+//		don.setTip(don0.getTip());		
 		don.setVia(don0.getVia());
 		
 		don.setStatus(KStatus.DRAFT);

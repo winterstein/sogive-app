@@ -202,7 +202,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 	});
 
 	// HACK default to stopping with the event
-	if (event && dntn.repeat && dntn.repeat !== 'OFF' && dntn.repeatStopsAfterEvent===undefined) {
+	if (event && Donation.isRepeating(dntn) && dntn.repeatStopsAfterEvent===undefined) {
 		dntn.repeatStopsAfterEvent = true;
 	}
 
@@ -221,7 +221,7 @@ const AmountSection = ({path, item, fromEditor}) => {
 				<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
 			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
 			{event && showRepeatControls? 
-				<PropControl disabled={ ! dntn.repeat || dntn.repeat==='OFF'} 					
+				<PropControl disabled={ ! Donation.isRepeating(dntn)} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
 					type='checkbox' 
 					path={path} prop='repeatStopsAfterEvent' />
@@ -467,7 +467,8 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	return (<div>
 		<div className='padded-block'>
-			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' label={`Include a tip to cover SoGive's operating costs?`} />
+			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' 
+				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : null} tip to cover SoGive's operating costs?`} />
 			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} />
@@ -492,7 +493,7 @@ const ThankYouSection = ({path, item, did}) => {
 			<big>
 				<p>
 					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} />
-					{donation.repeat && donation.repeat!=='OFF'? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
+					{Donation.isRepeating(donation)? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
 					to {item.name} <br />
 				</p>
 				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}

@@ -82,6 +82,8 @@ Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
  */
 Donation.to = don => This.assIsa(don) && don.to;
 
+Donation.isRepeating = don => don.repeat && don.repeat!=='OFF';
+
 /**
  * @param {
  * 	to: {?String} charity ID
@@ -107,7 +109,8 @@ Donation.make = (base = {}) => {
 Donation.strRepeat = rep => {
 	const srep = {
 		'OFF': 'one-off',
-		'DAY': 'day',
+		'HOUR': 'hourly',
+		'DAY': 'daily',
 		'WEEK': 'weekly',
 		'MONTH': 'monthly',
 		'YEAR': 'annual'
