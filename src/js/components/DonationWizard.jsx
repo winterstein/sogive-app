@@ -23,6 +23,7 @@ import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
+import {errorPath} from '../base/plumbing/Crud';
 
 /**
  * 
@@ -465,13 +466,15 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 		onToken_doPayment({donation});
 	};
 
+	let payError = DataStore.getValue(errorPath({type:getType(donation), id:donation.id, action:'publish'}));
+
 	return (<div>
 		<div className='padded-block'>
 			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' 
 				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : null} tip to cover SoGive's operating costs?`} />
 			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} />
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
 };
 
