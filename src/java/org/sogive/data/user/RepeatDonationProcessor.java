@@ -24,6 +24,7 @@ import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.Actor;
+import com.winterwell.utils.threads.MsgToActor;
 import com.winterwell.utils.time.Dt;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
@@ -132,7 +133,10 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 		if ( ! WebUtils2.isValidEmail(email)) {
 			email = msg.getOriginalDonation().getDonorEmail();
 		}
-		DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
+		List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
+		for (MsgToActor m : msgs) {
+			m.post();
+		}
 	}
 	
 

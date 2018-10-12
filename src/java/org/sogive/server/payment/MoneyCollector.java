@@ -60,7 +60,13 @@ public class MoneyCollector {
 	
 	List<Transfer> transfers = new ArrayList();
 	
-	public List<Transfer> run() {
+	/**
+	 * 
+	 * @return
+	 * @throws RuntimeException If the stripe money collection goes wrong
+	 * CardException 
+	 */	
+	public List<Transfer> run() throws RuntimeException {
 		Money total = basket.getAmount();
 		
 		// already paid?
@@ -132,12 +138,10 @@ public class MoneyCollector {
 			basket.setPaymentId(charge.getId());
 			basket.setPaymentCollected(true);					
 			transfers.add(new Transfer(user, to, total));
-			// FIXME
-//			pi.setRefresh("true");
-//			pi.setOpTypeCreate(true);				
 			// check we haven't done before: done by the op_type=create
 			return transfers;
 		} catch(Throwable e) {
+			Log.w(LOGTAG, "Error from "+basket.getId()+": "+e);
 			throw Utils.runtime(e);
 		}
 	}

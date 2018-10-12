@@ -3,6 +3,7 @@ package org.sogive.server;
 import static com.winterwell.utils.StrUtils.newLine;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.threads.MsgToActor;
 import com.winterwell.utils.threads.ICallable;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
@@ -160,8 +162,9 @@ public class DonationServlet extends CrudServlet {
 				"Donations must be for a positive amount: "+donation.getAmount()+" (donation id: "+donation.getId()
 			);
 		}
+		List<MsgToActor> msgs = null;
 		if (donation.getStatus() != KStatus.PUBLISHED) {
-			doPublishFirstTime(state, donation);
+			msgs = doPublishFirstTime(state, donation);
 		} else {
 			Log.d(LOGTAG, "doPublish - but update not first time "+state);
 		}
@@ -169,8 +172,12 @@ public class DonationServlet extends CrudServlet {
 		setupRepeat(donation);
 		
 		// store in the database TODO use an actor which can retry
+		// NB: done after the mods that may be made by doPublishFirstTime
 		super.doPublish(state, KRefresh.TRUE, true);
-				
+		
+		// Update fundraiser (done after the publish)
+		MsgToActor.postAll(msgs);
+		
 		// Done
 		return jthing;
 	}
@@ -196,7 +203,7 @@ public class DonationServlet extends CrudServlet {
 		index.execute();
 	}
 
-	private void doPublishFirstTime(WebRequest state, Donation donation) {
+	private List<MsgToActor> doPublishFirstTime(WebRequest state, Donation donation) {
 		Log.d(LOGTAG, "doPublishFirstTime "+donation+" "+state);
 		// who
 		XId user = state.getUserId();
@@ -232,9 +239,10 @@ public class DonationServlet extends CrudServlet {
 		}
 		
 		// do it!
-		doPublish3_ShowMeTheMoney(state, donation, from, email);
+		List<MsgToActor> msgs = doPublish3_ShowMeTheMoney(state, donation, from, email);		
 		
 		jthing.setJava(donation); // Is this needed to avoid any stale json?
+		return msgs;
 	}
 
 	static String getEmail(WebRequest state, IForSale donation) {
@@ -257,8 +265,11 @@ public class DonationServlet extends CrudServlet {
 	 * @param donation
 	 * @param user Cannot be null (use email if not logged in)
 	 * @param email
+	 * @return unposted message, to allow it to be posted after the donation is published
 	 */
-	public static void doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) {
+	public static List<MsgToActor> doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) 
+	
+	{
 		Utils.check4null(donation, user, email);
 		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
@@ -291,15 +302,17 @@ public class DonationServlet extends CrudServlet {
 		} else {			
 			XId to = NGO.xidFromId(donation.getTo());
 			MoneyCollector mc = new MoneyCollector(donation, user, email, to, state);
-			mc.run();
+			mc.run(); // what if this fails??
 		}
 		
 		// Donating to/via a fundraiser? Update its donation total + add matched funding
+		
 		String frid = donation.getFundRaiser();
+		List<MsgToActor> msgs = new ArrayList();
 		if ( ! Utils.isBlank(frid)) {
-//			FundraiserServlet fart = new FundraiserServlet();
 			DonateToFundRaiserActor dtfa = Dep.get(DonateToFundRaiserActor.class);
-			dtfa.send(donation);
+			MsgToActor msg = new MsgToActor<>(dtfa, donation, null);
+			msgs.add(msg);
 			Log.d(LOGTAG, "send to DonateToFundRaiserActor "+donation);
 		} else {
 			Log.d(LOGTAG, "no fundraiser for "+donation+" so dont call DonateToFundRaiserActor");
@@ -312,6 +325,7 @@ public class DonationServlet extends CrudServlet {
 			Log.e(LOGTAG, ex);
 			// don't choke though, carry on
 		}
+		return msgs;
 	}
 
 	/**
