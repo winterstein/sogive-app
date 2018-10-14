@@ -158,6 +158,8 @@ public class MoneyCollector {
 	private Customer addStripeSourceToCustomer(StripeAuth sa) throws StripeException {
 		if (sa.getCustomerId() != null) {
 			Log.d(LOGTAG, "NOT adding Stripe source to customer 'cos its hopefully already set");
+			Customer customer = Customer.retrieve(sa.getCustomerId());
+			return customer;
 		}
 		assert "source".equals(sa.getObject()) : sa;
 		try {
