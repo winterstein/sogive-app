@@ -152,7 +152,7 @@ public class MoneyCollector {
 	/**
 	 * https://stripe.com/docs/sources/customers
 	 * @param sa
-	 * @return
+	 * @return shouldn't be null, but best to handle that
 	 * @throws StripeException
 	 */
 	private Customer addStripeSourceToCustomer(StripeAuth sa) throws StripeException {
@@ -174,7 +174,7 @@ public class MoneyCollector {
 		} catch(InvalidRequestException ex) {
 			if (ex.toString().contains("already been attached")) {
 				// already done? well that shouldn't happen but it's OK
-				Log.e(LOGTAG, ex);
+				Log.w(LOGTAG, ex);
 				return null;
 			}
 			throw ex;
