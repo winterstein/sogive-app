@@ -101,12 +101,18 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			if (donated == null) donated = Money.pound(0);
 			fundraiser.setDonated(donated.plus(prevTotal));
 			
-			Integer donationCount = fundraiser.getDonationCount();
-			if (donationCount == null) donationCount = 0;
-			fundraiser.setDonationCount(donationCount + 1);
-			// FIXME race condition vs edits or other donations!
-			// TODO use an update script, and handle conflict exceptions
-			Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
+			// how many people? But no repeated +1 for repeats
+			if (donation.getGenerator()==null) {
+				Integer donationCount = fundraiser.getDonationCount();
+				if (donationCount == null) donationCount = 0;
+				fundraiser.setDonationCount(donationCount + 1);
+				// FIXME race condition vs edits or other donations!
+				// Though most edits will funnel through this actor in single file.
+				// TODO use an update script, and handle conflict exceptions
+				Log.d(getName(), "updateFundRaiser count: "+fundraiser.getDonationCount()+" total: "+fundraiser.getDonated()+" from "+prevTotal+" for "+fundraiser.getId()+" by donation "+donation.getId());
+			}
+			
+			// save
 			JThing<FundRaiser> jthing = new JThing<FundRaiser>(fundraiser);
 			jthing.version = versionf;
 			AppUtils.doSaveEdit2(path, jthing, null, true);
