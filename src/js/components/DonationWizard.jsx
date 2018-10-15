@@ -220,7 +220,9 @@ const AmountSection = ({path, item, fromEditor}) => {
 			
 			{showRepeatControls? 
 				<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
-			{dntn.repeat === 'WEEK'? "Weekly donations are not ideal, as the credit card companies charge per-transaction. Please consider switching to a monthly donation." : null}
+			{dntn.repeat === 'WEEK'?
+				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
+				: null}
 			{event && showRepeatControls? 
 				<PropControl disabled={ ! Donation.isRepeating(dntn)} 					
 					label='Stop recurring donations after the event? (you can also cancel at any time)' 
