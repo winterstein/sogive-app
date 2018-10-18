@@ -60,7 +60,7 @@ public class DonateToFundRaiserActor extends Actor<Donation> {
 			dons.add(donation.getId()); // NB: WARNING: If there is then an exception below, this code will not get re-run
 			
 			// How much?			
-			Money amount = donation.getAmount();
+			Money amount = donation.getRawAmount();
 			
 			Throwable hackex = null;
 			// Add in matched funding?

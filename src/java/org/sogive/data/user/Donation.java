@@ -207,6 +207,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * @deprecated HACK: amount plus tip!
 	 * TODO move tip into fees.
+	 * @see #getRawAmount()
 	 */
 	public Money getAmount() {
 		// HACK plus tip
