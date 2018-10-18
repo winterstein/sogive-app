@@ -159,7 +159,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK} >
-						<AmountSection path={path} fromEditor={fromEditor} item={item} />
+						<AmountSection path={path} fromEditor={fromEditor} item={item} paidElsewhere={paidElsewhere} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
@@ -189,7 +189,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 }; // ./CharityPageImpactAndDonate
 
 
-const AmountSection = ({path, item, fromEditor}) => {
+const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 	let credit = Transfer.getCredit();	
 	const dntn = DataStore.getValue(path) || {};
 	const val = getDonationAmount({path,item,credit});
@@ -208,6 +208,10 @@ const AmountSection = ({path, item, fromEditor}) => {
 	}
 
 	let showRepeatControls = dntn.repeat || repeatDonations.length > 1;
+	if (paidElsewhere) {
+		showRepeatControls = dntn.repeat && true; // off unless somehow set
+		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
+	}
 
 	return (
 		<div className='section donation-amount'>

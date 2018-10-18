@@ -6,6 +6,7 @@ import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react
 import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
 
+import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO';
@@ -373,7 +374,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
-				fund <span className='impact-count'>{Output.number(impact)}</span> {Output.name(impact)}
+				fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.name(impact)}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
@@ -456,28 +457,28 @@ const SearchPager = ({total, from = 0}) => {
 
 	if (thisPage > 1) {
 		pageLinks.unshift(
-			<PageLink key={`search-page-prev`} pageNum={thisPage - 1} title='Previous page'>
+			<PageLink key='search-page-prev' pageNum={thisPage - 1} title='Previous page'>
 				&lt;
 			</PageLink>
 		);
 	}
 	if (thisPage > 2) {
 		pageLinks.unshift(
-			<PageLink key={`search-page-first`} pageNum={1} title='First page'>
+			<PageLink key='search-page-first' pageNum={1} title='First page'>
 				&lt;&lt;
 			</PageLink>
 		);
 	}
 	if (pageCount - thisPage > 0) {
 		pageLinks.push(
-			<PageLink key={`search-page-next`} pageNum={thisPage + 1} title='Next page'>
+			<PageLink key='search-page-next' pageNum={thisPage + 1} title='Next page'>
 				&gt;
 			</PageLink>
 		);
 	}
 	if (pageCount - thisPage > 1) {
 		pageLinks.push(
-			<PageLink key={`search-page-last`} pageNum={pageCount} title='Last page'>
+			<PageLink key='search-page-last' pageNum={pageCount} title='Last page'>
 				&gt;&gt;
 			</PageLink>
 		);

@@ -51,17 +51,16 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 /**
  * See Output.js for relevant doc notes
  * {
+ * 	output: {?Output} if unset, returns null!
  * 	cost: {?Money} how much do you wish to donate?
  * 	targetCount: {?Number} e.g. 10 for "10 malaria nets"
  * 		Either cost or targetCount should be set, but not both.
  * }
   @returns {?Output}
  */
-const impactCalc = ({charity, project, output, outputs, cost, amount, targetCount}) => {
-	assert( ! outputs, "ImpactWidgetry.jsx - old code! use output not outputs");
+const impactCalc = ({charity, project, output, cost, targetCount}) => {
 	NGO.assIsa(charity);
 	Project.assIsa(project);
-	assMatch(amount, "?String");
 	assMatch(targetCount, "?Number");
 	assMatch(cost, "?Money");
 	if ( ! output) {
@@ -81,19 +80,24 @@ const impactCalc = ({charity, project, output, outputs, cost, amount, targetCoun
 	Money.assIsa(cpbraw);
 	const unitName = Output.name(output) || '';
 
+	// for low CPBs, switch to showing "£10 can fund" rather than "helping 1 person costs £0"
+	if (Money.value(cpbraw) < 0.75 && targetCount===1 && ! cost) {
+		cost = Money.make({currency:'GBP', value:10}); // ??support other currencies??
+		targetCount = null;
+	}
+	
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});
-		return Output.make({cost, number: targetCount, name: Misc.TrPlural(targetCount, unitName), description: output.description });
+		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
+	} else {
+		targetCount = Money.divide(cost, cpbraw);
 	}
-
-	let impactNum = Money.divide(cost, cpbraw);
-
+	
 	// Pluralise unit name correctly
-	const plunitName = Misc.TrPlural(impactNum, unitName);
+	const plunitName = Misc.TrPlural(targetCount, unitName);
 
-	return Output.make({number:impactNum, name:plunitName, description:output.description});
+	return Output.make({cost, number:targetCount, name:plunitName, description:output.description});
 }; // ./impactCalc()
 
 /**
