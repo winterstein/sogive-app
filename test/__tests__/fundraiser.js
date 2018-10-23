@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {login, eventIdFromName} = require('../test-base/res/UtilityFunctions');
+const {login, soGiveFailIfPointingAtProduction} = require('../test-base/res/UtilityFunctions');
 const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
 const Event = require('../sogive-scripts/event');
 const Fundraiser = require('../sogive-scripts/fundraiser');
@@ -12,6 +12,7 @@ test('Create a fundraiser', async() => {
     const page = await browser.newPage();
 
     await Event.goto({page});
+    await soGiveFailIfPointingAtProduction({page});
     await login({page, username, password});  
     await Event.createNewEvent({
         page,
@@ -55,6 +56,8 @@ test('Logged-out fundraiser donation', async() => {
     await page.waitFor(3000);
 
     await Fundraiser.goto({page, fundName});
+    await soGiveFailIfPointingAtProduction({page});
+
     await Fundraiser.donate({page, Amount: {amount: 10}, GiftAid: {}, Details: {email: 'thePuppetMaster@winterwell.com'}, Message: {message:'???'}});
 }, 25000);
 
@@ -63,6 +66,8 @@ test('Logged-in fundraiser donation', async() => {
     const page = await browser.newPage();
 
     await Fundraiser.goto({page, fundName});
+    await soGiveFailIfPointingAtProduction({page});
+
     await login({page, username, password});    
     await Fundraiser.donate({page, Amount: {amount: 10}, GiftAid: {}, Message: {message:'???'}});
 }, 25000);
@@ -71,6 +76,8 @@ test('Delete fundraiser', async() => {
     const page = await window.__BROWSER__.newPage();
 
     await Fundraiser.goto({page, fundName});
+    await soGiveFailIfPointingAtProduction({page});
+
     await login({page, username, password});
     await Fundraiser.deleteFundraiser({page, fundName});
 }, 15000);
@@ -79,6 +86,8 @@ test('Delete event', async() => {
     const page = await window.__BROWSER__.newPage();
 
     await Event.goto({page});
+    await soGiveFailIfPointingAtProduction({page});
+
     await login({page, username, password});
     await Event.deleteEvent({page, eventName: fundName});
 }, 15000);

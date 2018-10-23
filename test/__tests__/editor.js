@@ -1,6 +1,6 @@
 // checks functionality of sogive.org/#edit
 const puppeteer = require('puppeteer');
-const {APIBASE, login, fillInForm} = require('../test-base/res/UtilityFunctions');
+const {APIBASE, login, fillInForm, soGiveFailIfPointingAtProduction} = require('../test-base/res/UtilityFunctions');
 const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
 const {SoGiveSelectors, CommonSelectors} = require('../test-base/utils/SelectorsMaster');
 const $ = require('jquery');
@@ -15,6 +15,9 @@ test('Edit and publish field', async () => {
     const page = await browser.newPage();
 
     await page.goto(APIBASE + `/#edit?charityId=${lamb}`);
+
+    await soGiveFailIfPointingAtProduction({page});
+
     await login({page, username, password});
     await page.waitFor(Editor.story);
     await fillInForm({page, Selectors: Editor, data: {story: timeStamp}});
