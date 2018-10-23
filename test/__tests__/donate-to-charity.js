@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {login} = require('../test-base/res/UtilityFunctions');
+const {login, soGiveFailIfPointingAtProduction} = require('../test-base/res/UtilityFunctions');
 const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
 const Search = require('../sogive-scripts/sogive.org_search');
 const Donation = require('../sogive-scripts/sogive.org_charity');
@@ -8,6 +8,9 @@ test('Logged-in charity donation', async () => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
     await Search.goto(page);
+
+    await soGiveFailIfPointingAtProduction({page});
+    
     await login({page, username, password});  
     await Search.search({
         page, 
@@ -37,6 +40,9 @@ test('Logged-out charity donation', async () => {
     const browser = window.__BROWSER__;
     const page = await browser.newPage();
     await Search.goto(page);
+
+    await soGiveFailIfPointingAtProduction({page});
+
     await Search.search({
         page, 
         search_term: 'oxfam'

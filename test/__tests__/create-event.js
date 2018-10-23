@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const {login} = require('../test-base/res/UtilityFunctions');
+const {login, soGiveFailIfPointingAtProduction} = require('../test-base/res/UtilityFunctions');
 const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
 const Event = require('../sogive-scripts/event');
 
@@ -9,6 +9,9 @@ test('Create an event', async() => {
     const page = await browser.newPage();
 
     await Event.goto({page});
+
+    await soGiveFailIfPointingAtProduction({page});
+
     await login({page, username, password});  
     await Event.createNewEvent({
         page,
