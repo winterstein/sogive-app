@@ -526,11 +526,21 @@ const Receipt = ({basket, event}) => {
 };
 
 const ConfirmedTicketList = ({basket, event}) => {
-	if ( ! basket) return null;
-	let tickets = Basket.getItems(basket);
+	
+	if ( ! basket || ! event ) return null;
+
+	// ID of event that user is registering for
+	const {id} = event;
+
+	// Will return false if the user's basket does not contain a ticket for this event
+	// Can't imagine how they could manage that, but will add a safety check below
+	let ticket = 
+		Basket.getItems(basket)
+		.find( ticket => ticket.eventId === id);
+
 	return (
 		<div className='ConfirmedTicketList'>
-			{tickets.map( (ticket, ti) => <ConfirmedTicket key={ti} ticket={ticket} event={event} /> )}
+			{ ticket ? <ConfirmedTicket ticket={ticket} event={event} /> : "Basket does not contain a ticket for this event" }
 		</div>
 	);
 };
