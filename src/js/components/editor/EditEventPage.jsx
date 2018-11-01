@@ -16,16 +16,26 @@ import Ticket from '../../data/charity/Ticket';
 import Donation from '../../data/charity/Donation';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
-import ShareWidget, {ShareLink} from '../../base/components/ShareWidget';
+import ShareWidget, {AccessDenied, ShareLink} from '../../base/components/ShareWidget';
 import {SuggestedDonationEditor} from './CommonControls';
 
 const EditEventPage = () => {
-	if ( ! Login.isLoggedIn()) {
-		return <div className='alert alert-warning'><h3>Please login</h3></div>;
-	}
 	// which event?	
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
+
+	let hasShareAccess = Login.checkShare(eventId);
+	hasShareAccess = (hasShareAccess && hasShareAccess.responseJSON && hasShareAccess.responseJSON.success);
+
+	let isAdmin = Roles.iCan(C.CAN.admin);
+	isAdmin = isAdmin && isAdmin.value;
+
+	if ( ! Login.isLoggedIn()) {
+		return <div className='alert alert-warning'><h3>Please login</h3></div>;
+	}
+	else if ( ! hasShareAccess && ! isAdmin ) {
+		return <AccessDenied thingId={eventId} />;
+	}
 	if (eventId) return <EventEditor id={eventId} />;
 	let type = C.TYPES.Event;
 	let servlet = path[0];
