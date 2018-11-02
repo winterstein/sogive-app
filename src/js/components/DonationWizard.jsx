@@ -151,6 +151,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	const amountOK = amount !== null && Money.value(amount) > 0;
 
+	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
+
+
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
 			<Modal.Header closeButton >
@@ -166,8 +169,8 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
 					</WizardStage> : null}
 				
-					{showDetailsSection? <WizardStage title='Details' setNavStatus>
-						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} setNavStatus />
+					{showDetailsSection? <WizardStage title='Details' sufficient={emailOkay} complete={emailOkay}>
+						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
