@@ -50,11 +50,13 @@ const Event = ({id}) => {
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
 	let canEdit = Roles.iCan(C.CAN.editEvent).value;
-	return (
+	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};
+	return (<div>
+		<div className='fullwidth-bg' style={pstyle} />
 		<div className="col-md-8 col-md-offset-2">
 			<h2>{item.name || 'Event '+id} </h2>		
 			<small>ID: {id}</small>		
-			{logo? <img src={logo} className='img-thumbnail' alt='event logo' /> : null}
+			{logo? <img src={logo} className='pull-right logo-large img-thumbnail' alt='event logo' /> : null}
 			<center>
 				{item.date? <Misc.LongDate date={item.date} /> : null}
 				{item.description? <MDText source={item.description} /> : null}				
@@ -67,8 +69,9 @@ const Event = ({id}) => {
 
 			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
 		</div>
-	);
+	</div>);
 };
+
 
 const Register = ({event}) => {
 	assert(event);
