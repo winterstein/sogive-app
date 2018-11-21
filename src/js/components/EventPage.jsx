@@ -53,10 +53,11 @@ const Event = ({id}) => {
 	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};
 	return (<div>
 		<div className='fullwidth-bg' style={pstyle} />
-		<div className="col-md-8 col-md-offset-2">
-			<h2>{item.name || 'Event '+id} </h2>		
-			<small>ID: {id}</small>		
-			{logo? <img src={logo} className='pull-right logo-large img-thumbnail' alt='event logo' /> : null}
+		<div className="col-md-8 col-md-offset-2 well" style={{marginTop:'2vh'}}>
+			{item.bannerImage? <img src={item.bannerImage} style={{width:'100%', maxHeight:'50vh'}} alt='event banner' /> : null}
+			<h2>{item.name || 'Event '+id}</h2>		
+			<small>SoGive ID: {id}</small>
+			{logo? <img src={logo} className='pull-right logo-xlarge img-thumbnail' alt='event logo' /> : null}
 			<center>
 				{item.date? <Misc.LongDate date={item.date} /> : null}
 				{item.description? <MDText source={item.description} /> : null}				
