@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import com.winterwell.bob.BuildTask;
-import com.winterwell.calstat.BuildCalstat;
+//import com.winterwell.calstat.BuildCalstat;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.web.app.build.KPubType;
 import com.winterwell.web.app.build.PublishProjectTask;
@@ -24,7 +24,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 	@Override
 	public List<BuildTask> getDependencies() {
 		List<BuildTask> deps = super.getDependencies();
-		deps.add(new BuildCalstat());
+//		deps.add(new BuildCalstat());
 		return deps;
 	}
 
