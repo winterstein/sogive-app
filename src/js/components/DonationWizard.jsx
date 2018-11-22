@@ -251,7 +251,7 @@ const SDButton = ({path,sd}) => {
 		{sd.name}
 		<Misc.Money amount={sd.amount} />
 		{Donation.strRepeat(sd.repeat)}
-		{sd.text? <div>{sd.text}</div> : null}
+		{sd.text? <div><small>{sd.text}</small></div> : null}
 	</button>);
 };
 
