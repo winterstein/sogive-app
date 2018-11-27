@@ -5,8 +5,8 @@
 // We can copy stuff from Bootstrap
 // But for now, let's just use vanilla
 
-// // Using #mainDiv to increase specificity of selectors to beat BS
-#mainDiv {
+// // Using #mainDiv or .modal-dialog to increase specificity of selectors to beat BS
+#mainDiv, .modal-dialog {
 	
 	.btn { // double BS normal rounding
 		border-radius: 8px;
@@ -58,11 +58,11 @@
 		// no right shadow
 		box-shadow: none; // 0px 2px 2px rgba(0,0,0,0.2);
 	}
+}
 
-	/* small print text within a button */	
-	.btn-smallprint {
-		font-size: 85%; // same as BS .small
-		max-width: 150px;
-		line-height: 100%;
-	}
+/* small print text within a button */	
+.btn-smallprint {
+	font-size: 85%; // same as BS .small
+	max-width: 150px;
+	line-height: 100%;
 }
