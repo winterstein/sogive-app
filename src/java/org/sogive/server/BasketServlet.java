@@ -62,7 +62,12 @@ public class BasketServlet extends CrudServlet<Basket> {
 		// collect the money
 		String eventId = basket.getEventId();
 		if (eventId==null) {
-			eventId = basket.getItems().get(0).getEventId();
+			// HACK grab an event-id from a ticket (assumes only one event per basket)
+			List<Ticket> items = basket.getItems();
+			assert ! items.isEmpty() : "empty basket?! "+basket+" from "+state;
+			Ticket item0 = items.get(0);
+			assert item0 != null : "No ticket 0?! items:"+items+" basket:"+basket+" from "+state;
+			eventId = item0.getEventId();
 		}
 		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements		
 		MoneyCollector mc = new MoneyCollector(basket, user, email, to, state);
