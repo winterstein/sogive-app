@@ -86,7 +86,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 
 	@Override
 	public void process(WebRequest state) throws Exception {
-		if (state.getSlug().contains("/list")) {
+		if (state.getSlug().contains("/_list")) {
 			doList(state);
 			return;
 		}
