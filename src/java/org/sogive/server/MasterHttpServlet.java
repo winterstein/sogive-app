@@ -33,6 +33,7 @@ import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.KServerType;
 import com.winterwell.web.app.LogServlet;
 import com.winterwell.web.app.ManifestServlet;
+import com.winterwell.web.app.MasterServlet;
 import com.winterwell.web.app.UploadServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.AField;
@@ -63,7 +64,7 @@ import com.winterwell.web.WebPage;
 import com.winterwell.web.ajax.JsonResponse;
 
 /**
- *
+ * Minor TODO replace with use of {@link MasterServlet}
  */
 public class MasterHttpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
