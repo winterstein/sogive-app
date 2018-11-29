@@ -42,6 +42,7 @@ import lombok.Data;
 import lombok.ToString;
 
 /**
+ * Transfer of money from Alice to Bob.
 * A lightweight object for maintaining an accounting audit trail
 * This corresponds to a simple credit-debit transaction in double-entry
 * book-keeping.
