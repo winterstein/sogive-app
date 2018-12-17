@@ -29,21 +29,7 @@ const CharityPage = () => {
 	);
 	if ( ! charity) {
 		return <Misc.Loading />;
-	}
-	// let allprojects = charity.projects || [];
-	// split out overall vs projects
-	// const overalls = _.filter(allprojects, Project.isOverall);
-	// let projectProjects = _.filter(allprojects, p => ! Project.isOverall(p) );
-	// latest only
-	// const overall = Project.getLatest(overalls);
-	// const year = overall? overall.year : 0;
-	// let oldProjects = _.filter(projectProjects, p => p.year !== year);
-	// let currentProjects = _.filter(projectProjects, p => p.year === year);
-	// // sort by cost, biggest first
-	// currentProjects = _.sortBy(currentProjects, p => {
-	// 	let annualCost = _.find(p.inputs, pi => pi.name==='annualCosts');
-	// 	return annualCost? -annualCost.value : 0;
-	// });
+	}	
 
 	const impactColumn = (
 		<div className='col-md-7 col-xs-12 column impact-column'>
