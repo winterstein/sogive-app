@@ -1,6 +1,7 @@
 /** Data model functions for the NGO data-type */
 
 import _ from 'lodash';
+import $ from 'jquery';
 import {isa, defineType} from '../../base/data/DataClass';
 import {assert, assMatch} from 'sjtest';
 import {ellipsize, asNum} from 'wwutils';
@@ -146,7 +147,7 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 		projectCost = adjustedProjectCost;		
 	}
 	Money.assIsa(projectCost);
-	if ( ! _.isNumber(outputCount)) {
+	if ( ! $.isNumeric(outputCount)) {
 		console.error("NGO.js - Not a number?! "+outputCount, "from", output);
 		return 1/0; // NaN
 	}
