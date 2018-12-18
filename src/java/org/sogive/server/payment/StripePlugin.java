@@ -1,31 +1,23 @@
 package org.sogive.server.payment;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.sogive.data.charity.Money;
-import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
-import com.winterwell.utils.Dep;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.log.Log;
-import com.winterwell.utils.log.WeirdException;
-import com.winterwell.web.fields.SField;
 import com.stripe.Stripe;
-import com.stripe.exception.AuthenticationException;
-import com.stripe.exception.CardException;
-import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
 import com.stripe.net.RequestOptions;
+import com.winterwell.utils.Dep;
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.log.Log;
 
 /**
  * Take money from people.

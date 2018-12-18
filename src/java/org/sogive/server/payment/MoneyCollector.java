@@ -1,29 +1,20 @@
 package org.sogive.server.payment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.DBSoGive;
 import org.sogive.data.charity.Money;
-import org.sogive.data.charity.NGO;
 import org.sogive.data.commercial.Transfer;
-import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 
 import com.goodloop.data.PaymentException;
-import com.stripe.Stripe;
-import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
-import com.stripe.model.Plan;
-import com.stripe.model.Subscription;
-import com.winterwell.ical.Repeat;
-import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;

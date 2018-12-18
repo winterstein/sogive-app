@@ -2,7 +2,6 @@ package org.sogive.data.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.Output;
@@ -13,7 +12,6 @@ import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
-import com.winterwell.es.ESPath;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;

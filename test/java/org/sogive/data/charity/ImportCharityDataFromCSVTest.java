@@ -1,13 +1,9 @@
 package org.sogive.data.charity;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 
 import org.junit.Test;
 import org.sogive.server.SoGiveServer;
-
-import com.winterwell.gson.JsonIOException;
 
 public class ImportCharityDataFromCSVTest {
 

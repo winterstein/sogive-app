@@ -1,20 +1,14 @@
 package org.sogive.server;
 
-import java.util.Enumeration;
-import java.util.Map;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.junit.Test;
 import org.sogive.data.DBSoGive;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.user.Person;
 
-import com.winterwell.web.ajax.JThing;
 import com.winterwell.utils.Dep;
 import com.winterwell.web.LoginDetails;
-import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CommonFields;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.EmailConfig;

@@ -1,9 +1,6 @@
 package org.sogive.data.commercial;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-import org.sogive.server.SoGiveTestUtils;
 
 public class FundRaiserTest {
 

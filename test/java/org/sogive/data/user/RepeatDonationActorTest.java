@@ -1,7 +1,5 @@
 package org.sogive.data.user;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.sogive.data.charity.Money;
 

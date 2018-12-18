@@ -1,14 +1,8 @@
 package org.sogive.data;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
@@ -24,8 +18,6 @@ import org.sogive.data.user.Person;
 import org.sogive.data.user.RepeatDonation;
 import org.sogive.data.user.Team;
 
-import com.winterwell.utils.io.SqlUtils;
-import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
@@ -33,19 +25,11 @@ import com.winterwell.es.ESType;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.IESResponse;
 import com.winterwell.es.client.SearchRequestBuilder;
-import com.winterwell.es.client.admin.CreateIndexRequest;
-import com.winterwell.es.client.admin.CreateIndexRequest.Analyzer;
 import com.winterwell.gson.Gson;
-import com.winterwell.es.client.admin.PutMappingRequestBuilder;
 import com.winterwell.utils.Dep;
-import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.containers.Containers;
-import com.winterwell.utils.io.ArgsParser;
-import com.winterwell.utils.log.Log;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 

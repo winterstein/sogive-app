@@ -1,10 +1,10 @@
 package org.sogive.server.payment;
 
+import com.stripe.model.Event;
+import com.stripe.net.ApiResource;
 import com.winterwell.utils.log.Log;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
-import com.stripe.model.Event;
-import com.stripe.net.ApiResource;
 
 /**
  * /stripe/webhook
