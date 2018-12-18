@@ -10,12 +10,7 @@ import org.sogive.data.commercial.Ticket;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.MoneyCollector;
-import org.sogive.server.payment.StripeAuth;
-import org.sogive.server.payment.StripePlugin;
 
-import com.stripe.model.Charge;
-import com.stripe.model.Event;
-import com.sun.corba.se.impl.protocol.NotLocalLocalCRDImpl;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;

@@ -12,11 +12,13 @@ import com.winterwell.web.app.build.PublishProjectTask;
  */
 public class PublishSoGiveApp extends PublishProjectTask {
 	
+
 	public PublishSoGiveApp() throws Exception {
 		super("sogive", "/home/winterwell/sogive-app");
 		bashScript = "../wwappbase.js/./project-publisher.sh sogive";
 //		bashScript = "../wwappbase.js/./test-script.sh sogive";
 		typeOfPublish = KPubType.test;
+		notests = true;
 	}
 	
 	@Override
