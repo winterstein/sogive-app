@@ -4,7 +4,6 @@
 package org.sogive.data.commercial;
 
 import java.util.List;
-import java.util.Map;
 
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;

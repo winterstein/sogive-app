@@ -1,54 +1,23 @@
 package org.sogive.server;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.winterwell.web.ajax.JThing;
-import com.winterwell.data.KStatus;
-import com.winterwell.es.ESPath;
-import com.winterwell.es.client.DeleteRequestBuilder;
-import com.winterwell.es.client.ESConfig;
-import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.ESHttpResponse;
-import com.winterwell.es.client.GetRequestBuilder;
-import com.winterwell.es.client.GetResponse;
-import com.winterwell.es.client.IESResponse;
-import com.winterwell.es.client.IndexRequestBuilder;
-import com.winterwell.es.client.SearchRequestBuilder;
-import com.winterwell.es.client.SearchResponse;
-import com.winterwell.es.client.UpdateRequestBuilder;
-import com.winterwell.gson.FlexiGson;
-import com.winterwell.gson.Gson;
-import com.winterwell.utils.Dep;
-import com.winterwell.utils.Printer;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.containers.Containers;
-import com.winterwell.utils.log.Log;
-import com.winterwell.utils.web.WebUtils2;
-import com.winterwell.web.WebEx;
-import com.winterwell.web.ajax.JsonResponse;
-import com.winterwell.web.app.AppUtils;
-import com.winterwell.web.app.CrudServlet;
-import com.winterwell.web.app.WebRequest;
-import com.winterwell.web.data.XId;
-import com.winterwell.web.fields.JsonField;
-import com.winterwell.web.fields.ListField;
-import com.winterwell.web.fields.SField;
-
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
 import org.sogive.data.charity.Project;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.charity.Thing; 
+import org.sogive.data.charity.Thing;
+
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
+import com.winterwell.gson.Gson;
+import com.winterwell.utils.Dep;
+import com.winterwell.utils.Utils;
+import com.winterwell.web.ajax.JThing;
+import com.winterwell.web.app.AppUtils;
+import com.winterwell.web.app.CrudServlet;
+import com.winterwell.web.app.WebRequest; 
 
 public class CharityServlet extends CrudServlet<NGO> {
 

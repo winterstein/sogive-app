@@ -1,20 +1,13 @@
 package org.sogive.data.charity;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiPredicate;
 
-import org.sogive.data.commercial.SuggestedDonation;
-
 import com.winterwell.utils.StrUtils;
-import com.winterwell.utils.TodoException;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
-import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.web.data.XId;
 
 public class NGO extends Thing<NGO> {

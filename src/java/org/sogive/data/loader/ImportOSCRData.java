@@ -1,46 +1,26 @@
 package org.sogive.data.loader;
 
-import static com.winterwell.utils.containers.Containers.get;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.zip.ZipFile;
 
-import org.sogive.data.charity.Citation;
-import org.sogive.data.charity.Money;
 import org.sogive.data.charity.NGO;
-import org.sogive.data.charity.Output;
-import org.sogive.data.charity.Project;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
-import org.sogive.server.CharityServlet;
 import org.sogive.server.SoGiveServer;
 
-import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.depot.Depot;
 import com.winterwell.depot.Desc;
 import com.winterwell.es.ESPath;
-import com.winterwell.es.client.ESHttpResponse;
-import com.winterwell.es.client.UpdateRequestBuilder;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
-import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.Printer;
-import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
-import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVReader;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.KErrorPolicy;
-import com.winterwell.utils.log.Log;
-import com.winterwell.utils.time.Time;
-import com.winterwell.utils.web.WebUtils;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 
 public class ImportOSCRData {

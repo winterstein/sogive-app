@@ -1,11 +1,8 @@
 package com.winterwell.es.client;
 
-import static org.junit.Assert.*;
-
 import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
-import org.junit.Test;
 
 import com.winterwell.gson.FlexiGson;
 

@@ -1,11 +1,9 @@
 package org.sogive.server.payment;
 
 import org.sogive.data.charity.Money;
-import org.sogive.data.commercial.Event;
 
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Utils;
-import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 

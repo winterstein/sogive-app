@@ -3,43 +3,33 @@ package org.sogive.data.commercial;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.sogive.data.charity.Money;
-import org.sogive.data.charity.Output;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
-import com.winterwell.web.ajax.JThing;
 import com.winterwell.data.KStatus;
-import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
-import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
-import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
-import com.winterwell.utils.web.WebUtils2;
-import com.winterwell.web.ajax.JsonResponse;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
 
 import lombok.Data;
-import lombok.ToString;
 
 /**
  * Transfer of money from Alice to Bob.

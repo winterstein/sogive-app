@@ -1,23 +1,27 @@
 package org.sogive.server;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.winterwell.web.ajax.JThing;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
+import org.sogive.data.charity.NGO;
+import org.sogive.data.charity.SoGiveConfig;
+
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
-import com.winterwell.es.ESUtils;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.suggest.Suggesters;
-import com.winterwell.gson.Gson;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
-import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
@@ -30,29 +34,12 @@ import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.AppUtils;
-import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.app.WebRequest.KResponseType;
 import com.winterwell.web.fields.BoolField;
-import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
-import com.winterwell.youagain.client.AuthToken;
-import com.winterwell.youagain.client.YouAgainClient;
-
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-import org.sogive.data.charity.NGO;
-import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.loader.ImportOSCRData; 
-// Just imported to log progress of fixReady!
-import com.winterwell.utils.log.Log;
 
 public class SearchServlet implements IServlet {
 

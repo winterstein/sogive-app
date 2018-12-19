@@ -1,16 +1,13 @@
 package org.sogive.data.commercial;
 
 import java.util.List;
-import java.util.Map;
 
 import org.sogive.data.charity.Money;
-import org.sogive.data.charity.NGO;
 import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.ical.Repeat;
-import com.winterwell.utils.Mutable;
 
 import lombok.Data;
 

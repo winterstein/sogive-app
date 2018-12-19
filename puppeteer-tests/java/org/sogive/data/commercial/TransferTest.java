@@ -1,7 +1,5 @@
 package org.sogive.data.commercial;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.sogive.data.charity.Money;
 import org.sogive.server.SoGiveServer;

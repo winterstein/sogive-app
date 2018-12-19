@@ -1,7 +1,5 @@
 package org.sogive.data.charity;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class MoneyTest {
