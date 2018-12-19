@@ -51,5 +51,5 @@ for js_file in ${RES[*]}; do
 done
 
 printf "\nLaunching Jest... \n"
-cd /home/$USER/winterwell/sogive-app/test/ 
+cd /home/$USER/winterwell/sogive-app/puppeteer-tests/ 
 npm run jest -- --config ./jest.config.json --testURL $ENDPOINT $JestOptionsBlob
