@@ -1,11 +1,12 @@
+// TODO: Can we get rid of this in favour of writing out simplified instructions as and when needed?
+// If it is not possible to simplify process, can maybe restructure and move this to a utils_sogive.js file.
 const puppeteer = require('puppeteer');
 const {
     fillInForm,
     disableAnimations,
     APIBASE
 } = require('../test-base/res/UtilityFunctions');
-const {SoGiveSelectors} = require('../test-base/utils/SelectorsMaster');
-const {General} = SoGiveSelectors;
+const {SoGiveSelectors: {General}} = require('../test-base/utils/SelectorsMaster');
 
 /**Fills in the donation form with details provided
  * @param Amount {amount: 0, hide-amount-checkbox: true}

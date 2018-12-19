@@ -3,9 +3,6 @@ const {
     APIBASE,
     disableAnimations
 } = require('../test-base/res/UtilityFunctions');
-const {
-    donate,
-} = require('./donation-form');
 
 async function goto({page, charityId}) {
     page.goto(`${APIBASE}/#charity?charityId=${charityId}`);
@@ -13,6 +10,5 @@ async function goto({page, charityId}) {
 }
 
 module.exports = {
-    donate,
     goto
 };

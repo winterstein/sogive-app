@@ -9,9 +9,11 @@
   },
   "license": "MIT",
   "dependencies": {
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.21",
     "chart.js": "^2.7.3",
     "easy-enums": "^1.1.6",
     "easyi18n": "^1.1.1",
+    "eslint": "^5.10.0",
     "hashmap": "^2.3.0",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
@@ -24,7 +26,7 @@
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.6.3",
     "react-dropzone": "^4.3.0",
-    "react-markdown": "^4.0.3",
+    "react-markdown": "^4.0.4",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^2.0.1",
     "sjtest": "^0.4.8",
@@ -36,7 +38,7 @@
     "compile": "webpack -p"
   },
   "devDependencies": {
-	"intl": "^1.2.5",
+    "intl": "^1.2.5",
     "eslint": "^5.9.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.15",

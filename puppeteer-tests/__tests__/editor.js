@@ -2,13 +2,12 @@
 const puppeteer = require('puppeteer');
 const {APIBASE, login, fillInForm, soGiveFailIfPointingAtProduction} = require('../test-base/res/UtilityFunctions');
 const {username, password} = require('../../../logins/sogive-app/puppeteer.credentials');
-const {SoGiveSelectors, CommonSelectors} = require('../test-base/utils/SelectorsMaster');
+const {SoGiveSelectors: {Editor}, CommonSelectors} = require('../test-base/utils/SelectorsMaster');
 const $ = require('jquery');
 
-// the lucky charity to be tested on
+// the lucky charity to be tested
 const lamb = "urras-eaglais-na-h-aoidhe";
 const timeStamp = new Date().toISOString();
-const {Editor} = SoGiveSelectors;
 
 test('Edit and publish field', async () => {
     const browser = window.__BROWSER__;
