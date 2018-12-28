@@ -233,7 +233,7 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 			{recommendedNote}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
-				{ _.map(ready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
+				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				{ unready.length ? (
 					<div className='unready-results row'>
 						<h3>Analysis in progress</h3>
