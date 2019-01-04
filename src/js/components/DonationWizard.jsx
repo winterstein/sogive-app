@@ -359,16 +359,16 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) =>
 	}
 	// dflt={Login.getUser() && Login.getUser().name} 
 	// dflt={Login.getEmail()}
+	let reqrd = giftAid;
 	return (
 		// TODO do we have the user's details stored?	
 		<div className='section donation-amount'>
-			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> 
-				: <p>These details are optional: you can give anonymously.</p>}
+			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> : null}
 			{fromEditor? <Misc.PropControl label='Donor ID' path={path} prop='from' /> : null}
-			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' />
-			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' />
-			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' />
-			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' />
+			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' required={reqrd} optional={ ! reqrd} />
+			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' required />
+			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' required={reqrd} optional={ ! reqrd} />
+			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' required={reqrd} optional={ ! reqrd} />
 			{ ! giftAid? <Misc.PropControl prop='consentToSharePII' 
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
 				path={path} type='checkbox' />
