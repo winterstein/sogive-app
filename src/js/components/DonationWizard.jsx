@@ -417,6 +417,7 @@ const onToken_doPayment = ({donation}) => {
 			// clear the draft
 			ActionMan.clearDonationDraft({donation});			
 			// do a fresh load of the fundraiser?
+			// NB: race condition with ES indexing might mean our donation doesn't show up instantly :(
 			if (donation.fundRaiser) {				
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
@@ -507,7 +508,7 @@ const ThankYouSection = ({path, item, did}) => {
 				<p>
 					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} />
 					{Donation.isRepeating(donation)? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
-					to {item.name} <br />
+					&nbsp; to {item.name} <br />
 				</p>
 				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
 				<p>
