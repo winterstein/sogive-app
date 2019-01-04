@@ -20,3 +20,5 @@ lib/
 dependencies/
 .settings
 pom.bob.xml
+sogive.jar
+boblog
