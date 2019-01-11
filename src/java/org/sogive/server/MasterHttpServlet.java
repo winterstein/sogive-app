@@ -19,6 +19,7 @@ import com.winterwell.web.app.HttpServletWrapper;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.KServerType;
 import com.winterwell.web.app.LogServlet;
+import com.winterwell.web.app.ManifestServlet;
 import com.winterwell.web.app.MasterServlet;
 import com.winterwell.web.app.UploadServlet;
 import com.winterwell.web.app.WebRequest;
@@ -119,6 +120,9 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new EmailServlet();
 				s.process(request);
 				return;
+			case "manifest":
+				s = new ManifestServlet();
+				s.process(request);
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
