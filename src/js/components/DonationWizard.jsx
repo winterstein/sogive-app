@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { Modal } from 'react-bootstrap';
+import Login from 'you-again';
 
 import C from '../C';
 import printer from '../base/utils/printer';
@@ -134,9 +135,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getPath(C.KStatus.DRAFT, type, donationDraft.id);
-	assert(donationDraft === DataStore.getValue(path), 
-		"DonationWizard.jsx wtf: "+JSON.stringify(donationDraft)+" vs "+JSON.stringify(DataStore.getValue(path))
-	);
+	if (donationDraft !== DataStore.getValue(path)) {
+		console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ", 
+			['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
+			donationDraft);
+	}
 	// Don't ask for gift-aid details if the charity doesn't support it
 	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];
 	// We don't need to collect address etc. if we're not collecting gift-aid

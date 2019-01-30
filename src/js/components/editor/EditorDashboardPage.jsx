@@ -23,7 +23,6 @@ class EditorDashboardPage extends React.Component {
 				<h3>In development...</h3>
 				<AddCharityWidget />
 				<AddEditorWidget />
-				<ImportDataWidget />	
 				<p><a href='/#manageDonations'>Manage Donations</a></p>
 			</div>
 		);
@@ -57,16 +56,6 @@ const AddEditorWidget = () => {
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
 		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
-	</Misc.Card>);
-};
-
-const ImportDataWidget = () => {
-	return (<Misc.Card title='Import Data Set' >		
-		<p>Do NOT repeat click these.</p>
-		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('OSCR')}>Import OSCR Data</button>
-
-		<button className='btn btn-warning' onClick={e => ServerIO.importDataSet('oldSpreadsheet')}>Import Old Spreadsheet Data</button>
-
 	</Misc.Card>);
 };
 
