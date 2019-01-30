@@ -22,8 +22,6 @@ ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
 // ServerIO.APIBASE = 'https://app.sogive.org';
 
-window.wtf = 'foo';
-
 ServerIO.checkBase();
 
 ServerIO.getServletForType = (type) => {

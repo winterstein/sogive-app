@@ -1,9 +1,7 @@
-// @Flow
+
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import Login from 'you-again';
-import {XId } from 'wwutils';
 import { Modal } from 'react-bootstrap';
 
 import C from '../C';
@@ -29,11 +27,6 @@ import {errorPath} from '../base/plumbing/Crud';
  * 
  * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
  */
-
-// falsy value for SERVER_TYPE = production
-const stripeKey = (C.SERVER_TYPE) ?
-	'pk_test_RyG0ezFZmvNSP5CWjpl5JQnd' // test
-	: 'pk_live_InKkluBNjhUO4XN1QAkCPEGY'; // live
 
 /**
  * NB: We can have several DonateButtons, but only one model form
@@ -63,12 +56,14 @@ const DonateButton = ({item, paidElsewhere}) => {
 };
 
 /**
- * The main donation wizard 
+ * The main click-here-to-donate widget 
  * 
  * @param item: a FundRaiser or NGO
  * @param fromEditor ??
  * 
  * Warning: Only have ONE of these on a page! Otherwise both will open at once!
+ * 
+ * TODO refactor this
  */
 const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {	
 
@@ -139,7 +134,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getPath(C.KStatus.DRAFT, type, donationDraft.id);
-	assert(donationDraft === DataStore.getValue(path), DataStore.getValue(path));
+	assert(donationDraft === DataStore.getValue(path), 
+		"DonationWizard.jsx wtf: "+JSON.stringify(donationDraft)+" vs "+JSON.stringify(DataStore.getValue(path))
+	);
 	// Don't ask for gift-aid details if the charity doesn't support it
 	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];
 	// We don't need to collect address etc. if we're not collecting gift-aid
