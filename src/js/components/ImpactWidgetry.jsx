@@ -82,14 +82,14 @@ const impactCalc = ({charity, project, output, cost, targetCount}) => {
 
 	// for low CPBs, switch to showing "£10 can fund" rather than "helping 1 person costs £0"
 	if (Money.value(cpbraw) < 0.75 && targetCount===1 && ! cost) {
-		cost = Money.make({currency:'GBP', value:10}); // ??support other currencies??
+		cost = new Money({currency:'GBP', value:10}); // ??support other currencies??
 		targetCount = null;
 	}
 	
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = Money.make({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
+		cost = new Money({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
 	} else {
 		targetCount = Money.divide(cost, cpbraw);
 	}

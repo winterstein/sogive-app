@@ -446,7 +446,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	// tip?
 	// default: £1
 	if (donation.hasTip === undefined) donation.hasTip = true;
-	if (donation.tip===undefined) donation.tip = Money.make({currency:'GBP', value:1});
+	if (donation.tip===undefined) donation.tip = new Money({currency:'GBP', value:1});
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
 

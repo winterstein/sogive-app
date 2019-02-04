@@ -1,12 +1,14 @@
 
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
-import {isa, nonce, defineType} from '../base/data/DataClass';
+import DataClass, {nonce} from '../base/data/DataClass';
 import {uid, blockProp} from 'wwutils';
 import Money from '../base/data/Money';
 import C from '../C';
 
-const Basket = defineType(C.TYPES.Basket);
+class Basket extends DataClass {
+
+}
 const This = Basket;
 export default Basket;
 
@@ -14,10 +16,10 @@ export default Basket;
 
 // Basket is normally DRAFT (PUBLISHED = paid for)
 
-Basket.isa = (obj) => isa(obj, Basket.type)
-		// sneaky place to add safety checks
-		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
-		&& true;
+// Basket.isa = (obj) => isa(obj, Basket.type)
+// 		// sneaky place to add safety checks
+// 		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
+// 		&& true;
 
 This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;
@@ -56,7 +58,7 @@ Basket.getTotal = (basket) => {
 	if (total && basket.hasTip && Money.isa(basket.tip)) {
 		total = Money.add(total, basket.tip);
 	}
-	return total || Money.make();
+	return total || new Money();
 };
 
 Basket.make = (base = {}) => {
@@ -64,7 +66,7 @@ Basket.make = (base = {}) => {
 	let ma = {
 		items: [],
 		hasTip: true,
-		// tip: Money.make({value: 1}), // TODO tip/fee based on event and tickets
+		// tip: new Money({value: 1}), // TODO tip/fee based on event and tickets
 		...base,
 		'@type': Basket.type,
 	};

@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import $ from 'jquery';
-import {isa, defineType} from '../../base/data/DataClass';
+import DataClass from '../../base/data/DataClass';
 import {assert, assMatch} from 'sjtest';
 import {ellipsize, asNum} from 'wwutils';
 import Project from './Project';
@@ -20,7 +20,9 @@ import Enum from 'easy-enums';
  * There is a representative project -- this gives the impact that's reported.
  */
 
-const NGO = defineType('NGO');
+class NGO extends DataClass {
+
+}
 const This = NGO;
 export default NGO;
 
@@ -28,7 +30,7 @@ export default NGO;
  * Mostly you should use #displayName()!
  */
 NGO.displayName = (ngo) => ngo.displayName || ngo.name || NGO.id(ngo);
-NGO.description = (ngo) => isa(ngo, 'NGO') && ngo.description;
+NGO.description = (ngo) => NGO.assIsa(ngo) && ngo.description;
 NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
 NGO.logo = item => item.logo; 
@@ -152,7 +154,7 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 		return 1/0; // NaN
 	}
 	assMatch(outputCount, Number, "NGO.js outputCount not a Number?! "+outputCount);
-	let costPerOutput = Money.make(projectCost);
+	let costPerOutput = new Money(projectCost);
 	Money.setValue(costPerOutput, projectCost.value / outputCount);
 	return costPerOutput;
 };

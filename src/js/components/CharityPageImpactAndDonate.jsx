@@ -61,7 +61,7 @@ class CharityPageImpactAndDonate extends Component {
 		// use Money.add/sub instead??
 		const rawValue = Money.value(amount) + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
-		const newAmount = Money.make({ value, currency: 'GBP' });
+		const newAmount = new Money({ value, currency: 'GBP' });
 		DataStore.setValue(['widget', 'CharityPageImpactAndDonate', NGO.id(charity), 'amount'], newAmount);
 	}
 
@@ -87,7 +87,7 @@ class CharityPageImpactAndDonate extends Component {
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
 		if ( ! amount) {
-			amount = Money.make({value:10});
+			amount = new Money({value:10});
 			DataStore.setValue(amountPath, amount, false);
 		}
 		const user = Login.getUser();

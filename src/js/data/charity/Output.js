@@ -1,7 +1,7 @@
 
 import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
-import {isa, defineType, getType} from '../../base/data/DataClass';
+import DataClass, {getType} from '../../base/data/DataClass';
 
 /* Output type, which also does Impact: 
 {
@@ -20,7 +20,22 @@ import {isa, defineType, getType} from '../../base/data/DataClass';
 */
 
 /** impact utils */
-const Output = defineType('Output');
+class Output extends DataClass {
+	/** @type {String} */
+	name;
+	/** @type {Number} Number of units output, e.g. the number of malaria nets */
+	number;
+	// cost: {Money} total cost, ie cost = costPerOutput * number
+	// costPerOutput {Money}
+	// amount: {String} non-numerical descriptions of how much was output
+	// confidence {String}
+	// description: {String}
+	// start: {Date}
+	// end: {Date}
+	// order: {Number} for display lists
+	// year: {Number}
+}
+DataClass.register(Output);
 const This = Output;
 export default Output;
 

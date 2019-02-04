@@ -84,7 +84,7 @@ const EditCharityPage = () => {
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Misc.Card>
 			<Misc.Card title='Preview: Impact'>
-				<ImpactDesc charity={charity} amount={Money.make({value:10, currency:'GBP'})} />
+				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
 				<small><ul>
 					<li>Representative project: {repProj? repProj.name+' '+repProj.year : "none"}</li>
 					<li>Outputs: {repProj? Project.outputs(repProj).map(o => o.number+" "+o.name) : null}</li>
@@ -419,10 +419,10 @@ const ProjectInputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || Money.make({name: 'annualCosts'});	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || Money.make({name: 'projectCosts'});
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || Money.make({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || Money.make({name: "incomeFromBeneficiaries"});
+	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
+	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
+	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>

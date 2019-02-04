@@ -1,12 +1,19 @@
 import {assert} from 'sjtest';
-import {isa, nonce, defineType} from '../../base/data/DataClass';
+import DataClass, {nonce} from '../../base/data/DataClass';
 import C from '../../C';
 import Money from '../../base/data/Money';
 import DataStore from '../../base/plumbing/DataStore';
 import {XId, blockProp} from 'wwutils';
 
-/** impact utils */
-const Donation = defineType(C.TYPES.Donation);
+
+class Donation extends DataClass {
+	/** crude duck type: needs an amount or total */
+	isa(obj) {
+		if ( ! obj) return false;
+		return super.isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
+	}
+}
+DataClass.register(Donation);
 const This = Donation;
 export default Donation;
 
@@ -27,11 +34,6 @@ function isNumeric(value) {
 	return ! isNaN(value - parseFloat(value));
 }
 
-/** crude duck type: needs an amount or total */
-Donation.isa = (obj) => {
-	if ( ! obj) return false;
-	return isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
-};
 Donation.assIsa = (obj) => {
 	assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
 	blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');
@@ -94,7 +96,7 @@ Donation.make = (base = {}) => {
 	let ma = {
 		'@type': C.TYPES.Donation,
 		/* The user's contribution (this is what the user pays; not what the charity recieves) */
-		amount: Money.make(),
+		amount: new Money(),
 		id: nonce(),	
 		...base
 	};

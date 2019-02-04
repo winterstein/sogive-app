@@ -2,10 +2,13 @@
 
 import _ from 'lodash';
 import {assert} from 'sjtest';
-import {isa, defineType} from '../../base/data/DataClass';
+import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 
-const Project = defineType('Project');
+class Project extends DataClass {
+
+}
+DataClass.register(Project);
 const This = Project;
 export default Project;
 
@@ -77,7 +80,7 @@ Project.getTotalCost = (project) => {
 		}
 		return total + (Money.value(input) || 0); // normal
 	}, 0);
-	return Money.make({currency, value});
+	return new Money({currency, value});
 };
 
 const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];

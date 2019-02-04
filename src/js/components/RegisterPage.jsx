@@ -474,7 +474,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	// tip removed from register page (as requested by Sanjay, march 2018)
 	// // tip? Default to £1
 	// if (basket.hasTip && basket.tip === undefined) {
-	// 	basket.tip = Money.make({value:1});
+	// 	basket.tip = new Money({value:1});
 	// }
 	// 		<div className='padded-block'>
 	// 			<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 

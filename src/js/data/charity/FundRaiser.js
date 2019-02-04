@@ -1,5 +1,5 @@
 import {assert, assMatch} from 'sjtest';
-import {isa, defineType} from '../../base/data/DataClass';
+import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 import {blockProp, XId} from 'wwutils';
 import C from '../../C';
@@ -9,18 +9,20 @@ import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 
 /** impact utils */
-const FundRaiser = defineType(C.TYPES.FundRaiser);
+class FundRaiser extends DataClass {
+
+}
 /** `This` makes it easier to copy-paste code between similar classes */
 const This = FundRaiser;
 export default FundRaiser;
 
 window.FundRaiser = FundRaiser; // for debug
 
-This.isa = (obj) => isa(obj, This.type)
-		// sneaky place to add safety checks
-		&& blockProp(obj, 'charity', This.type+' - use charityId()')
-		&& blockProp(obj, 'event', This.type+' - use eventId()')
-		&& true;
+// This.isa = (obj) => isa(obj, This.type)
+// 		// sneaky place to add safety checks
+// 		&& blockProp(obj, 'charity', This.type+' - use charityId()')
+// 		&& blockProp(obj, 'event', This.type+' - use eventId()')
+// 		&& true;
 
 This.oxid = obj => obj.oxid || (obj.owner && obj.owner.xid);
 
@@ -58,7 +60,7 @@ This.target = item => {
 
 	if (item.target && Money.value(item.target)) return item.target;
 
-	item.target = Money.make({value: nextTarget(This.donated(item).value)});
+	item.target = new Money({value: nextTarget(This.donated(item).value)});
 	
 	// TODO more than the total donations
 	return item.target;
