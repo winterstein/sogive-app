@@ -21,6 +21,10 @@ import Enum from 'easy-enums';
  */
 
 class NGO extends DataClass {
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
 
 }
 const This = NGO;

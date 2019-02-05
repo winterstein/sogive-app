@@ -11,7 +11,12 @@ class Basket extends DataClass {
 	items = [];
 	// tip: new Money({value: 1}), // TODO tip/fee based on event and tickets
 	hasTip = true;
-	
+
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
+
 }
 const This = Basket;
 export default Basket;

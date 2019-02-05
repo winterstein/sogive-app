@@ -34,6 +34,12 @@ class Output extends DataClass {
 	// end: {Date}
 	// order: {Number} for display lists
 	// year: {Number}
+
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
+
 }
 DataClass.register(Output);
 const This = Output;

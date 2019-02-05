@@ -11,9 +11,11 @@ class Ticket extends DataClass {
 
 	constructor(base) {
 		super(base);
+		Object.assign(this, base);
 		// Use a fresh ID
 		this.id = this.eventId+'.'+nonce();
 	}
+
 }
 
 DataClass.register(Ticket);

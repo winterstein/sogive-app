@@ -4,6 +4,10 @@ import C from '../../C';
 
 /** impact utils */
 class Event extends DataClass {
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
 
 }
 DataClass.register(Event);

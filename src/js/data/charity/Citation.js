@@ -8,6 +8,11 @@ class Citation extends DataClass {
 	static isa(obj) {
 		return super.isa(obj, 'Citation') || (obj.url && asNum(obj.year));
 	}
+	
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
 }
 export default Citation;
 

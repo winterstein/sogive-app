@@ -6,7 +6,10 @@ import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 
 class Project extends DataClass {
-
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
 }
 DataClass.register(Project);
 const This = Project;

@@ -12,6 +12,11 @@ class Donation extends DataClass {
 		if ( ! obj) return false;
 		return super.isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
 	}
+
+	constructor(base) {
+		super(base);
+		Object.assign(this, base);
+	}
 }
 DataClass.register(Donation);
 const This = Donation;
