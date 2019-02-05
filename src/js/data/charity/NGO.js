@@ -194,7 +194,7 @@ NGO.getCitations = (charity) => {
 			refs.push(node);
 		} else if (node.source) {
 			console.warn("converting to citation", node);
-			refs.push(Citation.make(node));
+			refs.push(new Citation(node));
 		}
 	});
 	refs = _.uniq(refs);

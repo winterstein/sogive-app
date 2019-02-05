@@ -8,7 +8,7 @@ import {XId, blockProp} from 'wwutils';
 
 class Donation extends DataClass {
 	/** crude duck type: needs an amount or total */
-	isa(obj) {
+	static isa(obj) {
 		if ( ! obj) return false;
 		return super.isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
 	}

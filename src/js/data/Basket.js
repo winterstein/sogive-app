@@ -8,6 +8,10 @@ import C from '../C';
 
 class Basket extends DataClass {
 
+	items = [];
+	// tip: new Money({value: 1}), // TODO tip/fee based on event and tickets
+	hasTip = true;
+	
 }
 const This = Basket;
 export default Basket;
@@ -59,17 +63,4 @@ Basket.getTotal = (basket) => {
 		total = Money.add(total, basket.tip);
 	}
 	return total || new Money();
-};
-
-Basket.make = (base = {}) => {
-	// event??
-	let ma = {
-		items: [],
-		hasTip: true,
-		// tip: new Money({value: 1}), // TODO tip/fee based on event and tickets
-		...base,
-		'@type': Basket.type,
-	};
-	Basket.assIsa(ma);
-	return ma;
 };

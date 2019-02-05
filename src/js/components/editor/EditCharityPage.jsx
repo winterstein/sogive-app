@@ -55,8 +55,8 @@ const EditCharityPage = () => {
 	// projects
 	let allprojects = charity.projects || [];
 	// split out overall vs projects
-	let overalls = _.filter(allprojects, p => Project.name(p) === Project.overall);
-	let projectProjects = _.filter(allprojects, p => Project.name(p) !== Project.overall);
+	let overalls = _.filter(allprojects, p => Project.getName(p) === Project.overall);
+	let projectProjects = _.filter(allprojects, p => Project.getName(p) !== Project.overall);
 	// sort by year
 	overalls = _.sortBy(overalls, p => - (p.year || 0) );
 	projectProjects = _.sortBy(projectProjects, p => - (p.year || 0) );

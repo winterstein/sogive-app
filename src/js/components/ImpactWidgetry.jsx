@@ -97,7 +97,7 @@ const impactCalc = ({charity, project, output, cost, targetCount}) => {
 	// Pluralise unit name correctly
 	const plunitName = Misc.TrPlural(targetCount, unitName);
 
-	return Output.make({cost, number:targetCount, name:plunitName, description:output.description});
+	return new Output({cost, number:targetCount, name:plunitName, description:output.description});
 }; // ./impactCalc()
 
 /**

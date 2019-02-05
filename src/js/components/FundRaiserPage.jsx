@@ -73,7 +73,7 @@ const FundRaiserPage = ({id}) => {
 	}
 	let charity = FundRaiser.charity(item);
 	if ( ! charity) {
-		charity = NGO.make(); 
+		charity = new NGO(); 
 		console.warn("FundRaiser with no charity set?!");
 	}
 

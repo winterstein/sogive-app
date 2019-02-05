@@ -1,21 +1,15 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
-import {isa} from '../../base/data/DataClass';
+import DataClass from '../../base/data/DataClass';
 import {asNum} from 'wwutils';
 
-const Citation = {};
+class Citation extends DataClass {
+	/** duck type: needs URL and year  */
+	static isa(obj) {
+		return super.isa(obj, 'Citation') || (obj.url && asNum(obj.year));
+	}
+}
 export default Citation;
-
-// duck type: needs URL and year
-Citation.isa = (obj) => isa(obj, 'Citation') || (obj.url && asNum(obj.year));
-Citation.assIsa = (obj) => assert(Citation.isa(obj));
 
 // HACK support old data format
 Citation.url = (obj) => obj.url || obj.source;
-
-Citation.make = (base = {}) => {
-	let cit = {};
-	Object.assign(cit, base);
-	cit['@type'] = 'Citation';
-	return cit;
-};

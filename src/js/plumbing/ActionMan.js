@@ -41,7 +41,7 @@ ActionMan.addProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity));
 	let item = DataStore.appstate.widget.AddProject.form;
 	if (isOverall) item.name = Project.overall;
-	let proj = Project.make(item);
+	let proj = new Project(item);
 	// add to the charity	
 	if ( ! charity.projects) charity.projects = [];
 	charity.projects.push(proj);
@@ -70,7 +70,7 @@ ActionMan.addInputOrOutput = ({list, ioPath, formPath}) => {
 
 ActionMan.addDataSource = ({list, srcPath, formPath}) => {
 	assert(_.isArray(list), list);
-	let citation = Citation.make(DataStore.getValue(formPath));
+	let citation = new Citation(DataStore.getValue(formPath));
 	
 	list.push(citation);
 	DataStore.setValue(srcPath, list);
@@ -133,7 +133,7 @@ ActionMan.getBasketPV = (uxid) => {
 	// loading - or maybe we have to make a new basket
 	let pGetMake = pvbasket.promise.catch(err => {
 		console.log("make a new basket");
-		let basket = Basket.make({id: bid});
+		let basket = new Basket({id: bid});
 		DataStore.setData(C.KStatus.DRAFT, basket);
 		return basket;
 	});
@@ -153,7 +153,7 @@ ActionMan.addToBasket = (basket, item) => {
 	// copy so we can safely modify elsewhere
 	// copy a ticket
 	if (Ticket.isa(item)) {
-		item = Ticket.make(item, item.eventId);
+		item = new Ticket(item);
 	} else {
 		console.log("addToBasket - not a Ticket", item);
 		item = _.cloneDeep(item);
@@ -224,7 +224,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 		// 		let dontn = cargo.hits && cargo.hits[0];
 		// 		if ( ! dontn) {
 		// make a new draft donation
-		let dontn = Donation.make({
+		let dontn = new Donation({
 			to: charity,
 			fundRaiser: fundRaiser,
 			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,

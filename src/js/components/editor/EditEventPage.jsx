@@ -55,12 +55,12 @@ const EventEditor = ({id}) => {
 	let item = pEvent.value;
 
 	const addTicketType = () => {
-		const tt = Ticket.make({}, item.id);
+		const tt = new Ticket({eventId: item.id});
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
 		DataStore.update();
 	};
 	const addExtra = () => {
-		const tt = Ticket.make({}, item.id);
+		const tt = new Ticket({eventId: item.id});
 		item.extras = (item.extras || []).concat(tt);
 		DataStore.update();
 	};

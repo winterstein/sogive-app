@@ -14,7 +14,6 @@ export default Project;
 
 Project.overall = 'overall';
 
-Project.name = (ngo) => ngo.name;
 Project.year = (ngo) => This.assIsa(ngo, Project.type) && ngo.year;
 
 Project.isOverall = (project) => Project.assIsa(project) && project.name && project.name.toLowerCase() === Project.overall;

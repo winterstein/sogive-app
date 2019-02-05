@@ -6,8 +6,16 @@ import {uid, blockProp} from 'wwutils';
 import Money from '../../base/data/Money';
 
 class Ticket extends DataClass {
+	
+	price = new Money();
 
+	constructor(base) {
+		super(base);
+		// Use a fresh ID
+		this.id = this.eventId+'.'+nonce();
+	}
 }
+
 DataClass.register(Ticket);
 const This = Ticket;
 export default Ticket;
@@ -22,21 +30,3 @@ This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;
 
 This.oxid = item => item.attendeeEmail+'@email';
-
-/**
- * TODO refactor into constructor
- */
-Ticket.make = (base, eventId) => {
-	assMatch(eventId, String);
-	const obj = {
-		eventId: eventId,
-		price: new Money(),
-		// base price will override the blank above if set
-		...base,
-		// Use a fresh ID
-		id: eventId+'.'+nonce()
-	};
-	obj['@type'] = 'Ticket';
-	This.assIsa(obj);
-	return obj;
-};

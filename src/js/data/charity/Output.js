@@ -47,14 +47,6 @@ Output.isa = (obj) => {
 Output.number = obj => This.assIsa(obj) && obj.number;
 Output.cost = obj => This.assIsa(obj) && obj.cost;
 
-Output.make = (base = {}) => {
-	assMatch(base.amount, "?String", base);
-	return {
-		'@type': This.type,
-		...base
-	};
-};
-
 /**
  * A scaled version 
  * @param donationAmount {Money}
