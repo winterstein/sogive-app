@@ -297,9 +297,9 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	const benefit = DataStore.getValue(path.concat('giftAidBenefitInReturn'));
 	const taxpayer = DataStore.getValue(path.concat('giftAidTaxpayer'));
 	const yesToGiftAid = DataStore.getValue(path.concat('giftAid'));
-			
-	const canGiftAid = !! (ownMoney && taxpayer && fromSale===false && benefit===false);
-	const cannotGiftAid = !! (ownMoney===false || taxpayer===false || fromSale || benefit);
+
+	const canGiftAid = !! (ownMoney==="yes" && taxpayer==="yes" && fromSale==="no" && benefit==="no");
+	const cannotGiftAid = !! (ownMoney==="no" || taxpayer==="no" || fromSale==="yes" || benefit==="yes");
 	
 	// If we're disabling the checkbox, untick it too
 	if (cannotGiftAid) {
