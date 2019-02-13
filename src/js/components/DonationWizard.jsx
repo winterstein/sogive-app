@@ -166,7 +166,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
-						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
+						<GiftAidSection path={path} charity={charity} stagePath={stagePath} setNavStatus />
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' sufficient={emailOkay} complete={emailOkay}>
