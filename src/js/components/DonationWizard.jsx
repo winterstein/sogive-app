@@ -356,8 +356,8 @@ const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) =>
 	const allDetails = !! (donorName && donorEmail && donorAddress && donorPostcode);
 
 	if (setNavStatus) {
-		let sufficient = allDetails || (!giftAid && !!(donorEmail));
-		setNavStatus({sufficient, complete: allDetails});
+		let sufficient = allDetails || (!giftAid);
+		setNavStatus({sufficient, complete: allDetails || (!giftAid && !!(donorEmail))});
 	}
 	// dflt={Login.getUser() && Login.getUser().name} 
 	// dflt={Login.getEmail()}
