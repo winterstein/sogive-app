@@ -151,6 +151,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	const amountOK = amount !== null && Money.value(amount) > 0;
 
+	const email = DataStore.getValue(path.concat("donorEmail"));
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
 
 
@@ -170,7 +171,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' sufficient={emailOkay} complete={emailOkay}>
-						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
+						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} setNavStatus />
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
@@ -352,9 +353,10 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 
 const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) => {
 	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
-	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
+	const allDetails = !! (donorName && donorEmail && donorAddress && donorPostcode);
+
 	if (setNavStatus) {
-		let sufficient = allDetails || ! giftAid;
+		let sufficient = allDetails || (!giftAid && !!(donorEmail));
 		setNavStatus({sufficient, complete: allDetails});
 	}
 	// dflt={Login.getUser() && Login.getUser().name} 
