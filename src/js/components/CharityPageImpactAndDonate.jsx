@@ -152,7 +152,7 @@ class CharityPageImpactAndDonate extends Component {
 const DonationOutput = ({impact, charity}) => {
 	if ( ! impact) {
 		return (<div className='donation-output'>
-			<h3>{NGO.name(charity)}</h3>
+			<h3>{NGO.getName(charity)}</h3>
 			<MDText source={NGO.shortDescription(charity)} />
 		</div>);	
 	}
@@ -163,7 +163,7 @@ const DonationOutput = ({impact, charity}) => {
 				{printer.prettyNumber(impact.number, 2)}
 			</div> : null}
 			<div className='output-units'>
-				{Output.name(impact)}
+				{Output.getName(impact)}
 			</div>
 		</center>
 	</div>);

@@ -33,7 +33,7 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 		let impi = impacts[i];
 		let inum = new Intl.NumberFormat(Settings.locale, {maximumSignificantDigits:2}).format(Output.number(impi));
 		impactDivs.push(<div className='impact' key={i}>
-			<big className='amount'>{inum}</big> <span className='impact-unit-name'>{Output.name(impi)}</span>
+			<big className='amount'>{inum}</big> <span className='impact-unit-name'>{Output.getName(impi)}</span>
 		</div>);
 	}
 	
@@ -78,7 +78,7 @@ const impactCalc = ({charity, project, output, cost, targetCount}) => {
 		return null; // Not a quantified output?
 	}
 	Money.assIsa(cpbraw);
-	const unitName = Output.name(output) || '';
+	const unitName = Output.getName(output) || '';
 
 	// for low CPBs, switch to showing "£10 can fund" rather than "helping 1 person costs £0"
 	if (Money.value(cpbraw) < 0.75 && targetCount===1 && ! cost) {

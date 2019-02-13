@@ -103,7 +103,7 @@ const CharityAbout = ({charity}) => {
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
 	return (
 		<div className='charity-about'>
-			{NGO.name(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.name(charity)}</h4> : null}
+			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
 			<CharityAboutImage charity={charity} />
 			<div className='descriptions'>
 				<div className='description-short'>

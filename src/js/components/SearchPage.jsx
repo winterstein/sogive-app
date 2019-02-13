@@ -374,7 +374,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} /> may 
-				fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.name(impact)}
+				fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}

@@ -31,7 +31,7 @@
     "react-dropzone": "^4.3.0",
     "react-markdown": "^4.0.4",
     "react-stripe-checkout": "^2.6.3",
-    "react-stripe-elements": "^2.0.1",
+    "react-stripe-elements": "^2.0.3",
     "sjtest": "^0.4.9",
     "wwutils": "^0.9.4",
     "you-again": "^0.8.4"
@@ -55,7 +55,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-	 "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-polyfill": "^6.26.0",
     "babel-cli": "^6.26.0",
     "babel-preset-stage-2": "^6.24.1"
