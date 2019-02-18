@@ -11,7 +11,7 @@ class Project extends DataClass {
 		Object.assign(this, base);
 	}
 }
-DataClass.register(Project);
+DataClass.register(Project, "Project");
 const This = Project;
 export default Project;
 

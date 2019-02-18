@@ -10,7 +10,7 @@ class Event extends DataClass {
 	}
 
 }
-DataClass.register(Event);
+DataClass.register(Event, "Event");
 export default Event;
 
 Event.date = e => e && e.date;

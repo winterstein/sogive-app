@@ -18,7 +18,7 @@ class Ticket extends DataClass {
 
 }
 
-DataClass.register(Ticket);
+DataClass.register(Ticket, "Ticket");
 const This = Ticket;
 export default Ticket;
 

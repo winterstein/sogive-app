@@ -41,7 +41,7 @@ class Output extends DataClass {
 	}
 
 }
-DataClass.register(Output);
+DataClass.register(Output, "Output");
 const This = Output;
 export default Output;
 

@@ -18,7 +18,7 @@ class Donation extends DataClass {
 		Object.assign(this, base);
 	}
 }
-DataClass.register(Donation);
+DataClass.register(Donation, "Donation");
 const This = Donation;
 export default Donation;
 
