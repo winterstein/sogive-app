@@ -14,7 +14,7 @@ import ServerIO from '../plumbing/ServerIO';
 import { getId, getType } from '../base/data/DataClass';
 import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import Ticket from '../data/charity/Ticket';
 import Money from '../base/data/Money';
 import FundRaiser from '../data/charity/FundRaiser';

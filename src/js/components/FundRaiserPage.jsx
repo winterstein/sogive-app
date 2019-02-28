@@ -14,7 +14,7 @@ import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
 import {notifyUser} from '../base/plumbing/Messaging';
 import Money from '../base/data/Money';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import Output from '../data/charity/Output';
 import C from '../C';
 import Roles from '../base/Roles';

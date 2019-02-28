@@ -9,7 +9,7 @@ import C from '../C';
 import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../base/plumbing/DataStore';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Transfer from '../base/data/Transfer';

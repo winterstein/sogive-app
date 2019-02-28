@@ -9,7 +9,7 @@ import {XId, encURI} from 'wwutils';
 import C from '../C.js';
 
 import Login from 'you-again';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 
 // Try to avoid using this for modularity!
 import DataStore from '../base/plumbing/DataStore';

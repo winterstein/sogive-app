@@ -11,7 +11,7 @@ import DataStore, {getPath} from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 import printer from '../../base/utils/printer';
 import C from '../../C';
-import NGO from '../../data/charity/NGO';
+import NGO from '../../data/charity/NGO2';
 import Project from '../../data/charity/Project';
 import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';

@@ -9,7 +9,7 @@ import DataStore from '../base/plumbing/DataStore';
 import C from '../C';
 
 import Money from '../base/data/Money';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
 import Project from '../data/charity/Project';
 
