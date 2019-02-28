@@ -18,6 +18,7 @@ class Basket extends DataClass {
 	}
 
 }
+DataClass.register(Basket, "Basket");
 const This = Basket;
 export default Basket;
 
