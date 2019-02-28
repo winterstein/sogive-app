@@ -10,7 +10,7 @@ import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import printer from '../base/utils/printer';
 import C from '../C';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';

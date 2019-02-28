@@ -9,7 +9,7 @@ import C from '../C';
 import ServerIO from './ServerIO';
 import DataStore from '../base/plumbing/DataStore';
 import {getId, getType} from '../base/data/DataClass';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Project from '../data/charity/Project';

@@ -9,7 +9,7 @@ import Login from 'you-again';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
-import NGO from '../data/charity/NGO';
+import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Misc from '../base/components/Misc';
