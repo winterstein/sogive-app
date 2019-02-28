@@ -14,6 +14,7 @@ class Citation extends DataClass {
 		Object.assign(this, base);
 	}
 }
+DataClass.register(Citation, "Citation");
 export default Citation;
 
 // HACK support old data format

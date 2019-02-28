@@ -12,6 +12,7 @@ import ActionMan from '../../plumbing/ActionMan';
 class FundRaiser extends DataClass {
 
 }
+DataClass.register(FundRaiser, "FundRaiser");
 /** `This` makes it easier to copy-paste code between similar classes */
 const This = FundRaiser;
 export default FundRaiser;
