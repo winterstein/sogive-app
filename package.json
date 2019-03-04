@@ -35,7 +35,7 @@
   },
   "scripts": {
     "compile-watch": "webpack --config webpack.config.js --progress --colors --watch",
-    "compile": "webpack -p"
+    "compile": "webpack -p --progress --colors"
   },
   "devDependencies": {
     "intl": "^1.2.5",
