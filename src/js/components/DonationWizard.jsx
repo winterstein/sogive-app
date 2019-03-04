@@ -135,11 +135,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getPath(C.KStatus.DRAFT, type, donationDraft.id);
-	if (donationDraft !== DataStore.getValue(path)) {
-		console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ", 
-			['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
-			donationDraft);
-	}
+	// if (donationDraft !== DataStore.getValue(path)) {
+	// 	console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ", 
+	// 		['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
+	// 		donationDraft);
+	// }
 	// Don't ask for gift-aid details if the charity doesn't support it
 	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];
 	// We don't need to collect address etc. if we're not collecting gift-aid
@@ -482,7 +482,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	return (<div>
 		<div className='padded-block'>
 			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' 
-				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : null} tip to cover SoGive's operating costs?`} />
+				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : ''} tip to cover SoGive's operating costs?`} />
 			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
