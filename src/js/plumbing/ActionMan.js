@@ -226,7 +226,6 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 		// 		if ( ! dontn) {
 		// make a new draft donation
 		let dontn = new Donation({
-			id: md5( from + charity ),
 			to: charity,
 			fundRaiser: fundRaiser,
 			via: FundRaiser.isa(item)? FundRaiser.oxid(item) : null,
