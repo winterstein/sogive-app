@@ -13,7 +13,12 @@ class Donation extends DataClass {
 		return super.isa(obj, C.TYPES.Donation) || obj.amount || obj.total;
 	}
 
-	constructor(base) {
+	constructor(base={}) {
+		// Default values
+		base.id = base.id || nonce();
+		base.amount = base.amount || new Money();
+		base['@type'] = base['@type'] || C.TYPES.Donation;  
+
 		super(base);
 		Object.assign(this, base);
 	}
