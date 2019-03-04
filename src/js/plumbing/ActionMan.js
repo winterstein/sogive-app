@@ -138,7 +138,7 @@ ActionMan.getBasketPV = (uxid) => {
 		DataStore.setData(C.KStatus.DRAFT, basket);
 		return basket;
 	});
-	return PV(pGetMake);
+	return new PV(pGetMake);
 };
 
 /**
