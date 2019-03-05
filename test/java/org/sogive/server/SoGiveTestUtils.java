@@ -24,6 +24,11 @@ import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
 
+/**
+ * See also WWAppTestUtils
+ * @author daniel
+ *
+ */
 public class SoGiveTestUtils {
 
 	static SoGiveServer server;
