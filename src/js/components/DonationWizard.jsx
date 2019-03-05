@@ -294,11 +294,12 @@ const getDonationAmount2 = ({path, pathAmount, item, credit}) => {
 
 const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	assert(stagePath, "GiftAidSection no stagePath");
-	const ownMoney = DataStore.getValue(path.concat('giftAidOwnMoney'));
-	const fromSale = DataStore.getValue(path.concat('giftAidFundRaisedBySale'));
-	const benefit = DataStore.getValue(path.concat('giftAidBenefitInReturn'));
-	const taxpayer = DataStore.getValue(path.concat('giftAidTaxpayer'));
-	const yesToGiftAid = DataStore.getValue(path.concat('giftAid'));
+	const donation = DataStore.getValue(path);
+	const ownMoney = donation.giftAidOwnMoney;
+	const fromSale = donation.giftAidFundRaisedBySale;
+	const benefit = donation.giftAidBenefitInReturn;
+	const taxpayer = donation.giftAidTaxpayer;
+	const yesToGiftAid = donation.giftAid;
 			
 	const canGiftAid = !! (ownMoney && taxpayer && fromSale===false && benefit===false);
 	const cannotGiftAid = !! (ownMoney===false || taxpayer===false || fromSale || benefit);
