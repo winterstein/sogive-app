@@ -262,7 +262,9 @@ const SDButton = ({path,sd}) => {
 const getDonationAmount = ({path, item, credit}) => {
 	const pathAmount = path.concat('amount');
 	let val = DataStore.getValue(pathAmount);
-	if (val && (Money.value(val) || val.raw)) {
+	// NB: the raw !== undefined test should allow user-set blank values to stay blank
+	// whilst replacing fresh blanks below.
+	if (val && (Money.value(val) || val.raw !== undefined)) {
 		return val;
 	}
 	val = getDonationAmount2({path, pathAmount, item, credit});
