@@ -47,7 +47,7 @@ test('Create a fundraiser', async() => {
     await page.waitForSelector(Register.EmptyBasket);
     await page.click(Register.EmptyBasket);
 
-    await page.waitFor(1500);
+    await page.waitFor(4500);
     await page.waitForSelector(Register.Add);
     await page.click(Register.Add);
 
@@ -137,16 +137,3 @@ test('Delete event', async() => {
     await login({page, username, password});
     await deleteEvent({page, eventName: eventData.name});
 }, 30000);
-
-// Separated out deleting events. Was meaning that screenshot taken for above is completely useless
-// test('Delete fundraiser and event', async() => {
-//     const browser = window.__BROWSER__;
-//     const page = await browser.newPage();
-    
-//     //Doesn't really matter which page it goes
-//     await Event.goto({page});
-//     await login({page, username, password}); 
-    
-//     await Fundraiser.deleteFundraiser({page, fundName:"You will be assimilated"});
-//     await Event.deleteEvent({page, eventName: "You will be assimilated"}); 
-// }, 15000);
