@@ -85,9 +85,12 @@ Donation.amount = don => This.assIsa(don) && don.amount;
 
 /**
  * @param {Donation} don 
- * @returns fundraiser ID or null
+ * @returns {?String} fundraiser ID or null
  */
-Donation.fundRaiser = don => This.assIsa(don) && don.fundRaiser;
+Donation.fundRaiser = don => {
+	This.assIsa(don);
+	return don.fundRaiser;
+};
 
 /**
  * @returns {String} the charity ID
