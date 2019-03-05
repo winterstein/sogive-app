@@ -50,8 +50,19 @@ Output.isa = (obj) => {
 	return getType(obj)==='Output' || obj.costPerBeneficiary || obj.number;
 };
 
-Output.number = obj => This.assIsa(obj) && obj.number;
-Output.cost = obj => This.assIsa(obj) && obj.cost;
+Output.number = obj => {
+	This.assIsa(obj);
+	return obj.number;
+};
+
+/**
+ * @param obj {!Output}
+ * @returns {?Money}
+ */
+Output.cost = obj => {
+	This.assIsa(obj);
+	return obj.cost;
+};
 
 /**
  * A scaled version 
