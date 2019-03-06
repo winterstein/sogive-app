@@ -458,7 +458,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 			...basket.stripe,
 			...token
 		};
-		ActionMan.crud({type: C.TYPES.Basket, id:getId(basket), action:C.CRUDACTION.publish, item:basket})
+		ActionMan.crud(C.TYPES.Basket, getId(basket), C.CRUDACTION.publish, basket)
 			.then(res => {
 				let n = Number.parseInt(DataStore.getValue(stagePath)) + 1;
 				DataStore.setValue(stagePath, n);
