@@ -1,4 +1,6 @@
-// @Flow
+/**
+ * COPY PASTA then delete bits from EditCharityPage.jsx
+ */
 import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
@@ -21,12 +23,12 @@ import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import {SuggestedDonationEditor} from './CommonControls';
 
-const EditCharityPage = () => {
+const SimpleEditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
 	}
 	// fetch data
-	let cid = DataStore.getUrlValue('charityId');
+	const cid = DataStore.getUrlValue('charityId');
 	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
 	let {value:charity} = DataStore.fetch(cpath,
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
@@ -79,7 +81,11 @@ const EditCharityPage = () => {
 				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				<div>Switch back to the <a href={'/#simpleedit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Simpler Editor</a></div>
+				<div>
+				This is the simpler editor. It does not
+				include all the possible settings. 
+				You can switch back-and-forth with the  
+				<a href={'/#edit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Advanced Editor</a></div>
 				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
@@ -98,9 +104,6 @@ const EditCharityPage = () => {
 
 				<Misc.Card title='Donations &amp; Tax'>
 					<EditField item={charity} 
-						field='noPublicDonations' label='No public donations' type='checkbox' 
-						help="Tick yes for those rare charities that don't take donations from the general public. Examples include foundations which are simply funded solely from a single source." />
-					<EditField item={charity} 
 						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					<h4>Suggested Donations</h4>
@@ -109,9 +112,7 @@ const EditCharityPage = () => {
 
 				<Misc.Card title='Overall finances and impact'>
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
-				</Misc.Card>
-				<Misc.Card title={'Project finances and impact ('+projectProjects.length+' projects)'}>
-					<ProjectsEditor charity={charity} projects={projectProjects} />
+					<p>If you want to enter data on specific projects - please switch to the Advanced Editor.</p>
 				</Misc.Card>
 				<Misc.Card title='Editorial'>
 					<EditorialEditor charity={charity} />
@@ -150,10 +151,6 @@ const EditorialEditor = ({charity}) => {
 			help="A sentence or two on why SoGive recommends (or not) this charity." 
 		/>
 
-		<EditField item={charity} type='checkbox' field='hideImpact'
-			label='Hide impact'
-			help="If the charity objects to showing impact info, this can be used to hide it on fund-raisers." />
-
 	</div>);
 };
 
@@ -162,27 +159,16 @@ const ProfileEditor = ({charity}) => {
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 		<EditField item={charity} disabled type='text' field='name' label='Official name (locked)' help='The official name, usually as registered with the Charity Commission.' />
-		<EditField item={charity} type='text' field='displayName' label='Display name'
-			help='This is the name that will be used throughout the SoGive website. It should be the name that people normally use when referring to the charity. If this is the same as the official name, feel free to copy it across (or leaving this field blank is also fine). The name used should be sufficient to differentiate it from any other charity with a similar name. If can be the same as the official name.' />
-		
-		<EditField label='Parent charity ID' item={charity} type='text'
-			field='parentCharity'
-			help='Usually blank. The ID of the parent charity, if there is one. Preferably the SoGive ID, but a registration number is OK.' />
-		<EditField label='Parent charity name' item={charity} type='text'
-			field='parentCharityName'
-			help='Usually blank. The name of the parent charity, if there is one.' />
 
 		<div className='well'>
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
 			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
 			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
 			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
 			<EditField label='USA registration number (i.e. EIN)' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
 		<EditField item={charity} type='url' field='url' label='Website' />
-		<EditField item={charity} type='url' field='wikipedia' label='Wikipedia page' />
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
@@ -204,29 +190,10 @@ const ProfileEditor = ({charity}) => {
 		Copy and paste this URL into this field. 
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 
-		<EditField userFilter='goodloop' item={charity} type='img' field='logo_white' label='White-on-transparent silhouette "poster" logo' />
-		<EditField userFilter='goodloop' item={charity} type='color' field='color' label='Brand colour' />
-		<EditField userFilter='goodloop' item={charity} type='number' field='circleCrop' label='Circle Crop Factor' max={100} min={0} />
-		{Roles.iCan('goodloop').value?
-			<div style={{backgroundColor: 'white', borderRadius: '50%', border: '1px solid grey', height: '100px', width: '100px', textAlign: 'center', overflow: 'hidden'}}>
-				<img src={charity.logo} style={{height: `${charity.circleCrop || 100}%`, width: `${charity.circleCrop || 100}%`, marginTop: `${(100 - (charity.circleCrop || 100)) / 2}%`, objectFit: 'contain', }} />
-			</div>
-			: null
-		}
 		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
-		<EditField item={charity} type='textarea' field='stories' label='Story' 
-			help='A story from this project, e.g. about a beneficiary. We havent worked out a rule about whether the story and the photo need to relate to each other.' />
-			
-		<EditField item={charity} field='smallPrint' label='Small print' help='For charities which e.g. like WaterAid have a financial structure which donors must legally be made aware of.' />
-		
-		<EditField item={charity} type='textarea' field='communicationsWithCharity' label='Communications with the charity' 
-				help='Keeping a summary of our efforts to get information from the charity, and their responses. Include dates of messages sent.' />
-
-		<EditField item={charity} type='text' field='externalAssessments' label='External assessments' 
-				help='If there are 3rd party impact assessments, e.g. GiveWell, enter the links' />		
 	</div>);
 }; // ./ProfileEditor
 
@@ -335,15 +302,6 @@ const ProjectEditor = ({charity, project}) => {
 	return (
 		<div>
 			<ProjectDataSources charity={charity} project={project} />
-			{isOverall? null : (
-				<div>
-					<EditProjectField charity={charity} project={project} type='textarea' field='description' label='Description' />
-					<EditProjectField charity={charity} project={project} type='imgUpload' field='image' label='Photo' />
-					<EditProjectField charity={charity} project={project} type='text' field='imageCaption' label='Photo caption' />
-					<EditProjectField charity={charity} project={project} type='textarea' field='stories' label='Story' 
-						help='A story from this project, e.g. about a beneficiary.' />					
-				</div>
-			)}
 			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
 				help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
 				You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
@@ -636,17 +594,6 @@ const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 		meta = (item.meta && item.meta[field]) || {};
 	}
 	return (<div className='flexbox'>
-		<div className='TODO'>
-			<Misc.Icon fa='user' title='Last editor' />
-			{meta.lastEditor}
-		</div>
-		<div>
-			<MetaEditorItem icon='external-link' title='Information source (preferably a url)'
-				meta={meta} metaPath={metaPath} 
-				itemField={field} metaField='source' type='url'
-				saveFn={saveFn}
-			/>
-		</div>
 		<div>
 			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath}
 				itemField={field} metaField='notes' type='textarea'
@@ -684,5 +631,5 @@ const Ref = ({reference}) => {
 	return <div>{printer.str(reference)}</div>;
 };
 
-export default EditCharityPage;
+export default SimpleEditCharityPage;
 

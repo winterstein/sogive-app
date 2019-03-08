@@ -19,6 +19,7 @@ import AccountPage from './AccountPage';
 import AboutPage from '../base/components/AboutPage';
 import CharityPage from './CharityPage';
 import EditCharityPage from './editor/EditCharityPage';
+import SimpleEditCharityPage from './editor/SimpleEditCharityPage';
 import EditorDashboardPage from './editor/EditorDashboardPage';
 import ExchangeRatesPage from './editor/ExchangeRatesPage';
 import FundRaiserPage from './FundRaiserPage';
@@ -81,6 +82,7 @@ const PAGES = {
 	account: AccountPage,
 	charity: CharityPage,
 	edit: EditCharityPage,
+	simpleedit: SimpleEditCharityPage,
 	exchangeRates: ExchangeRatesPage,
 	about: AboutPage,
 	test: TestPage	
