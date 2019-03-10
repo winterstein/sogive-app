@@ -82,8 +82,8 @@ const SimpleEditCharityPage = () => {
 				<div>
 					This is the simpler editor. It does not
 					include all the possible settings. 
-					You can switch back-and-forth with the  
-					<a href={'/#edit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Advanced Editor</a>
+					You can switch back-and-forth with the <a href={'/#edit?charityId='+escape(cid)} 
+						className='btn btn-default btn-sm'>Advanced Editor</a>
 				</div>
 
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
