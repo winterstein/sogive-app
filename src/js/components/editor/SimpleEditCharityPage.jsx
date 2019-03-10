@@ -79,13 +79,15 @@ const SimpleEditCharityPage = () => {
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
 				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<div>
+					This is the simpler editor. It does not
+					include all the possible settings. 
+					You can switch back-and-forth with the  
+					<a href={'/#edit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Advanced Editor</a>
+				</div>
+
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				<div>
-				This is the simpler editor. It does not
-				include all the possible settings. 
-				You can switch back-and-forth with the  
-				<a href={'/#edit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Advanced Editor</a></div>
 				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
@@ -172,14 +174,11 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
-		<div>
-			<p>The tags are used for the charity search process. A list of common tags is here: https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E</p>
-		</div>
-		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags' 
+		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags, e.g. education, poverty, environment' 
 			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
-		<EditField item={charity} type='text' field='howTags' label='How (method) tags' 
+		<EditField item={charity} type='text' field='howTags' label='How (method) tags, e.g. research, direct work, campaigning' 
 			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to "Research", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated. ' />
-		<EditField item={charity} type='text' field='whereTags' label='Where tags' 
+		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
 		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
