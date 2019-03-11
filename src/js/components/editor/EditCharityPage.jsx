@@ -418,15 +418,15 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 /**
  * Project inputs
  */
-const ProjectInputs = ({charity, project}) => {
+const ProjectInputs = ({charity, project={}, project: { inputs=[] }}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
+	let annualCosts = inputs.find(input => input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
+	let projectCosts = inputs.find(input => input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
+	let tradingCosts = inputs.find(input => input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = inputs.find(input => input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
@@ -442,12 +442,12 @@ const ProjectInputs = ({charity, project}) => {
 };
 
 
-const ProjectOutputs = ({charity, project}) => {
+const ProjectOutputs = ({charity, project={}, project: { outputs=[] }}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
 	// NB: use the array index as key 'cos the other details can be edited
-	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
+	let rinputs = outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (
 		<div className='well'>
 			<h5>Outputs</h5>
@@ -491,7 +491,7 @@ This is also a good place to point if, for example, the impacts shown are an ave
 					</tr>
 					{rinputs}
 					<tr><td colSpan={6}>
-						<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
+						<AddIO pio={'p'+pid+'_output'} list={outputs} ioPath={projectPath.concat('outputs')} />
 					</td></tr>
 				</tbody>
 			</table>		
