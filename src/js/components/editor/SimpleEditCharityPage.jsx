@@ -113,9 +113,13 @@ const SimpleEditCharityPage = () => {
 				</Misc.Card>
 
 				<Misc.Card title='Overall finances and impact'>
-					<ProjectsEditor isOverall charity={charity} projects={overalls} />
-					<p>If you want to enter data on specific projects - please switch to the Advanced Editor.</p>
+					<ProjectsEditor isOverall charity={charity} projects={overalls} />					
 				</Misc.Card>
+
+				<Misc.Card title={'Project finances and impact ('+projectProjects.length+' projects)'}>
+					<ProjectsEditor charity={charity} projects={projectProjects} />
+				</Misc.Card>
+
 				<Misc.Card title='Editorial'>
 					<EditorialEditor charity={charity} />
 				</Misc.Card>
