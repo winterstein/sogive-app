@@ -14,11 +14,14 @@ class Project extends DataClass {
 		{"@type":"Money","name":"incomeFromBeneficiaries","currency":"GBP"}
 	];
 	outputs = []; //default
-	'@type' = 'Project';
 
 	constructor(base) {
 		super(base);
 		Object.assign(this, base);
+		// ensure year is the right type
+		if (this.year) {
+			this.year = parseInt(this.year);
+		}
 	}
 }
 DataClass.register(Project, "Project");
@@ -43,23 +46,6 @@ Project.outputs = project => {
  * @return {Money[]} never null, can be empty
  */
 Project.inputs = project => project.inputs || [];
-
-Project.make = function(base) {
-	let proj = {
-		inputs: [
-			{"@type":"Money","name":"annualCosts","currency":"GBP"},
-			{"@type":"Money","name":"fundraisingCosts","currency":"GBP"},
-			{"@type":"Money","name":"tradingCosts","currency":"GBP"},
-			{"@type":"Money","name":"incomeFromBeneficiaries","currency":"GBP"}
-		],
-		outputs: []
-	};
-	proj['@type'] = Project.type;
-	proj = _.extend(proj, base);
-	// ensure year is the right type
-	proj.year = parseInt(proj.year);
-	return proj;
-};
 
 Project.getLatest = (projects) => {
 	if ( ! projects) return null;
