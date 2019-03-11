@@ -6,6 +6,16 @@ import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 
 class Project extends DataClass {
+
+	inputs = [
+		{"@type":"Money","name":"annualCosts","currency":"GBP"},
+		{"@type":"Money","name":"fundraisingCosts","currency":"GBP"},
+		{"@type":"Money","name":"tradingCosts","currency":"GBP"},
+		{"@type":"Money","name":"incomeFromBeneficiaries","currency":"GBP"}
+	];
+	outputs = []; //default
+	'@type' = 'Project';
+
 	constructor(base) {
 		super(base);
 		Object.assign(this, base);
