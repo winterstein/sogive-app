@@ -40,7 +40,7 @@ ActionMan.addCharity = () => {
 
 ActionMan.addProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity));
-	let item = DataStore.appstate.widget.AddProject.form;
+	let item = DataStore.getValue(['widget', 'AddProject', 'form']);
 	if (isOverall) item.name = Project.overall;
 	let proj = new Project(item);
 	// add to the charity	
