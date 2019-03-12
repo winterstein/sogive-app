@@ -1,55 +1,7 @@
-#!/bin/bash
+# Wrapper for wwappbase jest.sh
+# Prefered this to simply simlinking from appbase for two reasons:
+# 1) It means that scripts expecting the old call format ./jest.sh test will still work
+# 2) Users won't have to add an extra paramater like ./jest.sh adserver test to the call
+# Still get all of the benefits of DRY code, without the additional hassle
 
-########
-### Setting values to variables if there are no arguments given when running the script
-########
-JestOptionsBlob=""
-ENDPOINT='http://local.sogive.org'
-
-
-########
-### Handling Test Target arguments
-########
-case $1 in
-	test)
-	printf "\nGoing to run Jest tests on test.sogive.org\n"
-	ENDPOINT='https://test.sogive.org'
-	;;
-	production)
-	printf "\nGoing to run Jest tests on app.sogive.org\n"
-	ENDPOINT='https://app.sogive.org'
-	;;
-	local)
-	printf "\nGoing to run Jest tests on local.sogive.org\n"
-	ENDPOINT='http://local.sogive.org'
-	;;
-	*)
-	printf "\nGoing to run Jest tests on $1\n"
-	JestOptionsBlob="$JestOptionsBlob $1"
-esac
-
-########
-### Satisfy NPM contingencies
-#######
-printf "\nGetting NPM Packages to Run Jest Tests...\n"
-npm i
-cd ~/winterwell/wwappbase.js/test-base && npm i
-cd ~/winterwell/sogive-app/test
-
-
-
-#########
-### Run the tests
-#########
-RES=$(cd ~/winterwell/wwappbase.js/test-base/res/ && find -iname "*.js")
-#Jest will babel any test files itself,
-#but anything it sees as "outside of its runtime" (config files)
-#need to be babeled by us
-printf "\nBabeling config files..."
-for js_file in ${RES[*]}; do
-	babel ~/winterwell/wwappbase.js/test-base/res/$js_file --out-file ~/winterwell/wwappbase.js/test-base/babeled-res/$js_file
-done
-
-printf "\nLaunching Jest... \n"
-cd /home/$USER/winterwell/sogive-app/puppeteer-tests/ 
-npm run jest -- --config ./jest.config.json --testURL $ENDPOINT $JestOptionsBlob
+~/winterwell/wwappbase.js/test-base/jest.sh -s sogive "$@"
