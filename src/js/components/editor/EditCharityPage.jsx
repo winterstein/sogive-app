@@ -32,7 +32,7 @@ const EditCharityPage = () => {
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);	
 	if ( ! charity) {
-		return <Misc.Loading />;
+		return <Misc.Loading text={Roles.isDev() ? <span> <a href="/#editordashboard"> Click here </a> to add this as a new charity </span> : 'Loading...'} />;
 	}
 	// HACK load a fresh draft the first time.
 	if (C.KStatus.isPUBLISHED(charity.status)) {
