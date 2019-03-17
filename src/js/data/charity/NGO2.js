@@ -28,7 +28,10 @@ export default NGO;
  */
 NGO.displayName = (ngo) => ngo.displayName || ngo.name || NGO.id(ngo);
 NGO.description = (ngo) => NGO.assIsa(ngo) && ngo.description;
-NGO.image = (ngo) => NGO.assIsa(ngo) && ngo.images;
+NGO.image = (ngo) => {
+	NGO.assIsa(ngo);
+	return ngo.images;
+};
 NGO.summaryDescription = (ngo) => ngo.summaryDescription;
 NGO.logo = item => item.logo; 
 
