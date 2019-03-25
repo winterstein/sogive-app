@@ -21,6 +21,8 @@ ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
 // ServerIO.APIBASE = 'https://app.sogive.org';
 
+ServerIO.MEDIA_ENDPOINT = '/upload.json';
+
 ServerIO.checkBase();
 
 ServerIO.getServletForType = (type) => {
