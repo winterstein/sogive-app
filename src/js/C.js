@@ -30,4 +30,4 @@ Roles.defineRole(C.ROLES.company, [C.CAN.uploadCredit]);
 Roles.defineRole(C.ROLES.admin, C.CAN.values);
 Roles.defineRole(C.ROLES.goodlooper, [C.CAN.edit, C.CAN.publish, C.CAN.goodloop]);
 
-C.emailRegex = /(.+?@[\w-]+?\.[\w-]+?)/;
+C.emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
