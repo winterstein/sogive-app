@@ -87,7 +87,23 @@ const EventEditor = ({id}) => {
 		<Misc.Card title='Event Details'>			
 			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
 
-			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' />
+			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' 
+				validator={ (v, rawValue) => {
+					if ( ! v) {
+						// raw but no date suggests the server removed it
+						if (rawValue) return 'Please use the date format yyyy-mm-dd';
+						return null;
+					}
+					try {
+						let sdate = "" + new Date(v);
+						if (sdate === 'Invalid Date' || !v.match(/[0-9]{4}(-|\/)[0-9]{2}(-|\/)[0-9]{2}/)) {
+							return 'Please use the date format yyyy-mm-dd';
+						}
+					} catch (er) {
+						return 'Please use the date format yyyy-mm-dd';
+					}
+				} }
+			/>
 			
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
