@@ -198,7 +198,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 	const val = getDonationAmount({path,item,credit});
 
 	let eid = FundRaiser.eventId(item);
-	let event = eid? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid) : null;	
+	let event = eid && DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);	
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	suggestedDonations.filter(sd => sd.repeat).forEach(sd => {
@@ -209,8 +209,10 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 	if (event && Donation.isRepeating(dntn) && dntn.repeatStopsAfterEvent===undefined) {
 		dntn.repeatStopsAfterEvent = true;
 	}
-
-	let showRepeatControls = dntn.repeat || repeatDonations.length > 1;
+	
+	// Disallow repeat donations if the event has already passed
+	const eventExpired = event && event.date && new Date() > new Date(event.date);
+	let showRepeatControls = !eventExpired || dntn.repeat || repeatDonations.length > 1;
 	if (paidElsewhere) {
 		showRepeatControls = dntn.repeat && true; // off unless somehow set
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
