@@ -76,7 +76,7 @@ function send_alert {
 
 ATTACHMENTS=()
 
-NEW_FAIL_LOGS=$(find test-results/Logs\(failure\)/ -type f -iname "*.txt" -amin +0 -amin -2)
+NEW_FAIL_LOGS=$(find ~/winterwell/wwappbase.js/test-base/test-results/Logs/ -type f -iname "*.txt" -amin +0 -amin -2)
 
 if [[ $NEW_FAIL_LOGS = '' ]]; then
         printf "\nNo Failures Detected\n"
