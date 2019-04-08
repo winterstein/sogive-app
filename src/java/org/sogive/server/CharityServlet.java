@@ -14,6 +14,7 @@ import com.winterwell.es.ESPath;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
+import com.winterwell.web.ajax.AjaxMsg;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
@@ -88,7 +89,12 @@ public class CharityServlet extends CrudServlet<NGO> {
 		// Make sure there's no ID collision!
 		NGO existsPublished = getCharity(id, KStatus.PUBLISHED);
 		NGO existsDraft = getCharity(id, KStatus.DRAFT);
-		assert existsPublished == null && existsDraft == null : state;
+		if (existsPublished !=null || existsDraft != null) {
+			state.addMessage(AjaxMsg.warningAboutInput("Cannot make new. "+id+" already exists. Using existing entry."));
+			// NB: return draft by default, as doNew would normally make a draft
+			JThing jt = new JThing(Utils.or(existsDraft, existsPublished));
+			return jt;
+		}		
 		
 		// The given ID is OK: put it on the map and construct the NGO
 		rawMap.put("@id", id);
