@@ -90,7 +90,12 @@ public class CharityServlet extends CrudServlet<NGO> {
 		NGO existsPublished = getCharity(id, KStatus.PUBLISHED);
 		NGO existsDraft = getCharity(id, KStatus.DRAFT);
 		if (existsPublished !=null || existsDraft != null) {
-			state.addMessage(AjaxMsg.warningAboutInput("Cannot make new. "+id+" already exists. Using existing entry."));
+			state.addMessage(AjaxMsg.warningAboutInput(
+					"Cannot make new. "+id+" "
+					+(existsPublished==null? "(draft) " : "")
+					+"already exists. Please use the existing entry."
+					+(existsPublished==null? " Being only a draft, the existing entry does not show in listings. " : "")
+			));
 			// NB: return draft by default, as doNew would normally make a draft
 			JThing jt = new JThing(Utils.or(existsDraft, existsPublished));
 			return jt;
