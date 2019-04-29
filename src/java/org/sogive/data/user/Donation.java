@@ -200,7 +200,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * The user's contribution
 	 */
-	private final Money amount;
+	private Money amount;
 	
 	/**
 	 * @deprecated HACK: amount plus tip!
