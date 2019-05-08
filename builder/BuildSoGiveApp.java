@@ -23,6 +23,7 @@ public class BuildSoGiveApp extends BuildWinterwellProject {
 	public List<BuildTask> getDependencies() {
 		List<BuildTask> deps = new ArrayList(super.getDependencies());
 		deps.add(new MavenDependencyTask("com.stripe:stripe-java:6.9.0"));
+		deps.add(new MavenDependencyTask("org.projectlombok:lombok:1.18.8"));
 		deps.add(new WWDependencyTask("calstat", "com.winterwell.calstat.BuildCalstat"));		
 		return deps;
 	}
