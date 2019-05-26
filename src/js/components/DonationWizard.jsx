@@ -38,12 +38,13 @@ const DonateButton = ({item, paidElsewhere}) => {
 	// no donations to draft fundraisers or charities
 	if (false && (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED)) {
 		return (
-			<button className='btn btn-lg btn-primary disabled' title='This is a draft preview page - publish to actually donate'>Donate</button>
+			<button className='btn btn-lg btn-primary disabled' type='button'
+				title='This is a draft preview page - publish to actually donate'>Donate</button>
 		);	
 	}
 	
 	return (
-		<button className='btn btn-lg btn-primary' 
+		<button className='btn btn-lg btn-primary' type='button'
 			onClick={() => {
 				// DataStore.setValue([...donationPath, 'fundRaiser'], getId(item));
 				// poke the paidElsewhere flag
@@ -147,8 +148,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// You don't send messages to charities...
 	const showMessageSection = FundRaiser.isa(item);
 
+	// get (set) the amount
+	let credit = Transfer.getCredit();	
+	getDonationAmount({path,item,credit});
 	const amount = DataStore.getValue(path.concat("amount"));
-
+	// NB: this should always be true, cos getDonationAmount sets it to a default
 	const amountOK = amount !== null && Money.value(amount) > 0;
 
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
@@ -162,10 +166,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK} >
-						<AmountSection path={path} fromEditor={fromEditor} item={item} paidElsewhere={paidElsewhere} />
+						<AmountSection path={path} fromEditor={fromEditor} item={item} 
+							paidElsewhere={paidElsewhere} />
 					</WizardStage>
 				
-					{showGiftAidSection? <WizardStage title='Gift Aid' setNavStatus>
+					{showGiftAidSection? <WizardStage title='Gift Aid'>
 						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
 					</WizardStage> : null}
 				
@@ -213,6 +218,10 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 	// Disallow repeat donations if the event has already passed
 	const eventExpired = event && event.date && new Date() > new Date(event.date);
 	let showRepeatControls = !eventExpired || dntn.repeat || repeatDonations.length > 1;
+	// default to one-off, no repeats
+	if (showRepeatControls && dntn.repeat === undefined) {
+		dntn.repeat = 'OFF';
+	}
 	if (paidElsewhere) {
 		showRepeatControls = dntn.repeat && true; // off unless somehow set
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
@@ -228,7 +237,9 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			{showRepeatControls? 
-				<PropControl type='radio' path={path} prop='repeat' options={repeatDonations} labels={Donation.strRepeat} inline /> : null}
+				<PropControl type='radio' path={path} prop='repeat' 
+					options={repeatDonations} labels={Donation.strRepeat} inline />
+				: null}
 			{dntn.repeat === 'WEEK'?
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
 				: null}
@@ -259,6 +270,9 @@ const SDButton = ({path,sd}) => {
 };
 
 /**
+ * This can set the DOnation.amount to a default value as a side-effect
+ * @param item {Donation}
+ * @param path {String[]} path to Donation item
  * @returns Money
  */
 const getDonationAmount = ({path, item, credit}) => {
@@ -325,8 +339,11 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 		);
 	}
 
-	let suff = canGiftAid || cannotGiftAid;
-	if (setNavStatus) setNavStatus({sufficient: suff, complete: cannotGiftAid || (canGiftAid && yesToGiftAid)});
+	if (setNavStatus) {
+		const sufficient = canGiftAid || cannotGiftAid;
+		const complete = cannotGiftAid || (canGiftAid && yesToGiftAid);
+		setNavStatus({sufficient, complete});
+	}
 
 	return (
 		<div className='section donation-amount'>
