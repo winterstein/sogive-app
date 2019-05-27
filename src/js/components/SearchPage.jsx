@@ -47,7 +47,7 @@ export default class SearchPage extends React.Component {
 		// query comes from the url
 		let q = DataStore.getUrlValue('q');
 		let from = DataStore.getUrlValue('from') || 0;
-		let status = DataStore.getUrlValue('status') || '';
+		const status = DataStore.getUrlValue('status') || '';
 		if (q==='ERROR') { // HACK
 			throw new Error("Argh!");
 		}
@@ -153,17 +153,8 @@ class SearchForm extends React.Component {
 		this.setState({q: ''});
 	}
 
-	/*
-	const showAllButton = (
-		<div className='pull-right'>
-			<Button onClick={this.showAll.bind(this)} className="btn-showall" bsSize='sm'>
-				Show All
-			</Button>
-		</div>
-	);
-	*/
-
 	render() {
+		let status = this.props.status;
 		return (
 			<div className='SearchForm'><Form onSubmit={(event) => { this.onSubmit(event); }} >
 				<FormGroup className='' bsSize='lg' controlId="formq">
@@ -182,8 +173,8 @@ class SearchForm extends React.Component {
 							<Glyphicon glyph="search" />
 						</InputGroup.Addon>
 					</InputGroup>
+					{status? <div>Include listings with status: {status}</div> : null}
 				</FormGroup>
-				{/*showAllButton*/}
 			</Form></div>
 		);
 	} // ./render
