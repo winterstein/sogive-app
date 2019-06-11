@@ -85,7 +85,7 @@ public class RepeatDonation extends AThing {
 	public Donation newDraftDonation() {		
 		Donation don0 = getOriginalDonation();
 		Utils.check4null(from, to, don0, this);
-		org.sogive.data.charity.Money uc = don0.getRawAmount();
+		Money uc = don0.getRawAmount();
 		Donation don = new Donation(from, to, uc);
 		// NB: we cant just copy DOnation as that includes various processing flags :(
 		don.setA(don0.getA());

@@ -2,6 +2,7 @@ package org.sogive.data.charity;
 
 import java.util.Map;
 
+import com.goodloop.data.Money;
 import com.winterwell.utils.StrUtils;
 
 /**

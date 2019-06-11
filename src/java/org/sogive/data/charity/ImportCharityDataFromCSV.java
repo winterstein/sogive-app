@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 
 import org.sogive.server.CharityServlet;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESConfig;

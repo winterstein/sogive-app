@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripeAuth;

@@ -1,7 +1,7 @@
 package org.sogive.server.payment;
 
-import org.sogive.data.charity.Money;
 
+import com.goodloop.data.Money;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.time.TUnit;

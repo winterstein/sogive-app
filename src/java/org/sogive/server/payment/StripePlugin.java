@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.user.Person;
 
 import com.stripe.Stripe;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.user.Person;
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;

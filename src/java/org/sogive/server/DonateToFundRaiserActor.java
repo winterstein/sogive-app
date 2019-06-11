@@ -3,7 +3,7 @@ package org.sogive.server;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;

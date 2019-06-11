@@ -6,6 +6,7 @@ package org.sogive.data.charity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.goodloop.data.Money;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.log.Log;

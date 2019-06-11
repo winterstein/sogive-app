@@ -3,7 +3,7 @@ package org.sogive.data.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;

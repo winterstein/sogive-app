@@ -2,7 +2,7 @@ package org.sogive.data.commercial;
 
 import java.util.List;
 
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 

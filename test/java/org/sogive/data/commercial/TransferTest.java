@@ -1,7 +1,7 @@
 package org.sogive.data.commercial;
 
 import org.junit.Test;
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 import org.sogive.server.SoGiveServer;
 
 import com.goodloop.data.KCurrency;

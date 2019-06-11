@@ -1,6 +1,6 @@
 package org.sogive.data.commercial;
 
-import org.sogive.data.charity.Money;
+import com.goodloop.data.Money;
 
 import com.winterwell.data.AThing;
 import com.winterwell.web.data.XId;

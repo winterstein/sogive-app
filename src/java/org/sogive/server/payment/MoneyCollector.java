@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.DBSoGive;
-import org.sogive.data.charity.Money;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Person;
 
+import com.goodloop.data.Money;
 import com.goodloop.data.PaymentException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
