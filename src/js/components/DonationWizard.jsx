@@ -253,7 +253,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 }; // ./AmountSection
 
 const SDButton = ({path,sd}) => {
-	if ( ! sd.amount) return; // defend against bad data
+	if ( ! sd.amount) return null; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
 	return (
 		<button className='btn btn-default' type="button" onClick={e => {
