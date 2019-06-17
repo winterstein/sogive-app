@@ -92,12 +92,13 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		.setLenientReader(true)
 		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
-		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))
+		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))		
 //		.registerTypeHierarchyAdapter(AThing.class, new AThingAdapter())		
 		.serializeSpecialFloatingPointValues()
 		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 //		.setClassProperty(null) // NB: "@type" would conflict, so use the @class default
 		.setClassMapping("org.sogive.data.MonetaryAmount", Money.class) // update old data
+		.setClassMapping("org.sogive.data.charity.Money", Money.class)
 		.setLoopPolicy(KLoopPolicy.QUIET_NULL)
 		.create();
 		Dep.set(Gson.class, gson);
