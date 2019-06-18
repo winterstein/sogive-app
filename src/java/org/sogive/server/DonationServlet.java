@@ -227,13 +227,13 @@ public class DonationServlet extends CrudServlet {
 	 * @param state Can be null
 	 * @param donation
 	 * @param user Cannot be null (use email if not logged in)
-	 * @param email
+	 * @param email Can be null for e.g. Good-Loop "donations" But must be set for "proper" SoGive donations 
 	 * @return unposted message, to allow it to be posted after the donation is published
 	 */
 	public static List<MsgToActor> doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) 
 	
 	{
-		Utils.check4null(donation, user, email);
+		Utils.check4null(donation, user);
 		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
 		// make sure it has a date and some donor info
@@ -262,7 +262,8 @@ public class DonationServlet extends CrudServlet {
 		}
 		if (donation.isPaidElsewhere()) {
 			Log.d(LOGTAG, "paid elsewhere "+donation);
-		} else {			
+		} else {					
+			Utils.check4null(donation, email);
 			XId to = NGO.xidFromId(donation.getTo());
 			MoneyCollector mc = new MoneyCollector(donation, user, email, to, state);
 			mc.run(); // what if this fails??
@@ -282,11 +283,13 @@ public class DonationServlet extends CrudServlet {
 		}
 		
 		// Send an email
-		try {
-			doUploadTransfers2_email(donation, email);
-		} catch(Throwable ex) {
-			Log.e(LOGTAG, ex);
-			// don't choke though, carry on
+		if (email != null) {
+			try {
+				doUploadTransfers2_email(donation, email);
+			} catch(Throwable ex) {
+				Log.e(LOGTAG, ex);
+				// don't choke though, carry on
+			}
 		}
 		return msgs;
 	}
