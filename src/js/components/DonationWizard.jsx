@@ -156,7 +156,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const amountOK = amount !== null && Money.value(amount) > 0;
 
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
-
+	console.warn(emailOkay);
 
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
@@ -372,13 +372,9 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	);
 };
 
-const DetailsSection = ({path, stagePath, setNavStatus, charity, fromEditor}) => {
-	const {giftAid, donorName, donorEmail, donorAddress, donorPostcode} = DataStore.getValue(path);
-	const allDetails = donorName && donorEmail && donorAddress && donorPostcode;
-	if (setNavStatus) {
-		let sufficient = allDetails || ! giftAid;
-		setNavStatus({sufficient, complete: allDetails});
-	}
+const DetailsSection = ({path, charity, fromEditor}) => {
+	const {giftAid} = DataStore.getValue(path);
+
 	// dflt={Login.getUser() && Login.getUser().name} 
 	// dflt={Login.getEmail()}
 	let reqrd = giftAid;
