@@ -51,11 +51,17 @@ const CharityPage = () => {
 				<Tab eventKey={1} title='About'>
 					<CharityAbout charity={charity} />
 				</Tab>
-				<Tab eventKey={2} title='Extra Info'>
-					<CharityExtra charity={charity} />
-					<LogOffSiteDonation item={charity} />
-					<MakeDirectFundRaiser charity={charity} />
-				</Tab>
+				{
+					(charity.projects && charity.projects.length)
+					|| Login.isLoggedIn()
+					&& (
+						<Tab eventKey={2} title='Extra Info'>
+							<CharityExtra charity={charity} />
+							<LogOffSiteDonation item={charity} />
+							<MakeDirectFundRaiser charity={charity} />
+						</Tab>
+					)
+				}
 			</Tabs>
 		</div>
 	);
@@ -139,16 +145,18 @@ const CharityAboutImage = ({charity}) => {
  */
 const CharityExtra = ({charity}) => {
 	if (!charity || !charity.projects || !charity.projects.length) return null;
-	const projectsByYear = {};
-	(charity.projects).forEach(project => {
-		const projectsForYear = projectsByYear[project.year] || [];
-		if (Project.isOverall(project)) {
-			projectsForYear.unshift(project);
-		} else {
-			projectsForYear.push(project);
-		}
-		projectsByYear[project.year] = projectsForYear;
-	});
+
+	// Create an object of from: {"2015":[projectData1, projectData2], "2016":[projectData3]}
+	const projectsByYear = charity.projects.reduce((out, project) => {
+		// Append to existing year array if one was create on previous loop
+		if( !out[project.year] ) {
+			out[project.year] = []; 
+		} 
+		// Summary of year's projects will always appear first in array
+		out[project.year] = Project.isOverall(project) ? [project, ...out[project.year]] : [...out[project.year], project];
+
+		return out;
+	}, {});
 
 	// const yearDivs = Object.keys(projectsByYear).sort().reverse().map(year => (
 	// 	<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
