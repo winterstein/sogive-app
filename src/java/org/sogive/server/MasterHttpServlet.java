@@ -67,6 +67,10 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new DonationServlet();
 				s.process(request);
 				return;
+			case "giftcard":
+				s = new GiftCardServlet();
+				s.process(request);
+				return;
 			case "repeatdonation":
 				s = new RepeatdonationServlet();
 				s.process(request);

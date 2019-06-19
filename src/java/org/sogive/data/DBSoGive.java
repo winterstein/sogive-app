@@ -14,6 +14,7 @@ import org.sogive.data.commercial.Ticket;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.loader.ImportOSCRData;
 import org.sogive.data.user.Donation;
+import org.sogive.data.user.GiftCard;
 import org.sogive.data.user.Person;
 import org.sogive.data.user.RepeatDonation;
 import org.sogive.data.user.Team;
@@ -114,7 +115,13 @@ public class DBSoGive {
 					Ticket.class, 
 							new ESType()
 								.property("eventId", ESType.keyword)
-					
+					,
+					GiftCard.class,
+						new ESType()
+							.property("code", ESType.keyword)
+							.property("redeemed", new ESType().bool())
+							.property("redeemedBy", new ESType().text())
+							.property("amount", money)
 				));
 		
 		// Dummy TBD charity
