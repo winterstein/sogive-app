@@ -26,6 +26,9 @@ public class GiftCard extends AThing {
 	// Which user account claimed the card?
 	public String redeemedBy;
 	
+	// Who created this giftcard?
+	public String generatedBy;
+	
 	// How many digits long should codes be?
 	static final int codeLength = 16;
 	
@@ -33,12 +36,13 @@ public class GiftCard extends AThing {
 	static final String alphaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	static SecureRandom random = new SecureRandom();
 	
-	public GiftCard(Double amount) {
+	public GiftCard(Double amount, String generatedBy) {
 		super();
 		
 		code = generateNewCode();
 		redeemed = false;
 		this.amount = new Money(KCurrency.GBP, amount);
+		this.generatedBy = generatedBy;
 	}
 	
 	

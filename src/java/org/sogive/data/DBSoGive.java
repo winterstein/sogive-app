@@ -122,6 +122,7 @@ public class DBSoGive {
 							.property("redeemed", new ESType().bool())
 							.property("redeemedBy", new ESType().text())
 							.property("amount", money)
+							.property("generatedBy", new ESType().text())
 				));
 		
 		// Dummy TBD charity
