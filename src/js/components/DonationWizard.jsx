@@ -256,13 +256,13 @@ const SDButton = ({path,sd}) => {
 	if ( ! sd.amount) return null; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
 	return (
-		<button className='btn btn-default' type="button" onClick={e => {
+		<button className='btn btn-default suggested-donation' type="button" onClick={e => {
 			let amnt = Object.assign({}, sd.amount);
 			delete amnt['@class'];
 			DataStore.setValue(path.concat('amount'), amnt);
 			DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
 		}}>
-			{sd.name}
+			{sd.name? <span>{sd.name} </span> : null}
 			<Misc.Money amount={sd.amount} />
 			{sd.repeat? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
 			{sd.text? <div className='btn-smallprint'>{sd.text}</div> : null}
