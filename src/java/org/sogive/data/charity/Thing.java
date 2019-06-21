@@ -22,6 +22,8 @@ import com.winterwell.utils.time.Time;
  * https://schema.org/Thing
  * @author daniel
  *
+ * @deprecated This turns out to be an awkward approach. AThing is more Java, or one could use data-classes
+ * as we do in js
  */
 public class Thing<SubThing extends Thing> extends HashMap<String,Object> 
 implements IInit 
@@ -177,14 +179,30 @@ implements IInit
 			if (thing instanceof Thing) {
 				((Thing) thing).putAll(map);
 			} else {
-				Map<String, Object> thingmap = Containers.objectAsMap(thing);
-				map.remove("@type");
-				thingmap.putAll(map);
+				putIntoObject(thing, map);
 			}
 			thing.init();
 			return thing;
 		} catch(Exception ex) {
 			throw Utils.runtime(ex);
+		}
+	}
+
+	/**
+	 * NB: allows for bad / extra data, which is skipped over
+	 * @param thing
+	 * @param map
+	 */
+	private static void putIntoObject(Object thing, Map<String,Object> map) {		
+		for(Map.Entry<String,Object> e : map.entrySet()) {
+			String key=null; Object value=null;
+			try {
+				key = e.getKey();
+				value = e.getValue();
+				ReflectionUtils.setPrivateField(thing, key, value);
+			} catch (Throwable ex) {
+				Log.w(thing.getClass().getSimpleName(), "Put "+key+" = "+value+": "+ex);
+			}
 		}
 	}
 
