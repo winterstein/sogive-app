@@ -17,7 +17,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 		bashScript = "../wwappbase.js/./project-publisher.sh sogive";
 //		bashScript = "../wwappbase.js/./test-script.sh sogive";
 		typeOfPublish = KPubType.test;
-		notests = true;
+//		notests = true;
 	}
 	
 	@Override
