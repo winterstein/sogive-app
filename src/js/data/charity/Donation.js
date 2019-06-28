@@ -5,7 +5,9 @@ import Money from '../../base/data/Money';
 import DataStore from '../../base/plumbing/DataStore';
 import {XId, blockProp} from 'wwutils';
 
-
+/**
+ * Note: SuggestedDonation can be viewed as a small subset of this {amount, repeat}
+ */
 class Donation extends DataClass {
 	/** crude duck type: needs an amount or total */
 	static isa(obj) {

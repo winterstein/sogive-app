@@ -149,8 +149,13 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const showMessageSection = FundRaiser.isa(item);
 
 	// get (set) the amount
+	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
 	let credit = Transfer.getCredit();	
-	getDonationAmount({path,item,credit});
+	let eid = FundRaiser.eventId(item);
+	let event = eid && DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);		
+	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
+	const proposedSuggestedDonation = getDonationAmount({path,item,credit, suggestedDonations});
+	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
 	// NB: this should always be true, cos getDonationAmount sets it to a default
 	const amountOK = amount !== null && Money.value(amount) > 0;
@@ -167,7 +172,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 				<Wizard stagePath={stagePath} >
 					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK} >
 						<AmountSection path={path} fromEditor={fromEditor} item={item} 
-							paidElsewhere={paidElsewhere} />
+							paidElsewhere={paidElsewhere} credit={credit} 
+							proposedSuggestedDonation={proposedSuggestedDonation} 
+							event={event} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid'>
@@ -197,14 +204,17 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 }; // ./CharityPageImpactAndDonate
 
 
-const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
-	let credit = Transfer.getCredit();	
+/**
+ * 
+ * @param item {NGO|FundRaiser}
+ * @param credit {?Money}
+ * @param proposedDonationValue {!SuggestedDonation} Assumed setup already
+ */
+const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedSuggestedDonation, suggestedDonations, event}) => {
 	const dntn = DataStore.getValue(path) || {};
-	const val = getDonationAmount({path,item,credit});
+	// How much £?
+	const val = proposedSuggestedDonation.amount;
 
-	let eid = FundRaiser.eventId(item);
-	let event = eid && DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);	
-	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	suggestedDonations.filter(sd => sd.repeat).forEach(sd => {
 		if (repeatDonations.indexOf(sd.repeat)===-1) repeatDonations.push(sd.repeat); 
@@ -218,9 +228,9 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere}) => {
 	// Disallow repeat donations if the event has already passed
 	const eventExpired = event && event.date && new Date() > new Date(event.date);
 	let showRepeatControls = !eventExpired || dntn.repeat || repeatDonations.length > 1;
-	// default to one-off, no repeats
+	// Suggestde repeat? If not, default to one-off, no repeats
 	if (showRepeatControls && dntn.repeat === undefined) {
-		dntn.repeat = 'OFF';
+		dntn.repeat = proposedSuggestedDonation.repeat || 'OFF';
 	}
 	if (paidElsewhere) {
 		showRepeatControls = dntn.repeat && true; // off unless somehow set
@@ -272,39 +282,51 @@ const SDButton = ({path,sd}) => {
 /**
  * This can set the DOnation.amount to a default value as a side-effect
  * @param item {Donation}
+ * @param credit {?Money}
+ * @param suggestedDonations {?SuggestedDonation[]}
  * @param path {String[]} path to Donation item
- * @returns Money
+ * @returns {SuggestedDonation}
  */
-const getDonationAmount = ({path, item, credit}) => {
-	const pathAmount = path.concat('amount');
-	let val = DataStore.getValue(pathAmount);
+const getDonationAmount = ({path, item, credit, suggestedDonations}) => {
+	const dntn = DataStore.getValue(path) || DataStore.setValue(path, {});
+	let val = Donation.amount(dntn);
 	// NB: the raw !== undefined test should allow user-set blank values to stay blank
 	// whilst replacing fresh blanks below.
 	if (val && (Money.value(val) || val.raw !== undefined)) {
-		return val;
+		return {amount:val, repeat:dntn.repeat};
 	}
-	val = getDonationAmount2({path, pathAmount, item, credit});
-	DataStore.setValue(pathAmount, val, false);
-	return val;
+	const sd = getDonationAmount2({path, item, credit, suggestedDonations});
+	// side-effect: set
+	dntn.amount = sd.amount; 
+	dntn.repeat = sd.repeat;
+	return sd;
 };
 
-const getDonationAmount2 = ({path, pathAmount, item, credit}) => {
+/**
+ * 
+ * @returns {SuggestedDonation}
+ */
+const getDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 	// Set to amount of user's credit if present
-	if (credit && credit.value) {		
-		return credit;
+	if (credit && credit.value) {
+		return {amount:credit, repeat:'OFF'};
 	}
 	// fundraiser target?
 	let target = item.target;	
 	// divide by weekly??
+	
+	// Set to suggested donation?
+	if (suggestedDonations) {
+		const sd = suggestedDonations[0];
+		return sd;
+	}
+
 	// HACK: grab the amount from the impact widget of CharityPageImpactAndDonate?
 	const dontn = DataStore.getValue(path);
 	let cid = Donation.to(dontn);
 	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
-	// stored donation is zero or default? 
-	// Set to amount of user's credit if present
-	const valValue = Money.value(val);
-	if (valValue) return val;
-	return val;
+	let amount = Money.isa(val)? val : new Money({value:val});
+	return {amount, repeat:'MONTH'};
 };
 
 
