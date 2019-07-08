@@ -59,7 +59,7 @@ const ManageDonationsPage = () => {
 	// resolve from list version to latest (so edits can be seen)
 	dons = dons.map(
 		// prefer draft, so you can see edits in progress
-		don => DataStore.getData(C.KStatus.DRAFT, getType(don), getId(don)) || DataStore.getData(getStatus(don), getType(don), getId(don))
+		don => DataStore.getData(C.KStatus.DRAFT, getType(don), getId(don)) || DataStore.getData(getStatus(don), getType(don), getId(don)) || don
 	);
 
 	const columns = [
@@ -146,7 +146,6 @@ const ManageDonationsPage = () => {
 	return (
 		<div className=''>
 			<h2>Manage Donations</h2>
-
 			<SimpleTable data={dons} columns={columns} csv hasFilter addTotalRow hideEmpty />			
 		</div>
 	);
