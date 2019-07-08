@@ -31,7 +31,7 @@ const ManageDonationsPage = () => {
 		return <div>You need the `manageDonations` capability.</div>;
 	}
 
-	const pvDonations = ActionMan.list = ({
+	const pvDonations = ActionMan.list({
 		type: C.TYPES.Donation, status: C.KStatus.ALL_BAR_TRASH, 
 		q:'ALL'
 	});
