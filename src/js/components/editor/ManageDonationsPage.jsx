@@ -31,24 +31,30 @@ const ManageDonationsPage = () => {
 		return <div>You need the `manageDonations` capability.</div>;
 	}
 
-	const pvDonations = DataStore.fetch(['list', 'Donations', 'all'], () => {
-		// minor: refactor into ServerIO.getDonations
-		return ServerIO.load('/donation/_list.json?q=ALL', {data: {status: 'ALL_BAR_TRASH'}} )
-			.then(res => {
-				let dons = res.cargo.hits;
-				dons.forEach(don => {
-					if ( ! getId(don)) {
-						console.warn("ManageDonationsPage skip no id", don);
-						return;
-					}
-					// patch old patchy data
-					if ( ! getType(don)) don['@type'] = C.TYPES.Donation;
-					if ( ! getStatus(don)) don.status = C.KStatus.PUBLISHED;
-					DataStore.setData(null, don, false);
-				});
-				return res;
-			});
+	const pvDonations = ActionMan.list({
+		type: C.TYPES.Donation, status: C.KStatus.ALL_BAR_TRASH, 
+		q:'ALL'
 	});
+
+	// DataStore.fetch(['list', 'Donations', 'all'], () => {
+		// minor: refactor into ServerIO.getDonations
+		// return ServerIO.load('/donation/_list.json?q=ALL', {data: {status: 'ALL_BAR_TRASH'}} )
+		// 	.then(res => {
+		// 		let dons = res.cargo.hits;
+		// 		dons.forEach(don => {
+		// 			if ( ! getId(don)) {
+		// 				console.warn("ManageDonationsPage skip no id", don);
+		// 				return;
+		// 			}
+		// 			// patch old patchy data
+		// 			if ( ! getType(don)) don['@type'] = C.TYPES.Donation;
+		// 			if ( ! getStatus(don)) don.status = C.KStatus.PUBLISHED;
+		// 			DataStore.setData(null, don, false);
+		// 		});
+		// 		return res;
+		// 	});
+	// });
+
 	if ( ! pvDonations.resolved) {
 		return <Misc.Loading />;
 	}
@@ -59,7 +65,7 @@ const ManageDonationsPage = () => {
 	// resolve from list version to latest (so edits can be seen)
 	dons = dons.map(
 		// prefer draft, so you can see edits in progress
-		don => DataStore.getData(C.KStatus.DRAFT, getType(don), getId(don)) || DataStore.getData(getStatus(don), getType(don), getId(don)) || don
+		don => DataStore.getData(C.KStatus.DRAFT, getType(don), getId(don)) || DataStore.getData(getStatus(don), getType(don), getId(don))
 	);
 
 	const columns = [
