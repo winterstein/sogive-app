@@ -24,5 +24,10 @@
 	<classpathentry kind="lib" path="dependencies/stripe-java.jar"/>
 	<classpathentry kind="lib" path="/middleware/mockito/mockito-all.jar"/>
 	<classpathentry kind="lib" path="/middleware/lombok/lombok.jar"/>
+	<classpathentry kind="src" path="target/generated-sources/annotations">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
