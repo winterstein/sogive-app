@@ -174,6 +174,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 						<AmountSection path={path} fromEditor={fromEditor} item={item} 
 							paidElsewhere={paidElsewhere} credit={credit} 
 							proposedSuggestedDonation={proposedSuggestedDonation} 
+							suggestedDonations={suggestedDonations}
 							event={event} />
 					</WizardStage>
 				
@@ -316,7 +317,7 @@ const getDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 	// divide by weekly??
 	
 	// Set to suggested donation?
-	if (suggestedDonations) {
+	if (suggestedDonations && suggestedDonations.length) {
 		const sd = suggestedDonations[0];
 		return sd;
 	}
