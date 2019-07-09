@@ -130,7 +130,7 @@ public class MasterHttpServlet extends HttpServlet {
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
 		} catch(Throwable ex) {
-			HttpServletWrapper.doCatch(ex, resp, null);
+			HttpServletWrapper.doCatch(ex, resp);
 		} finally {
 			Thread.currentThread().setName("...done servlet: "+servletName);
 			WebRequest.close(req, resp);
