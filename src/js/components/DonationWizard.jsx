@@ -216,10 +216,13 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
 
+	// What repeat options?
 	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
-	suggestedDonations.filter(sd => sd.repeat).forEach(sd => {
-		if (repeatDonations.indexOf(sd.repeat)===-1) repeatDonations.push(sd.repeat); 
-	});
+	repeatDonations.push(proposedSuggestedDonation.repeat);
+	suggestedDonations.forEach(sd => repeatDonations.push(sd.repeat));	
+	repeatDonations.push(dntn.repeat); // if something is set, then include it
+	// no dupes, no nulls
+	repeatDonations = _.uniq(repeatDonations.filter(rd => rd));
 
 	// HACK default to stopping with the event
 	if (event && Donation.isRepeating(dntn) && dntn.repeatStopsAfterEvent===undefined) {
