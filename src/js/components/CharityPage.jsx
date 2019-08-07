@@ -144,7 +144,7 @@ const CharityAboutImage = ({charity}) => {
  * The charity extra tab
  */
 const CharityExtra = ({charity}) => {
-	if (!charity || !charity.projects || !charity.projects.length) return null;
+	if ( ! charity) return null;
 
 	// Create an object of from: {"2015":[projectData1, projectData2], "2016":[projectData3]}
 	const projectsByYear = charity.projects.reduce((out, project) => {
@@ -181,7 +181,7 @@ const Citations = ({citations}) => (
 	<div className='citations'>
 		<h3>Sources</h3>
 		<ol>
-			{citations.map((ref,i) => <Cite i={i} key={i} citation={ref}/>)}
+			{citations.map((ref,i) => <Cite i={i} key={i} citation={ref} />)}
 		</ol>
 	</div>
 );
@@ -397,7 +397,6 @@ const ProjectImage = ({images, title}) => {
 	let image = _.isArray(images)? images[0] : images;
 	return <div><center><img src={image} title={title} className='project-image'/></center></div>;
 };
-
 
 /**
  * 
