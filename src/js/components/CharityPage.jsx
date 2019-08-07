@@ -1,12 +1,13 @@
 // @Flow
 import React from 'react';
-import MDText from '../base/components/MDText'
 import _ from 'lodash';
+import MDText from '../base/components/MDText'
 import {assert} from 'sjtest';
 import {yessy, encURI} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 import Roles from '../base/Roles';
 import ServerIO from '../plumbing/ServerIO';
+import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../base/plumbing/DataStore';
 import printer from '../base/utils/printer';
 import C from '../C';
@@ -24,9 +25,7 @@ import {CreateButton} from '../base/components/ListLoad';
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	let {value:charity} = DataStore.fetch(DataStore.getPath(C.KStatus.PUBLISHED, C.TYPES.$NGO(), cid), 
-		() => ServerIO.getCharity(cid, C.KStatus.PUBLISHED).then(result => result.cargo)
-	);
+	let {value:charity} = ActionMan.getDataItem({status:C.KStatus.PUBLISHED, type:C.TYPES.$NGO(), id:cid});
 	if ( ! charity) {
 		return <Misc.Loading />;
 	}	
@@ -51,17 +50,11 @@ const CharityPage = () => {
 				<Tab eventKey={1} title='About'>
 					<CharityAbout charity={charity} />
 				</Tab>
-				{
-					(charity.projects && charity.projects.length)
-					|| Login.isLoggedIn()
-					&& (
-						<Tab eventKey={2} title='Extra Info'>
-							<CharityExtra charity={charity} />
-							<LogOffSiteDonation item={charity} />
-							<MakeDirectFundRaiser charity={charity} />
-						</Tab>
-					)
-				}
+				<Tab eventKey={2} title='Extra Info'>
+					<CharityExtra charity={charity} />
+					<LogOffSiteDonation item={charity} />
+					<MakeDirectFundRaiser charity={charity} />
+				</Tab>
 			</Tabs>
 		</div>
 	);
@@ -145,18 +138,17 @@ const CharityAboutImage = ({charity}) => {
  */
 const CharityExtra = ({charity}) => {
 	if ( ! charity) return null;
-
-	// Create an object of from: {"2015":[projectData1, projectData2], "2016":[projectData3]}
-	const projectsByYear = charity.projects.reduce((out, project) => {
-		// Append to existing year array if one was create on previous loop
-		if( !out[project.year] ) {
-			out[project.year] = []; 
-		} 
-		// Summary of year's projects will always appear first in array
-		out[project.year] = Project.isOverall(project) ? [project, ...out[project.year]] : [...out[project.year], project];
-
-		return out;
-	}, {});
+	
+	// const projectsByYear = {};
+	// (charity.projects).forEach(project => {
+	// 	const projectsForYear = projectsByYear[project.year] || [];
+	// 	if (Project.isOverall(project)) {
+	// 		projectsForYear.unshift(project);
+	// 	} else {
+	// 		projectsForYear.push(project);
+	// 	}
+	// 	projectsByYear[project.year] = projectsForYear;
+	// });
 
 	// const yearDivs = Object.keys(projectsByYear).sort().reverse().map(year => (
 	// 	<CharityExtraYear key={year} year={year} projects={projectsByYear[year]} />
