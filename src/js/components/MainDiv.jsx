@@ -21,7 +21,6 @@ import CharityPage from './CharityPage';
 import EditCharityPage from './editor/EditCharityPage';
 import SimpleEditCharityPage from './editor/SimpleEditCharityPage';
 import EditorDashboardPage from './editor/EditorDashboardPage';
-import ExchangeRatesPage from './editor/ExchangeRatesPage';
 import FundRaiserPage from './FundRaiserPage';
 import EditFundRaiserPage from './editor/EditFundRaiserPage';
 import ManageDonationsPage from './editor/ManageDonationsPage';
@@ -83,7 +82,6 @@ const PAGES = {
 	charity: CharityPage,
 	edit: EditCharityPage,
 	simpleedit: SimpleEditCharityPage,
-	exchangeRates: ExchangeRatesPage,
 	about: AboutPage,
 	test: TestPage	
 };
