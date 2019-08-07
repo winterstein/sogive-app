@@ -24,7 +24,7 @@
     "react-bootstrap": "^0.32.4",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.8.6",
-    "react-dropzone": "^8.1.0",
+    "react-dropzone": "^10.1.7",
     "react-markdown": "^4.1.0",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^2.0.3",
