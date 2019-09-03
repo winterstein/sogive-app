@@ -10,6 +10,7 @@ import com.winterwell.data.AThing;
 import com.winterwell.utils.time.Time;
 
 /**
+ * E.g. a sponsored run
  * @author daniel
  *
  */

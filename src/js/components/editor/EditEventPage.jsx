@@ -123,6 +123,10 @@ const EventEditor = ({id}) => {
 				dflt 
 			/>
 
+			{/* TODO a nice charity picker like RegisterPage.jsx CharityChoiceTab */}
+			<Misc.PropControl path={path} prop='charityId' item={item} 
+				label='Charity ID' />
+
 			<Misc.PropControl path={path} prop='teams' item={item} 
 				label='User teams?' type='checkbox' />
 		</Misc.Card>
