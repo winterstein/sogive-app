@@ -52,9 +52,6 @@ const Event = ({id}) => {
 	let logo = item.logoImage || item.img;
 	let canEdit = Roles.iCan(C.CAN.editEvent).value;
 	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};	
-	let allFundraisers = Object.values(DataStore.getValue(['data',C.TYPES.FundRaiser]) || {});
-	let ourFundraisers = allFundraisers.filter(f => FundRaiser.eventId(f)===id && FundRaiser.status(f)===C.TYPES.PUBLISHED);
-	let total = Money.total(ourFundraisers.map(FundRaiser.donated));
 
 	return (<>
 		<div className='fullwidth-bg' style={pstyle} />
@@ -68,31 +65,35 @@ const Event = ({id}) => {
 				{item.description? <MDText source={item.description} /> : null}				
 				{item.url? <div><a href={item.url}>Event website</a></div> : null}
 			</center>
-
-			<Register event={item} />
 	
 			{item.backgroundImage? <img src={item.backgroundImage} className='img-thumbnail' width='200px' /> : null}
 
 			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
-
-			<div>
-				<h3>Participants and FundRaising Pages</h3>
-				{total? <Misc.Money amount={total} /> : null}
-				<FundRaiserList eventId={id} />
-			</div>
+			
+			<FundRaiserList event={item} eventId={id} />			
 		</div>
 	</>);
 };
 
 
-const FundRaiserList = ({eventId}) => {
+const FundRaiserList = ({event, eventId}) => {
+	let allFundraisers = Object.values(DataStore.getValue(['data',C.TYPES.FundRaiser]) || {});
+	let ourFundraisers = allFundraisers.filter(f => FundRaiser.eventId(f)===id && FundRaiser.status(f)===C.TYPES.PUBLISHED);
+	let total = Money.total(ourFundraisers.map(FundRaiser.donated));
 	let q = "eventId:"+eventId;
 	let sort = null;
 	// let ListItem = 
-	return (<ListLoad type={C.TYPES.FundRaiser} status={C.KStatus.PUBLISHED} q={q}
-		hasFilter={false}		
-		checkboxes={false} canDelete={false} canCreate={false}
-	/>);
+	return (<div>
+		<h3>Participants and Fund-Raising Pages</h3>
+
+		<Register event={event} />
+
+		{Money.value(total)? <h4>Total raised so far: <Misc.Money amount={total} />...</h4> : null}
+		<ListLoad type={C.TYPES.FundRaiser} status={C.KStatus.PUBLISHED} q={q}
+			hasFilter={false}		
+			checkboxes={false} canDelete={false} canCreate={false}
+		/>
+	</div>);
 };
 
 
@@ -103,7 +104,7 @@ const Register = ({event}) => {
 		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);	
 	}
 	// just a big CTA
-	return (<center><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Register</a></center>);
+	return (<center style={{margin:'10px'}}><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Join in - Register Here</a></center>);
 };
 
 
