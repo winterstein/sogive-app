@@ -74,5 +74,9 @@ public class Event extends AThing {
 	public Time getDate() {
 		return date==null? null : new Time(date);
 	}
+
+	public String getCharityId() {
+		return charityId;
+	}
 	
 }	

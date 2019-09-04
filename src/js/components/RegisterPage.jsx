@@ -104,11 +104,11 @@ const RegisterPage = () => {
 					</WizardStage>
 				}
 				
-				{ ! yessy(event.extras)? null :
+				{ false && yessy(event.extras)?
 					<WizardStage title='Extras'>
 						TODO Extras
 						auto skip if none
-					</WizardStage>
+					</WizardStage> : null
 				}
 
 				<WizardStage title='Checkout' next={false} >

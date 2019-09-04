@@ -31,13 +31,20 @@ This.eventId = obj => obj.eventId;
 This.charityId = obj => obj.charityId;
 
 /**
+ * Can do some fetching
  * @returns {?NGO}
  */
 This.charity = item => {
-	const cid = This.charityId(item);
+	let cid = This.charityId(item);
 	if ( ! cid) {
-		console.warn("FundRaiser.js - No charity!", item);
-		return null;
+		// recover it from the event?
+		let eventId = This.eventId(item);
+		let pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED});
+		if (pvEvent.resolved) {
+			cid = pvEvent.value.charityId;
+		}
+		console.warn("FundRaiser.js - No charity!", item, cid);
+		if ( ! cid) return null;
 	}
 	const spec = {type:C.TYPES.NGO, id:cid, status:C.KStatus.PUBLISHED};
 	let pvCharity = ActionMan.getDataItem(spec);

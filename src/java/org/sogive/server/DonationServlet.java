@@ -9,6 +9,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import org.sogive.data.charity.NGO;
+import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.RepeatDonation;
@@ -255,7 +256,15 @@ public class DonationServlet extends CrudServlet {
 			assert fr != null : "doPublishFirstTime null to and no fundRaiser?! "+donation+" "+state;
 			String cid = fr.getCharityId();
 			if (Utils.isBlank(cid)) {
-				throw new IllegalStateException("Donation fail: FundRaiser with no charity? "+fr);
+				// recover from the event?
+				Event event = fr.getEvent();
+				if (event!=null) {
+					cid = event.getCharityId();
+				}
+				if (cid==null) {
+					throw new IllegalStateException("Donation fail: FundRaiser with no charity? "+fr);
+				}
+				Log.w(LOGTAG, "fundraiser "+frid+" without a charity? recovered cid="+cid+" from event");
 			}
 			donation.setTo(cid);
 			Log.w(LOGTAG, "doPublishFirstTime null to - set to "+cid+" Donation: "+donation);

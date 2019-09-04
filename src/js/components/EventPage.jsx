@@ -16,6 +16,7 @@ import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../base/data/DataClass';
 import ListLoad, {CreateButton} from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
+import Money from '../base/data/Money';
 
 const EventPage = () => {
 	// which event?	
@@ -50,8 +51,12 @@ const Event = ({id}) => {
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
 	let canEdit = Roles.iCan(C.CAN.editEvent).value;
-	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};
-	return (<div>
+	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};	
+	let allFundraisers = Object.values(DataStore.getValue(['data',C.TYPES.FundRaiser]) || {});
+	let ourFundraisers = allFundraisers.filter(f => FundRaiser.eventId(f)===id && FundRaiser.status(f)===C.TYPES.PUBLISHED);
+	let total = Money.total(ourFundraisers.map(FundRaiser.donated));
+
+	return (<>
 		<div className='fullwidth-bg' style={pstyle} />
 		<div className="col-md-8 col-md-offset-2 well" style={{marginTop:'2vh'}}>
 			{item.bannerImage? <img src={item.bannerImage} style={{width:'100%', maxHeight:'50vh'}} alt='event banner' /> : null}
@@ -69,8 +74,25 @@ const Event = ({id}) => {
 			{item.backgroundImage? <img src={item.backgroundImage} className='img-thumbnail' width='200px' /> : null}
 
 			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
+
+			<div>
+				<h3>Participants and FundRaising Pages</h3>
+				{total? <Misc.Money amount={total} /> : null}
+				<FundRaiserList eventId={id} />
+			</div>
 		</div>
-	</div>);
+	</>);
+};
+
+
+const FundRaiserList = ({eventId}) => {
+	let q = "eventId:"+eventId;
+	let sort = null;
+	// let ListItem = 
+	return (<ListLoad type={C.TYPES.FundRaiser} status={C.KStatus.PUBLISHED} q={q}
+		hasFilter={false}		
+		checkboxes={false} canDelete={false} canCreate={false}
+	/>);
 };
 
 
