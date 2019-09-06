@@ -47,7 +47,7 @@ const RegisterPage = () => {
 	const basket = pvbasket.value;
 	console.log('pvbasket', pvbasket);
 
-	if (!basket) {
+	if ( ! basket) {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
 
@@ -64,6 +64,12 @@ const RegisterPage = () => {
 	const deleteBasket = e => {
 		ActionMan.delete(C.TYPES.Basket, basket.id);
 	};
+
+	// hacky: set a charity in the basket?
+	if ( ! event.pickCharity) {
+		const charityId = Event.charityId(event);
+		if (charityId) basket.charityId = charityId;	
+	}
 
 	return (
 		<div className=''>

@@ -13,4 +13,6 @@ class Event extends DataClass {
 DataClass.register(Event, "Event");
 export default Event;
 
+Event.charityId = e => e && e.charityId;
+
 Event.date = e => e && e.date;

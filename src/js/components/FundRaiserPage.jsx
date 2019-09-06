@@ -73,8 +73,11 @@ const FundRaiserPage = ({id}) => {
 	}
 	let charity = FundRaiser.charity(item);
 	if ( ! charity) {
+		// Hack to avoid undefined errors
 		charity = new NGO(); 
-		console.warn("FundRaiser with no charity set?!");
+		let cid = FundRaiser.charityId(item);
+		charity.id = cid;
+		console.warn("FundRaiser with no charity set?! "+cid);
 	}
 
 	let pEvent = ActionMan.getDataItem({type: C.TYPES.Event, id: item.eventId, status: C.KStatus.PUBLISHED});
