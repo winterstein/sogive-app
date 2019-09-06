@@ -245,7 +245,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		<div className='section donation-amount'>
 			
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
-			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} />)}		
+			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}		
 			
 			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
@@ -266,11 +266,12 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		</div>);
 }; // ./AmountSection
 
-const SDButton = ({path,sd}) => {
+const SDButton = ({path,sd, donation}) => {
 	if ( ! sd.amount) return null; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
+	let on = donation && Money.eq(donation.amount, sd.amount) && donation.repeat === sd.repeat;
 	return (
-		<button className='btn btn-default suggested-donation' type="button" onClick={e => {
+		<button className={'btn btn-default suggested-donation'+(on?' active':'')} type="button" onClick={e => {
 			let amnt = Object.assign({}, sd.amount);
 			delete amnt['@class'];
 			DataStore.setValue(path.concat('amount'), amnt);
