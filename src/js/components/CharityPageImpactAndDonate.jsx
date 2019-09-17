@@ -47,6 +47,7 @@ const donationIncrements = {
 	Infinity: 10000,
 };
 
+// TODO refactor into a function
 class CharityPageImpactAndDonate extends Component {
 
 	// Bump the donation up or down by a "reasonable" amount for current value
@@ -82,7 +83,13 @@ class CharityPageImpactAndDonate extends Component {
 		}
 
 		// donation info
-		const formPath = ['widget', 'CharityPageImpactAndDonate', NGO.id(charity)];
+		let cid = NGO.id(charity);
+		if ( ! cid) {
+			// paranoia - DA reported an undefined bug Sep 2019 - maybe a race condition?
+			console.error("No Charity ID?!",charity);
+			return <div />;
+		}
+		const formPath = ['widget', 'CharityPageImpactAndDonate', cid];
 		const formData = DataStore.getValue(formPath) || {};
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
@@ -123,7 +130,7 @@ class CharityPageImpactAndDonate extends Component {
 						<div className='donation-input'>
 							<div className='amount-input'>
 								<Misc.PropControl type='Money' prop='amount' 
-									path={['widget', 'CharityPageImpactAndDonate', NGO.id(charity)]} changeCurrency={false} />
+									path={formPath} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>
 							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
