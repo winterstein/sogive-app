@@ -61,6 +61,10 @@ const nextTarget = (number) => {
 	return target * 0.2;
 };
 
+/**
+ * @returns {?Money}
+ * TODO target value = -1 means "no targets please"
+ */
 This.target = item => {
 	This.assIsa(item);
 	
