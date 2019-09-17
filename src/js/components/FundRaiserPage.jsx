@@ -140,7 +140,7 @@ const FundRaiserPage = ({id}) => {
 				<Row>
 					<Col md={6} className='me'>
 						<center>
-							<h3>About Me: {item.owner.name}</h3>
+							<h3>About: {item.owner.name}</h3>
 						</center>
 						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
 						<div>{item.owner.description? <MDText source={item.owner.description} /> : null}</div>
