@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
-
 import SJTest, {assert} from 'sjtest';
 import {XId, encURI, yessy} from 'wwutils';
 import Login from 'you-again';
+import BS from '../base/components/BS';
 import printer from '../base/utils/printer.js';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
@@ -91,9 +91,9 @@ const RegisterPage = () => {
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 
-					<button className="btn btn-default btn-sm pull-left" onClick={deleteBasket} >
+					<BS.Button size='sm' className="pull-left" onClick={deleteBasket} >
 						<Misc.Icon glyph='trash' />Empty Basket
-					</button> 
+					</BS.Button> 
 				</WizardStage>
 
 				<WizardStage title='Register' sufficient={Login.isLoggedIn()} complete={Login.isLoggedIn()} >

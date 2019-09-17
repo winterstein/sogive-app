@@ -183,11 +183,12 @@ ActionMan.getBasketPath = (uxid) => {
 		uxid = Login.getId() || Login.getTempId();		
 	}
 	const bid = Basket.idForUxid(uxid);
-	return DataStore.getPath(C.KStatus.DRAFT, C.TYPES.Basket, bid);
+	return DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.Basket, id:bid});
 };
 
 /**
- * TODO due to bugs (April 2018) this feature was switched off!
+ * TODO due to bugs (April 2018) 
+ * the load-from-server core of this feature was switched off!
  * 
  * NB: uses a pseudo id of `draft-to:X`
  * 
@@ -241,6 +242,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
 		// }); // ./then()
 	}); // ./fetch()
 };
+
 /**Clears donation draft held in ActionMan Datastore
  * Hacky fix to deal with seperate donations in the same session overriding each other
  */

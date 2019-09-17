@@ -135,7 +135,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	let donationDraft = pDonation.value;
 	Donation.assIsa(donationDraft);
 	
-	const path = DataStore.getPath(C.KStatus.DRAFT, type, donationDraft.id);
+	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id:donationDraft.id});
 	// if (donationDraft !== DataStore.getValue(path)) {
 	// 	console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ", 
 	// 		['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
@@ -179,7 +179,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid'>
-						<GiftAidSection path={path} charity={charity} stagePath={stagePath} />
+						<GiftAidSection path={path} charity={charity} stagePath={stagePath} setNavStatus />
 					</WizardStage> : null}
 				
 					{showDetailsSection? <WizardStage title='Details' sufficient={emailOkay} complete={emailOkay}>
@@ -303,7 +303,8 @@ const getDonationAmount = ({path, item, credit, suggestedDonations}) => {
 	const sd = getDonationAmount2({path, item, credit, suggestedDonations});
 	// side-effect: set
 	dntn.amount = sd.amount; 
-	dntn.repeat = sd.repeat;
+	// dont overwrite repeat - so you can set it off before setting a £amount
+	if ( ! dntn.repeat) dntn.repeat = sd.repeat;
 	return sd;
 };
 
