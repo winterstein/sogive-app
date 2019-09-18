@@ -77,15 +77,19 @@ public class MoneyCollector {
 		boolean allOnCredit = false;
 		if (sa != null && StripeAuth.credit_token.equals(sa.id)) {
 			allOnCredit = true;
-		}		
+		}
+		
 		Money credit = Transfer.getTotalCredit(user);
 		if (credit!=null && credit.getValue100p() > 0) {
 			// NB if your account is in debt i.e. < 0, then you cant pay on credit
 			Money residual = doCollectMoney2(credit, allOnCredit);
 			if (residual==null || residual.getValue100p()==0) {
+				Log.d(LOGTAG, "full payment on credit "+basket+".");
 				return transfers;
+			} else {
+				Log.d(LOGTAG, "part payment on credit "+basket+" residual: "+residual);	
 			}
-			Log.d(LOGTAG, "part payment on credit "+basket+" residual: "+residual);
+			
 			total = residual;
 		} else if (allOnCredit) {
 			throw new PaymentException("Cannot pay with credit of "+credit+" (basket: "+basket+")");
