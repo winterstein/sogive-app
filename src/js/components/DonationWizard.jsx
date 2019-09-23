@@ -8,6 +8,8 @@ import Login from 'you-again';
 import C from '../C';
 import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
+import ServerIO from '../plumbing/ServerIO';
+import $ from 'jquery';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -23,6 +25,7 @@ import PaymentWidget from '../base/components/PaymentWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
+import BS from '../base/components/BS';
 
 /**
  * 
@@ -73,14 +76,27 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	assert(id, "CharityPageImpactAndDonate", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
 	if ( ! causeName) causeName = item.displayName || item.name || id;
-
+	let pvEvent = {};
 	if ( ! charity) {
 		if (NGO.isa(item)) charity = item;
-		else if (FundRaiser.isa(item)) charity = FundRaiser.charity(item);
+		else if (FundRaiser.isa(item)) {
+			charity = FundRaiser.charity(item);
+			let eventId = FundRaiser.eventId(item);
+			if (eventId) pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED});
+		}
 	}
 	let charityId = charity? getId(charity) : item.charityId;
 	const widgetPath = ['widget', 'DonationWizard', id];
-	
+
+	// From an event?
+	const event = pvEvent.value;		
+
+	// £/$
+	let preferredCurrency = null;
+	if (event && event.country) {
+		preferredCurrency = {GB:'GBP',US:'USD'}[event.country];
+	}
+
 	// There can only be one!
 	// TODO move this to Misc for reuse TODO reuse this safety test with other only-one-per-page dialogs
 	// ?? maybe replace the assert with a more lenient return null??
@@ -150,9 +166,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	// get (set) the amount
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
-	let credit = Transfer.getCredit();	
-	let eid = FundRaiser.eventId(item);
-	let event = eid && DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, eid);		
+	let credit = Transfer.getCredit();		
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	const proposedSuggestedDonation = getDonationAmount({path,item,credit, suggestedDonations});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
@@ -175,7 +189,8 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 							paidElsewhere={paidElsewhere} credit={credit} 
 							proposedSuggestedDonation={proposedSuggestedDonation} 
 							suggestedDonations={suggestedDonations}
-							event={event} />
+							event={event} 
+							preferredCurrency={preferredCurrency} />
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid'>
@@ -211,8 +226,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
  * @param credit {?Money}
  * @param proposedDonationValue {!SuggestedDonation} Assumed setup already
  */
-const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedSuggestedDonation, suggestedDonations, event}) => {
+const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) => {
 	const dntn = DataStore.getValue(path) || {};
+	if (preferredCurrency==='GBP') preferredCurrency=null; // HACK GBP is the default
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
 
@@ -240,14 +256,18 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		showRepeatControls = dntn.repeat && true; // off unless somehow set
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
 	}
-
+	
 	return (
 		<div className='section donation-amount'>
 			
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
 			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}		
 			
-			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} />
+			{preferredCurrency? 
+				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
+				:
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} />
+			}
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			{showRepeatControls? 
@@ -265,6 +285,46 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 				: null}
 		</div>);
 }; // ./AmountSection
+
+
+const CurrencyConvertor = ({path, val, preferredCurrency}) => {
+	let transPath = ['transient'].concat(path);
+	let trans = DataStore.getValue(transPath);
+	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
+		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
+		console.warn("got",got);
+		return got;
+	});
+	let rate = 0.80341;
+	if (pvRate.value) {
+		console.warn(pvRate.value);
+		rate = pvRate.value.rates.GBP;
+	}
+	return (<><BS.Row>
+		<BS.Col md={6} sm={12}>
+			<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
+				label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
+					let dollars = e.target.value;
+					let pounds = dollars? Math.round(rate*dollars*100) / 100 : null;
+					console.warn("e", e);
+					DataStore.setValue(path.concat('amount'), new Money(pounds));
+					return e;
+				}} />
+		</BS.Col>
+		<BS.Col md={6} sm={12}>
+			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation (£)' value={val} changeCurrency={false} 
+				onChange={e => {
+					console.warn("e2", e.target.value);
+					let pounds = e.target.value;
+					let dollars = pounds? Math.round(pounds*100 / rate) / 100 : null;
+					DataStore.setValue(transPath.concat('localAmount'), new Money({currency:'USD', value:dollars}));
+				}}
+			/>			
+		</BS.Col>		
+	</BS.Row>
+		<div><small>Approximate rate: 1 {preferredCurrency} &rarr; {rate} GBP. SoGive is based in the UK and we work in £ sterling. Currency conversion is handled by the banks and the rate may vary.</small></div>
+	</>);
+};
 
 const SDButton = ({path,sd, donation}) => {
 	if ( ! sd.amount) return null; // defend against bad data

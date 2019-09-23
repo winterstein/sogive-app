@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
+import com.winterwell.es.ESKeyword;
 import com.winterwell.utils.time.Time;
 
 /**
@@ -19,6 +20,7 @@ public class Event extends AThing {
 	/**
 	 * ISO3166 country code
 	 */
+	@ESKeyword
 	String country;
 	
 	/**
