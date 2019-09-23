@@ -312,7 +312,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 				}} />
 		</BS.Col>
 		<BS.Col md={6} sm={12}>
-			<Misc.PropControl prop='amount' path={path} type='Money' label='Donation (£)' value={val} changeCurrency={false} 
+			<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false} 
 				onChange={e => {
 					console.warn("e2", e.target.value);
 					let pounds = e.target.value;
@@ -322,7 +322,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 			/>			
 		</BS.Col>		
 	</BS.Row>
-		<div><small>Approximate rate: 1 {preferredCurrency} &rarr; {rate} GBP. SoGive is based in the UK and we work in £ sterling. Currency conversion is handled by the banks and the rate may vary.</small></div>
+		<div><small>Approximate rate: 1 {preferredCurrency} = {rate} GBP. SoGive is based in the UK and we work in £ sterling. Currency conversion is handled by the banks and the actual rate may vary.</small></div>
 	</>);
 };
 
