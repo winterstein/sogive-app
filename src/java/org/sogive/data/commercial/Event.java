@@ -15,6 +15,11 @@ import com.winterwell.utils.time.Time;
  *
  */
 public class Event extends AThing {
+
+	/**
+	 * ISO3166 country code
+	 */
+	String country;
 	
 	/**
 	 * Events can have per-person (attendee) fundraising targets, and whole-event targets.

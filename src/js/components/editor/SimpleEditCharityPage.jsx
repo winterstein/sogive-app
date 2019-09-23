@@ -376,15 +376,16 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 /**
  * Project inputs
  */
-const ProjectInputs = ({charity, project}) => {
+const ProjectInputs = ({charity, project={}}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	let annualCosts = project.inputs.find(input => input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
-	let projectCosts = project.inputs.find(input => input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
-	let tradingCosts = project.inputs.find(input => input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = project.inputs.find(input => input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
+	let inputs = project.inputs|| [];
+	let annualCosts = inputs.find(input => input.name && input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
+	let projectCosts = inputs.find(input => input.name && input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
+	let tradingCosts = inputs.find(input => input.name && input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
+	let incomeFromBeneficiaries = inputs.find(input => input.name && input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
@@ -636,3 +637,8 @@ const Ref = ({reference}) => {
 
 export default SimpleEditCharityPage;
 
+export {
+	ProjectInputs,
+	AddProject, RemoveProject, ProjectDataSources, STD_INPUTS,
+	AddIO
+};

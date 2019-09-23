@@ -28,7 +28,8 @@ import lombok.Data;
  *
  */
 @Data
-public class FundRaiser extends AThing {
+public class FundRaiser extends AThing {	
+	
 	String eventId;
 	XId oxid;
 	/**

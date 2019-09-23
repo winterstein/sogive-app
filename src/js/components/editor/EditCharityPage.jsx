@@ -20,6 +20,7 @@ import {LoginLink} from '../../base/components/LoginWidget';
 import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import {SuggestedDonationEditor} from './CommonControls';
+import {ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO} from './SimpleEditCharityPage';
 
 const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -259,78 +260,6 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 };
 
 
-const AddProject = ({charity, isOverall}) => {
-	assert(NGO.isa(charity), "EditCharityPage.AddProject");
-	if (isOverall) {
-		return (
-			<div className='form-inline well'>
-				<h4>Add Year</h4>
-				<p>Create a new annual record</p>
-				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
-				&nbsp;
-				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Misc.Icon glyph='plus' /> Add
-				</button>
-			</div>
-		);		
-	}
-	return (
-		<div className='form-inline well'>
-			<h4>Add Project/Year</h4>
-			<p>Create a new annual project record</p>
-			<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
-			&nbsp;
-			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
-			&nbsp;
-			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
-				<Misc.Icon glyph='plus' /> Add
-			</button>
-		</div>
-	);
-};
-
-
-const RemoveProject = ({charity, project}) => {
-	assert(NGO.isa(charity), "EditCharityPage.RemoveProject");
-	const deleteProject = function(event) {
-		event.preventDefault();
-		if (confirm("Are you sure you want to delete this project?")) {
-			removeProject({charity, project});
-		}
-	};
-	return (
-		<button className='btn btn-default btn-sm pull-right' 
-			title='Delete this project!'
-			onClick={deleteProject}
-		>
-			<Misc.Icon glyph='trash' />
-		</button>
-	);
-};
-
-const removeProject = ({charity, project}) => {
-	// TODO a confirm step! DataStore.setShow('confirmDialog', true);
-	ActionMan.removeProject({charity, project});
-};
-
-const AddIO = ({list, pio, ioPath}) => {
-	assert(_.isArray(list) && _.isArray(ioPath) && pio, "EditCharityPage.AddIO");
-	const formPath = ['widget','AddIO', pio, 'form'];
-	const oc = () => ActionMan.addInputOrOutput({list, ioPath, formPath});
-	let name = DataStore.getValue(formPath.concat('name'));
-	
-	return (
-		<div className='form-inline'>
-			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
-			{' '}
-			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
-				<Misc.Icon glyph='plus' />
-			</button>
-		</div>
-	);
-};
-
-
 const ProjectEditor = ({charity, project}) => {
 	// story image as well as project image??
 	// Projects have stories and images. Overall finances dont need, as they have the overall charity bumpf
@@ -367,78 +296,6 @@ const ProjectEditor = ({charity, project}) => {
 			{isOverall? <EditProjectField charity={charity} project={project} type='Money' field='reserves' label='Reserves' /> : null}
 	</div>
 	);
-};
-
-// See and edit the list of data-sources for this project
-const ProjectDataSources = ({charity, project}) => {
-
-	const projIndex = charity.projects.indexOf(project);
-	const dataSrcPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, NGO.id(charity)).concat(['projects', projIndex, 'data-src']);
-	const sourceList = project['data-src'] || [];
-	return (
-		<div className='well'>
-			<h4>Data Sources</h4>
-			{ sourceList.map(src => {
-				const srcIndex = project['data-src'].indexOf(src);
-				const citationPath = dataSrcPath.concat(srcIndex);
-				return (
-					<ProjectDataSource key={'p'+projIndex+'src'+srcIndex} charity={charity} project={project} citation={src} citationPath={citationPath} />
-				);
-			}) }
-			<AddDataSource dataId={'p'+projIndex+'data-src'} list={sourceList} srcPath={dataSrcPath} />
-		</div>
-	);
-};
-
-const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) => {
-	return (
-		<div className='row'>
-			<div className='col-md-6'>
-				<Misc.PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
-			</div>
-		</div>
-	);
-};
-
-const AddDataSource = ({list, dataId, srcPath}) => {
-	assert(_.isArray(list) && _.isArray(srcPath) && dataId, "EditCharityPage.AddDataSource");
-	const formPath = ['widget','AddDataSource', dataId, 'form'];
-	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
-	return (
-		<div className='form-inline'>
-			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
-			{' '}
-			<button className='btn btn-default' onClick={addSourceFn}>
-				<Misc.Icon glyph='plus' />
-			</button>
-		</div>
-	);
-};
-
-/**
- * Project inputs
- */
-const ProjectInputs = ({charity, project={}, project: { inputs=[] }}) => {
-	const isOverall = project.name === Project.overall;
-	let cid = NGO.id(charity);
-	let pid = charity.projects.indexOf(project);
-	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	let annualCosts = inputs.find(input => input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
-	let projectCosts = inputs.find(input => input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
-	let tradingCosts = inputs.find(input => input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
-	let incomeFromBeneficiaries = inputs.find(input => input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
-	return (<div className='well'>
-		<h5>Inputs</h5>
-		<table className='table'>
-			<tbody>			
-				{ ! isOverall? <ProjectInputEditor charity={charity} project={project} input={projectCosts} /> : null}
-				<ProjectInputEditor charity={charity} project={project} input={annualCosts} />
-				<ProjectInputEditor charity={charity} project={project} input={tradingCosts} />
-				<ProjectInputEditor charity={charity} project={project} input={incomeFromBeneficiaries} />
-			</tbody>
-		</table>
-		<MetaEditor item={project} field='inputs_meta' itemPath={projectPath} help='Financial data' />
-	</div>);
 };
 
 
@@ -499,13 +356,6 @@ This is also a good place to point if, for example, the impacts shown are an ave
 	);
 }; // ./ProjectOutputs()
 
-const STD_INPUTS = {
-	projectCosts: "Project costs",
-	annualCosts: "Annual costs",
-	fundraisingCosts: "Fundraising costs",
-	tradingCosts: "Trading costs",
-	incomeFromBeneficiaries: "Income from Beneficiaries"
-};
 
 /**
  * Has two modes:

@@ -105,6 +105,8 @@ const EventEditor = ({id}) => {
 				} }
 			/>
 			
+			<Misc.PropControl path={path} prop='country' item={item} label='Country' type='country' required={false} />
+			
 			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
 			<Misc.PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
