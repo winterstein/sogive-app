@@ -17,6 +17,7 @@ import NGO from '../../data/charity/NGO2';
 import Project from '../../data/charity/Project';
 import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
+import PropControl from '../../base/components/PropControl';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
 import Crud from '../../base/plumbing/Crud'; //publish
@@ -233,7 +234,7 @@ const AddProject = ({charity, isOverall}) => {
 			<div className='form-inline well'>
 				<h4>Add Year</h4>
 				<p>Create a new annual record</p>
-				<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+				<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 				&nbsp;
 				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
 					<Misc.Icon glyph='plus' /> Add
@@ -245,9 +246,9 @@ const AddProject = ({charity, isOverall}) => {
 		<div className='form-inline well'>
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
-			<Misc.PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
+			<PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
 			&nbsp;
-			<Misc.PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+			<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
 			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
 				<Misc.Icon glyph='plus' /> Add
@@ -288,7 +289,7 @@ const AddIO = ({list, pio, ioPath}) => {
 	
 	return (
 		<div className='form-inline'>
-			<Misc.PropControl prop='name' label='Impact unit / Name' path={formPath} />
+			<PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
 				<Misc.Icon glyph='plus' />
@@ -352,7 +353,7 @@ const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) =
 	return (
 		<div className='row'>
 			<div className='col-md-6'>
-				<Misc.PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
+				<PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
 			</div>
 		</div>
 	);
@@ -364,7 +365,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
 		<div className='form-inline'>
-			<Misc.PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
+			<PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
 				<Misc.Icon glyph='plus' />
@@ -470,9 +471,12 @@ const STD_INPUTS = {
  * Has two modes:
  * In overall, inputs are always manual entry.
  * Within a project, several inputs are auto-calculated by default.
+ * 
+ * @param input {Money} Must be a named Money 
  */
 const ProjectInputEditor = ({charity, project, input}) => {	
 	const isOverall = project.name === Project.overall;
+	assert(input.name, "ProjectInputEditor - input MOney must have a name", input);
 	// for projects, auto-calc costs based on the % that the project makes up of the overall
 	let widgetPath = ['widget', 'ProjectInputEditor', project.name, input.name];
 	let manualEntryPath = ['widget', 'ProjectInputEditor', project.name, input.name, 'manualEntry'];
@@ -497,8 +501,8 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	return (<tr>
 		<td>{iname}</td>
 		<td>
-			{ isOverall || input.name==='projectCosts'? null : <Misc.PropControl label={'Manual entry for '+iname} type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<Misc.PropControl type='Money' prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
+			{ isOverall || input.name==='projectCosts'? null : <PropControl label={'Manual entry for '+iname} type='checkbox' prop='manualEntry' path={widgetPath} /> }
+			<PropControl type='Money' name={input.name} prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -521,19 +525,19 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><Misc.PropControl prop='name' path={inputPath} item={output} /></td>
-		<td><Misc.PropControl prop='number' type='number' path={inputPath} item={output} /></td>
+		<td><PropControl prop='name' path={inputPath} item={output} /></td>
+		<td><PropControl prop='number' type='number' path={inputPath} item={output} /></td>
 		<td>
-			<Misc.PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
+			<PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<Misc.PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
+			<PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
-			<Misc.PropControl prop='description' type='textarea'
+			<PropControl prop='description' type='textarea'
 				path={inputPath} item={output}
 			/>
 		</td>
@@ -571,7 +575,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 	return (
 		<div>			
 			<Misc.Col2>
-				<Misc.PropControl label={label || field} type={type} prop={field} 
+				<PropControl label={label || field} type={type} prop={field} 
 					path={path} item={item} 
 					tooltip={help}
 					{ ...other}
@@ -621,7 +625,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	return (
 		<div className='MetaEditorItem'>
 			{ricon} 
-			<Misc.PropControl label={title} prop={metaField}
+			<PropControl label={title} prop={metaField}
 				path={metaPath}
 				item={meta} type={type}
 				saveFn={saveFn}
