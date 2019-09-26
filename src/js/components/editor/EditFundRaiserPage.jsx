@@ -43,7 +43,7 @@ const FundRaiserEditor = ({id}) => {
 
 	let pvcw = canWrite(type, id);
 	if (pvcw.resolved && ! pvcw.value) {
-		notifyUser("Sorry - You cannot edit this.");
+		notifyUser("Sorry - You cannot edit this. "+id+" ");
 	}
 
 	let event = null;

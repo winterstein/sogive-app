@@ -21,6 +21,7 @@ import Roles from '../base/Roles';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 import Misc from '../base/components/Misc';
+import CSS from '../base/components/CSS';
 import DonationWizard, {DonateButton} from './DonationWizard';
 import ListLoad from '../base/components/ListLoad';
 import {ImpactDesc} from './ImpactWidgetry';
@@ -110,6 +111,8 @@ const FundRaiserPage = ({id}) => {
 
 	return (
 		<div>
+			<CSS css={event.customCSS} />
+			<CSS css={item.customCSS} />
 			{event.backgroundImage ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
 			<DonationWizard item={item} />
 			<Grid id='FundRaiserPage'>
@@ -192,6 +195,7 @@ const DonationProgress = ({item, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	assMatch(target, "?Money");
+	const isTarget = target && Money.value(target) > 0;	
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
 	// nothing?
@@ -199,19 +203,19 @@ const DonationProgress = ({item, charity}) => {
 		return (<div className='DonationProgress no-money'>
 			<p>No money raised yet.</p>
 			{isOwner(item)? <p>Why not kick-start things by making a seed donation yourself?</p> : null}
-			<div className='target'>Target: <Misc.Money amount={target} /></div>
+			{isTarget> 0? <div className='target'>Target: <Misc.Money amount={target} /></div> : null}
 			<DonateButton item={item} />
 		</div>);
 	}
 
-	const donatedPercent = donated && target? 100 * (donated.value / target.value) : 0;
+	const donatedPercent = donated && target? 100 * (Money.value(donated) / Money.value(target)) : 0;
 	// Clamp the bar height to 100% for obvious reasons
 	const donatedBarHeight =Math.min(100, donatedPercent);
 	const remainingBarHeight = 100 - donatedBarHeight;
 
 	return (
 		<div className='DonationProgress'>
-			<div className='ProgressGraph'>
+			{isTarget? <div className='ProgressGraph'>
 				<div className='target'>Target: <Misc.Money amount={target} /></div>
 				<div className='bar-container'>
 					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
@@ -227,7 +231,7 @@ const DonationProgress = ({item, charity}) => {
 						{Math.round(donatedPercent)}%
 					</div>
 				</div>
-			</div>
+			</div> : null}
 			<div className='progress-details'>
 				<DonationsSoFar item={item} />				
 				{charity && charity.hideImpact? null 

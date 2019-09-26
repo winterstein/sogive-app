@@ -36,6 +36,11 @@ public class Event extends AThing {
 	 */
 	Money target = Money.pound(100);
 	
+	String customCSS;
+	
+	/**
+	 * NB: no ticketTypes = no-one can register. Use this to close an event.
+	 */
 	List<Ticket> ticketTypes;
 	/**
 	 * merchandise: t-shirts, bus-tickets, etc.

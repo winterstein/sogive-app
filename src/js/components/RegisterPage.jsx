@@ -571,7 +571,14 @@ const ConfirmedTicket = ({ticket, event}) => {
 	// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
 	// Option (b) would allow for e.g. I set up my page and my Gran's page.
 	// for now: no email = no page
-	let frid = FundRaiser.getIdForTicket(ticket);	
+	let frid = FundRaiser.getIdForTicket(ticket);
+	
+	// claim ownership (NB: avoid repeat calls to go easy on the server. This is idempotent - repeat calls would fail harmlessly).
+	if (frid && ! DataStore.getValue(['misc','claimFlag', frid])) {
+		Login.claim(frid);
+		DataStore.setValue(['misc','claimFlag', frid], true);
+	}
+
 	return (<div className='clear padded-block'>
 		<Misc.Col2>
 			<h3>{ticket.attendeeName}</h3>			

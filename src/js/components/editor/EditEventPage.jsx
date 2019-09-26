@@ -139,6 +139,8 @@ const EventEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
 
 			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
+
+			<Misc.PropControl path={path} prop='customCSS' item={item} label='Custom CSS' help='Use for advanced styling edits.' type='textarea' />
 		</Misc.Card>
 
 		<Misc.Card title='Ticket Types' icon='ticket' warning={item.ticketTypes? null : "Define a ticket type so people can register for your event"}>

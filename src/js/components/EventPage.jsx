@@ -17,6 +17,7 @@ import {getType, getId, nonce} from '../base/data/DataClass';
 import ListLoad, {CreateButton} from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
 import Money from '../base/data/Money';
+import CSS from '../base/components/CSS';
 
 const EventPage = () => {
 	// which event?	
@@ -30,7 +31,7 @@ const EventPage = () => {
 	let pvCanEdit = Roles.iCan(C.CAN.editEvent);
 	return (
 		<div>
-			<h2>Pick an Event</h2>
+			<h2>Pick an Event</h2>			
 			<ListLoad type={type} status={C.KStatus.PUBLISHED} />
 			{pvCanEdit.value? <div><h4>Draft Events</h4>
 				<ListLoad type={type} status={C.KStatus.DRAFT} />
@@ -54,6 +55,7 @@ const Event = ({id}) => {
 	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};	
 
 	return (<>
+		<CSS css={item.customCSS} />
 		<div className='fullwidth-bg' style={pstyle} />
 		<div className="col-md-8 col-md-offset-2 well" style={{marginTop:'2vh'}}>
 			{item.bannerImage? <img src={item.bannerImage} style={{width:'100%', maxHeight:'50vh'}} alt='event banner' /> : null}
