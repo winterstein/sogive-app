@@ -80,7 +80,9 @@ const Event = ({id}) => {
 
 const FundRaiserList = ({event, eventId}) => {
 	let allFundraisers = Object.values(DataStore.getValue(['data',C.TYPES.FundRaiser]) || {});
-	let ourFundraisers = allFundraisers.filter(f => FundRaiser.eventId(f)===id && FundRaiser.status(f)===C.TYPES.PUBLISHED);
+	let ourFundraisers = allFundraisers.filter(
+		f => FundRaiser.eventId(f)===eventId && (FundRaiser.status(f)===C.KStatus.PUBLISHED || FundRaiser.status(f)===C.KStatus.PUBLISHED)
+	);
 	let total = Money.total(ourFundraisers.map(FundRaiser.donated));
 	let q = "eventId:"+eventId;
 	let sort = null;
@@ -91,7 +93,9 @@ const FundRaiserList = ({event, eventId}) => {
 		<Register event={event} />
 
 		{Money.value(total)? <h4>Total raised so far: <Misc.Money amount={total} />...</h4> : null}
-		<ListLoad type={C.TYPES.FundRaiser} status={C.KStatus.PUBLISHED} q={q}
+		<ListLoad type={C.TYPES.FundRaiser} 
+			navpage='fundraiser'
+			status={C.KStatus.PUBLISHED} q={q}
 			hasFilter={false}		
 			checkboxes={false} canDelete={false} canCreate={false}
 		/>
