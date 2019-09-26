@@ -8,8 +8,8 @@ class Event extends DataClass {
 		super(base);
 		Object.assign(this, base);
 	}
-
 }
+
 DataClass.register(Event, "Event");
 export default Event;
 

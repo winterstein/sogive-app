@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import MDText from '../base/components/MDText'
 
 import SJTest, {assert} from 'sjtest';
-import { modifyHash, encURI, uid } from 'wwutils';
+import { modifyHash, encURI, uid, yessy } from 'wwutils';
 import { Button, Well } from 'react-bootstrap';
 
 import printer from '../base/utils/printer.js';
@@ -99,6 +99,10 @@ const FundRaiserList = ({event, eventId}) => {
 
 const Register = ({event}) => {
 	assert(event);
+	// No tickets? = no registration
+	if ( ! yessy(event.ticketTypes)) {
+		return null;
+	}
 	// published?
 	if (false && event.status !== C.KStatus.PUBLISHED) {
 		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);	
