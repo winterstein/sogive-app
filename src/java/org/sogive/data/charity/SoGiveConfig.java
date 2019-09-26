@@ -44,14 +44,16 @@ public class SoGiveConfig implements IESRouter, ISiteConfig {
 		KStatus ks = (KStatus) status;
 		if (ks==null) ks = KStatus.PUBLISHED;
 		switch(ks) {
-		case PUBLISHED:
+		case PUBLISHED: 
+		case ARCHIVED: // lets keep archived in the published index.
+		case PUB_OR_ARC: // ...which means PUB_OR_ARC = PUB here
 			break;
 		case DRAFT: case PENDING: case REQUEST_PUBLISH: case MODIFIED:
 			index += ".draft";
 			break;
 		case TRASH:
 			index += ".trash";
-			break;
+			break;		
 		case ALL_BAR_TRASH:
 			String i1 = index;
 			String i2 = index+".draft";
