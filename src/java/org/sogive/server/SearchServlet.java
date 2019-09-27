@@ -63,7 +63,7 @@ public class SearchServlet implements IServlet {
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
 		ESPath path = config.getPath(null, NGO.class, null, status);
-		SearchRequestBuilder s = client.prepareSearch(path.index()).setType(path.type);
+		SearchRequestBuilder s = new SearchRequestBuilder(client).setPath(path);
 		s.setDebug(true);		
 		String q = state.get(Q);
 		boolean showRecommended = state.get(RECOMMENDED, false);
