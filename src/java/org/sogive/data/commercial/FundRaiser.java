@@ -11,6 +11,7 @@ import org.sogive.data.user.Person;
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.data.PostLite;
+import com.winterwell.es.ESKeyword;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
@@ -30,6 +31,7 @@ import lombok.Data;
 @Data
 public class FundRaiser extends AThing {	
 	
+	@ESKeyword
 	String eventId;
 	XId oxid;
 	/**
@@ -49,6 +51,7 @@ public class FundRaiser extends AThing {
 	Money donated = Money.pound(0);
 	
 	Integer donationCount;
+	@ESKeyword
 	String charityId;
 	/**
 	 * The user's personal story

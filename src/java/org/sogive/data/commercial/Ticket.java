@@ -3,6 +3,7 @@ package org.sogive.data.commercial;
 import com.goodloop.data.Money;
 
 import com.winterwell.data.AThing;
+import com.winterwell.es.ESKeyword;
 import com.winterwell.web.data.XId;
 
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Ticket extends AThing {
 	String postPurchaseLink;
 	String postPurchaseCTA; 
 	
+	@ESKeyword
 	String eventId;
 	
 	/** e.g. "a gentle 10 mile walk" 
@@ -60,6 +62,7 @@ public class Ticket extends AThing {
 	String attendeeEmail;
 	String attendeeAddress;
 	String team;
+	@ESKeyword	
 	String charityId;
 
 	@Override

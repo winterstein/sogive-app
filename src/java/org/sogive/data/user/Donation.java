@@ -12,6 +12,7 @@ import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
+import com.winterwell.es.ESKeyword;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
@@ -69,6 +70,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * the charity id. this is NOT an Xid!
 	 */
+	@ESKeyword
 	String to;
 	
 	/**
@@ -152,6 +154,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * e.g. a stripe charge id
 	 */
+	@ESKeyword
 	String paymentId;
 	
 	@Override
