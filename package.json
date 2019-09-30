@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -18,7 +18,7 @@
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.14",
     "md5": "^2.2.1",
-    "promise-value": "^1.2.3",
+    "promise-value": "^1.2.5",
     "react": "^16.8.6",
     "react-autocomplete": "^1.8.1",
     "react-bootstrap": "^0.32.4",
@@ -31,7 +31,7 @@
     "scheduler": "^0.13.6",
     "sjtest": "^0.4.9",
     "wwutils": "^0.9.4",
-    "you-again": "^0.8.4"
+    "you-again": "^0.8.5"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
