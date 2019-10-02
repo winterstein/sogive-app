@@ -59,8 +59,7 @@ const Event = ({id}) => {
 		<div className='fullwidth-bg' style={pstyle} />
 		<div className="col-md-8 col-md-offset-2 well" style={{marginTop:'2vh'}}>
 			{item.bannerImage? <img src={item.bannerImage} style={{width:'100%', maxHeight:'50vh'}} alt='event banner' /> : null}
-			<h2>{item.name || 'Event '+id}</h2>		
-			<small>SoGive ID: {id}</small>
+			<h2>{item.name || 'Event '+id}</h2>
 			{logo? <img src={logo} className='pull-right logo-xlarge img-thumbnail' alt='event logo' /> : null}
 			
 			{item.date? <center><Misc.LongDate date={item.date} /></center> : null}
