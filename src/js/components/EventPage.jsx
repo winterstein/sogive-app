@@ -94,6 +94,7 @@ const FundRaiserList = ({event, eventId}) => {
 
 		{Money.value(total)? <h4>Total raised so far: <Misc.Money amount={total} />...</h4> : null}
 		<ListLoad type={C.TYPES.FundRaiser} 
+			servlet='fundraiser'
 			navpage='fundraiser'
 			status={C.KStatus.PUBLISHED} q={q}
 			hasFilter={false}		
