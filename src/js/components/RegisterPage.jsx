@@ -521,7 +521,7 @@ const Receipt = ({basket, event}) => {
 				<p>Registered in England and Wales, company no. 09966206</p>
 				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
-				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeString(createdDate)}</p> : null}				
+				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeTag(createdDate)}</p> : null}				
 				<p>Customer name: {ticket0 && ticket0.attendeeName}</p>
 				{card? <p>Payment card: **** **** **** {card.last4}</p> : null}
 				{basket.paymentId? <p>Payment ID: {basket.paymentId}</p> : null}

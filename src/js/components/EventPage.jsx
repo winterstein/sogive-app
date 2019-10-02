@@ -62,11 +62,10 @@ const Event = ({id}) => {
 			<h2>{item.name || 'Event '+id}</h2>		
 			<small>SoGive ID: {id}</small>
 			{logo? <img src={logo} className='pull-right logo-xlarge img-thumbnail' alt='event logo' /> : null}
-			<center>
-				{item.date? <Misc.LongDate date={item.date} /> : null}
-				{item.description? <MDText source={item.description} /> : null}				
-				{item.url? <div><a href={item.url}>Event website</a></div> : null}
-			</center>
+			
+			{item.date? <center><Misc.LongDate date={item.date} /></center> : null}
+			{item.description? <MDText source={item.description} /> : null}				
+			{item.url? <div><a href={item.url}>Event website</a></div> : null}
 	
 			{item.backgroundImage? <img src={item.backgroundImage} className='img-thumbnail' width='200px' /> : null}
 
