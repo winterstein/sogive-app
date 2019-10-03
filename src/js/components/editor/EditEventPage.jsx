@@ -78,7 +78,7 @@ const EventEditor = ({id}) => {
 		DataStore.update();
 	};
 
-	const path = getPath(C.KStatus.DRAFT, type, id);
+	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id});
 	return (<div>
 		<h2>Event {item.name || id} </h2>
 		<div><a href={"/#event/"+escape(id)}>View event</a></div>		

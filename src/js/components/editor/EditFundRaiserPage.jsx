@@ -55,7 +55,7 @@ const FundRaiserEditor = ({id}) => {
 
 	// TODO charity reuses register form control
 
-	const path = getPath(C.KStatus.DRAFT, type, id);
+	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id});
 	const peepPath = path.concat('owner');
 
 	return (
