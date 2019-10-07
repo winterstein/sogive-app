@@ -322,9 +322,11 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 			/>			
 		</BS.Col>		
 	</BS.Row>
-		<div><small>Approximate rate: 1 {preferredCurrency} = {rate} GBP. SoGive is based in the UK and we work in £ sterling. Currency conversion is handled by the banks and the actual rate may vary.</small></div>
+		<div><small>Approximate rate: 1 {preferredCurrency} = {rate} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
+		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
 	</>);
 };
+
 
 const SDButton = ({path,sd, donation}) => {
 	if ( ! sd.amount) return null; // defend against bad data
