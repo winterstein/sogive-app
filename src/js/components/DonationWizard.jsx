@@ -290,15 +290,16 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
+	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
 		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
 		console.warn("got",got);
 		return got;
 	});
 	let rate = 0.80341;
-	if (pvRate.value) {
-		console.warn(pvRate.value);
-		rate = pvRate.value.rates.GBP;
+	if (pvRate.value) {		
+		rate = pvRate.value.rates.GBP / pvRate.value.rates.USD;
+		console.warn("USD->GBP "+rate, pvRate.value);
 	}
 	return (<><BS.Row>
 		<BS.Col md={6} sm={12}>
