@@ -323,7 +323,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 			/>			
 		</BS.Col>		
 	</BS.Row>
-		<div><small>Approximate rate: 1 {preferredCurrency} = {rate} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
+		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
 		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
 	</>);
 };
