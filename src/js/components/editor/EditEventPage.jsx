@@ -16,7 +16,7 @@ import Ticket from '../../data/charity/Ticket';
 import Donation from '../../data/charity/Donation';
 import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
-import ShareWidget, {AccessDenied, ShareLink} from '../../base/components/ShareWidget';
+import ShareWidget, {canWrite, AccessDenied, ShareLink} from '../../base/components/ShareWidget';
 import {SuggestedDonationEditor} from './CommonControls';
 
 const EditEventPage = () => {
@@ -24,8 +24,8 @@ const EditEventPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 
-	let hasShareAccess = Login.checkShare(eventId);
-	hasShareAccess = (hasShareAccess && hasShareAccess.responseJSON && hasShareAccess.responseJSON.success);
+	let type = C.TYPES.Event;
+	let pvCanWrite = canWrite(type, eventId);
 
 	let isAdmin = Roles.iCan(C.CAN.admin);
 	isAdmin = isAdmin && isAdmin.value;
@@ -33,12 +33,11 @@ const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div className='alert alert-warning'><h3>Please login</h3></div>;
 	}
-	else if ( ! hasShareAccess && ! isAdmin ) {
+	if ( ! pvCanWrite.resolved) return <Misc.Loading text="Checking editing rights" />;
+	if ( ! pvCanWrite.value && ! isAdmin ) {
 		return <AccessDenied thingId={eventId} />;
 	}
 	if (eventId) return <EventEditor id={eventId} />;
-	let type = C.TYPES.Event;
-	let servlet = path[0];
 	return (<div>
 		<CreateButton type={type} />
 		<h2>Edit an Event</h2>
