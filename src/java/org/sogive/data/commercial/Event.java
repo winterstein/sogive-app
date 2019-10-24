@@ -78,6 +78,12 @@ public class Event extends AThing {
 	 */
 	Boolean teams;
 	Boolean pickCharity;
+	
+	/**
+	 * If set, the organiser will get name and email details for all donors. Donors will be informed of this when making a donation.
+	 */
+	Boolean shareDonorsWithOrganiser;
+	
 	/**
 	 * locked charity?
 	 */

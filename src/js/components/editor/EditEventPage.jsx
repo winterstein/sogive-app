@@ -113,12 +113,6 @@ const EventEditor = ({id}) => {
 			<Misc.PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
 
 			<Misc.PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
-
-			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
-				type='number' />
-
-			<Misc.PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
-
 			<Misc.PropControl path={path} prop='pickCharity' item={item} 
 				label='Allow users to pick their charity?' type='checkbox' 
 				dflt 
@@ -161,6 +155,16 @@ const EventEditor = ({id}) => {
 				: <p>No extras yet!</p>
 			}
 			<button className='btn btn-default' onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
+		</Misc.Card>
+
+		<Misc.Card title='Advanced Options'>
+			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
+				type='number' />
+
+			<Misc.PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
+
+			<Misc.PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: share details with event organiser' 
+				type='checkbox' help="If set, the organiser (that's probably you!) will get name and email details for all donors. Donors will be informed of this when making a donation." />
 		</Misc.Card>
 
 		<div>

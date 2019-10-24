@@ -202,7 +202,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage> : null}
 				
 					{showMessageSection? <WizardStage title='Message'>
-						<MessageSection path={path} recipient={item.owner} />
+						<MessageSection path={path} recipient={item.owner} item={item} />
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false} >
@@ -486,7 +486,7 @@ const DetailsSection = ({path, charity, fromEditor}) => {
 };
 
 
-const MessageSection = ({path, recipient}) => (
+const MessageSection = ({path, recipient, item}) => (
 	<div className='section donation-amount'>
 		<Misc.PropControl 
 			prop='message' 
@@ -494,8 +494,14 @@ const MessageSection = ({path, recipient}) => (
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
 			path={path} type='textarea' />
 
-		<p>By default we list your name and the amount.</p>
-		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' />
+		<p>
+			By default we list your name and the amount.
+			Your name, amount, and your email are also shared with the organiser.
+		</p>
+		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' 
+			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))? 
+				"Your name will not be listed on the website. However your name, email, and donation will still be shared with the organiser" : null}
+		/>		
 
 		<Misc.PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
 
