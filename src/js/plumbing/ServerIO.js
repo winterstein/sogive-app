@@ -35,10 +35,12 @@ ServerIO.getServletForType = (type) => {
 /**
  * @param query {!String} query string
  * @param status {?KStatus} optional to request draft
+ * @param {?Boolean} recommended If true, return only high-impact "gold" charities. Also fetches legacy recommended charities. @deprecated in favour of impact=high
+ * @param {?String} impact e.g. "high" Filter by impact
  */
-ServerIO.searchCharities = function({q, prefix, from, size, status, recommended}) {
+ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact}) {
 	// assMatch( q || prefix, String);
-	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended}} );
+	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
 };
 
 

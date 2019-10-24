@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
+import javax.lang.model.SourceVersion;
+
 import com.winterwell.depot.IInit;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
@@ -198,6 +200,9 @@ implements IInit
 			String key=null; Object value=null;
 			try {
 				key = e.getKey();
+				if ( ! SourceVersion.isName(key)) {
+					continue; // skip eg. "@type"
+				}
 				value = e.getValue();
 				ReflectionUtils.setPrivateField(thing, key, value);
 			} catch (Throwable ex) {

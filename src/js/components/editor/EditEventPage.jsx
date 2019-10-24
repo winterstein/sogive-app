@@ -142,7 +142,7 @@ const EventEditor = ({id}) => {
 				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />) 
 				: <p>No tickets yet!</p>
 			}
-			<button className='btn btn-default' onClick={addTicketType}><Misc.Icon glyph='plus' /> Create</button>
+			<button className='btn btn-default' onClick={addTicketType} type="button"><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
 		<Misc.Card title='Suggested Donation'>
@@ -154,7 +154,7 @@ const EventEditor = ({id}) => {
 				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
 				: <p>No extras yet!</p>
 			}
-			<button className='btn btn-default' onClick={addExtra}><Misc.Icon glyph='plus' /> Create</button>
+			<button className='btn btn-default' onClick={addExtra} type="button"><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
 		<Misc.Card title='Advanced Options'>

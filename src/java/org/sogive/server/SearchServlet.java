@@ -20,6 +20,8 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
@@ -38,6 +40,7 @@ import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.app.WebRequest.KResponseType;
 import com.winterwell.web.fields.BoolField;
+import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
 
@@ -49,7 +52,14 @@ public class SearchServlet implements IServlet {
 	public static final SField Q = new SField("q");
 	public static final IntField SIZE = new IntField("size");
 	public static final IntField FROM = new IntField("from");
+	
+	@Deprecated
 	public static final BoolField RECOMMENDED = new BoolField("recommended");
+	/**
+	 * e.g. "high" (aka gold)
+	 */
+	public static final SField IMPACT = new SField("impact");
+	
 	public static final BoolField FIXREADY = new BoolField("fixready");
 	/**
 	 * What will ES allow without scrolling??
@@ -66,7 +76,10 @@ public class SearchServlet implements IServlet {
 		SearchRequestBuilder s = new SearchRequestBuilder(client).setPath(path);
 		s.setDebug(true);		
 		String q = state.get(Q);
-		boolean showRecommended = state.get(RECOMMENDED, false);
+		
+		String impact = state.get(IMPACT);
+		boolean _showRecommended = state.get(RECOMMENDED, false);
+		if (impact==null && _showRecommended) impact = "high";
 		
 		if ( q != null) {			
 			// Do we want this to handle e.g. accents??
@@ -93,9 +106,17 @@ public class SearchServlet implements IServlet {
 		}
 		
 		// Data status Filters
-		if (showRecommended) {
-			QueryBuilder qb = QueryBuilders.termQuery("recommended", "true");
-			s.addQuery(qb);
+		if (impact != null) {
+			// HACK: handle old data format, which was recommended:true
+			if ("high".equals(impact)) {
+				BoolQueryBuilder bq = ESQueryBuilders.boolQuery()
+						.should(ESQueryBuilders.termQuery("impact", impact))
+						.should(ESQueryBuilders.termQuery("recommended", true));
+				s.addQuery(bq);
+			} else {
+				QueryBuilder qb = QueryBuilders.termQuery("impact", impact);
+				s.addQuery(qb);
+			}
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {

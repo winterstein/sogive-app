@@ -24,7 +24,15 @@ import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import {SuggestedDonationEditor} from './CommonControls';
 
+/**
+ * HACK flag for simple vs advanced editor -- lets us mix in some advanced controls here.
+ */
+const isAdvanced = () => DataStore.getValue('widget','editor','isAdvanced');
+
 const SimpleEditCharityPage = () => {
+	// HACK - see isAdvanced()
+	DataStore.setValue(['widget','editor','isAdvanced'], false);
+
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
 	}
@@ -134,21 +142,24 @@ const SimpleEditCharityPage = () => {
 
 
 const EditorialEditor = ({charity}) => {
+	// soft port OLD data
 	let rec = charity.recommended;
-	return (<div>					
-		<EditField item={charity} type='checkbox' field='recommended'
-			label='Recommended High-Impact Charity'
-			help="Recommended charities are listed above others. They should have a high impact-per-£ ratio, based on reliable data." />
-		
+	if (rec && ! charity.impact) charity.impact = 'high';
+
+	return (<div>
 		<EditField item={charity} type='select' field='impact'
-			options={CONFIDENCE_VALUES.values} 
+			options={IMPACT_VALUES.values} 
+			labels={IMPACT_LABEL4VALUE}
+			canUnset
 			label='Overall Impact Rating'
-			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them?"
+			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
 		/>
 
 		<EditField item={charity} field='confidence' 
-			type='select' options={CONFIDENCE_VALUES.values} 
+			type='select'			
+			options={CONFIDENCE_VALUES.values} 
 			defaultValue={CONFIDENCE_VALUES.medium} 
+			canUnset
 			label='Overall Confidence'
 			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities." 
 		/>
@@ -157,6 +168,11 @@ const EditorialEditor = ({charity}) => {
 			label='Recommendation Comment '
 			help="A sentence or two on why SoGive recommends (or not) this charity." 
 		/>
+
+		{isAdvanced()? <EditField item={charity} type='checkbox' field='hideImpact'
+			label='Hide impact'
+			help="If the charity objects to showing impact info, this can be used to hide it on fund-raisers." />
+			: null}
 
 	</div>);
 };
@@ -508,6 +524,14 @@ const ProjectInputEditor = ({charity, project, input}) => {
 };
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
+const IMPACT_VALUES = new Enum("high medium low very-low more-info-needed");
+const IMPACT_LABEL4VALUE = {
+	"high": "gold",
+	"medium": "silver",
+	"low": "bronze",
+	"very-low": "do not donate",
+	"more-info-needed": "more information needed"
+};
 
 /**
  * Edit output / impact
@@ -644,5 +668,8 @@ export default SimpleEditCharityPage;
 export {
 	ProjectInputs,
 	AddProject, RemoveProject, ProjectDataSources, STD_INPUTS,
-	AddIO
+	AddIO,
+	isAdvanced,
+	CONFIDENCE_VALUES, 
+	EditorialEditor
 };
