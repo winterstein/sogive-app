@@ -7,6 +7,8 @@ import SJTest from 'sjtest';
 import BS from './base/components/BS3';
 import MainDiv from './components/MainDiv';
 import {getUrlVars, addScript} from 'wwutils';
+import Misc from './base/components/Misc';
+Misc.FontAwesome = 5;
 
 ReactDOM.render(
 	<MainDiv />,
