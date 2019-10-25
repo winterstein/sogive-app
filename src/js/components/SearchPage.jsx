@@ -35,11 +35,11 @@ export default class SearchPage extends React.Component {
 	setResults(results, total, from, all, recommended) {
 		assert(_.isArray(results));
 		this.setState({
-			results: results,
-			total: total,
-			from: from,
-			all: all,
-			recommended: recommended,
+			results,
+			total,
+			from,
+			all,
+			recommended,
 		});
 	}
 
@@ -346,9 +346,9 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	}
 	// Some elements need to be shrunk down if they're too long
 	const longName = charityName.length > 25;
-
-	const recommendedTab = item.recommended ? (
-		<span className='recommended-tab'><img className='recommended-icon' src='/img/recommended.svg' />Recommended Charity</span>
+	
+	const recommendedTab = NGO.isHighImpact(item)? (
+		<span className='recommended-tab'><Misc.Icon fa='award' className='text-gold recommended-icon' /> Recommended Charity</span>
 	) : null;
 	
 	/** if onPick is defined, then stop the click and call onPick */
@@ -370,7 +370,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
-			</div>
+			</div>			
 			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
@@ -393,15 +393,30 @@ const SearchResult = ({ item, CTA, onPick }) => {
 				)}
 			</a>
 			<a href={charityUrl} onClick={onClick} className='text-summary col-md-4 col-xs-8'>
-				<span className='name'>{charityName}</span>
+				<span className='name'>{charityName} <ImpactBadge charity={item} /></span>
 				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
 			{impactExplanation}
-			{noImpact}
+			{noImpact}			
 		</div>
 	);
 }; //./SearchResult
 
+
+const ImpactBadge = ({charity}) => {
+	if (NGO.isHighImpact(charity)) charity.impact='high'; // old data HACK
+	if ( ! charity.impact || charity.impact==='more-info-needed') return null;
+	if (charity.impact==='very-low') {
+		return <span className='impact-rating pull-right text-warning' title='We suggest avoiding this charity'><Misc.Icon fa='times' /> dubious impact</span>;
+	}
+	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	let help = {
+		high: 'Gold: a high impact charity with solid data',
+		medium: 'Silver: an effective charity',
+		low: 'Bronze: Either the impact or the impact measurement/reporting could be better',
+	}[charity.impact];
+	return <span className={'impact-rating pull-right text-'+label} title={help}><Misc.Icon fa='award' /> {label}</span>;
+};
 
 const SearchPager = ({total, from = 0}) => {
 	const pageCount = Math.min(Math.ceil(total / RESULTS_PER_PAGE), MAX_RESULTS / RESULTS_PER_PAGE);

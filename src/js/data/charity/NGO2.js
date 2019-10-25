@@ -38,6 +38,11 @@ NGO.logo = item => item.logo;
 NGO.PROPS = new Enum('uk_giftaid');
 
 /**
+ * patch old data (boolean) and new (impact=high aka "gold")
+ */
+NGO.isHighImpact = ngo => ngo.recommended || ngo.impact==='high';
+
+/**
  * Get the summary or description, capped at 280 chars. Can be blank never null.
  */
 NGO.shortDescription = ngo => ellipsize(ngo.summaryDescription || ngo.description || '', 280);

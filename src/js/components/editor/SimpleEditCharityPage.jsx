@@ -148,8 +148,8 @@ const EditorialEditor = ({charity}) => {
 
 	return (<div>
 		<EditField item={charity} type='select' field='impact'
-			options={IMPACT_VALUES.values} 
-			labels={IMPACT_LABEL4VALUE}
+			options={C.IMPACT_VALUES.values} 
+			labels={C.IMPACT_LABEL4VALUE}
 			canUnset
 			label='Overall Impact Rating'
 			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
@@ -524,14 +524,6 @@ const ProjectInputEditor = ({charity, project, input}) => {
 };
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
-const IMPACT_VALUES = new Enum("high medium low very-low more-info-needed");
-const IMPACT_LABEL4VALUE = {
-	"high": "gold",
-	"medium": "silver",
-	"low": "bronze",
-	"very-low": "do not donate",
-	"more-info-needed": "more information needed"
-};
 
 /**
  * Edit output / impact

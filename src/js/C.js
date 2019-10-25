@@ -32,3 +32,15 @@ Roles.defineRole(C.ROLES.goodlooper, [C.CAN.edit, C.CAN.publish, C.CAN.goodloop]
 
 // Taken from: http://emailregex.com/
 C.emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+C.IMPACT_VALUES = new Enum("high medium low very-low more-info-needed");
+/**
+ * Lowercase and do not change! - the labels are also used as css class names!
+ */
+C.IMPACT_LABEL4VALUE = {
+	"high": "gold",
+	"medium": "silver",
+	"low": "bronze",
+	"very-low": "do not donate",
+	"more-info-needed": "more information needed"
+};
