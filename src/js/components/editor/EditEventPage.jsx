@@ -33,7 +33,9 @@ const EditEventPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div className='alert alert-warning'><h3>Please login</h3></div>;
 	}
-	if ( ! pvCanWrite.resolved) return <Misc.Loading text="Checking editing rights" />;
+	if ( ! pvCanWrite.resolved) {
+		return <Misc.Loading text="Checking editing rights" />;
+	} 
 	if ( ! pvCanWrite.value && ! isAdmin ) {
 		return <AccessDenied thingId={eventId} />;
 	}
