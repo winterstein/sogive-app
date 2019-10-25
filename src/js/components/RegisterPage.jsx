@@ -73,7 +73,7 @@ const RegisterPage = () => {
 
 	return (
 		<div className=''>
-			<div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage || '/img/kiltwalk/KW_aberdeen_supporter_background.jpg'})`}} />
+			<div className='fullwidth-bg' style={{backgroundImage: 'url('+event.backgroundImage+')'}} />
 			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
