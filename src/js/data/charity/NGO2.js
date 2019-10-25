@@ -39,8 +39,9 @@ NGO.PROPS = new Enum('uk_giftaid');
 
 /**
  * patch old data (boolean) and new (impact=high aka "gold")
+ * Plus check for ready
  */
-NGO.isHighImpact = ngo => ngo.recommended || ngo.impact==='high';
+NGO.isHighImpact = ngo => NGO.isReady(ngo) && (ngo.recommended || ngo.impact==='high');
 
 /**
  * Get the summary or description, capped at 280 chars. Can be blank never null.

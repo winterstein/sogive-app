@@ -404,6 +404,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 
 
 const ImpactBadge = ({charity}) => {
+	if ( ! NGO.isReady(charity)) return null;
 	if (NGO.isHighImpact(charity)) charity.impact='high'; // old data HACK
 	if ( ! charity.impact || charity.impact==='more-info-needed') return null;
 	if (charity.impact==='very-low') {
