@@ -129,7 +129,7 @@ class CharityPageImpactAndDonate extends Component {
 						</div>
 						<div className='donation-input'>
 							<div className='amount-input'>
-								<Misc.PropControl type='Money' prop='amount' 
+								<Misc.PropControl type='Money' prop='amount'
 									path={formPath} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>
