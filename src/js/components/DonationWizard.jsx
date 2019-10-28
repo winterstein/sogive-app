@@ -168,7 +168,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
 	let credit = Transfer.getCredit();		
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	const proposedSuggestedDonation = getDonationAmount({path,item,credit, suggestedDonations});
+	const proposedSuggestedDonation = getDonationAmount({path, item, credit, suggestedDonations});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
 	// NB: this should always be true, cos getDonationAmount sets it to a default
@@ -212,7 +212,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					<WizardStage title='Receipt' previous={false} >
 						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
-				</Wizard>
+					</Wizard>
 			</Modal.Body>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
@@ -256,6 +256,9 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		showRepeatControls = dntn.repeat && true; // off unless somehow set
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
 	}
+
+	// When the user manually changes the donation amount, mark the donation object as "don't mess with the amount if it's set elsewhere"
+	const flagUserSetAmount = () => DataStore.setValue(path.concat('userSetAmount'), true);
 	
 	return (
 		<div className='section donation-amount'>
@@ -266,7 +269,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 			{preferredCurrency? 
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
 				:
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} />
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
 			}
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
@@ -360,7 +363,10 @@ const getDonationAmount = ({path, item, credit, suggestedDonations}) => {
 	let val = Donation.amount(dntn);
 	// NB: the raw !== undefined test should allow user-set blank values to stay blank
 	// whilst replacing fresh blanks below.
-	if (val && (Money.value(val) || val.raw !== undefined)) {
+	// dntn could have been set by the PropControl in AmountSection without user action
+	// If not set by user action, still fall through to getDonationAmount2 - which might pull from
+	// the +/- "X May Fund.." field
+	if (val && dntn.userSetAmount && (Money.value(val) || val.raw !== undefined)) {
 		return {amount:val, repeat:dntn.repeat};
 	}
 	const sd = getDonationAmount2({path, item, credit, suggestedDonations});
