@@ -539,6 +539,7 @@ const DownloadLink = ({total}) => {
 		<a className='pull-right' 
 			title='Download these reults in .csv (spreadsheet) format'
 			href={'/search.csv?'+qry} 
+			download='charities.csv'
 			target='_new'>
 			<Glyphicon glyph='download-alt' /> csv
 		</a>
