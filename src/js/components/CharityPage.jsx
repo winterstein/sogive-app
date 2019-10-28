@@ -50,7 +50,7 @@ const CharityPage = () => {
 				<Tab eventKey={1} title='About'>
 					<CharityAbout charity={charity} />
 				</Tab>
-				<Tab eventKey={2} title='Extra Info'>
+				<Tab eventKey={2} title='Analysis'>
 					<CharityExtra charity={charity} />
 					<LogOffSiteDonation item={charity} />
 					<MakeDirectFundRaiser charity={charity} />
