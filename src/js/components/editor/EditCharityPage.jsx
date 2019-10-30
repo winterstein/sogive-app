@@ -112,6 +112,7 @@ const EditCharityPage = () => {
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					<h4>Suggested Donations</h4>
 					<Misc.ListEditor path={cpath.concat('suggestedDonations')} ItemEditor={SuggestedDonationEditor} />
+					{/* TODO bank details - but using profiler not SoGive utself for GDPR reasons */}
 				</Misc.Card>
 
 				<Misc.Card title='Overall finances and impact'>
@@ -420,6 +421,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 	// some controls are not for all users e.g. goodloop
 	if (userFilter) {
 		if ( ! Roles.iCan(userFilter).value ) {
+			console.log("skip EditField "+field+" cos userFilter "+userFilter)
 			return null;
 		}
 	}
