@@ -1,6 +1,7 @@
 package org.sogive.server;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.sogive.data.user.RepeatDonation;
 
@@ -14,8 +15,7 @@ public class RepeatdonationServlet extends CrudServlet<RepeatDonation> {
 	}
 
 	@Override
-	protected void doList(WebRequest state) throws IOException {
-		// TODO Auto-generated method stub
-		super.doList(state);
+	protected List doList(WebRequest state) throws IOException {
+		return super.doList(state);
 	}
 }

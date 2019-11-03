@@ -81,8 +81,8 @@ public class DonationServlet extends CrudServlet {
 	}*/
 	
 	@Override
-	protected void doList(WebRequest state) throws IOException {
-		super.doList(state);
+	protected List doList(WebRequest state) throws IOException {
+		return super.doList(state);
 	}
 
 		
