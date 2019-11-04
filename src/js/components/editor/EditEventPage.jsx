@@ -172,6 +172,7 @@ const EventEditor = ({id}) => {
 		<div>
 			<ShareLink item={item} />
 			<ShareWidget item={item} />
+			<div><br/><br/>{/* a bit of whitespace at the page bottom*/}</div>
 		</div>
 		<Misc.SavePublishDiscard type={type} id={id} />
 	</div>);
