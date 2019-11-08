@@ -317,7 +317,7 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 	assert(basketPath, "RegisterPage.jsx - WalkerDetailsTab: "+basketPath);
 	// No sort on Tickets -- so that the editor can adjust ordering (eg by name / kind, alphabetical, or walk-length, or whatever)
 	let items = Basket.getItems(basket); //.sort((a, b) => a.name > b.name);
-	if ( ! items.length) return null;
+	assert(items.length, "WalkerDetailsTab - empty basket! "+JSON.stringify(basket));
 	let ticket0 = items[0];
 	let wdetails = items.map((ticket, ti) => {
 		const ticketPath = [...basketPath, 'items', ti];

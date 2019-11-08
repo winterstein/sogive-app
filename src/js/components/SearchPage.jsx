@@ -542,7 +542,7 @@ const DownloadLink = ({total}) => {
 			download='charities.csv'
 			target='_new'>
 			<Glyphicon glyph='download-alt' /> csv
-		</a>
+		</a> 
 	);
 };
 
