@@ -30,6 +30,8 @@ import EventReportPage from './editor/EventReportPage';
 import RegisterPage from './RegisterPage';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
+import CardShopPage from './CardShopPage';
+import CardPage from './CardPage';
 
 /**
  * init DataStore
@@ -83,7 +85,9 @@ const PAGES = {
 	edit: EditCharityPage,
 	simpleedit: SimpleEditCharityPage,
 	about: AboutPage,
-	test: TestPage	
+	test: TestPage,
+	cardshop: CardShopPage,
+	card: CardPage
 };
 
 const DEFAULT_PAGE = 'search';
