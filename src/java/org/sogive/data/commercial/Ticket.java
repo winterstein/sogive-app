@@ -53,7 +53,7 @@ public class Ticket extends AThing {
 	
 	
 	String description;
-	// i.e. "Walker"
+	/** i.e. "Walker" */
 	String attendeeNoun;
 	String attendeeIcon;
 	
