@@ -177,7 +177,6 @@ const EditorialEditor = ({charity}) => {
 	</div>);
 };
 
-
 const ProfileEditor = ({charity}) => {
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
@@ -195,8 +194,15 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
+		
 		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags, e.g. education, poverty, environment' 
 			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
+		
+		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)' 
+			options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
+			labels={NGO.UNSDGs}
+			help='Which UN SDG does this charity mainly work on?' />
+
 		<EditField item={charity} type='text' field='howTags' label='How (method) tags, e.g. research, direct work, campaigning' 
 			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to "Research", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated. ' />
 		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world' 
