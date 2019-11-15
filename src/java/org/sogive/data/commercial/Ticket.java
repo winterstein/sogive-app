@@ -64,11 +64,20 @@ public class Ticket extends AThing {
 	
 	
 	String attendeeName;
+	
+	@ESKeyword
 	String attendeeEmail;
 	String attendeeAddress;
 	String team;
+	
 	@ESKeyword	
 	String charityId;
+
+	/**
+	 * The parent Ticket ID, or null
+	 */
+	@ESKeyword	
+	String parentId;
 
 	@Override
 	public String toString() {

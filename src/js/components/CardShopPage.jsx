@@ -177,7 +177,9 @@ const TicketGroup = ({name, subtitle, types, basket}) => {
 
 const RegisterTicket = ({ticketType, basket}) => {
 	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
-	let tickets = basket ? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
+	const _tickets = Basket.getItems(basket);
+	const ttid = getId(ticketType);
+	let tickets = basket ? _tickets.filter(tkt => tkt.parentId === ttid) : [];
 
 	const removeTicketAction = () => ActionMan.removeFromBasket(basket, tickets[tickets.length-1]);
 	const addTicketAction = () => ActionMan.addToBasket(basket, ticketType);
@@ -218,12 +220,13 @@ const TicketInvoice = ({event, basket}) => {
 	console.warn("basket", basket);
 	// Group items of same type+kind into rows
 	Basket.getItems(basket).forEach(item => {
-		let row = idToRow[item.id];
+		const id = item.parentId || item.id;
+		let row = idToRow[id];
 		if (row) {
 			row.count += 1;
 			row.cost = Money.add(row.cost, item.price);
 		} else {
-			idToRow[item.id] = {
+			idToRow[id] = {
 				item,
 				label: (item.name || 'Ticket') + (item.kind? ' - '+item.kind : ''), // eg "The Wee Wander - Child"
 				count: 1,

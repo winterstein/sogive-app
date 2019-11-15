@@ -22,6 +22,7 @@ public class Card extends AThing {
 		this.id = "card."+FundRaiser.getIDForTicket(ticket);
 //		generatedBy = basket.get // TODO!
 		ticketId = ticket.getId();
+		parentTicketId = ticket.getParentId();
 		basketId = basket.getId();
 		charityId = Utils.or(ticket.getId(), basket.getId());
 		toName = ticket.attendeeName;
@@ -40,6 +41,9 @@ public class Card extends AThing {
 	
 	@ESKeyword
 	String ticketId;
+
+	@ESKeyword
+	String parentTicketId;
 	
 	@ESKeyword
 	String basketId;

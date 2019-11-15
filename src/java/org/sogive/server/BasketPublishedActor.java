@@ -6,7 +6,6 @@ import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Card;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Ticket;
-import org.sogive.data.user.GiftCard;
 
 import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;

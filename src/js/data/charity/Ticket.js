@@ -12,6 +12,8 @@ class Ticket extends DataClass {
 	constructor(base) {
 		super(base);
 		Object.assign(this, base);
+		// preserve history
+		this.parentId = base? base.id : null;
 		// Use a fresh ID
 		this.id = this.eventId+'.'+nonce();
 	}
