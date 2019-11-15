@@ -46,8 +46,9 @@ public class MasterHttpServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String servletName = null;
+		WebRequest request = null;
 		try {
-			WebRequest request = new WebRequest(null, req, resp);
+			request = new WebRequest(null, req, resp);
 			Log.d("servlet", request);
 			String path = request.getRequestPath();
 			String[] pathBits = path.split("/");
@@ -129,8 +130,8 @@ public class MasterHttpServlet extends HttpServlet {
 				s.process(request);
 			}			
 			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
-		} catch(Throwable ex) {
-			HttpServletWrapper.doCatch(ex, resp, null);
+		} catch(Throwable ex) {			
+			HttpServletWrapper.doCatch(ex, resp, request);
 		} finally {
 			Thread.currentThread().setName("...done servlet: "+servletName);
 			WebRequest.close(req, resp);

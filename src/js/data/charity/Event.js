@@ -8,11 +8,7 @@ class Event extends DataClass {
 	constructor(base) {
 		super(base);
 		Object.assign(this, base);
-		// start with one default ticket
-		if ( ! this.ticketTypes) {
-			const tt = new Ticket({eventId: getId(this), name:"Standard Ticket"});
-			this.ticketTypes = [tt];	
-		}
+		// NB: EditEventPage will make one default ticket -- cant do it here as no ID yet
 	}
 }
 DataClass.register(Event, "Event");

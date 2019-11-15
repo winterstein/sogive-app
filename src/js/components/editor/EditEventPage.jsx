@@ -60,6 +60,12 @@ const EventEditor = ({id}) => {
 		item.ticketTypes = (item.ticketTypes || []).concat(tt);
 		DataStore.update();
 	};
+	// start with one default ticket
+	if ( ! item.ticketTypes) {
+		const tt = new Ticket({eventId: item.id, name:"Standard Ticket"});
+		item.ticketTypes = [tt];
+	}
+	// merchandise
 	const addExtra = () => {
 		const tt = new Ticket({eventId: item.id});
 		item.extras = (item.extras || []).concat(tt);

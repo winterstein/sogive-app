@@ -23,7 +23,7 @@ import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 
 const CardPage = () => {
-
+	return <div>CARD</div>;
 };
 
 export default CardPage;

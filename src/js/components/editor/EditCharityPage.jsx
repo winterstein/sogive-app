@@ -166,7 +166,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags' 
 			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
 
-		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)' 
+		<EditField item={charity} type='select' field='unsdg' label='UN Sustainable Development Goal (SDG)' 
 			options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
 			labels={NGO.UNSDGs}
 			help='Which UN SDG does this charity mainly work on?' />
