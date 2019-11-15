@@ -104,23 +104,10 @@ const CardShopPage = () => {
 					<RegisterOrLoginTab stagePath={stagePath} />
 				</WizardStage>
 				
-				<WizardStage title='Your Details' complete={walkerDetailsOK} sufficient={walkerDetailsOK} >
+				<WizardStage title='Delivery Details' complete={walkerDetailsOK} sufficient={walkerDetailsOK} >
 					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				</WizardStage>
-						
-				{event.pickCharity === false? null :
-					<WizardStage title='Your Charity' complete={ !! Basket.charityId(basket)} >
-						<CharityChoiceTab basket={basket} />
-					</WizardStage>
-				}
-				
-				{ false && yessy(event.extras)?
-					<WizardStage title='Extras'>
-						TODO Extras
-						auto skip if none
-					</WizardStage> : null
-				}
-
+										
 				<WizardStage title='Checkout' next={false} >
 					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				</WizardStage>
@@ -214,7 +201,7 @@ const RegisterTicket = ({ticketType, basket}) => {
 			</div>
 			<div className='info'>
 				<div className='top-line'>
-					<div className='type-kind'>{kind || ''} Registration</div>
+					<div className='type-kind'>{kind || ''}</div>
 					<div className='type-price'><Misc.Money amount={price} /></div>
 				</div>
 				<div className='description'>{description || ''}</div>
@@ -361,85 +348,14 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<div className='AttendeeDetails'>			
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
+				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first person' /> : null}
 				{ sameAsFirst? null : 
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
-						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
 			</div>
 		</div>
-	);
-};
-
-const TeamControl = ({ticket, path}) => {
-	// does this event support teams?
-	let event = Ticket.eventId(ticket)? DataStore.getData(C.KStatus.PUBLISHED, C.TYPES.Event, Ticket.eventId(ticket)) : null;
-	if ( ! event) {
-		console.warn("TeamControl - No event?! "+Ticket.eventId(ticket), ticket);
-	}
-	if (event && event.teams === false) {
-		return null;
-	}
-
-	return (<Misc.Col2>
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
-			help='Families or colleagues can fundraise as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
-	</Misc.Col2>);
-};
-
-const CharityChoiceTab = ({basket}) => {
-	if ( ! basket) return null;
-	const bpath = ActionMan.getBasketPath();
-	const charityId = Basket.charityId(basket);
-	const recommended = ! charityId; // limit to recommended charities if the input is blank
-	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
-		() => {
-			return ServerIO.searchCharities({prefix: charityId, size: 20, recommended})
-				.then(res => {
-					let hits = res.cargo && res.cargo.hits;
-					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
-					return hits;
-				});
-		}
-	);
-	// keep previous results around, so they're stable whilst the user is typing
-	let results = pvCharities.resolved? pvCharities.value 
-		: DataStore.getValue(['widget','RegisterPage','pickCharityPrevious']);
-		// all={this.state.all} recommended={recommended}
-
-	const onPick = charity => {
-		NGO.assIsa(charity);
-		DataStore.setValue(bpath.concat('charityId'), getId(charity));
-	};
-
-	return (<div>
-		<div className='padded-block'>
-			<p>
-				Please choose a charity to support.
-			</p>		
-			<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
-		</div>
-		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
-			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />			
-	</div>);
-};
-
-const PickCTA = ({item, onClick}) => {
-	const bpath = ActionMan.getBasketPath();
-	const basket = DataStore.getValue(bpath);
-	if (Basket.charityId(basket)===getId(item)) {
-		return (<div className='read-more btn btn-default active'>
-			<Misc.Icon glyph='check' /> Selected
-		</div>);
-	}
-	return (
-		<button onClick={onClick} className='read-more btn btn-default'>
-			<Misc.Icon glyph='unchecked' /> Select
-		</button>
 	);
 };
 
@@ -521,6 +437,7 @@ const Receipt = ({basket, event}) => {
 	return (
 		<div>
 			<div className='padded-block'>
+				<h3>Thank You!</h3>
 				<h3>Payment to SoGive Ltd.</h3>
 				<p>Registered in England and Wales, company no. 09966206</p>
 				{/*<p>Invoice no: TODO</p>*/}
@@ -544,9 +461,7 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 	// Will return false if the user's basket does not contain a ticket for this event
 	// Can't imagine how they could manage that, but will add a safety check below
-	let ticket = 
-		Basket.getItems(basket)
-		.find( ticket => ticket.eventId === id);
+	let ticket = Basket.getItems(basket).find(t => t.eventId === id);
 
 	return (
 		<div className='ConfirmedTicketList'>
@@ -557,30 +472,13 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
-	// did the event specify a next page?
-	if (ticket.postPurchaseLink) {
-		let url = ticket.postPurchaseLink;
-		let cta = ticket.postPurchaseCTA || url;
-		return (<div className='clear padded-block'>
-			<Misc.Col2>
-				<h3>{ticket.attendeeName}</h3>			
-				<div>
-					<h3><a href={url}>{cta}</a></h3>
-				</div>
-			</Misc.Col2>
-		</div>);		
-	}
-	// TODO how can we make a page for no email??
-	// (a) use a temp id, and have a way for the user to claim it
-	// (b) use the lead user's email, and have a way for them to access these other pages, and transfer them
-	// Option (b) would allow for e.g. I set up my page and my Gran's page.
-	// for now: no email = no page
-	let frid = FundRaiser.getIdForTicket(ticket);
+	// important - duplicated in Java
+	let frid = "card."+FundRaiser.getIdForTicket(ticket);
 	
 	// claim ownership (NB: avoid repeat calls to go easy on the server. This is idempotent - repeat calls would fail harmlessly).
 	if (frid && ! DataStore.getValue(['misc','claimFlag', frid])) {
 		Login.claim(frid);
-		DataStore.setValue(['misc','claimFlag', frid], true);
+		DataStore.setValue(['misc','claimFlag', frid], true, false);
 	}
 
 	return (<div className='clear padded-block'>
@@ -588,11 +486,12 @@ const ConfirmedTicket = ({ticket, event}) => {
 			<h3>{ticket.attendeeName}</h3>			
 			<div>
 				{ ticket.attendeeEmail? 
-					<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
-						Setup Fund-Raising Page for {ticket.attendeeName}
+					<a className='btn btn-primary btn-lg' href={'#card/'+encURI(frid)}>
+						Preview e-Card
 					</a>
 					: <p>No email provided</p>
 				}
+				<p>A physical card will also be posted.</p>
 			</div>
 		</Misc.Col2>
 	</div>);

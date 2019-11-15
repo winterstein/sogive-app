@@ -17,6 +17,11 @@ import lombok.Data;
 public class Ticket extends AThing {
 
 	/**
+	 * Optional message from buyer to recipient
+	 */
+	String message;
+	
+	/**
 	 * By default, if you buy several tickets, they use the same address. 
 	 */
 	Boolean sameAsFirst = true;

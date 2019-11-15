@@ -3,9 +3,12 @@ package org.sogive.server;
 import javax.mail.internet.InternetAddress;
 
 import org.sogive.data.commercial.Basket;
+import org.sogive.data.commercial.Card;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Ticket;
+import org.sogive.data.user.GiftCard;
 
+import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
@@ -40,14 +43,21 @@ public class BasketPublishedActor extends Actor<Basket> {
 			Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);
 			return;
 		}
-
-		// make fundraiser
-		FundRaiser fr = new FundRaiser(ticket, basket);
-		JThing draft = new JThing<>(fr);
-		ESPath draftPath = Dep.get(IESRouter.class).getPath(FundRaiser.class, fr.id, KStatus.DRAFT);
-		ESPath publishPath = Dep.get(IESRouter.class).getPath(FundRaiser.class, fr.id, KStatus.PUBLISHED);
-		AppUtils.doPublish(draft, draftPath, publishPath);
 		
+		// make card?
+		AThing fr;
+		if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
+			fr = new Card(ticket, basket);
+		} else {		
+			// make fundraiser
+			fr = new FundRaiser(ticket, basket);		
+		}
+		JThing draft = new JThing<>(fr);
+		IESRouter iesRouter = Dep.get(IESRouter.class);
+		ESPath draftPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.DRAFT);
+		ESPath publishPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.PUBLISHED);
+		AppUtils.doPublish(draft, draftPath, publishPath);
+
 		// email user
 		try {
 			doEmailWalker(ticket, fr);
@@ -56,7 +66,7 @@ public class BasketPublishedActor extends Actor<Basket> {
 		}
 	}
 
-	private void doEmailWalker(Ticket ticket, FundRaiser fr) {
+	private void doEmailWalker(Ticket ticket, AThing fr) {
 		Emailer emailer = Dep.get(Emailer.class);
 		if (emailer==null) {
 			Log.e("BasketPublishedActor", "No Emailer?! Cannot email ticket info for "+ticket);

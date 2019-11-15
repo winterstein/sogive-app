@@ -5,6 +5,8 @@ package org.sogive.data.user;
 
 import java.security.SecureRandom;
 
+import org.sogive.data.commercial.Card;
+
 import com.goodloop.data.KCurrency;
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
@@ -13,6 +15,12 @@ import com.winterwell.es.ESPath;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 
+/**
+ * Give a money voucher.
+ * See {@link Card} which does not transfer money.
+ * @author daniel
+ *
+ */
 public class GiftCard extends AThing {
 	
 	public String code;
@@ -34,6 +42,7 @@ public class GiftCard extends AThing {
 	
 	// Used to randomly generate alpha-numeric code
 	static final String alphaNumeric = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 	static SecureRandom random = new SecureRandom();
 	
 	public GiftCard(Double amount, String generatedBy) {

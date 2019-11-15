@@ -8,6 +8,7 @@ import {modifyHash} from 'wwutils';
 import C from '../../C';
 import Roles from '../../base/Roles';
 import Misc from '../../base/components/Misc';
+import PropControl from '../../base/components/PropControl';
 import DataStore, {getPath} from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
 import ActionMan from '../../plumbing/ActionMan';
@@ -92,9 +93,9 @@ const EventEditor = ({id}) => {
 		<small>ID: {id}</small>
 		
 		<Misc.Card title='Event Details'>			
-			<Misc.PropControl path={path} prop='name' item={item} label='Event Name' />
+			<PropControl path={path} prop='name' item={item} label='Event Name' />
 
-			<Misc.PropControl path={path} prop='date' item={item} label='Event Date' type='date' 
+			<PropControl path={path} prop='date' item={item} label='Event Date' type='date' 
 				validator={ (v, rawValue) => {
 					if ( ! v) {
 						// raw but no date suggests the server removed it
@@ -112,36 +113,36 @@ const EventEditor = ({id}) => {
 				} }
 			/>
 			
-			<Misc.PropControl path={path} prop='country' item={item} label='Country' type='country' required={false} />
+			<PropControl path={path} prop='country' item={item} label='Country' type='country' required={false} />
 			
-			<Misc.PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
+			<PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
-			<Misc.PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
+			<PropControl path={path} prop='url' item={item} label='Event web-page' type='url' />
 
-			<Misc.PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
+			<PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
 
-			<Misc.PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
-			<Misc.PropControl path={path} prop='pickCharity' item={item} 
+			<PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
+			<PropControl path={path} prop='pickCharity' item={item} 
 				label='Allow users to pick their charity?' type='checkbox' 
 				dflt 
 			/>
 
 			{/* TODO a nice charity picker like RegisterPage.jsx CharityChoiceTab */}
-			<Misc.PropControl path={path} prop='charityId' item={item} 
+			<PropControl path={path} prop='charityId' item={item} 
 				label='Charity ID' />
 
-			<Misc.PropControl path={path} prop='teams' item={item} 
+			<PropControl path={path} prop='teams' item={item} 
 				label='User teams?' type='checkbox' />
 		</Misc.Card>
 
 		<Misc.Card icon='camera' title='Images & Branding'>
-			<Misc.PropControl path={path} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
+			<PropControl path={path} prop='backgroundImage' item={item} label='Event Page Backdrop' type='imgUpload' />
 			
-			<Misc.PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
+			<PropControl path={path} prop='logoImage' item={item} label='Square Logo Image' type='imgUpload' />
 
-			<Misc.PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
+			<PropControl path={path} prop='bannerImage' item={item} label='Banner Image (suggested width: 600px)' type='imgUpload' />
 
-			<Misc.PropControl path={path} prop='customCSS' item={item} label='Custom CSS' type='textarea'
+			<PropControl path={path} prop='customCSS' item={item} label='Custom CSS' type='textarea'
 				help='Use for advanced styling edits. This also propagates to all fundraiser pages for this event.' />
 		</Misc.Card>
 
@@ -166,12 +167,12 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<Misc.Card title='Advanced Options'>
-			<Misc.PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
+			<PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
 				type='number' />
 
-			<Misc.PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
+			<PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
 
-			<Misc.PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: Share details with event organiser' 
+			<PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: Share details with event organiser' 
 				type='checkbox' help="If set, the organiser (that's probably you!) will get name and email details for <i>all</i> donors. Donors will be informed of this when making a donation. Only tick this if you need those details. You will be responsible for handling their personal data correctly." />
 		</Misc.Card>
 
@@ -191,24 +192,29 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 	};
 	return (<div className='well'>
 		<small>{ticketType.id}</small>
-		<Misc.PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
-		<Misc.PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
-		<Misc.PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
-		<Misc.PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
+		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
+		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
+		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child' />
+		
+		<PropControl path={path} prop='charityId' label='Charity ID' disabled={Event.charityId(event)} 
+			placeholder='Link a charity to this ticket'
+		/>
+
+		<PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.Col2>
 			<div>
-				<Misc.PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
+				<PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
 					help='The maximum number that can be sold - normally left blank for unlimited' />
-				<Misc.PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only' 
+				<PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only' 
 					help='TODO only those invited by the organiser can attend' />
 			</div>
 			<div><label>Sold so far: {ticketType.sold || 0}</label></div>
 		</Misc.Col2>
-		<Misc.PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
-		<Misc.PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
-		<Misc.PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
-		<Misc.PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
-		<Misc.PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
+		<PropControl type='text' item={ticketType} path={path} prop='description' label='Description' />
+		<PropControl type='text' item={ticketType} path={path} prop='attendeeNoun' label='Attendee Noun' placeholder='e.g. Walker' />
+		<PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
+		<PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
+		<PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
@@ -223,12 +229,12 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 	};
 	return (<div className='well'>
 		<small>{getId(extra)}</small>
-		<Misc.PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
-		<Misc.PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
-		<Misc.PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
-		<Misc.PropControl type='text' item={extra} path={path} prop='description' label='Description' />
+		<PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
+		<PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
+		<PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
+		<PropControl type='text' item={extra} path={path} prop='description' label='Description' />
 		<Misc.Col2>
-			<Misc.PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
+			<PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
 			<div><label>Sold so far: {extra.sold || 0}</label></div>
 		</Misc.Col2>
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>

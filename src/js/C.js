@@ -20,7 +20,7 @@ C.app = {
 	version: {app: '1.0.0'}
 };
 
-C.TYPES = new Enum("NGO User Donation RepeatDonation Project Event FundRaiser Basket Ticket Money Transfer");
+C.TYPES = new Enum("NGO User Donation RepeatDonation Project Event FundRaiser Basket Ticket Card Money Transfer");
 
 C.ROLES = new Enum("editor admin company goodlooper");
 C.CAN = new Enum("edit publish admin editEvent test uploadCredit goodloop manageDonations");

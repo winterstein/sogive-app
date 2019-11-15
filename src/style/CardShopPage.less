@@ -1,0 +1,114 @@
+
+// HACK copy paste of RegisterPage.less
+
+@import "positioning.less";
+@import "Page.less";
+@import "colours.less";
+
+#cardshop {
+	.padded-page;	
+}
+
+#cardshop {
+	.ticket-group {		
+		.ticket-group-types {
+			.padded-block;
+			list-style-type: none;
+			padding: 0;
+			position: relative;			
+
+			.ticket-type {
+				background: @type-bg-colour;
+				display: flex;
+				justify-content: space-between;
+				margin: 1em auto;
+
+				.decoration, .info, .controls {
+					display: inline-block;
+				}
+				// padding, except for the curled-corner .decoration
+				.info, .controls {
+					padding: 1em;
+				}
+				.decoration {
+					width: 10em;
+					background-image: url(/img/ticket-corner.png);
+					background-repeat: no-repeat;
+					background-position-x: left;
+					background-position-y: bottom;
+					background-size: contain;
+					.attendee-icon {
+						width: 6em;
+						margin: 1em;
+					}
+				}
+				.decoration, .controls {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+				.info {
+					flex-grow: 1;
+					.top-line {
+						display: flex;
+						justify-content: space-between;
+						.type-name, .type-price {
+							font-size: 1.25em;
+						}
+					}
+				}
+				.controls {
+					width: 10em;
+					border-left: 2px solid @type-line-colour;
+					text-align: center;
+					.add-remove-controls {
+						display: flex;
+					}
+
+					.add-first-ticket, .add-remove-ticket, .ticket-count {
+						font-size: 1.25em;
+					}
+					.add-first-ticket {
+						width: 6em;
+					}
+					.add-remove-ticket, .ticket-count {
+						width: 2em;
+					}
+					.ticket-count {
+						background-color: white;
+						display: inline-block;
+					}
+				}
+			}
+		}
+	} // ./ticket-group
+
+	.invoice {
+		background-color: @type-bg-colour;
+		width: 100%;
+		padding: 1.5em 0;
+
+		.invoice-table {
+			width: 100%;
+			.padded-block;
+
+			line-height: 1.75em;
+			font-size: 1.25em;
+
+			.desc-col {
+				text-align: left;
+			}
+			.amount-col {
+				text-align: right;
+			}
+			.total-row {
+				border-top: 1px solid darken(@type-bg-colour, 20%);
+			}
+		}
+	} // ./invoice
+
+	.AttendeeDetails {
+		.padded-block;
+	}
+	
+} // ./#cardshop

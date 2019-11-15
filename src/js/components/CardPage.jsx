@@ -23,7 +23,11 @@ import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 
 const CardPage = () => {
-	return <div>CARD</div>;
+	let path = DataStore.getValue(['location','path']);
+	let frId = path[1];
+	let pvCard = ActionMan.getDataItem({type:C.TYPES.Card, id:frId, status: C.KStatus.PUBLISHED});
+
+	return <div>CARD {frId} {pvCard.value? JSON.stringify(pvCard.value) : null}</div>;	
 };
 
 export default CardPage;
