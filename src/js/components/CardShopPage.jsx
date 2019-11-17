@@ -84,7 +84,6 @@ const Card = ({basket, ticket}) => {
 		Charity funded: {ticket.charityId}<br/>
 		{ticket.description}
 		<center><BS.Button size='lg' color='primary' onClick={addTicketAction}>Buy One</BS.Button></center>
-		{JSON.stringify(ticket)}		
 	</div>);
 };
 

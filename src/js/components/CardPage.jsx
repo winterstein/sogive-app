@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import MDText from '../base/components/MDText'
 import {assert} from 'sjtest';
-import {yessy, encURI} from 'wwutils';
+import {yessy, encURI, XId} from 'wwutils';
 import { Tabs, Tab, Button, Panel, Image, Well, Label } from 'react-bootstrap';
 import Roles from '../base/Roles';
 import ServerIO from '../plumbing/ServerIO';
@@ -33,13 +33,26 @@ const CardPage = () => {
 	if ( pvCard.error) {
 		return <BS.Alert>Something not right :'( {pvCard.error}</BS.Alert>
 	}
-	const card = pvCard;
+	const card = pvCard.value;
+	let senderXId = card.sender;
+	let pvSender = ActionMan.getDataItem({type:C.TYPES.User, id:senderXId, status:C.KStatus.PUBLISHED});
+
+	if ( ! card.message) {
+		card.message = `Dear ${card.toName}
+		
+		Season's Greetings!
+
+		From ${pvSender.value && pvSender.value.name? pvSender.value.name : XId.prettyName(senderXId)}`;
+	}
+
 	return (<div>
 		<img src={card.img} className='xmas-card-img' />
-		<div className='message'>{card.message || "Season's Greetings"}</div>
-		{card.attendeeAddress? <p>A physical card is also being posted to you.</p> : null}
+		
+		<div className='message'>{card.message}</div>
+
+		{card.toAddress? <p>A physical card is also being posted to you.</p> : null}
 		<div><small>Card ID: {frId}</small></div>
-		</div>);	
+	</div>);	
 };
 
 export default CardPage;

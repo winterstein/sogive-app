@@ -8,6 +8,7 @@ import org.sogive.server.payment.StripeAuth;
 
 import com.winterwell.data.AThing;
 import com.winterwell.ical.Repeat;
+import com.winterwell.web.data.XId;
 
 import lombok.Data;
 
@@ -21,6 +22,8 @@ import lombok.Data;
  */
 @Data
 public class Basket extends AThing implements IForSale {
+	
+	XId oxid;
 
 	/**
 	 * Stripe token etc

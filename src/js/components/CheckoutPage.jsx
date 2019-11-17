@@ -111,6 +111,8 @@ const CheckoutPage = () => {
 	);
 };
 
+const isGift = ticket => ticket && ticket.kind && ticket.kind.toLowerCase() === 'card';
+
 /**
  * 
  */
@@ -314,7 +316,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 
 	// first ticket - fill in from user details 
 	// HACK: unless it is a card
-	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn() && ticket.kind !== 'Card' && ticket.kind !== 'card') {
+	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn() && ! isGift(ticket)) {
 		const user = Login.getUser();
 		ticket.attendeeName = user.name;
 		ticket.attendeeEmail = Login.getEmail();
@@ -347,6 +349,11 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
 					</div>
 				}
+				{isGift(ticket)?
+					<Misc.PropControl prop='message' label='Message' 
+						placeholder={`Your message to ${ticket.attendeeName || 'them'}?`} 
+						path={path} type='textarea' />
+				: null}
 			</div>
 		</div>
 	);
@@ -449,6 +456,7 @@ const ConfirmedTicketList = ({basket, event}) => {
 	);
 };
 
+// HACK - assumes cards
 const ConfirmedTicket = ({ticket, event}) => {
 	if ( ! Ticket.eventId(ticket)) ticket.eventId = getId(event);
 	// important - duplicated in Java
@@ -464,13 +472,13 @@ const ConfirmedTicket = ({ticket, event}) => {
 		<Misc.Col2>
 			<h3>{ticket.attendeeName}</h3>			
 			<div>
-				{ ticket.attendeeEmail? 
-					<a className='btn btn-primary btn-lg' href={'#card/'+encURI(frid)}>
-						Preview e-Card
-					</a>
-					: <p>No email provided</p>
+				{ ticket.attendeeEmail && "An e-Card will be sent. "
+					// <a className='btn btn-primary btn-lg' href={'#card/'+encURI(frid)}>
+					// 	Preview e-Card
+					// </a>
+					// : <p>No email provided</p>
 				}
-				<p>A physical card will also be posted.</p>
+				{ticket.attendeeAddress && "A physical card will be posted. "}
 			</div>
 		</Misc.Col2>
 	</div>);

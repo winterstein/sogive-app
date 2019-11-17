@@ -23,6 +23,8 @@ public class Card extends AThing {
 	String description;
 
 	String message;
+
+	XId sender;
 	
 	public Card(Ticket ticket, Basket basket) {
 		// important - duplicated in js
@@ -42,6 +44,7 @@ public class Card extends AThing {
 		message = ticket.message;
 		posted = false;
 		emailed = false;
+		sender = basket.oxid;
 	}
 	public static final String KIND_CARD = "Card";
 
