@@ -32,6 +32,7 @@ import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import CardShopPage from './CardShopPage';
 import CardPage from './CardPage';
+import CheckoutPage from './CheckoutPage';
 
 /**
  * init DataStore
@@ -87,7 +88,8 @@ const PAGES = {
 	about: AboutPage,
 	test: TestPage,
 	cardshop: CardShopPage,
-	card: CardPage
+	card: CardPage,
+	checkout: CheckoutPage
 };
 
 const DEFAULT_PAGE = 'search';

@@ -11,6 +11,7 @@ import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
+import com.winterwell.es.client.KRefresh;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
@@ -55,7 +56,8 @@ public class BasketPublishedActor extends Actor<Basket> {
 		IESRouter iesRouter = Dep.get(IESRouter.class);
 		ESPath draftPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.DRAFT);
 		ESPath publishPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.PUBLISHED);
-		AppUtils.doPublish(draft, draftPath, publishPath);
+		// fast refresh, as there is a race vs the user
+		AppUtils.doPublish(draft, draftPath, publishPath, KRefresh.TRUE, true);
 
 		// email user
 		try {
@@ -90,7 +92,14 @@ public class BasketPublishedActor extends Actor<Basket> {
 				+fr.id+" \n"+fr.getUrl();
 		SimpleMessage email = new SimpleMessage(emailer.getBotEmail(), to, subject, body);
 		emailer.send(email);
-
+		
+		// HACK update emailed flag
+		if (fr instanceof Card) {
+			IESRouter iesRouter = Dep.get(IESRouter.class);
+			ESPath publishPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.PUBLISHED);
+			((Card)fr).setEmailed(true);
+			AppUtils.doSaveEdit2(publishPath, new JThing(fr), null);
+		}
 	}
 	
 }

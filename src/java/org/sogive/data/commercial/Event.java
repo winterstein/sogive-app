@@ -16,7 +16,7 @@ import com.winterwell.utils.time.Time;
  *
  */
 public class Event extends AThing {
-
+	
 	/**
 	 * ISO3166 country code
 	 */

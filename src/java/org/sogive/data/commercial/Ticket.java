@@ -60,6 +60,9 @@ public class Ticket extends AThing {
 	String description;
 	/** i.e. "Walker" */
 	String attendeeNoun;
+	/**
+	 * "img" would have been a better name - oh well. Minor TODO rename
+	 */
 	String attendeeIcon;
 	
 	

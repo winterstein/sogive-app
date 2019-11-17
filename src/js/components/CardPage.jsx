@@ -21,13 +21,25 @@ import DonationWizard, {DonateButton} from './DonationWizard';
 import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
+import BS from '../base/components/BS';
 
 const CardPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	let pvCard = ActionMan.getDataItem({type:C.TYPES.Card, id:frId, status: C.KStatus.PUBLISHED});
-
-	return <div>CARD {frId} {pvCard.value? JSON.stringify(pvCard.value) : null}</div>;	
+	if ( ! pvCard.resolved) {
+		return <Misc.Loading />
+	}
+	if ( pvCard.error) {
+		return <BS.Alert>Something not right :'( {pvCard.error}</BS.Alert>
+	}
+	const card = pvCard;
+	return (<div>
+		<img src={card.img} className='xmas-card-img' />
+		<div className='message'>{card.message || "Season's Greetings"}</div>
+		{card.attendeeAddress? <p>A physical card is also being posted to you.</p> : null}
+		<div><small>Card ID: {frId}</small></div>
+		</div>);	
 };
 
 export default CardPage;

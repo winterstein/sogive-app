@@ -31,7 +31,18 @@ export default Basket;
 // 		&& blockProp(obj, 'charity', 'Basket.js - use Basket.charityId()')
 // 		&& true;
 
-This.eventId = obj => obj.eventId;
+/**
+ * @returns {?String} eventId if set, or if all items (tickets) agree
+ */
+This.eventId = obj => {
+	This.assIsa(obj);
+	if (obj.eventId) return obj.eventId;
+	const items = Basket.getItems(obj);
+	let eids = items.map(i => i.eventId);
+	const eidSet = new Set(eids);
+	if (eidSet.size === 1) return eids[0];
+	return null;
+};
 This.charityId = obj => obj.charityId;
 
 Basket.idForUxid = (uxid) => "for_"+uxid;

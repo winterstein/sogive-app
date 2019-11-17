@@ -17,17 +17,29 @@ import com.winterwell.web.data.XId;
  */
 public class Card extends AThing {
 
+	@ESKeyword
+	String img;
+
+	String description;
+
+	String message;
+	
 	public Card(Ticket ticket, Basket basket) {
 		// important - duplicated in js
 		this.id = "card."+FundRaiser.getIDForTicket(ticket);
 //		generatedBy = basket.get // TODO!
+		this.name = ticket.name;
 		ticketId = ticket.getId();
 		parentTicketId = ticket.getParentId();
+		shopId = ticket.getEventId();
 		basketId = basket.getId();
 		charityId = Utils.or(ticket.getId(), basket.getId());
+		img = ticket.attendeeIcon;
+		description = ticket.description;
 		toName = ticket.attendeeName;
 		toEmail = ticket.attendeeEmail;
 		toAddress = ticket.attendeeAddress;
+		message = ticket.message;
 		posted = false;
 		emailed = false;
 	}
@@ -44,6 +56,9 @@ public class Card extends AThing {
 
 	@ESKeyword
 	String parentTicketId;
+
+	@ESKeyword
+	String shopId;
 	
 	@ESKeyword
 	String basketId;
@@ -60,4 +75,8 @@ public class Card extends AThing {
 
 	Boolean posted;
 	Boolean emailed;
+	
+	public void setEmailed(boolean emailed) {
+		this.emailed = emailed;
+	}
 }
