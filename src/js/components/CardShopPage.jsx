@@ -50,7 +50,7 @@ const CardShopPage = () => {
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 			</h2>
-			<h4>Show your impact and share your love in this holiday season.</h4>
+			<h4>Make an impact and share your love in this holiday season.</h4>
 			
 			<h2>How it Works</h2>
 			<ol>
@@ -58,8 +58,7 @@ const CardShopPage = () => {
 				<li>We transfer the donation to the charity.</li>
 				<li>We post your card, including a handwritten note, to your family member or friend.</li>
 				<li>We also send an e-Card to their email.</li>
-			
-			</ol>
+			</ol>			
 
 			<h2>Pick a Card and Make a Difference</h2>
 			<BS.Row>
