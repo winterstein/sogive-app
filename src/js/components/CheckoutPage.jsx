@@ -21,10 +21,12 @@ import FundRaiser from '../data/charity/FundRaiser';
 import { SearchResults } from './SearchPage';
 import Roles from '../base/Roles';
 import Misc from '../base/components/Misc';
+import PropControl from '../base/components/PropControl';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
 import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
+import { defaultCardMessage } from './CardShopPage';
 
 /**
  * Buy cards. Copy pasta from RegisterPage.jsx TODO unify the two
@@ -111,6 +113,11 @@ const CheckoutPage = () => {
 	);
 };
 
+/**
+ * 
+ * @param {Ticket} ticket 
+ * @returns {Boolean}
+ */
 const isGift = ticket => ticket && ticket.kind && ticket.kind.toLowerCase() === 'card';
 
 /**
@@ -302,6 +309,12 @@ const WalkerDetailsTab = ({basket, basketPath}) => {
 	// No sort on Tickets -- so that the editor can adjust ordering (eg by name / kind, alphabetical, or walk-length, or whatever)
 	let items = Basket.getItems(basket); //.sort((a, b) => a.name > b.name);
 	assert(items.length, "WalkerDetailsTab - empty basket! "+JSON.stringify(basket));
+
+	// set ownership of Tickets to the current user
+	items.forEach(item => {
+		if ( ! item.oxid) item.oxid = Login.getId();
+	});
+
 	let ticket0 = items[0];
 	let wdetails = items.map((ticket, ti) => {
 		const ticketPath = [...basketPath, 'items', ti];
@@ -341,17 +354,20 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			</center>
 			<hr />
 			<div className='AttendeeDetails'>			
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first person' /> : null}
+				<PropControl type='text' item={ticket} path={path} prop='attendeeName' 
+					label={noun+' Full Name'} help={isGift()} />
+				<PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label={noun+' Email'}
+					help="Include their email to also send an e-Card at no extra cost. You can leave this blank if you don't want to do that." />
+				{ i!==0? <PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first person' /> : null}
 				{ sameAsFirst? null : 
 					<div>
-						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
 					</div>
 				}
 				{isGift(ticket)?
-					<Misc.PropControl prop='message' label='Message' 
-						placeholder={`Your message to ${ticket.attendeeName || 'them'}?`} 
+					<PropControl prop='message' label='Message' 
+						help={`Your message to ${ticket.attendeeName || 'them'}, which will be written inside the card. Please include their name and yours.`} 
+						dflt={defaultCardMessage(ticket)}
 						path={path} type='textarea' />
 				: null}
 			</div>

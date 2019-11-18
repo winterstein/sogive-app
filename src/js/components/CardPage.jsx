@@ -22,33 +22,32 @@ import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 import BS from '../base/components/BS';
+import PropControl from '../base/components/PropControl';
+import {defaultCardMessage} from CardShopPage;
+import CardShopPage from './CardShopPage';
 
 const CardPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	let pvCard = ActionMan.getDataItem({type:C.TYPES.Card, id:frId, status: C.KStatus.PUBLISHED});
 	if ( ! pvCard.resolved) {
-		return <Misc.Loading />
+		return <Misc.Loading />;
 	}
 	if ( pvCard.error) {
-		return <BS.Alert>Something not right :'( {pvCard.error}</BS.Alert>
+		return <BS.Alert>Something not right :'( {pvCard.error}</BS.Alert>;
 	}
 	const card = pvCard.value;
 	let senderXId = card.sender;
 	let pvSender = ActionMan.getDataItem({type:C.TYPES.User, id:senderXId, status:C.KStatus.PUBLISHED});
 
 	if ( ! card.message) {
-		card.message = `Dear ${card.toName}
-		
-		Season's Greetings!
-
-		From ${pvSender.value && pvSender.value.name? pvSender.value.name : XId.prettyName(senderXId)}`;
+		card.message = defaultCardMessage(card);
 	}
 
 	return (<div>
 		<img src={card.img} className='xmas-card-img' />
 		
-		<div className='message'>{card.message}</div>
+		<div className='message'><MDText source={card.message} /></div>
 
 		{card.toAddress? <p>A physical card is also being posted to you.</p> : null}
 		<div><small>Card ID: {frId}</small></div>

@@ -32,6 +32,8 @@ public class Ticket extends AThing {
 	String postPurchaseLink;
 	String postPurchaseCTA; 
 	
+	XId oxid;
+	
 	@ESKeyword
 	String eventId;
 	

@@ -27,6 +27,27 @@ import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 
 /**
+ * 
+ * @param {Card|Ticket} info 
+ */
+export const defaultCardMessage = info => {
+	let me = '';
+	if (info.oxid) {
+		let pvUser = ActionMan.getDataItem({type:C.TYPES.User, id:info.oxid});
+		if (pvUser.value && pvUser.name) {			
+			me = pvUser.name;
+		} else {
+			me = XId.prettyName(info.oxid);
+		}
+	}
+	return `Dear ${info.toName || info.attendeeName}
+		
+		Season's Greetings!
+
+		From ${me}`;
+};
+
+/**
  * Sign up for an event!
  */
 const CardShopPage = () => {
@@ -54,7 +75,7 @@ const CardShopPage = () => {
 			
 			<h2>How it Works</h2>
 			<ol>
-				<li>Buy a card - only £5, which includes a high-impact donation.</li>
+				<li>Buy a card - only £5, which includes a high-impact donation and postage.</li>
 				<li>We transfer the donation to the charity.</li>
 				<li>We post your card, including a handwritten note, to your family member or friend.</li>
 				<li>We also send an e-Card to their email.</li>
