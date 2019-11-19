@@ -109,15 +109,19 @@ const CardShopPage = () => {
 };
 
 const Card = ({basket, ticket, event}) => {
+	const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:ticket.charityId, status:C.KStatus.PUBLISHED});
+	let charityName = pvCharity.value ? pvCharity.value.name : ticket.charityId;
+
 	const addTicketAction = () => {
 		ActionMan.addToBasket(basket, ticket);
 		modifyHash(['checkout', event.id]);
 	};
+
 	return (<div className='XmasCard well'>
 		<h3>{ticket.name}</h3>
 		<h4 className='subtitle'>{ticket.subtitle}</h4>
 		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
-		Charity funded: {ticket.charityId}<br/>
+		Charity funded: {charityName}<br/>
 		{ticket.description}
 		<center><BS.Button size='lg' color='primary' onClick={addTicketAction}>Buy One</BS.Button></center>
 	</div>);
