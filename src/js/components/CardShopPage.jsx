@@ -67,7 +67,7 @@ const CardShopPage = () => {
 	return (
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: 'url('+event.backgroundImage+')'}} />
-			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
+			{event.bannerImage? <div className='banner-div'><img className='page-banner' src={event.bannerImage} alt='banner' /></div> : null}
 			{/* <h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
 			</h2> */}
