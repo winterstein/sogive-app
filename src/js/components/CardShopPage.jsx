@@ -121,7 +121,7 @@ const Card = ({basket, ticket, event}) => {
 		<h3>{ticket.name}</h3>
 		<h4 className='subtitle'>{ticket.subtitle}</h4>
 		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
-		<p>Charity funded: {charityName}</p>
+		<p>Charity funded: <a href={'/#charity?charityId='+encURI(ticket.charityId)}>{charityName}</a></p>
 		<p>{ticket.description}</p>
 		<center><BS.Button size='lg' color='primary' onClick={addTicketAction}>Buy One</BS.Button></center>
 	</div>);

@@ -25,6 +25,7 @@ import {CreateButton} from '../base/components/ListLoad';
 const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
+	if ( ! cid) cid = DataStore.getValue('location', 'path')[1]; // TODO switch to this more RESTful path naming as the standard
 	let {value:charity} = ActionMan.getDataItem({status:C.KStatus.PUBLISHED, type:C.TYPES.$NGO(), id:cid});
 	if ( ! charity) {
 		return <Misc.Loading />;
