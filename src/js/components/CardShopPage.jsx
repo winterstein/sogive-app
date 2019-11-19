@@ -73,21 +73,36 @@ const CardShopPage = () => {
 			</h2>
 			<h4>Make an impact and share your love in this holiday season.</h4>
 			
-			<h2>How it Works</h2>
-			<ol>
-				<li>Buy a card - only £5, which includes a high-impact donation and postage.</li>
-				<li>We transfer the donation to the charity.</li>
-				<li>We post your card, including a handwritten note, to your family member or friend.</li>
-				<li>We also send an e-Card to their email.</li>
-			</ol>			
+			<div className='howitworks'>
+				<h2>How it Works</h2>
+				<ol>
+					<li>Buy a card - only £5, which includes a high-impact donation and postage.</li>
+					<li>We transfer the donation to the charity.</li>
+					<li>We post your card, including a handwritten note, to your family member or friend.</li>
+					<li>We also send an e-Card to their email.</li>
+				</ol>
+			</div>			
 
 			<h2>Pick a Card and Make a Difference</h2>
 			<BS.Row>
 				{event.ticketTypes.map(t => <BS.Col md={4} key={t.id} ><Card basket={basket} ticket={t} event={event} /></BS.Col>)}
 			</BS.Row>
 
-			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
+			<div className='moreinfo'>
+				<h2>F.A.Q.</h2>
+				<h4>How much goes to charity?</h4>
+				<i>Most of the money!</i> The costs are:<br/>
+				£0.50 for the card (sourced from Oxfam, so some of this goes to good causes too)<br/>
+				£0.70 postage<br/>
+				£0.50 to cover SoGive's costs<br/>
+				<i>£3.30 to the charity (or £4.30 for the malaria net card)</i><br/>
+				<h4>What countries do you post to?</h4>
+				We are UK based, but we will post to <i>any country</i>. 
+				For non-UK addresses, the postage will be a bit higher, so the charity donation will be a bit lower.
+				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>
+			</div>
 
+			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 		</div>
 	);
 };
