@@ -68,9 +68,10 @@ const CardShopPage = () => {
 		<div className=''>
 			<div className='fullwidth-bg' style={{backgroundImage: 'url('+event.backgroundImage+')'}} />
 			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
-			<h2 className='page-masthead'>
+			{/* <h2 className='page-masthead'>
 				<span className='event-name'>{event.name}</span>
-			</h2>
+			</h2> */}
+			<br/>
 			<h4>Make an impact and share your love in this holiday season.</h4>
 			
 			<div className='howitworks'>
