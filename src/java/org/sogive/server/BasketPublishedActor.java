@@ -12,6 +12,7 @@ import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.KRefresh;
+import com.winterwell.gson.FlexiGson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
@@ -59,11 +60,34 @@ public class BasketPublishedActor extends Actor<Basket> {
 		// fast refresh, as there is a race vs the user
 		AppUtils.doPublish(draft, draftPath, publishPath, KRefresh.TRUE, true);
 
+		// TODO send e-card -- For now, just notify us
+		if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
+			notifyUs(ticket);
+		}
+		
 		// email user
 		try {
 			doEmailWalker(ticket, fr);
 		} catch(Throwable ex) {
 			Log.e("BasketPublished", ex);
+		}
+	}
+
+	
+	/**
+	 * Yay - tell us a card was bought
+	 * @param ticket
+	 */
+	private void notifyUs(Ticket ticket) {
+		try {
+			Emailer emailer = Dep.get(Emailer.class);
+			SimpleMessage email = new SimpleMessage(emailer.getBotEmail().toString(), 
+					"support@sogive.org", "Shop "+AppUtils.getServerType()+" "+AppUtils.getFullHostname()+" - card bought :)", 
+					"NOTE: We now have to send the physical card and the e-card!\n\n"+
+					FlexiGson.toJSON(ticket));
+			emailer.send(email);
+		} catch(Exception ex) {
+			Log.e(getName(), ex);
 		}
 	}
 

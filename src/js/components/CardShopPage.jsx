@@ -33,18 +33,18 @@ import PaymentWidget from '../base/components/PaymentWidget';
 export const defaultCardMessage = info => {
 	let me = '';
 	if (info.oxid) {
-		let pvUser = ActionMan.getDataItem({type:C.TYPES.User, id:info.oxid});
-		if (pvUser.value && pvUser.name) {			
-			me = pvUser.name;
+		let user = Login.getUser();
+		if (user.xid === info.oxid) {
+			me = user.name;
 		} else {
 			me = XId.prettyName(info.oxid);
 		}
 	}
-	return `Dear ${info.toName || info.attendeeName}
-		
-		Season's Greetings!
+	return `Dear ${info.toName || info.attendeeName || 'Friend'}
 
-		From ${me}`;
+Season's Greetings!
+
+From ${me}`;
 };
 
 /**
@@ -83,7 +83,7 @@ const CardShopPage = () => {
 
 			<h2>Pick a Card and Make a Difference</h2>
 			<BS.Row>
-				{event.ticketTypes.map(t => <BS.Col md={4} key={t.id} ><Card basket={basket} ticket={t} /></BS.Col>)}
+				{event.ticketTypes.map(t => <BS.Col md={4} key={t.id} ><Card basket={basket} ticket={t} event={event} /></BS.Col>)}
 			</BS.Row>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
@@ -92,10 +92,10 @@ const CardShopPage = () => {
 	);
 };
 
-const Card = ({basket, ticket}) => {
+const Card = ({basket, ticket, event}) => {
 	const addTicketAction = () => {
 		ActionMan.addToBasket(basket, ticket);
-		modifyHash(['checkout']);
+		modifyHash(['checkout', event.id]);
 	};
 	return (<div className='XmasCard well'>
 		<h3>{ticket.name}</h3>

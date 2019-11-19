@@ -42,7 +42,7 @@ const CheckoutPage = () => {
 	// Linked to one event / shop?
 	let eventId = DataStore.getValue('location', 'path')[1] || Basket.eventId(basket);
 	const pvEvent = eventId? ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED}) : null;
-	const event = (pvEvent && pvEvent.value) || {}; // can be null
+	const event = (pvEvent && pvEvent.value) || {};
 
 	const walkerDetailsOK = Basket.getItems(basket).reduce((done, ticket) => {
 		return done && ticket.attendeeName && ticket.attendeeEmail && ticket.attendeeAddress;
@@ -108,7 +108,7 @@ const CheckoutPage = () => {
 			</Wizard>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
-
+			{event.id? <h4><a href={'#cardshop/'+encURI(event.id)}>Or return to the shop</a></h4> : null}
 		</div>
 	);
 };
@@ -130,7 +130,11 @@ const TicketTypes = ({event, basket}) => {
 		return null;
 	}
 	const nameToTickets = {};
-	event.ticketTypes.forEach(tt => {
+	// only show options for +/- if the user has one in their basket
+	// -- but show the template to avoid accidentally copying any e.g. message details
+	const actualTickets = Basket.getItems(basket);	
+	let liveTicketTypes = event.ticketTypes.filter(tt => actualTickets.find(at => at.name === tt.name));
+	liveTicketTypes.forEach(tt => {
 		const ticketsForName = nameToTickets[tt.name];
 		if (ticketsForName && ticketsForName.types) {
 			ticketsForName.types.push(tt);
@@ -366,6 +370,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 				}
 				{isGift(ticket)?
 					<PropControl prop='message' label='Message' 
+						rows={6}
 						help={`Your message to ${ticket.attendeeName || 'them'}, which will be written inside the card. Please include their name and yours.`} 
 						dflt={defaultCardMessage(ticket)}
 						path={path} type='textarea' />

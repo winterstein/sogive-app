@@ -23,8 +23,7 @@ import SocialShare from './SocialShare';
 import {CreateButton} from '../base/components/ListLoad';
 import BS from '../base/components/BS';
 import PropControl from '../base/components/PropControl';
-import {defaultCardMessage} from CardShopPage;
-import CardShopPage from './CardShopPage';
+import CardShopPage, {defaultCardMessage} from './CardShopPage';
 
 const CardPage = () => {
 	let path = DataStore.getValue(['location','path']);
