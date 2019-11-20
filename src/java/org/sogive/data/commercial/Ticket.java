@@ -1,5 +1,7 @@
 package org.sogive.data.commercial;
 
+import java.util.Map;
+
 import com.goodloop.data.Money;
 
 import com.winterwell.data.AThing;
@@ -83,6 +85,11 @@ public class Ticket extends AThing {
 	 */
 	@ESKeyword	
 	String parentId;
+
+	/**
+	 * Can be null
+	 */
+	Map<String,Object> options;
 
 	@Override
 	public String toString() {

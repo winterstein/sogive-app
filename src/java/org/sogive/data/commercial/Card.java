@@ -1,5 +1,7 @@
 package org.sogive.data.commercial;
 
+import java.util.Map;
+
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.GiftCard;
 import org.sogive.server.payment.IForSale;
@@ -25,6 +27,8 @@ public class Card extends AThing {
 	String message;
 
 	XId oxid;
+
+	Map<String, Object> options;
 	
 	public Card(Ticket ticket, Basket basket) {
 		// important - duplicated in js
@@ -45,6 +49,7 @@ public class Card extends AThing {
 		posted = false;
 		emailed = false;
 		oxid = basket.oxid;
+		options = ticket.options;
 	}
 	public static final String KIND_CARD = "Card";
 

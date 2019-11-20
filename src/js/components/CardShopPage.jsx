@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
 import SJTest, {assert} from 'sjtest';
-import {XId, encURI, yessy, modifyHash} from 'wwutils';
+import {XId, encURI, yessy, modifyHash, join} from 'wwutils';
 import Login from 'you-again';
 import BS from '../base/components/BS';
 import printer from '../base/utils/printer.js';
@@ -26,6 +26,7 @@ import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 import MDText from '../base/components/MDText';
+import deepCopy from '../base/utils/deepCopy';
 
 /**
  * 
@@ -75,10 +76,16 @@ const CardShopPage = () => {
 			<br/>
 			<MDText source={event.description} />
 
-			<h2>Pick a Card and Make a Difference</h2>
+			<h2>Pick a Cause and a Card and Make a Difference</h2>
+			<h3>Causes</h3>
 			<BS.Row>
-				{event.ticketTypes.map(t => <BS.Col md={4} key={t.id} ><Card basket={basket} ticket={t} event={event} /></BS.Col>)}
+				{event.ticketTypes.filter(tt => tt.kind==='Card').map(t => <BS.Col md={4} key={t.id} ><Item basket={basket} ticket={t} event={event} /></BS.Col>)}
 			</BS.Row>
+			<h3>Cards</h3>
+			<BS.Row>
+				{event.ticketTypes.filter(tt => tt.kind==='Option').map(t => <BS.Col md={4} key={t.id} ><Option basket={basket} ticket={t} event={event} /></BS.Col>)}
+			</BS.Row>
+			<p>The card will have a sticker stating the cause and impact you've supported.</p>
 
 			<div className='moreinfo'>
 				<h2>F.A.Q.</h2>
@@ -91,31 +98,56 @@ const CardShopPage = () => {
 				<h4>What countries do you post to?</h4>
 				We are UK based, but we will post to <i>any country</i>. 
 				For non-UK addresses, the postage will be a bit higher, so the charity donation will be a bit lower.
-				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>
+				<h4>What if I don't want to send an e-Card?</h4>
+				No problem - just don't enter an email for the recipient.
+				<h4>What if I <i>only</i> want to send an e-Card?</h4>
+				No problem - just write "no postage" (or similar) for the recipient's address. 
+				We will give the extra money to your charity.
+				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>				
 			</div>
 
 			{basket? <Misc.SavePublishDiscard type={C.TYPES.Basket} id={getId(basket)} hidden /> : null}
 		</div>
 	);
+	//<h4>How late can I send a card to have it arrive by Christmas?</h4>
+	// Based on Royal Mail advice, please make your order before ?? for UK deliveries, and before ?? for international. 
+	// Please note that we cannot guarantee delivery times. 	
 };
 
-const Card = ({basket, ticket, event}) => {
+const Option = ({basket, ticket, event}) => {
+	return (<div className={join('XmasCard ShopChoice well', ticket===basket.option? 'selected' : null)}>
+		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
+		<center><BS.Button size='lg' color='primary' onClick={e => setSelect({basket, ticket, event})}>Select</BS.Button></center>
+	</div>);
+};
+
+const Item = ({basket, ticket, event}) => {
 	const pvCharity = ActionMan.getDataItem({type:C.TYPES.NGO, id:ticket.charityId, status:C.KStatus.PUBLISHED});
 	let charityName = pvCharity.value ? pvCharity.value.name : ticket.charityId;
 
-	const addTicketAction = () => {
-		ActionMan.addToBasket(basket, ticket);
-		modifyHash(['checkout', event.id]);
-	};
-
-	return (<div className='XmasCard well'>
+	return (<div className={join('XmasCard ShopChoice well', ticket===basket.item? 'selected' : null)}>
 		<h3>{ticket.name}</h3>
 		<h4 className='subtitle'>{ticket.subtitle}</h4>
 		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
 		<p>Charity funded: <a href={'/#charity?charityId='+encURI(ticket.charityId)}>{charityName}</a></p>
 		<p>{ticket.description}</p>
-		<center><BS.Button size='lg' color='primary' onClick={addTicketAction}>Buy One</BS.Button></center>
+		<center><BS.Button size='lg' color='primary' onClick={e => setSelect({basket, ticket, event})}>Buy One</BS.Button></center>
 	</div>);
+};
+
+/**
+ * HACK stash cause (Card) / card-image (Option), then checkout when we have both
+ */
+const setSelect = ({basket, ticket, event}) => {
+	if (ticket.kind==='Option') basket.option = ticket;
+	if (ticket.kind==='Card') basket.item = ticket;
+	if (basket.option && basket.item) {
+		// set the card choice option, and checkout
+		basket.item.options =  deepCopy(basket.option);
+		basket.option = null; // reset in case they go back to add a different card
+		ActionMan.addToBasket(basket, basket.item);
+		modifyHash(['checkout', event.id]);
+	}
 };
 
 export default CardShopPage;
