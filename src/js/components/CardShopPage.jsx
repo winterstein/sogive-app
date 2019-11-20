@@ -27,6 +27,7 @@ import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 import MDText from '../base/components/MDText';
 import deepCopy from '../base/utils/deepCopy';
+import PropControl from '../base/components/PropControl';
 
 /**
  * 
@@ -115,7 +116,14 @@ const CardShopPage = () => {
 };
 
 const Option = ({basket, ticket, event}) => {
-	return (<div className={join('XmasCard ShopChoice well', ticket===basket.option? 'selected' : null)}>
+	const isSelected = ticket===basket.option;
+	// TODO personalised cards -- needs a design + slightly special selection-ready logic in setSelect
+// 	const bopath = ActionMan.getBasketPath().concat('option');
+// 	{isSelected && ticket.subtitle && ticket.subtitle.includes("upload")? 
+// 	<PropControl type='imgUpload' prop='imgUpload' path={bopath} label='Upload Your Photo' />
+// : null}
+
+	return (<div className={join('XmasCard ShopChoice well', isSelected? 'selected' : null)}>
 		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
 		<center><BS.Button size='lg' color='primary' onClick={e => setSelect({basket, ticket, event})}>Select</BS.Button></center>
 	</div>);
