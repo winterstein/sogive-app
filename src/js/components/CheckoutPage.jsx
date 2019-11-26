@@ -27,17 +27,19 @@ import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { defaultCardMessage } from './CardShopPage';
+import deepCopy from '../base/utils/deepCopy';
 
 /**
  * Buy cards. Copy pasta from RegisterPage.jsx TODO unify the two
  */
-const CheckoutPage = () => {
+const CheckoutPage = () => {	
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
 
 	if ( ! basket) {
 		return <Misc.Loading text='Retrieving your basket...' />;
 	}
+	const doneBasket = DataStore.getValue(['transient','doneBasket']);
 
 	// Linked to one event / shop?
 	let eventId = DataStore.getValue('location', 'path')[1] || Basket.eventId(basket);
@@ -98,12 +100,17 @@ const CheckoutPage = () => {
 				</WizardStage>
 										
 				<WizardStage title='Checkout' next={false} >
+					{ 	// clean out old
+						doneBasket && basket && doneBasket.id !== basket.id 
+							&& DataStore.setValue(['transient', 'doneBasket'], null, false) && null
+					}
 					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				</WizardStage>
 				
 				<WizardStage title='Confirmation' previous={false} >
-					<Receipt basket={basket} event={event} />
-					<ConfirmedTicketList basket={basket} event={event} />
+					<BehaviourBasketDone basket={basket} doneBasket={doneBasket} />
+					<Receipt basket={doneBasket} event={event} />
+					<ConfirmedTicketList basket={doneBasket} event={event} />
 				</WizardStage>
 			</Wizard>
 
@@ -111,6 +118,17 @@ const CheckoutPage = () => {
 			{event.id? <h4><a href={'#cardshop/'+encURI(event.id)}>Or return to the shop</a></h4> : null}
 		</div>
 	);
+};
+
+const BehaviourBasketDone = ({basket, doneBasket}) => {
+	if ( ! basket) return null;
+	if (doneBasket) return null;
+	// stash for the receipt display
+	doneBasket = deepCopy(basket);
+	DataStore.setValue(['transient','doneBasket'], doneBasket);
+	// empty
+	if (basket.id) ActionMan.delete(C.TYPES.Basket, basket.id);
+	return null;
 };
 
 /**
@@ -434,6 +452,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 };
 
 const Receipt = ({basket, event}) => {
+	if ( ! basket) return null; // avoid NPE during race condition
 	const items = Basket.getItems(basket);
 	const ticket0 = items.length && items[0]; // TODO this is not necc the person who paid
 	const stripe = basket.stripe;
