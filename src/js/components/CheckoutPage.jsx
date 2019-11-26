@@ -100,7 +100,7 @@ const CheckoutPage = () => {
 				</WizardStage>
 										
 				<WizardStage title='Checkout' next={false} >
-					{ 	// clean out old
+					{ 	// clean out old Minor TODO something is causing a redraw glitch here
 						doneBasket && basket && doneBasket.id !== basket.id 
 							&& DataStore.setValue(['transient', 'doneBasket'], null, false) && null
 					}
@@ -127,7 +127,7 @@ const BehaviourBasketDone = ({basket, doneBasket}) => {
 	doneBasket = deepCopy(basket);
 	DataStore.setValue(['transient','doneBasket'], doneBasket);
 	// empty
-	if (basket.id) ActionMan.delete(C.TYPES.Basket, basket.id);
+	if (basket.id && basket.status===C.KStatus.PUBLISHED) ActionMan.delete(C.TYPES.Basket, basket.id);
 	return null;
 };
 
