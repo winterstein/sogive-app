@@ -138,7 +138,7 @@ ActionMan.getBasketPV = (uxid) => {
 		let currentBasket = DataStore.getValue(['transient','basket']);
 		if (currentBasket) {
 			if ( ! currentBasket.id || XId.service(currentBasket.id)==='temp' || currentBasket.id.endsWith(uxid)) {
-				console.log("transfer basket: "+basket.id+" -> "+bid);
+				console.log("transfer basket: "+currentBasket.id+" -> "+bid);
 				basket.id = bid;
 				basket.oxid = uxid;
 			}
