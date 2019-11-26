@@ -22,18 +22,20 @@ import Citation from '../data/charity/Citation';
 import XId from '../base/data/XId';
 import ActionMan from '../base/plumbing/ActionManBase';
 
-
-ActionMan.addCharity = () => {
+/**
+ * @param {?NGO} charity
+ */
+ActionMan.addCharity = (charity) => {
 	// TODO search the database for potential matches, and confirm with the user
 	// get the info (just the name)
-	let item = DataStore.appstate.widget.AddCharityWidget.form;
-	assert(item.name);
+	if ( ! charity) charity = DataStore.appstate.widget.AddCharityWidget.form;
+	assert(charity.name, "ActionMan.addCharity() No name!",charity);
 	// TODO message the user!
-	ServerIO.addCharity(item)
+	ServerIO.addCharity(charity)
 	.then(res => {
 		console.log("AddCharity", res);
-		let charity = res.cargo;
-		DataStore.setValue(['widget','AddCharityWidget','result','id'], NGO.id(charity));
+		let rCharity = res.cargo;
+		DataStore.setValue(['widget','AddCharityWidget','result','id'], NGO.id(rCharity));
 	});
 };
 

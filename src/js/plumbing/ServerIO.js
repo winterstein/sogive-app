@@ -44,6 +44,9 @@ ServerIO.searchCharities = function({q, prefix, from, size, status, recommended,
 };
 
 
+/**
+ @deprecated convenience for ServerIO.getDataItem
+ */
 ServerIO.getCharity = function(charityId, status) {
 	return ServerIO.getDataItem({type: C.TYPES.NGO, id: charityId, status: status});
 };

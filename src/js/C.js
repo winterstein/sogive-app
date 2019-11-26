@@ -25,7 +25,7 @@ C.TYPES = new Enum("NGO User Donation RepeatDonation Project Event FundRaiser Ba
 C.ROLES = new Enum("editor admin company goodlooper");
 C.CAN = new Enum("edit publish admin editEvent test uploadCredit goodloop manageDonations");
 // setup roles
-Roles.defineRole(C.ROLES.editor, [C.CAN.publish, C.CAN.editEvent]);
+Roles.defineRole(C.ROLES.editor, [C.CAN.edit, C.CAN.publish, C.CAN.editEvent]);
 Roles.defineRole(C.ROLES.company, [C.CAN.uploadCredit]);
 Roles.defineRole(C.ROLES.admin, C.CAN.values);
 Roles.defineRole(C.ROLES.goodlooper, [C.CAN.edit, C.CAN.publish, C.CAN.goodloop]);

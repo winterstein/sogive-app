@@ -2,10 +2,10 @@
 import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
-import {yessy} from 'wwutils';
+import {yessy, encURI} from 'wwutils';
 import Login from 'you-again';
 import Enum from 'easy-enums';
-
+import BS from '../../base/components/BS';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore, {getPath} from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
@@ -29,28 +29,46 @@ const EditCharityPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
 	}
+
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
-	let {value:charity} = DataStore.fetch(cpath,
-		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
-	);	
+	let pvCharity = DataStore.fetch(cpath,
+		// NB: swallow 'cos error display is done below
+		() => ServerIO.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.DRAFT, swallow:true})
+	);
+	// if ( ! pvCharity.resolved) return <Misc.Loading text='Loading...' />; FIXME weird - the error isnt coming through?! Is is a racce-condition / failure to update react??
+	let charity = pvCharity.value;
+	// error?
 	if ( ! charity) {
-		return <Misc.Loading text={Roles.isDev() ? <span> <a href="/#editordashboard"> Click here </a> to add this as a new charity </span> : 'Loading...'} />;
+		if ( ! Roles.iCan(C.CAN.edit).value) {
+			return pvCharity.error? <BS.Alert><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></BS.Alert>
+				: <Misc.Loading text='Loading...' />;
+		}
+		return (<>
+			{pvCharity.error? <BS.Alert><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></BS.Alert> : <Misc.Loading text='Loading...' />}
+			<Misc.Card title='Add a New Charity?'>
+				<div className='alert alert-warning'>
+					ALWAYS <a href='#search?status=ALL_BAR_TRASH'>search</a> first to check the charity isn't already in the database. 
+					Otherwise we will have ugly merge problems.</div>
+				<button className='btn btn-warning' type='button' onClick={() => ActionMan.addCharity({name:cid})}>Add Charity <code>{cid}</code></button>
+			</Misc.Card>
+		</>);
 	}
+
 	// HACK load a fresh draft the first time.
 	if (C.KStatus.isPUBLISHED(charity.status)) {
 		if ( ! charity.uptodatedraft) {
 			ServerIO.getCharity(cid, C.KStatus.DRAFT)
-			.then(res => {
-				console.warn("res", res);
-				if (res.cargo) {
-					res.cargo.status = C.KStatus.DRAFT;
-					res.cargo.uptodatedraft = "yes";
-					console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
-					DataStore.setData(C.KStatus.DRAFT, res.cargo);
-				}
-			});
+				.then(res => {
+					console.warn("res", res);
+					if (res.cargo) {
+						res.cargo.status = C.KStatus.DRAFT;
+						res.cargo.uptodatedraft = "yes";
+						console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
+						DataStore.setData(C.KStatus.DRAFT, res.cargo);
+					}
+				});
 		}
 	} else if (C.KStatus.isDRAFT(charity.status)) {
 		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
@@ -131,6 +149,7 @@ const EditCharityPage = () => {
 		</div>
 	);
 }; // ./EditCharityPage
+
 
 const ProfileEditor = ({charity}) => {
 	return (<div>
