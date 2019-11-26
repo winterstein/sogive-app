@@ -82,15 +82,28 @@ const CardShopPage = () => {
 
 			<div className='moreinfo'>
 				<h2>F.A.Q.</h2>
+
+				<h4>What countries do you post to?</h4>
+				We are UK based, but we will post to <i>any country</i>. 
+				For non-UK addresses, the postage will be a bit higher, so the charity donation will be a bit lower.
+				
+				<h4>What is the deadline for Christmas?</h4>
+				Wednesday 18th December.<br/>
+				This is based on the Royal Mail's recommended last posting date,
+				(20th December), allowing time for us to prepare and send your card.
+
 				<h4>How much goes to charity?</h4>
 				<i>Most of the money!</i> The costs are:<br/>
 				£0.50 for the card (sourced from Oxfam, so some of this goes to good causes too)<br/>
 				£0.70 postage<br/>
 				£0.50 to cover SoGive's costs<br/>
-				<i>£3.30 to the charity (or £4.30 for the malaria net card)</i><br/>
-				<h4>What countries do you post to?</h4>
-				We are UK based, but we will post to <i>any country</i>. 
-				For non-UK addresses, the postage will be a bit higher, so the charity donation will be a bit lower.
+				<i>£3.30 to the charity</i><br/>
+
+				<h4>Can I send lots of cards?</h4>
+				Yes - if you want to send a batch of cards, 
+				download <a href='/uploads/SoGive_Cards_Batch_Send_Form.xlsx' download>this spreadsheet</a>, and
+				email us at <a href='mailto:support@sogive.org'>support@sogive.org</a>				
+
 				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>
 			</div>
 
