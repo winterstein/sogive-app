@@ -6,7 +6,7 @@ import C from '../../C';
 import md5 from 'md5';
 import Ticket from './Ticket';
 import DataStore from '../../base/plumbing/DataStore';
-import ActionMan from '../../plumbing/ActionMan';
+import ActionMan from '../../base/plumbing/ActionManBase';
 
 /** impact utils */
 class FundRaiser extends DataClass {

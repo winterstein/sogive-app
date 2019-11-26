@@ -19,7 +19,7 @@ import Ticket from '../data/charity/Ticket';
 import Basket from '../data/Basket';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
-
+import XId from '../base/data/XId';
 import ActionMan from '../base/plumbing/ActionManBase';
 
 
@@ -132,10 +132,23 @@ ActionMan.getBasketPV = (uxid) => {
 	let pvbasket = ActionMan.getDataItem({type:C.TYPES.Basket, id:bid, status: C.KStatus.DRAFT, swallow:true});
 	if (pvbasket.value) return pvbasket;
 	// loading - or maybe we have to make a new basket
-	let pGetMake = pvbasket.promise.catch(err => {
-		console.log("make a new basket");
-		let basket = new Basket({id: bid});
+	let pGetMake = pvbasket.promise.catch(err => {		
+		let basket = null;
+		// Use temp basket??
+		let currentBasket = DataStore.getValue(['transient','basket']);
+		if (currentBasket) {
+			if ( ! currentBasket.id || XId.service(currentBasket.id)==='temp' || currentBasket.id.endsWith(uxid)) {
+				basket.id = bid;		
+			}
+		}
+		if ( ! basket) {
+			console.log("make a new basket", bid);
+			basket = new Basket({id: bid});
+		}
+		// stash and return
 		DataStore.setData(C.KStatus.DRAFT, basket);
+		// set as the current basket
+		DataStore.setValue(['transient','basket'], basket);
 		return basket;
 	});
 	return new PV(pGetMake);
