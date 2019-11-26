@@ -138,12 +138,14 @@ ActionMan.getBasketPV = (uxid) => {
 		let currentBasket = DataStore.getValue(['transient','basket']);
 		if (currentBasket) {
 			if ( ! currentBasket.id || XId.service(currentBasket.id)==='temp' || currentBasket.id.endsWith(uxid)) {
-				basket.id = bid;		
+				console.log("transfer basket: "+basket.id+" -> "+bid);
+				basket.id = bid;
+				basket.oxid = uxid;
 			}
 		}
 		if ( ! basket) {
 			console.log("make a new basket", bid);
-			basket = new Basket({id: bid});
+			basket = new Basket({id: bid, oxid:uxid});
 		}
 		// stash and return
 		DataStore.setData(C.KStatus.DRAFT, basket);
