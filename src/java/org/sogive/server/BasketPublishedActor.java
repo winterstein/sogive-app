@@ -63,6 +63,7 @@ public class BasketPublishedActor extends Actor<Basket> {
 		// TODO send e-card -- For now, just notify us
 		if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
 			notifyUs(ticket);
+			return; // Don't email the "walker"
 		}
 		
 		// email user
