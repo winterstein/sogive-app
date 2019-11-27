@@ -30,47 +30,56 @@ import com.winterwell.web.email.SimpleMessage;
  */
 public class BasketPublishedActor extends Actor<Basket> {
 
+	private static final String LOGTAG = "BasketPublishedActor";
+
 	@Override
 	protected void consume(Basket basket, Actor from) throws Exception {
 		// make a fundraiser for each walker
-		Log.d("BasketPublishedActor", "consume "+basket+" tickets "+basket.getItems());
+		Log.d(LOGTAG, "consume "+basket+" tickets "+basket.getItems());
 		basket.getItems().forEach(ticket -> process(ticket, basket));
 	}
 
 	private void process(Ticket ticket, Basket basket) {
-		Log.d("BasketPublishedActor", "process ticket "+ticket+" from "+basket);
-		// no email?!
-		if (ticket.getAttendeeEmail()==null) {
-			Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);
-			return;
-		}
-		
-		// make card?
-		AThing fr;
-		if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
-			fr = new Card(ticket, basket);
-		} else {		
-			// make fundraiser
-			fr = new FundRaiser(ticket, basket);		
-		}
-		JThing draft = new JThing<>(fr);
-		IESRouter iesRouter = Dep.get(IESRouter.class);
-		ESPath draftPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.DRAFT);
-		ESPath publishPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.PUBLISHED);
-		// fast refresh, as there is a race vs the user
-		AppUtils.doPublish(draft, draftPath, publishPath, KRefresh.TRUE, true);
-
-		// TODO send e-card -- For now, just notify us
-		if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
-			notifyUs(ticket);
-			return; // Don't email the "walker"
-		}
-		
-		// email user
 		try {
-			doEmailWalker(ticket, fr);
-		} catch(Throwable ex) {
-			Log.e("BasketPublished", ex);
+			Log.d(LOGTAG, "process ticket "+ticket+" from "+basket);
+			// no email?!
+			if (ticket.getAttendeeEmail()==null) {
+				Log.e("TODO", "handle tickets without an email "+ticket+" from "+basket);
+				return;
+			}
+			
+			// make card?
+			AThing fr;
+			if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
+				fr = new Card(ticket, basket);
+			} else {		
+				// make fundraiser
+				fr = new FundRaiser(ticket, basket);		
+			}
+			JThing draft = new JThing<>(fr);
+			IESRouter iesRouter = Dep.get(IESRouter.class);
+			ESPath draftPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.DRAFT);
+			ESPath publishPath = iesRouter.getPath(fr.getClass(), fr.id, KStatus.PUBLISHED);
+			// fast refresh, as there is a race vs the user
+			AppUtils.doPublish(draft, draftPath, publishPath, KRefresh.TRUE, true);
+	
+			// TODO send e-card -- For now, just notify us
+			if (Card.KIND_CARD.equalsIgnoreCase(ticket.getKind())) {
+				notifyUs(ticket);
+				return; // Don't email the "walker"
+			} else {
+				Log.d(LOGTAG, "dont sent notify Card email cos kind="+ticket.getKind()+" in "+ticket);
+			}
+			
+			// email user
+			try {
+				doEmailWalker(ticket, fr);
+			} catch(Throwable ex) {
+				Log.e("BasketPublished", ex);
+			}
+		} catch(Throwable ex) { // paranoia
+			Log.e(LOGTAG, ex);
+			throw Utils.runtime(ex);
 		}
 	}
 
@@ -81,21 +90,24 @@ public class BasketPublishedActor extends Actor<Basket> {
 	 */
 	private void notifyUs(Ticket ticket) {
 		try {
+			Log.i(LOGTAG, "notifyUs "+ticket);
 			Emailer emailer = Dep.get(Emailer.class);
 			SimpleMessage email = new SimpleMessage(emailer.getBotEmail().toString(), 
 					"support@sogive.org", "Shop "+AppUtils.getServerType()+" "+AppUtils.getFullHostname()+" - card bought :)", 
 					"NOTE: We now have to send the physical card and the e-card!\n\n"+
 					FlexiGson.toJSON(ticket));
 			emailer.send(email);
+			Log.i(LOGTAG, "...notifyUs sent "+ticket);
 		} catch(Exception ex) {
-			Log.e(getName(), ex);
+			Log.e(LOGTAG, ex);
 		}
 	}
 
 	private void doEmailWalker(Ticket ticket, AThing fr) {
+		Log.i(LOGTAG, "doEmailWalker "+ticket+" "+fr);
 		Emailer emailer = Dep.get(Emailer.class);
 		if (emailer==null) {
-			Log.e("BasketPublishedActor", "No Emailer?! Cannot email ticket info for "+ticket);
+			Log.e(LOGTAG, "No Emailer?! Cannot email ticket info for "+ticket);
 			return;
 		}
 		String e = ticket.getAttendeeEmail();		
