@@ -30,13 +30,17 @@ ActionMan.addCharity = (charity) => {
 	// get the info (just the name)
 	if ( ! charity) charity = DataStore.appstate.widget.AddCharityWidget.form;
 	assert(charity.name, "ActionMan.addCharity() No name!",charity);
-	// TODO message the user!
+	// add to the DB (as draft)	
 	ServerIO.addCharity(charity)
-	.then(res => {
-		console.log("AddCharity", res);
-		let rCharity = res.cargo;
-		DataStore.setValue(['widget','AddCharityWidget','result','id'], NGO.id(rCharity));
-	});
+		.then(res => {
+			console.log("AddCharity", res);
+			let rCharity = res.cargo;
+			DataStore.setValue(['widget','AddCharityWidget','result','id'], NGO.id(rCharity));
+		});
+	// optimistic add to local, using (hopefully the same as the server) canonicalised name	
+	if ( ! charity.id) charity.id = charity.name.toLowerCase().replace(/\s+/g, "-");	
+	charity = new NGO(charity);
+	DataStore.setValue(DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:charity.id}), charity);	
 };
 
 

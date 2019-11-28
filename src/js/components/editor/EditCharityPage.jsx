@@ -24,7 +24,7 @@ import {ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS
 
 const EditCharityPage = () => {
 	// HACK - see isAdvanced()
-	DataStore.setValue(['widget','editor','isAdvanced'], true);
+	DataStore.setValue(['widget','editor','isAdvanced'], true, false);
 
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
@@ -32,7 +32,7 @@ const EditCharityPage = () => {
 
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
-	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
+	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
 	let pvCharity = DataStore.fetch(cpath,
 		// NB: swallow 'cos error display is done below
 		() => ServerIO.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.DRAFT, swallow:true})
@@ -51,10 +51,13 @@ const EditCharityPage = () => {
 				<div className='alert alert-warning'>
 					ALWAYS <a href='#search?status=ALL_BAR_TRASH'>search</a> first to check the charity isn't already in the database. 
 					Otherwise we will have ugly merge problems.</div>
-				<button className='btn btn-warning' type='button' onClick={() => ActionMan.addCharity({name:cid})}>Add Charity <code>{cid}</code></button>
+				<button className='btn btn-warning' type='button' onClick={() => {
+					ActionMan.addCharity({name:cid});
+					DataStore.update();
+				}}>Add Charity <code>{cid}</code></button>
 			</Misc.Card>
 		</>);
-	}
+	} // ./error
 
 	// HACK load a fresh draft the first time.
 	if (C.KStatus.isPUBLISHED(charity.status)) {
