@@ -174,7 +174,8 @@ const ManageDonationsPage = () => {
 		<div className=''>
 			<h2>Manage Donations</h2>
 			<PropControl label='Format' prop='format' options={['normal', 'hmrc']} 
-				labels={['Normal', 'HMRC Gift Aid Format']} type='select' />
+				labels={['Normal', 'HMRC Gift Aid Format']} type='select' />			
+			{isGiftAidFormat? <p>The table below is filtered to ONLY include donations with gift-aid.</p> : null}
 			<SimpleTable data={dons} columns={columns} csv hasFilter
 				addTotalRow={ ! isGiftAidFormat} hideEmpty={ ! isGiftAidFormat} 
 				rowsPerPage={100}
