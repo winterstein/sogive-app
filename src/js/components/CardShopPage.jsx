@@ -100,8 +100,8 @@ const CardShopPage = () => {
 				<i>£3.30 to the charity</i><br/>
 
 				<h4>Can I send lots of cards?</h4>
-				Yes - if you want to send a batch of cards, 
-				download <a href='/uploads/SoGive_Cards_Batch_Send_Form.xlsx' download>this spreadsheet</a>, and
+				Yes - if you want to send a batch of 10 or more cards, then you can use a spreadsheet for convenience. 
+				Download <a href='/uploads/SoGive_Cards_Batch_Send_Form.xlsx' download>this spreadsheet</a>, and
 				email us at <a href='mailto:support@sogive.org'>support@sogive.org</a>				
 
 				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>
