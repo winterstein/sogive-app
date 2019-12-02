@@ -29,12 +29,9 @@ const CardPage = () => {
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	let pvCard = ActionMan.getDataItem({type:C.TYPES.Card, id:frId, status: C.KStatus.PUBLISHED});
-	if ( ! pvCard.resolved) {
-		return <Misc.Loading />;
-	}
-	if ( pvCard.error) {
-		return <BS.Alert>Something not right :'( {pvCard.error}</BS.Alert>;
-	}
+	if ( ! pvCard.value) {
+		return <Misc.Loading pv={pvCard} />;
+	}	
 	const card = pvCard.value;
 	let senderXId = card.sender;
 	let pvSender = ActionMan.getDataItem({type:C.TYPES.User, id:senderXId, status:C.KStatus.PUBLISHED});

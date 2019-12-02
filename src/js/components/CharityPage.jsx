@@ -26,9 +26,11 @@ const CharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	if ( ! cid) cid = DataStore.getValue('location', 'path')[1]; // TODO switch to this more RESTful path naming as the standard
-	let {value:charity} = ActionMan.getDataItem({status:C.KStatus.PUBLISHED, type:C.TYPES.$NGO(), id:cid});
+	let status = DataStore.getUrlValue('status') || C.KStatus.PUBLISHED;
+	let pvCharity = ActionMan.getDataItem({status, type:C.TYPES.$NGO(), id:cid});
+	let charity = pvCharity.value;
 	if ( ! charity) {
-		return <Misc.Loading />;
+		return <Misc.Loading pv={pvCharity} />;
 	}	
 
 	const impactColumn = (

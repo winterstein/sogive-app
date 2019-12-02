@@ -42,8 +42,7 @@ const EditCharityPage = () => {
 	// error?
 	if ( ! charity) {
 		if ( ! Roles.iCan(C.CAN.edit).value) {
-			return pvCharity.error? <BS.Alert><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></BS.Alert>
-				: <Misc.Loading text='Loading...' />;
+			return <Misc.Loading text='Loading...' pv={pvCharity} />;
 		}
 		return (<>
 			{pvCharity.error? <BS.Alert><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></BS.Alert> : <Misc.Loading text='Loading...' />}
