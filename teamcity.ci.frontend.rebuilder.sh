@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET_SERVER='simmons.soda.sh'
+TARGET_SERVER='hugh.soda.sh'
 TARGET_DIR='/home/winterwell/sogive-app/'
 SYNC_LIST=("server" "src" "web" "package.json" "webpack.config.js")
 
