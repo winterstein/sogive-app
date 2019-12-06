@@ -317,6 +317,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
+						let pounds = dollars? Math.round(rate*dollars*100) / 100 : null;
 						console.warn("e", e);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
 						return e;
