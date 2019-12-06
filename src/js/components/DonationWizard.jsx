@@ -166,7 +166,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	// get (set) the amount
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
-	let credit = Transfer.getCredit();		
+	let credit = Transfer.getCredit();
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
 	const proposedSuggestedDonation = getDonationAmount({path, item, credit, suggestedDonations});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
@@ -179,12 +179,12 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	return (
 		<Modal show className="donate-modal" onHide={closeLightbox}>
-			<Modal.Header closeButton >
+			<Modal.Header closeButton>
 				<Modal.Title>Donate to {causeName}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<Wizard stagePath={stagePath} >
-					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK} >
+				<Wizard stagePath={stagePath}>
+					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK}>
 						<AmountSection path={path} fromEditor={fromEditor} item={item} 
 							paidElsewhere={paidElsewhere} credit={credit} 
 							proposedSuggestedDonation={proposedSuggestedDonation} 
@@ -228,7 +228,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
  */
 const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) => {
 	const dntn = DataStore.getValue(path) || {};
-	if (preferredCurrency==='GBP') preferredCurrency=null; // HACK GBP is the default
+	if (preferredCurrency === 'GBP') preferredCurrency = null; // HACK GBP is the default
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
 
@@ -241,14 +241,14 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 	repeatDonations = _.uniq(repeatDonations.filter(rd => rd));
 
 	// HACK default to stopping with the event
-	if (event && Donation.isRepeating(dntn) && dntn.repeatStopsAfterEvent===undefined) {
+	if (event && Donation.isRepeating(dntn) && dntn.repeatStopsAfterEvent === undefined) {
 		dntn.repeatStopsAfterEvent = true;
 	}
 	
 	// Disallow repeat donations if the event has already passed
 	const eventExpired = event && event.date && new Date() > new Date(event.date);
 	let showRepeatControls = !eventExpired || dntn.repeat || repeatDonations.length > 1;
-	// Suggestde repeat? If not, default to one-off, no repeats
+	// Suggested repeat? If not, default to one-off, no repeats
 	if (showRepeatControls && dntn.repeat === undefined) {
 		dntn.repeat = proposedSuggestedDonation.repeat || 'OFF';
 	}
@@ -264,28 +264,28 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		<div className='section donation-amount'>
 			
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
-			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}		
+			{suggestedDonations.map((sd, i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}
 			
-			{preferredCurrency? 
+			{preferredCurrency ? (
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
-				:
+			) : (
 				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
-			}
-			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
+			)}
+			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
-			{showRepeatControls? 
-				<PropControl type='radio' path={path} prop='repeat' 
-					options={repeatDonations} labels={Donation.strRepeat} inline />
-				: null}
+			{showRepeatControls ?
+				<PropControl type='radio' path={path} prop='repeat'
+					options={repeatDonations} labels={Donation.strRepeat} inline
+				/> : null}
 			{dntn.repeat === 'WEEK'?
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
 				: null}
-			{event && showRepeatControls? 
-				<PropControl disabled={ ! Donation.isRepeating(dntn)} 					
-					label='Stop recurring donations after the event? (you can also cancel at any time)' 
-					type='checkbox' 
-					path={path} prop='repeatStopsAfterEvent' />
-				: null}
+			{event && showRepeatControls ?
+				<PropControl disabled={!Donation.isRepeating(dntn)}
+					label='Stop recurring donations after the event? (you can also cancel at any time)'
+					type='checkbox'
+					path={path} prop='repeatStopsAfterEvent'
+				/> : null}
 		</div>);
 }; // ./AmountSection
 
@@ -293,42 +293,49 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
+
 	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
 		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
 		console.warn("got",got);
 		return got;
 	});
+
 	let rate = 0.80341;
-	if (pvRate.value) {		
+	if (pvRate.value) {
 		rate = pvRate.value.rates.GBP / pvRate.value.rates.USD;
 		console.warn("USD->GBP "+rate, pvRate.value);
 	}
-	return (<><BS.Row>
-		<BS.Col md={6} sm={12}>
-			<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
-				label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
-					let dollars = e.target.value;
-					let pounds = dollars? Math.round(rate*dollars*100) / 100 : null;
-					console.warn("e", e);
-					DataStore.setValue(path.concat('amount'), new Money(pounds));
-					return e;
-				}} />
-		</BS.Col>
-		<BS.Col md={6} sm={12}>
-			<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false} 
-				onChange={e => {
-					console.warn("e2", e.target.value);
-					let pounds = e.target.value;
-					let dollars = pounds? Math.round(pounds*100 / rate) / 100 : null;
-					DataStore.setValue(transPath.concat('localAmount'), new Money({currency:'USD', value:dollars}));
-				}}
-			/>			
-		</BS.Col>		
-	</BS.Row>
+
+	// Only apply value={val} (which overrides DataStore binding) to the £ value if the DataStore value doesn't exist yet
+	const gbpValue = DataStore.getValue(path.concat('amount')) ? val : null;
+
+	return <>
+		<BS.Row>
+			<BS.Col md={6} sm={12}>
+				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
+					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
+						let dollars = e.target.value;
+						let pounds = dollars? Math.round(rate*dollars*100) / 100 : null;
+						console.warn("e", e);
+						DataStore.setValue(path.concat('amount'), new Money(pounds));
+						return e;
+					}} />
+			</BS.Col>
+			<BS.Col md={6} sm={12}>
+				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={gbpValue} changeCurrency={false} 
+					onChange={e => {
+						console.warn("e2", e.target.value);
+						let pounds = e.target.value;
+						let dollars = pounds? Math.round(pounds*100 / rate) / 100 : null;
+						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:'USD', value:dollars}));
+					}}
+				/>
+			</BS.Col>
+		</BS.Row>
 		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
 		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
-	</>);
+	</>;
 };
 
 
