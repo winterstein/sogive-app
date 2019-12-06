@@ -259,7 +259,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 
 	// When the user manually changes the donation amount, mark the donation object as "don't mess with the amount if it's set elsewhere"
 	const flagUserSetAmount = () => DataStore.setValue(path.concat('userSetAmount'), true);
-	
+
 	return (
 		<div className='section donation-amount'>
 			
@@ -267,7 +267,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 			{suggestedDonations.map((sd, i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}
 			
 			{preferredCurrency ? (
-				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
+				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} onChange={flagUserSetAmount} />
 			) : (
 				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
 			)}
@@ -290,7 +290,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 }; // ./AmountSection
 
 
-const CurrencyConvertor = ({path, val, preferredCurrency}) => {
+const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
 
@@ -307,29 +307,27 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 		console.warn("USD->GBP "+rate, pvRate.value);
 	}
 
-	// Only apply value={val} (which overrides DataStore binding) to the £ value if the DataStore value doesn't exist yet
-	const extraProps = {};
-	if (!DataStore.getValue(path.concat('amount'))) extraProps.value = val;
-
 	return <>
 		<BS.Row>
 			<BS.Col md={6} sm={12}>
 				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
-						let pounds = dollars? Math.round(rate*dollars*100) / 100 : null;
-						console.warn("e", e);
+						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
+						console.warn(`setting £ donation from local amount: ${pounds} => ${dollars}`);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
-						return e;
-					}} />
+						return onChange(e);
+					}}
+				/>
 			</BS.Col>
 			<BS.Col md={6} sm={12}>
-				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' {...extraProps} changeCurrency={false}
+				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false}
 					onChange={e => {
-						console.warn("e2", e.target.value);
 						let pounds = e.target.value;
-						let dollars = pounds? Math.round(pounds*100 / rate) / 100 : null;
+						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
+						console.warn(`setting local donation from £ amount: $${dollars} => £${pounds}`);
 						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:'USD', value:dollars}));
+						return onChange(e);
 					}}
 				/>
 			</BS.Col>
@@ -359,7 +357,7 @@ const SDButton = ({path,sd, donation}) => {
 };
 
 /**
- * This can set the DOnation.amount to a default value as a side-effect
+ * This can set the Donation.amount to a default value as a side-effect
  * @param item {Donation}
  * @param credit {?Money}
  * @param suggestedDonations {?SuggestedDonation[]}
