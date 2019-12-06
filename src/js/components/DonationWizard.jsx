@@ -308,7 +308,8 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 	}
 
 	// Only apply value={val} (which overrides DataStore binding) to the £ value if the DataStore value doesn't exist yet
-	const gbpValue = DataStore.getValue(path.concat('amount')) ? val : null;
+	const extraProps = {};
+	if (!DataStore.getValue(path.concat('amount'))) extraProps.val = val;
 
 	return <>
 		<BS.Row>
@@ -323,7 +324,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 					}} />
 			</BS.Col>
 			<BS.Col md={6} sm={12}>
-				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={gbpValue} changeCurrency={false} 
+				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' {...extraProps} changeCurrency={false}
 					onChange={e => {
 						console.warn("e2", e.target.value);
 						let pounds = e.target.value;
