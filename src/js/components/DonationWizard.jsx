@@ -231,6 +231,10 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 	if (preferredCurrency==='GBP') preferredCurrency=null; // HACK GBP is the default
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
+	if (Money.hasValue(val) && ! Money.hasValue(dntn.amount)) {
+		dntn.amount = Object.assign({}, val);
+		DataStore.setValue(path, dntn, false);
+	}
 
 	// What repeat options?
 	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
@@ -267,9 +271,9 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 			{suggestedDonations.map((sd,i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}		
 			
 			{preferredCurrency? 
-				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
+				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} />
 				:
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' changeCurrency={false} onChange={flagUserSetAmount} />
 			}
 			{Money.value(credit)? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
@@ -316,7 +320,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 				}} />
 		</BS.Col>
 		<BS.Col md={6} sm={12}>
-			<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false} 
+			<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' changeCurrency={false} 
 				onChange={e => {
 					console.warn("e2", e.target.value);
 					let pounds = e.target.value;
@@ -327,7 +331,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency}) => {
 		</BS.Col>		
 	</BS.Row>
 		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
-		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
+		Currency conversion is handled by your bank - the rate they apply may be a bit worse.</small></div>
 	</>);
 };
 

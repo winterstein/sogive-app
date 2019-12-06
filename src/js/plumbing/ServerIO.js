@@ -19,7 +19,7 @@ import ServerIO from '../base/plumbing/ServerIOBase';
 
 ServerIO.APIBASE = '';
 ServerIO.APIBASE = 'https://test.sogive.org';
-// ServerIO.APIBASE = 'https://app.sogive.org';
+ServerIO.APIBASE = 'https://app.sogive.org';
 
 ServerIO.MEDIA_ENDPOINT = '/upload.json';
 
