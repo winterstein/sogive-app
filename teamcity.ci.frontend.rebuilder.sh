@@ -1,10 +1,16 @@
 #!/bin/bash
 
-TARGET_SERVER='simmons.soda.sh'
+TARGET_SERVER='hugh.soda.sh'
 TARGET_DIR='/home/winterwell/sogive-app/'
-SYNC_LIST=("server" "src" "web" "package.json" "webpack.config.js")
+SYNC_LIST=("src" "web" "package.json" "webpack.config.js")
 
-for sync_item in ${SYNC_LIST(@)}; do
+
+printf "\nRemoving old 'base' symlink\n"
+rm -rf src/js/base
+printf "\nSymlinking 'base' from where TeamCity keeps it's wwappbase.js repo\n"
+ln -s /home/winterwell/TeamCity/buildAgent/work/9307b27f248c307/base src/js/base
+
+for sync_item in ${SYNC_LIST[@]}; do
 	rsync -rLhP $sync_item winterwell@$TARGET_SERVER:$TARGET_DIR
 done
 
