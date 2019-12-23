@@ -35,7 +35,7 @@ public class Donation extends AThing implements IForSale {
 	/**
 	 * used to create RepeatDonation
 	 */
-	String repeat;
+	private String repeat;
 	
 	public Repeat getRepeat() {
 		// stop at fundraiser event?
