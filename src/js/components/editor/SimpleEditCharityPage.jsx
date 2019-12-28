@@ -195,7 +195,11 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type='textarea' label='Description' field='description' 
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
 		
-		<EditField item={charity} type='select' field='category' label='Category' options={Object.keys(NGO.CATEGORY)} />
+		<EditField item={charity} type='select' field='category' label='Category' 
+			options={Object.keys(NGO.CATEGORY)} 
+			help='The categories are mostly aligned with those used by Charity Navigator.'
+		/>
+		<div><small>{charity.subcategory? null : (NGO.CATEGORY[charity.category] || []).join(" / ")}</small></div>
 		<EditField item={charity} type='select' field='subcategory' label='Sub-Category' options={NGO.CATEGORY[charity.category] || []} />
 
 		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)' 
