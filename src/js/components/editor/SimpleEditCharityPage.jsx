@@ -178,6 +178,9 @@ const EditorialEditor = ({charity}) => {
 };
 
 const ProfileEditor = ({charity}) => {
+	if (charity.category && ! charity.whyTags) {
+		charity.whyTags = charity.category;
+	}
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 		<EditField item={charity} disabled type='text' field='name' label='Official name (locked)' help='The official name, usually as registered with the Charity Commission.' />
