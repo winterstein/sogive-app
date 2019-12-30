@@ -57,7 +57,9 @@ const CheckoutPage = () => {
 	const stagePath = ['location', 'params', 'registerStage'];
 
 	const deleteBasket = e => {
-		ActionMan.delete(C.TYPES.Basket, basket.id);
+		e.preventDefault();
+		basket.items = [];
+		DataStore.setData(C.KStatus.DRAFT, basket);
 	};
 
 	// hacky: set a charity in the basket?
