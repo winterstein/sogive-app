@@ -57,10 +57,5 @@ public class CardServlet extends CrudServlet {
 		super(Card.class);
 	}
 	
-	@Override
-	protected List doList(WebRequest state) throws IOException {
-		// TODO security - devs only
-		return super.doList(state);
-	}
 	
 }

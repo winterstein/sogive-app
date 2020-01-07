@@ -80,10 +80,6 @@ public class DonationServlet extends CrudServlet {
 		super.process(state);
 	}*/
 	
-	@Override
-	protected List doList(WebRequest state) throws IOException {
-		return super.doList(state);
-	}
 
 		
 	@Override

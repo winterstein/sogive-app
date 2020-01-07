@@ -13,9 +13,4 @@ public class RepeatdonationServlet extends CrudServlet<RepeatDonation> {
 	public RepeatdonationServlet() {
 		super(RepeatDonation.class);
 	}
-
-	@Override
-	protected List doList(WebRequest state) throws IOException {
-		return super.doList(state);
-	}
 }
