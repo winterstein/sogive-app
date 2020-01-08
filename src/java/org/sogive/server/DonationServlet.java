@@ -81,13 +81,12 @@ public class DonationServlet extends CrudServlet {
 	}*/
 	
 
-		
 	@Override
-	protected ESQueryBuilder doList2_query(WebRequest state) {
+	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		// a donations request MUST provide from or q, to avoid listing all
 		String from = state.get("from");
 		String q = state.get("q"); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
-		if ("ALL".equals(q)) {
+		if (ALL.equalsIgnoreCase(q)) {
 			return null; // All! 
 		}
 		if (from==null && q==null) {
