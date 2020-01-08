@@ -48,7 +48,7 @@ public class CreditServlet extends CrudServlet<Transfer> implements IServlet {
 	
 
 	@Override
-	protected ESQueryBuilder doList2_query(WebRequest state) {
+	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		// support from:user
 		String from = state.get("from");
 		if (from!=null) {
