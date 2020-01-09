@@ -11,8 +11,9 @@ import org.sogive.data.user.Person;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
-import com.stripe.model.CustomerSubscriptionCollection;
+//import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
+import com.stripe.model.SubscriptionCollection;
 import com.stripe.net.RequestOptions;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
@@ -59,7 +60,7 @@ public class StripePlugin {
 			String secretKey = Dep.get(StripeConfig.class).secretKey;
 			RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
 			Customer customer = Customer.retrieve(id, requestOptions);
-			CustomerSubscriptionCollection subs = customer.getSubscriptions();
+			SubscriptionCollection subs = customer.getSubscriptions();
 			if (subs==null || subs.getData().isEmpty()) { // bug seen Dec 2015 When/why does this happen?
 				// It might be when we create a test account, then remove them from Stripe!
 				return null;
