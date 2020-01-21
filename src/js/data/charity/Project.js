@@ -39,13 +39,18 @@ Project.isOverall = (project) => Project.assIsa(project) && project.name && proj
  @return {Output[]} never null, can be empty
  */
 Project.outputs = project => {
-	Project.assIsa(project);
-	return project.outputs || [];
+	Project.assIsa(project);	
+	Project.safeList(project, 'outputs');
+	return project.outputs;
 };
 /** 
  * @return {Money[]} never null, can be empty
  */
-Project.inputs = project => project.inputs || [];
+Project.inputs = project => {
+	Project.checkIsa(project);
+	Project.safeList(project, 'inputs');
+	return project.inputs;
+};
 
 Project.getLatest = (projects) => {
 	if ( ! projects) return null;

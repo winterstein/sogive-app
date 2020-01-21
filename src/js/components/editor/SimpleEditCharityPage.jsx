@@ -313,6 +313,13 @@ const removeProject = ({charity, project}) => {
 	ActionMan.removeProject({charity, project});
 };
 
+/**
+ * onClick, `list` is edited directly by ActionMan.addInputOrOutput()!
+ * @param {{
+ * 	list: Object[],
+ * 	ioPath: string[]
+ * }}
+ */
 const AddIO = ({list, pio, ioPath}) => {
 	assert(_.isArray(list) && _.isArray(ioPath) && pio, "EditCharityPage.AddIO");
 	const formPath = ['widget','AddIO', pio, 'form'];
@@ -414,7 +421,7 @@ const ProjectInputs = ({charity, project={}}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	let inputs = project.inputs|| [];
+	let inputs = Project.inputs(project);
 	let annualCosts = inputs.find(input => input.name && input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
 	let projectCosts = inputs.find(input => input.name && input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
 	let tradingCosts = inputs.find(input => input.name && input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
@@ -438,8 +445,6 @@ const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
-	// NB: use the array index as key 'cos the other details can be edited
-	let rinputs = project.outputs.map((input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />);
 	return (
 		<div className='well'>
 			<h5>Outputs</h5>
@@ -481,7 +486,12 @@ This is also a good place to point if, for example, the impacts shown are an ave
 						</th>
 						<th>Meta</th>
 					</tr>
-					{rinputs}
+					{	
+						/* NB: use the array index as key 'cos the other details can be edited */
+						Project.outputs(project).map(
+							(input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />
+						)
+					}
 					<tr><td colSpan={6}>
 						<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
 					</td></tr>
@@ -522,7 +532,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 		assert( ! dspi || dspi === project.inputs, "EditCharityPage.ProjectInputEditor", inputsPath, dspi, project.inputs);
 	}
 	// where in the list are we?
-	let ii = project.inputs.indexOf(input);
+	let ii = Project.inputs(project).indexOf(input);
 	if (ii === -1) {
 		project.inputs.push(input);
 		ii = project.inputs.indexOf(input);
