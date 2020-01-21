@@ -36,7 +36,8 @@
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
-    "compile-watch-fast": "NO_PROD=true webpack --progress --colors --watch"
+    "compile-watch-fast": "NO_PROD=true webpack --progress --colors --watch",
+    "test": "jest"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
@@ -47,14 +48,24 @@
     "babel-loader": "^8.0.5",
     "babel-plugin-transform-node-env-inline": "^0.4.3",
     "css-loader": "^3.0.0",
-    "style-loader": "^0.23.1",
     "eslint": "^5.15.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
     "intl": "^1.2.5",
+    "jest": "^24.9.0",
+    "jest-puppeteer": "^4.4.0",
+    "ndb": "^1.1.5",
+    "puppeteer": "^2.0.0",
+    "style-loader": "^0.23.1",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
+  },
+  "jest": {
+    "preset": "jest-puppeteer",
+    "globals": {
+      "window": {}
+    }
   }
 }
