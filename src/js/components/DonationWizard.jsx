@@ -168,10 +168,10 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
 	let credit = Transfer.getCredit();
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	const proposedSuggestedDonation = getDonationAmount({path, item, credit, suggestedDonations});
+	const proposedSuggestedDonation = getSetDonationAmount({path, item, credit, suggestedDonations});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
-	// NB: this should always be true, cos getDonationAmount sets it to a default
+	// NB: this should always be true, cos getSetDonationAmount sets it to a default
 	const amountOK = amount !== null && Money.value(amount) > 0;
 
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
@@ -226,7 +226,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
  * @param credit {?Money}
  * @param proposedDonationValue {!SuggestedDonation} Assumed setup already
  */
-const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) => {
+const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, 
+	proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) => 
+{
 	const dntn = DataStore.getValue(path) || {};
 	if (preferredCurrency === 'GBP') preferredCurrency = null; // HACK GBP is the default
 	// How much £?
@@ -261,29 +263,28 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, proposedS
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
 	}
 
-	// When the user manually changes the donation amount, mark the donation object as "don't mess with the amount if it's set elsewhere"
-	const flagUserSetAmount = () => DataStore.setValue(path.concat('userSetAmount'), true);
-
 	return (
 		<div className='section donation-amount'>
 			
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
 			{suggestedDonations.map((sd, i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}
 			
-			{preferredCurrency ? (
-				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} onChange={flagUserSetAmount} />
-			) : (
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
-			)}
+			{preferredCurrency?
+				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
+				:
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' 
+					value={val} changeCurrency={false}
+				/>
+			}
 			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			{showRepeatControls ?
 				<PropControl type='radio' path={path} prop='repeat'
 					options={repeatDonations} labels={Donation.strRepeat} inline
 				/> : null}
-			{dntn.repeat === 'WEEK'?
+			{/* {dntn.repeat === 'WEEK'?	rm as asked by Sanjay, Jan 2020
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
-				: null}
+				: null} */}
 			{event && showRepeatControls ?
 				<PropControl disabled={!Donation.isRepeating(dntn)}
 					label='Stop recurring donations after the event? (you can also cancel at any time)'
@@ -301,7 +302,6 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
 		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
-		console.warn("got",got);
 		return got;
 	});
 
@@ -320,6 +320,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
 						console.warn(`setting £ donation from local amount: ${pounds} => ${dollars}`);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
+						DataStore.setModified(path.concat('amount'));
 						return onChange(e);
 					}}
 				/>
@@ -346,13 +347,17 @@ const SDButton = ({path,sd, donation}) => {
 	if ( ! sd.amount) return null; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
 	let on = donation && Money.eq(donation.amount, sd.amount) && donation.repeat === sd.repeat;
+	// on click, set stuff
+	const clickSuggestedButton = e => {
+		let amnt = Object.assign({}, sd.amount);
+		delete amnt['@class'];
+		DataStore.setModified(path.concat('amount'));
+		DataStore.setValue(path.concat('amount'), amnt);
+		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
+	};
+	// 
 	return (
-		<button className={'btn btn-default suggested-donation'+(on?' active':'')} type="button" onClick={e => {
-			let amnt = Object.assign({}, sd.amount);
-			delete amnt['@class'];
-			DataStore.setValue(path.concat('amount'), amnt);
-			DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
-		}}>
+		<button className={'btn btn-default mr-2 suggested-donation'+(on?' active':'')} type="button" onClick={clickSuggestedButton}>
 			{sd.name? <span>{sd.name} </span> : null}
 			<Misc.Money amount={sd.amount} />
 			{sd.repeat? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
@@ -368,18 +373,15 @@ const SDButton = ({path,sd, donation}) => {
  * @param path {String[]} path to Donation item
  * @returns {SuggestedDonation}
  */
-const getDonationAmount = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
 	const dntn = DataStore.getValue(path) || DataStore.setValue(path, {});
 	let val = Donation.amount(dntn);
-	// NB: the raw !== undefined test should allow user-set blank values to stay blank
-	// whilst replacing fresh blanks below.
-	// dntn could have been set by the PropControl in AmountSection without user action
-	// If not set by user action, still fall through to getDonationAmount2 - which might pull from
-	// the +/- "X May Fund.." field
-	if (val && dntn.userSetAmount && (Money.value(val) || val.raw !== undefined)) {
+	// Preserve user set values
+	if (DataStore.isModified(path.concat('amount'))) {
+		if ( ! val) val = new Money();
 		return {amount:val, repeat:dntn.repeat};
 	}
-	const sd = getDonationAmount2({path, item, credit, suggestedDonations});
+	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations});
 	// side-effect: set
 	dntn.amount = sd.amount; 
 	// dont overwrite repeat - so you can set it off before setting a £amount
@@ -391,7 +393,7 @@ const getDonationAmount = ({path, item, credit, suggestedDonations}) => {
  * 
  * @returns {SuggestedDonation}
  */
-const getDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 	// Set to amount of user's credit if present
 	if (credit && credit.value) {
 		return {amount:credit, repeat:'OFF'};
@@ -588,12 +590,12 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 			<p>This form is for donations that have already been paid.</p>
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
-			<button onClick={e => {
+			<button type='button' onClick={e => {
 				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
-				.then(res => {
-					notifyUser('Off-site donation published - reload to see');
-					closeLightbox();
-				});				
+					.then(res => {
+						notifyUser('Off-site donation published - reload to see');
+						closeLightbox();
+					});				
 			}} className='btn btn-primary'>Publish Donation</button>
 		</div>);
 	}
@@ -618,7 +620,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
-};
+}; // ./PaymentSection
 
 /**
  * 

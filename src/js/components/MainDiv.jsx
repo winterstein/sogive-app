@@ -10,6 +10,7 @@ import Roles from '../base/Roles';
 import C from '../C';
 // Templates
 import MessageBar from '../base/components/MessageBar';
+import BS from '../base/components/BS3';
 import NavBar from '../base/components/NavBar';
 import LoginWidget from '../base/components/LoginWidget';
 // Pages
@@ -99,7 +100,7 @@ const DEFAULT_PAGE = 'search';
 */
 class MainDiv extends Component {
 
-	componentWillMount() {
+	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
@@ -117,15 +118,21 @@ class MainDiv extends Component {
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
 				LoginWidget.hide();
-			} else {
-				// poke React via DataStore (e.g. for Login.error)
-				DataStore.update({}); // is this needed given the setState() below??
 			}
+			// poke React via DataStore (e.g. for Login.error)
+			DataStore.update({});
+			// is this needed??
 			this.setState({});
 		});
 
 		// Are we logged in?
 		Login.verify();
+
+		// Check if we're on a mobile device and place the result in state
+		// COPIED FROM ADUNIT'S device.js
+		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
+		DataStore.setValue(['env', 'isMobile'], isMobile);
 
 		// enforce a page
 		let path = DataStore.getValue('location', 'path');
@@ -133,7 +140,8 @@ class MainDiv extends Component {
 		if ( ! page) {
 			modifyHash([DEFAULT_PAGE]);
 		}
-	}
+	} // ./componentDidMount
+	
 
 	componentDidCatch(error, info) {
 		// Display fallback UI

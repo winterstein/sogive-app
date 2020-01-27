@@ -394,7 +394,7 @@ const CharityChoiceTab = ({basket}) => {
 	const recommended = ! charityId; // limit to recommended charities if the input is blank
 	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
 		() => {
-			return ServerIO.searchCharities({prefix: charityId, size: 20, recommended})
+			return ServerIO.searchCharities({q: charityId, size: 20, recommended}) // NB: was prefix not q. Issue seen Jan 2020 - the underlying DB isnt indexed fully for prefix 
 				.then(res => {
 					let hits = res.cargo && res.cargo.hits;
 					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
