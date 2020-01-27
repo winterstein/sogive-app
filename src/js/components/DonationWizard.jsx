@@ -302,7 +302,6 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
 		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
-		console.warn("got",got);
 		return got;
 	});
 
@@ -321,6 +320,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
 						console.warn(`setting £ donation from local amount: ${pounds} => ${dollars}`);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
+						DataStore.setModified(path.concat('amount'));
 						return onChange(e);
 					}}
 				/>
