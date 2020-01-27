@@ -282,9 +282,9 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 				<PropControl type='radio' path={path} prop='repeat'
 					options={repeatDonations} labels={Donation.strRepeat} inline
 				/> : null}
-			{dntn.repeat === 'WEEK'?
+			{/* {dntn.repeat === 'WEEK'?	rm as asked by Sanjay, Jan 2020
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
-				: null}
+				: null} */}
 			{event && showRepeatControls ?
 				<PropControl disabled={!Donation.isRepeating(dntn)}
 					label='Stop recurring donations after the event? (you can also cancel at any time)'
