@@ -30,12 +30,12 @@ const fundraiserData = {
 };
 
 // Use existing event to test fundraiser. We test event creation separately.
-const eventId = 'TurHe2nW';
+const eventId = 'VgT2FGzo';
 let fundraiserEditLink; // Link to fundraiser edit page, from where we delete it.
 let fundraiserId;
 
-const fundraiserIdClip = async () => {
-	return await fundraiserEditLink.split('/').pop();
+const fundraiserIdClip = () => {
+	return fundraiserEditLink.split('/').pop();
 };
 
 let browser;
