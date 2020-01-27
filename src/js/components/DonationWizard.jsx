@@ -272,11 +272,13 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
 			{suggestedDonations.map((sd, i) => <SDButton key={i} sd={sd} path={path} donation={dntn} flagUserSetAmount={flagUserSetAmount} />)}
 			
-			{preferredCurrency ? (
+			{preferredCurrency?
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} onChange={flagUserSetAmount} />
-			) : (
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' value={val} changeCurrency={false} onChange={flagUserSetAmount} />
-			)}
+				:
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' 
+					value={val} changeCurrency={false} onChange={flagUserSetAmount} 
+				/>
+			}
 			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			{showRepeatControls ?
@@ -358,7 +360,7 @@ const SDButton = ({path,sd, donation, flagUserSetAmount}) => {
 	};
 	// 
 	return (
-		<button className={'btn btn-default suggested-donation'+(on?' active':'')} type="button" onClick={clickSuggestedButton}>
+		<button className={'btn btn-default mr-2 suggested-donation'+(on?' active':'')} type="button" onClick={clickSuggestedButton}>
 			{sd.name? <span>{sd.name} </span> : null}
 			<Misc.Money amount={sd.amount} />
 			{sd.repeat? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
