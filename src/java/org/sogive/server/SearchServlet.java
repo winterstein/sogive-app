@@ -6,12 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 
@@ -21,7 +15,10 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
+import com.winterwell.es.client.sort.KSortOrder;
+import com.winterwell.es.client.sort.Sort;
 import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
@@ -87,8 +84,7 @@ public class SearchServlet implements IServlet {
 			// See https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
 			q = StrUtils.toCanonical(q);
 			// this will query _all			
-			QueryBuilder qbq = QueryBuilders.simpleQueryStringQuery(q)
-								.defaultOperator(Operator.AND);
+			ESQueryBuilder qbq = ESQueryBuilders.simpleQueryStringQuery(q);
 			s.addQuery(qbq);
 			
 //			SearchQuery sq = new SearchQuery(q);
@@ -114,30 +110,32 @@ public class SearchServlet implements IServlet {
 						.should(ESQueryBuilders.termQuery("recommended", true));
 				s.addQuery(bq);
 			} else {
-				QueryBuilder qb = QueryBuilders.termQuery("impact", impact);
+				ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
 				s.addQuery(qb);
 			}
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
-			QueryBuilder qb = QueryBuilders.existsQuery("projects");
+			ESQueryBuilder qb = ESQueryBuilders.existsQuery("projects");
 			s.addQuery(qb);
 		}
 		Boolean onlyReady = state.get(new BoolField("ready"));
 		if (Utils.yes(onlyReady)) {
-			QueryBuilder qb = QueryBuilders.termQuery("ready", "true");
+			ESQueryBuilder qb = ESQueryBuilders.termQuery("ready", "true");
 			s.addQuery(qb);
 		}
 		
 		// TODO test ordering.
 		// Show recommended charities before all other results
-		SortBuilder recSort = SortBuilders.fieldSort("recommended").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
+		Sort recSort = new Sort("recommended", KSortOrder.desc);
+				//.setMissing("_last").unmappedType("boolean");
 		s.addSort(recSort);
 		// Prioritise charities marked "ready for use"
-		SortBuilder readySort = SortBuilders.fieldSort("ready").order(SortOrder.DESC).missing("_last").unmappedType("boolean");
+		Sort readySort = new Sort("ready", KSortOrder.desc);
+				//.setMissing("_last").unmappedType("boolean");
 		s.addSort(readySort);
 		// After that - just use the relevance score
-		s.addSort(SortBuilders.scoreSort());
+		s.addSort(Sort.scoreSort());
 		// s.addSort("name.raw", SortOrder.ASC);
 		// s.addSort("@id", SortOrder.ASC);
 		s.setDebug(true);

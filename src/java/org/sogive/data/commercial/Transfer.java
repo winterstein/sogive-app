@@ -4,8 +4,6 @@ package org.sogive.data.commercial;
 import java.util.Arrays;
 import java.util.List;
 
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import com.goodloop.data.Money;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
@@ -19,6 +17,8 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.query.ESQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Mutable;
 import com.winterwell.utils.Utils;
@@ -170,9 +170,9 @@ public class Transfer extends AThing {
 		String idx = Dep.get(IESRouter.class).getPath(Transfer.class, null).index();
 		s.setIndex(idx);
 		String toFrom = user.toString();
-		QueryBuilder qb = QueryBuilders.boolQuery()
-				.should(QueryBuilders.termQuery("to", toFrom))
-				.should(QueryBuilders.termQuery("from", toFrom))
+		ESQueryBuilder qb = ESQueryBuilders.boolQuery()
+				.should(ESQueryBuilders.termQuery("to", toFrom))
+				.should(ESQueryBuilders.termQuery("from", toFrom))
 				.minimumNumberShouldMatch(1);
 		s.setQuery(qb);
 		

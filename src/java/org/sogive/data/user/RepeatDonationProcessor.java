@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.elasticsearch.search.sort.SortOrder;
 import org.sogive.server.DonationServlet;
 import org.sogive.server.SoGiveServer;
 
@@ -16,6 +15,8 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.sort.KSortOrder;
+import com.winterwell.es.client.sort.Sort;
 import com.winterwell.gson.Gson;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.utils.Dep;
@@ -141,7 +142,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 		ESPath path = Dep.get(IESRouter.class).getPath(Donation.class, null, KStatus.PUBLISHED);
 		s.setPath(path);
 		s.setSize(2); // don't need many!
-		s.addSort("date", SortOrder.DESC);
+		s.addSort(new Sort("date", KSortOrder.desc));
 		SearchResponse sr = s.get();
 		List<Donation> dons = sr.getSearchResults(Donation.class);
 		Time prev = rdon.getDate();

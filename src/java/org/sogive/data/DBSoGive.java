@@ -2,8 +2,6 @@ package org.sogive.data;
 
 import java.util.List;
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import com.goodloop.data.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
@@ -27,6 +25,8 @@ import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.containers.ArrayMap;
@@ -138,14 +138,14 @@ public class DBSoGive {
 		ESConfig ec = Dep.get(ESConfig.class);
 		ESHttpClient esjc = new ESHttpClient(ec);
 		SearchRequestBuilder search = esjc.prepareSearch("charity");
-		BoolQueryBuilder qb = QueryBuilders.boolQuery();
+		BoolQueryBuilder qb = ESQueryBuilders.boolQuery();
 		for (String f : new String[] {
 				NGO.ID, "englandWalesCharityRegNum", ImportOSCRData.OSCR_REG,
 				"niCharityRegNum",
 				"ukCompanyRegNum", "usCompanyRegNum"
 		}) {
 			if (ngo.get(f) != null) {
-				qb.should(QueryBuilders.termQuery(f, ngo.get(f)));
+				qb.should(ESQueryBuilders.termQuery(f, ngo.get(f)));
 			}
 		}
 		qb.minimumNumberShouldMatch(1);

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.sogive.data.commercial.Ticket;
 
 import com.winterwell.data.KStatus;
@@ -15,6 +13,8 @@ import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
+import com.winterwell.es.client.query.ESQueryBuilder;
+import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.containers.ArrayMap;
@@ -51,9 +51,9 @@ public class EventReportServlet implements IServlet {
 		
 		// query ?? cf crudservlet
 //		String q = state.get("q");
-		QueryBuilder qb = 
-				QueryBuilders.boolQuery().must(
-						QueryBuilders.termQuery("eventId", eventId)
+		ESQueryBuilder qb = 
+				ESQueryBuilders.boolQuery().must(
+						ESQueryBuilders.termQuery("eventId", eventId)
 						);
 		
 		s.setQuery(qb);
