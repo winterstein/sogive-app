@@ -2,6 +2,8 @@ package org.sogive.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +61,7 @@ import com.winterwell.youagain.client.YouAgainClient;
  * @author daniel
  * @testedby {@link DonationServletTest}
  */
-public class DonationServlet extends CrudServlet {
+public class DonationServlet extends CrudServlet<Donation> {
 
 	@Override
 	protected void doSecurityCheck(WebRequest state) throws SecurityException {
@@ -140,6 +142,58 @@ public class DonationServlet extends CrudServlet {
 		// Done
 		return jthing;
 	}
+	
+	/** Fields that cleanse() should remove */
+	List<String> cleanseFields = Arrays.asList("from", "donorName", "donor", "donorAddress", "donorPostcode", "via", "collected", "paidOut", "paidElsewhere", "paymentId", "stripe", "f", "tip");
+		
+	/**
+	 * Remove sensitive details for privacy
+	 * TODO Export-CSV should e.g. set a prop on the servlet which says "don't sanitize, I need full data"
+	 * @param hits2
+	 * @param state
+	 * @return
+	 */
+	@Override
+	public List<Map> cleanse(List<Map> hits2, WebRequest state) {
+		for (Map donation : hits2) {
+			// We want to be able to display a name unless the donor requested anonymity
+			// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
+			String donorName = null;
+			Object anon = donation.get("anonymous");
+			Boolean anonymous = false;
+			if (anon instanceof Boolean) anonymous = ((Boolean) anon);
+			if (anon instanceof String) anonymous = "true".equals((String) anon); // Should be boolean, but just in case
+			if (!anonymous) {
+				// Try to get an explicitly declared name
+				donorName = (String) donation.get("donorName");
+				Map<String, Object> donorObj = (Map) donation.get("donor");
+				if (donorName == null) donorName = (String) donorObj.get("name");
+				
+				// Still no name? Fall back to email addresses, but just take everything up to the @ for privacy
+				// This mimics the name-reconstructing behaviour used on the front end
+				if (donorName == null) {
+					donorName = (String) donation.get("from");
+					donorName = (String) donation.get("donorEmail");
+					if (donorName == null) donorName = (String) donorObj.get("id");
+					if (donorName != null) donorName = donorName.replaceAll("@.*", "");
+				}
+			}
+			
+			// We've got a name or proxy, now scrub all possibly-sensitive fields
+			for (String key : cleanseFields) {
+				if (donation.containsKey(key)) donation.remove(key);	
+			}
+			
+			// Now reinstate the "donor" object but with only a name
+			if (!anonymous && donorName != null) { 
+				Map<String, String> donor = new HashMap<String, String>();
+				donor.put("name", donorName);
+				donation.put("donor", donor);
+			}
+		}
+		return hits2;
+	}
+	
 
 	private void setupRepeat(Donation donation) {
 		ESPath path = AppUtils.getPath(null, RepeatDonation.class, RepeatDonation.idForDonation(donation), KStatus.PUBLISHED);
@@ -334,5 +388,4 @@ public class DonationServlet extends CrudServlet {
 		email.setHtmlContent(bodyHtml, bodyPlain);
 		emailer.send(email);
 	}
-	
 }
