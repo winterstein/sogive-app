@@ -143,8 +143,6 @@ public class DonationServlet extends CrudServlet<Donation> {
 		return jthing;
 	}
 	
-	/** Fields that cleanse() should remove */
-	List<String> cleanseFields = Arrays.asList("from", "donorName", "donor", "donorAddress", "donorPostcode", "via", "collected", "paidOut", "paidElsewhere", "paymentId", "stripe", "f", "tip");
 		
 	/**
 	 * Remove sensitive details for privacy
@@ -154,41 +152,56 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 * @return
 	 */
 	@Override
-	public List<Map> cleanse(List<Map> hits2, WebRequest state) {
-		for (Map donation : hits2) {
+	public List cleanse(List hits2, WebRequest state) {
+		for (Object dntnObj : hits2) {
+			if (!(dntnObj instanceof Donation)) continue;
+			Donation donation = (Donation) dntnObj;
+
 			// We want to be able to display a name unless the donor requested anonymity
 			// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
 			String donorName = null;
-			Object anon = donation.get("anonymous");
-			Boolean anonymous = false;
-			if (anon instanceof Boolean) anonymous = ((Boolean) anon);
-			if (anon instanceof String) anonymous = "true".equals((String) anon); // Should be boolean, but just in case
+			Boolean anonymous = donation.getAnonymous();
+			if (anonymous == null) anonymous = false;
+			
 			if (!anonymous) {
 				// Try to get an explicitly declared name
-				donorName = (String) donation.get("donorName");
-				Map<String, Object> donorObj = (Map) donation.get("donor");
-				if (donorName == null) donorName = (String) donorObj.get("name");
+				donorName = donation.getDonorName();
+				PersonLite donor = donation.getDonor();
+				if (donorName == null) donorName = donor.getName();
 				
 				// Still no name? Fall back to email addresses, but just take everything up to the @ for privacy
 				// This mimics the name-reconstructing behaviour used on the front end
 				if (donorName == null) {
-					donorName = (String) donation.get("from");
-					donorName = (String) donation.get("donorEmail");
-					if (donorName == null) donorName = (String) donorObj.get("id");
-					if (donorName != null) donorName = donorName.replaceAll("@.*", "");
+					String donorEmail = donation.getDonorEmail();
+					if (donorEmail == null) donorEmail = donor.id;
+					if (donorEmail == null) donorEmail = donation.getFrom().name;
+					// We've done all we can! Strip everything after the @ and go.
+					if (donorEmail != null) donorName = donorEmail.replaceAll("@.*", "");
 				}
 			}
 			
 			// We've got a name or proxy, now scrub all possibly-sensitive fields
-			for (String key : cleanseFields) {
-				if (donation.containsKey(key)) donation.remove(key);	
-			}
+			donation.setFrom(null);
+			donation.setDonor(null);
+			donation.setDonorName(null);
+			donation.setDonorAddress(null);
+			donation.setDonorPostcode(null);
+			donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
+			// TODO These can't be nulled because they're primitives - not super personal but should we change that?
+			// donation.setCollected(null);
+			// donation.setPaidOut(null);
+			// donation.setPaidElsewhere(null);
+			donation.setPaymentId(null);
+			donation.setStripe(null);
+			donation.setF(null);
+			donation.setTip(null);
 			
 			// Now reinstate the "donor" object but with only a name
-			if (!anonymous && donorName != null) { 
-				Map<String, String> donor = new HashMap<String, String>();
-				donor.put("name", donorName);
-				donation.put("donor", donor);
+			if (!anonymous && donorName != null) {
+				// Fake an XID for the PersonLite object
+				PersonLite donor = new PersonLite(new XId(donorName, "name"));
+				donor.setName(donorName);
+				donation.setDonor(donor);
 			}
 		}
 		return hits2;
