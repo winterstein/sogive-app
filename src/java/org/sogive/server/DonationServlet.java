@@ -184,6 +184,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donation.setFrom(null);
 			donation.setDonor(null);
 			donation.setDonorName(null);
+			donation.setDonorEmail(null);
 			donation.setDonorAddress(null);
 			donation.setDonorPostcode(null);
 			donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
