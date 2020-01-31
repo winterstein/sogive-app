@@ -4,12 +4,13 @@ import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 import { Modal } from 'react-bootstrap';
 import Login from 'you-again';
+import $ from 'jquery';
 
 import C from '../C';
 import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
-import $ from 'jquery';
+
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
@@ -43,7 +44,7 @@ const DonateButton = ({item, paidElsewhere}) => {
 		return (
 			<button className='btn btn-lg btn-primary disabled' type='button'
 				title='This is a draft preview page - publish to actually donate'>Donate</button>
-		);	
+		);
 	}
 	
 	return (
@@ -89,7 +90,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const widgetPath = ['widget', 'DonationWizard', id];
 
 	// From an event?
-	const event = pvEvent.value;		
+	const event = pvEvent.value;
 
 	// £/$
 	let preferredCurrency = null;
@@ -101,7 +102,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// TODO move this to Misc for reuse TODO reuse this safety test with other only-one-per-page dialogs
 	// ?? maybe replace the assert with a more lenient return null??
 	const rpath = ['transient', 'render'].concat(widgetPath);
-	const already = DataStore.getValue(rpath);	
+	const already = DataStore.getValue(rpath);
 	assert( ! already, "DonationWizard.jsx - duplicate "+widgetPath);
 	DataStore.setValue(rpath, true, false);
 
@@ -127,9 +128,12 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 		DataStore.setValue([...widgetPath, 'open'], false);
 		DataStore.setValue(stagePath, null);
 
-		//Check if donation is draft
-		if(C.KStatus.isPUBLISHED(donationDraft.status)) {
-			// ?? does this duplicate the clear done on publish??
+		// Donation has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
+		// We checked for PUBLISHED status before - BUT the draft under draft.Donation.from:donorId.to:itemId isn't marked as such.
+		// TODO Stripe ID will also be truthy for a declined transaction - there's no indication that the token is bad
+		// until we publish and DonationServlet tries to redeem it. Mark declined on publish & retain the draft so user can try another card
+		const pvDonationDraft = ActionMan.getDonationDraft({item}); // resolve use-before-declare warnings
+		if (pvDonationDraft.value && pvDonationDraft.value.stripe.id) {
 			ActionMan.clearDonationDraft({donation: donationDraft});
 		}
 	};
@@ -190,7 +194,8 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 							proposedSuggestedDonation={proposedSuggestedDonation} 
 							suggestedDonations={suggestedDonations}
 							event={event} 
-							preferredCurrency={preferredCurrency} />
+							preferredCurrency={preferredCurrency}
+						/>
 					</WizardStage>
 				
 					{showGiftAidSection? <WizardStage title='Gift Aid'>
@@ -205,11 +210,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 						<MessageSection path={path} recipient={item.owner} item={item} />
 					</WizardStage> : null}
 				
-					<WizardStage title='Payment' next={false} >
+					<WizardStage title='Payment' next={false}>
 						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
 				
-					<WizardStage title='Receipt' previous={false} >
+					<WizardStage title='Receipt' previous={false}>
 						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
 					</Wizard>
@@ -506,11 +511,12 @@ const DetailsSection = ({path, charity, fromEditor}) => {
 
 const MessageSection = ({path, recipient, item}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl 
-			prop='message' 
-			label='Message' 
+		<Misc.PropControl
+			prop='message'
+			label='Message'
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
-			path={path} type='textarea' />
+			path={path} type='textarea'
+		/>
 
 		<p>
 			By default we list your name and the amount.
@@ -519,7 +525,7 @@ const MessageSection = ({path, recipient, item}) => (
 		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' 
 			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))? 
 				"Your name will not be listed on the website. However your name, email, and donation will still be shared with the organiser" : null}
-		/>		
+		/>
 
 		<Misc.PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
 
@@ -535,7 +541,7 @@ const MessageSection = ({path, recipient, item}) => (
  */
 const onToken_doPayment = ({donation}) => {
 	DataStore.setData(C.KStatus.DRAFT, donation);
-	// invalidate credit if some got spent	
+	// invalidate credit if some got spent
 	let credit = Transfer.getCredit();
 	if (credit && Money.value(credit) > 0) {
 		DataStore.invalidateList(C.TYPES.Transfer);
@@ -547,17 +553,19 @@ const onToken_doPayment = ({donation}) => {
 			const stagePath = ['location', 'params', 'dntnStage'];
 			const stage = Number.parseInt(DataStore.getValue(stagePath));
 			DataStore.setValue(stagePath, Number.parseInt(stage) + 1);
-			// clear the draft
-			ActionMan.clearDonationDraft({donation});			
+			// Don't delete the donation! We still need it to show the right amount in the receipt.
+			// Published donation draft will be cleared from the draft path when the widget closes.
 			// do a fresh load of the fundraiser?
 			// NB: race condition with ES indexing might mean our donation doesn't show up instantly :(
-			if (donation.fundRaiser) {				
+			if (donation.fundRaiser) {
 				ActionMan.refreshDataItem({type:C.TYPES.FundRaiser, id:donation.fundRaiser, status:C.KStatus.PUBLISHED});
 			} else {
 				console.log("DonationWizard doPayment - no fundraiser to refresh", donation);
 			}
 		});
+	// TODO Catch a 400 (normally signifies payment declined) and mark the donation draft as "not completed"
 };
+
 
 const TQ_PATH = ['widget', 'ThankYouSection', 'donation'];
 
@@ -579,7 +587,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	// tip?
 	// default: £1
 	if (donation.hasTip === undefined) donation.hasTip = true;
-	if (donation.tip===undefined) donation.tip = new Money({currency:'GBP', value:1});
+	if (donation.tip === undefined) donation.tip = new Money({currency:'GBP', value:1});
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
 
@@ -595,7 +603,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 					.then(res => {
 						notifyUser('Off-site donation published - reload to see');
 						closeLightbox();
-					});				
+					});
 			}} className='btn btn-primary'>Publish Donation</button>
 		</div>);
 	}
@@ -622,6 +630,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	</div>);
 }; // ./PaymentSection
 
+
 /**
  * 
  * @param {String} did The donation ID - status: not used!
@@ -633,7 +642,8 @@ const ThankYouSection = ({path, item, did}) => {
 		donation = DataStore.getValue(TQ_PATH);
 	}
 	let amountPlusTip;
-   if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
+	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
+
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
@@ -651,6 +661,7 @@ const ThankYouSection = ({path, item, did}) => {
 		</div>
 	);
 };
+
 
 export {DonateButton};
 export default CharityPageImpactAndDonate;
