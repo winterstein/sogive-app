@@ -31,14 +31,14 @@ const isAdvanced = () => DataStore.getValue('widget','editor','isAdvanced');
 
 const SimpleEditCharityPage = () => {
 	// HACK - see isAdvanced()
-	DataStore.setValue(['widget','editor','isAdvanced'], false);
+	DataStore.setValue(['widget','editor','isAdvanced'], false, false);
 
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
 	}
 	// fetch data
 	const cid = DataStore.getUrlValue('charityId');
-	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
+	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
 	let {value:charity} = DataStore.fetch(cpath,
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);	

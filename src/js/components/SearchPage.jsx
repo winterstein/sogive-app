@@ -18,6 +18,7 @@ import C from '../C';
 import {getId} from '../base/data/DataClass';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
+// #Minor TODO refactor to replace components with simpler functions
 
 const MAX_RESULTS = 10000;
 const RESULTS_PER_PAGE = 20;
@@ -32,14 +33,13 @@ export default class SearchPage extends React.Component {
 		};
 	}
 
-	setResults(results, total, from, all, recommended) {
+	setResults(results, total, from, all) {
 		assert(_.isArray(results));
 		this.setState({
 			results,
 			total,
 			from,
 			all,
-			recommended,
 		});
 	}
 
@@ -55,10 +55,10 @@ export default class SearchPage extends React.Component {
 		let searchResults = null;
 		let searchPager = null;
 		// Show results box if a query was entered (so we get "No Results")
-		if (q || this.state.recommended) {
+		if (q) {
 			searchResults = (
 				<div className='col-md-12'>
-					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} all={this.state.all} recommended={this.state.recommended} />
+					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} all={this.state.all} />
 				</div>
 			);
 		}
@@ -88,15 +88,12 @@ class SearchForm extends React.Component {
 		super(...params);
 		this.state = {
 			q: this.props.query,
-			recommended: !this.props.query, // No query on creation = grab the recommended charities
 		};
 	}
 
 	componentDidMount() {
 		if (this.state.q) {
 			this.search(this.state.q);
-		} else if (this.state.recommended) {
-			this.search('', null, null, true); // Give us all recommended charities
 		}
 	}
 
@@ -121,23 +118,22 @@ class SearchForm extends React.Component {
 		this.search(this.state.q || '', this.props.status, 0);
 	}
 
-	search(query, status, from, recommended) {
+	search(query, status, from) {
 		// Put search query in URL so it's bookmarkable / shareable
 		DataStore.setUrlValue("q", query);
 		DataStore.setUrlValue("from", from);
 		
 		DataStore.setValue(['widget', 'Search', 'loading'], true);
-		const all = !recommended && !query;
+		const all = ! query;
 
 		// hack to allow status=DRAFT
-		ServerIO.searchCharities({q: query, from, size: RESULTS_PER_PAGE, status, recommended})
+		ServerIO.searchCharities({q: query, from, size: RESULTS_PER_PAGE, status})
 			.then(function(res) {
 				console.warn(res);
 				let charities = res.cargo.hits;
 				let total = res.cargo.total;
 				DataStore.setValue(['widget', 'Search', 'loading'], false);
-				this.props.setResults(charities, total, from || 0, all, recommended);
-				this.setState({recommended: false});
+				this.props.setResults(charities, total, from || 0, all);
 			}.bind(this));
 
 	}
@@ -198,7 +194,7 @@ const FieldClearButton = ({onClick, children}) => (
  * 	loading {?Boolean}
  * }
  */
-const SearchResults = ({ results, total, query, from, all, recommended, CTA, onPick, tabs, download, loading}) => {
+const SearchResults = ({ results, total, query, from, all, CTA, onPick, tabs, download, loading}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -208,20 +204,17 @@ const SearchResults = ({ results, total, query, from, all, recommended, CTA, onP
 	let resultsForText = '';
 	if (all) {
 		resultsForText = 'Showing all charities';
-	} else if (recommended) {
-		resultsForText = 'Showing recommended charities';
 	} else {
 		resultsForText = `Results for “${query}”`;
 	}
 
-	const recommendedNote = recommended ? (
-		<div className='recommended-note'>These recommendations are based on analysis of impact data</div>
-	) : null;
+	// const recommendedNote = recommended ? (
+	// 	<div className='recommended-note'>These recommendations are based on analysis of impact data</div>
+	// ) : null;
 
 	return (
 		<div className='SearchResults'>
 			{tabs !== false? <div className='top-tab'>{resultsForText}</div> : null}
-			{recommendedNote}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
@@ -383,7 +376,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	) : null;
 
 	return (
-		<div className={`SearchResult row ${item.recommended ? 'recommended' : ''}`} data-id={cid} >
+		<div className='SearchResult row' data-id={cid} >
 			{recommendedTab}
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (

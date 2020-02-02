@@ -50,8 +50,6 @@ public class SearchServlet implements IServlet {
 	public static final IntField SIZE = new IntField("size");
 	public static final IntField FROM = new IntField("from");
 	
-	@Deprecated
-	public static final BoolField RECOMMENDED = new BoolField("recommended");
 	/**
 	 * e.g. "high" (aka gold)
 	 */
@@ -75,8 +73,7 @@ public class SearchServlet implements IServlet {
 		String q = state.get(Q);
 		
 		String impact = state.get(IMPACT);
-		boolean _showRecommended = state.get(RECOMMENDED, false);
-		if (impact==null && _showRecommended) impact = "high";
+		if (impact==null) impact = "high";
 		
 		if ( q != null) {			
 			// Do we want this to handle e.g. accents??
@@ -103,16 +100,8 @@ public class SearchServlet implements IServlet {
 		
 		// Data status Filters
 		if (impact != null) {
-			// HACK: handle old data format, which was recommended:true
-			if ("high".equals(impact)) {
-				BoolQueryBuilder bq = ESQueryBuilders.boolQuery()
-						.should(ESQueryBuilders.termQuery("impact", impact))
-						.should(ESQueryBuilders.termQuery("recommended", true));
-				s.addQuery(bq);
-			} else {
-				ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
-				s.addQuery(qb);
-			}
+			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
+			s.addQuery(qb);
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
@@ -126,10 +115,10 @@ public class SearchServlet implements IServlet {
 		}
 		
 		// TODO test ordering.
-		// Show recommended charities before all other results
-		Sort recSort = new Sort("recommended", KSortOrder.desc);
+		// TODO sort by impact - show high-impact charities before all other results
+//		Sort recSort = new Sort("recommended", KSortOrder.desc);
 				//.setMissing("_last").unmappedType("boolean");
-		s.addSort(recSort);
+//		s.addSort(recSort);
 		// Prioritise charities marked "ready for use"
 		Sort readySort = new Sort("ready", KSortOrder.desc);
 				//.setMissing("_last").unmappedType("boolean");
