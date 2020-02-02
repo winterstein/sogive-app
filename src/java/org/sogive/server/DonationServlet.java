@@ -31,6 +31,7 @@ import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -82,12 +83,25 @@ public class DonationServlet extends CrudServlet<Donation> {
 		super.process(state);
 	}*/
 	
+	@Override
+	protected ESQueryBuilder doList3_ESquery(String q, String prefix, WebRequest stateOrNull) {
+		// HACK - include personal data for admin requests
+		if (q != null && q.endsWith("purpose:admin")) {
+			q = q.substring(0, q.length()-"purpose:admin".length()).trim();
+		}
+		
+		return super.doList3_ESquery(q, prefix, stateOrNull);
+	}
 
 	@Override
 	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		// a donations request MUST provide from or q, to avoid listing all
 		String from = state.get("from");
-		String q = state.get("q"); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
+		String q = state.get(Q); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
+
+		// HACK
+		if (q.endsWith("purpose:admin")) q = q.substring(0, q.length() - "purpose:admin".length()).trim();
+
 		if (ALL.equalsIgnoreCase(q)) {
 			return null; // All! 
 		}
@@ -143,6 +157,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		return jthing;
 	}
 	
+	
 		
 	/**
 	 * Remove sensitive details for privacy
@@ -153,6 +168,24 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 */
 	@Override
 	public List cleanse(List hits2, WebRequest state) {
+		// TODO HACK if returning a list for the event owner - show more info
+		boolean showEmailAndAddress = false;
+		// ...HACK is this for manageDonations?
+		String q = state.get(Q);
+		String ref = state.getReferer();
+		if (q.endsWith("purpose:admin")) {
+			// TODO Is this an admin eg Sanjay
+			YouAgainClient ya = Dep.get(YouAgainClient.class);
+			List<AuthToken> tokens = ya.getAuthTokens(state);
+			// TODO get admins from YA
+			for (AuthToken authToken : tokens) {
+				if ( ! authToken.xid.isService("email")) continue;
+				String n = authToken.xid.getName();
+				if (n.endsWith("good-loop.com")) showEmailAndAddress = true;
+				if (n.equals("sanjay@sogive.org")) showEmailAndAddress = true;
+			}
+		}
+		
 		for (Object dntnObj : hits2) {
 			if (!(dntnObj instanceof Donation)) continue;
 			Donation donation = (Donation) dntnObj;
@@ -162,18 +195,18 @@ public class DonationServlet extends CrudServlet<Donation> {
 			String donorName = null;
 			Boolean anonymous = donation.getAnonymous();
 			if (anonymous == null) anonymous = false;
-			
-			if (!anonymous) {
+			if (showEmailAndAddress) anonymous = false;
+			if ( ! anonymous) {
 				// Try to get an explicitly declared name
 				donorName = donation.getDonorName();
 				PersonLite donor = donation.getDonor();
-				if (donorName == null) donorName = donor.getName();
+				if (donorName == null && donor!=null) donorName = donor.getName();
 				
 				// Still no name? Fall back to email addresses, but just take everything up to the @ for privacy
 				// This mimics the name-reconstructing behaviour used on the front end
 				if (donorName == null) {
 					String donorEmail = donation.getDonorEmail();
-					if (donorEmail == null) donorEmail = donor.id;
+					if (donorEmail == null && donor != null) donorEmail = donor.id;
 					if (donorEmail == null) donorEmail = donation.getFrom().name;
 					// We've done all we can! Strip everything after the @ and go.
 					if (donorEmail != null) donorName = donorEmail.replaceAll("@.*", "");
@@ -181,21 +214,21 @@ public class DonationServlet extends CrudServlet<Donation> {
 			}
 			
 			// We've got a name or proxy, now scrub all possibly-sensitive fields
-			donation.setFrom(null);
-			donation.setDonor(null);
-			donation.setDonorName(null);
-			donation.setDonorEmail(null);
-			donation.setDonorAddress(null);
-			donation.setDonorPostcode(null);
-			donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
-			// TODO These can't be nulled because they're primitives - not super personal but should we change that?
-			// donation.setCollected(null);
-			// donation.setPaidOut(null);
-			// donation.setPaidElsewhere(null);
+			if ( ! showEmailAndAddress) {
+				donation.setFrom(null);
+				donation.setDonor(null);
+				donation.setDonorName(null);
+				donation.setDonorEmail(null);
+				donation.setDonorAddress(null);
+				donation.setDonorPostcode(null);
+				donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
+				donation.setF(null);
+				
+				donation.setTip(null);
+			}
+			// always null out background financial info
 			donation.setPaymentId(null);
-			donation.setStripe(null);
-			donation.setF(null);
-			donation.setTip(null);
+			donation.setStripe(null);						
 			
 			// Now reinstate the "donor" object but with only a name
 			if (!anonymous && donorName != null) {
