@@ -183,6 +183,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 				String n = authToken.xid.getName();
 				if (n.endsWith("good-loop.com")) showEmailAndAddress = true;
 				if (n.equals("sanjay@sogive.org")) showEmailAndAddress = true;
+				if (n.equals("candice.spendelow@gmail.com")) showEmailAndAddress = true;				
 			}
 		}
 		
