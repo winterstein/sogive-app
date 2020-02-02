@@ -185,6 +185,8 @@ public class DonationServlet extends CrudServlet<Donation> {
 				if (n.equals("sanjay@sogive.org")) showEmailAndAddress = true;
 				if (n.equals("candice.spendelow@gmail.com")) showEmailAndAddress = true;				
 			}
+			// SAFETY HACK
+			if ( ! showEmailAndAddress) throw new WebEx.E403("Only admins can use this page for now. No admin user listed in auth-tokens: "+tokens);
 		}
 		
 		for (Object dntnObj : hits2) {
