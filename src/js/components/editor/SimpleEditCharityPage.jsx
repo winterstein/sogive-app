@@ -190,6 +190,7 @@ const ProfileEditor = ({charity}) => {
 			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
 			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
 			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
+			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />			
 			<EditField label='USA registration number (i.e. EIN)' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
@@ -210,11 +211,6 @@ const ProfileEditor = ({charity}) => {
 			labels={NGO.UNSDGs}
 			help='Which UN SDG does this charity mainly work on?' />
 
-		<EditField item={charity} type='text' field='whyTags' label='Why (goal/area) tags, e.g. education, poverty, environment' 
-			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
-		
-		<EditField item={charity} type='text' field='howTags' label='How (method) tags, e.g. research, direct work, campaigning' 
-			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to "Research", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated. ' />
 		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world' 
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
@@ -684,7 +680,7 @@ const Ref = ({reference}) => {
 export default SimpleEditCharityPage;
 
 export {
-	ProjectInputs,
+	ProjectInputs, ProfileEditor,
 	AddProject, RemoveProject, ProjectDataSources, STD_INPUTS,
 	AddIO,
 	isAdvanced,
