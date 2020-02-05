@@ -88,6 +88,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		// HACK - include personal data for admin requests
 		if (q != null && q.endsWith("purpose:admin")) {
 			q = q.substring(0, q.length()-"purpose:admin".length()).trim();
+			Log.d(LOGTAG, "doList3_ESquery hack: chop purpose so q="+q);
 		}
 		
 		return super.doList3_ESquery(q, prefix, stateOrNull);
@@ -100,7 +101,10 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String q = state.get(Q); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
 
 		// HACK
-		if (q.endsWith("purpose:admin")) q = q.substring(0, q.length() - "purpose:admin".length()).trim();
+		if (q.endsWith("purpose:admin")) {
+			Log.d(LOGTAG, "doList4_ESquery_custom hack: chop purpose so q="+q);
+			q = q.substring(0, q.length() - "purpose:admin".length()).trim();
+		}
 
 		if (ALL.equalsIgnoreCase(q)) {
 			return null; // All! 
@@ -187,6 +191,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 			}
 			// SAFETY HACK
 			if ( ! showEmailAndAddress) throw new WebEx.E403("Only admins can use this page for now. No admin user listed in auth-tokens: "+tokens);
+			Log.d(LOGTAG, "hack purpose:admin upgrade data for "+tokens);
 		}
 		
 		for (Object dntnObj : hits2) {
