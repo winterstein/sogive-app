@@ -105,7 +105,7 @@ public class NGO extends Thing<NGO> {
 	}
 
 	public static XId xidFromId(String id) {
-		assert ! Utils.isBlank(id);
+		assert ! Utils.isBlank(id) : "NGO - Blank Id!";
 		return new XId(id+"@sogive");
 	}
 

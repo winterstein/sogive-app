@@ -239,9 +239,9 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donation.setStripe(null);						
 			
 			// Now reinstate the "donor" object but with only a name
-			if (!anonymous && donorName != null) {
+			if ( ! anonymous && ! Utils.isBlank(donorName)) {
 				// Fake an XID for the PersonLite object
-				PersonLite donor = new PersonLite(new XId(donorName, "name"));
+				PersonLite donor = new PersonLite(new XId(donorName, "name", false));
 				donor.setName(donorName);
 				donation.setDonor(donor);
 			}
@@ -377,7 +377,9 @@ public class DonationServlet extends CrudServlet<Donation> {
 			Log.d(LOGTAG, "paid elsewhere "+donation);
 		} else {					
 			Utils.check4null(donation, email);
-			XId to = NGO.xidFromId(donation.getTo());
+			String _to = donation.getTo();
+			assert _to != null : "No charity ID?! "+donation;
+			XId to = NGO.xidFromId(_to);
 			MoneyCollector mc = new MoneyCollector(donation, user, email, to, state);
 			mc.run(); // what if this fails??
 		}
