@@ -133,7 +133,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 		// TODO Stripe ID will also be truthy for a declined transaction - there's no indication that the token is bad
 		// until we publish and DonationServlet tries to redeem it. Mark declined on publish & retain the draft so user can try another card
 		const pvDonationDraft = ActionMan.getDonationDraft({item}); // resolve use-before-declare warnings
-		if (pvDonationDraft.value && pvDonationDraft.value.stripe.id) {
+		if (pvDonationDraft.value && pvDonationDraft.value.stripe && pvDonationDraft.value.stripe.id) {
 			ActionMan.clearDonationDraft({donation: donationDraft});
 		}
 	};
