@@ -6,7 +6,6 @@ import com.winterwell.bob.BuildTask;
 import com.winterwell.web.app.build.KPubType;
 import com.winterwell.web.app.build.PublishProjectTask;
 
-
 /**
  */
 public class PublishSoGiveApp extends PublishProjectTask {

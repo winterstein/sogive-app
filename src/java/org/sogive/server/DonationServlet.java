@@ -65,6 +65,14 @@ import com.winterwell.youagain.client.YouAgainClient;
 public class DonationServlet extends CrudServlet<Donation> {
 
 	@Override
+	protected String doAction2_blockRepeats2_actionId(WebRequest state) {
+		// This is stronger than base behaviour.
+		// Block eg the 2x Stripe customers bug seen Feb 2020 in SoGive
+		// by relying on the url to be specific
+		return state.getAction()+" "+state.getRequestUrl();
+	}
+	
+	@Override
 	protected void doSecurityCheck(WebRequest state) throws SecurityException {
 		YouAgainClient ya = Dep.get(YouAgainClient.class);
 		List<AuthToken> tokens = ya.getAuthTokens(state);
@@ -142,10 +150,11 @@ public class DonationServlet extends CrudServlet<Donation> {
 			);
 		}
 		List<MsgToActor> msgs = null;
-		if (donation.getStatus() != KStatus.PUBLISHED) {
-			msgs = doPublishFirstTime(state, donation);
+		if (KStatus.wasPublished(donation.getStatus())) {
+			Log.d(LOGTAG, "doPublish - but update only, as not first time "+state);			
 		} else {
-			Log.d(LOGTAG, "doPublish - but update not first time "+state);
+			// Collect money etc
+			msgs = doPublishFirstTime(state, donation);
 		}
 		// repeat?
 		setupRepeat(donation);
@@ -339,6 +348,12 @@ public class DonationServlet extends CrudServlet<Donation> {
 	
 	{
 		Utils.check4null(donation, user);
+		// guard against repeat bug seen Feb 2020
+		if (donation.isCollected() && ! donation.isPaidElsewhere()) {
+			Log.e(LOGTAG, "skip doPublish3_ShowMeTheMoney - duplicate? "+donation.getId()+" "+state);
+			return new ArrayList();
+		}
+			
 		donation.setF(new XId[]{user}); // who reported this? audit trail
 		
 		// make sure it has a date and some donor info
