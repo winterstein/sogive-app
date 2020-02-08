@@ -68,7 +68,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	protected String doAction2_blockRepeats2_actionId(WebRequest state) {
 		// This is stronger than base behaviour.
 		// Block eg the 2x Stripe customers bug seen Feb 2020 in SoGive
-		// by relying on the url to be specific
+		// by relying on the url to be RESTful and hence specific enough
 		return state.getAction()+" "+state.getRequestUrl();
 	}
 	
