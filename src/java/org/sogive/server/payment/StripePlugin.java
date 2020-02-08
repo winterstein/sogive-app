@@ -72,6 +72,17 @@ public class StripePlugin {
 		}
 	}
 
+	/**
+	 * 
+	 * @param amount
+	 * @param description
+	 * @param sa
+	 * @param user
+	 * @param idempotencyKey E.g. the Donation or Basket id. Repeated calls with the same i-key _within 24 hours_ should be harmless.
+	 * See https://stripe.com/docs/api#idempotent_requests
+	 * @return
+	 * @throws Exception
+	 */
 	public static Charge collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
@@ -96,9 +107,6 @@ public class StripePlugin {
         chargeMap.put("statement_descriptor", "Donation via SoGive"); // max 22 chars
         chargeMap.put("currency", Utils.or(amount.getCurrency(), "GBP"));
         
-//        https://stripe.com/docs/api#idempotent_requests
-//        add header Idempotency-Key:
-        	
         Log.i(LOGTAG, "create-map:"+chargeMap);
         // blank entries upset Stripe
         for(String k : chargeMap.keySet().toArray(new String[0])) {
@@ -111,10 +119,21 @@ public class StripePlugin {
         		chargeMap.remove(k);
         	}
         }
+        
+//      https://stripe.com/docs/api#idempotent_requests
+//		add header Idempotency-Key:
+        RequestOptions ro = null;
+        if (Utils.isBlank(idempotencyKey)) {
+        	Log.w(LOGTAG, "No idempotency-key protection for charge "+chargeMap);
+        } else {
+        	ro = RequestOptions.getDefault().toBuilder().setIdempotencyKey(idempotencyKey).build();
+        }
+
         // Charge!!
-        Charge c = Charge.create(chargeMap);
-//        Customer c = Customer.create(chargeMap, requestOptions);
-        Log.d(LOGTAG, c);
+        Charge c = Charge.create(chargeMap, ro);
+
+        //        Customer c = Customer.create(chargeMap, requestOptions);
+        Log.d(LOGTAG, "A charge was made! "+c);
         if (user!=null && c.getCustomer() != null) {
         	Customer cobj = c.getCustomerObject();
 	        user.put("stripe", new ArrayMap(

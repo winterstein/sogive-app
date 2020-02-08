@@ -38,7 +38,7 @@ const SimpleEditCharityPage = () => {
 	}
 	// fetch data
 	const cid = DataStore.getUrlValue('charityId');
-	const cpath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid);
+	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
 	let {value:charity} = DataStore.fetch(cpath,
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
 	);	
@@ -367,7 +367,8 @@ const ProjectEditor = ({charity, project}) => {
 const ProjectDataSources = ({charity, project}) => {
 
 	const projIndex = charity.projects.indexOf(project);
-	const dataSrcPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, NGO.id(charity)).concat(['projects', projIndex, 'data-src']);
+	const dataSrcPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:NGO.id(charity)})
+		.concat(['projects', projIndex, 'data-src']);
 	const sourceList = project['data-src'] || [];
 	return (
 		<div className='well'>
@@ -416,7 +417,7 @@ const ProjectInputs = ({charity, project={}}) => {
 	const isOverall = project.name === Project.overall;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
+	let projectPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	let inputs = Project.inputs(project);
 	let annualCosts = inputs.find(input => input.name && input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
 	let projectCosts = inputs.find(input => input.name && input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
@@ -440,7 +441,7 @@ const ProjectInputs = ({charity, project={}}) => {
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid]);
+	let projectPath = DataStore.getPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	return (
 		<div className='well'>
 			<h5>Outputs</h5>
@@ -522,7 +523,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	let readonly = ! manualEntry;
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let inputsPath = getPath(C.KStatus.DRAFT, C.TYPES.NGO, cid).concat(['projects', pid, 'inputs']);
+	let inputsPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid, 'inputs']);
 	{	// sanity check
 		const dspi = DataStore.getValue(inputsPath);
 		assert( ! dspi || dspi === project.inputs, "EditCharityPage.ProjectInputEditor", inputsPath, dspi, project.inputs);
@@ -555,7 +556,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	let ii = project.outputs.indexOf(output);
-	let inputPath = getPath(C.KStatus.DRAFT,C.TYPES.NGO,cid).concat(['projects', pid, 'outputs', ii]);
+	let inputPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid, 'outputs', ii]);
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
@@ -587,7 +588,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 
 const EditField = ({item, ...stuff}) => {
 	let id = NGO.id(item);
-	let path = getPath(C.KStatus.DRAFT,C.TYPES.NGO,id);
+	let path = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id});
 	return <EditField2 item={item} path={path} {...stuff} />;
 };
 
@@ -596,7 +597,7 @@ const EditProjectField = ({charity, project, ...stuff}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
 	assert(pid!==-1, "EditCharityPage.EditProjectField: "+project);
-	let path = getPath(C.KStatus.DRAFT,C.TYPES.NGO,cid).concat(['projects', pid]);
+	let path = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	return <EditField2 parentItem={charity} item={project} path={path} {...stuff} />;
 };
 

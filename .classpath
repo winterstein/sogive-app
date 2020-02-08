@@ -20,7 +20,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="dependencies/gson.jar"/>
-	<classpathentry kind="lib" path="dependencies/stripe-java.jar"/>
+	<classpathentry kind="lib" path="dependencies/stripe-java.jar" sourcepath="dependencies/stripe-java-17.8.0.zip"/>
 	<classpathentry kind="lib" path="/middleware/mockito/mockito-all.jar"/>
 	<classpathentry kind="lib" path="/middleware/lombok/lombok.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
