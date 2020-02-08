@@ -15,7 +15,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 		super("sogive", "/home/winterwell/sogive-app");
 		bashScript = "../wwappbase.js/./project-publisher.sh sogive";
 //		bashScript = "../wwappbase.js/./test-script.sh sogive";
-		typeOfPublish = KPubType.test;
+		typeOfPublish = KPubType.production;
 //		notests = true;
 	}
 	
