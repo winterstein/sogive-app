@@ -101,7 +101,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String q = state.get(Q); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
 
 		// HACK
-		if (q.endsWith("purpose:admin")) {
+		if (q !=null && q.endsWith("purpose:admin")) {
 			Log.d(LOGTAG, "doList4_ESquery_custom hack: chop purpose so q="+q);
 			q = q.substring(0, q.length() - "purpose:admin".length()).trim();
 		}
@@ -177,7 +177,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		// ...HACK is this for manageDonations?
 		String q = state.get(Q);
 		String ref = state.getReferer();
-		if (q.endsWith("purpose:admin")) {
+		if (q !=null && q.endsWith("purpose:admin")) {
 			// TODO Is this an admin eg Sanjay
 			YouAgainClient ya = Dep.get(YouAgainClient.class);
 			List<AuthToken> tokens = ya.getAuthTokens(state);
