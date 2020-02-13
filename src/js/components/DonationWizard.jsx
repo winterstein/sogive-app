@@ -72,8 +72,7 @@ const DonateButton = ({item, paidElsewhere}) => {
  * 
  * TODO refactor this
  */
-const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {	
-
+const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "CharityPageImpactAndDonate", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
@@ -581,7 +580,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	}
 	
 	const {amount} = donation;
-	if ( ! amount) {
+	if (!amount) {
 		return null;
 	}
 	Money.assIsa(amount);
@@ -623,9 +622,9 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	return (<div>
 		<div className='padded-block'>
-			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' 
+			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip'
 				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : ''} tip to cover SoGive's operating costs?`} />
-			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
+			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
@@ -645,6 +644,9 @@ const ThankYouSection = ({path, item, did}) => {
 	let amountPlusTip;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
 
+	// pull this out to make "We've received..." a one-liner & make natural spacing easy
+	const repeat = Donation.isRepeating(donation) ? <span> {Donation.strRepeat(donation.repeat)} </span> : null;
+
 	const registerMessage = (<>
 		<p>Would you like to quickly create a SoGive account?</p>
 		<p>You can <RegisterLink style={{textTransform: 'lowercase'}}> here</RegisterLink></p>
@@ -654,15 +656,9 @@ const ThankYouSection = ({path, item, did}) => {
 		<div className='text-center'>
 			<h3>Thank You!</h3>
 			<big>
-				<p>
-					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} />
-					{Donation.isRepeating(donation)? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
-					&nbsp; to {item.name} <br />
-				</p>
+				<p>We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> {repeat} to {item.name}</p>
 				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
-				<p>
-					Thanks for using SoGive!
-				</p>
+				<p>Thanks for using SoGive!</p>
 				{Login.user ? '' : registerMessage}
 			</big>
 		</div>

@@ -29,13 +29,13 @@ import SocialShare from './SocialShare';
 import {canWrite} from '../base/components/ShareWidget';
 
 const FundRaiserTop = () => {
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	if (frId) return <FundRaiserPage id={frId} />;
 	let type = C.TYPES.FundRaiser;
 
-	// which event?	
+	// which event?
 
 	return (
 		<div>
@@ -60,7 +60,7 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
-		// minor TODO use ServerIO.getDonations		
+		// minor TODO use ServerIO.getDonations
 		return ServerIO.load('/donation/_list.json', {data: {q:"fundRaiser:"+id, sort:"date-desc", status: C.KStatus.PUBLISHED}});
 	});
 	const donations = pvDonations.value && pvDonations.value.hits;
@@ -145,19 +145,19 @@ const FundRaiserPage = ({id}) => {
 						<center>
 							<h3>About: {item.owner.name}</h3>
 						</center>
-						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
+						<Misc.AvatarImg className='pull-left' peep={item.owner} />
 						<div>{item.owner.description? <MDText source={item.owner.description} /> : null}</div>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
-							<h3>The Charity: {NGO.displayName(charity)}</h3>							
+							<h3>The Charity: {NGO.displayName(charity)}</h3>
 						</center>
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>
 							{NGO.shortDescription(charity)} &nbsp;
 							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.id(charity))} target={charity.url? '_blank': ''}>More info</a></small>
-						</p>					
+						</p>
 					</Col>
 				</Row>
 
@@ -174,7 +174,7 @@ const FundRaiserPage = ({id}) => {
 						<h3>Supporters:</h3>
 						{/*supporters? <DonateButton item={item} /> : null*/}
 						{ donations ? (
-							<Supporters item={item} donations={donations} charity={/*charity*/ null} />						
+							<Supporters item={item} donations={donations} charity={/*charity*/ null} />
 						) : null}
 						<SocialShare charity={charity} fundraiser={item} />
 					</Col>

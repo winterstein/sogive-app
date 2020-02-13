@@ -66,7 +66,7 @@ Donation.getTotal = (don) => {
 };
 
 /**
- * @param {?Donation} don 
+ * @param {?Donation} don
  * @returns ?String can be null for anonymous donors
  */
 Donation.donorName = don => {
@@ -112,7 +112,7 @@ Donation.make = (base = {}) => {
 		'@type': C.TYPES.Donation,
 		/* The user's contribution (this is what the user pays; not what the charity recieves) */
 		amount: new Money(),
-		id: nonce(),	
+		id: nonce(),
 		...base
 	};
 	Donation.assIsa(ma);
