@@ -24,6 +24,8 @@ import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import {SuggestedDonationEditor} from './CommonControls';
 
+const CONFIDENCE_VALUES = new Enum("high medium low very-low");
+
 /**
  * HACK flag for simple vs advanced editor -- lets us mix in some advanced controls here.
  */
@@ -49,15 +51,15 @@ const SimpleEditCharityPage = () => {
 	if (C.KStatus.isPUBLISHED(charity.status)) {
 		if ( ! charity.uptodatedraft) {
 			ServerIO.getCharity(cid, C.KStatus.DRAFT)
-			.then(res => {
-				console.warn("res", res);
-				if (res.cargo) {
-					res.cargo.status = C.KStatus.DRAFT;
-					res.cargo.uptodatedraft = "yes";
-					console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
-					DataStore.setData(C.KStatus.DRAFT, res.cargo);
-				}
-			});
+				.then(res => {
+					console.warn("res", res);
+					if (res.cargo) {
+						res.cargo.status = C.KStatus.DRAFT;
+						res.cargo.uptodatedraft = "yes";
+						console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
+						DataStore.setData(C.KStatus.DRAFT, res.cargo);
+					}
+				});
 		}
 	} else if (C.KStatus.isDRAFT(charity.status)) {
 		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
@@ -156,7 +158,7 @@ const EditorialEditor = ({charity}) => {
 		/>
 
 		<EditField item={charity} field='confidence' 
-			type='select'			
+			type='select'
 			options={CONFIDENCE_VALUES.values} 
 			defaultValue={CONFIDENCE_VALUES.medium} 
 			canUnset
@@ -234,7 +236,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	assert(NGO.isa(charity), 'ProjectsEditor', charity);
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
-		<Misc.Card key={'project_'+i} 
+		<Misc.Card key={'project_'+i}
 			title={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Misc.Card>)
@@ -290,12 +292,15 @@ const RemoveProject = ({charity, project}) => {
 	assert(NGO.isa(charity), "EditCharityPage.RemoveProject");
 	const deleteProject = function(event) {
 		event.preventDefault();
+		/* eslint-disable no-alert,no-restricted-globals */
+		/* global confirm */
 		if (confirm("Are you sure you want to delete this project?")) {
 			removeProject({charity, project});
 		}
+		/* eslint-enable no-alert,no-restricted-globals */
 	};
 	return (
-		<button className='btn btn-default btn-sm pull-right' 
+		<button className='btn btn-default btn-sm pull-right'
 			title='Delete this project!'
 			onClick={deleteProject}
 		>
@@ -546,7 +551,6 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	</tr>);
 };
 
-const CONFIDENCE_VALUES = new Enum("high medium low very-low");
 
 /**
  * Edit output / impact
@@ -586,11 +590,13 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	</tr>);
 };
 
+
 const EditField = ({item, ...stuff}) => {
 	let id = NGO.id(item);
 	let path = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id});
 	return <EditField2 item={item} path={path} {...stuff} />;
 };
+
 
 const EditProjectField = ({charity, project, ...stuff}) => {
 	assert(project, "EditCharityPage.EditProjectField: "+stuff);
@@ -618,7 +624,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 					path={path} item={item} 
 					tooltip={help}
 					{ ...other}
-					/>
+				/>
 				<MetaEditor item={item} itemPath={path} field={field} help={help} />
 			</Misc.Col2>
 		</div>

@@ -20,7 +20,7 @@ import {LoginLink} from '../../base/components/LoginWidget';
 import Crud from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import {SuggestedDonationEditor} from './CommonControls';
-import {ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, isAdvanced} from './SimpleEditCharityPage';
+import {ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, CONFIDENCE_VALUES, isAdvanced} from './SimpleEditCharityPage';
 
 const EditCharityPage = () => {
 	// HACK - see isAdvanced()
