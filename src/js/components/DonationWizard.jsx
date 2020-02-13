@@ -23,6 +23,7 @@ import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
+import LoginWidget, { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
@@ -644,6 +645,11 @@ const ThankYouSection = ({path, item, did}) => {
 	let amountPlusTip;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
 
+	const registerMessage = (<>
+		<p>Would you like to quickly create a SoGive account?</p>
+		<p>You can <RegisterLink style={{textTransform: 'lowercase'}}> here</RegisterLink></p>
+	</>);
+
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
@@ -657,6 +663,7 @@ const ThankYouSection = ({path, item, did}) => {
 				<p>
 					Thanks for using SoGive!
 				</p>
+				{Login.user ? '' : registerMessage}
 			</big>
 		</div>
 	);
