@@ -431,7 +431,7 @@ const ProjectInputs = ({charity, project={}}) => {
 	return (<div className='well'>
 		<h5>Inputs</h5>
 		<table className='table'>
-			<tbody>			
+			<tbody>
 				{ ! isOverall? <ProjectInputEditor charity={charity} project={project} input={projectCosts} /> : null}
 				<ProjectInputEditor charity={charity} project={project} input={annualCosts} />
 				<ProjectInputEditor charity={charity} project={project} input={tradingCosts} />
@@ -446,12 +446,12 @@ const ProjectInputs = ({charity, project={}}) => {
 const ProjectOutputs = ({charity, project}) => {
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
-	let projectPath = DataStore.getPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
+	let projectPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	return (
 		<div className='well'>
 			<h5>Outputs</h5>
 			<table className='table'>
-				<tbody>			
+				<tbody>
 					<tr>
 						<th>
 							Impact units <Misc.Icon glyph='question-sign' title={
@@ -472,7 +472,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 						</th>
 						<th>
 							Confidence <Misc.Icon glyph='question-sign' title={
-`How confident are we in this cost-per-beneficiary estimate?   
+`How confident are we in this cost-per-beneficiary estimate?
 
 - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.   
 - Medium - the default value.    
@@ -498,7 +498,7 @@ This is also a good place to point if, for example, the impacts shown are an ave
 						<AddIO pio={'p'+pid+'_output'} list={project.outputs} ioPath={projectPath.concat('outputs')} />
 					</td></tr>
 				</tbody>
-			</table>		
+			</table>
 		</div>
 	);
 }; // ./ProjectOutputs()
