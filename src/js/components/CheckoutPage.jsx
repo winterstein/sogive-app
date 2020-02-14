@@ -32,7 +32,7 @@ import deepCopy from '../base/utils/deepCopy';
 /**
  * Buy cards. Copy pasta from RegisterPage.jsx TODO unify the two
  */
-const CheckoutPage = () => {	
+const CheckoutPage = () => {
 	const pvbasket = ActionMan.getBasketPV();
 	const basket = pvbasket.value;
 
@@ -65,7 +65,7 @@ const CheckoutPage = () => {
 	// hacky: set a charity in the basket?
 	if ( ! event.pickCharity) {
 		const charityId = Event.charityId(event);
-		if (charityId) basket.charityId = charityId;	
+		if (charityId) basket.charityId = charityId;
 	}
 
 	return (
@@ -81,16 +81,16 @@ const CheckoutPage = () => {
 
 			<Wizard stagePath={stagePath} nonavButtons >
 
-				<WizardStage title='Tickets' 
-					sufficient={basket && Basket.getItems(basket).length} 
-					complete={basket && Basket.getItems(basket).length} 
+				<WizardStage title='Tickets'
+					sufficient={basket && Basket.getItems(basket).length}
+					complete={basket && Basket.getItems(basket).length}
 				>
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 
 					<BS.Button size='sm' className="pull-left" onClick={deleteBasket} >
 						<Misc.Icon glyph='trash' />Empty Basket
-					</BS.Button> 
+					</BS.Button>
 				</WizardStage>
 
 				<WizardStage title='Register' sufficient={Login.isLoggedIn()} complete={Login.isLoggedIn()} >
@@ -103,7 +103,7 @@ const CheckoutPage = () => {
 										
 				<WizardStage title='Checkout' next={false} >
 					{ 	// clean out old Minor TODO something is causing a redraw glitch here
-						doneBasket && basket && doneBasket.id !== basket.id 
+						doneBasket && basket && doneBasket.id !== basket.id
 							&& DataStore.setValue(['transient', 'doneBasket'], null, false) && null
 					}
 					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
@@ -135,7 +135,7 @@ const BehaviourBasketDone = ({basket, doneBasket}) => {
 
 /**
  * 
- * @param {Ticket} ticket 
+ * @param {Ticket} ticket
  * @returns {Boolean}
  */
 const isGift = ticket => ticket && ticket.kind && ticket.kind.toLowerCase() === 'card';
@@ -152,7 +152,7 @@ const TicketTypes = ({event, basket}) => {
 	const nameToTickets = {};
 	// only show options for +/- if the user has one in their basket
 	// -- but show the template to avoid accidentally copying any e.g. message details
-	const actualTickets = Basket.getItems(basket);	
+	const actualTickets = Basket.getItems(basket);
 	let liveTicketTypes = event.ticketTypes.filter(tt => actualTickets.find(at => at.name === tt.name));
 	liveTicketTypes.forEach(tt => {
 		const ticketsForName = nameToTickets[tt.name];
@@ -167,7 +167,7 @@ const TicketTypes = ({event, basket}) => {
 	});
 
 	const ticketGroups = Object.entries(nameToTickets).map(([name, info]) => (
-		<TicketGroup key={JSON.stringify([name,info])} 
+		<TicketGroup key={JSON.stringify([name,info])}
 			basket={basket} {...info} />
 	));
 
@@ -197,7 +197,7 @@ const TicketGroup = ({name, subtitle, types, basket}) => {
 };
 
 const RegisterTicket = ({ticketType, basket}) => {
-	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
+	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis
 	const _tickets = Basket.getItems(basket);
 	const ttid = getId(ticketType);
 	let tickets = basket ? _tickets.filter(tkt => tkt.parentId === ttid) : [];
@@ -277,7 +277,7 @@ const TicketInvoice = ({event, basket}) => {
 
 
 	return (
-		<div className='invoice'>			
+		<div className='invoice'>
 			<table className='invoice-table'>
 				<tbody>
 					{rowElements}
@@ -351,7 +351,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	assert(DataStore.getValue(path) === null || DataStore.getValue(path) === ticket, "RegisterPage.js - "+path+" "+ticket+" "+DataStore.getValue(path));
 	const noun = ticket.attendeeNoun || 'Attendee';
 
-	// first ticket - fill in from user details 
+	// first ticket - fill in from user details
 	// HACK: unless it is a card
 	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn() && ! isGift(ticket)) {
 		const user = Login.getUser();
@@ -369,29 +369,29 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	}
 	return (
 		<div>
-			<center>		
+			<center>
 				<h3>
-					{ticket.name} 
-					{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
+					{ticket.name}
+					{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null}
 				: <span>{noun} {i+1}</span>
 				</h3>
 			</center>
 			<hr />
-			<div className='AttendeeDetails'>			
-				<PropControl type='text' item={ticket} path={path} prop='attendeeName' 
+			<div className='AttendeeDetails'>
+				<PropControl type='text' item={ticket} path={path} prop='attendeeName'
 					label={noun+' Full Name'} help={isGift()} />
 				<PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label={noun+' Email'}
 					help="Include their email to also send an e-Card at no extra cost. You can leave this blank if you don't want to do that." />
 				{ i!==0? <PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first person' /> : null}
-				{ sameAsFirst? null : 
+				{ sameAsFirst? null :
 					<div>
 						<PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
 					</div>
 				}
 				{isGift(ticket)?
-					<PropControl prop='message' label='Message' 
+					<PropControl prop='message' label='Message'
 						rows={6}
-						help={`Your message to ${ticket.attendeeName || 'them'}, which will be written inside the card. Please include their name and yours.`} 
+						help={`Your message to ${ticket.attendeeName || 'them'}, which will be written inside the card. Please include their name and yours.`}
 						dflt={defaultCardMessage(ticket)}
 						path={path} type='textarea' />
 				: null}
@@ -444,7 +444,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 				<PaymentWidget
 					amount={Basket.getTotal(basket)}
 					onToken={onToken}
-					recipient={event.name || "Basket"+basket.id} 
+					recipient={event.name || "Basket"+basket.id}
 					email={email}
 					username={Login.getId()}
 				/>
@@ -470,7 +470,7 @@ const Receipt = ({basket, event}) => {
 				<p>Registered in England and Wales, company no. 09966206</p>
 				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
-				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeTag(createdDate)}</p> : null}				
+				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeTag(createdDate)}</p> : null}
 				<p>Customer name: {ticket0 && ticket0.attendeeName}</p>
 				{card? <p>Payment card: **** **** **** {card.last4}</p> : null}
 				{basket.paymentId? <p>Payment ID: {basket.paymentId}</p> : null}
@@ -512,7 +512,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 
 	return (<div className='clear padded-block'>
 		<Misc.Col2>
-			<h3>{ticket.attendeeName}</h3>			
+			<h3>{ticket.attendeeName}</h3>
 			<div>
 				{ ticket.attendeeEmail && "An e-Card will be sent. "
 					// <a className='btn btn-primary btn-lg' href={'#card/'+encURI(frid)}>

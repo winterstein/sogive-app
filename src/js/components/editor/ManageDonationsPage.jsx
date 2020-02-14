@@ -22,7 +22,7 @@ const COLUMNS = [
 		id: 'id',
 		Header: 'Id',
 		accessor: d => getId(d)
-	}, 
+	},
 	{
 		Header: 'Date',
 		accessor: 'date'
@@ -31,7 +31,7 @@ const COLUMNS = [
 		Header: 'From',
 		accessor: 'from',
 		Cell: v => XId.dewart(v)
-	}, 
+	},
 	{
 		Header: 'Donor',
 		accessor: 'donorName'
@@ -39,7 +39,7 @@ const COLUMNS = [
 	{
 		Header: 'To',
 		accessor: 'to'
-	}, 
+	},
 	{
 		Header: "Amount",
 		accessor: 'amount',
@@ -108,7 +108,7 @@ const ManageDonationsPage = () => {
 	}
 
 	const pvDonations = ActionMan.list({
-		type: C.TYPES.Donation, status: C.KStatus.ALL_BAR_TRASH, 
+		type: C.TYPES.Donation, status: C.KStatus.ALL_BAR_TRASH,
 		q:'ALL purpose:admin'
 	});
 
@@ -166,20 +166,20 @@ const ManageDonationsPage = () => {
 			},
 			columns.find(c => c.Header==='Amount'),
 			// columns.find(c => c.accessor==='giftAid'),
-		];		
+		];
 		dons = dons.filter(don => don.giftAid);
 	}
 
 	return (
 		<div className=''>
 			<h2>Manage Donations</h2>
-			<PropControl label='Format' prop='format' options={['normal', 'hmrc']} 
-				labels={['Normal', 'HMRC Gift Aid Format']} type='select' />			
+			<PropControl label='Format' prop='format' options={['normal', 'hmrc']}
+				labels={['Normal', 'HMRC Gift Aid Format']} type='select' />
 			{isGiftAidFormat? <p>The table below is filtered to ONLY include donations with gift-aid.</p> : null}
 			<SimpleTable data={dons} columns={columns} csv hasFilter
-				addTotalRow={ ! isGiftAidFormat} hideEmpty={ ! isGiftAidFormat} 
+				addTotalRow={ ! isGiftAidFormat} hideEmpty={ ! isGiftAidFormat}
 				rowsPerPage={100}
-			/>			
+			/>
 		</div>
 	);
 };

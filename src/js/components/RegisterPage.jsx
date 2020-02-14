@@ -68,7 +68,7 @@ const RegisterPage = () => {
 	// hacky: set a charity in the basket?
 	if ( ! event.pickCharity) {
 		const charityId = Event.charityId(event);
-		if (charityId) basket.charityId = charityId;	
+		if (charityId) basket.charityId = charityId;
 	}
 
 	return (
@@ -84,16 +84,16 @@ const RegisterPage = () => {
 
 			<Wizard stagePath={stagePath} nonavButtons >
 
-				<WizardStage title='Tickets' 
-					sufficient={basket && Basket.getItems(basket).length} 
-					complete={basket && Basket.getItems(basket).length} 
+				<WizardStage title='Tickets'
+					sufficient={basket && Basket.getItems(basket).length}
+					complete={basket && Basket.getItems(basket).length}
 				>
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 
-					<BS.Button size='sm' className="pull-left" onClick={deleteBasket} >
+					<BS.Button size='sm' className="pull-left" onClick={deleteBasket}>
 						<Misc.Icon glyph='trash' />Empty Basket
-					</BS.Button> 
+					</BS.Button>
 				</WizardStage>
 
 				<WizardStage title='Register' sufficient={Login.isLoggedIn()} complete={Login.isLoggedIn()} >
@@ -103,7 +103,7 @@ const RegisterPage = () => {
 				<WizardStage title='Your Details' complete={walkerDetailsOK} sufficient={walkerDetailsOK} >
 					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				</WizardStage>
-						
+				
 				{event.pickCharity === false? null :
 					<WizardStage title='Your Charity' complete={ !! Basket.charityId(basket)} >
 						<CharityChoiceTab basket={basket} />
@@ -117,11 +117,11 @@ const RegisterPage = () => {
 					</WizardStage> : null
 				}
 
-				<WizardStage title='Checkout' next={false} >
+				<WizardStage title='Checkout' next={false}>
 					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				</WizardStage>
 				
-				<WizardStage title='Confirmation' previous={false} >
+				<WizardStage title='Confirmation' previous={false}>
 					<Receipt basket={basket} event={event} />
 					<ConfirmedTicketList basket={basket} event={event} />
 				</WizardStage>
@@ -134,7 +134,7 @@ const RegisterPage = () => {
 };
 
 /**
- * 
+ *
  */
 const TicketTypes = ({event, basket}) => {
 	Event.assIsa(event); Basket.assIsa(basket);
@@ -155,7 +155,7 @@ const TicketTypes = ({event, basket}) => {
 	});
 
 	const ticketGroups = Object.entries(nameToTickets).map(([name, info]) => (
-		<TicketGroup key={JSON.stringify([name,info])} 
+		<TicketGroup key={JSON.stringify([name,info])}
 			basket={basket} {...info} />
 	));
 
@@ -185,7 +185,7 @@ const TicketGroup = ({name, subtitle, types, basket}) => {
 };
 
 const RegisterTicket = ({ticketType, basket}) => {
-	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis	
+	// TODO put cloned objects into the basket, so we can extra details to them (names & addresses) on a per-ticket basis
 	let tickets = basket ? Basket.getItems(basket).filter(tkt => getId(tkt) === getId(ticketType)) : [];
 
 	const removeTicketAction = () => ActionMan.removeFromBasket(basket, tickets[tickets.length-1]);
@@ -262,7 +262,7 @@ const TicketInvoice = ({event, basket}) => {
 
 
 	return (
-		<div className='invoice'>			
+		<div className='invoice'>
 			<table className='invoice-table'>
 				<tbody>
 					{rowElements}
@@ -346,22 +346,22 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 	}
 	return (
 		<div>
-			<center>		
+			<center>
 				<h3>
-				{ticket.name} 
-				{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null} 
+				{ticket.name}
+				{ticket.kind? <span className='kind'> - {ticket.kind}</span> : null}
 				: <span>{noun} {i+1}</span>
 				</h3>
 			</center>
 			<hr />
-			<div className='AttendeeDetails'>			
+			<div className='AttendeeDetails'>
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
 				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
 				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
-				{ sameAsFirst? null : 
+				{ sameAsFirst? null :
 					<div>
 						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />						
+						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -381,7 +381,7 @@ const TeamControl = ({ticket, path}) => {
 	}
 
 	return (<Misc.Col2>
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)' 
+		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)'
 			help='Families or colleagues can fundraise as a team, with a Team Page here.' />
 		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
 	</Misc.Col2>);
@@ -392,9 +392,9 @@ const CharityChoiceTab = ({basket}) => {
 	const bpath = ActionMan.getBasketPath();
 	const charityId = Basket.charityId(basket);
 	const recommended = ! charityId; // limit to recommended charities if the input is blank
-	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'], 
+	const pvCharities = DataStore.fetch(['widget','RegisterPage','pickCharity', charityId || '*'],
 		() => {
-			return ServerIO.searchCharities({q: charityId, size: 20, recommended}) // NB: was prefix not q. Issue seen Jan 2020 - the underlying DB isnt indexed fully for prefix 
+			return ServerIO.searchCharities({q: charityId, size: 20, recommended}) // NB: was prefix not q. Issue seen Jan 2020 - the underlying DB isnt indexed fully for prefix
 				.then(res => {
 					let hits = res.cargo && res.cargo.hits;
 					DataStore.setValue(['widget','RegisterPage','pickCharityPrevious'], hits);
@@ -403,7 +403,7 @@ const CharityChoiceTab = ({basket}) => {
 		}
 	);
 	// keep previous results around, so they're stable whilst the user is typing
-	let results = pvCharities.resolved? pvCharities.value 
+	let results = pvCharities.resolved? pvCharities.value
 		: DataStore.getValue(['widget','RegisterPage','pickCharityPrevious']);
 		// all={this.state.all} recommended={recommended}
 
@@ -416,11 +416,11 @@ const CharityChoiceTab = ({basket}) => {
 		<div className='padded-block'>
 			<p>
 				Please choose a charity to support.
-			</p>		
+			</p>
 			<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
 		</div>
-		<SearchResults results={results} query={charityId} recommended={ ! charityId} 
-			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />			
+		<SearchResults results={results} query={charityId} recommended={ ! charityId}
+			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />
 	</div>);
 };
 
@@ -483,7 +483,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	// 	basket.tip = new Money({value:1});
 	// }
 	// 		<div className='padded-block'>
-	// 			<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip' 
+	// 			<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip'
 	// 				label={`Include a tip to cover SoGive's operating costs?`} />
 	// 			{basket.hasTip ? (
 	// 				<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
@@ -497,7 +497,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 				<PaymentWidget
 					amount={Basket.getTotal(basket)}
 					onToken={onToken}
-					recipient={event.name} 
+					recipient={event.name}
 					email={email}
 					username={Login.getId()}
 				/>
@@ -521,7 +521,7 @@ const Receipt = ({basket, event}) => {
 				<p>Registered in England and Wales, company no. 09966206</p>
 				{/*<p>Invoice no: TODO</p>*/}
 				<p>Event: {event.name}</p>
-				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeTag(createdDate)}</p> : null}				
+				{stripe && stripe.created? <p>Payment date & time: {Misc.dateTimeTag(createdDate)}</p> : null}
 				<p>Customer name: {ticket0 && ticket0.attendeeName}</p>
 				{card? <p>Payment card: **** **** **** {card.last4}</p> : null}
 				{basket.paymentId? <p>Payment ID: {basket.paymentId}</p> : null}
@@ -540,7 +540,7 @@ const ConfirmedTicketList = ({basket, event}) => {
 
 	// Will return false if the user's basket does not contain a ticket for this event
 	// Can't imagine how they could manage that, but will add a safety check below
-	let ticket = 
+	let ticket =
 		Basket.getItems(basket)
 		.find( ticket => ticket.eventId === id);
 
@@ -559,12 +559,12 @@ const ConfirmedTicket = ({ticket, event}) => {
 		let cta = ticket.postPurchaseCTA || url;
 		return (<div className='clear padded-block'>
 			<Misc.Col2>
-				<h3>{ticket.attendeeName}</h3>			
+				<h3>{ticket.attendeeName}</h3>
 				<div>
 					<h3><a href={url}>{cta}</a></h3>
 				</div>
 			</Misc.Col2>
-		</div>);		
+		</div>);
 	}
 	// TODO how can we make a page for no email??
 	// (a) use a temp id, and have a way for the user to claim it
@@ -572,7 +572,7 @@ const ConfirmedTicket = ({ticket, event}) => {
 	// Option (b) would allow for e.g. I set up my page and my Gran's page.
 	// for now: no email = no page
 	let frid = FundRaiser.getIdForTicket(ticket);
-	
+
 	// claim ownership (NB: avoid repeat calls to go easy on the server. This is idempotent - repeat calls would fail harmlessly).
 	if (frid && ! DataStore.getValue(['misc','claimFlag', frid])) {
 		Login.claim(frid);
@@ -581,9 +581,9 @@ const ConfirmedTicket = ({ticket, event}) => {
 
 	return (<div className='clear padded-block'>
 		<Misc.Col2>
-			<h3>{ticket.attendeeName}</h3>			
+			<h3>{ticket.attendeeName}</h3>
 			<div>
-				{ ticket.attendeeEmail? 
+				{ ticket.attendeeEmail?
 					<a className='btn btn-primary btn-lg' href={'#editFundraiser/'+encURI(frid)}>
 						Setup Fund-Raising Page for {ticket.attendeeName}
 					</a>

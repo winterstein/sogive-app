@@ -28,8 +28,8 @@ import PaymentWidget from '../base/components/PaymentWidget';
 import MDText from '../base/components/MDText';
 
 /**
- * 
- * @param {Card|Ticket} info 
+ *
+ * @param {Card|Ticket} info
  */
 export const defaultCardMessage = info => {
 	let me = '';
@@ -84,7 +84,7 @@ const CardShopPage = () => {
 				<h2>F.A.Q.</h2>
 
 				<h4>What countries do you post to?</h4>
-				We are UK based, but we will post to <i>any country</i>. 
+				We are UK based, but we will post to <i>any country</i>.
 				For non-UK addresses, the postage will be a bit higher, so the charity donation will be a bit lower.
 				
 				<h4>What is the deadline for Christmas?</h4>
@@ -100,9 +100,9 @@ const CardShopPage = () => {
 				<i>£3.30 to the charity</i><br/>
 
 				<h4>Can I send lots of cards?</h4>
-				Yes - if you want to send a batch of 10 or more cards, then you can use a spreadsheet for convenience. 
+				Yes - if you want to send a batch of 10 or more cards, then you can use a spreadsheet for convenience.
 				Download <a href='/uploads/SoGive_Cards_Batch_Send_Form.xlsx' download>this spreadsheet</a>, and
-				email us at <a href='mailto:support@sogive.org'>support@sogive.org</a>				
+				email us at <a href='mailto:support@sogive.org'>support@sogive.org</a>
 
 				<h4>Any other questions? Just email us at <a href='mailto:support@sogive.org'>support@sogive.org</a></h4>
 			</div>

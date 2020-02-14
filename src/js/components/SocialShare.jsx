@@ -89,13 +89,14 @@ const SocialShare = ({charity, fundraiser, donation, shareText}) => {
 
 	return (
 		<div className='share-social-buttons'>
-			<a className='share-social-twitter' 
-				href={'https://twitter.com/intent/tweet?text='+encURI(shareText)+'&url='+encURI(url)} data-show-count="none">
+			<a className='share-social-twitter'
+				href={'https://twitter.com/intent/tweet?text='+encURI(shareText)+'&url='+encURI(url)} data-show-count="none"
+			>
 				<span className='fab fa-twitter' />
 			</a>
 			<a className='share-social-facebook' onClick={e => shareOnFacebook(pageInfo)}><span className='fab fa-facebook' /></a>
-			<a className='share-social-email' 
-				href={'mailto:?subject='+encURI(NGO.displayName(charity)+" shared via SoGive")+'&body='+encURI(window.location)} 
+			<a className='share-social-email'
+				href={'mailto:?subject='+encURI(NGO.displayName(charity)+" shared via SoGive")+'&body='+encURI(window.location)}
 				target='_blank'
 			>
 				<span className='fas fa-envelope' />

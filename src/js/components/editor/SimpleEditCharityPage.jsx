@@ -43,7 +43,7 @@ const SimpleEditCharityPage = () => {
 	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
 	let {value:charity} = DataStore.fetch(cpath,
 		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
-	);	
+	);
 	if ( ! charity) {
 		return <Misc.Loading />;
 	}
@@ -62,7 +62,7 @@ const SimpleEditCharityPage = () => {
 				});
 		}
 	} else if (C.KStatus.isDRAFT(charity.status)) {
-		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once 
+		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once
 	}
 
 	// projects
@@ -86,21 +86,21 @@ const SimpleEditCharityPage = () => {
 	// put it together
 	console.log("EditCharity", charity);
 	return (
-		<div className='EditCharityPage'>			
+		<div className='EditCharityPage'>
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
 				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
 				<div>
 					This is the simpler editor. It does not
-					include all the possible settings. 
-					You can switch back-and-forth with the <a href={'/#edit?charityId='+escape(cid)} 
+					include all the possible settings.
+					You can switch back-and-forth with the <a href={'/#edit?charityId='+escape(cid)}
 						className='btn btn-default btn-sm'>Advanced Editor</a>
 				</div>
 
 				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
 				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid} 
-					cannotPublish={ ! Roles.iCan(C.CAN.publish).value} 
+				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
+					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Misc.Card>
 			<Misc.Card title='Preview: Impact'>
@@ -116,15 +116,15 @@ const SimpleEditCharityPage = () => {
 				</Misc.Card>
 
 				<Misc.Card title='Donations &amp; Tax'>
-					<EditField item={charity} 
-						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid' 
+					<EditField item={charity}
+						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid'
 						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
 					<h4>Suggested Donations</h4>
 					<Misc.ListEditor path={cpath.concat('suggestedDonations')} ItemEditor={SuggestedDonationEditor} />
 				</Misc.Card>
 
 				<Misc.Card title='Overall finances and impact'>
-					<ProjectsEditor isOverall charity={charity} projects={overalls} />					
+					<ProjectsEditor isOverall charity={charity} projects={overalls} />
 				</Misc.Card>
 
 				<Misc.Card title={'Project finances and impact ('+projectProjects.length+' projects)'}>
@@ -150,25 +150,25 @@ const EditorialEditor = ({charity}) => {
 
 	return (<div>
 		<EditField item={charity} type='select' field='impact'
-			options={C.IMPACT_VALUES.values} 
+			options={C.IMPACT_VALUES.values}
 			labels={C.IMPACT_LABEL4VALUE}
 			canUnset
 			label='Overall Impact Rating'
 			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
 		/>
 
-		<EditField item={charity} field='confidence' 
+		<EditField item={charity} field='confidence'
 			type='select'
-			options={CONFIDENCE_VALUES.values} 
-			defaultValue={CONFIDENCE_VALUES.medium} 
+			options={CONFIDENCE_VALUES.values}
+			defaultValue={CONFIDENCE_VALUES.medium}
 			canUnset
 			label='Overall Confidence'
-			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities." 
+			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities."
 		/>
 
-		<EditField item={charity} type='textarea' field='recommendation' 
+		<EditField item={charity} type='textarea' field='recommendation'
 			label='Recommendation Comment '
-			help="A sentence or two on why SoGive recommends (or not) this charity." 
+			help="A sentence or two on why SoGive recommends (or not) this charity."
 		/>
 
 		{isAdvanced()? <EditField item={charity} type='checkbox' field='hideImpact'
@@ -192,42 +192,42 @@ const ProfileEditor = ({charity}) => {
 			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
 			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
 			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />			
+			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
 			<EditField label='USA registration number (i.e. EIN)' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
 		</div>
 
 		<EditField item={charity} type='url' field='url' label='Website' />
 		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
-		<EditField item={charity} type='textarea' label='Description' field='description' 
+		<EditField item={charity} type='textarea' label='Description' field='description'
 			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
 		
-		<EditField item={charity} type='select' field='category' label='Category' 
-			options={Object.keys(NGO.CATEGORY)} 
+		<EditField item={charity} type='select' field='category' label='Category'
+			options={Object.keys(NGO.CATEGORY)}
 			help='The categories are mostly aligned with those used by Charity Navigator.'
 		/>
 		<div><small>{charity.subcategory? null : (NGO.CATEGORY[charity.category] || []).join(" / ")}</small></div>
 		<EditField item={charity} type='select' field='subcategory' label='Sub-Category' options={NGO.CATEGORY[charity.category] || []} />
 
-		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)' 
+		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)'
 			options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
 			labels={NGO.UNSDGs}
 			help='Which UN SDG does this charity mainly work on?' />
 
-		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world' 
+		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world'
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image. 
+		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image.
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
-		One way to get this is to use Google Image search, then visit image, and copy the url. 
-		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element". 
-		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab. 
-		Copy and paste this URL into this field. 
+		One way to get this is to use Google Image search, then visit image, and copy the url.
+		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element".
+		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab.
+		Copy and paste this URL into this field.
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 
-		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work. 
-		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts  
+		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work.
+		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
-		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />		
+		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />
 	</div>);
 }; // ./ProfileEditor
 
@@ -270,7 +270,7 @@ const AddProject = ({charity, isOverall}) => {
 					<Misc.Icon glyph='plus' /> Add
 				</button>
 			</div>
-		);		
+		);
 	}
 	return (
 		<div className='form-inline well'>
@@ -347,22 +347,22 @@ const ProjectEditor = ({charity, project}) => {
 		<div>
 			<ProjectDataSources charity={charity} project={project} />
 			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
-				help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app. 
-				You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy). 
-				We aim as far as possible to estimate which project would be the recipient of the marginal extra pound. 
-				This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data) 
-				to influence the choice of representative project too.`} />			
+				help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app.
+				You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy).
+				We aim as far as possible to estimate which project would be the recipient of the marginal extra pound.
+				This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data)
+				to influence the choice of representative project too.`} />
 			<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
 				help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
-			<EditProjectField charity={charity} project={project} field='start' label='Year start' 
+			<EditProjectField charity={charity} project={project} field='start' label='Year start'
 				type='date'
-				help="Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at" />			
-			<EditProjectField charity={charity} project={project} field='end' label='Year end' 
+				help="Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at" />
+			<EditProjectField charity={charity} project={project} field='end' label='Year end'
 				type='date'
 				help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
 
 			<ProjectInputs charity={charity} project={project} />
-			<ProjectOutputs charity={charity} project={project} />		
+			<ProjectOutputs charity={charity} project={project} />
 			{isOverall? <EditProjectField charity={charity} project={project} type='Money' field='reserves' label='Reserves' /> : null}
 	</div>
 	);
@@ -424,7 +424,7 @@ const ProjectInputs = ({charity, project={}}) => {
 	let pid = charity.projects.indexOf(project);
 	let projectPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	let inputs = Project.inputs(project);
-	let annualCosts = inputs.find(input => input.name && input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});	
+	let annualCosts = inputs.find(input => input.name && input.name.indexOf('annual') !== -1) || new Money({name: 'annualCosts'});
 	let projectCosts = inputs.find(input => input.name && input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
 	let tradingCosts = inputs.find(input => input.name && input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
 	let incomeFromBeneficiaries = inputs.find(input => input.name && input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
@@ -467,28 +467,28 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							/>
 						</th>
 						<th>
-							Override cost per beneficiary 
+							Override cost per beneficiary
 							<Misc.Icon glyph='question-sign' title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
 						</th>
 						<th>
 							Confidence <Misc.Icon glyph='question-sign' title={
 `How confident are we in this cost-per-beneficiary estimate?
 
-- High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.   
-- Medium - the default value.    
-- Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.    
+- High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.
+- Medium - the default value.
+- Low - use this if, for example, you are uncertain about the consistency between the costs and the impact figures, but believe that it's probably not wildly wrong.
 - Very low - reasonable chance that it might be wildly wrong. Very Low confidence probably means we shouldn't make this is the representative project, or if we do, we shouldn't mark the charity as finished.`}
 							/>
 						</th>
 						<th>
 							Description <Misc.Icon glyph='question-sign' title={
-`An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped. 
+`An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped.
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>
 						</th>
 						<th>Meta</th>
 					</tr>
-					{	
+					{
 						/* NB: use the array index as key 'cos the other details can be edited */
 						Project.outputs(project).map(
 							(input, i) => <ProjectOutputEditor key={project.name+'-'+i} charity={charity} project={project} output={input} />
@@ -515,10 +515,10 @@ const STD_INPUTS = {
  * Has two modes:
  * In overall, inputs are always manual entry.
  * Within a project, several inputs are auto-calculated by default.
- * 
- * @param input {Money} Must be a named Money 
+ *
+ * @param input {Money} Must be a named Money
  */
-const ProjectInputEditor = ({charity, project, input}) => {	
+const ProjectInputEditor = ({charity, project, input}) => {
 	const isOverall = project.name === Project.overall;
 	assert(input.name, "ProjectInputEditor - input MOney must have a name", input);
 	// for projects, auto-calc costs based on the % that the project makes up of the overall
@@ -555,7 +555,7 @@ const ProjectInputEditor = ({charity, project, input}) => {
 /**
  * Edit output / impact
  */
-const ProjectOutputEditor = ({charity, project, output}) => {	
+const ProjectOutputEditor = ({charity, project, output}) => {
 	assert(charity, "EditCharityPage.ProjectOutputEditor not a charity", charity);
 	let cid = NGO.id(charity);
 	let pid = charity.projects.indexOf(project);
@@ -564,7 +564,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	assert(ii !== -1, "EditCharityPage.ProjectOutputEditor ii="+ii);
 	assert(pid !== -1, "EditCharityPage.ProjectOutputEditor pid="+pid);
 	assert(DataStore.getValue(inputPath) === output, "EditCharityPage.ProjectOutputEditor output");
-	
+
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
@@ -575,7 +575,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values} 
+			<PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values}
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
@@ -618,10 +618,10 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 	assMatch(field, "String|Number");
 
 	return (
-		<div>			
+		<div>
 			<Misc.Col2>
-				<PropControl label={label || field} type={type} prop={field} 
-					path={path} item={item} 
+				<PropControl label={label || field} type={type} prop={field}
+					path={path} item={item}
 					tooltip={help}
 					{ ...other}
 				/>
@@ -633,7 +633,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 
 /**
  * If bar is a primitive node, then foo.bar has meta info stored at foo.meta.bar
- * 
+ *
  */
 const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 	assert(item, "EditCharityPage.MetaEditor");
@@ -669,7 +669,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	}
 	return (
 		<div className='MetaEditorItem'>
-			{ricon} 
+			{ricon}
 			<PropControl label={title} prop={metaField}
 				path={metaPath}
 				item={meta} type={type}
@@ -691,6 +691,6 @@ export {
 	AddProject, RemoveProject, ProjectDataSources, STD_INPUTS,
 	AddIO,
 	isAdvanced,
-	CONFIDENCE_VALUES, 
+	CONFIDENCE_VALUES,
 	EditorialEditor
 };

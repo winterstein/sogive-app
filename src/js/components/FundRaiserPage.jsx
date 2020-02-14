@@ -43,8 +43,8 @@ const FundRaiserTop = () => {
 			<ListLoad type={type} />
 			<hr/>
 			<div>
-				Fundraisers are personal pages linked to a specific event, e.g. 
-				"Sanjay's Sponsored Marathon". 
+				Fundraisers are personal pages linked to a specific event, e.g.
+				"Sanjay's Sponsored Marathon".
 				To create a Fundraiser, start by registering for the <a href='#event'>event</a>.
 			</div>
 		</div>
@@ -75,7 +75,7 @@ const FundRaiserPage = ({id}) => {
 	let charity = FundRaiser.charity(item);
 	if ( ! charity) {
 		// Hack to avoid undefined errors
-		charity = new NGO(); 
+		charity = new NGO();
 		let cid = FundRaiser.charityId(item);
 		charity.id = cid;
 		console.warn("FundRaiser with no charity set?! "+cid);
@@ -163,10 +163,10 @@ const FundRaiserPage = ({id}) => {
 
 				<Row>
 					<Col md={6}>
-						{item.story? 
+						{item.story?
 							<div><h3>Story:</h3><MDText source={item.story} /></div>
 							: null}
-						{item.updates? 
+						{item.updates?
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
 							: null}
 					</Col>
@@ -195,7 +195,7 @@ const DonationProgress = ({item, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	assMatch(target, "?Money");
-	const isTarget = target && Money.value(target) > 0;	
+	const isTarget = target && Money.value(target) > 0;
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
 	// nothing?
@@ -233,10 +233,10 @@ const DonationProgress = ({item, charity}) => {
 				</div>
 			</div> : null}
 			<div className='progress-details'>
-				<DonationsSoFar item={item} />				
-				{charity && charity.hideImpact? null 
+				<DonationsSoFar item={item} />
+				{charity && charity.hideImpact? null
 					: <ImpactDesc charity={charity} amount={donated} showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />}
-				<DonateButton item={item} />				
+				<DonateButton item={item} />
 			</div>
 		</div>
 	);
@@ -252,7 +252,7 @@ const DonationsSoFar = ({item}) => {
 			<div className='details-input'>
 				Be the first to donate to {item.name}!
 			</div>
-		);		
+		);
 	}
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
 	const diff = Money.sub(target, donated);
@@ -302,12 +302,12 @@ const Supporter = ({donation, charity}) => {
 				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
-			<Misc.RelativeDate date={donation.date} className='donation-date' />			
+			<Misc.RelativeDate date={donation.date} className='donation-date' />
 			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
-			{donation.contributions && ! donation.anonAmount? 
+			{donation.contributions && ! donation.anonAmount?
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
-			{donation.repeat && donation.repeat!=='OFF'? 
+			{donation.repeat && donation.repeat!=='OFF'?
 				<div>Repeats {Donation.strRepeat(donation.repeat)}</div> : null}
 			{donation.message ? (
 				<p>{donation.message}</p>

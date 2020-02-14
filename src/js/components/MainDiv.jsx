@@ -71,11 +71,11 @@ DataStore.update({
 	focus: {
 		NGO: null,
 		User: null,
-	},	
+	},
 	widget: {},
 	misc: {
 	},
-	/** status of server requests, for displaying 'loading' spinners 
+	/** status of server requests, for displaying 'loading' spinners
 	 * Normally: transient.$item_id.status
 	*/
 	transient: {}
@@ -120,11 +120,11 @@ class MainDiv extends Component {
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
 
-		// Set up login watcher here, at the highest level		
+		// Set up login watcher here, at the highest level
 		Login.change(() => {
 			// invalidate all lists!
 			DataStore.setValue(['list'], {});
-			// also remove any promises for these lists -- see fetch()		
+			// also remove any promises for these lists -- see fetch()
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
 
@@ -160,7 +160,7 @@ class MainDiv extends Component {
 	componentDidCatch(error, info) {
 		// Display fallback UI
 		this.setState({error, info, errorPath: DataStore.getValue('location', 'path')});
-		console.error(error, info); 
+		console.error(error, info);
 		if (window.onerror) window.onerror("Caught error", null, null, null, error);
 	}
 
@@ -168,7 +168,7 @@ class MainDiv extends Component {
 		// HACK clear render info
 		DataStore.setValue(['transient', 'render'], null, false);
 
-		let path = DataStore.getValue('location', 'path');	
+		let path = DataStore.getValue('location', 'path');
 		let page = (path && path[0]);
 		if ( ! page) {
 			page = DEFAULT_PAGE;
