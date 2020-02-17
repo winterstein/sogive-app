@@ -31,7 +31,7 @@ const CharityPage = () => {
 	let charity = pvCharity.value;
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
-	}	
+	}
 
 	const impactColumn = (
 		<div className='col-md-7 col-xs-12 column impact-column'>
@@ -72,8 +72,8 @@ const CharityPage = () => {
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
-				{infoColumn}				
-			</div>						
+				{infoColumn}
+			</div>
 		</div>
 	);
 }; // ./CharityPage
@@ -119,7 +119,7 @@ const CharityAbout = ({charity}) => {
 				<a href={churl} target='_blank'>{charity.url}</a>
 			</div>
 			<div className='official-details'>
-				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}				
+				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}
 			</div>
 		</div>
 	);
@@ -165,7 +165,7 @@ const CharityExtra = ({charity}) => {
 
 	return (
 		<div className='charity-extra'>
-			<Quote text={charity.recommendation} />			
+			<Quote text={charity.recommendation} />
 			{refs.length? <Citations citations={refs} /> : null}
 			<p>Join the SoGive team as a volunteer editor to help us turn charity reporting into meaningful impact models.</p>
 		</div>
@@ -245,7 +245,7 @@ const CharityExtraProjectOutputs = ({outputs}) => {
 			<h4>Outputs</h4>
 			{outs.map(output => (
 				<div key={"out_"+output.name}>
-					{Misc.TrPlural(Output.number(output), output.name || 'beneficiaries')}: 
+					{Misc.TrPlural(Output.number(output), output.name || 'beneficiaries')}:
 					{printer.prettyNumber(Output.number(output))}
 				</div>
 			))}
@@ -314,7 +314,7 @@ const EditLink = ({charity}) => {
 	// HACK: clear the datastore before viewing, so that we load the draft
 	// TODO replace once the git branch feature/refactor-crud-data-draft-DW-may-2018 is complete
 	return (<div className='pull-right'>
-		<a href={'#simpleedit?charityId='+escape(cid)} 
+		<a href={'#simpleedit?charityId='+escape(cid)}
 			onClick={() => {
 				// Trying in Edit page instead
 				// DataStore.setValue(DataStore.getPath(charity), null, false);
@@ -394,7 +394,7 @@ const ProjectImage = ({images, title}) => {
 };
 
 /**
- * 
+ *
  copy paste modify from EditFundraiserPage
  */
 const LogOffSiteDonation = ({item}) => {
@@ -403,7 +403,7 @@ const LogOffSiteDonation = ({item}) => {
 	NGO.assIsa(item, "LogOffSiteDonation");
 	return (
 		<Misc.Card title='Add an off-site donation'>
-			<p>Use this form to record a donation which has already been paid for elsewhere. 
+			<p>Use this form to record a donation which has already been paid for elsewhere.
 				It will be added to your profile dashboard.</p>
 			<DonateButton item={item} paidElsewhere />
 		</Misc.Card>

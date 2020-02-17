@@ -21,7 +21,7 @@ import ShareWidget, {canWrite, AccessDenied, ShareLink} from '../../base/compone
 import {SuggestedDonationEditor} from './CommonControls';
 
 const EditEventPage = () => {
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 
@@ -36,7 +36,7 @@ const EditEventPage = () => {
 	}
 	if ( ! pvCanWrite.resolved) {
 		return <Misc.Loading text="Checking editing rights" />;
-	} 
+	}
 	if ( ! pvCanWrite.value && ! isAdmin ) {
 		return <AccessDenied thingId={eventId} />;
 	}
@@ -74,7 +74,7 @@ const EventEditor = ({id}) => {
 	};
 
 	/**
-	 * alter the ticket order 
+	 * alter the ticket order
 	 */
 	const move = (i, di) => {
 		// swap
@@ -89,13 +89,13 @@ const EventEditor = ({id}) => {
 	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id});
 	return (<div>
 		<h2>Event {item.name || id} </h2>
-		<div><a href={"/#event/"+escape(id)}>View event</a></div>		
+		<div><a href={"/#event/"+escape(id)}>View event</a></div>
 		<small>ID: {id}</small>
 		
-		<Misc.Card title='Event Details'>			
+		<Misc.Card title='Event Details'>
 			<PropControl path={path} prop='name' item={item} label='Event Name' />
 
-			<PropControl path={path} prop='date' item={item} label='Event Date' type='date' 
+			<PropControl path={path} prop='date' item={item} label='Event Date' type='date'
 				validator={ (v, rawValue) => {
 					if ( ! v) {
 						// raw but no date suggests the server removed it
@@ -122,16 +122,16 @@ const EventEditor = ({id}) => {
 			<PropControl path={path} prop='perPersonTarget' item={item} label='How much should each participant raise?' type='Money' />
 
 			<PropControl path={path} prop='target' item={item} label='Overall event target?' type='Money' />
-			<PropControl path={path} prop='pickCharity' item={item} 
-				label='Allow users to pick their charity?' type='checkbox' 
-				dflt 
+			<PropControl path={path} prop='pickCharity' item={item}
+				label='Allow users to pick their charity?' type='checkbox'
+				dflt
 			/>
 
 			{/* TODO a nice charity picker like RegisterPage.jsx CharityChoiceTab */}
-			<PropControl path={path} prop='charityId' item={item} 
+			<PropControl path={path} prop='charityId' item={item}
 				label='Charity ID' />
 
-			<PropControl path={path} prop='teams' item={item} 
+			<PropControl path={path} prop='teams' item={item}
 				label='User teams?' type='checkbox' />
 		</Misc.Card>
 
@@ -147,8 +147,8 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<Misc.Card title='Ticket Types' icon='ticket' warning={item.ticketTypes? null : "Define a ticket type so people can register for your event"}>
-			{item.ticketTypes? item.ticketTypes.map( (tt, i) => 
-				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />) 
+			{item.ticketTypes? item.ticketTypes.map( (tt, i) =>
+				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />)
 				: <p>No tickets yet!</p>
 			}
 			<button className='btn btn-default' onClick={addTicketType} type="button"><Misc.Icon glyph='plus' /> Create</button>
@@ -159,20 +159,20 @@ const EventEditor = ({id}) => {
 		</Misc.Card>
 
 		<Misc.Card title='Merchandise & Extras' icon='gift'>
-			{item.extras? item.extras.map( (tt, i) => 
-				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />) 
+			{item.extras? item.extras.map( (tt, i) =>
+				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />)
 				: <p>No extras yet!</p>
 			}
 			<button className='btn btn-default' onClick={addExtra} type="button"><Misc.Icon glyph='plus' /> Create</button>
 		</Misc.Card>
 
 		<Misc.Card title='Advanced Options'>
-			<PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk' 
+			<PropControl path={path} prop='matchedFunding' item={item} label='Matched funding? e.g. enter 40 for 40% for The Kiltwalk'
 				type='number' />
 
 			<PropControl path={path} prop='matchedFundingSponsor' item={item} label='If there is matched funding - who is the sponsor?' />
 
-			<PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: Share details with event organiser' 
+			<PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: Share details with event organiser'
 				type='checkbox' help="If set, the organiser (that's probably you!) will get name and email details for <i>all</i> donors. Donors will be informed of this when making a donation. Only tick this if you need those details. You will be responsible for handling their personal data correctly." />
 		</Misc.Card>
 
@@ -194,19 +194,19 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<small>{ticketType.id}</small>
 		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
 		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
-		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child / Card' 
+		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child / Card'
 			help="'Card' is a special value for setting up charity Xmas Cards" />
 		
-		<PropControl path={path} prop='charityId' label='Charity ID' disabled={Event.charityId(event)} 
+		<PropControl path={path} prop='charityId' label='Charity ID' disabled={Event.charityId(event)}
 			placeholder='Link a charity to this ticket'
 		/>
 
 		<PropControl type='Money' item={ticketType} path={path} prop='price' label='Price' />
 		<Misc.Col2>
 			<div>
-				<PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock' 
+				<PropControl type='number' item={ticketType} path={path} prop='stock' label='Stock'
 					help='The maximum number that can be sold - normally left blank for unlimited' />
-				<PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only' 
+				<PropControl type='checkbox' item={ticketType} path={path} prop='inviteOnly' label='Invite only'
 					help='TODO only those invited by the organiser can attend' />
 			</div>
 			<div><label>Sold so far: {ticketType.sold || 0}</label></div>
@@ -231,7 +231,7 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 	return (<div className='well'>
 		<small>{getId(extra)}</small>
 		<PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
-		<PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />		
+		<PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />
 		<PropControl type='Money' item={extra} path={path} prop='price' label='Price' />
 		<PropControl type='text' item={extra} path={path} prop='description' label='Description' />
 		<Misc.Col2>

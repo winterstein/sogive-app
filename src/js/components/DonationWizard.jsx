@@ -23,13 +23,14 @@ import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
 import {nonce, getId, getType} from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
+import LoginWidget, { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
 import BS from '../base/components/BS';
 
 /**
- * 
+ *
  * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
  */
 
@@ -52,7 +53,7 @@ const DonateButton = ({item, paidElsewhere}) => {
 			onClick={() => {
 				// DataStore.setValue([...donationPath, 'fundRaiser'], getId(item));
 				// poke the paidElsewhere flag
-				DataStore.setValue([...widgetPath, 'paidElsewhere'], paidElsewhere, false); 
+				DataStore.setValue([...widgetPath, 'paidElsewhere'], paidElsewhere, false);
 				DataStore.setValue([...widgetPath, 'open'], true);
 			}}
 		>
@@ -62,20 +63,19 @@ const DonateButton = ({item, paidElsewhere}) => {
 };
 
 /**
- * The main click-here-to-donate widget 
- * 
+ * The main click-here-to-donate widget
+ *
  * @param item: a FundRaiser or NGO
  * @param fromEditor ??
- * 
+ *
  * Warning: Only have ONE of these on a page! Otherwise both will open at once!
- * 
+ *
  * TODO refactor this
  */
-const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {	
-
+const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "CharityPageImpactAndDonate", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 	let pvEvent = {};
 	if ( ! charity) {
@@ -133,7 +133,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 		// TODO Stripe ID will also be truthy for a declined transaction - there's no indication that the token is bad
 		// until we publish and DonationServlet tries to redeem it. Mark declined on publish & retain the draft so user can try another card
 		const pvDonationDraft = ActionMan.getDonationDraft({item}); // resolve use-before-declare warnings
-		if (pvDonationDraft.value && pvDonationDraft.value.stripe.id) {
+		if (pvDonationDraft.value && pvDonationDraft.value.stripe && pvDonationDraft.value.stripe.id) {
 			ActionMan.clearDonationDraft({donation: donationDraft});
 		}
 	};
@@ -157,7 +157,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	
 	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id:donationDraft.id});
 	// if (donationDraft !== DataStore.getValue(path)) {
-	// 	console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ", 
+	// 	console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ",
 	// 		['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
 	// 		donationDraft);
 	// }
@@ -189,11 +189,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			<Modal.Body>
 				<Wizard stagePath={stagePath}>
 					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK}>
-						<AmountSection path={path} fromEditor={fromEditor} item={item} 
-							paidElsewhere={paidElsewhere} credit={credit} 
-							proposedSuggestedDonation={proposedSuggestedDonation} 
+						<AmountSection path={path} fromEditor={fromEditor} item={item}
+							paidElsewhere={paidElsewhere} credit={credit}
+							proposedSuggestedDonation={proposedSuggestedDonation}
 							suggestedDonations={suggestedDonations}
-							event={event} 
+							event={event}
 							preferredCurrency={preferredCurrency}
 						/>
 					</WizardStage>
@@ -226,13 +226,13 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 
 /**
- * 
+ *
  * @param item {NGO|FundRaiser}
  * @param credit {?Money}
  * @param proposedDonationValue {!SuggestedDonation} Assumed setup already
  */
-const AmountSection = ({path, item, fromEditor, paidElsewhere, credit, 
-	proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) => 
+const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
+	proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) =>
 {
 	const dntn = DataStore.getValue(path) || {};
 	if (preferredCurrency === 'GBP') preferredCurrency = null; // HACK GBP is the default
@@ -246,7 +246,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 	// What repeat options?
 	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	repeatDonations.push(proposedSuggestedDonation.repeat);
-	suggestedDonations.forEach(sd => repeatDonations.push(sd.repeat));	
+	suggestedDonations.forEach(sd => repeatDonations.push(sd.repeat));
 	repeatDonations.push(dntn.repeat); // if something is set, then include it
 	// no dupes, no nulls
 	repeatDonations = _.uniq(repeatDonations.filter(rd => rd));
@@ -277,7 +277,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{preferredCurrency?
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
 				:
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation' 
+				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation'
 					value={val} changeCurrency={false}
 				/>
 			}
@@ -319,7 +319,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 	return <>
 		<BS.Row>
 			<BS.Col md={6} sm={12}>
-				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money' 
+				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money'
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
@@ -342,7 +342,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 				/>
 			</BS.Col>
 		</BS.Row>
-		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling. 
+		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling.
 		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
 	</>;
 };
@@ -360,7 +360,7 @@ const SDButton = ({path,sd, donation}) => {
 		DataStore.setValue(path.concat('amount'), amnt);
 		DataStore.setValue(path.concat('repeat'), sd.repeat); // NB this can set null
 	};
-	// 
+
 	return (
 		<button className={'btn btn-default mr-2 suggested-donation'+(on?' active':'')} type="button" onClick={clickSuggestedButton}>
 			{sd.name? <span>{sd.name} </span> : null}
@@ -388,14 +388,14 @@ const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
 	}
 	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations});
 	// side-effect: set
-	dntn.amount = sd.amount; 
+	dntn.amount = sd.amount;
 	// dont overwrite repeat - so you can set it off before setting a £amount
 	if ( ! dntn.repeat) dntn.repeat = sd.repeat;
 	return sd;
 };
 
 /**
- * 
+ *
  * @returns {SuggestedDonation}
  */
 const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
@@ -404,7 +404,7 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 		return {amount:credit, repeat:'OFF'};
 	}
 	// fundraiser target?
-	let target = item.target;	
+	let target = item.target;
 	// divide by weekly??
 	
 	// Set to suggested donation?
@@ -448,7 +448,7 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 				of Gift Aid claimed on all your donations, it is your responsibility to pay any difference.
 		</p>);
 	} else if (cannotGiftAid) {
-		giftAidMessage = (<p>This donation does not qualify for Gift Aid. 
+		giftAidMessage = (<p>This donation does not qualify for Gift Aid.
 				That's OK - many donations don't, and the difference is a small fraction.</p>
 		);
 	}
@@ -489,11 +489,11 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 const DetailsSection = ({path, charity, fromEditor}) => {
 	const {giftAid} = DataStore.getValue(path);
 
-	// dflt={Login.getUser() && Login.getUser().name} 
+	// dflt={Login.getUser() && Login.getUser().name}
 	// dflt={Login.getEmail()}
 	let reqrd = giftAid;
 	return (
-		// TODO do we have the user's details stored?	
+		// TODO do we have the user's details stored?
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> : null}
 			{fromEditor? <Misc.PropControl label='Donor ID' path={path} prop='from' /> : null}
@@ -501,8 +501,8 @@ const DetailsSection = ({path, charity, fromEditor}) => {
 			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' required />
 			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' required={reqrd} optional={ ! reqrd} />
 			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' required={reqrd} optional={ ! reqrd} />
-			{ ! giftAid? <Misc.PropControl prop='consentToSharePII' 
-				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'} 
+			{ ! giftAid? <Misc.PropControl prop='consentToSharePII'
+				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'}
 				path={path} type='checkbox' />
 				: null}
 		</div>);
@@ -514,7 +514,7 @@ const MessageSection = ({path, recipient, item}) => (
 		<Misc.PropControl
 			prop='message'
 			label='Message'
-			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`} 
+			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`}
 			path={path} type='textarea'
 		/>
 
@@ -522,8 +522,8 @@ const MessageSection = ({path, recipient, item}) => (
 			By default we list your name and the amount.
 			Your name, amount, and your email are also shared with the organiser.
 		</p>
-		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox' 
-			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))? 
+		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox'
+			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))?
 				"Your name will not be listed on the website. However your name, email, and donation will still be shared with the organiser" : null}
 		/>
 
@@ -535,7 +535,7 @@ const MessageSection = ({path, recipient, item}) => (
 
 /**
  * Process the actual payment! Which is done by publishing the Donation.
- * 
+ *
  * PaymentWidget talks to Stripe, then passes over to this method for the actual payment.
  * TODO refactor this into PaymentWidget
  */
@@ -574,13 +574,13 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 	DataStore.setValue(TQ_PATH, donation, false);
 
 	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);	
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
 	if ( ! donation) {
 		return null;
 	}
 	
 	const {amount} = donation;
-	if ( ! amount) {
+	if (!amount) {
 		return null;
 	}
 	Money.assIsa(amount);
@@ -622,9 +622,9 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	return (<div>
 		<div className='padded-block'>
-			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip' 
+			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip'
 				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : ''} tip to cover SoGive's operating costs?`} />
-			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />			
+			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
@@ -632,7 +632,7 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 
 /**
- * 
+ *
  * @param {String} did The donation ID - status: not used!
  */
 const ThankYouSection = ({path, item, did}) => {
@@ -644,19 +644,22 @@ const ThankYouSection = ({path, item, did}) => {
 	let amountPlusTip;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
 
+	// pull this out to make "We've received..." a one-liner & make natural spacing easy
+	const repeat = Donation.isRepeating(donation) ? <span> {Donation.strRepeat(donation.repeat)} </span> : null;
+
+	const registerMessage = (<>
+		<p>Would you like to quickly create a SoGive account?</p>
+		<p>You can <RegisterLink style={{textTransform: 'lowercase'}}> here</RegisterLink></p>
+	</>);
+
 	return (
 		<div className='text-center'>
 			<h3>Thank You!</h3>
 			<big>
-				<p>
-					We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} />
-					{Donation.isRepeating(donation)? <span> {Donation.strRepeat(donation.repeat)} </span> : null}
-					&nbsp; to {item.name} <br />
-				</p>
+				<p>We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> {repeat} to {item.name}</p>
 				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
-				<p>
-					Thanks for using SoGive!
-				</p>
+				<p>Thanks for using SoGive!</p>
+				{Login.user ? '' : registerMessage}
 			</big>
 		</div>
 	);

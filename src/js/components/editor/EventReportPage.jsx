@@ -20,7 +20,7 @@ const EventReportPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div className='alert alert-warning'><h3>Please login</h3></div>;
 	}
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 	if (eventId) return <EventReport id={eventId} />;

@@ -29,13 +29,13 @@ import SocialShare from './SocialShare';
 import {canWrite} from '../base/components/ShareWidget';
 
 const FundRaiserTop = () => {
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let frId = path[1];
 	if (frId) return <FundRaiserPage id={frId} />;
 	let type = C.TYPES.FundRaiser;
 
-	// which event?	
+	// which event?
 
 	return (
 		<div>
@@ -43,8 +43,8 @@ const FundRaiserTop = () => {
 			<ListLoad type={type} />
 			<hr/>
 			<div>
-				Fundraisers are personal pages linked to a specific event, e.g. 
-				"Sanjay's Sponsored Marathon". 
+				Fundraisers are personal pages linked to a specific event, e.g.
+				"Sanjay's Sponsored Marathon".
 				To create a Fundraiser, start by registering for the <a href='#event'>event</a>.
 			</div>
 		</div>
@@ -60,7 +60,7 @@ const FundRaiserPage = ({id}) => {
 
 	// fetch donations for this fundraiser
 	const pvDonations = DataStore.fetch(['list', C.TYPES.Donation, id], () => {
-		// minor TODO use ServerIO.getDonations		
+		// minor TODO use ServerIO.getDonations
 		return ServerIO.load('/donation/_list.json', {data: {q:"fundRaiser:"+id, sort:"date-desc", status: C.KStatus.PUBLISHED}});
 	});
 	const donations = pvDonations.value && pvDonations.value.hits;
@@ -75,7 +75,7 @@ const FundRaiserPage = ({id}) => {
 	let charity = FundRaiser.charity(item);
 	if ( ! charity) {
 		// Hack to avoid undefined errors
-		charity = new NGO(); 
+		charity = new NGO();
 		let cid = FundRaiser.charityId(item);
 		charity.id = cid;
 		console.warn("FundRaiser with no charity set?! "+cid);
@@ -145,28 +145,28 @@ const FundRaiserPage = ({id}) => {
 						<center>
 							<h3>About: {item.owner.name}</h3>
 						</center>
-						<Misc.AvatarImg className='pull-left' peep={item.owner} />						
+						<Misc.AvatarImg className='pull-left' peep={item.owner} />
 						<div>{item.owner.description? <MDText source={item.owner.description} /> : null}</div>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
 					<Col md={6} className='charity-info'>
 						<center>
-							<h3>The Charity: {NGO.displayName(charity)}</h3>							
+							<h3>The Charity: {NGO.displayName(charity)}</h3>
 						</center>
 						<img className='charity-logo' alt={`Logo for ${charity.name}`} src={NGO.logo(charity)} />
 						<p>
 							{NGO.shortDescription(charity)} &nbsp;
 							<small><a href={charity.url || '#charity?charityId='+encURI(NGO.id(charity))} target={charity.url? '_blank': ''}>More info</a></small>
-						</p>					
+						</p>
 					</Col>
 				</Row>
 
 				<Row>
 					<Col md={6}>
-						{item.story? 
+						{item.story?
 							<div><h3>Story:</h3><MDText source={item.story} /></div>
 							: null}
-						{item.updates? 
+						{item.updates?
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
 							: null}
 					</Col>
@@ -174,7 +174,7 @@ const FundRaiserPage = ({id}) => {
 						<h3>Supporters:</h3>
 						{/*supporters? <DonateButton item={item} /> : null*/}
 						{ donations ? (
-							<Supporters item={item} donations={donations} charity={/*charity*/ null} />						
+							<Supporters item={item} donations={donations} charity={/*charity*/ null} />
 						) : null}
 						<SocialShare charity={charity} fundraiser={item} />
 					</Col>
@@ -195,7 +195,7 @@ const DonationProgress = ({item, charity}) => {
 	FundRaiser.assIsa(item);
 	const target = FundRaiser.target(item);
 	assMatch(target, "?Money");
-	const isTarget = target && Money.value(target) > 0;	
+	const isTarget = target && Money.value(target) > 0;
 	const donated = FundRaiser.donated(item);
 	assMatch(donated, "?Money");
 	// nothing?
@@ -233,10 +233,10 @@ const DonationProgress = ({item, charity}) => {
 				</div>
 			</div> : null}
 			<div className='progress-details'>
-				<DonationsSoFar item={item} />				
-				{charity && charity.hideImpact? null 
+				<DonationsSoFar item={item} />
+				{charity && charity.hideImpact? null
 					: <ImpactDesc charity={charity} amount={donated} showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />}
-				<DonateButton item={item} />				
+				<DonateButton item={item} />
 			</div>
 		</div>
 	);
@@ -252,7 +252,7 @@ const DonationsSoFar = ({item}) => {
 			<div className='details-input'>
 				Be the first to donate to {item.name}!
 			</div>
-		);		
+		);
 	}
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
 	const diff = Money.sub(target, donated);
@@ -302,12 +302,12 @@ const Supporter = ({donation, charity}) => {
 				<img className='supporter-photo' src={personImg} alt={`${name}'s avatar`} />
 			) : null }
 			<h4>{name}</h4>
-			<Misc.RelativeDate date={donation.date} className='donation-date' />			
+			<Misc.RelativeDate date={donation.date} className='donation-date' />
 			{donation.anonAmount? null : <div><span className='amount-donated'><Misc.Money amount={Donation.amount(donation)} /></span> donated</div>}
-			{donation.contributions && ! donation.anonAmount? 
+			{donation.contributions && ! donation.anonAmount?
 				donation.contributions.map((con, ci) => <div key={ci} className='contribution'><Misc.Money amount={con.money} /> {con.text}</div>)
 				: null}
-			{donation.repeat && donation.repeat!=='OFF'? 
+			{donation.repeat && donation.repeat!=='OFF'?
 				<div>Repeats {Donation.strRepeat(donation.repeat)}</div> : null}
 			{donation.message ? (
 				<p>{donation.message}</p>

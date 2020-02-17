@@ -1,11 +1,11 @@
 
 
 /**
- * 
+ *
  * TODO
  * Refactor impact widgets into ImpactWidgetry.jsx
  * Anything remaining into CharityPage
- * 
+ *
  */
 
 // @Flow
@@ -161,7 +161,7 @@ const DonationOutput = ({impact, charity}) => {
 		return (<div className='donation-output'>
 			<h3>{NGO.getName(charity)}</h3>
 			<MDText source={NGO.shortDescription(charity)} />
-		</div>);	
+		</div>);
 	}
 
 	return (<div className='donation-output'>

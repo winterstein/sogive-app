@@ -20,7 +20,7 @@ import Money from '../base/data/Money';
 import CSS from '../base/components/CSS';
 
 const EventPage = () => {
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
 	if (eventId) {
@@ -31,12 +31,12 @@ const EventPage = () => {
 	let pvCanEdit = Roles.iCan(C.CAN.editEvent);
 	return (
 		<div>
-			<h2>Pick an Event</h2>			
+			<h2>Pick an Event</h2>
 			<ListLoad type={type} status={C.KStatus.PUBLISHED} />
 			{pvCanEdit.value? <div><h4>Draft Events</h4>
 				<ListLoad type={type} status={C.KStatus.DRAFT} />
 				<CreateButton type={type} navpage='editEvent' />
-			</div> 
+			</div>
 				: null}
 		</div>
 	);
@@ -52,7 +52,7 @@ const Event = ({id}) => {
 	let item = pEvent.value;
 	let logo = item.logoImage || item.img;
 	let canEdit = Roles.iCan(C.CAN.editEvent).value;
-	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};	
+	let pstyle = {backgroundImage: item.backgroundImage? 'url('+item.backgroundImage+')' : null};
 
 	return (<>
 		<CSS css={item.customCSS} />
@@ -63,14 +63,14 @@ const Event = ({id}) => {
 			{logo? <img src={logo} className='pull-right logo-xlarge img-thumbnail' alt='event logo' /> : null}
 			
 			{item.date? <center><Misc.LongDate date={item.date} /></center> : null}
-			{item.description? <MDText source={item.description} /> : null}				
+			{item.description? <MDText source={item.description} /> : null}
 			{item.url? <div><a href={item.url}>Event website</a></div> : null}
-	
+
 			{item.backgroundImage? <img src={item.backgroundImage} className='img-thumbnail' width='200px' /> : null}
 
 			{canEdit? <div className='pull-right'><small><a href={modifyHash(['editEvent',id], null, true)}>edit</a></small></div> : null}
 			
-			<FundRaiserList event={item} eventId={id} />			
+			<FundRaiserList event={item} eventId={id} />
 		</div>
 	</>);
 };
@@ -84,18 +84,18 @@ const FundRaiserList = ({event, eventId}) => {
 	let total = Money.total(ourFundraisers.map(FundRaiser.donated));
 	let q = "eventId:"+eventId;
 	let sort = null;
-	// let ListItem = 
+	// let ListItem =
 	return (<div>
 		<h3>Participants and Fund-Raising Pages</h3>
 
 		<Register event={event} />
 
 		{Money.value(total)? <h4>Total raised so far: <Misc.Money amount={total} />...</h4> : null}
-		<ListLoad type={C.TYPES.FundRaiser} 
+		<ListLoad type={C.TYPES.FundRaiser}
 			servlet='fundraiser'
 			navpage='fundraiser'
 			status={C.KStatus.PUBLISHED} q={q}
-			hasFilter={false}		
+			hasFilter={false}
 			checkboxes={false} canDelete={false} canCreate={false}
 		/>
 	</div>);
@@ -110,7 +110,7 @@ const Register = ({event}) => {
 	}
 	// published?
 	if (false && event.status !== C.KStatus.PUBLISHED) {
-		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);	
+		return (<center><a title='This is a draft - you can only register from the published event page' className='btn btn-lg btn-primary disabled'>Register</a></center>);
 	}
 	// just a big CTA
 	return (<center style={{margin:'10px'}}><a href={'#register/'+getId(event)} className='btn btn-lg btn-primary'>Join in - Register Here</a></center>);

@@ -133,7 +133,7 @@ public class MasterHttpServlet extends HttpServlet {
 				s = new ManifestServlet();
 				s.process(request);
 			}			
-			WebUtils2.sendError(500, "TODO - no servlet for "+path, resp);
+			WebUtils2.sendError(500, "TODO - no servlet for "+servletName+" full path: "+path, resp);
 		} catch(Throwable ex) {			
 			HttpServletWrapper.doCatch(ex, resp, request);
 		} finally {

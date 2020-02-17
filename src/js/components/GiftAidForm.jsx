@@ -35,7 +35,7 @@ const GiftAidForm = ({ formPath }) => {
 			{ giftAidChecks }
 			<small><a target='_blank' href='https://www.gov.uk/donating-to-charity/gift-aid'>
 				Find out more about Gift Aid
-			</a></small>			
+			</a></small>
 		</div>
 	);
 };

@@ -25,7 +25,7 @@ const DashboardPage = () => {
 		);
 	}
 
-	const pv = user? DataStore.fetch(['list','Donation','dashboard'],	
+	const pv = user? DataStore.fetch(['list','Donation','dashboard'],
 		() => {
 			return ServerIO.getDonations({from:Login.getId()})
 				.then(function(result) {
@@ -35,7 +35,7 @@ const DashboardPage = () => {
 		}) : {};
 	const donations = pv.value;
 
-	if ( ! donations && ! pv.error) {		
+	if ( ! donations && ! pv.error) {
 		return (
 			<div className="page DashboardPage">
 				<h2>My Dashboard</h2>
@@ -49,9 +49,9 @@ const DashboardPage = () => {
 			<h2>My Dashboard</h2>
 			<div>
 				<DashboardWidget title="Donation History">
-					<DonationList donations={donations} />				
+					<DonationList donations={donations} />
 				</DashboardWidget>
-				{donations.length? null : 
+				{donations.length? null :
 					<DashboardWidget title='Welcome to SoGive'>
 						Get started by <a href='/#search'>searching</a> for a charity.
 					</DashboardWidget>
@@ -76,7 +76,7 @@ const DonationListItem = ({donation}) => {
 	return (
 		<div className='well'>
 			<Misc.Time time={donation.date} />
-			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} /> 
+			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} />
 			to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
 			{donation.fundRaiser && donation.via? <span> as part of <a href={'#fundraiser/'+encURI(donation.fundRaiser)}>{XId.prettyName(donation.via)}'s fund-raiser</a></span> : null}
 			.

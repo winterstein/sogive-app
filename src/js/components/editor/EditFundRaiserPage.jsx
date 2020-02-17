@@ -18,7 +18,7 @@ import {notifyUser} from '../../base/plumbing/Messaging';
 
 const EditFundRaiserPage = () => {
 
-	// which event?	
+	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let id = path[1];
 	if (id) return <FundRaiserEditor id={id} />;
@@ -39,7 +39,7 @@ const FundRaiserEditor = ({id}) => {
 	}
 	console.warn("pEvent", pEvent.value);
 	let item = pEvent.value;
-	FundRaiser.assIsa(item);	
+	FundRaiser.assIsa(item);
 
 	let pvcw = canWrite(type, id);
 	if (pvcw.resolved && ! pvcw.value) {
@@ -72,14 +72,14 @@ const FundRaiserEditor = ({id}) => {
 					Event: <a href={'#event/'+encURI(eid)}>{eid}</a> <br/>
 					<ShareLink item={item} />
 					<ShareWidget item={item} />
-				</small></p>			
+				</small></p>
 				<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
 				<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
-				<Misc.PropControl path={path} prop='description' item={item} label='Description' />		
+				<Misc.PropControl path={path} prop='description' item={item} label='Description' />
 				<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
-				<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money' 
+				<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money'
 					placeholder='Leave blank for an automatic target (recommended). Set to -1 to switch off the targets.'
-				/>			
+				/>
 
 				<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
 				<Misc.PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
@@ -92,14 +92,14 @@ const FundRaiserEditor = ({id}) => {
 				<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 
 				<AddOffSiteDonation fundraiser={item} />
-				{/* 
+				{/*
 					Publish button disabled if no charity ID has been entered. This doesn't check if the ID is valid or not --
 					thought that might exclude smaller, local charities that we don't track.
 					*/}
-				<Misc.SavePublishDiscard 
-					type={type} 
-					id={id} 
-					cannotPublish={!DataStore.getValue(path.concat('charityId'))} 
+				<Misc.SavePublishDiscard
+					type={type}
+					id={id}
+					cannotPublish={!DataStore.getValue(path.concat('charityId'))}
 					publishTooltipText="Please enter the name of the charity that you would like to support"
 				/>
 			</div>

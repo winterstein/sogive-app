@@ -78,7 +78,7 @@ export default class SearchPage extends React.Component {
 	}
 }
 
-const FeaturedCharities = () => null; 
+const FeaturedCharities = () => null;
 
 /**
  * TODO change into a Misc.PropControl??
@@ -185,11 +185,11 @@ const FieldClearButton = ({onClick, children}) => (
 
 
 /**
- * 
+ *
  * @param {
-* 		results: {!NGO[]} the charities
+ * 	results: {!NGO[]} the charities
  * 	CTA: {?ReactComponent} allows the Read More button to be replaced
- * 	onPick: {?Function} charity => 
+ * 	onPick: {?Function} charity =>
  * 	tabs {Boolean|String[]}
  * 	loading {?Boolean}
  * }
@@ -244,7 +244,7 @@ const SuggestCharityForm = () => {
 	DataStore.setValue(fpath.concat('notify'), 'daniel@sodash.com', false);
 	DataStore.setValue(fpath.concat('controller'), 'sogive.org', false);
 
-	let profilerEndpoint = 
+	let profilerEndpoint =
 		'https://profiler.good-loop.com/form/sogive';
 		// 'http://localprofiler.winterwell.com/form/sogive';
 
@@ -253,14 +253,14 @@ const SuggestCharityForm = () => {
 			Can't find the charity you want? If you fill in the details below, we'll try to add it to the database.
 			If you're registering for an event, you can go ahead - enter "TBD" and you can come back and set the charity later.
 		</p>
-		<Misc.PropControl path={fpath} prop='charityName' label='Name of charity' />		
+		<Misc.PropControl path={fpath} prop='charityName' label='Name of charity' />
 		<Misc.PropControl path={fpath} prop='website' label='Charity website' />
 		<Misc.PropControl path={fpath} prop='facebook' label='Charity Facebook page (if applicable)' />
 		<Misc.PropControl path={fpath} prop='contactEmail' label='Contact email for charity' />
 		<Misc.PropControl path={fpath} prop='contactPhone' label='Contact phone number for charity' />
 		<Misc.PropControl path={fpath} prop='email' label='Your email' />
-		<Misc.SubmitButton url={profilerEndpoint} path={fpath} 
-			onSuccess={<p>Thank you for suggesting this charity.</p>} 
+		<Misc.SubmitButton url={profilerEndpoint} path={fpath}
+			onSuccess={<p>Thank you for suggesting this charity.</p>}
 		>
 			Submit
 		</Misc.SubmitButton>
@@ -316,9 +316,9 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	// The donation picker needs to store its value
 	// DataStore.setValue(['widget','CharityPageImpactAndDonate', NGO.id(item), 'amount'], newAmount);
 	const impact = project ? impactCalc({
-		charity: item, 
-		project, 
-		output: project && Project.outputs(project)[0], 
+		charity: item,
+		project,
+		output: project && Project.outputs(project)[0],
 		targetCount: targetCount || 1
 	}) : null;
 
@@ -358,12 +358,12 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	const impactExplanation = impact ? (
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
-				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} 
-				/> may fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
+				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} />
+				may fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
-			</div>			
+			</div>
 			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
@@ -390,7 +390,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
 			{impactExplanation}
-			{noImpact}			
+			{noImpact}
 		</div>
 	);
 }; //./SearchResult
@@ -503,7 +503,7 @@ const PageLink = ({pageNum, title, children}) => {
 	};
 	
 	return (
-		<a 
+		<a
 			href={window.location.pathname + newHash}
 			className='pager-button'
 			onClick={goToPage}
@@ -523,19 +523,21 @@ const DownloadLink = ({total}) => {
 	const qry = qi === -1? '' : locn.substr(qi+1);
 	if (noCos) {
 		return (
-			<span className='pull-right text-secondary' 
-				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}>
+			<span className='pull-right text-secondary'
+				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}
+			>
 				<Glyphicon glyph='download-alt' /> csv
-			</span>);	
+			</span>);
 	}
 	return (
-		<a className='pull-right' 
+		<a className='pull-right'
 			title='Download these reults in .csv (spreadsheet) format'
-			href={'/search.csv?'+qry} 
+			href={'/search.csv?'+qry}
 			download='charities.csv'
-			target='_new'>
+			target='_new'
+		>
 			<Glyphicon glyph='download-alt' /> csv
-		</a> 
+		</a>
 	);
 };
 

@@ -24,7 +24,7 @@ const ImpactDesc = ({charity, project, outputs, amount, maxImpacts, showMoney=tr
 	if ( ! project) project = NGO.getProject(charity);
 	// NB: no project = no impact data
 	if ( ! project) return null;
-	let impacts = multipleImpactCalc({ charity, project, cost: amount });	
+	let impacts = multipleImpactCalc({ charity, project, cost: amount });
 	if ( ! impacts) return null;
 	if ( ! maxImpacts) maxImpacts = 1;
 	if (maxImpacts === -1) maxImpacts = impacts.length;
@@ -89,7 +89,7 @@ const impactCalc = ({charity, project, output, cost, targetCount}) => {
 	// Requested a particular impact count? (ie "cost of helping 3 people")
 	if (targetCount) {
 		assert( ! cost, "impactCalc - cant set cost and targetCount");
-		cost = new Money({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});		
+		cost = new Money({currency: cpbraw.currency, value: Money.value(cpbraw) * targetCount});
 	} else {
 		targetCount = Money.divide(cost, cpbraw);
 	}
@@ -101,7 +101,7 @@ const impactCalc = ({charity, project, output, cost, targetCount}) => {
 }; // ./impactCalc()
 
 /**
- * 
+ *
  * @returns {Output[]} Filters null, so can be an empty list
  */
 const multipleImpactCalc = ({charity, project, ...params}) => {
@@ -116,17 +116,17 @@ const multipleImpactCalc = ({charity, project, ...params}) => {
 
 /**
  * Copy pasta from I18N.js (aka easyi18n)
- * @param {number} num 
+ * @param {number} num
  * @param {String} text Can be undefined (returns undefined)
  */
 Misc.TrPlural = (num, text) => {
 	if ( ! text) return text;
 	let isPlural = Math.round(num) !== 1;
-	// Plural forms: 
+	// Plural forms:
 	// Normal: +s, +es (eg potatoes, boxes), y->ies (eg parties), +en (e.g. oxen)
 	// See http://www.englisch-hilfen.de/en/grammar/plural.htm, or https://en.wikipedia.org/wiki/English_plurals for the full horror.
 	// We also cover some French, German (+e, +n) and Spanish.
-	// regex matches letter(es)	
+	// regex matches letter(es)
 	if (isPlural===true) {
 		// Get the correction from the translation
 		text = text.replace(/(\w)\((s|es|en|e|n)\)/g, '$1$2');

@@ -8,6 +8,7 @@ import _ from 'lodash';
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import C from '../C';
+import Messaging from '../base/plumbing/Messaging';
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import BS from '../base/components/BS3';
@@ -35,6 +36,16 @@ import CardShopPage from './CardShopPage';
 import CardPage from './CardPage';
 import CheckoutPage from './CheckoutPage';
 
+// HACK: Squash "attempt to reuse idempotent Stripe key" error messages - server should be safe now so user doesn't need to see them
+Messaging.registerFilter(msg => {
+	if (!msg || !msg.type || !msg.text) return true; // ...just in case
+	if (msg.type === 'error' && msg.text.match('Keys for idempotent requests')) {
+		console.log('Not displaying "500: Keys for idempotent requests..." error message');
+		return false;
+	}
+	return true;
+});
+
 /**
  * init DataStore
  */
@@ -60,11 +71,11 @@ DataStore.update({
 	focus: {
 		NGO: null,
 		User: null,
-	},	
+	},
 	widget: {},
 	misc: {
 	},
-	/** status of server requests, for displaying 'loading' spinners 
+	/** status of server requests, for displaying 'loading' spinners
 	 * Normally: transient.$item_id.status
 	*/
 	transient: {}
@@ -109,11 +120,11 @@ class MainDiv extends Component {
 		const updateReact = (mystate) => this.setState({});
 		DataStore.addListener(updateReact);
 
-		// Set up login watcher here, at the highest level		
+		// Set up login watcher here, at the highest level
 		Login.change(() => {
 			// invalidate all lists!
 			DataStore.setValue(['list'], {});
-			// also remove any promises for these lists -- see fetch()		
+			// also remove any promises for these lists -- see fetch()
 			let ppath = ['transient', 'PromiseValue', 'list'];
 			DataStore.setValue(ppath, null);
 
@@ -149,22 +160,22 @@ class MainDiv extends Component {
 	componentDidCatch(error, info) {
 		// Display fallback UI
 		this.setState({error, info, errorPath: DataStore.getValue('location', 'path')});
-		console.error(error, info); 
+		console.error(error, info);
 		if (window.onerror) window.onerror("Caught error", null, null, null, error);
 	}
 
 	render() {
 		// HACK clear render info
-		DataStore.setValue(['transient', 'render'], null, false);	
+		DataStore.setValue(['transient', 'render'], null, false);
 
-		let path = DataStore.getValue('location', 'path');	
+		let path = DataStore.getValue('location', 'path');
 		let page = (path && path[0]);
 		if ( ! page) {
 			page = DEFAULT_PAGE;
 			console.warn("MainDiv.jsx - No page?! in render() - using default "+DEFAULT_PAGE);
 		}
 		assert(page);
-		let Page = PAGES[page];		
+		let Page = PAGES[page];
 		if ( ! Page) {
 			Page = E404Page;
 		}

@@ -20,9 +20,9 @@ const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <div><h2>My Account: Please login</h2><LoginLink title='Login' /></div>;
 	}
-	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {	
+	const pvCreditToMe = DataStore.fetch(['list', 'Transfer', 'to:'+Login.getId()], () => {
 		return ServerIO.load('/credit/_list', {data: {to: Login.getId()} });
-	});	
+	});
 	// TODO link into My-Loop, and vice-versa
 	// TODO store gift aid settings
 			// 	<Card title='Gift Aid'>
@@ -48,10 +48,10 @@ const AccountPage = () => {
 
 const RepeatingDonations = () => {
 	// ListItem={RDListItem}
-	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation' 
-		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH}		
+	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation'
+		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH}
 		canDelete />;
-	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {	
+	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {
 	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });
 	// });
 	// if ( ! pvRDons.resolved) return <Misc.Loading />;
@@ -70,7 +70,7 @@ const CreditToMe = ({credits}) => {
 };
 
 const UploadCredit = () => {
-	const pvCredits = DataStore.fetch(['list', 'Transfer', 'from:'+Login.getId()], () => {	
+	const pvCredits = DataStore.fetch(['list', 'Transfer', 'from:'+Login.getId()], () => {
 		return ServerIO.load('/credit/_list', {data: {from: Login.getId()} });
 	});
 	let path = ['widget', 'UploadCredit' ,'form'];
