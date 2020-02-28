@@ -250,7 +250,7 @@ public class MoneyCollector {
 	private String getBuyerEmail() {
 		if (buyerEmail!=null) return buyerEmail;		
 		assert user.isService("email") : user;
-		return user.dewart();
+		return user.getName();
 	}
 
 

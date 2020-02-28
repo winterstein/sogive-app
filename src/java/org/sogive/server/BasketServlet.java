@@ -45,7 +45,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 		XId user = state.getUserId();		
 		if (user==null) {
 			if (email==null) throw new NoAuthException("Stripe requires authentication to process a payment");
-			user = new XId(email, "Email");
+			user = new XId(email, "email");
 		}
 		assert user != null;
 		
