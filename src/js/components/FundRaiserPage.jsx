@@ -257,22 +257,15 @@ const DonationsSoFar = ({item}) => {
 	const target = (userTarget && userTarget.value) ? userTarget : FundRaiser.target(item);
 	const diff = Money.sub(target, donated);
 
-	if (diff.value <= 0) {
-		return (
-			<div className='details-input'>
-				<p>
-					<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-					We've passed <Misc.Money amount={target} /> in donations - what's next?
-				</p>
-			</div>
-		);
-	}
-
 	return (
 		<div className='details-input'>
 			<p>
 				<big>{donationCount}</big> supporters have already raised <big><Misc.Money amount={donated} /></big>.<br />
-				Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!
+				{					
+					diff.value > 0? <>Just <Misc.Money amount={diff} /> more to reach <Misc.Money amount={target} />!</>
+						: Money.value(target) > 0? <>We've passed <Misc.Money amount={target} /> in donations - What's next?</>
+							: null
+				}
 			</p>
 		</div>
 	);
