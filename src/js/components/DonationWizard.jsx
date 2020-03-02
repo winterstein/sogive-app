@@ -176,7 +176,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
 	// NB: this should always be true, cos getSetDonationAmount sets it to a default
-	const amountOK = amount !== null && Money.value(amount) > 0;
+	const amountOK = amount !== null && Money.value(amount) > 0.7; // avoid 1p donations
 
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
 	console.warn(emailOkay);
@@ -278,7 +278,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
 				:
 				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation'
-					value={val} changeCurrency={false}
+					value={val} changeCurrency={false} min={new Money(1)}
 				/>
 			}
 			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
