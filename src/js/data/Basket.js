@@ -60,6 +60,10 @@ Basket.getItems = (basket) => {
  * @returns {Money} never null
 */
 Basket.getTotal = (basket) => {
+	if ( ! basket) {
+		console.warn("Basket.js - null for getTotal()?! - hack: total=£0")
+		return new Money();
+	}
 	// Using this clumsy forEach instead of a reduce because this makes it clearer
 	// that the total's Money object (thus currency) is based on the first item
 	let total = null;
@@ -67,7 +71,7 @@ Basket.getTotal = (basket) => {
 		Money.assIsa(item.price);
 		// skip over any NaNs
 		if (isNaN(item.price.value)) {
-			console.warn("Basket.js getTotal: NaN", basket, item);
+			console.warn("Basket.js getTotal: skip NaN", basket, item);
 			return;
 		}
 		if (total === null) {
