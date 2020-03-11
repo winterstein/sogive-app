@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 const { login, soGiveFailIfPointingAtProduction, donate } = require("../utils/UtilityFunctions");
 const { username, password } = require("../utils/Credentials");
 const { CommonSelectors, Search, General } = require('../utils/SoGiveSelectors');
+const { targetServers } = require('../utils/testConfig');
 
 const Details = {
 	name: "Human Realman",
@@ -11,26 +12,19 @@ const Details = {
 	"consent-checkbox": true
 };
 
-const APIBASE = 'https://test.sogive.org';
-const argvs = process.argv;
-const devtools = argvs.join(',').includes('debug') || false;
+const config = JSON.parse(process.env.__CONFIGURATION);
 
-let browser;
-let page;
+const baseSite = targetServers[config.site];
+const protocol = config.site === 'local' ? 'http://' : 'https://';
+ewhg
+let url = `${baseSite}`;
 
 describe("Charity donation tests", () => {
 	beforeEach(async () => {
-		browser = await puppeteer.launch({ headless: false, devtools: devtools });
-		page = await browser.newPage();
-	});
-
-	afterEach(async () => {
-		await browser.close();
+		await page.goto(url);
 	});
 
 	test("Logged-out charity donation", async () => {
-		await page.goto(APIBASE + "#search?q=");
-
 		// Search for charity
 		await page.click(Search.Main.SearchField);
 		await page.keyboard.type("oxfam");
@@ -51,7 +45,6 @@ describe("Charity donation tests", () => {
 	}, 90000);
 
 	test("Logged-in charity donation", async () => {
-		await page.goto(APIBASE + "#search?q=");
 		await login({ page, username, password });
 
 		// Search for charity

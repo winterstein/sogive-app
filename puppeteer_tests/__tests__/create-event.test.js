@@ -2,8 +2,14 @@ const puppeteer = require("puppeteer");
 const { login, soGiveFailIfPointingAtProduction, donate } = require("../utils/UtilityFunctions");
 const { username, password } = require("../utils/Credentials");
 const { CommonSelectors, Search, General } = require('../utils/SoGiveSelectors');
+const { targetServers } = require('../utils/testConfig');
 
-const APIBASE = 'https://test.sogive.org';
+const config = JSON.parse(process.env.__CONFIGURATION);
+
+const baseSite = targetServers[config.site];
+const protocol = config.site === 'local' ? 'http://' : 'https://';
+
+let url = `${baseSite}`;
 
 // Default event data
 const eventData = {
@@ -17,30 +23,14 @@ const eventData = {
 		"https://i.pinimg.com/originals/a4/42/b9/a442b9891265ec69c78187a030b0753b.jpg"
 };
 
-const argvs = process.argv;
-const devtools = argvs.join(',').includes('debug') || false;
-
-let browser;
-let page;
-
 describe("Create event tests", () => {
 	const longName = "supercalifragilisticexpialidocious";
 	let id = '';
 
-	beforeEach(async () => {
-		browser = await puppeteer.launch({ headless: !devtools, devtools: devtools });
-		page = await browser.newPage();
-	});
-
-	afterEach(async () => {
-		await page.close();
-		await browser.close();
-	});
-
 	// Journey: User visits site, clicks on log in, types in their credentials, press Enter.
 	// Result: They are now logged in
 	test('Login to the site', async () => {
-		await page.goto(APIBASE);
+		await page.goto(url);
 
 		await page.$('.login-link');
 		await page.click('.login-link');
@@ -56,7 +46,7 @@ describe("Create event tests", () => {
 	// Jorney: User goes to 'Event' tab. Clicks on create event, fills in some fields when prompted, publishes the changes.
 	// Result: New event is published and listed
 	test("Create an event", async () => {
-		await page.goto(APIBASE);
+		await page.goto(url);
 
 		await page.$('.login-link');
 		await page.click('.login-link');
@@ -67,7 +57,7 @@ describe("Create event tests", () => {
 		await page.type('[name=password]', password);
 		await page.keyboard.press('Enter');
 
-		await page.goto(APIBASE+'#event');
+		await page.goto(url+'#event');
 
 		// Clicks on the create button. 
 		await page.waitForSelector('.glyphicon');
@@ -94,7 +84,7 @@ describe("Create event tests", () => {
 		id = idString;
 
 		// Reload to avoid any buggy behaviour
-		await page.goto(APIBASE+`#event`);
+		await page.goto(url+`#event`);
 		await page.waitFor(500);
 		await page.reload();
 	}, 45000);
@@ -104,7 +94,7 @@ describe("Create event tests", () => {
 	test('Delete event created', async() => {
 		// Go to the event
 		// await page.goto(`http://local.sogive.org#event/${id}`);
-		await page.goto(APIBASE+`#event/${id}`);
+		await page.goto(url+`#event/${id}`);
 		await page.$('.login-link');
 		await page.click('.login-link');
         
@@ -125,7 +115,7 @@ describe("Create event tests", () => {
 		// Wait and reload to be safe
 		await page.waitFor(4000);
 		await page.reload();
-		await page.goto(APIBASE+`#event`);
+		await page.goto(url+`#event`);
 
 		// Make sure event has been removed
 		const nameIsPresent = await page.evaluate(() => {

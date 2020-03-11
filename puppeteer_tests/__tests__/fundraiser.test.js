@@ -2,8 +2,14 @@ const puppeteer = require("puppeteer");
 const { login, soGiveFailIfPointingAtProduction, donate, fillInForm } = require("../utils/UtilityFunctions");
 const { username, password } = require("../utils/Credentials");
 const { CommonSelectors, Search, General, Register, Fundraiser } = require('../utils/SoGiveSelectors');
+const { targetServers } = require('../utils/testConfig');
 
-const APIBASE = 'https://test.sogive.org';
+const config = JSON.parse(process.env.__CONFIGURATION);
+
+const baseSite = targetServers[config.site];
+const protocol = config.site === 'local' ? 'http://' : 'https://';
+
+let url = `${baseSite}`;
 
 // Default event data
 const eventData = {
@@ -38,36 +44,16 @@ const fundraiserIdClip = () => {
 	return fundraiserEditLink.split('/').pop();
 };
 
-let browser;
-let page;
-
 describe("Fundraiser tests", () => {
 
-	// beforeAll(async () => {
-	//     browser = await  puppeteer.launch({headless: false});
-	// });
-	
-	beforeEach(async () => {
-		browser = await puppeteer.launch({headless: false});
-		page = await browser.newPage();
-	});
-
-	afterEach(async () => {
-		await browser.close();
-	});
-
-	// afterAll(async () => {
-	//     browser.close();
-	// })
-
 	test("Create a fundraiser", async () => {
-		await page.goto(`${APIBASE}#event`);
+		await page.goto(`${url}#event`);
 
 		// login.
 		await login({ page, username, password });
 
 		// Go to event page and click on Register event
-		await page.goto(APIBASE + `#event/${eventId}`);
+		await page.goto(url + `#event/${eventId}`);
 		await page.waitForSelector('.btn');
 		await page.click('.btn');
 
@@ -118,8 +104,6 @@ describe("Fundraiser tests", () => {
 		);
 		fundraiserEditLink = await page.url();
 		fundraiserId = await fundraiserIdClip();
-		console.log(fundraiserId);
-		debugger;
 		await fillInForm({
 			page,
 			data: fundraiserData.EditFundraiser,
@@ -135,7 +119,7 @@ describe("Fundraiser tests", () => {
 	}, 45000);
 
 	test("Logged-in fundraiser donation", async () => {
-		await page.goto(`${APIBASE}#fundraiser/${fundraiserId}`);
+		await page.goto(`${url}#fundraiser/${fundraiserId}`);
 		await page.reload();
 
 		await login({ page, username, password });
@@ -181,8 +165,8 @@ describe("Fundraiser tests", () => {
 	}, 30000);
 
 	test("Logged-out fundraiser donation", async () => {
-		// await page.goto(`${APIBASE}#fundraiser/aundiks.TurHe2nW.01ff18`);
-		await page.goto(APIBASE);
+		// await page.goto(`${url}#fundraiser/aundiks.TurHe2nW.01ff18`);
+		await page.goto(url);
 
 		// Log out
 		// await page.waitForSelector('#top-right-menu');
@@ -191,7 +175,7 @@ describe("Fundraiser tests", () => {
 		// await page.click('#top-right-menu > li > ul > li:nth-child(3) > a');
 		// await page.reload();
 
-		await page.goto(`${APIBASE}#fundraiser/${fundraiserId}`);
+		await page.goto(`${url}#fundraiser/${fundraiserId}`);
 
 		// Wait for donate button
 		await page.waitForSelector('.btn');
@@ -234,7 +218,7 @@ describe("Fundraiser tests", () => {
 	}, 30000);
 
 	test("Delete fundraiser", async () => {
-		await page.goto(APIBASE);
+		await page.goto(url);
 		
 		await login({ page, username, password });
 		await page.goto(fundraiserEditLink);
