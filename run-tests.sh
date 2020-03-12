@@ -8,7 +8,7 @@
 # 03. email number and summary of errors to Andris
 
 PROJECT_NAME="sogive-app"
-RECEIVERS=(sysadmin@good-loop.com)
+RECEIVERS=(andris@good-loop.com)
 LOGFILE='sogive.tests.output.log'
 SUMMARY_LOGFILE='sogive.failed.tests.summary.log'
 
