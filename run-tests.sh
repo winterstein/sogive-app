@@ -31,6 +31,12 @@ else
     touch $SUMMARY_LOGFILE
 fi
 
+if [ -d /tmp/msmtp ]; then
+    printf ""
+else
+    mkdir -p /tmp/msmtp
+fi
+
 # Get node console out put into a text file
 node runtest.js &> $LOGFILE
 
