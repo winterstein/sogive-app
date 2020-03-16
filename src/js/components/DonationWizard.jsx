@@ -277,9 +277,10 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{preferredCurrency?
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
 				:
-				<Misc.PropControl prop='amount' path={path} type='Money' label='Donation'
-					value={val} changeCurrency={false} min={new Money(1)}
-				/>
+				<PropControl prop='amount' path={path} type='Money' label='Donation'
+					value={val} changeCurrency={false} min={new Money(1)} 
+					append={Donation.isRepeating(dntn)? "per "+dntn.repeat.toLowerCase() : null}
+				/>				
 			}
 			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
