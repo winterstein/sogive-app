@@ -8,7 +8,7 @@
 # 03. email number and summary of errors to Andris
 
 PROJECT_NAME="sogive-app"
-RECEIVERS=(andris@good-loop.com)
+RECEIVERS=("andris@good-loop.com" "sysadmin@good-loop.com")
 LOGFILE='sogive.tests.output.log'
 SUMMARY_LOGFILE='sogive.failed.tests.summary.log'
 
@@ -51,7 +51,9 @@ fi
 
 # If there are any failures detected, send the alert email
 if [[ $NUM_FAILS -gt '0' ]]; then
-    EMAIL_BODY=$(cat $SUMMARY_LOGFILE)
-    SUBJECT=$(printf "$NUM_FAILS test(s) failed for $PROJECT_NAME")
-    send_email
+    for recipients in ${RECEIVERS[@]}; do
+        EMAIL_BODY=$(cat $SUMMARY_LOGFILE)
+        SUBJECT=$(printf "$NUM_FAILS test(s) failed for $PROJECT_NAME")
+        send_email
+    done
 fi
