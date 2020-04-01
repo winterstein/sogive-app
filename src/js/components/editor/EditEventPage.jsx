@@ -115,9 +115,10 @@ const EventEditor = ({id}) => {
 			/>
 			
 			<PropControl path={path} prop='country' item={item} label='Country' type='country' required={false}
-				help='This sets the default currency. Use a two-letter ISO 3166 code, e.g. Britain is "GB"'
+				help={`This sets the default currency (currently: ${Money.CURRENCY_FOR_COUNTRY[item.country] || 'GBP'}). 
+				Use a two-letter ISO 3166 code, e.g. Britain is "GB"`}
 			/>
-			<div><small>Currency: {Money.CURRENCY_FOR_COUNTRY[item.country] || 'GBP'}</small></div>			
+			<div><small>Currency: </small></div>			
 			
 			<PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 
