@@ -19,6 +19,7 @@ import Event from '../../data/charity/Event';
 import ListLoad, {CreateButton} from '../../base/components/ListLoad';
 import ShareWidget, {canWrite, AccessDenied, ShareLink} from '../../base/components/ShareWidget';
 import {SuggestedDonationEditor} from './CommonControls';
+import Money from '../../base/data/Money.js';
 
 const EditEventPage = () => {
 	// which event?
@@ -113,7 +114,10 @@ const EventEditor = ({id}) => {
 				} }
 			/>
 			
-			<PropControl path={path} prop='country' item={item} label='Country' type='country' required={false} />
+			<PropControl path={path} prop='country' item={item} label='Country' type='country' required={false}
+				help='This sets the default currency. Use a two-letter ISO 3166 code, e.g. Britain is "GB"'
+			/>
+			<div><small>Currency: {Money.CURRENCY_FOR_COUNTRY[item.country] || 'GBP'}</small></div>			
 			
 			<PropControl path={path} prop='description' item={item} label='Description' type='textarea' />
 

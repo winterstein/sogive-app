@@ -95,7 +95,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// £/$
 	let preferredCurrency = null;
 	if (event && event.country) {
-		preferredCurrency = {GB:'GBP',US:'USD'}[event.country];
+		preferredCurrency = Money.CURRENCY_FOR_COUNTRY[event.country];
 	}
 
 	// There can only be one!
@@ -301,20 +301,20 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 }; // ./AmountSection
 
 
-const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
+const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
 
 	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
-		let got = $.get('https://api.exchangeratesapi.io/latest?symbols=USD,GBP');
+		let got = $.get('https://api.exchangeratesapi.io/latest?symbols='+preferredCurrency+',GBP');
 		return got;
 	});
 
 	let rate = 0.80341;
 	if (pvRate.value) {
-		rate = pvRate.value.rates.GBP / pvRate.value.rates.USD;
-		console.warn("USD->GBP "+rate, pvRate.value);
+		rate = pvRate.value.rates.GBP / pvRate.value.rates[preferredCurrency];
+		console.warn(preferredCurrency+"->GBP "+rate, pvRate.value);
 	}
 
 	return <>
@@ -337,7 +337,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency, onChange}) => {
 						let pounds = e.target.value;
 						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
 						console.warn(`setting local donation from £ amount: $${dollars} => £${pounds}`);
-						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:'USD', value:dollars}));
+						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:preferredCurrency, value:dollars}));
 						return onChange(e);
 					}}
 				/>
