@@ -13,7 +13,7 @@ LOGFILE='sogive.tests.output.log'
 SUMMARY_LOGFILE='sogive.failed.tests.summary.log'
 
 function send_email {
-    printf "\n$EMAIL_BODY\n" | mutt -s "$SUBJECT" $RECEIVERS
+    printf "\n$EMAIL_BODY\n" | mutt -s "$SUBJECT" $recipients
 }
 
 #clear out any residual test-logs that might exist in the dir
