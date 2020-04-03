@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
+import { Jumbotron, Button, Badge } from 'reactstrap';
+
 import SJTest, {assert} from 'sjtest';
 import {XId, encURI, yessy, modifyHash} from 'wwutils';
 import Login from 'you-again';
-import BS from '../base/components/BS';
 import printer from '../base/utils/printer.js';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
@@ -88,9 +88,9 @@ const CheckoutPage = () => {
 					<TicketTypes event={event} basket={basket} />
 					<TicketInvoice event={event} basket={basket} />
 
-					<BS.Button size='sm' className="pull-left" onClick={deleteBasket} >
-						<Misc.Icon glyph='trash' />Empty Basket
-					</BS.Button>
+					<Button size='sm' className="pull-left" onClick={deleteBasket} >
+						<Misc.Icon prefix="fas" fa="trash" audit />Empty Basket
+					</Button>
 				</WizardStage>
 
 				<WizardStage title='Register' sufficient={Login.isLoggedIn()} complete={Login.isLoggedIn()} >
@@ -207,9 +207,9 @@ const RegisterTicket = ({ticketType, basket}) => {
 
 	const addRemove = tickets.length ? (
 		<div className='add-remove-controls btn-group' role="group" aria-label="add remove controls">
-			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon glyph='minus' /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon prefix="fas" fa="minus" audit /></button>
 			<span className='ticket-count btn-text'>{tickets.length}</span>
-			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon glyph='plus' /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon prefix="fas" fa="plus" audit /></button>
 		</div>
 	) : (
 		<button className='btn btn-default btn-square add-first-ticket' onClick={addTicketAction}>Add</button>
@@ -312,7 +312,7 @@ const RegisterOrLoginTab = ({stagePath}) => {
 		return (
 			<div className='login-tab padded-block'>
 				<Jumbotron>
-					<p><Misc.Icon glyph='ok' className='text-success' /> You're logged in as <Label title={Login.getId()}>{Login.getUser().name || Login.getId()}</Label>.</p>
+					<p><Misc.Icon prefix="fas" fa="ok" audit className='text-success' /> You're logged in as <Badge title={Login.getId()}>{Login.getUser().name || Login.getId()}</Badge>.</p>
 					<p>Not you? <Button onClick={() => Login.logout()}>Log out</Button></p>
 				</Jumbotron>
 			</div>

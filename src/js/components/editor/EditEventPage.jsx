@@ -156,7 +156,7 @@ const EventEditor = ({id}) => {
 				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />)
 				: <p>No tickets yet!</p>
 			}
-			<button className='btn btn-default' onClick={addTicketType} type="button"><Misc.Icon glyph='plus' /> Create</button>
+			<button className='btn btn-default' onClick={addTicketType} type="button"><Misc.Icon prefix="fas" fa="plus" audit /> Create</button>
 		</Misc.Card>
 
 		<Misc.Card title='Suggested Donation'>
@@ -168,7 +168,7 @@ const EventEditor = ({id}) => {
 				<ExtraEditor key={'tt'+i} i={i} path={path.concat(['extra', i])} extra={tt} event={item} move={move} last={i + 1 === item.extras.length} />)
 				: <p>No extras yet!</p>
 			}
-			<button className='btn btn-default' onClick={addExtra} type="button"><Misc.Icon glyph='plus' /> Create</button>
+			<button className='btn btn-default' onClick={addExtra} type="button"><Misc.Icon prefix="fas" fa="plus" audit /> Create</button>
 		</Misc.Card>
 
 		<Misc.Card title='Advanced Options'>
@@ -221,9 +221,9 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<PropControl type='imgUpload' item={ticketType} path={path} prop='attendeeIcon' label='Attendee Icon' />
 		<PropControl type='url' item={ticketType} path={path} prop='postPurchaseLink' label='Post-purchase link' placeholder='leave blank for setup-your-fundraiser' />
 		<PropControl type='text' item={ticketType} path={path} prop='postPurchaseCTA' label='Post-purchase CTA' placeholder='leave blank for default behaviour' />
-		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
-		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
-		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon glyph='trash' /></button>
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon prefix="fas" fa="arrow-up" audit /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon prefix="fas" fa="arrow-down" audit /> down</button>
+		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon prefix="fas" fa="trash" audit /></button>
 	</div>);
 };
 
@@ -243,9 +243,9 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 			<PropControl type='text' item={extra} path={path} prop='stock' label='Stock' help='The maximum number that can be sold' />
 			<div><label>Sold so far: {extra.sold || 0}</label></div>
 		</Misc.Col2>
-		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon glyph='arrow-up' /> up</button>
-		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon glyph='arrow-down' /> down</button>
-		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon glyph='trash' /></button>
+		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon prefix="fas" fa="arrow-up" audit /> up</button>
+		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon prefix="fas" fa="arrow-down" audit /> down</button>
+		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon prefix="fas" fa="trash" audit /></button>
 	</div>);
 };
 

@@ -7,7 +7,7 @@
 const Event = {};
 Event.Main = {
 	EventList: `#event > div > div:nth-child(2)`,
-	CreateEvent: 'button span.glyphicon-plus', //Won't appear in DOM until CREATE_EDIT_EVENT has been clicked. Can also navigate directly to sogive.org/#editEvent
+	CreateEvent: 'button[name=create-item]', //Won't appear in DOM until CREATE_EDIT_EVENT has been clicked. Can also navigate directly to sogive.org/#editEvent
 	CreateEditButton: `#event small > a`
 };
 Event.EditEventForm = {

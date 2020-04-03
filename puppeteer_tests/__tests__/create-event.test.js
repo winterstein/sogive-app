@@ -60,8 +60,8 @@ describe("Create event tests", () => {
 		await page.goto(url+'#event');
 
 		// Clicks on the create button. 
-		await page.waitForSelector('.glyphicon');
-		await page.click('.glyphicon');
+		await page.waitForSelector('[name=create-item]');
+		await page.click('[name=create-item]');
 
 		// Wait for form to render, then fill it
 		await page.waitForSelector("[name=name]");

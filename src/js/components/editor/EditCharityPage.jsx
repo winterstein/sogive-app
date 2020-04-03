@@ -3,7 +3,8 @@ import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import BS from '../../base/components/BS';
+import { Alert } from 'reactstrap';
+
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
@@ -43,7 +44,7 @@ const EditCharityPage = () => {
 			return <Misc.Loading text='Loading...' pv={pvCharity} />;
 		}
 		return (<>
-			{pvCharity.error? <BS.Alert><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></BS.Alert> : <Misc.Loading text='Loading...' />}
+			{pvCharity.error? <Alert color="warning"><h4>Sorry: We could not load {cid}</h4><div><small>{pvCharity.error.status}</small></div></Alert> : <Misc.Loading text='Loading...' />}
 			<Misc.Card title='Add a New Charity?'>
 				<div className='alert alert-warning'>
 					ALWAYS <a href='#search?status=ALL_BAR_TRASH'>search</a> first to check the charity isn't already in the database.
@@ -100,7 +101,7 @@ const EditCharityPage = () => {
 		<div className='EditCharityPage'>
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<p>NOTE: Please hover over the <Misc.Icon prefix="fas" fa="question-circle" title='question mark' /> icon -- this often includes useful information!</p>
 				<div>
 					Switch back to the <a href={'/#simpleedit?charityId='+escape(cid)} className='btn btn-default btn-sm'>Simpler Editor</a>
 				</div>
@@ -333,24 +334,24 @@ const ProjectOutputs = ({charity, project={}, project: { outputs=[] }}) => {
 				<tbody>
 					<tr>
 						<th>
-							Impact units <Misc.Icon glyph='question-sign' title={
+							Impact units <Misc.Icon prefix="fas" fa="question-circle" title={
 `These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Be aware that the SoGive code will calculate the amount of impact attributable to a donor, and then append these words after that number (eg wording like "case(s) of malaria averted" would work if you put a number in front, but "reduction in malaria prevalence" wouldn't work). Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
 							/>
 						</th>
 						<th>
-							Amount <Misc.Icon glyph='question-sign' title={
+							Amount <Misc.Icon prefix="fas" fa="question-circle" title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
 ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
 							/>
 						</th>
 						<th>
 							Override cost per beneficiary
-							<Misc.Icon glyph='question-sign' title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
+							<Misc.Icon prefix="fas" fa="question-circle" title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
 						</th>
 						<th>
-							Confidence <Misc.Icon glyph='question-sign' title={
+							Confidence <Misc.Icon prefix="fas" fa="question-circle" title={
 `How confident are we in this cost-per-beneficiary estimate?
 
 - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.
@@ -360,7 +361,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							/>
 						</th>
 						<th>
-							Description <Misc.Icon glyph='question-sign' title={
+							Description <Misc.Icon prefix="fas" fa="question-circle" title={
 `An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped.
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>

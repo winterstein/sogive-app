@@ -4,7 +4,7 @@ import MDText from '../base/components/MDText';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import { Clearfix, Grid, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'reactstrap';
 
 import printer from '../base/utils/printer.js';
 import _ from 'lodash';
@@ -115,33 +115,33 @@ const FundRaiserPage = ({id}) => {
 			<CSS css={item.customCSS} />
 			{event.backgroundImage ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
 			<DonationWizard item={item} />
-			<Grid id='FundRaiserPage'>
+			<Container id='FundRaiserPage'>
 				{event.bannerImage? <Row>
-					<Col md={12} className='event-banner'>
+					<Col md="12" className='event-banner'>
 						<img alt={`Banner for ${item.name}`} src={event.bannerImage} />
 					</Col>
 				</Row> : null}
 
 				<Row className='title-bar'>
-					<Col md={12}>
+					<Col md="12">
 						<h2>{item.name} {date? ' - ' : null} {date? <Misc.LongDate date={date} /> : null}</h2>
 					</Col>
 				</Row>
 
 				<Row className='vitals'>
-					<Col md={6}>
+					<Col md="6">
 						<div className='user-event-photo'>
 							<img alt={`${item.owner.name}'s photo for ${item.name}`} src={item.img} />
 						</div>
 					</Col>
 
-					<Col md={6}>
+					<Col md="6">
 						<DonationProgress item={item} charity={charity} />
 					</Col>
 				</Row>
 
 				<Row>
-					<Col md={6} className='me'>
+					<Col md="6" className='me'>
 						<center>
 							<h3>About: {item.owner.name}</h3>
 						</center>
@@ -149,7 +149,7 @@ const FundRaiserPage = ({id}) => {
 						<div>{item.owner.description? <MDText source={item.owner.description} /> : null}</div>
 						<p><small><a href={event.url || '#event/'+encURI(event.id)} target={event.url? '_blank': ''}>About the event</a></small></p>
 					</Col>
-					<Col md={6} className='charity-info'>
+					<Col md="6" className='charity-info'>
 						<center>
 							<h3>The Charity: {NGO.displayName(charity)}</h3>
 						</center>
@@ -162,7 +162,7 @@ const FundRaiserPage = ({id}) => {
 				</Row>
 
 				<Row>
-					<Col md={6}>
+					<Col md="6">
 						{item.story?
 							<div><h3>Story:</h3><MDText source={item.story} /></div>
 							: null}
@@ -170,7 +170,7 @@ const FundRaiserPage = ({id}) => {
 							<div><h3>Updates</h3>{printer.str(item.updates)}</div>
 							: null}
 					</Col>
-					<Col md={6}>
+					<Col md="6">
 						<h3>Supporters:</h3>
 						{/*supporters? <DonateButton item={item} /> : null*/}
 						{ donations ? (
@@ -181,12 +181,12 @@ const FundRaiserPage = ({id}) => {
 				</Row>
 				{/*
 				<Row>
-					<Col md={12}>
+					<Col md="12">
 						<center><DonateButton item={item} /></center>
 					</Col>
 				</Row>
 				*/}
-			</Grid>
+			</Container>
 		</div>
 	);
 };
@@ -220,14 +220,14 @@ const DonationProgress = ({item, charity}) => {
 				<div className='bar-container'>
 					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
 						<Misc.Money amount={donated} />
-						<Misc.Icon glyph='triangle-right' />
+						<Misc.Icon prefix="fas" fa="triangle-right" audit />
 					</div>
 					<div className='donation-progress-bar'>
 						<div className='remaining' style={{height: remainingBarHeight+'%'}}>&nbsp;</div>
 						<div className='done' style={{height: donatedBarHeight+'%'}}>&nbsp;</div>
 					</div>
 					<div className='progress-pointer percent' style={{bottom: donatedBarHeight+'%'}}>
-						<Misc.Icon glyph='triangle-left' />
+						<Misc.Icon prefix="fas" fa="triangle-left" audit />
 						{Math.round(donatedPercent)}%
 					</div>
 				</div>
@@ -305,7 +305,7 @@ const Supporter = ({donation, charity}) => {
 			{donation.message ? (
 				<p>{donation.message}</p>
 			) : null }
-			<Clearfix />
+			<div className="clearfix" />
 		</li>
 	);
 };

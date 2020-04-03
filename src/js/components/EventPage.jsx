@@ -5,7 +5,6 @@ import MDText from '../base/components/MDText'
 
 import SJTest, {assert} from 'sjtest';
 import { modifyHash, encURI, uid, yessy } from 'wwutils';
-import { Button, Well } from 'react-bootstrap';
 
 import printer from '../base/utils/printer.js';
 import C from '../C';

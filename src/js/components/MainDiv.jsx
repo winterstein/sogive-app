@@ -11,7 +11,6 @@ import C from '../C';
 import Messaging from '../base/plumbing/Messaging';
 // Templates
 import MessageBar from '../base/components/MessageBar';
-import BS from '../base/components/BS3';
 import NavBar from '../base/components/NavBar';
 import LoginWidget from '../base/components/LoginWidget';
 // Pages

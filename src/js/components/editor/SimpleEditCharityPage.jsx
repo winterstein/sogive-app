@@ -89,7 +89,7 @@ const SimpleEditCharityPage = () => {
 		<div className='EditCharityPage'>
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-				<p>NOTE: Please hover over the <Misc.Icon glyph='question-sign' title='question mark' /> icon -- this often includes useful information!</p>
+				<p>NOTE: Please hover over the <Misc.Icon prefix="fas" fa="question-circle" title='question mark' /> icon -- this often includes useful information!</p>
 				<div>
 					This is the simpler editor. It does not
 					include all the possible settings.
@@ -267,7 +267,7 @@ const AddProject = ({charity, isOverall}) => {
 				<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 				&nbsp;
 				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Misc.Icon glyph='plus' /> Add
+					<Misc.Icon prefix="fas" fa="plus" audit /> Add
 				</button>
 			</div>
 		);
@@ -281,7 +281,7 @@ const AddProject = ({charity, isOverall}) => {
 			<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
 			&nbsp;
 			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
-				<Misc.Icon glyph='plus' /> Add
+				<Misc.Icon prefix="fas" fa="plus" audit /> Add
 			</button>
 		</div>
 	);
@@ -304,7 +304,7 @@ const RemoveProject = ({charity, project}) => {
 			title='Delete this project!'
 			onClick={deleteProject}
 		>
-			<Misc.Icon glyph='trash' />
+			<Misc.Icon prefix="fas" fa="trash" audit />
 		</button>
 	);
 };
@@ -332,7 +332,7 @@ const AddIO = ({list, pio, ioPath}) => {
 			<PropControl prop='name' label='Impact unit / Name' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
-				<Misc.Icon glyph='plus' />
+				<Misc.Icon prefix="fas" fa="plus" audit />
 			</button>
 		</div>
 	);
@@ -409,7 +409,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 			<PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
 			{' '}
 			<button className='btn btn-default' onClick={addSourceFn}>
-				<Misc.Icon glyph='plus' />
+				<Misc.Icon prefix="fas" fa="plus" audit />
 			</button>
 		</div>
 	);
@@ -454,24 +454,24 @@ const ProjectOutputs = ({charity, project}) => {
 				<tbody>
 					<tr>
 						<th>
-							Impact units <Misc.Icon glyph='question-sign' title={
+							Impact units <Misc.Icon prefix="fas" fa="question-circle" title={
 `These are the units in which the impacts are measured, for example "people helped" or "vaccinations performed" or whatever. Be aware that the SoGive code will calculate the amount of impact attributable to a donor, and then append these words after that number (eg wording like "case(s) of malaria averted" would work if you put a number in front, but "reduction in malaria prevalence" wouldn't work). Keep this short, preferably about 2-3 words. 5 words max.
 Plurals can be written using a -(s) suffix, or by putting (plural: X) or (singular: X) after the word.
 E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)"`}
 							/>
 						</th>
 						<th>
-							Amount <Misc.Icon glyph='question-sign' title={
+							Amount <Misc.Icon prefix="fas" fa="question-circle" title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
 ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
 							/>
 						</th>
 						<th>
 							Override cost per beneficiary
-							<Misc.Icon glyph='question-sign' title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
+							<Misc.Icon prefix="fas" fa="question-circle" title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
 						</th>
 						<th>
-							Confidence <Misc.Icon glyph='question-sign' title={
+							Confidence <Misc.Icon prefix="fas" fa="question-circle" title={
 `How confident are we in this cost-per-beneficiary estimate?
 
 - High - the numbers are things the charity can accurately estimate (e.g. malaria nets distributed), and the funding picture is clear, and there has been some independent verification of the figures.
@@ -481,7 +481,7 @@ ${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is 
 							/>
 						</th>
 						<th>
-							Description <Misc.Icon glyph='question-sign' title={
+							Description <Misc.Icon prefix="fas" fa="question-circle" title={
 `An optional sentence to explain more about the output. For example, if you said "people helped", you could expand here more about *how* those people were helped.
 This is also a good place to point if, for example, the impacts shown are an average across several different projects doing different things.`}
 							/>

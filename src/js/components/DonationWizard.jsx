@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import { Modal } from 'react-bootstrap';
+import { Modal, ModalBody, Row, Col } from 'reactstrap';
 import Login from 'you-again';
 import $ from 'jquery';
 
@@ -27,7 +27,7 @@ import LoginWidget, { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
-import BS from '../base/components/BS';
+
 
 /**
  *
@@ -144,10 +144,10 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// if the promise is running, wait for it before making a new draft
 	if ( ! pDonation.resolved) {
 		return (
-			<Modal show className="donate-modal" onHide={closeLightbox}>
-				<Modal.Body>
+			<Modal isOpen={true} className="donate-modal" onClosed={closeLightbox}>
+				<ModalBody>
 					<Misc.Loading />
-				</Modal.Body>
+				</ModalBody>
 			</Modal>
 		);
 	}
@@ -318,8 +318,8 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	}
 
 	return <>
-		<BS.Row>
-			<BS.Col md={6} sm={12}>
+		<Row>
+			<Col md="6" sm="12">
 				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money'
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
@@ -330,8 +330,8 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 						return onChange(e);
 					}}
 				/>
-			</BS.Col>
-			<BS.Col md={6} sm={12}>
+			</Col>
+			<Col md="6" sm="12">
 				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false}
 					onChange={e => {
 						let pounds = e.target.value;
@@ -341,8 +341,8 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 						return onChange(e);
 					}}
 				/>
-			</BS.Col>
-		</BS.Row>
+			</Col>
+		</Row>
 		<div><small>Approximate rate: 1 {preferredCurrency} = {printer.toNSigFigs(rate, 4)} GBP (source: ECB). SoGive is based in the UK and we work in £ sterling.
 		Currency conversion is handled by your bank - the rate they apply is likely to be a bit worse.</small></div>
 	</>;

@@ -1,6 +1,6 @@
 // @Flow
 import React from 'react';
-import { FormGroup } from 'react-bootstrap';
+import { FormGroup } from 'reactstrap';
 
 import DataStore from '../base/plumbing/DataStore';
 

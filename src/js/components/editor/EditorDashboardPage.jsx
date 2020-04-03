@@ -1,9 +1,7 @@
 import React from 'react';
-import { assert, assMatch } from 'sjtest';
 import Login from 'you-again';
 import _ from 'lodash';
-import { XId, encURI } from 'wwutils';
-import {Panel} from 'react-bootstrap';
+import { encURI } from 'wwutils';
 
 import printer from '../../base/utils/printer';
 // import C from '../C';
@@ -14,20 +12,15 @@ import ActionMan from '../../plumbing/ActionMan';
 import Misc from '../../base/components/Misc';
 
 
-class EditorDashboardPage extends React.Component {
-	render() {
-		// display...
-		return (
-			<div className="page EditorDashboardPage">
-				<h2>Editorial Dashboard</h2>
-				<h3>In development...</h3>
-				<AddCharityWidget />
-				<AddEditorWidget />
-				<p><a href='/#manageDonations'>Manage Donations</a></p>
-			</div>
-		);
-	}
-} // ./EditorDashboardPage
+const EditorDashboardPage = () => (
+	<div className="page EditorDashboardPage">
+		<h2>Editorial Dashboard</h2>
+		<h3>In development...</h3>
+		<AddCharityWidget />
+		<AddEditorWidget />
+		<p><a href='/#manageDonations'>Manage Donations</a></p>
+	</div>
+); // ./EditorDashboardPage
 
 
 const AddCharityWidget = () => {

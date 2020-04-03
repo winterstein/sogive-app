@@ -1,30 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import { Jumbotron, Well, Button, Label } from 'react-bootstrap';
-import SJTest, {assert} from 'sjtest';
-import {XId, encURI, yessy, modifyHash} from 'wwutils';
+import { XId, encURI, modifyHash } from 'wwutils';
 import Login from 'you-again';
-import BS from '../base/components/BS';
-import printer from '../base/utils/printer.js';
+import { Row, Col, Button } from 'reactstrap';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
-import ServerIO from '../plumbing/ServerIO';
-import { getId, getType } from '../base/data/DataClass';
-import Basket from '../data/Basket';
-import Event from '../data/charity/Event';
-import NGO from '../data/charity/NGO2';
-import Ticket from '../data/charity/Ticket';
-import Money from '../base/data/Money';
-import FundRaiser from '../data/charity/FundRaiser';
-import { SearchResults } from './SearchPage';
-import Roles from '../base/Roles';
+import { getId } from '../base/data/DataClass';
 import Misc from '../base/components/Misc';
-import { LoginWidgetEmbed } from '../base/components/LoginWidget';
-import DonationWizard from './DonationWizard';
-import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
-import PaymentWidget from '../base/components/PaymentWidget';
 import MDText from '../base/components/MDText';
 
 /**
@@ -76,9 +59,9 @@ const CardShopPage = () => {
 			<MDText source={event.description} />
 
 			<h2>Pick a Card and Make a Difference</h2>
-			<BS.Row>
-				{event.ticketTypes.map(t => <BS.Col md={4} key={t.id} ><Card basket={basket} ticket={t} event={event} /></BS.Col>)}
-			</BS.Row>
+			<Row>
+				{event.ticketTypes.map(t => <Col md="4" key={t.id} ><Card basket={basket} ticket={t} event={event} /></Col>)}
+			</Row>
 
 			<div className='moreinfo'>
 				<h2>F.A.Q.</h2>
@@ -127,7 +110,7 @@ const Card = ({basket, ticket, event}) => {
 		<img src={ticket.attendeeIcon} className='xmas-card-preview-img' />
 		<p>Charity funded: <a href={'/#charity?charityId='+encURI(ticket.charityId)}>{charityName}</a></p>
 		<p>{ticket.description}</p>
-		<center><BS.Button size='lg' color='primary' onClick={addTicketAction}>Buy One</BS.Button></center>
+		<center><Button size='lg' color='primary' onClick={addTicketAction}>Buy One</Button></center>
 	</div>);
 };
 

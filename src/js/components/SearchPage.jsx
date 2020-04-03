@@ -2,7 +2,8 @@
 import React from 'react';
 import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
-import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
+// import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
+import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
 
@@ -152,22 +153,25 @@ class SearchForm extends React.Component {
 	render() {
 		let status = this.props.status;
 		return (
-			<div className='SearchForm'><Form onSubmit={(event) => { this.onSubmit(event); }} >
-				<FormGroup className='' bsSize='lg' controlId="formq">
-					<InputGroup bsSize='lg'>
-						<FormControl
-							className='sogive-search-box'
+			<div className="SearchForm"><Form onSubmit={event => this.onSubmit(event)}>
+				<FormGroup size="lg" controlId="formq">
+					<InputGroup size="lg">
+						<Input
+							className="sogive-search-box"
 							type="search"
 							value={this.state.q || ''}
 							placeholder="Keyword search"
 							onChange={(e) => this.onChange('q', e)}
 						/>
+						<InputGroupAddon addonType="append" className="sogive-search-box">
+							<Button onClick={e => this.onSubmit(e)}>
+								<Misc.Icon prefix="fas" fa="search" audit />
+							</Button>
+						</InputGroupAddon>
 						<FieldClearButton onClick={(e) => this.clear(e)}>
-							<Glyphicon glyph='remove-circle' />
+							<Misc.Icon prefix="fas" fa="remove-circle" audit />
 						</FieldClearButton>
-						<InputGroup.Addon className='sogive-search-box' onClick={(e) => this.onSubmit(e)}>
-							<Glyphicon glyph="search" />
-						</InputGroup.Addon>
+
 					</InputGroup>
 					{status? <div>Include listings with status: {status}</div> : null}
 				</FormGroup>
@@ -178,7 +182,7 @@ class SearchForm extends React.Component {
 
 
 const FieldClearButton = ({onClick, children}) => (
-	<span className='field-clear-button visible-xs-block' onClick={onClick}>
+	<span className="field-clear-button visible-xs-block" onClick={onClick}>
 		{children}
 	</span>
 );
@@ -290,10 +294,12 @@ const ellipsize = (string, length) => {
 
 
 const DefaultCTA = ({itemUrl, onClick, item}) => {
-	return (<a href={itemUrl} onClick={onClick} className='read-more btn btn-default'>
-				Read more
-		<img className='read-more-caret' src='/img/read-more-caret.svg' />
-	</a>);
+	return (
+		<a href={itemUrl} onClick={onClick} className='read-more btn btn-default'>
+			Read more
+			<img className='read-more-caret' src='/img/read-more-caret.svg' />
+		</a>
+	);
 };
 
 /**
@@ -526,7 +532,7 @@ const DownloadLink = ({total}) => {
 			<span className='pull-right text-secondary'
 				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}
 			>
-				<Glyphicon glyph='download-alt' /> csv
+				<Misc.Icon prefix="fas" fa="download" audit /> csv
 			</span>);
 	}
 	return (
@@ -536,7 +542,7 @@ const DownloadLink = ({total}) => {
 			download='charities.csv'
 			target='_new'
 		>
-			<Glyphicon glyph='download-alt' /> csv
+			<Misc.Icon prefix="fas" fa="download" audit /> csv
 		</a>
 	);
 };

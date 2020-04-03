@@ -4,15 +4,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import SJTest from 'sjtest';
-import BS from './base/components/BS3';
-import MainDiv from './components/MainDiv';
 import {getUrlVars, addScript} from 'wwutils';
+
+import MainDiv from './components/MainDiv';
 import Misc from './base/components/Misc';
+
 Misc.FontAwesome = 5;
 
-ReactDOM.render(
-	<MainDiv />,
-document.getElementById('mainDiv'));
+const container = document.getElementById('mainDiv');
+ReactDOM.render(<MainDiv />, container);
 
 // TEST?
 // STATUS: experimental! This allows you to load and run a script via the test= parameter
