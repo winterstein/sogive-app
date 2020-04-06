@@ -115,9 +115,11 @@ class CharityPageImpactAndDonate extends Component {
 
 		return (
 			<div className='donation-impact'>
-				<div className='project-image'>
-					<img src={project && project.images} alt='' />
-				</div>
+				{project && project.images ? (
+					<div className='project-image'>
+						<img src={project.images} alt='' />
+					</div>
+				) : null}
 				<div className='row donation-io-row'>
 					<div className='col-sm-6 left-column'>
 						<div className='donation-buttons'>

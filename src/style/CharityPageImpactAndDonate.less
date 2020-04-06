@@ -114,16 +114,24 @@
 		}
 
 		.amount-input {
-			.input-group .input-group-addon {
+			.input-group .input-group-prepend {
 				padding-left: 120px;
 				z-index: 9; /* Must appear behind the sun graphic */
 				padding-right: 0;
+				// blanket nuke Bootstrap 4's button styling rules on children
+				* {
+					padding: 0;
+					border: none;
+					border-radius: 0;
+					background-color: transparent;
+					font-size: 100%;
+				}
 			}
 			.input-group .form-control {
 				padding-left: 0;
 				color: @donation-number-fg
 			}
-			.form-control, .input-group-addon {
+			.form-control, .input-group-prepend {
 				background-color: @donation-amt-input-bg;
 				border: none;
 				border-radius: 0;

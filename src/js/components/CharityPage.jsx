@@ -1,10 +1,10 @@
 // @Flow
-import React from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import Login from 'you-again';
-import { Tabs, Tab, Image, Label } from 'reactstrap';
-import {assert} from 'sjtest';
-import {yessy, encURI} from 'wwutils';
+import { Col, Image, Label } from 'reactstrap';
+import { assert } from 'sjtest';
+import { yessy, encURI } from 'wwutils';
 
 import Roles from '../base/Roles';
 import printer from '../base/utils/printer';
@@ -13,6 +13,7 @@ import DataStore from '../base/plumbing/DataStore';
 import MDText from '../base/components/MDText';
 import {CreateButton} from '../base/components/ListLoad';
 import Misc from '../base/components/Misc';
+import { Tabs, Tab } from '../base/components/Tabs';
 
 import C from '../C';
 import ServerIO from '../plumbing/ServerIO';
@@ -23,9 +24,25 @@ import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
 
-import DonationWizard, {DonateButton} from './DonationWizard';
+import DonationWizard, { DonateButton } from './DonationWizard';
 import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
+
+const InfoColumn = ({charity}) => (
+	<Col md="4" xs="12" className="column info-column">
+		<div className="header">&nbsp;</div>
+		<Tabs id="rhsTabs" defaultTabId="1">
+			<Tab tabId="1" title="About">
+				<CharityAbout charity={charity} />
+			</Tab>
+			<Tab tabId="2" title="Analysis">
+				<CharityExtra charity={charity} />
+				<LogOffSiteDonation item={charity} />
+				<MakeDirectFundRaiser charity={charity} />
+			</Tab>
+		</Tabs>
+	</Col>
+);
 
 
 const CharityPage = () => {
@@ -40,33 +57,18 @@ const CharityPage = () => {
 	}
 
 	const impactColumn = (
-		<div className='col-md-7 col-xs-12 column impact-column'>
-			<div className='header'>
-				<h1 className='charity-name'>
+		<Col md="7" xs="12" className="column impact-column">
+			<div className="header">
+				<h1 className="charity-name">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
-				<CharityTags className='why-tags' tagsString={charity.whyTags} />
-				<CharityTags className='where-tags' tagsString={charity.whereTags} />
+				<CharityTags className="why-tags" tagsString={charity.whyTags} />
+				<CharityTags className="where-tags" tagsString={charity.whereTags} />
 			</div>
 			<CharityDonate charity={charity} />
-		</div>
+		</Col>
 	);
-	const spacerColumn = <div className='col-md-1 hidden-xs' />;
-	const infoColumn = (
-		<div className='col-md-4 col-xs-12 column info-column'>
-			<div className='header'>&nbsp;</div>
-			<Tabs defaultActiveKey={1} id='rhsTabs'>
-				<Tab eventKey={1} title='About'>
-					<CharityAbout charity={charity} />
-				</Tab>
-				<Tab eventKey={2} title='Analysis'>
-					<CharityExtra charity={charity} />
-					<LogOffSiteDonation item={charity} />
-					<MakeDirectFundRaiser charity={charity} />
-				</Tab>
-			</Tabs>
-		</div>
-	);
+	const spacerColumn = <Col md="1" xs="hidden" />;
 
 	return (
 		<div>
@@ -78,7 +80,7 @@ const CharityPage = () => {
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
-				{infoColumn}
+				<InfoColumn charity={charity} />
 			</div>
 		</div>
 	);
@@ -400,8 +402,7 @@ const ProjectImage = ({images, title}) => {
 };
 
 /**
- *
- copy paste modify from EditFundraiserPage
+ * copy paste modify from EditFundraiserPage
  */
 const LogOffSiteDonation = ({item}) => {
 	if ( ! item) return null; // probably its loading

@@ -94,7 +94,7 @@ const SocialShare = ({charity, fundraiser, donation, shareText}) => {
 			>
 				<span className='fab fa-twitter' />
 			</a>
-			<a className='share-social-facebook' onClick={e => shareOnFacebook(pageInfo)}><span className='fab fa-facebook' /></a>
+			<a className='share-social-facebook' href={window.location.href} onClick={e => shareOnFacebook(pageInfo)}><span className='fab fa-facebook' /></a>
 			<a className='share-social-email'
 				href={'mailto:?subject='+encURI(NGO.displayName(charity)+" shared via SoGive")+'&body='+encURI(window.location)}
 				target='_blank'
@@ -105,4 +105,3 @@ const SocialShare = ({charity, fundraiser, donation, shareText}) => {
 };
 
 export default SocialShare;
-
