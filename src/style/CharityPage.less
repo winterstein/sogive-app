@@ -43,22 +43,24 @@
 					
 					/* Fancy tab shape */
 					&:before {
-						content: ''; 
+						content: '';
 						position: absolute;
-						top: -5px; right: 0; bottom: 0; left: 0;
-						transform: perspective(110px) rotateX(30deg);
-						transform-origin: bottom;
-						margin-left: -10px;
-						margin-right: -10px;	
+						bottom: 0;
+						left: -1rem;
+						right: -1rem;
+						height: 0;
+						border-bottom: 3rem solid @charity-page-greyline;
+						border-left: 1rem solid transparent;
+						border-right: 1rem solid transparent;
 					}
 				}
 
 				a:before {
-					background-color: @charity-page-greyline;
+					border-bottom-color: @charity-page-greyline;
 					z-index: -1;
 				}
 				&.active a:before {
-					background-color: @charity-page-greybg;
+					border-bottom-color: @charity-page-greybg;
 					z-index: -2;
 				}
 			}
