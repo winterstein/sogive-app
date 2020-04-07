@@ -15,6 +15,7 @@ import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.SearchRequestBuilder;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.BoostingQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.es.client.sort.KSortOrder;
@@ -102,10 +103,12 @@ public class SearchServlet implements IServlet {
 			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
 			s.addQuery(qb);
 		} else {
-			// prefer high impact, but dont force it
-			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", "high");
-			BoolQueryBuilder preferHigh = ESQueryBuilders.boolQuery().should(qb);
-			s.addQuery(preferHigh);
+			// prefer high impact, but dont force it			
+//			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", "high");
+//			ESQueryBuilder preferHigh = new BoostingQueryBuilder().positive(qb);
+//			s.addQuery(preferHigh);
+			// Ought to work, but seems to act as a hard filter?! Apr 2020
+			// use a post-search sort instead
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
@@ -143,7 +146,10 @@ public class SearchServlet implements IServlet {
 		List<Map> hits = prefix==null? sr.getHits() : sr.getSuggesterHits("autocomplete");
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
 		
-//		Collections.sort(arg0);
+		// Move high impact to be first
+		List<Map> highImpact = Containers.filter(hits2, hit -> "high".equals(hit.get("impact")));
+		hits2.removeAll(highImpact);
+		hits2.addAll(0, highImpact);
 		
 		// HACK: send back csv?
 		if (state.getResponseType() == KResponseType.csv) {
