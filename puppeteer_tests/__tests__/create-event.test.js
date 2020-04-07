@@ -41,6 +41,7 @@ describe("Create event tests", () => {
 		await page.type('[name=password]', password);
 
 		await page.keyboard.press('Enter');
+		await page.waitFor(1000);
 	}, 99999);
 
 	// Jorney: User goes to 'Event' tab. Clicks on create event, fills in some fields when prompted, publishes the changes.
@@ -48,8 +49,8 @@ describe("Create event tests", () => {
 	test("Create an event", async () => {
 		await page.goto(url);
 
-		await page.$('.login-link');
-		await page.click('.login-link');
+		// await page.$('.login-link');
+		// await page.click('.login-link');
         
 		await page.click('[name=email]');
 		await page.type('[name=email]', username);
@@ -95,14 +96,14 @@ describe("Create event tests", () => {
 		// Go to the event
 		// await page.goto(`http://local.sogive.org#event/${id}`);
 		await page.goto(url+`#event/${id}`);
-		await page.$('.login-link');
-		await page.click('.login-link');
+		// await page.$('.login-link');
+		// await page.click('.login-link');
         
-		await page.click('[name=email]');
-		await page.type('[name=email]', username);
-		await page.click('[name=password]');
-		await page.type('[name=password]', password);
-		await page.keyboard.press('Enter');
+		// await page.click('[name=email]');
+		// await page.type('[name=email]', username);
+		// await page.click('[name=password]');
+		// await page.type('[name=password]', password);
+		// await page.keyboard.press('Enter');
 
 		// Click on the 'Edit' link on the top right
 		await page.waitForSelector('.pull-right');

@@ -16,7 +16,7 @@ const config = JSON.parse(process.env.__CONFIGURATION);
 
 const baseSite = targetServers[config.site];
 const protocol = config.site === 'local' ? 'http://' : 'https://';
-ewhg
+
 let url = `${baseSite}`;
 
 describe("Charity donation tests", () => {
@@ -53,10 +53,10 @@ describe("Charity donation tests", () => {
 		await page.click(Search.Main.SearchButton);
 
 		// Click on first link in search results
-		// await page.waitForSelector(Search.Main.FirstResult);
-		// await page.click(Search.Main.FirstResult);
-		await page.waitForSelector('#search > div > div:nth-child(2) > div > div.results-list > div:nth-child(2) > a.logo.col-md-2.col-xs-4');
-		await page.click('#search > div > div:nth-child(2) > div > div.results-list > div:nth-child(2) > a.logo.col-md-2.col-xs-4');
+		await page.waitForSelector(Search.Main.FirstResult);
+		await page.click(Search.Main.FirstResult);
+		await page.waitForSelector('.donate-button');
+		await page.click('.donate-button');
 
 		await donate({
 			page,
