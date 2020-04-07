@@ -73,7 +73,6 @@ public class SearchServlet implements IServlet {
 		String q = state.get(Q);
 		
 		String impact = state.get(IMPACT);
-		if (impact==null) impact = "high";
 		
 		if ( q != null) {			
 			// Do we want this to handle e.g. accents??
@@ -102,6 +101,11 @@ public class SearchServlet implements IServlet {
 		if (impact != null) {
 			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
 			s.addQuery(qb);
+		} else {
+			// prefer high impact, but dont force it
+			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", "high");
+			BoolQueryBuilder preferHigh = ESQueryBuilders.boolQuery().should(qb);
+			s.addQuery(preferHigh);
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
