@@ -17,7 +17,7 @@ import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../base/data/DataClass';
 
-// #Minor TODO refactor to use DataStore more. Replace the FormControl with a Misc.PropControl
+// #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
 
 const MAX_RESULTS = 10000;
@@ -207,10 +207,6 @@ const SearchResults = ({ results, total, query, from, all, CTA, onPick, tabs, do
 	} else {
 		resultsForText = `Results for “${query}”`;
 	}
-
-	// const recommendedNote = recommended ? (
-	// 	<div className='recommended-note'>These recommendations are based on analysis of impact data</div>
-	// ) : null;
 
 	return (
 		<div className='SearchResults'>
