@@ -9,6 +9,9 @@ import {getUrlVars, addScript} from 'wwutils';
 import MainDiv from './components/MainDiv';
 import Misc from './base/components/Misc';
 
+// Import root LESS file so webpack finds & renders it out to main.css
+import '../style/main.less';
+
 Misc.FontAwesome = 5;
 
 const container = document.getElementById('mainDiv');

@@ -6,13 +6,14 @@
  */
 const webpack = require('webpack');
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 
 const baseConfig = {
 	entry: ['@babel/polyfill', './src/js/app.jsx'],
 	output: {
-		path: path.resolve(__dirname, './' + webDir + '/build/js/'),
+		path: path.resolve(__dirname, './' + webDir + '/build/'),
 		// filename: is left undefined and filled in by makeConfig
 	},
 	devtool: 'source-map',
@@ -33,16 +34,15 @@ const baseConfig = {
 					plugins: [
 						'@babel/plugin-proposal-class-properties',
 						'@babel/plugin-transform-react-jsx',
-						'transform-node-env-inline'
 					]
 				}
-			},
-			{
-				test: /\.css$/,
-				loader: 'style-loader!css-loader'
+			}, {
+				test: /\.less$/,
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader'],
 			}
 		],
 	},
+	plugins: [new MiniCssExtractPlugin({ filename: 'style/main.css' })]
 };
 
 
@@ -64,6 +64,8 @@ const makeConfig = ({ filename, mode }) => {
 	 * process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds
 	 * NB Plain strings here will be output as token names and cause a compile error, so use JSON.stringify to turn eg "production" into "\"production\""
 	 */
+	// Turns out this just isn't necessary!
+	/*
 	config.plugins = [
 		new webpack.DefinePlugin({
 			'process.env': {
@@ -71,14 +73,15 @@ const makeConfig = ({ filename, mode }) => {
 			}
 		}),
 	];
+	*/
 	return config;
 };
 
 const configs = [
-	makeConfig({filename: 'bundle-debug.js', mode: 'development' }),
+	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
 ];
 if (process.env.NO_PROD !== 'true') {
-	configs.push(makeConfig({filename: 'bundle.js', mode: 'production' }));
+	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
 }
 
 // Output bundle files for production and dev/debug
