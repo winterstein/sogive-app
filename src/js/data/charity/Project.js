@@ -71,11 +71,14 @@ Project.getCost = (project) => {
 
 /**
  * Actually, this is "get the total cost minus certain categories, so its more like total costs covered by donations"
+ * @param {!Project} project
+ * @returns {!Money}
  */
 Project.getTotalCost = (project) => {
 	// total - but some inputs are actually negatives
-	const currency = project.inputs.reduce((curr, input) => curr || input.currency, null);
-	const value = project.inputs.reduce((total, input) => {
+	const inputs = Project.inputs(project);
+	const currency = inputs.reduce((curr, input) => curr || input.currency, null);
+	const value = inputs.reduce((total, input) => {	
 		if (deductibleInputs.indexOf(input.name) !== -1) {
 			// These count against the total
 			// NB: Use abs in case an overly smart editor put them in as -ives
