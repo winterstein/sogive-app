@@ -18,22 +18,39 @@ const baseConfig = {
 	},
 	devtool: 'source-map',
 	resolve: {
-		extensions: ['.js', '.jsx'],
+		extensions: ['.ts', '.tsx', '.js', '.jsx'],
 		symlinks: false
 	},
 	module: {
 		rules: [
-			{
+			{	// Typescript
+				test: /\.tsx?$/,
+				loader: 'babel-loader',
+				exclude: /node_modules/,
+				options: {
+					presets: [
+						['@babel/preset-typescript', { targets: { ie: "11" }, loose: true }],
+						'@babel/react'
+					],
+					plugins: [
+						'@babel/plugin-transform-typescript',
+						'@babel/plugin-proposal-object-rest-spread',
+						'babel-plugin-const-enum'
+					]
+				}
+			},
+			{	// .js or .jsx
 				test: /.jsx?$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				options: {
 					presets: [
-						['@babel/preset-env', { targets: { ie: "11" }, loose: true }]
+						['@babel/preset-env', { targets: { ie: "11" }, loose: true }],
+						['@babel/preset-react']
 					],
 					plugins: [
 						'@babel/plugin-proposal-class-properties',
-						'@babel/plugin-transform-react-jsx',
+						'transform-node-env-inline'
 					]
 				}
 			}, {
@@ -64,22 +81,20 @@ const makeConfig = ({ filename, mode }) => {
 	 * process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds
 	 * NB Plain strings here will be output as token names and cause a compile error, so use JSON.stringify to turn eg "production" into "\"production\""
 	 */
-	// Turns out this just isn't necessary!
-	/*
-	config.plugins = [
+	config.plugins = (config.plugins || []).concat(
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify(mode), // Used by bundle.js to conditionally set up logging & Redux dev tools
 			}
-		}),
-	];
-	*/
+		})
+	);
 	return config;
 };
 
 const configs = [
 	makeConfig({filename: 'js/bundle-debug.js', mode: 'development' }),
 ];
+// Allow debug-only compilation for faster iteration in dev
 if (process.env.NO_PROD !== 'true') {
 	configs.push(makeConfig({filename: 'js/bundle.js', mode: 'production' }));
 }
