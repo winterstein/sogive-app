@@ -105,13 +105,14 @@ const PAGES = {
 
 const DEFAULT_PAGE = 'search';
 
+Login.app = C.app.service;
+
 /**
 		Top-level: tabs
 */
 class MainDiv extends Component {
 	constructor(props) {
-		super(props);
-		Login.app = C.app.service;
+		super(props);		
 	}
 
 	componentDidMount() {
