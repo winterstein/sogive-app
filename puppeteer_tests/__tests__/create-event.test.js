@@ -49,15 +49,6 @@ describe("Create event tests", () => {
 	test("Create an event", async () => {
 		await page.goto(url);
 
-		// await page.$('.login-link');
-		// await page.click('.login-link');
-        
-		await page.click('[name=email]');
-		await page.type('[name=email]', username);
-		await page.click('[name=password]');
-		await page.type('[name=password]', password);
-		await page.keyboard.press('Enter');
-
 		await page.goto(url+'#event');
 
 		// Clicks on the create button. 
