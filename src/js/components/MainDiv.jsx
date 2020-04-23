@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
 import { assert } from 'sjtest';
-import { getUrlVars, toTitleCase, modifyHash } from 'wwutils';
+import { modifyHash } from 'wwutils';
 import _ from 'lodash';
 
 // Plumbing
@@ -12,7 +12,7 @@ import Messaging from '../base/plumbing/Messaging';
 // Templates
 import MessageBar from '../base/components/MessageBar';
 import NavBar from '../base/components/NavBar';
-import LoginWidget from '../base/components/LoginWidget';
+import LoginWidget, { setShowLogin } from '../base/components/LoginWidget';
 // Pages
 import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
@@ -111,10 +111,6 @@ Login.app = C.app.service;
 		Top-level: tabs
 */
 class MainDiv extends Component {
-	constructor(props) {
-		super(props);		
-	}
-
 	componentDidMount() {
 		// redraw on change
 		const updateReact = (mystate) => this.setState({});
@@ -131,12 +127,11 @@ class MainDiv extends Component {
 			// ?? should we store and check for "Login was attempted" to guard this??
 			if (Login.isLoggedIn()) {
 				// close the login dialog on success
-				LoginWidget.hide();
+				setShowLogin(false);
+			} else {
+				// poke React via DataStore (e.g. for Login.error)
+				DataStore.update({});
 			}
-			// poke React via DataStore (e.g. for Login.error)
-			DataStore.update({});
-			// is this needed??
-			this.setState({});
 		});
 
 		// Are we logged in?
@@ -198,7 +193,7 @@ class MainDiv extends Component {
 		return (
 			<div>
 				<NavBar page={page} pages={pages} />
-				<div className="container avoid-navbar">
+				<div className="container">
 					<MessageBar messages={msgs} />
 					<div className='page' id={page}>
 						<Page />
