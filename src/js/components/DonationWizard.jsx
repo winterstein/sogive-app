@@ -1,15 +1,14 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
-import { Modal, ModalBody, Row, Col } from 'reactstrap';
+import { assert } from 'sjtest';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
 import Login from 'you-again';
 import $ from 'jquery';
 
 import C from '../C';
 import printer from '../base/utils/printer';
 import ActionMan from '../plumbing/ActionMan';
-import ServerIO from '../plumbing/ServerIO';
 
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
@@ -21,25 +20,35 @@ import Basket from '../data/Basket';
 
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import {nonce, getId, getType} from '../base/data/DataClass';
+import { getId, getType } from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
-import LoginWidget, { RegisterLink } from '../base/components/LoginWidget';
+import { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
 
 
+const widgetPath = ['widget', 'DonationWizard'];
+
+const setWidgetProp = (forItem, prop, value, update) => (
+	DataStore.setValue([...widgetPath, forItem, prop], value, update)
+);
+
+const getWidgetProp = (forItem, prop) => (
+	DataStore.getValue([...widgetPath, forItem, prop])
+);
+
+
 /**
- *
  * TODO Doc notes on the inputs to this. the charity profile sends in charity and project.
  */
 
 /**
- * NB: We can have several DonateButtons, but only one model form
+ * NB: We can have several DonateButtons, but only one modal form
  */
 const DonateButton = ({item, paidElsewhere}) => {
 	assert(item && getId(item), "DonationWizard.js - DonateButton: no item "+item);
-	const widgetPath = ['widget', 'DonationWizard', getId(item)];
+
 	// no donations to draft fundraisers or charities
 	if (false && (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED)) {
 		return (
@@ -49,16 +58,15 @@ const DonateButton = ({item, paidElsewhere}) => {
 	}
 	
 	return (
-		<button className='btn btn-lg btn-primary' type='button'
+		<Button color="primary" size="lg"
 			onClick={() => {
-				// DataStore.setValue([...donationPath, 'fundRaiser'], getId(item));
 				// poke the paidElsewhere flag
-				DataStore.setValue([...widgetPath, 'paidElsewhere'], paidElsewhere, false);
-				DataStore.setValue([...widgetPath, 'open'], true);
+				setWidgetProp(getId(item), 'paidElsewhere', paidElsewhere, false);
+				setWidgetProp(getId(item), 'open', true);
 			}}
 		>
 			Donate
-		</button>
+		</Button>
 	);
 };
 
@@ -86,8 +94,6 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 			if (eventId) pvEvent = ActionMan.getDataItem({type:C.TYPES.Event, id:eventId, status:C.KStatus.PUBLISHED});
 		}
 	}
-	let charityId = charity? getId(charity) : item.charityId;
-	const widgetPath = ['widget', 'DonationWizard', id];
 
 	// From an event?
 	const event = pvEvent.value;
@@ -103,7 +109,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// ?? maybe replace the assert with a more lenient return null??
 	const rpath = ['transient', 'render'].concat(widgetPath);
 	const already = DataStore.getValue(rpath);
-	assert( ! already, "DonationWizard.jsx - duplicate "+widgetPath);
+	assert(!already, "DonationWizard.jsx - duplicate "+widgetPath);
 	DataStore.setValue(rpath, true, false);
 
 	// what stage?
@@ -111,21 +117,19 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const stage = Number.parseInt(DataStore.getUrlValue('dntnStage'));
 
 	// not open? just show the button
-	let isOpen = DataStore.getValue([...widgetPath, 'open']);
+	let isOpen = getWidgetProp(id, 'open');
 	// THERE IS DEFINITELY A BETTER WAY OF CHECKING THIS. I JUST HAD TO ADD ISNAN TO THE LIST OF "THINGS STAGE SHOULD NOT BE" RIGHT BEFORE A DEMO.
-	if (isOpen===undefined || isOpen===null) {
-		isOpen = stage!==undefined && stage!==null && !isNaN(stage);
+	if (isOpen === undefined || isOpen === null) {
+		isOpen = stage !== undefined && stage !== null && !isNaN(stage);
 	}
-	if ( ! isOpen) {
-		return null;
-	}
+	if (!isOpen) return null;
 
 	// paid elsewhere, or (the default) paid here?
-	let paidElsewhere = DataStore.getValue([...widgetPath, 'paidElsewhere']);
+	let paidElsewhere = getWidgetProp(id, 'paidElsewhere');
 
 	// close dialog and reset the wizard stage
 	const closeLightbox = () => {
-		DataStore.setValue([...widgetPath, 'open'], false);
+		setWidgetProp(id, 'open', false);
 		DataStore.setValue(stagePath, null);
 
 		// Donation has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
@@ -142,9 +146,9 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	let type = C.TYPES.Donation;
 	let pDonation = ActionMan.getDonationDraft({item});
 	// if the promise is running, wait for it before making a new draft
-	if ( ! pDonation.resolved) {
+	if (!pDonation.resolved) {
 		return (
-			<Modal isOpen={true} className="donate-modal" onClosed={closeLightbox}>
+			<Modal isOpen className="donate-modal" toggle={closeLightbox}>
 				<ModalBody>
 					<Misc.Loading />
 				</ModalBody>
@@ -181,12 +185,12 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
 	console.warn(emailOkay);
 
+	// isOpen is always true - since we 
+
 	return (
-		<Modal show className="donate-modal" onHide={closeLightbox}>
-			<Modal.Header closeButton>
-				<Modal.Title>Donate to {causeName}</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
+		<Modal isOpen className="donate-modal" toggle={closeLightbox}>
+			<ModalHeader toggle={closeLightbox}>Donate to {causeName}</ModalHeader>
+			<ModalBody>
 				<Wizard stagePath={stagePath}>
 					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK}>
 						<AmountSection path={path} fromEditor={fromEditor} item={item}
@@ -218,7 +222,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
 					</Wizard>
-			</Modal.Body>
+			</ModalBody>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
 	);
@@ -244,7 +248,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 	}
 
 	// What repeat options?
-	let repeatDonations = event? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
+	let repeatDonations = event ? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	repeatDonations.push(proposedSuggestedDonation.repeat);
 	suggestedDonations.forEach(sd => repeatDonations.push(sd.repeat));
 	repeatDonations.push(dntn.repeat); // if something is set, then include it
@@ -349,13 +353,13 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 };
 
 
-const SDButton = ({path,sd, donation}) => {
-	if ( ! sd.amount) return null; // defend against bad data
+const SDButton = ({path, sd, donation}) => {
+	if (!sd.amount) return null; // defend against bad data
 	Money.assIsa(sd.amount, "SDButton");
 	let on = donation && Money.eq(donation.amount, sd.amount) && donation.repeat === sd.repeat;
 	// on click, set stuff
 	const clickSuggestedButton = e => {
-		let amnt = Object.assign({}, sd.amount);
+		let amnt = { ...sd.amount };
 		delete amnt['@class'];
 		DataStore.setModified(path.concat('amount'));
 		DataStore.setValue(path.concat('amount'), amnt);
@@ -363,13 +367,15 @@ const SDButton = ({path,sd, donation}) => {
 	};
 
 	return (
-		<button className={'btn btn-default mr-2 suggested-donation'+(on?' active':'')} type="button" onClick={clickSuggestedButton}>
-			{sd.name? <span>{sd.name} </span> : null}
+		<Button className={`mr-2 suggested-donation${on ? ' active' : ''}`} onClick={clickSuggestedButton}>
+			{sd.name ? <span>{sd.name} </span> : null}
 			<Misc.Money amount={sd.amount} />
-			{sd.repeat? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
-			{sd.text? <div className='btn-smallprint'>{sd.text}</div> : null}
-		</button>);
+			{sd.repeat ? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
+			{sd.text ? <div className='btn-smallprint'>{sd.text}</div> : null}
+		</Button>
+	);
 };
+
 
 /**
  * This can set the Donation.amount to a default value as a side-effect
@@ -599,13 +605,13 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 			<p>This form is for donations that have already been paid.</p>
 			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
 			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
-			<button type='button' onClick={e => {
+			<Button color="primary" onClick={e => {
 				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
 					.then(res => {
 						notifyUser('Off-site donation published - reload to see');
 						closeLightbox();
 					});
-			}} className='btn btn-primary'>Publish Donation</button>
+			}}>Publish Donation</Button>
 		</div>);
 	}
 
