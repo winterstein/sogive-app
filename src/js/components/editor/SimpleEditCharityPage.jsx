@@ -86,44 +86,44 @@ const SimpleEditCharityPage = () => {
 	// put it together
 	console.log("EditCharity", charity);
 	return (
-		<div className='EditCharityPage'>
+		<div className="EditCharityPage">
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
-				<p><a href={'/#charity?charityId='+NGO.id(charity)} target='_new'>view profile page</a></p>
-				<p>NOTE: Please hover over the <Misc.Icon prefix="fas" fa="question-circle" title='question mark' /> icon -- this often includes useful information!</p>
+				<p><a href={`/#charity?charityId=${NGO.id(charity)}`} target="_new">view profile page</a></p>
+				<p>NOTE: Please hover over the <Misc.Icon prefix="fas" fa="question-circle" title="question mark" /> icon -- this often includes useful information!</p>
 				<div>
 					This is the simpler editor. It does not
 					include all the possible settings.
 					You can switch back-and-forth with the <a href={'/#edit?charityId='+escape(cid)}
-						className='btn btn-default btn-sm'>Advanced Editor</a>
+						className="btn btn-default btn-sm">Advanced Editor</a>
 				</div>
 
-				<EditField item={charity} type='checkbox' field='ready' label='Is this data ready for use?' />
-				<EditField item={charity} type='text' field='nextAction' label='Next action (if any)' />
+				<EditField item={charity} type="checkbox" field="ready" label="Is this data ready for use?" />
+				<EditField item={charity} type="text" field="nextAction" label="Next action (if any)" />
 				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Misc.Card>
-			<Misc.Card title='Preview: Impact'>
+			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
 				<small><ul>
 					<li>Representative project: {repProj? repProj.name+' '+repProj.year : "none"}</li>
 					<li>Outputs: {repProj? Project.outputs(repProj).map(o => o.number+" "+o.name) : null}</li>
 				</ul></small>
 			</Misc.Card>
-			<Misc.CardAccordion widgetName='topLevelCharityEditor'>
-				<Misc.Card title='Charity Profile'>
+			<Misc.CardAccordion>
+				<Misc.Card title="Charity Profile">
 					<ProfileEditor charity={charity} />
 				</Misc.Card>
 
-				<Misc.Card title='Donations &amp; Tax'>
+				<Misc.Card title="Donations &amp; Tax">
 					<EditField item={charity}
-						field={NGO.PROPS.$uk_giftaid()} type='checkbox' label='Eligible for UK GiftAid'
-						help='If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible.' />
+						field={NGO.PROPS.$uk_giftaid()} type="checkbox" label="Eligible for UK GiftAid"
+						help="If the charity has a registration number with Charity Commission of England and Wales or the Scottish equivalent (OSCR) it is certainly eligible." />
 					<h4>Suggested Donations</h4>
 					<Misc.ListEditor path={cpath.concat('suggestedDonations')} ItemEditor={SuggestedDonationEditor} />
 				</Misc.Card>
 
-				<Misc.Card title='Overall finances and impact'>
+				<Misc.Card title="Overall finances and impact">
 					<ProjectsEditor isOverall charity={charity} projects={overalls} />
 				</Misc.Card>
 
@@ -131,10 +131,10 @@ const SimpleEditCharityPage = () => {
 					<ProjectsEditor charity={charity} projects={projectProjects} />
 				</Misc.Card>
 
-				<Misc.Card title='Editorial'>
+				<Misc.Card title="Editorial">
 					<EditorialEditor charity={charity} />
 				</Misc.Card>
-				<Misc.Card title='References'>
+				<Misc.Card title="References">
 					<ol>{rrefs}</ol>
 				</Misc.Card>
 			</Misc.CardAccordion>
@@ -149,30 +149,30 @@ const EditorialEditor = ({charity}) => {
 	if (rec && ! charity.impact) charity.impact = 'high';
 
 	return (<div>
-		<EditField item={charity} type='select' field='impact'
+		<EditField item={charity} type="select" field="impact"
 			options={C.IMPACT_VALUES.values}
 			labels={C.IMPACT_LABEL4VALUE}
 			canUnset
-			label='Overall Impact Rating'
+			label="Overall Impact Rating"
 			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
 		/>
 
-		<EditField item={charity} field='confidence'
-			type='select'
+		<EditField item={charity} field="confidence"
+			type="select"
 			options={CONFIDENCE_VALUES.values}
 			defaultValue={CONFIDENCE_VALUES.medium}
 			canUnset
-			label='Overall Confidence'
+			label="Overall Confidence"
 			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities."
 		/>
 
-		<EditField item={charity} type='textarea' field='recommendation'
-			label='Recommendation Comment '
+		<EditField item={charity} type="textarea" field="recommendation"
+			label="Recommendation Comment "
 			help="A sentence or two on why SoGive recommends (or not) this charity."
 		/>
 
-		{isAdvanced()? <EditField item={charity} type='checkbox' field='hideImpact'
-			label='Hide impact'
+		{isAdvanced()? <EditField item={charity} type="checkbox" field="hideImpact"
+			label="Hide impact"
 			help="If the charity objects to showing impact info, this can be used to hide it on fund-raisers." />
 			: null}
 
@@ -185,38 +185,38 @@ const ProfileEditor = ({charity}) => {
 	}
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
-		<EditField item={charity} disabled type='text' field='name' label='Official name (locked)' help='The official name, usually as registered with the Charity Commission.' />
+		<EditField item={charity} disabled type="text" field="name" label="Official name (locked)" help="The official name, usually as registered with the Charity Commission." />
 
-		<div className='well'>
+		<div className="well">
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-			<EditField label='England &amp; Wales Charity Commission registration number' item={charity} type='text' field='englandWalesCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.'/>
-			<EditField label='Scottish OSCR registration number' item={charity} type='text' field='scotlandCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='Northern Ireland registration number' item={charity} type='text' field='niCharityRegNum' help='Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there.' />
-			<EditField label='UK Companies House number' item={charity} type='text' field='ukCompanyRegNum' help='This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number' />
-			<EditField label='USA registration number (i.e. EIN)' item={charity} type='text' field='usCharityRegNum' help='Registration number as a 501(c)(3).' />
+			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
+			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
+			<EditField label="Northern Ireland registration number" item={charity} type="text" field="niCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
+			<EditField label="UK Companies House number" item={charity} type="text" field="ukCompanyRegNum" help="This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number" />
+			<EditField label="USA registration number (i.e. EIN)" item={charity} type="text" field="usCharityRegNum" help="Registration number as a 501(c)(3)." />
 		</div>
 
-		<EditField item={charity} type='url' field='url' label='Website' />
-		<EditField item={charity} type='textarea' label='Summary description' field='summaryDescription' help='About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description' />
-		<EditField item={charity} type='textarea' label='Description' field='description'
-			help='A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it.' />
+		<EditField item={charity} type="url" field="url" label="Website" />
+		<EditField item={charity} type="textarea" label="Summary description" field="summaryDescription" help="About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description" />
+		<EditField item={charity} type="textarea" label="Description" field="description"
+			help="A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it." />
 		
-		<EditField item={charity} type='select' field='category' label='Category'
+		<EditField item={charity} type="select" field="category" label="Category"
 			options={Object.keys(NGO.CATEGORY)}
-			help='The categories are mostly aligned with those used by Charity Navigator.'
+			help="The categories are mostly aligned with those used by Charity Navigator."
 		/>
 		<div><small>{charity.subcategory? null : (NGO.CATEGORY[charity.category] || []).join(" / ")}</small></div>
-		<EditField item={charity} type='select' field='subcategory' label='Sub-Category' options={NGO.CATEGORY[charity.category] || []} />
+		<EditField item={charity} type="select" field="subcategory" label="Sub-Category" options={NGO.CATEGORY[charity.category] || []} />
 
-		<EditField item={charity} type='select' field='UNSDG' label='UN Sustainable Development Goal (SDG)'
+		<EditField item={charity} type="select" field="UNSDG" label="UN Sustainable Development Goal (SDG)"
 			options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
 			labels={NGO.UNSDGs}
-			help='Which UN SDG does this charity mainly work on?' />
+			help="Which UN SDG does this charity mainly work on?" />
 
-		<EditField item={charity} type='text' field='whereTags' label='Where tags, e.g. UK, Africa, developing world'
+		<EditField item={charity} type="text" field="whereTags" label="Where tags, e.g. UK, Africa, developing world"
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type='imgUpload' field='logo' help={`Enter a url for the logo image.
+		<EditField item={charity} type="imgUpload" field="logo" help={`Enter a url for the logo image.
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url.
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element".
@@ -224,10 +224,10 @@ const ProfileEditor = ({charity}) => {
 		Copy and paste this URL into this field.
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 
-		<EditField item={charity} type='imgUpload' field='images' label='Photo' help={`Enter a url for a photo used by the charity to represent its work.
+		<EditField item={charity} type="imgUpload" field="images" label="Photo" help={`Enter a url for a photo used by the charity to represent its work.
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
-		<EditField item={charity} type='text' field='imageCaption' label='Photo caption' />
+		<EditField item={charity} type="text" field="imageCaption" label="Photo caption" />
 	</div>);
 }; // ./ProfileEditor
 
@@ -237,7 +237,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Misc.Card key={'project_'+i}
-			title={<div className={p === repProj? 'bg-success' : ''}><h4 className='pull-left'>{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className='clearfix'></div></div>}>
+			title={<div className={p === repProj? 'bg-success' : ''}><h4 className="pull-left">{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className="clearfix"></div></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Misc.Card>)
 	);
@@ -250,7 +250,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 				<li>For this to work, it’s important that the list of projects is comprehensive…</li>
 				<li>… i.e. if we take each of the projects listed here and add up the spend on each one, it comes to the total amount that the charity has spent on projects (if it excludes some spend which is not directly attributable to direct work – aka overheads – that’s fine because the code automatically takes care of that)</li>
 			</ul>
-			{projects.length? <Misc.CardAccordion widgetName={isOverall? 'overalls' : 'projects'}>{rprojects}</Misc.CardAccordion> : null}
+			{projects.length? <Misc.CardAccordion>{rprojects}</Misc.CardAccordion> : null}
 			<AddProject charity={charity} isOverall={isOverall} />
 		</div>
 	);
@@ -261,26 +261,26 @@ const AddProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity), "EditCharityPage.AddProject");
 	if (isOverall) {
 		return (
-			<div className='form-inline well'>
+			<div className="form-inline well">
 				<h4>Add Year</h4>
 				<p>Create a new annual record</p>
-				<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+				<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
 				&nbsp;
-				<button className='btn btn-default' onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Misc.Icon prefix="fas" fa="plus" audit /> Add
+				<button className="btn btn-default" onClick={() => ActionMan.addProject({charity, isOverall})}>
+					<Misc.Icon fa="plus" audit /> Add
 				</button>
 			</div>
 		);
 	}
 	return (
-		<div className='form-inline well'>
+		<div className="form-inline well">
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
-			<PropControl prop='name' label='Name' path={['widget','AddProject','form']} />
+			<PropControl prop="name" label="Name" path={['widget','AddProject','form']} />
 			&nbsp;
-			<PropControl prop='year' label='Year' path={['widget','AddProject','form']} type='year' />
+			<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
 			&nbsp;
-			<button className='btn btn-default' onClick={() => ActionMan.addProject({charity})}>
+			<button className="btn btn-default" onClick={() => ActionMan.addProject({charity})}>
 				<Misc.Icon prefix="fas" fa="plus" audit /> Add
 			</button>
 		</div>
@@ -300,8 +300,8 @@ const RemoveProject = ({charity, project}) => {
 		/* eslint-enable no-alert,no-restricted-globals */
 	};
 	return (
-		<button className='btn btn-default btn-sm pull-right'
-			title='Delete this project!'
+		<button className="btn btn-default btn-sm pull-right"
+			title="Delete this project!"
 			onClick={deleteProject}
 		>
 			<Misc.Icon prefix="fas" fa="trash" audit />
@@ -328,10 +328,10 @@ const AddIO = ({list, pio, ioPath}) => {
 	let name = DataStore.getValue(formPath.concat('name'));
 	
 	return (
-		<div className='form-inline'>
-			<PropControl prop='name' label='Impact unit / Name' path={formPath} />
+		<div className="form-inline">
+			<PropControl prop="name" label="Impact unit / Name" path={formPath} />
 			{' '}
-			<button className='btn btn-default' onClick={oc} disabled={ ! name}>
+			<button className="btn btn-default" onClick={oc} disabled={ ! name}>
 				<Misc.Icon prefix="fas" fa="plus" audit />
 			</button>
 		</div>
@@ -346,24 +346,24 @@ const ProjectEditor = ({charity, project}) => {
 	return (
 		<div>
 			<ProjectDataSources charity={charity} project={project} />
-			<EditProjectField charity={charity} project={project} type='checkbox' field='isRep' label='Is this the representative project?'
+			<EditProjectField charity={charity} project={project} type="checkbox" field="isRep" label="Is this the representative project?"
 				help={`This is the project which will be used to "represent" the charity’s impact on the SoGive website/app.
 				You may want to fill this in after you have entered the projects (often there is only the overall project, so the decision is easy).
 				We aim as far as possible to estimate which project would be the recipient of the marginal extra pound.
 				This is hard (maybe impossible?) to do, so we allow other factors (such as confidence in and availability of impact data)
 				to influence the choice of representative project too.`} />
-			<EditProjectField charity={charity} project={project} type='year' field='year' label='Year'
-				help='Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end' />
-			<EditProjectField charity={charity} project={project} field='start' label='Year start'
-				type='date'
+			<EditProjectField charity={charity} project={project} type="year" field="year" label="Year"
+				help="Which year should we say this is? If the data does not align nicely with a calendar year, typically it would be the year-end" />
+			<EditProjectField charity={charity} project={project} field="start" label="Year start"
+				type="date"
 				help="Year start is Year end minus one year + one day (e.g. if year end is 31 Mar 2016, then year start is 1 Apr 2015). Be careful that the accounts do refer to a period lasting one year – this almost always the case, but in the rare event that it doesn’t apply, then ensure that the period start date noted in this field aligns with that of the accounts you’re looking at" />
-			<EditProjectField charity={charity} project={project} field='end' label='Year end'
-				type='date'
-				help='Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document.' />
+			<EditProjectField charity={charity} project={project} field="end" label="Year end"
+				type="date"
+				help="Often stated right at the start of the accounts document. Where it’s not stated right at the start of the document, go to start of the financials, which is generally about halfway through the document." />
 
 			<ProjectInputs charity={charity} project={project} />
 			<ProjectOutputs charity={charity} project={project} />
-			{isOverall? <EditProjectField charity={charity} project={project} type='Money' field='reserves' label='Reserves' /> : null}
+			{isOverall? <EditProjectField charity={charity} project={project} type="Money" field="reserves" label="Reserves" /> : null}
 	</div>
 	);
 };
@@ -376,7 +376,7 @@ const ProjectDataSources = ({charity, project}) => {
 		.concat(['projects', projIndex, 'data-src']);
 	const sourceList = project['data-src'] || [];
 	return (
-		<div className='well'>
+		<div className="well">
 			<h4>Data Sources</h4>
 			{ sourceList.map(src => {
 				const srcIndex = project['data-src'].indexOf(src);
@@ -392,9 +392,9 @@ const ProjectDataSources = ({charity, project}) => {
 
 const ProjectDataSource = ({charity, project, citation, citationPath, saveFn}) => {
 	return (
-		<div className='row'>
-			<div className='col-md-6'>
-				<PropControl prop='url' label='Source URL' help='The URL at which this citation can be found' path={citationPath} item={citation} saveFn={saveFn} />
+		<div className="row">
+			<div className="col-md-6">
+				<PropControl prop="url" label="Source URL" help="The URL at which this citation can be found" path={citationPath} item={citation} saveFn={saveFn} />
 			</div>
 		</div>
 	);
@@ -405,10 +405,10 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 	const formPath = ['widget','AddDataSource', dataId, 'form'];
 	const addSourceFn = () => ActionMan.addDataSource({list, srcPath, formPath});
 	return (
-		<div className='form-inline'>
-			<PropControl prop='url' label='Add Source URL, then press + button' path={formPath} />
+		<div className="form-inline">
+			<PropControl prop="url" label="Add Source URL, then press + button" path={formPath} />
 			{' '}
-			<button className='btn btn-default' onClick={addSourceFn}>
+			<button className="btn btn-default" onClick={addSourceFn}>
 				<Misc.Icon prefix="fas" fa="plus" audit />
 			</button>
 		</div>
@@ -428,9 +428,9 @@ const ProjectInputs = ({charity, project={}}) => {
 	let projectCosts = inputs.find(input => input.name && input.name.indexOf('project') !== -1) || new Money({name: 'projectCosts'});
 	let tradingCosts = inputs.find(input => input.name && input.name.indexOf('trading') !== -1) || new Money({name: 'tradingCosts'});
 	let incomeFromBeneficiaries = inputs.find(input => input.name && input.name.indexOf('income') !== -1) || new Money({name: "incomeFromBeneficiaries"});
-	return (<div className='well'>
+	return (<div className="well">
 		<h5>Inputs</h5>
-		<table className='table'>
+		<table className="table">
 			<tbody>
 				{ ! isOverall? <ProjectInputEditor charity={charity} project={project} input={projectCosts} /> : null}
 				<ProjectInputEditor charity={charity} project={project} input={annualCosts} />
@@ -438,7 +438,7 @@ const ProjectInputs = ({charity, project={}}) => {
 				<ProjectInputEditor charity={charity} project={project} input={incomeFromBeneficiaries} />
 			</tbody>
 		</table>
-		<MetaEditor item={project} field='inputs_meta' itemPath={projectPath} help='Financial data' />
+		<MetaEditor item={project} field="inputs_meta" itemPath={projectPath} help="Financial data" />
 	</div>);
 };
 
@@ -448,9 +448,9 @@ const ProjectOutputs = ({charity, project}) => {
 	let pid = charity.projects.indexOf(project);
 	let projectPath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid}).concat(['projects', pid]);
 	return (
-		<div className='well'>
+		<div className="well">
 			<h5>Outputs</h5>
-			<table className='table'>
+			<table className="table">
 				<tbody>
 					<tr>
 						<th>
@@ -463,12 +463,12 @@ E.g. "malaria net(s)", "child (plural: children)" or "children (singular: child)
 						<th>
 							Amount <Misc.Icon prefix="fas" fa="question-circle" title={
 `Can be left blank for unknown. The best way to find this is usually to start reading the accounts from the start. If you can find the answers in the accounts, do a quick google search to see whether the charity has a separate impact report, and have a look through their website.
-${project.name==='overall'? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
+${project.name==="overall"? '' : 'Be careful to ensure that the amount shown is relevant to this project.'}`}
 							/>
 						</th>
 						<th>
 							Override cost per beneficiary
-							<Misc.Icon prefix="fas" fa="question-circle" title='Usually auto-calculated based on the costs and the amount. An override value can be put in here.' />
+							<Misc.Icon prefix="fas" fa="question-circle" title="Usually auto-calculated based on the costs and the amount. An override value can be put in here." />
 						</th>
 						<th>
 							Confidence <Misc.Icon prefix="fas" fa="question-circle" title={
@@ -545,8 +545,8 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	return (<tr>
 		<td>{iname}</td>
 		<td>
-			{ isOverall || input.name==='projectCosts'? null : <PropControl label={'Manual entry for '+iname} type='checkbox' prop='manualEntry' path={widgetPath} /> }
-			<PropControl type='Money' name={input.name} prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
+			{ isOverall || input.name==="projectCosts"? null : <PropControl label={'Manual entry for '+iname} type="checkbox" prop="manualEntry" path={widgetPath} /> }
+			<PropControl type="Money" name={input.name} prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -568,24 +568,24 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><PropControl prop='name' path={inputPath} item={output} /></td>
-		<td><PropControl prop='number' type='number' path={inputPath} item={output} /></td>
+		<td><PropControl prop="name" path={inputPath} item={output} /></td>
+		<td><PropControl prop="number" type="number" path={inputPath} item={output} /></td>
 		<td>
-			<PropControl prop='costPerBeneficiary' type='Money' path={inputPath} item={output} size={4} />
+			<PropControl prop="costPerBeneficiary" type="Money" path={inputPath} item={output} size={4} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<PropControl prop='confidence' type='select' options={CONFIDENCE_VALUES.values}
+			<PropControl prop="confidence" type="select" options={CONFIDENCE_VALUES.values}
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
-			<PropControl prop='description' type='textarea'
+			<PropControl prop="description" type="textarea"
 				path={inputPath} item={output}
 			/>
 		</td>
 		<td>
-			<MetaEditor item={output} field='all' itemPath={inputPath} />
+			<MetaEditor item={output} field="all" itemPath={inputPath} />
 		</td>
 	</tr>);
 };
@@ -646,10 +646,10 @@ const MetaEditor = ({item, field, help, itemPath, saveFn}) => {
 	} else {
 		meta = (item.meta && item.meta[field]) || {};
 	}
-	return (<div className='flexbox'>
+	return (<div className="flexbox">
 		<div>
-			<MetaEditorItem icon='comment-o' title='Notes' meta={meta} metaPath={metaPath}
-				itemField={field} metaField='notes' type='textarea'
+			<MetaEditorItem icon="comment-o" title="Notes" meta={meta} metaPath={metaPath}
+				itemField={field} metaField="notes" type="textarea"
 				saveFn={saveFn}
 			/>
 		</div>
@@ -663,12 +663,12 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	let ricon = <Misc.Icon fa={icon} title={title} onClick={(e) => DataStore.setValue(widgetNotesPath, true)} />;
 	let v = meta[metaField];
 	// green if set
-	if (v) ricon = <span className='text-success'>{ricon}</span>;
+	if (v) ricon = <span className="text-success">{ricon}</span>;
 	if ( ! DataStore.getValue(widgetNotesPath)) {
-		return <div className='MetaEditorItem'>{ricon} {meta[metaField]}</div>;
+		return <div className="MetaEditorItem">{ricon} {meta[metaField]}</div>;
 	}
 	return (
-		<div className='MetaEditorItem'>
+		<div className="MetaEditorItem">
 			{ricon}
 			<PropControl label={title} prop={metaField}
 				path={metaPath}
