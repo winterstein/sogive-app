@@ -10,7 +10,7 @@ import {listPath} from '../base/plumbing/Crud';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import List from '../base/data/List';
-import DataStore from '../base/plumbing/DataStore';
+import DataStore, { getValue, setValue } from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
@@ -19,6 +19,7 @@ import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../base/data/DataClass';
 import PropControl from '../base/components/PropControl';
+import { join, space } from '../base/components/BS';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -76,24 +77,31 @@ const FeaturedCharities = () => null;
  * TODO change into a Misc.PropControl??
  */
 const SearchForm = ({q, status}) => {
+	let rawq = getValue(['widget','search','rawq']);
+	if (rawq===undefined && q) {
+		setValue(['widget','search','rawq'], q);
+	}
+	// set the search query (this will trigger a search)
+	const onSubmit = e => {
+		stopEvent(e);		
+		DataStore.setUrlValue('q', rawq);
+	};
 	return (
-		<div className="SearchForm"><Form>
-			<FormGroup size="lg" controlId="formq">
+		<div className="SearchForm"><Form onSubmit={onSubmit}>
+			<FormGroup size="lg">
 				<InputGroup size="lg">
 					<PropControl className="sogive-search-box"
-						prop='q'
+						path={['widget','search']}
+						prop='rawq'
 						type="search"
-						value={q || ''}
 						placeholder="Keyword search"
 					/>					
 					<InputGroupAddon addonType="append" className="sogive-search-box">
-						<Button>
-							<Misc.Icon prefix="fas" fa="search" audit />
+						<Button type='submit' color='primary'>
+							<Misc.Icon prefix="fas" fa="search" />
 						</Button>
 					</InputGroupAddon>
-					<FieldClearButton>
-						<Misc.Icon prefix="fas" fa="remove-circle" audit />
-					</FieldClearButton>
+					<FieldClearButton />
 				</InputGroup>
 				{status? <div>Include listings with status: {status}</div> : null}
 			</FormGroup>
@@ -102,9 +110,9 @@ const SearchForm = ({q, status}) => {
 }; //./SearchForm
 
 
-const FieldClearButton = ({onClick, children}) => (
+const FieldClearButton = ({onClick}) => (
 	<span className="field-clear-button visible-xs-block" onClick={onClick}>
-		{children}
+		<Misc.Icon prefix="fas" fa="remove-circle" />
 	</span>
 );
 
@@ -265,10 +273,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	// Some elements need to be shrunk down if they're too long
 	const longName = charityName.length > 25;
 	
-	const recommendedTab = NGO.isHighImpact(item)? (
-		<span className='recommended-tab'><Misc.Icon fa='award' className='text-gold recommended-icon' /> Recommended Charity</span>
-	) : null;
-	
 	/** if onPick is defined, then stop the click and call onPick */
 	let onClick = null;
 	if (onPick) {
@@ -299,10 +303,9 @@ const SearchResult = ({ item, CTA, onPick }) => {
 			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
 	) : null;
-
 	return (
-		<div className='SearchResult row' data-id={cid} >
-			{recommendedTab}
+		<div className={'SearchResult row impact-'+NGO.impact(item)} data-id={cid} >
+			{NGO.isHighImpact(item)? <span className='recommended-tab'><Misc.Icon fa='award' className='text-gold recommended-icon' /> Recommended Charity</span> : null}
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
 					<img className='charity-logo' src={NGO.logo(item)} alt={`Logo for ${charityName}`} />
@@ -451,7 +454,7 @@ const DownloadLink = ({total}) => {
 			<span className='pull-right text-secondary'
 				title={'('+noCos+') Download these reults in .csv (spreadsheet) format'}
 			>
-				<Misc.Icon prefix="fas" fa="download" audit /> csv
+				<Misc.Icon prefix="fas" fa="download" /> csv
 			</span>);
 	}
 	return (
@@ -461,7 +464,7 @@ const DownloadLink = ({total}) => {
 			download='charities.csv'
 			target='_new'
 		>
-			<Misc.Icon prefix="fas" fa="download" audit /> csv
+			<Misc.Icon prefix="fas" fa="download" /> csv
 		</a>
 	);
 };

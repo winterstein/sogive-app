@@ -89,7 +89,7 @@ const CheckoutPage = () => {
 					<TicketInvoice event={event} basket={basket} />
 
 					<Button size='sm' className="pull-left" onClick={deleteBasket} >
-						<Misc.Icon prefix="fas" fa="trash" audit />Empty Basket
+						<Misc.Icon prefix="fas" fa="trash" />Empty Basket
 					</Button>
 				</WizardStage>
 
@@ -207,9 +207,9 @@ const RegisterTicket = ({ticketType, basket}) => {
 
 	const addRemove = tickets.length ? (
 		<div className='add-remove-controls btn-group' role="group" aria-label="add remove controls">
-			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon prefix="fas" fa="minus" audit /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={removeTicketAction}><Misc.Icon prefix="fas" fa="minus" /></button>
 			<span className='ticket-count btn-text'>{tickets.length}</span>
-			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon prefix="fas" fa="plus" audit /></button>
+			<button type="button" className="btn btn-default btn-square" onClick={addTicketAction}><Misc.Icon prefix="fas" fa="plus" /></button>
 		</div>
 	) : (
 		<button className='btn btn-default btn-square add-first-ticket' onClick={addTicketAction}>Add</button>
@@ -312,7 +312,7 @@ const RegisterOrLoginTab = ({stagePath}) => {
 		return (
 			<div className='login-tab padded-block'>
 				<Jumbotron>
-					<p><Misc.Icon prefix="fas" fa="ok" audit className='text-success' /> You're logged in as <Badge title={Login.getId()}>{Login.getUser().name || Login.getId()}</Badge>.</p>
+					<p><Misc.Icon prefix="fas" fa="ok" className='text-success' /> You're logged in as <Badge title={Login.getId()}>{Login.getUser().name || Login.getId()}</Badge>.</p>
 					<p>Not you? <Button onClick={() => Login.logout()}>Log out</Button></p>
 				</Jumbotron>
 			</div>

@@ -220,14 +220,14 @@ const DonationProgress = ({item, charity}) => {
 				<div className='bar-container'>
 					<div className='progress-pointer value' style={{bottom: donatedBarHeight+'%'}}>
 						<Misc.Money amount={donated} />
-						<Misc.Icon prefix="fas" fa="triangle-right" audit />
+						<Misc.Icon prefix="fas" fa="triangle-right" />
 					</div>
 					<div className='donation-progress-bar'>
 						<div className='remaining' style={{height: remainingBarHeight+'%'}}>&nbsp;</div>
 						<div className='done' style={{height: donatedBarHeight+'%'}}>&nbsp;</div>
 					</div>
 					<div className='progress-pointer percent' style={{bottom: donatedBarHeight+'%'}}>
-						<Misc.Icon prefix="fas" fa="triangle-left" audit />
+						<Misc.Icon prefix="fas" fa="triangle-left" />
 						{Math.round(donatedPercent)}%
 					</div>
 				</div>

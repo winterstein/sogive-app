@@ -319,18 +319,8 @@ const CharityProfile = ({charity}) => {
 const EditLink = ({charity}) => {
 	if ( ! Login.isLoggedIn()) return null;
 	const cid = NGO.id(charity);
-	// HACK: clear the datastore before viewing, so that we load the draft
-	// TODO replace once the git branch feature/refactor-crud-data-draft-DW-may-2018 is complete
 	return (<div className='pull-right'>
-		<a href={'#simpleedit?charityId='+escape(cid)}
-			onClick={() => {
-				// Trying in Edit page instead
-				// DataStore.setValue(DataStore.getPath(charity), null, false);
-				// ServerIO.getCharity(cid, C.KStatus.DRAFT);
-			}}
-		>
-			edit
-		</a>
+		<a href={'#simpleedit?charityId='+escape(cid)}>edit</a>
 	</div>);
 };
 

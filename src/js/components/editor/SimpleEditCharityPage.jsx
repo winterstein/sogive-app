@@ -267,7 +267,7 @@ const AddProject = ({charity, isOverall}) => {
 				<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
 				&nbsp;
 				<button className="btn btn-default" onClick={() => ActionMan.addProject({charity, isOverall})}>
-					<Misc.Icon fa="plus" audit /> Add
+					<Misc.Icon fa="plus" /> Add
 				</button>
 			</div>
 		);
@@ -281,7 +281,7 @@ const AddProject = ({charity, isOverall}) => {
 			<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
 			&nbsp;
 			<button className="btn btn-default" onClick={() => ActionMan.addProject({charity})}>
-				<Misc.Icon prefix="fas" fa="plus" audit /> Add
+				<Misc.Icon prefix="fas" fa="plus" /> Add
 			</button>
 		</div>
 	);
@@ -304,7 +304,7 @@ const RemoveProject = ({charity, project}) => {
 			title="Delete this project!"
 			onClick={deleteProject}
 		>
-			<Misc.Icon prefix="fas" fa="trash" audit />
+			<Misc.Icon prefix="fas" fa="trash" />
 		</button>
 	);
 };
@@ -332,7 +332,7 @@ const AddIO = ({list, pio, ioPath}) => {
 			<PropControl prop="name" label="Impact unit / Name" path={formPath} />
 			{' '}
 			<button className="btn btn-default" onClick={oc} disabled={ ! name}>
-				<Misc.Icon prefix="fas" fa="plus" audit />
+				<Misc.Icon prefix="fas" fa="plus" />
 			</button>
 		</div>
 	);
@@ -409,7 +409,7 @@ const AddDataSource = ({list, dataId, srcPath}) => {
 			<PropControl prop="url" label="Add Source URL, then press + button" path={formPath} />
 			{' '}
 			<button className="btn btn-default" onClick={addSourceFn}>
-				<Misc.Icon prefix="fas" fa="plus" audit />
+				<Misc.Icon prefix="fas" fa="plus" />
 			</button>
 		</div>
 	);

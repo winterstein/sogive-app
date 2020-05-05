@@ -31,6 +31,7 @@ import EventReportPage from './editor/EventReportPage';
 import RegisterPage from './RegisterPage';
 import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
+import MainDivBase from '../base/components/MainDivBase';
 import CardShopPage from './CardShopPage';
 import CardPage from './CardPage';
 import CheckoutPage from './CheckoutPage';
@@ -43,41 +44,6 @@ Messaging.registerFilter(msg => {
 		return false;
 	}
 	return true;
-});
-
-/**
- * init DataStore
- */
-DataStore.update({
-	data: {
-		NGO: {},
-		User: {},
-		Donation: {},
-		Fundraiser: {},
-		Basket: {}
-	},
-	draft: {
-		NGO: {},
-		User: {},
-		Donation: {},
-		Fundraiser: {},
-		Basket: {}
-	},
-	// Use list to store search results
-	list: {
-
-	},
-	focus: {
-		NGO: null,
-		User: null,
-	},
-	widget: {},
-	misc: {
-	},
-	/** status of server requests, for displaying 'loading' spinners
-	 * Normally: transient.$item_id.status
-	*/
-	transient: {}
 });
 
 
@@ -103,106 +69,24 @@ const PAGES = {
 	checkout: CheckoutPage
 };
 
-const DEFAULT_PAGE = 'search';
-
 Login.app = C.app.service;
 
 /**
 		Top-level: tabs
 */
-class MainDiv extends Component {
-	componentDidMount() {
-		// redraw on change
-		const updateReact = (mystate) => this.setState({});
-		DataStore.addListener(updateReact);
-
-		// Set up login watcher here, at the highest level
-		Login.change(() => {
-			// invalidate all lists!
-			DataStore.setValue(['list'], {});
-			// also remove any promises for these lists -- see fetch()
-			let ppath = ['transient', 'PromiseValue', 'list'];
-			DataStore.setValue(ppath, null);
-
-			// ?? should we store and check for "Login was attempted" to guard this??
-			if (Login.isLoggedIn()) {
-				// close the login dialog on success
-				setShowLogin(false);
-			} else {
-				// poke React via DataStore (e.g. for Login.error)
-				DataStore.update({});
-			}
-		});
-
-		// Are we logged in?
-		Login.verify();
-
-		// Check if we're on a mobile device and place the result in state
-		// COPIED FROM ADUNIT'S device.js
-		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-		const isMobile = !!(userAgent.match('/mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i'));
-		DataStore.setValue(['env', 'isMobile'], isMobile);
-
-		// enforce a page
-		let path = DataStore.getValue('location', 'path');
-		let page = (path && path[0]);
-		if ( ! page) {
-			modifyHash([DEFAULT_PAGE]);
-		}
-	} // ./componentDidMount
-	
-
-	componentDidCatch(error, info) {
-		// Display fallback UI
-		this.setState({error, info, errorPath: DataStore.getValue('location', 'path')});
-		console.error(error, info);
-		if (window.onerror) window.onerror("Caught error", null, null, null, error);
+const MainDiv = () => {
+	// which pages?
+	let pages = ['dashboard', 'search'];
+	if (Roles.iCan(C.CAN.test).value) { // TODO for everyone, not just dev
+		pages = pages.concat(['event', 'fundraiser']);
 	}
-
-	render() {
-		// HACK clear render info
-		DataStore.setValue(['transient', 'render'], null, false);
-
-		let path = DataStore.getValue('location', 'path');
-		let page = (path && path[0]);
-		if ( ! page) {
-			page = DEFAULT_PAGE;
-			console.warn("MainDiv.jsx - No page?! in render() - using default "+DEFAULT_PAGE);
-		}
-		assert(page);
-		let Page = PAGES[page];
-		if ( ! Page) {
-			Page = E404Page;
-		}
-		// caught an error?
-		if (this.state && this.state.error && this.state.errorPath === path) {
-			// Page is an error function
-			Page = () => (
-				<div><h3>There was an Error :'(</h3>
-					<p>Try navigating to a different tab, or reloading the page. If this problem persists, please contact support.</p>
-					<p>{this.state.error.message}<br/><small>{this.state.error.stack}</small></p>
-				</div>);
-		}
-		// which pages?
-		let pages = ['dashboard', 'search'];
-		if (Roles.iCan(C.CAN.test).value) { // TODO for everyone, not just dev
-			pages = pages.concat(['event', 'fundraiser']);
-		}
-		
-		let msgs = Object.values(DataStore.getValue('misc', 'messages-for-user') || {});
-		return (
-			<div>
-				<NavBar page={page} pages={pages} />
-				<div className="container">
-					<MessageBar messages={msgs} />
-					<div className='page' id={page}>
-						<Page />
-					</div>
-				</div>
-				<LoginWidget logo={C.app.logo} title={'Welcome to '+C.app.name} />
-			</div>
-		);
-	} // ./render()
-} // ./MainDiv
+	
+	return <MainDivBase pageForPath={PAGES}
+		navbarPages={pages}
+		// securityCheck: ({page}) => throw error / return true
+		// SecurityFailPage: ?JSX
+		defaultPage='search'
+	/>
+}; // ./MainDiv
 
 export default MainDiv;
