@@ -6,9 +6,10 @@ import { assert, assMatch } from 'sjtest';
 import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
-
+import {listPath} from '../base/plumbing/Crud';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
+import List from '../base/data/List';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
@@ -17,6 +18,7 @@ import Misc from '../base/components/Misc';
 import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../base/data/DataClass';
+import PropControl from '../base/components/PropControl';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -25,160 +27,79 @@ const MAX_RESULTS = 10000;
 const RESULTS_PER_PAGE = 20;
 const MAX_PAGES = 10;
 
-export default class SearchPage extends React.Component {
-
-	constructor(...params) {
-		super(...params);
-		this.state = {
-			results: []
-		};
+const SearchPage = () => {
+	// query comes from the url
+	let q = DataStore.getUrlValue('q');
+	const all = ! q;
+	let from = DataStore.getUrlValue('from') || 0;
+	const status = DataStore.getUrlValue('status') || '';
+	let impact = DataStore.getUrlValue('impact');
+	if ( ! q && ! impact) impact='high'; // just show recommended charities
+	if (q==='ERROR') { // HACK
+		throw new Error("Argh!");
 	}
+	
+	
+	// search hits
+	const lpath = ['list', 'NGO', status||'pub', q || 'all', from]; // listPath({type:C.TYPES.NGO, status, q});
+	let pvList = DataStore.fetch(lpath, () => {
+		return ServerIO.searchCharities({q, from, size: RESULTS_PER_PAGE, status, impact});
+	});
+	console.log(pvList);	
+	let total = pvList.value? List.total(pvList.value) : null;
+	let results = pvList.value? List.hits(pvList.value) : null;
+	results = DataStore.getDataList(results);
 
-	setResults(results, total, from, all) {
-		assert(_.isArray(results));
-		this.setState({
-			results,
-			total,
-			from,
-			all,
-		});
-	}
-
-	render() {
-		// query comes from the url
-		let q = DataStore.getUrlValue('q');
-		let from = DataStore.getUrlValue('from') || 0;
-		const status = DataStore.getUrlValue('status') || '';
-		if (q==='ERROR') { // HACK
-			throw new Error("Argh!");
-		}
-
-		let searchResults = null;
-		let searchPager = null;
-		// Show results box if a query was entered (so we get "No Results")
-		if (q) {
-			searchResults = (
-				<div className='col-md-12'>
-					<SearchResults results={this.state.results} total={this.state.total} from={from} query={q} all={this.state.all} />
-				</div>
-			);
-		}
-
-		return (
-			<div className='SearchPage row'>
-				<div className='col-md-12'>
-					<SearchForm query={q} from={from} status={status} setResults={this.setResults.bind(this)}/>
-				</div>
-				{searchResults}
-				{searchPager}
-				<div className='col-md-10'>
-					<FeaturedCharities />
-				</div>
+	return (
+		<div className='SearchPage row'>
+			<div className='col-md-12'>
+				<SearchForm query={q} from={from} status={status} />
 			</div>
-		);
-	}
-}
+
+			<div className='col-md-12'>
+				{pvList.value? 
+					<SearchResults {...{results, total, from, query:q, all, impact}} />
+					: <Misc.Loading />}
+			</div>
+
+			<div className='col-md-10'>
+				<FeaturedCharities />
+			</div>
+		</div>
+	);
+};
+export default SearchPage;
 
 const FeaturedCharities = () => null;
 
 /**
  * TODO change into a Misc.PropControl??
  */
-class SearchForm extends React.Component {
-	constructor(...params) {
-		super(...params);
-		this.state = {
-			q: this.props.query,
-		};
-	}
-
-	componentDidMount() {
-		if (this.state.q) {
-			this.search(this.state.q);
-		}
-	}
-
-	// Allow hash change to provoke a new search
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.query && (nextProps.query !== this.state.q || nextProps.from !== this.props.from || nextProps.status !== this.props.status)) {
-			this.search(nextProps.query, nextProps.status, nextProps.from);
-		}
-	}
-
-	onChange(name, e) {
-		e.preventDefault();
-		let newValue = e.target.value;
-		let newState = {};
-		newState[name] = newValue;
-		this.setState(newState);
-	}
-
-	onSubmit(e) {
-		e.preventDefault();
-		console.warn("submit",this.state);
-		this.search(this.state.q || '', this.props.status, 0);
-	}
-
-	search(query, status, from) {
-		// Put search query in URL so it's bookmarkable / shareable
-		DataStore.setUrlValue("q", query);
-		DataStore.setUrlValue("from", from);
-		
-		DataStore.setValue(['widget', 'Search', 'loading'], true);
-		const all = ! query;
-
-		// hack to allow status=DRAFT
-		ServerIO.searchCharities({q: query, from, size: RESULTS_PER_PAGE, status})
-			.then(function(res) {
-				console.warn(res);
-				let charities = res.cargo.hits;
-				let total = res.cargo.total;
-				DataStore.setValue(['widget', 'Search', 'loading'], false);
-				this.props.setResults(charities, total, from || 0, all);
-			}.bind(this));
-
-	}
-
-	showAll(e) {
-		e.preventDefault();
-		this.setState({q: ''});
-		this.search('');
-	}
-
-	clear(e) {
-		e.preventDefault();
-		this.setState({q: ''});
-	}
-
-	render() {
-		let status = this.props.status;
-		return (
-			<div className="SearchForm"><Form onSubmit={event => this.onSubmit(event)}>
-				<FormGroup size="lg" controlId="formq">
-					<InputGroup size="lg">
-						<Input
-							className="sogive-search-box"
-							type="search"
-							value={this.state.q || ''}
-							placeholder="Keyword search"
-							onChange={(e) => this.onChange('q', e)}
-						/>
-						<InputGroupAddon addonType="append" className="sogive-search-box">
-							<Button onClick={e => this.onSubmit(e)}>
-								<Misc.Icon prefix="fas" fa="search" audit />
-							</Button>
-						</InputGroupAddon>
-						<FieldClearButton onClick={(e) => this.clear(e)}>
-							<Misc.Icon prefix="fas" fa="remove-circle" audit />
-						</FieldClearButton>
-
-					</InputGroup>
-					{status? <div>Include listings with status: {status}</div> : null}
-				</FormGroup>
-			</Form></div>
-		);
-	} // ./render
-} //./SearchForm
+const SearchForm = ({q, status}) => {
+	return (
+		<div className="SearchForm"><Form>
+			<FormGroup size="lg" controlId="formq">
+				<InputGroup size="lg">
+					<PropControl className="sogive-search-box"
+						prop='q'
+						type="search"
+						value={q || ''}
+						placeholder="Keyword search"
+					/>					
+					<InputGroupAddon addonType="append" className="sogive-search-box">
+						<Button>
+							<Misc.Icon prefix="fas" fa="search" audit />
+						</Button>
+					</InputGroupAddon>
+					<FieldClearButton>
+						<Misc.Icon prefix="fas" fa="remove-circle" audit />
+					</FieldClearButton>
+				</InputGroup>
+				{status? <div>Include listings with status: {status}</div> : null}
+			</FormGroup>
+		</Form></div>
+	);
+}; //./SearchForm
 
 
 const FieldClearButton = ({onClick, children}) => (
@@ -189,7 +110,9 @@ const FieldClearButton = ({onClick, children}) => (
 
 
 /**
- *
+ * 
+ * CAREFUL WITH REFACTORS! Used in a few pages
+ * 
  * @param {
  * 	results: {!NGO[]} the charities
  * 	CTA: {?ReactComponent} allows the Read More button to be replaced
@@ -198,7 +121,7 @@ const FieldClearButton = ({onClick, children}) => (
  * 	loading {?Boolean}
  * }
  */
-const SearchResults = ({ results, total, query, from, all, CTA, onPick, tabs, download, loading}) => {
+const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, tabs, download, loading}) => {
 	if ( ! results) results = [];
 	// NB: looking for a ready project is deprecated, but left for backwards data compatibility
 	// TODO adjust the DB to have ready always on the charity
@@ -207,7 +130,7 @@ const SearchResults = ({ results, total, query, from, all, CTA, onPick, tabs, do
 
 	let resultsForText = '';
 	if (all) {
-		resultsForText = 'Showing all charities';
+		resultsForText = `Showing all ${impact? impact+' impact':''} charities`;
 	} else {
 		resultsForText = `Results for “${query}”`;
 	}
@@ -224,7 +147,7 @@ const SearchResults = ({ results, total, query, from, all, CTA, onPick, tabs, do
 						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
 					</div>
 				) : null}
-				{ _.map(unready, item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
+				{ unready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
 			</div>
 			{results.length===0 && query && ! loading? <SuggestCharityForm /> : null}
@@ -361,7 +284,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		<div className='impact col-md-6 hidden-xs'>
 			<div className='impact-summary'>
 				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} />
-				may fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
+				&nbsp; may fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
 			</div>
 			<div className='impact-detail'>
 				{ellipsize(impact.description, 140)}
