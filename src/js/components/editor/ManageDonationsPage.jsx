@@ -162,6 +162,7 @@ const ManageDonationsPage = () => {
 			},
 			{	// DD/MM/YY
 				Header: 'Donation date',
+				type: 'date',
 				accessor: don => don.date? new Date(don.date).toLocaleDateString("en-GB") : ""
 			},
 			columns.find(c => c.Header==='Amount'),
