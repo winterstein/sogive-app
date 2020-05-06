@@ -98,6 +98,17 @@ const COLUMNS = [
 ];	// ./ COLUMNS
 
 
+const housen = don => {
+	if ( ! don.donorAddress) return "";
+	let addr = don.donorAddress;
+	// TODO "2f2, 123 Hill Road" -> "2f2, 123"??
+	// TODO "Flat 7b, 123 Hill Road" -> "Flat 7b, 123"??
+	// first number or first comma
+	let hn = addr.trim().replace(/(.*)?(\\d+\\w*\\b|,).*/, "$1$2");
+	if (hn[hn.length -1] === ',') hn = hn.substr(0, hn.length-1);
+	return hn;
+};
+
 const ManageDonationsPage = () => {
 
 	if ( ! Login.isLoggedIn()) {
@@ -146,7 +157,7 @@ const ManageDonationsPage = () => {
 			},
 			{
 				Header: 'House name or number',	// or address if foreign
-				accessor: don => don.donorAddress? (don.donorPostcode? don.donorAddress.trim().replace(/\s.*/, "") : don.donorAddress.slice(0,40)) : ""
+				accessor: housen
 			},
 			{
 				Header: 'Postcode',
