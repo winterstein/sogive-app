@@ -58,7 +58,7 @@ Not needed for UI edits, but if you want to do backend work...
 
 1. Install Java (e.g. via apt-get install)
 
-2. Install ElasticSearch (e.g. via apt-get install)
+2. Install ElasticSearch (e.g. [via apt-get install](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/deb.html#deb-repo))
 
 3. Download bob-all.jar from https://www.winterwell.com/software/bob/ into sogive-app
 
