@@ -67,4 +67,6 @@ Not needed for UI edits, but if you want to do backend work...
 	cd sogive-app
 	java -jar bob-all.jar
 
-5. Run SoGive Server -- from Eclipse is probably easiest
+5. Start ElasticSearch (see https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html#start-deb)
+
+6. Run SoGive Server -- from Eclipse is probably easiest
