@@ -58,7 +58,7 @@ Not needed for UI edits, but if you want to do backend work...
 
 1. Install Java (e.g. via apt-get install)
 
-2. Install ElasticSearch (e.g. [via apt-get install](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/deb.html#deb-repo))
+2. Install ElasticSearch 5 (e.g. [via docker](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docker.html#_pulling_the_image))
 
 3. Download bob-all.jar from https://www.winterwell.com/software/bob/ into sogive-app
 
@@ -67,6 +67,12 @@ Not needed for UI edits, but if you want to do backend work...
 	cd sogive-app
 	java -jar bob-all.jar
 
-5. Start ElasticSearch (see https://www.elastic.co/guide/en/elasticsearch/reference/current/starting-elasticsearch.html#start-deb)
+5. Start ElasticSearch, with xpack security disabled. 
+
+    For example, (using docker): 
+    
+    ```
+    docker run -p 9200:9200 -d -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    ```
 
 6. Run SoGive Server -- from Eclipse is probably easiest
