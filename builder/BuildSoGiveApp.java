@@ -26,7 +26,6 @@ public class BuildSoGiveApp extends BuildWinterwellProject {
 		mdt.addDependency("org.mockito:mockito-core:3.3.3");
 		deps.add(mdt);
 		
-		deps.add(new WWDependencyTask("calstat", "com.winterwell.calstat.BuildCalstat"));		
 		return deps;
 	}
 
