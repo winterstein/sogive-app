@@ -1,18 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import SJTest, {assert, assMatch} from 'sjtest';
-import Login from 'you-again';
+import { assMatch } from 'sjtest';
 import {encURI} from 'wwutils';
 
 import ActionMan from '../../plumbing/ActionMan';
-import DataStore, {getPath} from '../../base/plumbing/DataStore';
+import DataStore from '../../base/plumbing/DataStore';
 import C from '../../C';
-import Roles from '../../base/Roles';
 
 import Misc from '../../base/components/Misc';
 import FundRaiser from '../../data/charity/FundRaiser';
-import DonationWizard, {DonateButton} from '../DonationWizard';
+import { DonateButton } from '../DonationWizard';
 import ShareWidget, {ShareLink, canWrite} from '../../base/components/ShareWidget';
 import {notifyUser} from '../../base/plumbing/Messaging';
 
@@ -110,8 +107,7 @@ const AddOffSiteDonation = ({fundraiser}) => {
 	return (
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
-			<DonateButton item={fundraiser} paidElsewhere />
-			<DonationWizard item={fundraiser} fromEditor />
+			<DonateButton item={fundraiser} paidElsewhere fromEditor />
 		</Misc.Card>
 	);
 };

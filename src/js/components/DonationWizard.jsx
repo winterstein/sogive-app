@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
@@ -20,7 +20,7 @@ import Basket from '../data/Basket';
 
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import { getId, getType } from '../base/data/DataClass';
+import { getId, getType, nonce } from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -46,7 +46,7 @@ const getWidgetProp = (forItem, prop) => (
 /**
  * NB: We can have several DonateButtons, but only one modal form
  */
-const DonateButton = ({item, paidElsewhere}) => {
+const DonateButton = ({item, paidElsewhere, ...props}) => {
 	assert(item && getId(item), "DonationWizard.js - DonateButton: no item "+item);
 
 	// no donations to draft fundraisers or charities
@@ -56,8 +56,10 @@ const DonateButton = ({item, paidElsewhere}) => {
 				title='This is a draft preview page - publish to actually donate'>Donate</button>
 		);
 	}
+
+	const showWizard = getWidgetProp(getId(item), 'open');
 	
-	return (
+	return <>
 		<Button color="primary" size="lg"
 			onClick={() => {
 				// poke the paidElsewhere flag
@@ -67,7 +69,8 @@ const DonateButton = ({item, paidElsewhere}) => {
 		>
 			Donate
 		</Button>
-	);
+		{ showWizard ? <DonationWizard item={item} {...props} /> : null }
+	</>;
 };
 
 /**
@@ -80,7 +83,7 @@ const DonateButton = ({item, paidElsewhere}) => {
  *
  * TODO refactor this
  */
-const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
+const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "CharityPageImpactAndDonate", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
@@ -106,11 +109,28 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 
 	// There can only be one!
 	// TODO move this to Misc for reuse TODO reuse this safety test with other only-one-per-page dialogs
-	// ?? maybe replace the assert with a more lenient return null??
+	// TRYING THIS: ?? maybe replace the assert with a more lenient return null??
+
+	// Shared store location for "a modal donation widget is open"
 	const rpath = ['transient', 'render'].concat(widgetPath);
-	const already = DataStore.getValue(rpath);
-	assert(!already, "DonationWizard.jsx - duplicate "+widgetPath);
-	DataStore.setValue(rpath, true, false);
+
+	// Assign this particular instance of the widget a unique identifier on mount
+	const [widgetId] = useState(nonce()); 
+
+	// On mount, claim the "only donation modal" position if it's available
+	useEffect(() => {
+		if (!DataStore.getValue(rpath)) DataStore.setValue(rpath, widgetId);
+		// On unmount, release it again
+		return () => {
+			if (DataStore.getValue(rpath) === widgetId) DataStore.setValue(rpath, null);
+		};
+	}, []);
+
+	// A widget is already drawn for the specified item - and it's not this one? Do nothing.
+	if (DataStore.getValue(rpath) !== widgetId) {
+		console.log('DonationWizard: Not rendering additional components');
+		return null;
+	}
 
 	// what stage?
 	const stagePath = ['location', 'params', 'dntnStage'];
@@ -148,7 +168,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	// if the promise is running, wait for it before making a new draft
 	if (!pDonation.resolved) {
 		return (
-			<Modal isOpen className="donate-modal" toggle={closeLightbox}>
+			<Modal isOpen={isOpen} className="donate-modal" toggle={closeLightbox}>
 				<ModalBody>
 					<Misc.Loading />
 				</ModalBody>
@@ -160,11 +180,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id:donationDraft.id});
-	// if (donationDraft !== DataStore.getValue(path)) {
-	// 	console.warn("DonationWizard.jsx oddity (published v ActionMan maybe?): ", path, DataStore.getValue(path), " vs ",
-	// 		['draft', C.TYPES.Donation, 'from:'+Login.getId(), 'draft-to:'+id],
-	// 		donationDraft);
-	// }
+	
 	// Don't ask for gift-aid details if the charity doesn't support it
 	const showGiftAidSection = charity && charity[NGO.PROPS.$uk_giftaid()];
 	// We don't need to collect address etc. if we're not collecting gift-aid
@@ -201,7 +217,7 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 							preferredCurrency={preferredCurrency}
 						/>
 					</WizardStage>
-				
+
 					{showGiftAidSection? <WizardStage title='Gift Aid'>
 						<GiftAidSection path={path} charity={charity} stagePath={stagePath} setNavStatus />
 					</WizardStage> : null}
@@ -217,11 +233,11 @@ const CharityPageImpactAndDonate = ({item, charity, causeName, fromEditor}) => {
 					<WizardStage title='Payment' next={false}>
 						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
-				
+
 					<WizardStage title='Receipt' previous={false}>
 						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
-					</Wizard>
+				</Wizard>
 			</ModalBody>
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
@@ -673,5 +689,5 @@ const ThankYouSection = ({path, item, did}) => {
 };
 
 
-export {DonateButton};
-export default CharityPageImpactAndDonate;
+export { DonateButton };
+export default DonationWizard;

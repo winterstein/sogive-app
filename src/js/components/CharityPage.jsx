@@ -1,12 +1,10 @@
 // @Flow
-import React, { useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import Login from 'you-again';
-import { Col, Image, Label } from 'reactstrap';
-import { assert } from 'sjtest';
-import { yessy, encURI } from 'wwutils';
+import { Col, Label } from 'reactstrap';
+import { yessy } from 'wwutils';
 
-import Roles from '../base/Roles';
 import printer from '../base/utils/printer';
 import DataStore from '../base/plumbing/DataStore';
 
@@ -16,17 +14,16 @@ import Misc from '../base/components/Misc';
 import { Tabs, Tab } from '../base/components/Tabs';
 
 import C from '../C';
-import ServerIO from '../plumbing/ServerIO';
 import ActionMan from '../plumbing/ActionMan';
 import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
-
-import DonationWizard, { DonateButton } from './DonationWizard';
 import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
 import SocialShare from './SocialShare';
+import { DonateButton } from './DonationWizard';
+
 
 const InfoColumn = ({charity}) => (
 	<Col md="4" xs="12" className="column info-column">
@@ -293,7 +290,7 @@ const CharityProfile = ({charity}) => {
 		<h4 className='CharityProfile'>Charity Profile</h4>
 		<div className='col-md-12'>
 			<div className='col-md-2 charity-logo-div'>
-				<Image src={charity.logo} responsive thumbnail className="charity-logo" />
+				<img src={charity.logo} responsive thumbnail className="charity-logo" />
 			</div>
 			<div className='col-md-7 charity-name-div'>
 				<h2>{charity.displayName || charity.name}</h2>

@@ -1,32 +1,34 @@
 import React from 'react';
 
-import MDText from '../base/components/MDText';
-
-import SJTest, {assert, assMatch} from 'sjtest';
+import { assMatch } from 'sjtest';
 import Login from 'you-again';
-import { Container, Row, Col, Button } from 'reactstrap';
-
-import printer from '../base/utils/printer.js';
+import { Container, Row, Col } from 'reactstrap';
 import _ from 'lodash';
 import {encURI} from 'wwutils';
-import DataStore from '../base/plumbing/DataStore';
-import ActionMan from '../plumbing/ActionMan';
-import ServerIO from '../plumbing/ServerIO';
-import {notifyUser} from '../base/plumbing/Messaging';
-import Money from '../base/data/Money';
-import NGO from '../data/charity/NGO2';
-import Output from '../data/charity/Output';
+
 import C from '../C';
-import Roles from '../base/Roles';
-import FundRaiser from '../data/charity/FundRaiser';
-import Donation from '../data/charity/Donation';
+
+import printer from '../base/utils/printer';
+import MDText from '../base/components/MDText';
 import Misc from '../base/components/Misc';
 import CSS from '../base/components/CSS';
-import DonationWizard, {DonateButton} from './DonationWizard';
 import ListLoad from '../base/components/ListLoad';
-import {ImpactDesc} from './ImpactWidgetry';
-import SocialShare from './SocialShare';
 import {canWrite} from '../base/components/ShareWidget';
+
+import DataStore from '../base/plumbing/DataStore';
+import {notifyUser} from '../base/plumbing/Messaging';
+import ActionMan from '../plumbing/ActionMan';
+import ServerIO from '../plumbing/ServerIO';
+
+import Money from '../base/data/Money';
+import NGO from '../data/charity/NGO2';
+import FundRaiser from '../data/charity/FundRaiser';
+import Donation from '../data/charity/Donation';
+
+import { DonateButton } from './DonationWizard';
+import { ImpactDesc } from './ImpactWidgetry';
+import SocialShare from './SocialShare';
+
 
 const FundRaiserTop = () => {
 	// which event?
@@ -114,7 +116,6 @@ const FundRaiserPage = ({id}) => {
 			<CSS css={event.customCSS} />
 			<CSS css={item.customCSS} />
 			{event.backgroundImage ? <div className='fullwidth-bg' style={{backgroundImage: `url(${event.backgroundImage})`}} /> : null}
-			<DonationWizard item={item} />
 			<Container id='FundRaiserPage'>
 				{event.bannerImage? <Row>
 					<Col md="12" className='event-banner'>

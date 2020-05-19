@@ -1,30 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import { Jumbotron, Button, Badge } from 'reactstrap';
-import SJTest, {assert} from 'sjtest';
-import {XId, encURI, yessy} from 'wwutils';
+import { assert } from 'sjtest';
+import { encURI, yessy } from 'wwutils';
 import Login from 'you-again';
 
-import printer from '../base/utils/printer.js';
 import C from '../C';
+
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import ServerIO from '../plumbing/ServerIO';
-import { getId, getType } from '../base/data/DataClass';
+
+import { getId } from '../base/data/DataClass';
+import Money from '../base/data/Money';
 import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
 import NGO from '../data/charity/NGO2';
 import Ticket from '../data/charity/Ticket';
-import Money from '../base/data/Money';
 import FundRaiser from '../data/charity/FundRaiser';
-import { SearchResults } from './SearchPage';
-import Roles from '../base/Roles';
+
 import Misc from '../base/components/Misc';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
-import DonationWizard from './DonationWizard';
-import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
+import Wizard, { WizardStage } from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
+import { SearchResults } from './SearchPage';
 
 /**
  * Sign up for an event!

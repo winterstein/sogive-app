@@ -1,29 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import { Jumbotron, Button, Badge } from 'reactstrap';
 
-import SJTest, {assert} from 'sjtest';
-import {XId, encURI, yessy, modifyHash} from 'wwutils';
+import { assert } from 'sjtest';
+import { encURI } from 'wwutils';
 import Login from 'you-again';
-import printer from '../base/utils/printer.js';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
-import ServerIO from '../plumbing/ServerIO';
-import { getId, getType } from '../base/data/DataClass';
+import { getId } from '../base/data/DataClass';
 import Basket from '../data/Basket';
 import Event from '../data/charity/Event';
-import NGO from '../data/charity/NGO2';
 import Ticket from '../data/charity/Ticket';
 import Money from '../base/data/Money';
 import FundRaiser from '../data/charity/FundRaiser';
-import { SearchResults } from './SearchPage';
-import Roles from '../base/Roles';
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
-import DonationWizard from './DonationWizard';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { defaultCardMessage } from './CardShopPage';
@@ -69,18 +62,17 @@ const CheckoutPage = () => {
 	}
 
 	return (
-		<div className=''>
+		<div>
 			<div className='fullwidth-bg' style={{backgroundImage: 'url('+event.backgroundImage+')'}} />
 			{event.bannerImage? <img className='page-banner' src={event.bannerImage} alt='banner' /> : null}
 			<h2 className='page-masthead'>
 				<span className='event-name'>{event.name || 'Checkout'}</span>
 				&nbsp;
-				<br></br>
+				<br/>
 				<span className='event-date'>{longdate}</span>
 			</h2>
 
 			<Wizard stagePath={stagePath} nonavButtons >
-
 				<WizardStage title='Tickets'
 					sufficient={basket && Basket.getItems(basket).length}
 					complete={basket && Basket.getItems(basket).length}
@@ -96,11 +88,11 @@ const CheckoutPage = () => {
 				<WizardStage title='Register' sufficient={Login.isLoggedIn()} complete={Login.isLoggedIn()} >
 					<RegisterOrLoginTab stagePath={stagePath} />
 				</WizardStage>
-				
+
 				<WizardStage title='Delivery Details' complete={walkerDetailsOK} sufficient={walkerDetailsOK} >
 					<WalkerDetailsTab basket={basket} basketPath={basketPath} />
 				</WizardStage>
-										
+
 				<WizardStage title='Checkout' next={false} >
 					{ 	// clean out old Minor TODO something is causing a redraw glitch here
 						doneBasket && basket && doneBasket.id !== basket.id
@@ -108,7 +100,7 @@ const CheckoutPage = () => {
 					}
 					<CheckoutTab basket={basket} event={event} stagePath={stagePath} />
 				</WizardStage>
-				
+
 				<WizardStage title='Confirmation' previous={false} >
 					<BehaviourBasketDone basket={basket} doneBasket={doneBasket} />
 					<Receipt basket={doneBasket} event={event} />

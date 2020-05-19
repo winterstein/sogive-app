@@ -10,15 +10,12 @@
 
 // @Flow
 import React, { Component } from 'react';
-import MDText from '../base/components/MDText'
-import _ from 'lodash';
 import { assert } from 'sjtest';
 import Login from 'you-again';
-import StripeCheckout from 'react-stripe-checkout';
-import { uid, XId } from 'wwutils';
+
+import MDText from '../base/components/MDText';
 
 import printer from '../base/utils/printer';
-import ActionMan from '../plumbing/ActionMan';
 import DataStore from '../base/plumbing/DataStore';
 import NGO from '../data/charity/NGO2';
 import Project from '../data/charity/Project';
@@ -26,10 +23,8 @@ import Output from '../data/charity/Output';
 import Money from '../base/data/Money';
 
 import Misc from '../base/components/Misc';
-import { impactCalc } from './ImpactWidgetry.jsx';
-import GiftAidForm from './GiftAidForm';
-import SocialShare from './SocialShare';
-import DonationWizard, {DonateButton} from './DonationWizard';
+import { impactCalc } from './ImpactWidgetry';
+import { DonateButton } from './DonationWizard';
 
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps
@@ -148,7 +143,6 @@ class CharityPageImpactAndDonate extends Component {
 				<div className='below-arrow'>
 					<div className='donate-button'>
 						<DonateButton item={charity} />
-						<DonationWizard item={charity} />
 					</div>
 				</div>
 				<div className='clearfix' />
