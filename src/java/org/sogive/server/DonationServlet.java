@@ -106,7 +106,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		// a donations request MUST provide from or q, to avoid listing all
 		String from = state.get("from");
-		String q = state.get(Q); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
+		String q = state.get(SearchServlet.Q); // NB: q is NOT processed in this method - just sanity checked - see super.doList()
 
 		// HACK
 		if (q !=null && q.endsWith("purpose:admin")) {
@@ -184,7 +184,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		// TODO HACK if returning a list for the event owner - show more info
 		boolean showEmailAndAddress = false;
 		// ...HACK is this for manageDonations?
-		String q = state.get(Q);
+		String q = state.get(SearchServlet.Q);
 		String ref = state.getReferer();
 		if (q !=null && q.endsWith("purpose:admin")) {
 			// TODO Is this an admin eg Sanjay
