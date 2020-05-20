@@ -89,7 +89,7 @@ const SimpleEditCharityPage = () => {
 		<div className="EditCharityPage">
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
 				<p><a href={`/#charity?charityId=${NGO.id(charity)}`} target="_new">view profile page</a></p>
-				<p>NOTE: Please hover over the <Misc.Icon prefix="fas" fa="question-circle" title="question mark" /> icon -- this often includes useful information!</p>
+				<p>NOTE: Please hover over the <Misc.Icon prefix="fa" fa="question-circle" title="question mark" /> icon -- this often includes useful information!</p>
 				<div>
 					This is the simpler editor. It does not
 					include all the possible settings.
