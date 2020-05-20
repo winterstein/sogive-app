@@ -22,7 +22,12 @@ import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.KErrorPolicy;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
-
+/**
+ * OSCR is the Scottish charity register. This can upload the _basic_ data from their register into SoGive.
+ * TODO upload more of what they hold
+ * @author daniel
+ *
+ */
 public class ImportOSCRData {
 
 	public static final String OSCR_REG = "scotlandCharityRegNum";
