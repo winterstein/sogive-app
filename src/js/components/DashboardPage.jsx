@@ -2,7 +2,7 @@ import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
 import { XId, encURI } from 'wwutils';
-
+import {Card, CardTitle} from 'reactstrap';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import DataStore from '../base/plumbing/DataStore';
@@ -108,14 +108,12 @@ const DonationListItem = ({donation}) => {
 
 
 const DashboardWidget = ({ children, iconClass, title }) =>
-	(<div className="panel panel-default">
-		<div className="panel-heading">
+	(<Card body>
+		<CardTitle>
 			<h3 className="panel-title"><DashTitleIcon iconClass={iconClass} /> {title || ''}</h3>
-		</div>
-		<div className="panel-body">
-			{children}
-		</div>
-</div>);
+		</CardTitle>
+		{children}
+	</Card>);
 // ./DashboardWidget
 
 const DashTitleIcon = ({ iconClass }) =>

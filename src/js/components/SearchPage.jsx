@@ -285,7 +285,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	
 	// NB re formatting below - beware of React eating spaces
 	const impactExplanation = impact ? (
-		<div className='impact col-md-6 hidden-xs'>
+		<div className='impact col-md-6 d-none d-sm-block'>
 			<div className='impact-summary'>
 				<Misc.Money amount={Output.cost(impact)} maximumFractionDigits={0} maximumSignificantDigits={2} />
 				&nbsp; may fund <span className='impact-count'>{printer.prettyNumber(Output.number(impact), 2)}</span> {Output.getName(impact)}
@@ -298,7 +298,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	) : null;
 	
 	const noImpact = !impact ? (
-		<div className='noImpact col-md-6 hidden-xs'>
+		<div className='noImpact col-md-6 d-none d-sm-block'>
 			Impact information is not available for this charity.
 			<CTA itemUrl={charityUrl} onClick={onClick} item={item} />
 		</div>
