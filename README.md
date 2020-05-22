@@ -33,7 +33,7 @@ Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js 
 5. Compile the css (must be run from bash, not zsh)
 	
        sudo apt install node-less
-       ./convert-less.sh
+       ./convert.less.sh
 
 6. Compile the js (and watch for edits)
 
