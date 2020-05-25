@@ -44,6 +44,9 @@ public class ImportOSCRData {
 	public synchronized void run() {
 		running = true;
 		Desc<File> desc = getDesc();
+		// Ask the user where the file is
+		// TODO where do OSCR keep the download? Let's doc that here.
+		// And maybe auto-download it.
 		Depot.getDefault().setErrorPolicy(KErrorPolicy.ASK);
 		File file = Depot.getDefault().get(desc);
 
