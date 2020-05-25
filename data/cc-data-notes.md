@@ -1,5 +1,8 @@
 http://data.charitycommission.gov.uk/data-definition.aspx
 
+TODO make a java class to munge this data and import into SoGive
+E.g. a bit like ImportOSCRData.java
+
 Which bits to use?
 
 and
