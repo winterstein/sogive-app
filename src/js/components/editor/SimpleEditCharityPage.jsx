@@ -99,9 +99,6 @@ const SimpleEditCharityPage = () => {
 
 				<EditField item={charity} type="checkbox" field="ready" label="Is this data ready for use?" />
 				<EditField item={charity} type="text" field="nextAction" label="Next action (if any)" />
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
-					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
-					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Misc.Card>
 			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
@@ -138,6 +135,9 @@ const SimpleEditCharityPage = () => {
 					<ol>{rrefs}</ol>
 				</Misc.Card>
 			</Misc.CardAccordion>
+			<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
+					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
+					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 		</div>
 	);
 }; // ./EditCharityPage
@@ -237,7 +237,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Misc.Card key={'project_'+i}
-			title={<div className={p === repProj? 'bg-success' : ''}><h4 className="pull-left">{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className="clearfix"></div></div>}>
+			title={<div><h4 className="pull-left">{p.name} {p.year}</h4> {repProj? <span className='text-success'>(representative project)</span>: null} <RemoveProject charity={charity} project={p} /><div className="clearfix" /></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Misc.Card>)
 	);
@@ -261,7 +261,7 @@ const AddProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity), "EditCharityPage.AddProject");
 	if (isOverall) {
 		return (
-			<div className="form-inline well">
+			<div className="form-group well">
 				<h4>Add Year</h4>
 				<p>Create a new annual record</p>
 				<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
@@ -273,7 +273,7 @@ const AddProject = ({charity, isOverall}) => {
 		);
 	}
 	return (
-		<div className="form-inline well">
+		<div className="form-group well">
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
 			<PropControl prop="name" label="Name" path={['widget','AddProject','form']} />
