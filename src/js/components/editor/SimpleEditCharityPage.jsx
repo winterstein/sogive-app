@@ -261,7 +261,7 @@ const AddProject = ({charity, isOverall}) => {
 	assert(NGO.isa(charity), "EditCharityPage.AddProject");
 	if (isOverall) {
 		return (
-			<div className="form-inline well">
+			<div className="form-group well">
 				<h4>Add Year</h4>
 				<p>Create a new annual record</p>
 				<PropControl prop="year" label="Year" path={['widget','AddProject','form']} type="year" />
@@ -273,7 +273,7 @@ const AddProject = ({charity, isOverall}) => {
 		);
 	}
 	return (
-		<div className="form-control well">
+		<div className="form-group well">
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
 			<PropControl prop="name" label="Name" path={['widget','AddProject','form']} />
