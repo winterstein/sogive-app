@@ -2,7 +2,6 @@ package org.sogive.server;
 
 import java.io.File;
 
-import org.sogive.data.charity.ImportCharityDataFromCSV;
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.web.WebEx;
@@ -23,10 +22,6 @@ public class ImportDataServlet implements IServlet {
 				throw new WebEx.E400("Repeat call");
 			}
 			oscr.run();
-		}	
-		if ("oldSpreadsheet".equalsIgnoreCase(dataset)) {
-			File export = new File("data/charities.csv");
-			new ImportCharityDataFromCSV(export).run();
 		}
 	}
 
