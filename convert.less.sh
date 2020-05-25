@@ -1,1 +1,0 @@
-../wwappbase.js/project/convert.less.sh
