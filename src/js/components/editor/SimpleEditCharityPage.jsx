@@ -99,9 +99,6 @@ const SimpleEditCharityPage = () => {
 
 				<EditField item={charity} type="checkbox" field="ready" label="Is this data ready for use?" />
 				<EditField item={charity} type="text" field="nextAction" label="Next action (if any)" />
-				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
-					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
-					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 			</Misc.Card>
 			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
@@ -138,6 +135,9 @@ const SimpleEditCharityPage = () => {
 					<ol>{rrefs}</ol>
 				</Misc.Card>
 			</Misc.CardAccordion>
+			<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
+					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
+					cannotDelete={ ! Roles.iCan(C.CAN.publish).value} />
 		</div>
 	);
 }; // ./EditCharityPage
@@ -273,7 +273,7 @@ const AddProject = ({charity, isOverall}) => {
 		);
 	}
 	return (
-		<div className="form-inline well">
+		<div className="form-control well">
 			<h4>Add Project/Year</h4>
 			<p>Create a new annual project record</p>
 			<PropControl prop="name" label="Name" path={['widget','AddProject','form']} />
