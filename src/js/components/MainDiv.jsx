@@ -71,22 +71,25 @@ const PAGES = {
 
 Login.app = C.app.service;
 
+// Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
+const navbarPagesFn = () => {
+	let pages = ['dashboard', 'search'];
+	if (!Roles.iCan(C.CAN.test).value) return pages;
+	return [...pages, 'event', 'fundraiser'];
+};
+
 /**
 		Top-level: tabs
 */
 const MainDiv = () => {
-	// which pages?
-	let pages = ['dashboard', 'search'];
-	if (Roles.iCan(C.CAN.test).value) { // TODO for everyone, not just dev
-		pages = pages.concat(['event', 'fundraiser']);
-	}
+	
 	
 	return <MainDivBase pageForPath={PAGES}
-		navbarPages={pages}
+		navbarPages={navbarPagesFn}
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
-	/>
+	/>;
 }; // ./MainDiv
 
 export default MainDiv;
