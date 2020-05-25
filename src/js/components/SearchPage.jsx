@@ -28,6 +28,8 @@ const MAX_RESULTS = 10000;
 const RESULTS_PER_PAGE = 20;
 const MAX_PAGES = 10;
 
+const PATH = ['widget', 'search'];
+
 const SearchPage = () => {
 	// query comes from the url
 	let q = DataStore.getUrlValue('q');
@@ -77,34 +79,28 @@ const FeaturedCharities = () => null;
  * TODO change into a Misc.PropControl??
  */
 const SearchForm = ({q, status}) => {
-	let rawq = getValue(['widget','search','rawq']);
-	if (rawq===undefined && q) {
-		setValue(['widget','search','rawq'], q);
+	let rawq = getValue([...PATH, 'rawq']);
+	if (rawq === undefined && q) {
+		setValue(['widget', 'search', 'rawq'], q);
 	}
+
 	// set the search query (this will trigger a search)
 	const onSubmit = e => {
-		stopEvent(e);		
+		stopEvent(e);
 		DataStore.setUrlValue('q', rawq);
 	};
+
+	const submitButton = (
+		<Button type="submit" color="primary" className="sogive-search-box">
+			<Misc.Icon prefix="fas" fa="search" />
+		</Button>
+	);
+
 	return (
-		<div className="SearchForm"><Form onSubmit={onSubmit}>
-			<FormGroup size="lg">
-				<InputGroup size="lg">
-					<PropControl className="sogive-search-box"
-						path={['widget','search']}
-						prop='rawq'
-						type="search"
-						placeholder="Keyword search"
-					/>					
-					<InputGroupAddon addonType="append" className="sogive-search-box">
-						<Button type='submit' color='primary'>
-							<Misc.Icon prefix="fas" fa="search" />
-						</Button>
-					</InputGroupAddon>
-					<FieldClearButton />
-				</InputGroup>
-				{status? <div>Include listings with status: {status}</div> : null}
-			</FormGroup>
+		<div className="SearchForm"><Form onSubmit={onSubmit} className="sogive-search-box">
+			<PropControl path={PATH} prop="rawq" type="search" placeholder="Keyword search" append={submitButton} size="lg" />
+			<FieldClearButton />
+			{status? <div>Include listings with status: {status}</div> : null}
 		</Form></div>
 	);
 }; //./SearchForm
