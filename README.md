@@ -109,3 +109,10 @@ Though we will switch to version 7 soon.
     ```
 
 6. Run SoGive Server -- from Eclipse is probably easiest
+
+7. Some tests:
+   - Test your local ElasticSearch is running: http://localhost:9200
+   - Test your local java SoGiveServer is running: http://localhost:8282
+   - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
+   - Test your local web-app: http://local.sogive.org/
+  
