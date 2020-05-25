@@ -29,7 +29,6 @@ import EditEventPage from './editor/EditEventPage';
 import EventPage from './EventPage';
 import EventReportPage from './editor/EventReportPage';
 import RegisterPage from './RegisterPage';
-import E404Page from '../base/components/E404Page';
 import TestPage from '../base/components/TestPage';
 import MainDivBase from '../base/components/MainDivBase';
 import CardShopPage from './CardShopPage';
