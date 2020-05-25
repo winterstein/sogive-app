@@ -237,7 +237,7 @@ const ProjectsEditor = ({charity, projects, isOverall}) => {
 	let repProj = NGO.getProject(charity);
 	let rprojects = projects.map((p,i) => (
 		<Misc.Card key={'project_'+i}
-			title={<div className={p === repProj? 'bg-success' : ''}><h4 className="pull-left">{p.name} {p.year}</h4><RemoveProject charity={charity} project={p} /><div className="clearfix"></div></div>}>
+			title={<div><h4 className="pull-left">{p.name} {p.year}</h4> {repProj? <span className='text-success'>(representative project)</span>: null} <RemoveProject charity={charity} project={p} /><div className="clearfix" /></div>}>
 			<ProjectEditor charity={charity} project={p} />
 		</Misc.Card>)
 	);
