@@ -89,6 +89,9 @@ import com.winterwell.web.app.AppUtils;
 //Rating of impactfulness	determined in a very ad-hoc way. Not being used
 //Comments about quality of intervention
 /**
+ * 
+ * @deprecated From the early days of the project.
+ * 
  * @testedby {@link ImportCharityDataFromCSVTest}
  * @author daniel
  *
