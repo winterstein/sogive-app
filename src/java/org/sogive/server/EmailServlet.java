@@ -11,11 +11,11 @@ import com.winterwell.utils.Dep;
 import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.CommonFields;
 import com.winterwell.web.app.CrudServlet;
-import com.winterwell.web.app.EmailConfig;
 import com.winterwell.web.app.Emailer;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
+import com.winterwell.web.email.EmailConfig;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.Checkbox;
 
@@ -42,10 +42,9 @@ public class EmailServlet extends CrudServlet<Event> implements IServlet {
 	}
 	
 	public void sendAnEmail(InternetAddress recipient, String message, String senderName) throws AddressException {
-		EmailConfig ec = Dep.get(EmailConfig.class);
-		LoginDetails ld = ec.getLoginDetails();		
-		InternetAddress sender = new InternetAddress(ld.loginName);
-		Emailer e = new Emailer(ld);		
+		EmailConfig ec = Dep.get(EmailConfig.class);		
+		InternetAddress sender = new InternetAddress(ec.emailFrom);
+		Emailer e = new Emailer(ec);		
 		
 		//Might be nice to retrieve sender's ID and append to front of title. Feel people are more likely to open email if they recognise the sender's name
 		SimpleMessage email = new SimpleMessage(sender, recipient, senderName + " has invited you to an event on sogive.org", message);
