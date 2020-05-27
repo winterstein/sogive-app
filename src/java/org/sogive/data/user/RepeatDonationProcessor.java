@@ -21,6 +21,7 @@ import com.winterwell.gson.Gson;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.log.Report;
 import com.winterwell.utils.threads.Actor;
 import com.winterwell.utils.threads.MsgToActor;
 import com.winterwell.utils.time.TUnit;
@@ -83,7 +84,7 @@ class RepeatTask extends TimerTask {
 				try {
 					String json = gson.toJson(map);
 					RepeatDonation rdon = gson.fromJson(json);
-					if (rdon.isDone()) {
+					if (rdon.isOff()) {
 						Log.d("RepeatTask", "Skip all done "+rdon);
 						continue;
 					}
@@ -103,35 +104,49 @@ class RepeatTask extends TimerTask {
 
 class RepeatDonationActor extends Actor<RepeatDonation> {
 	
+
+
 	@Override
 	protected void consume(RepeatDonation msg, Actor fromActor) throws Exception {
-		Log.d(getName(), "consume "+msg);		
-		// ready to repeat? Includes screen by end date
-		Time next = getNextRepeat(msg);
-		if (next==null || next.isAfter(new Time())) {
-			Log.d(getName(), "repeat? not yet - "+next+" for "+msg);
-			if (next==null) {
-				// mark as done
-				msg.setDone(true);
-				Log.d(getName(), "repeats all done for "+msg);
-				AppUtils.doPublish(msg, KRefresh.FALSE, true);
+		try {
+			Log.d(getName(), "consume "+msg);		
+			// ready to repeat? Includes screen by end date
+			Time next = getNextRepeat(msg);
+			if (next==null || next.isAfter(new Time())) {
+				Log.d(getName(), "repeat? not yet - "+next+" for "+msg);
+				if (next==null) {
+					// mark as done
+					msg.setDone(true);
+					Log.d(getName(), "repeats all done for "+msg);
+					AppUtils.doPublish(msg, KRefresh.FALSE, true);
+				}
+				return;
 			}
-			return;
-		}
-		
-		// donate!
-		Donation don = msg.newDraftDonation();
-		Log.d(getName(), "repeat! "+don+" for "+msg);
-		AppUtils.doPublish(don, KRefresh.TRUE, true);		
-		// collect money
-		XId from = msg.from;
-		String email = from.getName(); // ?? what if they login by Facebook??
-		if ( ! WebUtils2.isValidEmail(email)) {
-			email = msg.getOriginalDonation().getDonorEmail();
-		}
-		List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
-		for (MsgToActor m : msgs) {
-			m.post();
+			
+			// donate!
+			Donation don = msg.newDraftDonation();
+			Log.d(getName(), "repeat! "+don+" for "+msg);
+			AppUtils.doPublish(don, KRefresh.TRUE, true);		
+			// collect money
+			XId from = msg.from;
+			String email = from.getName(); // ?? what if they login by Facebook??
+			if ( ! WebUtils2.isValidEmail(email)) {
+				email = msg.getOriginalDonation().getDonorEmail();
+			}
+			List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
+			for (MsgToActor m : msgs) {
+				m.post();
+			}
+		} catch(Exception ex) {
+			// HACK
+			if (ex.toString().contains("Amount must be at least")) {
+				Log.w(getName(), ex);
+				// switch off
+				msg.setDone(true);
+				msg.addLog(new Report(null, ex));
+				return;
+			}
+			throw ex;
 		}
 	}
 	

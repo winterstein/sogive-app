@@ -138,7 +138,7 @@ public class MoneyCollector {
 		} catch(CardException cex) {
 			Log.w(LOGTAG, "Error from "+basket.getId()+": "+cex);
 			throw new PaymentException(cex.getMessage()+" "+cex.getDeclineCode());
-		} catch(Throwable e) {
+		} catch(Throwable e) {			
 			Log.w(LOGTAG, "Error from "+basket.getId()+": "+e);
 			throw Utils.runtime(e);
 		}

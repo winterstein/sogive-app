@@ -1,5 +1,8 @@
 package org.sogive.data.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.sogive.data.commercial.Event;
 
 import com.goodloop.data.Money;
@@ -9,6 +12,8 @@ import com.winterwell.es.ESKeyword;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.log.Log;
+import com.winterwell.utils.log.Report;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.data.XId;
@@ -34,7 +39,11 @@ public class RepeatDonation extends AThing {
 	 */
 	final XId from;
 	
-	public boolean isDone() {
+	/**
+	 * 
+	 * @return done = off. true if this donation is finished
+	 */
+	public boolean isOff() {
 		return done;
 	}
 	public void setDone(boolean done) {
@@ -55,7 +64,7 @@ public class RepeatDonation extends AThing {
 	private Time date;
 
 	private transient Donation originalDonation;
-
+	
 	public RepeatDonation(Donation donation) {
 		super();
 		date = donation.getTime();
@@ -123,12 +132,18 @@ public class RepeatDonation extends AThing {
 
 	boolean done;
 
+	private List<Report> log;
+
 	public Time getDate() {
 		return date;
 	}
 	
 	public ICalEvent getIcal() {
 		return ical;
+	}
+	public void addLog(Report report) {
+		if (log==null) log = new ArrayList();
+		log.add(report);
 	}
 	
 }

@@ -337,6 +337,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	}
 
 	/**
+	 * Collect money!
 	 * One off or repeat donations are OK
 	 * @param state Can be null
 	 * @param donation
