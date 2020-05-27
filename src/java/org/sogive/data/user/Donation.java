@@ -257,10 +257,6 @@ public class Donation extends AThing implements IForSale {
 	}
 	
 	@Deprecated // use setPaymentCollected() instead
-	public void setCollected(boolean b) {
-		setPaymentCollected(b);
-	}
-	@Deprecated // use setPaymentCollected() instead
 	public boolean isCollected() {
 		return getPaymentCollected();
 	}

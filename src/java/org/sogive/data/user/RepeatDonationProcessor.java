@@ -144,6 +144,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 				// switch off
 				msg.setDone(true);
 				msg.addLog(new Report(null, ex));
+				AppUtils.doSaveEdit(msg, null);
 				return;
 			}
 			throw ex;

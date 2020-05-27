@@ -15,13 +15,17 @@ import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.winterwell.data.KStatus;
+import com.winterwell.es.ESPath;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
+import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.data.XId;
 
 /**
+ * 
  * TODO handle repeat donations
  * @author daniel
  *
@@ -131,7 +135,11 @@ public class MoneyCollector {
 			Charge charge = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 			Log.d("stripe.collect", charge);
 			basket.setPaymentId(charge.getId());
-			basket.setPaymentCollected(true);					
+			basket.setPaymentCollected(true);
+			
+			// TODO save the "paid" edit straight away
+//			AppUtils.doSaveEdit(basket, state);
+			
 			transfers.add(new Transfer(user, to, total));
 			// check we haven't done before: done by the op_type=create
 			return transfers;
