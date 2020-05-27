@@ -138,15 +138,14 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 				m.post();
 			}
 		} catch(Exception ex) {
+			msg.addLog(new Report("payment", ex));
 			// HACK
 			if (ex.toString().contains("Amount must be at least")) {
 				Log.w(getName(), ex);
 				// switch off
 				msg.setDone(true);
-				msg.addLog(new Report(null, ex));
-				AppUtils.doSaveEdit(msg, null);
-				return;
 			}
+			AppUtils.doSaveEdit(msg, null);
 			throw ex;
 		}
 	}
