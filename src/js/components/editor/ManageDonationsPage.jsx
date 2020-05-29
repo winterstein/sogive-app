@@ -74,12 +74,6 @@ const COLUMNS = [
 		type: 'checkbox',
 		saveFn: ({path,...huh}) => {
 			Misc.publishDraftFn({path});
-			// console.warn('huh', huh, item);
-			// if (item.status === 'DRAFT') {
-			// 	ActionMan.saveEdits(C.TYPES.Donation, item.id, item);
-			// } else {
-			// 	ActionMan.publishEdits(C.TYPES.Donation, item.id, item);
-			// }
 		}
 	},
 	{
