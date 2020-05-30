@@ -34,6 +34,7 @@ public class Donation extends AThing implements IForSale {
 	
 	/**
 	 * used to create RepeatDonation
+	 * Uses TUnit strings, WEEK / MONTH
 	 */
 	private String repeat;
 	

@@ -77,6 +77,9 @@ public class RepeatDonation extends AThing {
 		from = donation.getFrom();
 		ical.start = donation.getTime();		
 		Repeat repeater = donation.getRepeat();
+		if (repeater==null) {
+			throw new IllegalArgumentException("Not a repeat: "+donation);
+		}
 		ical.setRepeat(repeater);		
 	}
 
@@ -142,8 +145,8 @@ public class RepeatDonation extends AThing {
 		return ical;
 	}
 	public void addLog(Report report) {
-		if (log==null) log = new ArrayList();
-		log.add(report);
+//		if (log==null) log = new ArrayList();
+//		log.add(report);
 	}
 	
 }
