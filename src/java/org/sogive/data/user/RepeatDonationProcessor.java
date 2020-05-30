@@ -81,6 +81,7 @@ class RepeatTask extends TimerTask {
 			// send to actor
 			Gson gson = Dep.get(Gson.class);
 			for (Map<String, Object> map : jsonrdons) {
+				Log.e("RepeatTask.debug", map.get("id")+" json: "+map);
 				try {
 					String json = gson.toJson(map);
 					RepeatDonation rdon = gson.fromJson(json);
