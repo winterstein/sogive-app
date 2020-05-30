@@ -6,7 +6,6 @@ import { assert, assMatch } from 'sjtest';
 import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
 import Login from 'you-again';
-import {listPath} from '../base/plumbing/Crud';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import List from '../base/data/List';
@@ -19,7 +18,6 @@ import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../base/data/DataClass';
 import PropControl from '../base/components/PropControl';
-import { join, space } from '../base/components/BS';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions

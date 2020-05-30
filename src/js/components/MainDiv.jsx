@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
-import { assert } from 'sjtest';
-import { modifyHash } from 'wwutils';
+import { assert, assMatch } from 'sjtest';
+import { getUrlVars, toTitleCase, modifyHash, yessy } from 'wwutils';
+import { Container } from 'reactstrap';
 import _ from 'lodash';
 
 // Plumbing
 import DataStore from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
+import CRUD from '../base/plumbing/Crud';
 import C from '../C';
+import Misc from '../base/components/Misc';
 import Messaging from '../base/plumbing/Messaging';
 // Templates
 import MessageBar from '../base/components/MessageBar';
@@ -68,6 +71,7 @@ const PAGES = {
 	checkout: CheckoutPage
 };
 
+// NB: MainDivBase does this too, but not until after getRoles is called below
 Login.app = C.app.service;
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
@@ -83,12 +87,13 @@ const navbarPagesFn = () => {
 const MainDiv = () => {
 	
 	
-	return <MainDivBase pageForPath={PAGES}
+	return (<MainDivBase
+		pageForPath={PAGES}
 		navbarPages={navbarPagesFn}
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
-	/>;
-}; // ./MainDiv
+	/>);
+};
 
 export default MainDiv;
