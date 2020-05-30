@@ -1,0 +1,30 @@
+{  
+  "@class" : "org.sogive.data.user.RepeatDonation",
+  "amount" : {
+    "@class" : "com.goodloop.data.Money",
+    "year" : 0,
+    "currency" : "GBP",
+    "value100p" : 100000,
+    "value" : "10"
+  },
+  "did" : "1bah",
+  "from" : "foo@cam.ac.uk@email",
+  "ical" : {
+    "@class" : "com.winterwell.ical.ICalEvent",
+    "start" : "2020-03-02T00:44:37Z",
+    "repeat" : {
+      "@class" : "com.winterwell.ical.Repeat",
+      "rrule" : "FREQ=WEEKLY;UNTIL=20200612;",
+      "freq" : "WEEK",
+      "since" : "2020-03-02T00:44:37Z",
+      "until" : "2020-06-12T00:00:00Z",
+      "interval" : 1,
+      "count" : 0
+    }
+  },
+  "to" : "against-malaria-foundation",
+  "fundRaiser" : "mayweekalternative.xHcQLciF.4052b4",
+  "date" : "2020-03-02T00:44:37Z",
+  "done" : false,
+  "id" : "repeat1bah"
+}

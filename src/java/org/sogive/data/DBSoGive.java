@@ -70,6 +70,8 @@ public class DBSoGive {
 		ESType money = Money.ESTYPE;
 		
 		ESType charitymapping = new ESType()
+				.property("ready", new ESType().bool())
+				.property("impact", ESType.keyword)
 				.property("projects", 
 						new ESType().object()
 							.property("year", new ESType().INTEGER())
