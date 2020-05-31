@@ -135,7 +135,7 @@ public class RepeatDonation extends AThing {
 
 	boolean done;
 
-	private List<Report> log;
+	private List log;
 
 	public Time getDate() {
 		return date;
@@ -145,8 +145,8 @@ public class RepeatDonation extends AThing {
 		return ical;
 	}
 	public void addLog(Report report) {
-//		if (log==null) log = new ArrayList();
-//		log.add(report);
+		if (log==null) log = new ArrayList();
+		log.add(report);
 	}
 	
 }
