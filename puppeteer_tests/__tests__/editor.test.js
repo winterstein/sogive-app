@@ -47,22 +47,4 @@ describe('Edit organisation tests', () => {
 		await expect(profileShortDescription).toBe(timeStamp);
 	}, 99999);
 
-	// TODO: BUG: sogive editor does not save empty fields, so we'll replace it with a '.'
-	// test('Reset edits', async () => {
-	//     await page.goto(`${url}#edit?charityId=${lamb}`);
-	//     await page.waitForSelector('[name=summaryDescription]');
-	//     await page.click('[name=summaryDescription]', { clickCount: 3 });
-	//     // await page.keyboard.press('Backspace');
-	//     await page.type('[name=summaryDescription]', '.');
-	//     await page.click('[name=save]');
-	//     await page.waitFor(2000);
-	//     await page.click('[name=publish]');
-	//     await page.waitFor(2000);
-
-	//     await page.goto(`${url}#charity?charityId=urras-eaglais-na-h-aoidhe`);
-	//     await page.waitForSelector('.donation-output');
-
-	//     const profileShortDescription = await page.$eval('.donation-output p', e => e.innerText);
-	//     await expect(profileShortDescription).toBe('.'); 
-	// }, 50000);
 });
