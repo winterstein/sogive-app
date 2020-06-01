@@ -117,8 +117,8 @@ const Register = {
 
 const Search = {};
 Search.Main = {
-	SearchField: `#formq`,
-	SearchButton: `span.sogive-search-box.input-group-addon`,
+	SearchField: `input[name=raw]`,
+	SearchButton: `button.sogive-search-box`,
 	ResultsList: `#search div.results-list`,
 	FirstResult: `#search div.results-list div.SearchResult a`
 };
