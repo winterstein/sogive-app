@@ -48,8 +48,9 @@ const SearchPage = () => {
 	});
 	console.log(pvList);	
 	let total = pvList.value? List.total(pvList.value) : null;
-	let results = pvList.value? List.hits(pvList.value) : null;
-	results = DataStore.getDataList(results);
+	let results0 = pvList.value? List.hits(pvList.value) : null;
+	const results = DataStore.getDataList(results0);
+	console.log("results", results, "vs", results0);
 
 	return (
 		<div className='SearchPage row'>
@@ -144,7 +145,7 @@ const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, 
 			<div className='results-list'>
 				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				{ unready.length ? (
-					<div className='unready-results row'>
+					<div className='unready-results'>
 						<h3>Analysis in progress</h3>
 						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
 					</div>
