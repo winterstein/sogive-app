@@ -227,7 +227,6 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type="imgUpload" field="images" label="Photo" help={`Enter a url for a photo used by the charity to represent its work.
 		This can often be found on the charity's website or in the annual report and accounts. You can find the annual report and accounts
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
-		<EditField item={charity} type="text" field="imageCaption" label="Photo caption" />
 	</div>);
 }; // ./ProfileEditor
 
