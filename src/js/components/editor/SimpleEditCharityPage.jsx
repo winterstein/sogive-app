@@ -201,18 +201,15 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type="textarea" label="Description" field="description"
 			help="A short paragraph, e.g. 2 or 3 sentences. These are used underneath the summary description, so they should add to it and not repeat it." />
 		
-		<EditField item={charity} type="select" field="category" label="Category"
-			options={Object.keys(NGO.CATEGORY)}
-			help="The categories are mostly aligned with those used by Charity Navigator."
-		/>
-		<div><small>{charity.subcategory? null : (NGO.CATEGORY[charity.category] || []).join(" / ")}</small></div>
-		<EditField item={charity} type="select" field="subcategory" label="Sub-Category" options={NGO.CATEGORY[charity.category] || []} />
+		<div>
+			<p>The tags are used for the charity search process. A list of common tags is <a href="https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E" target="_blank">here</a>.</p>
+		</div>
+		<EditField item={charity} type="text" field="whyTags" label="Why (goal/area) tags"
+			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
 
-		<EditField item={charity} type="select" field="UNSDG" label="UN Sustainable Development Goal (SDG)"
-			options={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
-			labels={NGO.UNSDGs}
-			help="Which UN SDG does this charity mainly work on?" />
-
+		<EditField item={charity} type="text" field="howTags" label="How (method) tags"
+			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to \"Research\", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated.' />
+		
 		<EditField item={charity} type="text" field="whereTags" label="Where tags, e.g. UK, Africa, developing world"
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
