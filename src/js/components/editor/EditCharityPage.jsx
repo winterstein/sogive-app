@@ -170,7 +170,7 @@ const ProfileEditor = ({charity}) => {
 			field="parentCharityName"
 			help="Usually blank. The name of the parent charity, if there is one." />
 
-		<div className="well">
+		<div className="well ml-3">
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
 			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
 			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />

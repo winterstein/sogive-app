@@ -187,7 +187,7 @@ const ProfileEditor = ({charity}) => {
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 		<EditField item={charity} disabled type="text" field="name" label="Official name (locked)" help="The official name, usually as registered with the Charity Commission." />
 
-		<div className="well">
+		<div className="well ml-3">
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
 			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
 			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
