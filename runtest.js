@@ -1,1 +1,0 @@
-../wwappbase.js/test-base/runtest.js
