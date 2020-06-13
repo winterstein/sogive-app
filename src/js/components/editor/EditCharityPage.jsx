@@ -170,7 +170,7 @@ const ProfileEditor = ({charity}) => {
 			field="parentCharityName"
 			help="Usually blank. The name of the parent charity, if there is one." />
 
-		<div className="well">
+		<div className="well ml-3">
 			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
 			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
 			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
@@ -199,7 +199,7 @@ const ProfileEditor = ({charity}) => {
 		/>
 
 		<div>
-			<p>The tags are used for the charity search process. A list of common tags is here: https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E</p>
+			<p>The tags are used for the charity search process. A list of common tags is <a href="https://docs.google.com/spreadsheets/d/128zX3ic_YoRA0WS1XWZo9-co7A1EmgcVfd_XZBUTx3E" target="_blank">here</a>.</p>
 		</div>
 		<EditField item={charity} type="text" field="whyTags" label="Why (goal/area) tags"
 			help='What is this charitys cause area? E.g. "education", "poverty", "international aid", or "children". Multiple tags can be comma-separated. Please check the common tags list and use those where possible.' />
