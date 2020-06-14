@@ -192,7 +192,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
 	let credit = Transfer.getCredit();
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	const proposedSuggestedDonation = getSetDonationAmount({path, item, credit, suggestedDonations});
+	const proposedSuggestedDonation = getSetDonationAmount({path, item, credit, suggestedDonations, event});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
 	// NB: this should always be true, cos getSetDonationAmount sets it to a default
@@ -401,7 +401,7 @@ const SDButton = ({path, sd, donation}) => {
  * @param path {String[]} path to Donation item
  * @returns {SuggestedDonation}
  */
-const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount = ({path, item, credit, suggestedDonations, event}) => {
 	const dntn = DataStore.getValue(path) || DataStore.setValue(path, {});
 	let val = Donation.amount(dntn);
 	// Preserve user set values
@@ -409,7 +409,7 @@ const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
 		if ( ! val) val = new Money();
 		return {amount:val, repeat:dntn.repeat};
 	}
-	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations});
+	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations, event});
 	// side-effect: set
 	dntn.amount = sd.amount;
 	// dont overwrite repeat - so you can set it off before setting a £amount
@@ -421,7 +421,7 @@ const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
  *
  * @returns {SuggestedDonation}
  */
-const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) => {
 	// Set to amount of user's credit if present
 	if (credit && credit.value) {
 		return {amount:credit, repeat:'OFF'};
@@ -441,7 +441,8 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 	let cid = Donation.to(dontn);
 	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
 	let amount = Money.isa(val)? val : new Money({value:val});
-	return {amount, repeat:'MONTH'};
+	let repeat = event ? 'OFF' : 'MONTH'
+	return {amount, repeat};
 };
 
 
