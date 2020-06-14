@@ -262,7 +262,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 		dntn.amount = Object.assign({}, val);
 		DataStore.setValue(path, dntn, false);
 	}
-
+	
 	// What repeat options?
 	let repeatDonations = event ? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	repeatDonations.push(proposedSuggestedDonation.repeat);
@@ -311,8 +311,8 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{/* {dntn.repeat === 'WEEK'?	rm as asked by Sanjay, Jan 2020
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
 				: null} */}
-			{event && showRepeatControls ?
-				<PropControl disabled={!Donation.isRepeating(dntn)}
+			{event && showRepeatControls && Donation.isRepeating(dntn) ?
+				<PropControl
 					label='Stop recurring donations after the event? (you can also cancel at any time)'
 					type='checkbox'
 					path={path} prop='repeatStopsAfterEvent'
