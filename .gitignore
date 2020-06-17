@@ -22,4 +22,5 @@ dependencies/
 pom.bob.xml
 sogive.jar
 boblog
-puppeteer-tests/test-results
+src/puppeteer-tests/test-results
+src/puppeteer-tests/utils/*.js
