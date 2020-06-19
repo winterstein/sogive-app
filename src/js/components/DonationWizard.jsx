@@ -26,6 +26,7 @@ import { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
+import XId from '../base/data/XId';
 
 
 const widgetPath = ['widget', 'DonationWizard'];
@@ -340,7 +341,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	return <>
 		<Row>
 			<Col md="6" sm="12">
-				<Misc.PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money'
+				<PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money'
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
@@ -352,7 +353,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 				/>
 			</Col>
 			<Col md="6" sm="12">
-				<Misc.PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false}
+				<PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false}
 					onChange={e => {
 						let pounds = e.target.value;
 						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
@@ -489,20 +490,20 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 				GiftAid can add considerably to your donation at no extra cost.<br />
 				Please answer the questions below to see if this donation qualifies for GiftAid.
 			</p>
-			<Misc.PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
+			<PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
 				label='This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.'
 			/>
-			<Misc.PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
+			<PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
 				label='This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.'
 			/>
-			<Misc.PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
+			<PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
 				label='I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.'
 			/>
-			<Misc.PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
+			<PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
 				label='I am a UK taxpayer.'
 			/>
 			{giftAidMessage}
-			<Misc.PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
+			<PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
 				label='I want to Gift Aid this donation, and agree to sharing my details for this.'
 			/>
 		</div>
@@ -512,19 +513,24 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 const DetailsSection = ({path, charity, fromEditor}) => {
 	const {giftAid} = DataStore.getValue(path);
 
+	// Do we have the user's details stored?
+	// let user = Login.getUser();
+	// let name = user && user.name;
+	// let email = user && user.xid && XId.service(user.xid) === 'email' && XId.id(user.xid);
+	// TODO PropControl dflt doesn't properly work
+
 	// dflt={Login.getUser() && Login.getUser().name}
 	// dflt={Login.getEmail()}
 	let reqrd = giftAid;
 	return (
-		// TODO do we have the user's details stored?
 		<div className='section donation-amount'>
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> : null}
-			{fromEditor? <Misc.PropControl label='Donor ID' path={path} prop='from' /> : null}
-			<Misc.PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' required={reqrd} optional={ ! reqrd} />
-			<Misc.PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' required />
-			<Misc.PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' required={reqrd} optional={ ! reqrd} />
-			<Misc.PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' required={reqrd} optional={ ! reqrd} />
-			{ ! giftAid? <Misc.PropControl prop='consentToSharePII'
+			{fromEditor? <PropControl label='Donor ID' path={path} prop='from' /> : null}
+			<PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' required={reqrd} optional={ ! reqrd} />
+			<PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' required />
+			<PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' required={reqrd} optional={ ! reqrd} />
+			<PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' required={reqrd} optional={ ! reqrd} />
+			{ ! giftAid? <PropControl prop='consentToSharePII'
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'}
 				path={path} type='checkbox' />
 				: null}
@@ -534,7 +540,7 @@ const DetailsSection = ({path, charity, fromEditor}) => {
 
 const MessageSection = ({path, recipient, item}) => (
 	<div className='section donation-amount'>
-		<Misc.PropControl
+		<PropControl
 			prop='message'
 			label='Message'
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`}
@@ -545,12 +551,12 @@ const MessageSection = ({path, recipient, item}) => (
 			By default we list your name and the amount.
 			Your name, amount, and your email are also shared with the organiser.
 		</p>
-		<Misc.PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox'
+		<PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox'
 			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))?
 				"Your name will not be listed on the website. However your name, email, and donation will still be shared with the organiser" : null}
 		/>
 
-		<Misc.PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
+		<PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
 
 	</div>
 );
@@ -619,8 +625,8 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 		donation.paidElsewhere = true;
 		return (<div>
 			<p>This form is for donations that have already been paid.</p>
-			<Misc.PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
-			<Misc.PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
+			<PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
+			<PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
 			<Button color="primary" onClick={e => {
 				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
 					.then(res => {
@@ -645,9 +651,9 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	return (<div>
 		<div className='padded-block'>
-			<Misc.PropControl type='checkbox' path={path} item={donation} prop='hasTip'
+			<PropControl type='checkbox' path={path} item={donation} prop='hasTip'
 				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : ''} tip to cover SoGive's operating costs?`} />
-			<Misc.PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />
+			<PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
