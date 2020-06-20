@@ -179,6 +179,9 @@ const EventEditor = ({id}) => {
 
 			<PropControl path={path} prop='shareDonorsWithOrganiser' item={item} label='Anonymous donors: Share details with event organiser'
 				type='checkbox' help="If set, the organiser (that's probably you!) will get name and email details for <i>all</i> donors. Donors will be informed of this when making a donation. Only tick this if you need those details. You will be responsible for handling their personal data correctly." />
+
+			<PropControl path={path} prop='allowOngoingDonations' item={item} label='Allow donations which repeat after the event'
+				type='checkbox' />
 		</Misc.Card>
 
 		<div>

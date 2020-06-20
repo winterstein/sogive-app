@@ -247,10 +247,10 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 
 
 /**
- *
- * @param item {NGO|FundRaiser}
- * @param credit {?Money}
- * @param proposedDonationValue {!SuggestedDonation} Assumed setup already
+ * @param {boolean} paidElsewhere Are they reporting an off-SoGive donation?
+ * @param {NGO|FundRaiser} item 
+ * @param {?Money} credit 
+ * @param {!SuggestedDonation} proposedDonationValue Assumed setup already
  */
 const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 	proposedSuggestedDonation, suggestedDonations, event, preferredCurrency}) =>
@@ -277,20 +277,37 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 		dntn.repeatStopsAfterEvent = true;
 	}
 	
-	// Disallow repeat donations if the event has already passed
-	const eventExpired = event && event.date && new Date() > new Date(event.date);
-	let showRepeatControls = !eventExpired || dntn.repeat || repeatDonations.length > 1;
-	// Suggested repeat? If not, default to one-off, no repeats
-	if (showRepeatControls && dntn.repeat === undefined) {
-		dntn.repeat = proposedSuggestedDonation.repeat || 'OFF';
+	// Offer repeating donations?
+	let showRepeatControls = true;
+	// Off for an event?
+	// NB: always show the controls if the donation _is_ repeating, or repeats are suggested, 'cos they're needed
+	if (event && ! dntn.repeat && repeatDonations.length===0) {
+		// must be switched on in the event
+		if ( ! event.allowOngoingDonations) {
+			showRepeatControls = false;			
+		}
+		// Disallow repeat donations if the event has already passed
+		// Use-case: the event had pay-in-installments options, which are now invalid.
+		// Minor TODO it'd be better to screen those out of the suggestedDonations
+		const eventExpired = event.date && new Date() > new Date(event.date);
+		if (eventExpired) {
+			showRepeatControls = false;
+		}		
 	}
+	if (event) {
+		// Suggested repeat? If not, default to one-off, no repeats
+		if (showRepeatControls && dntn.repeat === undefined) {
+			dntn.repeat = proposedSuggestedDonation.repeat || 'OFF';
+		}
+	}
+	// are they reporting an off-SoGive donation?
 	if (paidElsewhere) {
-		showRepeatControls = dntn.repeat && true; // off unless somehow set
+		showRepeatControls = dntn.repeat && true; // false unless dntn.repeat is somehow set
 		suggestedDonations = []; // no suggested donations as this is for logging ad-hoc external payments
 	}
 
 	return (
-		<div className='section donation-amount'>
+		<div className="section donation-amount">
 			
 			{suggestedDonations.length? <h4>Suggested Donations</h4>: null}
 			{suggestedDonations.map((sd, i) => <SDButton key={i} sd={sd} path={path} donation={dntn} />)}
@@ -309,10 +326,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 				<PropControl type='radio' path={path} prop='repeat'
 					options={repeatDonations} labels={Donation.strRepeat} inline
 				/> : null}
-			{/* {dntn.repeat === 'WEEK'?	rm as asked by Sanjay, Jan 2020
-				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
-				: null} */}
-			{event && showRepeatControls && Donation.isRepeating(dntn) ?
+			{event && showRepeatControls && Donation.isRepeating(dntn) ?			
 				<PropControl
 					label='Stop recurring donations after the event? (you can also cancel at any time)'
 					type='checkbox'
@@ -429,7 +443,6 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) 
 	}
 	// fundraiser target?
 	let target = item.target;
-	// divide by weekly??
 	
 	// Set to suggested donation?
 	if (suggestedDonations && suggestedDonations.length) {

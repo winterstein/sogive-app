@@ -32,6 +32,11 @@ public class Event extends AThing {
 	List<SuggestedDonation> suggestedDonations;
 	
 	/**
+	 * Should people be able to create ongoing donations, e.g. monthly and extending after the event?
+	 */
+	Boolean allowOngoingDonations;
+	
+	/**
 	 * status NOT used
 	 */
 	Money target = Money.pound(100);
@@ -77,6 +82,9 @@ public class Event extends AThing {
 	 * Event "features"
 	 */
 	Boolean teams;
+	/**
+	 * Allow the participants to pick their own charity
+	 */
 	Boolean pickCharity;
 	
 	/**
@@ -85,9 +93,12 @@ public class Event extends AThing {
 	Boolean shareDonorsWithOrganiser;
 	
 	/**
-	 * locked charity?
+	 * Set to charity-id if this event is locked to a charity. 
+	 * @see {@link #pickCharity}
 	 */
 	String charityId;
+	
+	
 	
 	public Time getDate() {
 		return date==null? null : new Time(date);

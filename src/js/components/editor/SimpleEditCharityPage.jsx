@@ -150,7 +150,7 @@ const EditorialEditor = ({charity}) => {
 
 	return (<div>
 		<EditField item={charity} type="select" field="impact"
-			options={C.IMPACT_VALUES.values.concat('')}
+			options={C.IMPACT_VALUES.values}
 			labels={C.IMPACT_LABEL4VALUE}
 			label="Overall Impact Rating"
 			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
@@ -158,7 +158,7 @@ const EditorialEditor = ({charity}) => {
 
 		<EditField item={charity} field="confidence"
 			type="select"
-			options={CONFIDENCE_VALUES.values.concat('')}
+			options={CONFIDENCE_VALUES.values}
 			label="Overall Confidence"
 			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities."
 		/>
