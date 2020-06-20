@@ -193,7 +193,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	// NB: do this here, not in AmountSection, as there are use cases where amount section doesnt get rendered.
 	let credit = Transfer.getCredit();
 	let suggestedDonations = item.suggestedDonations || (event && event.suggestedDonations) || [];
-	const proposedSuggestedDonation = getSetDonationAmount({path, item, credit, suggestedDonations});
+	const proposedSuggestedDonation = getSetDonationAmount({path, item, credit, suggestedDonations, event});
 	Money.assIsa(proposedSuggestedDonation.amount, proposedSuggestedDonation);
 	const amount = DataStore.getValue(path.concat("amount"));
 	// NB: this should always be true, cos getSetDonationAmount sets it to a default
@@ -263,7 +263,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 		dntn.amount = Object.assign({}, val);
 		DataStore.setValue(path, dntn, false);
 	}
-
+	
 	// What repeat options?
 	let repeatDonations = event ? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	repeatDonations.push(proposedSuggestedDonation.repeat);
@@ -312,8 +312,8 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{/* {dntn.repeat === 'WEEK'?	rm as asked by Sanjay, Jan 2020
 				"Note: although we do not charge any fees, the payment processing company levies a per-transaction fee, so splitting the donation into many steps increases the fees."
 				: null} */}
-			{event && showRepeatControls ?
-				<PropControl disabled={!Donation.isRepeating(dntn)}
+			{event && showRepeatControls && Donation.isRepeating(dntn) ?
+				<PropControl
 					label='Stop recurring donations after the event? (you can also cancel at any time)'
 					type='checkbox'
 					path={path} prop='repeatStopsAfterEvent'
@@ -402,7 +402,7 @@ const SDButton = ({path, sd, donation}) => {
  * @param path {String[]} path to Donation item
  * @returns {SuggestedDonation}
  */
-const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount = ({path, item, credit, suggestedDonations, event}) => {
 	const dntn = DataStore.getValue(path) || DataStore.setValue(path, {});
 	let val = Donation.amount(dntn);
 	// Preserve user set values
@@ -410,7 +410,7 @@ const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
 		if ( ! val) val = new Money();
 		return {amount:val, repeat:dntn.repeat};
 	}
-	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations});
+	const sd = getSetDonationAmount2({path, item, credit, suggestedDonations, event});
 	// side-effect: set
 	dntn.amount = sd.amount;
 	// dont overwrite repeat - so you can set it off before setting a £amount
@@ -422,7 +422,7 @@ const getSetDonationAmount = ({path, item, credit, suggestedDonations}) => {
  *
  * @returns {SuggestedDonation}
  */
-const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
+const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) => {
 	// Set to amount of user's credit if present
 	if (credit && credit.value) {
 		return {amount:credit, repeat:'OFF'};
@@ -442,7 +442,8 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations}) => {
 	let cid = Donation.to(dontn);
 	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
 	let amount = Money.isa(val)? val : new Money({value:val});
-	return {amount, repeat:'MONTH'};
+	let repeat = event ? 'OFF' : 'MONTH'
+	return {amount, repeat};
 };
 
 
