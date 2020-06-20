@@ -150,18 +150,15 @@ const EditorialEditor = ({charity}) => {
 
 	return (<div>
 		<EditField item={charity} type="select" field="impact"
-			options={C.IMPACT_VALUES.values}
+			options={C.IMPACT_VALUES.values.concat('')}
 			labels={C.IMPACT_LABEL4VALUE}
-			canUnset
 			label="Overall Impact Rating"
 			help="Assuming you agree with the charity's end-goals, how effective is it per-£ at delivering them? Gold quality charities are listed above others - they should have a high impact-per-£ ratio, based on reliable data."
 		/>
 
 		<EditField item={charity} field="confidence"
 			type="select"
-			options={CONFIDENCE_VALUES.values}
-			defaultValue={CONFIDENCE_VALUES.medium}
-			canUnset
+			options={CONFIDENCE_VALUES.values.concat('')}
 			label="Overall Confidence"
 			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities."
 		/>
@@ -565,9 +562,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<PropControl prop="confidence" type="select" options={CONFIDENCE_VALUES.values}
-				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
-			/>
+			<PropControl prop="confidence" type="select" options={CONFIDENCE_VALUES.values} path={inputPath} item={output} />
 		</td>
 		<td>
 			<PropControl prop="description" type="textarea"
