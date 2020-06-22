@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {assert} from 'sjtest';
 import DataClass from '../../base/data/DataClass';
-import {asNum} from 'wwutils';
+import { asNum } from '../../base/utils/miscutils';
 
 class Citation extends DataClass {
 	/** duck type: needs URL and year  */

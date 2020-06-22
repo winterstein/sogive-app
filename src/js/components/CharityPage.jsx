@@ -3,7 +3,7 @@ import React from 'react';
 import _ from 'lodash';
 import Login from 'you-again';
 import { Col, Label } from 'reactstrap';
-import { yessy } from 'wwutils';
+import {yessy } from '../base/utils/miscutils';
 
 import printer from '../base/utils/printer';
 import DataStore from '../base/plumbing/DataStore';

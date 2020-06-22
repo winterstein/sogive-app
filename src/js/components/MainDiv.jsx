@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Login from 'you-again';
-import { assert, assMatch } from 'sjtest';
-import { getUrlVars, toTitleCase, modifyHash, yessy } from 'wwutils';
 import { Container } from 'reactstrap';
 import _ from 'lodash';
 

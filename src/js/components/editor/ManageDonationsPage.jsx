@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert, assMatch} from 'sjtest';
 import Login from 'you-again';
-import {encURI, XId} from 'wwutils';
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
@@ -16,6 +15,7 @@ import MoneyItem from '../../base/data/MoneyItem';
 import Misc from '../../base/components/Misc';
 import SimpleTable from '../../base/components/SimpleTable';
 import PropControl from '../../base/components/PropControl';
+import XId from '../../base/data/XId';
 
 const COLUMNS = [
 	{

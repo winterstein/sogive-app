@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
 import printer from '../../base/utils/printer.js';
-import {modifyHash} from 'wwutils';
+import { modifyHash } from '../../base/utils/miscutils';
+
 import C from '../../C';
 import Roles from '../../base/Roles';
 import Misc from '../../base/components/Misc';

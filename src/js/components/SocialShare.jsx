@@ -3,7 +3,8 @@
 
 import React from 'react';
 import {assert, assMatch} from 'sjtest';
-import {encURI} from 'wwutils';
+import { encURI } from '../base/utils/miscutils';
+
 
 import DataStore from '../base/plumbing/DataStore';
 import C from '../C';

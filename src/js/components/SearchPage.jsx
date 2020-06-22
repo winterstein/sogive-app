@@ -4,7 +4,8 @@ import _ from 'lodash';
 import { assert, assMatch } from 'sjtest';
 // import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
 import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
-import {uid, encURI, modifyHash, stopEvent} from 'wwutils';
+import {encURI, modifyHash, stopEvent } from '../base/utils/miscutils';
+
 import Login from 'you-again';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';

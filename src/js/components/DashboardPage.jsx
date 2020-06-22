@@ -1,7 +1,8 @@
 import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
-import { XId, encURI } from 'wwutils';
+import XId from '../base/data/XId';
+import {encURI} from '../base/utils/miscutils';
 import {Card, CardTitle} from 'reactstrap';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';

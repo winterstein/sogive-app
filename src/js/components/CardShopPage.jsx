@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { XId, encURI, modifyHash } from 'wwutils';
+import XId from '../base/data/XId';
+import {encURI, modifyHash } from '../base/utils/miscutils';
 import Login from 'you-again';
 import { Row, Col, Button } from 'reactstrap';
 import C from '../C';

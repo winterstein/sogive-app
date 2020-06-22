@@ -10,11 +10,11 @@ import ServerIO from '../plumbing/ServerIO';
 import Roles from '../base/Roles';
 import Misc from '../base/components/Misc';
 import GiftAidForm from './GiftAidForm';
-import {XId} from 'wwutils';
 import Transfer from '../base/data/Transfer';
 import {LoginLink} from '../base/components/LoginWidget';
 import {RolesCard, LoginCard} from '../base/components/AccountPageWidgets';
 import ListLoad from '../base/components/ListLoad';
+import XId from '../base/data/XId';
 
 const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
