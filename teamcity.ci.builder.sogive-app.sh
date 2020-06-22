@@ -53,7 +53,7 @@ function send_alert_email {
         TIME=$(date +%Y-%m-%dT%H:%M:%S-%Z)
 	    message="AutoBuild Detected a Failure with $BUILD_PROCESS_NAME"
 	    body="Hi,\nThe AutoPublisher detected a failure when $BUILD_STEP"
-	    title="[$HOSTNAME] $message"
+	    title="TeamCity $message"
 	    printf "$body" | mutt -s "$title" -- $email
     done
 }
@@ -177,6 +177,8 @@ function use_npm {
                 printf "\nDeleting the existing node_modules...\n"
                 ssh winterwell@$server "rm -rf $PROJECT_ROOT_ON_SERVER/node_modules"
             fi
+            # Ensuring that there are no residual npm error/debug logs in place
+            ssh winterwell@$server "rm -rf /home/winterwell/.npm/_logs/*.log"
             printf "\nEnsuring all NPM Packages are in place on $server ...\n"
             ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && npm i"
             printf "\nChecking for errors while npm was attempting to get packages on $server ...\n"
