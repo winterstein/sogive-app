@@ -29,7 +29,13 @@
     "react-stripe-elements": "^2.0.3",
     "reactstrap": "^8.4.1",
     "sjtest": "^0.4.9",
-    "you-again": "^0.8.8"
+    "you-again": "^0.8.8",
+    "jest": "^25.1.0",
+    "shelljs": "^0.8.3",
+    "yargs": "^15.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^2.0.0",
+    "puppet-theatre": "latest"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors && git log -1 > web/build/npm-compile.gitlog.txt",
