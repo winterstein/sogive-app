@@ -63,8 +63,9 @@ Note: This is done using `webpack` and `webpack.config.js`. The watch.sh script 
 7. Modify your `/etc/hosts` file to have `127.0.0.1 local.sogive.org`
 
 	sudo nano /etc/hosts
-	# Then add the line 127.0.0.1 local.sogive.org
-	# and save (Control-X to exit, and follow the prompts)
+
+Then add the line: `127.0.0.1 local.sogive.org`   
+and save (Control-X to exit, and follow the prompts)
 
 8. Test: You should be able to view your local SoGive from a browser at http://local.sogive.org. It may fail to connect with a backend server, and emit an error. But you can check the js compilation is working.
 
