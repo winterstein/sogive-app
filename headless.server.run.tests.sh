@@ -5,7 +5,7 @@
 # purposes:
 # 01. capture node output to a text file
 # 02. analyze the text file and count errors reported
-# 03. email number and summary of errors to Andris
+# 03. email number and summary of errors to relevent persons
 
 PROJECT_NAME="sogive-app"
 RECEIVERS=("sysadmin@good-loop.com" "daniel@good-loop.com" "roscoe@good-loop.com")
@@ -37,8 +37,11 @@ else
     mkdir -p /tmp/msmtp
 fi
 
+# Resolve Dependencies
+npm i
+
 # Get node console out put into a text file
-node runtest.js &> $LOGFILE
+node runtest.headless.server.js &> $LOGFILE
 
 # surface scrape of log for failures
 ## Count them:
@@ -53,7 +56,7 @@ fi
 if [[ $NUM_FAILS -gt '0' ]]; then
     for recipients in ${RECEIVERS[@]}; do
         EMAIL_BODY=$(cat $SUMMARY_LOGFILE)
-        SUBJECT=$(printf "$NUM_FAILS test(s) failed for $PROJECT_NAME")
+        SUBJECT=$(printf [$HOSTNAME] reported "$NUM_FAILS test(s) failed for $PROJECT_NAME")
         send_email
     done
 fi

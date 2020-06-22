@@ -243,16 +243,17 @@ function start_service {
 # Automated Testing -- Evaluate and Use
 function use_automated_tests {
     if [[ $PROJECT_USES_AUTOMATED_TESTING = 'yes' ]]; then
+        DELAY_SECONDS='10'
+        printf "\nGetting Ready to Perform Tests...\n"
+        while [ $DELAY_SECONDS -gt 0 ]; do
+	        printf "$DELAY_SECONDS\033[0K\r"
+	        sleep 1
+	        : $((DELAY_SECONDS--))
+        done
         BUILD_PROCESS_NAME='automated testing'
         BUILD_STEP='automated tests were running'
         for server in ${TARGET_SERVERS[@]}; do
-            printf "\nEnding old automated testing session on $server...\n"
-            ssh winterwell@$server "tmux kill-session -t $PROJECT_NAME-automated-tests"
-            printf "\n$server is starting automated tests...\n"
-            ssh winterwell@$server "tmux new-session -d -s $PROJECT_NAME-automated-tests -n panel01"
-            ssh winterwell@$server "tmux send-keys -t $PROJECT_NAME-automated-tests 'cd $PROJECT_ROOT_ON_SERVER && npm run tests' C-m"
-            printf "\n$server is running automated tests in a tmux session\n"
-            printf "\tto check the progress, use ssh winterwell@$server and then use tmux attach-sessiont -t $PROJECT_NAME-automated-tests\n"
+            ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && bash headless.server.run.tests.sh"
         done
     fi
 }
