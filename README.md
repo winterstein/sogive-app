@@ -18,68 +18,62 @@ These instructions assume Linux.
        mkdir winterwell
        cd winterwell
 
-3. Clone this repo and its siblings
+3. Clone this repo, and its sibling wwappbase.js (which contains widgets and utility code)
 
        git clone git@github.com:winterstein/sogive-app.git
        git clone git@github.com:winterstein/wwappbase.js.git
 
-Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js repo.
+Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js repo. Your folders should look like this:
+
+	winterwell
+		/sogive-app
+		/wwappbase.js
 
 4. Install npm packages
 
        cd sogive-app
        npm i
 
-5. Compile the css (must be run from bash, not zsh)
-	
-       sudo apt install node-less
-       ./convert.less.sh
-
-6. Compile the js (and watch for edits)
+5. Compile the js and the css (and - joy! - watch for edits). 
 
        ./watch.sh
+       
+Note: This is done using `webpack` and `webpack.config.js`. The watch.sh script is a handy way of doing that during development. On the production server, we use `npm run compile`.
 
-7. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:
+6. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
+  	1. Install nginx (the command below is for debian-flavour Linux, eg Ubuntu or Mint)
+	
+  		sudo apt install nginx
   
-	   sudo apt install nginx
-	   cd /etc/nginx/sites-enabled
-	   sudo nano ../sites-available/local.sogive.org
-    
-     - paste the following into the file, and replace the `root` path:
-	```
-	server {
-		listen   80; ## listen for ipv4; this line is default and implied
-		root [path to sogive-app directory e.g. /home/your_username/winterwell/sogive-app]/web;
-		index index.html;
-		server_name local.sogive.org;
-		location / {
-				try_files $uri $uri/ @backend;
-				add_header 'Access-Control-Allow-Origin' "$http_origin";
-				add_header 'Access-Control-Allow-Credentials' 'true';
-		}
-		location @backend {
-				proxy_pass              http://localhost:8282;
-				proxy_set_header        X-Real-IP $remote_addr;
-				proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-				proxy_set_header        Host $http_host;
-		}
-	}
-	```
+  	2. Copy the config file to nginx. Following convention, it goes in two places, symlinked together:
+	   
+	   cd /etc/nginx/sites-available	   
+	   sudo cp ~/winterwell/sogive-app/config/local.sogive.org.nginx .
+	   cd ../sites-enabled
+	   sudo ln -s ../sites-available/local.sogive.org.nginx .
 
-     - symlink the file and start nginx:
+	3. The config file expects the sogive files to be in a "standard" place, so let's make them accessible there with a symlink:
+	
+		sudo ln -s ~/winterwell /home/winterwell
 
-           sudo ln -s ../sites-available/local.sogive.org .
-           sudo service nginx restart
+	4. Restart nginx
+	
+		sudo service nginx restart
 
-8. Optional: Modify your /etc/hosts to have `127.0.0.1 local.sogive.org`
+7. Modify your `/etc/hosts` file to have `127.0.0.1 local.sogive.org`
 
-9. Test: You should be able to view your local SoGive from a browser at http://local.sogive.org. It may fail to connect with a backend server, and emit an error. But you can check the js compilation is working.
+	sudo nano /etc/hosts
 
-10. If you got a connection error - Edit src/js/plumbing/ServerIO.js and uncomment the line:
+Then add the line: `127.0.0.1 local.sogive.org`   
+and save (Control-X to exit, and follow the prompts)
+
+8. Test: You should be able to view your local SoGive from a browser at http://local.sogive.org. It may fail to connect with a backend server, and emit an error. But you can check the js compilation is working.
+
+9.If you got a connection error - Edit src/js/plumbing/ServerIO.js and uncomment the line:
 	`ServerIO.APIBASE = 'https://test.sogive.org';`
 Your local SoGive should now connect to a test server, which has some data.
 
-11. Celebrate as you see best. Ask Sanjay if you want a recommendation for
+10 Celebrate as you see best. Ask Sanjay if you want a recommendation for
 a high impact celebration.
 
 
@@ -89,30 +83,25 @@ Not needed for UI edits, but if you want to do backend work...
 
 1. Install Java (e.g. via apt-get install)
 
-2. Install ElasticSearch
-May 2020: Currently we use version 5 (install e.g. [via docker](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docker.html#_pulling_the_image)). 
-Though we will switch to version 7 soon.
+2. Install ElasticSearch. June 2020: We now use version 7
 
-3. Download bob-all.jar from https://www.winterwell.com/software/bob/ into sogive-app
+3. Install Bob:
+
+	sudo npm i -g java-bob
 
 4. Use Bob to fetch dependency jars:
 
-       cd sogive-app
-       java -jar bob-all.jar
+       cd ~/winterwell/sogive-app
+       bob
 
-5. Start ElasticSearch, with xpack security disabled (why??). 
+5. Start ElasticSearch
 
-    For example, (using docker): 
-    
-    ```
-    docker run -p 9200:9200 -d -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:5.6.16
-    ```
-
-6. Run SoGive Server -- from Eclipse is probably easiest
+6. Run SoGive Server -- *Running SogiveServer from inside Eclipse is probably easiest*. 
+If you should want to run from the command line, it is `java -ea -cp build-lib/sogive.jar:build-lib/* org.sogive.server.SoGiveServer`
 
 7. Some tests:
    - Test your local ElasticSearch is running: http://localhost:9200
    - Test your local java SoGiveServer is running: http://localhost:8282
    - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
    - Test your local web-app: http://local.sogive.org/
-  
+
