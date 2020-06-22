@@ -52,7 +52,7 @@ ATTACHMENTS=()
 function send_alert_email {
     for email in ${EMAIL_RECIPIENTS[@]}; do
         TIME=$(date +%Y-%m-%dT%H:%M:%S-%Z)
-	    message="AutoBuild Detected a Failure with $BUILD_PROCESS_NAME"
+	    message="AutoBuild Detected a Failure Building $PROJECT_NAME during $BUILD_PROCESS_NAME"
 	    body="Hi,\nThe AutoPublisher detected a failure when $BUILD_STEP"
 	    title="TeamCity $message"
 	    printf "$body" | mutt -s "$title" ${ATTACHMENTS[@]} -- $email
