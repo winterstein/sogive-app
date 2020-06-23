@@ -1,7 +1,8 @@
 import React from 'react';
 import Login from 'you-again';
 import _ from 'lodash';
-import { encURI } from 'wwutils';
+import {encURI} from '../../base/utils/miscutils';
+
 
 import printer from '../../base/utils/printer';
 // import C from '../C';

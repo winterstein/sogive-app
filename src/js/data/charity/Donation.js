@@ -3,7 +3,7 @@ import DataClass, {nonce} from '../../base/data/DataClass';
 import C from '../../C';
 import Money from '../../base/data/Money';
 import DataStore from '../../base/plumbing/DataStore';
-import {XId, blockProp} from 'wwutils';
+import XId from '../../base/data/XId';
 
 /**
  * Note: SuggestedDonation can be viewed as a small subset of this {amount, repeat}
@@ -48,7 +48,7 @@ function isNumeric(value) {
 
 Donation.assIsa = (obj) => {
 	assert(Donation.isa(obj), "Donation.js - not a Donation "+obj);
-	blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');
+	// blockProp(obj, 'fundraiser', 'Donation.js - use Donation.fundRaiser()');
 	return true;
 };
 

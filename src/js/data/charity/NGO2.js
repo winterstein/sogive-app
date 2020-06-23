@@ -2,16 +2,17 @@
 
 import _ from 'lodash';
 import $ from 'jquery';
+import HashMap from 'hashmap';
+import Enum from 'easy-enums';
 import DataClass from '../../base/data/DataClass';
 import {assert, assMatch} from 'sjtest';
-import {ellipsize, asNum} from 'wwutils';
 import Project from './Project';
 import Output from './Output';
 import Money from '../../base/data/Money';
-import HashMap from 'hashmap';
 import Citation from './Citation';
-import Enum from 'easy-enums';
 import NGO from '../../base/data/NGO';
+import { ellipsize, asNum } from '../../base/utils/miscutils';
+
 /**
  * Each Charity (NGO -- which is the thing.org type) has projects.
  * "overall" is a project.

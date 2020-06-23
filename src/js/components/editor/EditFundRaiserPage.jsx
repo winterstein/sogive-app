@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { assMatch } from 'sjtest';
-import {encURI} from 'wwutils';
+import { encURI, } from '../../base/utils/miscutils';
+
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';

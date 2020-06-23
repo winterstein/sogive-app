@@ -4,7 +4,7 @@ import { assMatch } from 'sjtest';
 import Login from 'you-again';
 import { Container, Row, Col } from 'reactstrap';
 import _ from 'lodash';
-import {encURI} from 'wwutils';
+import {encURI} from '../base/utils/miscutils';
 
 import C from '../C';
 

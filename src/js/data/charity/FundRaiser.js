@@ -1,12 +1,12 @@
 import {assert, assMatch} from 'sjtest';
 import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
-import {blockProp, XId} from 'wwutils';
 import C from '../../C';
 import md5 from 'md5';
 import Ticket from './Ticket';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../base/plumbing/ActionManBase';
+import XId from '../../base/data/XId';
 
 /** impact utils */
 class FundRaiser extends DataClass {

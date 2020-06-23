@@ -3,7 +3,7 @@ import React from 'react';
 import { Jumbotron, Button, Badge } from 'reactstrap';
 
 import { assert } from 'sjtest';
-import { encURI } from 'wwutils';
+import {encURI} from '../base/utils/miscutils';
 import Login from 'you-again';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';

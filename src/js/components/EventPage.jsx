@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import MDText from '../base/components/MDText'
 
 import SJTest, {assert} from 'sjtest';
-import { modifyHash, encURI, uid, yessy } from 'wwutils';
+import XId from '../base/data/XId';
+import {encURI, modifyHash, uid, yessy } from '../base/utils/miscutils';
 
 import printer from '../base/utils/printer.js';
 import C from '../C';

@@ -5,7 +5,6 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
-import {XId, encURI} from 'wwutils';
 import C from '../C.js';
 
 import Login from 'you-again';
@@ -21,6 +20,7 @@ ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
 // ServerIO.APIBASE = 'https://app.sogive.org';
 
+// ?? use media.good-loop.com??
 ServerIO.MEDIA_ENDPOINT = '/upload.json';
 
 ServerIO.checkBase();
