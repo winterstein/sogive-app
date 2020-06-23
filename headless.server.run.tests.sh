@@ -65,7 +65,7 @@ fi
 if [[ $NUM_FAILS -gt '0' ]]; then
     for recipients in ${RECEIVERS[@]}; do
         EMAIL_BODY=$(cat $SUMMARY_LOGFILE)
-        SUBJECT=$(printf [$HOSTNAME] reported "$NUM_FAILS test(s) failed for $PROJECT_NAME")
+        SUBJECT=$(printf "$HOSTNAME reported $NUM_FAILS test(s) failed for $PROJECT_NAME")
         send_email
     done
 fi
