@@ -1,4 +1,6 @@
 'use strict';
+// Copied from wwappbase.js/template - because symlinks dont work
+// Calls npm run test = jest, with config set in process
 const shell = require('shelljs');
 const yargv = require('yargs').argv;
 
@@ -9,8 +11,11 @@ let config = {
 	head: true,
 	chrome: false,
 };
-let argv = process.argv.slice(0, 2);
 
+// Parse arguments...
+let argv = process.argv.slice(0, 2);
+// testPath ??format??
+// runInBand ??options??
 let testPath = '';
 let runInBand = '';
 

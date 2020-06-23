@@ -1,5 +1,5 @@
 const config = JSON.parse(process.env.__CONFIGURATION);
-console.log(config)
+console.log("jest-puppeteer.config.js", config);
 
 module.exports = {
 	launch: {
