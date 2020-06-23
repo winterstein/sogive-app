@@ -2,7 +2,7 @@
 
 # TeamCity Continuous Integration Builder Template
 
-#Version 1.0
+#Version 1.1
 # Meaning - Script has been written and tested
 
 #####  GENERAL SETTINGS
@@ -193,7 +193,6 @@ function use_npm {
                 ATTACHMENTS+=("-a *.log")
                 # Send the email
                 send_alert_email
-                exit 0
             fi
         done
     fi
@@ -209,17 +208,16 @@ function use_webpack {
             printf "\nNPM is now running a Webpack process on $server\n"
             ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE"
             printf "\nChecking for errors that occurred during Webpacking process on $server ...\n"
-            if [[ $(ssh winterwell@$server "grep -i 'error' $NPM_RUN_COMPILE_LOGFILE") = '' ]]; then
+            if [[ $(ssh winterwell@$server "cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx'") = '' ]]; then
                 printf "\nNo Webpacking errors detected on $server\n"
             else
                 printf "\nOne or more errors were recorded during the webpacking process. Sending Alert Emails, but Continuing Operation\n"
-                # Get the NPM_I_LOGFILE
+                # Get the NPM_RUN_COMPILE_LOGFILE
                 scp winterwell@$server:$NPM_RUN_COMPILE_LOGFILE .
                 # Add it to the Attachments
                 ATTACHMENTS+=("-a *.log")
                 # Send the email
                 send_alert_email
-                exit 0
             fi
         done
     fi
