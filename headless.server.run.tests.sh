@@ -47,7 +47,7 @@ git pull origin master
 git reset --hard FETCH_HEAD
 
 # Copy in the utils dir for sogive tests
-cp -r /home/winterwell/logins/test-base/sogive-app/utils /home/winterwell/sogive-app/src/puppeteer-tests/
+cp -r /home/winterwell/logins/test-base/sogive/utils /home/winterwell/sogive-app/src/puppeteer-tests/
 
 # Get node console out put into a text file
 node runtest.headless.server.js &> $LOGFILE
