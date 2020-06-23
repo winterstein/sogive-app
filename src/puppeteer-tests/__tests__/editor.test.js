@@ -1,9 +1,9 @@
 // checks functionality of sogive.org/#edit
 const puppeteer = require('puppeteer');
-const { login, soGiveFailIfPointingAtProduction, donate } = require("../utils/UtilityFunctions");
-const { username, password } = require("../utils/Credentials");
-const { CommonSelectors, Search, General } = require('../utils/SoGiveSelectors');
-const { targetServers } = require('../utils/testConfig');
+const { login, soGiveFailIfPointingAtProduction, donate } = require("../test-base/UtilityFunctions");
+const { username, password } = require("../Credentials");
+const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
+const { targetServers } = require('../testConfig');
 
 const config = JSON.parse(process.env.__CONFIGURATION);
 
