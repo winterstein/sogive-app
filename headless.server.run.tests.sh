@@ -40,6 +40,15 @@ fi
 # Resolve Dependencies
 npm i
 
+# Get changes to the logins repo
+cd /home/winterwell/logins
+git gc --prune=now
+git pull origin master
+git reset --hard FETCH_HEAD
+
+# Copy in the utils dir for sogive tests
+cp -r /home/winterwell/logins/test-base/sogive/utils /home/winterwell/sogive-app/src/puppeteer-tests/
+
 # Get node console out put into a text file
 node runtest.headless.server.js &> $LOGFILE
 
@@ -56,7 +65,7 @@ fi
 if [[ $NUM_FAILS -gt '0' ]]; then
     for recipients in ${RECEIVERS[@]}; do
         EMAIL_BODY=$(cat $SUMMARY_LOGFILE)
-        SUBJECT=$(printf [$HOSTNAME] reported "$NUM_FAILS test(s) failed for $PROJECT_NAME")
+        SUBJECT=$(printf "$HOSTNAME reported $NUM_FAILS test(s) failed for $PROJECT_NAME")
         send_email
     done
 fi
