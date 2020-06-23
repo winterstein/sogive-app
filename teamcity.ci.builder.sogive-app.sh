@@ -208,7 +208,7 @@ function use_webpack {
             printf "\nNPM is now running a Webpack process on $server\n"
             ssh winterwell@$server "cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE"
             printf "\nChecking for errors that occurred during Webpacking process on $server ...\n"
-            if [[ $(ssh winterwell@$server "grep -i 'error' $NPM_RUN_COMPILE_LOGFILE") = '' ]]; then
+            if [[ $(ssh winterwell@$server "cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx'") = '' ]]; then
                 printf "\nNo Webpacking errors detected on $server\n"
             else
                 printf "\nOne or more errors were recorded during the webpacking process. Sending Alert Emails, but Continuing Operation\n"
