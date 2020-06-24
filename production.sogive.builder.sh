@@ -33,7 +33,6 @@ ALTERNATIVE_WWAPPBASEJS_BRANCH=$2
 PROJECT_ROOT_ON_SERVER="/home/winterwell/sogive-app"
 WWAPPBASE_REPO_PATH_ON_SERVER_DISK="/home/winterwell/wwappbase.js"
 LOGINS_REPO_PATH_ON_SERVER_DISK='/home/winterwell/logins'
-BACKUP_THESE_PLEASE=("$PROJECT_ROOT_ON_SERVER/web/uploads/")
 SECRET_CONFIG_FILES_LOCATION='/home/winterwell/logins/sogive-app'
 
 
@@ -46,7 +45,6 @@ EMAIL_RECIPIENTS=(sysadmin@good-loop.com daniel@good-loop.com roscoe@good-loop.c
 BOB_ARGS='' #you can set bob arguments here, but they will run each and every time that the project is auto-built
 BOB_BUILD_PROJECT_NAME='' #If the project name isn't automatically sensed by bob, you can set it explicitly here
 NPM_CLEANOUT='no' #yes/no , will nuke the node_modules directory if 'yes', and then get brand-new packages.
-RENAME_CONFIG_FILES='yes' # yes/no , will use a function to rename config files that YOU MUST SPECIFY IN THE FUNCTIONS BELOW
 NPM_I_LOGFILE="/home/winterwell/.npm/_logs/npm.i.for.$PROJECT_NAME.log"
 NPM_RUN_COMPILE_LOGFILE="/home/winterwell/.npm/_logs/npm.run.compile.for.$PROJECT_NAME.log"
 ##

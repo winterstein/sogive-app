@@ -190,7 +190,7 @@ function use_npm {
                 # Get the NPM_I_LOGFILE
                 scp winterwell@$server:$NPM_I_LOGFILE .
                 # Add it to the Attachments
-                ATTACHMENTS+=("-a *.log")
+                ATTACHMENTS+=("-a npm.i.for.$PROJECT_NAME.log")
                 # Send the email
                 send_alert_email
             fi
@@ -215,7 +215,7 @@ function use_webpack {
                 # Get the NPM_RUN_COMPILE_LOGFILE
                 scp winterwell@$server:$NPM_RUN_COMPILE_LOGFILE .
                 # Add it to the Attachments
-                ATTACHMENTS+=("-a *.log")
+                ATTACHMENTS+=("-a npm.run.compile.for.$PROJECT_NAME.log")
                 # Send the email
                 send_alert_email
             fi
