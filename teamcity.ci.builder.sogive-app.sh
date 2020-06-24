@@ -17,7 +17,7 @@ NAME_OF_SERVICE='sogive' # This can be blank, but if your service uses a JVM, th
 PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
-PROJECT_USES_AUTOMATED_TESTING='yes' #yes or no
+PROJECT_USES_AUTOMATED_TESTING='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 
 ## TODO : put in an argument switch to allow a specific branch to be pulled from git
