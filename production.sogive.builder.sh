@@ -325,4 +325,3 @@ use_jerbil
 restore_uploads
 place_properties_files
 start_service
-use_automated_tests
