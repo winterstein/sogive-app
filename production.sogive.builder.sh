@@ -19,15 +19,12 @@ PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 PROJECT_USES_SECRET_CONFIG_FILES='yes' # Config files kept in the logins repo
+SPECIFIED_BRANCH=$1
+ALTERNATIVE_WWAPPBASEJS_BRANCH=$2
 
 
-## TODO : use $1 as the branch specification
-## TODO : check that branch exists for both the project and the wwappbase.js repo , or , write alternative branch name for wwappbase.js repo
-## TODO : use a human interactive "yes" or "FORCE" in order to proceed
-## TODO : rename secret config files
-## TODO : Use a tmux session to build
-## TODO : Backup files function
 ## TODO : Usage printout
+## TODO : set exit code statuses for aborted runs -- so that tmux will exit and there will be a concise error printed on screen.
 
 
 #####  SPECIFIC SETTINGS
@@ -52,8 +49,24 @@ NPM_CLEANOUT='no' #yes/no , will nuke the node_modules directory if 'yes', and t
 RENAME_CONFIG_FILES='yes' # yes/no , will use a function to rename config files that YOU MUST SPECIFY IN THE FUNCTIONS BELOW
 NPM_I_LOGFILE="/home/winterwell/.npm/_logs/npm.i.for.$PROJECT_NAME.log"
 NPM_RUN_COMPILE_LOGFILE="/home/winterwell/.npm/_logs/npm.run.compile.for.$PROJECT_NAME.log"
-
-
+##
+# Undeniably Esoteric Function to Backup the Uploads directory in sogive
+##
+function backup_uploads {
+    printf "\nBacking up the uploads directory in /home/winterwell/sogive-app/web/\n"
+    rsync -r /home/winterwell/sogive-app/web/uploads /home/winterwell/sogive-uploads-backups/
+}
+function restore_uploads {
+    printf "\nrestoring the uploads directories to /home/winterwell/sogive-app/web/uploads/\n"
+    rsync -r /home/winterwell/sogive-uploads/backups/uploads/* /home/winterwell/sogive-app/web/uploads/
+}
+##
+# Undeniably Esoteric Function to rename secret properties file so that production sogive can process payments
+##
+function place_properties_files {
+    printf "\nCopying and renaming properties files found in a discrete repository.\n"
+    cp /home/winterwell/logins/production.sogive.properties /home/winterwell/sogive-app/config/sogive.properties
+}
 
 ##### FUNCTIONS
 ## Do not edit these unless you know what you are doing
@@ -70,7 +83,6 @@ function send_alert_email {
 }
 
 
-
 # First-Run-check for repository : Check if repo exists on the server('s) disk(s)
 function check_repo_exists {
     printf "\nChecking if the repo for $PROJECT_NAME exists at $PROJECT_ROOT_ON_SERVER\n"
@@ -79,6 +91,7 @@ function check_repo_exists {
         cd /home/winterwell && git clone git@$GIT_REPO_URL
     fi
 }
+
 
 # First-Run-check for bob : Check if any of the target servers already have npm's bob
 function check_bob_exists {
@@ -139,17 +152,53 @@ function check_logins_exists {
 function cleanup_repo {
     printf "\nCleaning $HOSTNAME 's local repository...\n"
     cd $PROJECT_ROOT_ON_SERVER && git gc --prune=now
-    cd $PROJECT_ROOT_ON_SERVER && git pull origin $SPECIFIED_BRANCH
+    cd $PROJECT_ROOT_ON_SERVER && git pull origin master
     cd $PROJECT_ROOT_ON_SERVER && git reset --hard FETCH_HEAD
 }
+
+# Check if specified Branch exists for the project's repo
+function check_project_branch {
+    BUILD_PROCESS_NAME="checking for branch existence for $PROJECT_NAME"
+    BUILD_STEP="checking for the existence of specifed branch , $SPECIFIED_BRANCH , before attempting to build $PROJECT_NAME on $HOSTNAME"
+    printf "\nChecking if the specified branch, $SPECIFIED_BRANCH , exists. And if it does, then switching to it...\n"
+    if [[ $(cd $PROJECT_ROOT_ON_SERVER && git branch -a | grep -v "remotes" | grep "$SPECIFIED_BRANCH") = '' ]]; then
+        printf "\nSpecified branchname , $SPECIFIED_BRANCH , does not exist according to the canonical repository server.\nSending Alert Emails and Breaking Operation\n"
+        send_alert_email
+        exit 0
+    fi
+    printf "\nFound $SPECIFIED_BRANCH . Now switching to it for $PROJECT_NAME\n"
+    cd $PROJECT_ROOT_ON_SERVER && git checkout -f $SPECIFIED_BRANCH
+}
+
 
 # Cleanup wwappbase.js 's repo -- Ensure that this repository is up to date and clean
 function cleanup_wwappbasejs_repo {
     if [[ $PROJECT_USES_WWAPPBASE_SYMLINK = 'yes' ]]; then
         printf "\nCleaning $HOSTNAME 's local wwappbase.js repository\n"
         cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git gc --prune=now
-        cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin $SPECIFIED_BRANCH
+        cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin master
         cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git reset --hard FETCH_HEAD
+    fi
+}
+
+# Evaluate if a branch for wwappbase.js was specified, and if it was, use it.  If it wasn't, default to the same specified branch name as the main project
+function check_wwappbasejs_branch {
+    BUILD_PROCESS_NAME="checking for branch existence for wwappbase.js"
+    BUILD_STEP="checking for the existence of specifed branch for wwappbase.js , $ALTERNATIVE_WWAPPBASEJS_BRANCH , before attempting to build $PROJECT_NAME on $HOSTNAME"
+    if [[ $PROJECT_USES_WWAPPBASE_SYMLINK = 'yes' ]]; then
+        if [[ $2 = '' ]]; then
+            printf "\nNo specific branch name was parsed for wwappbase.js\nDefaulting to the same branch name as $PROJECT_NAME , $SPECIFIED_BRANCH .\n"
+            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin $SPECIFIED_BRANCH
+        else
+            printf "\nChecking that $ALTERNATIVE_WWAPPBASEJS_BRANCH exists for wwappbase.js repo. And if it does, then switching to it\n"
+            if [[ $(cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git branch -a | grep -v "remotes" | grep "$ALTERNATIVE_WWAPPBASEJS_BRANCH") = '' ]]; then
+                printf "\nSpecified Branch Name for wwappbase.js , $ALTERNATIVE_WWAPPBASEJS_BRANCH , does not exist according to the canonical repository server.\nSending Alert Emails and Breaking Operation\n"
+                send_alert_email
+                exit 0
+            fi
+            printf "\nFound $ALTERNATIVE_WWAPPBASEJS_BRANCH for the wwappbase.js repo.  Switching to it\n"
+            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin $ALTERNATIVE_WWAPPBASEJS_BRANCH
+        fi
     fi
 }
 
@@ -263,12 +312,17 @@ check_bob_exists
 check_jerbil_exists
 check_wwappbasejs_exists
 check_logins_exists
+backup_uploads
 cleanup_repo
+check_project_branch
 cleanup_wwappbasejs_repo
+check_wwappbasejs_branch
 stop_service
 use_bob
 use_npm
 use_webpack
 use_jerbil
+restore_uploads
+place_properties_files
 start_service
 use_automated_tests
