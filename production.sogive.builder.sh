@@ -2,8 +2,8 @@
 
 # Production Server Project Builder Template
 
-#Version 0.1
-# Meaning - Script has been written, but not tested
+#Version 0.5
+# Meaning - Script has been written, tested, but never used earnestly
 
 #####  GENERAL SETTINGS
 ## This section should be the most widely edited part of this script
@@ -58,14 +58,14 @@ function backup_uploads {
 }
 function restore_uploads {
     printf "\nrestoring the uploads directories to /home/winterwell/sogive-app/web/uploads/\n"
-    rsync -r /home/winterwell/sogive-uploads/backups/uploads/* /home/winterwell/sogive-app/web/uploads/
+    rsync -r /home/winterwell/sogive-uploads-backups/uploads/* /home/winterwell/sogive-app/web/uploads/
 }
 ##
 # Undeniably Esoteric Function to rename secret properties file so that production sogive can process payments
 ##
 function place_properties_files {
     printf "\nCopying and renaming properties files found in a discrete repository.\n"
-    cp /home/winterwell/logins/production.sogive.properties /home/winterwell/sogive-app/config/sogive.properties
+    cp /home/winterwell/logins/sogive-app/production.sogive.properties /home/winterwell/sogive-app/config/sogive.properties
 }
 
 ##### FUNCTIONS
@@ -100,6 +100,27 @@ function check_bob_exists {
     if [[ $PROJECT_USES_BOB = 'yes' ]]; then
         if [[ $(which bob) = '' ]]; then
             printf "\nNo global installation of 'bob' was found. Sending Alert Emails and Breaking Operation\n"
+            send_alert_email
+            exit 0
+        fi
+    fi
+}
+
+function check_bobwarehouse_repos {
+    BUILD_PROCESS_NAME='checking for bobs discrete repos dependencies'
+    BUILD_STEP='Checking to see if bobwarehouse has cloned repo "code" in place'
+    if [[ ! -d /home/winterwell/bobwarehouse/code ]]; then
+        printf "\nNo 'code' repository was found in bobwarehouse.  Attempting to clone one now.\n"
+        cd /home/winterwell/bobwarehouse && git clone git@git.winterwell.com:/winterwell-code code
+    fi
+}
+
+function check_for_maven_binaries {
+    BUILD_PROCESS_NAME='checking for the presence of maven binaries'
+    BUILD_STEP='Checking to see if "mvn" is avilable via the command line'
+    if [[ $PROJECT_USES_BOB = 'yes' ]]; then
+        if [[ $(which mvn) = '' ]]; then
+            printf "\nNo installation of the 'mvn' binary is availble on the current system's environment's PATH.\nYou must install 'maven' before you can use bob\n\nSending Email Alert and Breaking Operation\n"
             send_alert_email
             exit 0
         fi
@@ -161,7 +182,7 @@ function check_project_branch {
     BUILD_PROCESS_NAME="checking for branch existence for $PROJECT_NAME"
     BUILD_STEP="checking for the existence of specifed branch , $SPECIFIED_BRANCH , before attempting to build $PROJECT_NAME on $HOSTNAME"
     printf "\nChecking if the specified branch, $SPECIFIED_BRANCH , exists. And if it does, then switching to it...\n"
-    if [[ $(cd $PROJECT_ROOT_ON_SERVER && git branch -a | grep -v "remotes" | grep "$SPECIFIED_BRANCH") = '' ]]; then
+    if [[ $(cd $PROJECT_ROOT_ON_SERVER && git branch -a | grep "$SPECIFIED_BRANCH") = '' ]]; then
         printf "\nSpecified branchname , $SPECIFIED_BRANCH , does not exist according to the canonical repository server.\nSending Alert Emails and Breaking Operation\n"
         send_alert_email
         exit 0
@@ -186,18 +207,18 @@ function check_wwappbasejs_branch {
     BUILD_PROCESS_NAME="checking for branch existence for wwappbase.js"
     BUILD_STEP="checking for the existence of specifed branch for wwappbase.js , $ALTERNATIVE_WWAPPBASEJS_BRANCH , before attempting to build $PROJECT_NAME on $HOSTNAME"
     if [[ $PROJECT_USES_WWAPPBASE_SYMLINK = 'yes' ]]; then
-        if [[ $2 = '' ]]; then
+        if [[ $ALTERNATIVE_WWAPPBASEJS_BRANCH = '' ]]; then
             printf "\nNo specific branch name was parsed for wwappbase.js\nDefaulting to the same branch name as $PROJECT_NAME , $SPECIFIED_BRANCH .\n"
-            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin $SPECIFIED_BRANCH
+            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git checkout -f $SPECIFIED_BRANCH
         else
             printf "\nChecking that $ALTERNATIVE_WWAPPBASEJS_BRANCH exists for wwappbase.js repo. And if it does, then switching to it\n"
-            if [[ $(cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git branch -a | grep -v "remotes" | grep "$ALTERNATIVE_WWAPPBASEJS_BRANCH") = '' ]]; then
+            if [[ $(cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git branch -a | grep "$ALTERNATIVE_WWAPPBASEJS_BRANCH") = '' ]]; then
                 printf "\nSpecified Branch Name for wwappbase.js , $ALTERNATIVE_WWAPPBASEJS_BRANCH , does not exist according to the canonical repository server.\nSending Alert Emails and Breaking Operation\n"
                 send_alert_email
                 exit 0
             fi
             printf "\nFound $ALTERNATIVE_WWAPPBASEJS_BRANCH for the wwappbase.js repo.  Switching to it\n"
-            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git pull origin $ALTERNATIVE_WWAPPBASEJS_BRANCH
+            cd $WWAPPBASE_REPO_PATH_ON_SERVER_DISK && git checkout -f $ALTERNATIVE_WWAPPBASEJS_BRANCH
         fi
     fi
 }
@@ -222,10 +243,18 @@ function use_bob {
         printf "\n$HOSTNAME is building JARs...\n"
         cd $PROJECT_ROOT_ON_SERVER && bob $BOB_ARGS $BOB_BUILD_PROJECT_NAME
         printf "\nchecking bob.log for failures on $HOSTNAME\n"
+        if [[ $(grep -i 'ERROR EXIT' $PROJECT_ROOT_ON_SERVER/bob.log) = '' ]]; then
+            printf "\nNo bad exit detected from bob processes. Performing further log inspection\n"
+        else
+            printf "\nFailure or failures detected in latest bob.log. Sending Alert Emails and Breaking Operation\n"
+            ATTACHMENTS+=("-a $PROJECT_ROOT_ON_SERVER/bob.log")
+            send_alert_email
+            exit 0
         if [[ $(grep -i 'Compile task failed' $PROJECT_ROOT_ON_SERVER/bob.log) = '' ]]; then
             printf "\nNo failures recorded in bob.log on $HOSTNAME.  JARs should be fine.\n"
         else
             printf "\nFailure or failures detected in latest bob.log. Sending Alert Emails and Breaking Operation\n"
+            ATTACHMENTS+=("-a $PROJECT_ROOT_ON_SERVER/bob.log")
             send_alert_email
             exit 0
         fi
@@ -303,12 +332,18 @@ function start_service {
     fi
 }
 
+function leave_tmux_session {
+    exit
+}
+
 
 ################
 ### Run the Functions in Order
 ################
 check_repo_exists
 check_bob_exists
+check_bobwarehouse_repos
+check_for_maven_binaries
 check_jerbil_exists
 check_wwappbasejs_exists
 check_logins_exists
@@ -325,3 +360,4 @@ use_jerbil
 restore_uploads
 place_properties_files
 start_service
+leave_tmux_session
