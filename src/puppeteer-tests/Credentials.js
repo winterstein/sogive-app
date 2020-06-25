@@ -1,1 +1,1 @@
-../../../logins/test/Credentials.js
+../../../logins/sogive-app/puppeteer.credentials.js
