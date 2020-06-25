@@ -13,14 +13,6 @@ import com.winterwell.web.app.ISiteConfig;
 
 public class SoGiveConfig implements IESRouter, ISiteConfig {
 
-//	public static final String charityType = "charity";
-//
-//	public static final String charityIndex = "charity";
-//	
-//	public String charityDraftIndex = "charity_draft";
-//
-//	public static final String donationIndex = "donation";
-	
 	@Option
 	public int port = 8282;
 	

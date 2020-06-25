@@ -19,6 +19,6 @@ public class StripeConfig {
 	@Option
 	String pubKey;
 	
-	@Option
-	boolean testStripe;
+	@Option(description="Default to true (test) for safety, so you have to explicitly request 'its real money'")
+	boolean testStripe = true;
 }
