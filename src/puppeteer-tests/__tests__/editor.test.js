@@ -1,6 +1,6 @@
 // checks functionality of sogive.org/#edit
 const puppeteer = require('puppeteer');
-const { login, soGiveFailIfPointingAtProduction, donate } = require("../test-base/UtilityFunctions");
+const { login, soGiveFailIfPointingAtProduction, donate, check} = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -18,7 +18,7 @@ const timeStamp = new Date().toISOString();
 
 describe('Edit organisation tests', () => {
 
-	test('Edit and publish field', async () => {
+	check('Edit and publish field', async () => {
 		await page.goto(url);
 
 		await page.$('.login-link');
