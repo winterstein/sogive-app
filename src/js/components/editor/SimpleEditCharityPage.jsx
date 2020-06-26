@@ -82,7 +82,7 @@ const SimpleEditCharityPage = () => {
 	));
 
 	// put it together
-	console.log("EditCharity", charity);
+	// console.log("EditCharity", charity);
 	return (
 		<div className="EditCharityPage">
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
