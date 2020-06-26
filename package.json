@@ -32,7 +32,7 @@
     "you-again": "^0.8.8"
   },
   "scripts": {
-    "compile": "webpack --config $PWD/webpack.config.js --progress --colors && gitstamp.sh",
+    "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --colors --watch",
     "test": "jest",
