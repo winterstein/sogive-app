@@ -29,7 +29,13 @@
     "react-stripe-elements": "^2.0.3",
     "reactstrap": "^8.4.1",
     "sjtest": "^0.4.9",
-    "you-again": "^0.8.8"
+    "you-again": "^0.8.8",
+    "jest": "^25.1.0",
+    "shelljs": "^0.8.3",
+    "yargs": "^15.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^2.0.0",
+    "puppet-theatre": "latest"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",
@@ -42,6 +48,8 @@
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
+    "babel-plugin-transform-node-env-inline": "0.4.3",
+    "css-loader": "^3.5.3",
     "@babel/plugin-transform-react-jsx": "^7.9.4",
     "@babel/plugin-transform-typescript": "^7.9.6",
     "@babel/polyfill": "^7.8.7",
