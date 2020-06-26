@@ -1,4 +1,7 @@
 'use strict';
+
+// What are the arguments??
+
 // Copied from wwappbase.js/template - because symlinks dont work
 // Calls npm run test = jest, with config set in process
 const shell = require('shelljs');

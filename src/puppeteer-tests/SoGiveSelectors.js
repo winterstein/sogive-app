@@ -117,10 +117,10 @@ const Register = {
 
 const Search = {};
 Search.Main = {
-	SearchField: `input[name=raw]`,
+	SearchField: `input[name=rawq]`,
 	SearchButton: `button.sogive-search-box`,
-	ResultsList: `#search div.results-list`,
-	FirstResult: `#search div.results-list div.SearchResult a`
+	ResultsList: `.SearchResults div.results-list`,
+	FirstResult: `.SearchResults div.results-list div.SearchResult a`
 };
 
 // sogive.org/#edit
