@@ -25,3 +25,4 @@ boblog
 src/puppeteer-tests/test-results
 src/puppeteer-tests/utils/*.js
 build-lib
+package-lock.json
