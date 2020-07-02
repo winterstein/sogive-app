@@ -50,7 +50,7 @@ let runInBand = '';
 Object.entries(yargv).forEach(([key, value]) => {
 	if (key === 'test') { testPath = value; }
 	if (key === 'runInBand') { runInBand = '--runInBand'; }
-	// ??
+	// Overwrite config properties with command-line arguments? e.g. --site or --head
 	if (Object.keys(config).includes(key)) {
 		if (typeof config[key] === "boolean") {
 			const bool = config[key];
