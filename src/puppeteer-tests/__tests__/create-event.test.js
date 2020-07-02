@@ -44,7 +44,7 @@ describe("Create-Event-Tests", () => {
 	// Jorney: User goes to 'Event' tab. Clicks on create event, fills in some fields when prompted, publishes the changes.
 	// Result: New event is published and listed
 	test("Create an event", async () => {
-		console.log("Create an event...");
+		// console.log("Create an event...");
 		await page.goto(url);
 
 		await page.goto(url+'#event');
@@ -76,17 +76,17 @@ describe("Create-Event-Tests", () => {
 		// check it saved
 		await page.waitFor(2000);
 		expect(page).toMatch("Status: PUBLISHED");
-		console.log("...Create an event: "+id);
+		// console.log("...Create an event: "+id);
 	}, 45000);
 
 	// Journey: User goes to specific event (the test one made above), clicks on 'Delete'
 	// Shortcut: jump to the editEvent page
 	// Result: Event deleted and removed from the list.
 	test('Delete event created', async() => {
-		console.log("Delete event created...");
+		// console.log("Delete event created...");
 		if ( ! id) throw new Error("No id from Create an event?!");
 		// Go to the event
-		console.log("goto "+url+`#editEvent/${id}`);
+		// console.log("goto "+url+`#editEvent/${id}`);
 		await page.goto(url+`#editEvent/${id}`);
 
 		// Wait for 'Delete' button to render

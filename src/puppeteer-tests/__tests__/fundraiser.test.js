@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { login, soGiveFailIfPointingAtProduction, donate, fillInForm } = require("../test-base/UtilityFunctions");
+const { login, failIfPointingAtProduction, donate, fillInForm } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General, Register, Fundraiser } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
