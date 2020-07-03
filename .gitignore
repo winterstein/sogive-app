@@ -27,3 +27,4 @@ src/puppeteer-tests/utils/*.js
 build-lib
 package-lock.json
 web/style
+uploads
