@@ -13,7 +13,7 @@ const webDir = process.env.OUTPUT_WEB_DIR || 'web';
 const baseConfig = {
 	entry: ['@babel/polyfill', './src/js/app.jsx'],
 	output: {
-		path: path.resolve(__dirname, './' + webDir + '/build/'),
+		path: path.resolve(__dirname, './' + webDir + '/build/'), // NB: this should include js and css outputs
 		// filename: is left undefined and filled in by makeConfig
 	},
 	devtool: 'source-map',
@@ -45,12 +45,11 @@ const baseConfig = {
 				exclude: /node_modules/,
 				options: {
 					presets: [
-						['@babel/preset-env', { targets: { ie: "11" }, loose: true }],
-						['@babel/preset-react']
+						['@babel/preset-env', { targets: { ie: "11" }, loose: true }]
 					],
 					plugins: [
 						'@babel/plugin-proposal-class-properties',
-						'transform-node-env-inline'
+						'@babel/plugin-transform-react-jsx',
 					]
 				}
 			}, {
@@ -77,17 +76,8 @@ const makeConfig = ({ filename, mode }) => {
 	// What filename should we render to?
 	config.output = Object.assign({}, config.output, { filename });
 
-	/**
-	 * process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds
-	 * NB Plain strings here will be output as token names and cause a compile error, so use JSON.stringify to turn eg "production" into "\"production\""
-	 */
-	config.plugins = (config.plugins || []).concat(
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify(mode), // Used by bundle.js to conditionally set up logging & Redux dev tools
-			}
-		})
-	);
+	// The "mode" param should be inserting process.env already...
+	// process.env is available globally within bundle.js & allows us to hardcode different behaviour for dev & production builds	
 	return config;
 };
 
