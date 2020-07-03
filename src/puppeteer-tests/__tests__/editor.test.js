@@ -1,6 +1,6 @@
 // checks functionality of sogive.org/#edit
 const puppeteer = require('puppeteer');
-const { login, failIfPointingAtProduction} = require("../test-base/UtilityFunctions");
+const { doLogin } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -16,25 +16,11 @@ let url = `${baseSite}`;
 const lamb = "urras-eaglais-na-h-aoidhe";
 const timeStamp = new Date().toISOString();
 
-console.log("describe", describe);
-console.log("puppeteer.describe", puppeteer.describe);
-
 describe('Edit organisation tests', () => {
 
 	test('Edit and publish field', async () => {
 		await page.goto(url);
-
-		await page.$('.login-link');
-		await page.click('.login-link');
-        
-		await page.click('[name=email]');
-		await page.type('[name=email]', username);
-		await page.click('[name=password]');
-		await page.type('[name=password]', password);
-
-		// await page.evaluate(() => { debugger; });
-
-		await page.keyboard.press('Enter');
+		await doLogin({page});
 
 		await page.goto(`${url}#edit?charityId=${lamb}`);
 

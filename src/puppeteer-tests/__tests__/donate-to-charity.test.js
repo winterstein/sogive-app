@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { login, failIfPointingAtProduction, donate } = require("../test-base/UtilityFunctions");
+const { doLogin, donate } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -45,7 +45,7 @@ describe("Charity donation tests", () => {
 	}, 90000);
 
 	test("Logged-in charity donation", async () => {
-		await login({ page, username, password });
+		await doLogin({ page, username, password });
 
 		// Search for charity
 		await page.click(Search.Main.SearchField);

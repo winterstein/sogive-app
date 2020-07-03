@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { username, password } = require("../Credentials");
 const { targetServers } = require('../testConfig');
-
+const {doLogin} = require('../test-base/UtilityFunctions');
 const config = JSON.parse(process.env.__CONFIGURATION);
 
 const baseSite = targetServers[config.site];
@@ -27,18 +27,9 @@ describe("Create-Event-Tests", () => {
 	// Journey: User visits site, clicks on log in, types in their credentials, press Enter.
 	// Result: They are now logged in
 	test('Login to the site', async () => {
-		await page.goto(url);
-
-		await page.$('.login-link');
-		await page.click('.login-link');
-        
-		await page.click('[name=email]');
-		await page.type('[name=email]', username);
-		await page.click('[name=password]');
-		await page.type('[name=password]', password);
-
-		await page.keyboard.press('Enter');
-		await page.waitFor(1000);
+		page.goto(url);
+		await doLogin({page});
+		// all good
 	}, 99999);
 
 	// Jorney: User goes to 'Event' tab. Clicks on create event, fills in some fields when prompted, publishes the changes.

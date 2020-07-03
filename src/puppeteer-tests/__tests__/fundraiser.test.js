@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { login, failIfPointingAtProduction, donate, fillInForm } = require("../test-base/UtilityFunctions");
+const { doLogin, donate, fillInForm } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General, Register, Fundraiser } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -51,7 +51,7 @@ describe("Fundraiser tests", () => {
 		await page.goto(`${url}#event`);
 
 		// login.
-		await login({ page, username, password });
+		await doLogin({ page, username, password });
 
 		// Go to event page and click on Register event
 		await page.goto(url + `#event/${eventId}`);
@@ -123,7 +123,7 @@ describe("Fundraiser tests", () => {
 		await page.goto(`${url}#fundraiser/${fundraiserId}`);
 		await page.reload();
 
-		await login({ page, username, password });
+		await doLogin({ page, username, password });
 
 		// Click on Donate button
 		await page.waitForSelector('.btn');
@@ -221,7 +221,7 @@ describe("Fundraiser tests", () => {
 	test("Delete fundraiser", async () => {
 		await page.goto(url);
 		
-		await login({ page, username, password });
+		await doLogin({ page, username, password });
 		await page.goto(fundraiserEditLink);
 
 		await page.waitForSelector(General.CRUD.Delete);
