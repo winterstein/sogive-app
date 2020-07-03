@@ -14,6 +14,7 @@ describe('a-safety-test', () => {
 	
 	// Journey: visit the web-app	
 	test('smoke test site', async () => {
+		if ( ! server) throw new Error("No server url specified");
 		await serverSafetyCheck(page, server);		
 		// OK :)
 	});

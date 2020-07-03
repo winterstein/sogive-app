@@ -27,7 +27,7 @@ describe("Create-Event-Tests", () => {
 	// Journey: User visits site, clicks on log in, types in their credentials, press Enter.
 	// Result: They are now logged in
 	test('Login to the site', async () => {
-		page.goto(url);
+		await page.goto(url);
 		await doLogin({page});
 		// all good
 	}, 99999);
