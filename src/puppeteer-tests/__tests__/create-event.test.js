@@ -5,7 +5,6 @@ const {doLogin} = require('../test-base/UtilityFunctions');
 const config = JSON.parse(process.env.__CONFIGURATION);
 
 const baseSite = targetServers[config.site];
-const protocol = config.site === 'local' ? 'http://' : 'https://';
 
 let url = `${baseSite}`;
 
