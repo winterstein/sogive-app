@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
+import { Alert } from 'reactstrap';
 import printer from '../../base/utils/printer.js';
 import { modifyHash } from '../../base/utils/miscutils';
 
@@ -26,7 +27,9 @@ const EditEventPage = () => {
 	// which event?
 	let path = DataStore.getValue(['location','path']);
 	let eventId = path[1];
-
+	if ( ! eventId) {
+		return <Alert>Missing: Event ID</Alert>;
+	}
 	let type = C.TYPES.Event;
 	let pvCanWrite = canWrite(type, eventId);
 
@@ -34,7 +37,7 @@ const EditEventPage = () => {
 	isAdmin = isAdmin && isAdmin.value;
 
 	if ( ! Login.isLoggedIn()) {
-		return <div className='alert alert-warning'><h3>Please login</h3></div>;
+		return <Alert color="warning"><h3>Please login</h3></Alert>;
 	}
 	if ( ! pvCanWrite.resolved) {
 		return <Misc.Loading text="Checking editing rights" />;
