@@ -36,6 +36,7 @@ import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.MsgToActor;
+import com.winterwell.utils.time.Period;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 import com.winterwell.utils.web.WebUtils2;
@@ -92,14 +93,14 @@ public class DonationServlet extends CrudServlet<Donation> {
 	}*/
 	
 	@Override
-	protected ESQueryBuilder doList3_ESquery(String q, String prefix, WebRequest stateOrNull) {
+	protected ESQueryBuilder doList3_ESquery(String q, String prefix, Period period, WebRequest stateOrNull) {
 		// HACK - include personal data for admin requests
 		if (q != null && q.endsWith("purpose:admin")) {
 			q = q.substring(0, q.length()-"purpose:admin".length()).trim();
 			Log.d(LOGTAG, "doList3_ESquery hack: chop purpose so q="+q);
 		}
 		
-		return super.doList3_ESquery(q, prefix, stateOrNull);
+		return super.doList3_ESquery(q, prefix, period, stateOrNull);
 	}
 
 	@Override
