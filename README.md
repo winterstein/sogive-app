@@ -43,26 +43,26 @@ Note: This is done using `webpack` and `webpack.config.js`. The watch.sh script 
 6. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
   	1. Install nginx (the command below is for debian-flavour Linux, eg Ubuntu or Mint)
 	
-  		sudo apt install nginx
+  			sudo apt install nginx
   
   	2. Copy the config file to nginx. Following convention, it goes in two places, symlinked together:
-	   
-	   cd /etc/nginx/sites-available	   
-	   sudo cp ~/winterwell/sogive-app/config/local.sogive.org.nginx .
-	   cd ../sites-enabled
-	   sudo ln -s ../sites-available/local.sogive.org.nginx .
-
+	
+			cd /etc/nginx/sites-available
+			sudo cp ~/winterwell/sogive-app/config/local.sogive.org.nginx .
+			cd ../sites-enabled
+			sudo ln -s ../sites-available/local.sogive.org.nginx .
+	
 	3. The config file expects the sogive files to be in a "standard" place, so let's make them accessible there with a symlink:
 	
-		sudo ln -s ~/winterwell /home/winterwell
+			sudo ln -s ~/winterwell /home/winterwell
 
 	4. Restart nginx
 	
-		sudo service nginx restart
+			sudo service nginx restart
 
 7. Modify your `/etc/hosts` file to have `127.0.0.1 local.sogive.org`
 
-	sudo nano /etc/hosts
+		sudo nano /etc/hosts
 
 Then add the line: `127.0.0.1 local.sogive.org`   
 and save (Control-X to exit, and follow the prompts)
@@ -87,7 +87,7 @@ Not needed for UI edits, but if you want to do backend work...
 
 3. Install Bob:
 
-	sudo npm i -g java-bob
+       sudo npm i -g java-bob
 
 4. Use Bob to fetch dependency jars:
 
