@@ -13,10 +13,11 @@ Uses jest-puppeteer Doc: https://github.com/smooth-code/jest-puppeteer/blob/mast
 
 Options
 
-	--site What server to test? Default is local. Other values are usually "test" and "prod". See testConfig.js
+	--site <server> What server to test? Default is local. Other values are usually "test" and "prod". See testConfig.js
 		E.g. to run against the test site, use \`node runtest.js --site test\`
-	--head If true (i.e. not headless), launch a browser window for debugging.
-	--test <keyword> Use to filter by test. This matches on top-level "describe" names.
+	--head Launch a browser window for debugging (i.e. not headless)
+	--test <filename> Use to filter by test. This matches on test file names.
+	--chrome Run tests in Chrome instead of Puppeteer's default browser (Chromium)
 
 Tests are defined in: src/puppeteer-tests/__tests__
 (this is where jest-puppeteer looks)
@@ -61,6 +62,9 @@ Object.entries(yargv).forEach(([key, value]) => {
 
 // Store configuration on env
 process.env.__CONFIGURATION = JSON.stringify(config);
+
+// Preserve color of test results output
+process.env.FORCE_COLOR = true;
 
 // Setting real ARGV
 process.argv = argv;

@@ -105,3 +105,53 @@ If you should want to run from the command line, it is `java -ea -cp build-lib/s
    - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
    - Test your local web-app: http://local.sogive.org/
 
+## Running the tests
+
+### Puppeteer tests
+
+Jest Puppeteer tests live in `src/puppeteer-tests/__tests__` and exercise core functionality
+of the website, by clicking on elements and checking that other elements appear as expected.
+
+Most of the tests require account details in order to log in to SoGive. To supply these, create a
+file called `puppeteer.credentials.js` in `../logins/sogive-app` (relative to this repository
+root) containing valid account details. For example (dummy values):
+
+	const username = 'foo@example.com';
+	const password = 'password1';
+
+	module.exports = {
+		username,
+		password,
+	};
+
+*Note*, most tests require an account with edit rights.
+
+To run tests, after running `npm install` once to install test dependencies, from the root of the
+repository, run:
+
+	node runtest.js [--site local/test/prod] [--test file-name.js] [-- -t 'Test case name']
+
+where
+
+`--site local` runs tests against http://local.sogive.org (default if not specified)
+
+`--site test` runs tests against https://test.sogive.org
+
+`--site prod` runs tests against https://app.sogive.org
+
+Additional options may be included to control how the tests are run:
+
+- `--head` - show the browser while test is running
+
+- `--chrome` - run tests in Chrome instead of Puppeteer's default browser (Chromium)
+
+If running with `--head`, it can be useful to run the tests in slow motion. To do this, set
+an environment variable at the start of the command:
+
+- `SLOWMO=[integer]` - introduces [integer] ms delay on each test step
+
+For example:
+
+`SLOWMO=150 node runtest.js --head`
+
+
