@@ -28,12 +28,12 @@ shell.echo("Use `node runtest.js --support` for help and usage notes");
 
 let config = {	
 	// The possible values for `site` are defined in testConfig.js, targetServers
-	site: 'local',
+	site: 'test',
 	unsafe: false,
 	vert: '',
 	// Used by jest-puppeteer.config.js to launch an actual browser for debugging
 	head: false,	
-	chrome: false,
+	chrome: true,
 };
 
 // Parse arguments...
