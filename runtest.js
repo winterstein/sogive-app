@@ -19,6 +19,9 @@ Options
 	--test <filename> Use to filter by test. This matches on test file names.
 	--chrome Run tests in Chrome instead of Puppeteer's default browser (Chromium)
 
+	-- -t <testname> Use to filter by test name. Must be the last option in the command.
+	                 (Subsequent options will be ignored.)
+
 Tests are defined in: src/puppeteer-tests/__tests__
 (this is where jest-puppeteer looks)
 	`);
@@ -47,6 +50,11 @@ let testPath = '';
  * If true, switch to single-threaded mode
  */
 let runInBand = '';
+/**
+ * Filters tests by name (within testPath, if set). e.g.
+  * `node runtest.js --test donate -- -t 'Logged-out'`
+*/
+let testFilter = '';
 
 Object.entries(yargv).forEach(([key, value]) => {
 	if (key === 'test') { testPath = value; }
@@ -57,6 +65,9 @@ Object.entries(yargv).forEach(([key, value]) => {
 			const bool = config[key];
 			config[key] = !bool;
 		} else config[key] = value;
+	}
+	if (key === '_' && value[0] === '-t') {
+		testFilter = `-- -t ${value[1]}`;
 	}
 });
 
@@ -70,4 +81,4 @@ process.env.FORCE_COLOR = true;
 process.argv = argv;
 
 // Execute Jest. Specific target optional.
-shell.exec(`npm run test ${testPath} ${runInBand}`);
+shell.exec(`npm run test ${testPath} ${runInBand} ${testFilter}`);
