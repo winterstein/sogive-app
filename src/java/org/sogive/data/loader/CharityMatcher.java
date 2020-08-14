@@ -48,4 +48,13 @@ public class CharityMatcher {
 		return od;
 	}
 
+	public ObjectDistribution<NGO> matchByIdOnly(NGO ngo) {
+		ObjectDistribution<NGO> od = new ObjectDistribution<>();
+		List<NGO> charity = DBSoGive.getCharityById(ngo);
+		if (charity != null && ! charity.isEmpty()) {
+			od.train(charity);
+		}
+		return od;
+	}
+
 }
