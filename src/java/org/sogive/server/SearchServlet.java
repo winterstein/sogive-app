@@ -22,6 +22,7 @@ import com.winterwell.es.client.sort.KSortOrder;
 import com.winterwell.es.client.sort.Sort;
 import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
+import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
@@ -41,7 +42,11 @@ import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
 import com.winterwell.web.fields.SField;
-
+/**
+ * Should this be replaced with {@link CharityServlet} _list??
+ * @author daniel
+ *
+ */
 public class SearchServlet implements IServlet {
 
 	public SearchServlet() {
