@@ -96,9 +96,7 @@ public class Event extends AThing {
 	 * Set to charity-id if this event is locked to a charity. 
 	 * @see {@link #pickCharity}
 	 */
-	String charityId;
-	
-	
+	String charityId;	
 	
 	public Time getDate() {
 		return date==null? null : new Time(date);

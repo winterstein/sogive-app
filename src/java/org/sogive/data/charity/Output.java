@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.goodloop.data.Money;
 import com.winterwell.utils.StrUtils;
+import com.winterwell.web.ajax.JThing;
 
 /**
  * This is also the type for Impact!
@@ -91,22 +92,14 @@ public class Output extends Thing<Output> {
 		put("name", name);
 	}
 
-	/**
-	 * aka costPerBeneficiary
-	 * @param costPerBen
-	 */
-	public void setCostPerOutput(Money costPerBen) {
-		assert costPerBen.getValue100p() >= 0 : this;
-		put("costPerOutput", costPerBen);
+	public Money getCostPerBeneficiary() {
+		Object cpb = get("costPerBeneficiary");
+		if (cpb==null) return null;
+		if (cpb instanceof Money) return (Money) cpb;
+		return (Money) new JThing().setType(Money.class).setMap((Map) cpb).java();
 	}
-
-	/**
-	 * aka costPerBeneficiary
-	 */
-	public Money getCostPerOutput() {
-		Money cpb = (Money) get("costPerOutput");
-		return cpb;
+	public void setCostPerBeneficiary(Money cpb) {
+		put("costPerBeneficiary", cpb);
 	}
-
 	
 }

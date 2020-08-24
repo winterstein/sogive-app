@@ -5,6 +5,9 @@ import {assert} from 'sjtest';
 import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 
+/**
+ * See also Project.java
+ */
 class Project extends DataClass {
 
 	inputs = [

@@ -6,6 +6,7 @@ package org.sogive.data.charity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.goodloop.data.KCurrency;
 import com.goodloop.data.Money;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
@@ -19,6 +20,16 @@ import com.winterwell.utils.time.TimeUtils;
  */
 public class Project extends Thing<Project> {
 
+	/**
+	 * Find the projectCosts or annualCosts input
+	 * @returns {Money}
+	 */
+	Money getCost() {
+		List<Money> inputs = getInputs();
+		List<Money> costs = Containers.filter(inputs, input -> "projectCosts".equals(input.getName())|| "annualCosts".equals(input.getName()));
+		return costs.isEmpty()? null : costs.get(0); // can be null
+	};
+	
 	@Override
 	public void init() {
 		super.init();
@@ -120,69 +131,6 @@ public class Project extends Thing<Project> {
 	}
 	
 	
-	/**
-	 * ??This is currently only done client side!!
-	 * TODO Do it in Project.js
-	 * 
-	 * This calculates the impact info -- which is then stored on the Output object!
-	 * @param outputs
-	 * @param amount
-	 * @return
-	 */
-	public Object calcCostPerOutput(Output output) {
-//		Optional<Long> year = outputs.stream().map(o -> o.getYear()).max(Long::compare);
-		List<Money> inputs = getInputs();
-		// only the latest year - but a Project is single year
-		// TODO what if the years don't match?
-		Money totalCosts = Containers.first(inputs, ma -> "annualCosts".equals(ma.getName()));
-//		MonetaryAmount fundraisingCosts = Containers.first(inputs, ma -> "fundraisingCosts".equals(ma.getName()));
-		Money tradingCosts = Containers.first(inputs, ma -> "tradingCosts".equals(ma.getName()));
-		Money incomeFromBeneficiaries = Containers.first(inputs, ma -> "incomeFromBeneficiaries".equals(ma.getName()));			
-		
-		Money cost = totalCosts;
-		if (cost==null) {
-			// TODO unquantified impacts without
-			// can't calc anything
-			return null;
-		}
-		if (cost.isZero()) {
-			Log.i("data", "0 cost for "+this);
-			return null;
-		}
-//		assert cost.getValue() > 0 : cost+" "+this;
-		// What should the formula be?
-		// ...remove income e.g. the malaria net cost $10 but the person getting it paid $1, so $9 isthe cost to the charity
-		if (incomeFromBeneficiaries != null) {
-			cost = cost.minus(incomeFromBeneficiaries);
-		}
-//		assert cost.getValue() > 0 : cost+" "+this;
-		// Remove fundraising costs. 
-		// This feels dubious to me. I think fundraising is part of how well a charity operates,
-		// and it is likely that some of your donation will be re-invested in fundraising. 
-		// The business equivalent would be to exclude marketing costs when looking at likely dividends
-		// -- which would be odd. ^Dan
-		// TODO make this a user-configurable setting.
-		// TODO test what other people think.
-//		if (fundraisingCosts != null) {
-//			cost = cost.minus(fundraisingCosts);
-//		}
-		
-//		assert cost.getValue() > 0 : cost+" "+this;
-		if (tradingCosts != null) {
-			cost = cost.minus(tradingCosts);
-		}
-//		assert cost.getValue() > 0 : cost+" "+this;
-		
-		// Cost per output -- or is this calculated client side?
-//		Double num = output.getNumber();
-//		if (num != null) {
-//			double perOutput = cost.getValue() / num;
-//			output.setCostPerOutput(costPerOutput);
-//		}
-		// done
-		return output;
-	}
-	
 	@Deprecated // set on per-charity basis now
 	public boolean isReady() {
 		return Utils.truthy(get("ready"));
@@ -192,4 +140,37 @@ public class Project extends Thing<Project> {
 		Object ir = get("isRep");
 		return Utils.truthy(ir);
 	}
+	
+
+	/**
+	 * NB: code copy-pasta from Project.js
+	 * 
+	 * Actually, this is "get the total cost minus certain categories, so its more like total costs covered by donations"
+	 * @param {!Project} project
+	 * @returns {!Money}
+	 */
+	Money getTotalCost() {
+		// total - but some inputs are actually negatives
+		List<Money> inputs = getInputs();
+		Money total = new Money(null, 0);
+		for(Money input : inputs) {
+			if (input.isZero()) continue;
+			if (Containers.contains(input.getName(), deductibleInputs)) {
+				// These count against the total
+				// NB: Use abs in case an overly smart editor put them in as -ives
+				total = total.minus(input);
+			} else {
+				// normal
+				total = total.plus(input);
+			}
+		}
+		return total;
+	}
+
+	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "fundraisingCosts", "tradingCosts"};
+
+	public boolean isOverall() {
+		return getName()!=null && getName().toLowerCase().equals("overall");
+	}
+
 }

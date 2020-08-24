@@ -82,8 +82,4 @@ const UploadCredit = () => {
 	</Misc.Card>);
 };
 
-const RoleLine = ({role}) => {
-	return <div className='well'>{role}</div>;
-};
-
 export default AccountPage;

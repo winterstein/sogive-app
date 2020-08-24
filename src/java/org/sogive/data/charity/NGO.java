@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+import com.goodloop.data.Money;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
@@ -13,6 +14,7 @@ import com.winterwell.web.data.XId;
 public class NGO extends Thing<NGO> {
 		
 	private static final long serialVersionUID = 1L;
+	private static final String LOGTAG = "NGO";
 
 	@Override
 	public void init() {
@@ -108,6 +110,137 @@ public class NGO extends Thing<NGO> {
 		assert ! Utils.isBlank(id) : "NGO - Blank Id!";
 		return new XId(id+"@sogive");
 	}
+
+	/**
+	 * This is caluclated from other data 
+	 * @param unitOutput
+	 */
+	public void setSimpleImpact(Output unitOutput) {
+		put("simpleImpact", unitOutput);
+	}
+
+	public Output getSimpleImpact() {
+		try {
+			// add simple impact data
+			Project project = getRepProject();
+			if (project==null) {
+				return null;
+			}
+			// add cost of a single output as "simpleImpact"
+			Output unitOutput = calcSimpleImpact(project);
+			put("simpleImpact", unitOutput);
+			return unitOutput;
+		} catch(Throwable ex) {
+			Log.e(LOGTAG, ex);
+			return null;
+		}
+	}
+
+	
+	/**
+	 * 
+	 * @param project
+	 * @return unit-output 
+	 * @throws Exception
+	 */
+	private Output calcSimpleImpact(Project project) throws Exception {
+		List<Output> outputs = project.getOutputs();
+		if (outputs.isEmpty()) return null;
+		if (outputs.size() > 1) {
+			Log.d(LOGTAG, getId()+" simple impact based on only one output from "+outputs);
+		}
+		Output output = outputs.get(0);
+		Money cost = costPerBeneficiary(project, output);
+		
+		Output unitOutput = new Output();
+		unitOutput.setName(output.getName());
+		unitOutput.put("number", 1.0);
+		unitOutput.setCostPerBeneficiary(cost);
+		return unitOutput;
+	}
+
+	/**
+	 * NB: code copy-pasta from Project.js
+	 * 
+	 * @return {Money}
+	 */
+	Money costPerBeneficiary(Project project, Output output) {
+		// Is an override present? Forget calculation and just return that.
+		if (output!=null && output.getCostPerBeneficiary() != null) {
+			return output.getCostPerBeneficiary();
+		}
+		return costPerBeneficiaryCalc(project, output);
+	};
+
+	/**
+	 * NB: code copy-pasta from Project.js
+	 * 
+	 * @param {NGO} ngo 
+	 * @param {String|Number} yr 
+	 * @returns {Project} the overall project for year, or undefined
+	 */
+	Project getOverall(int yr) {
+		Project overall = Containers.first(getProjects(),
+				p -> p.isOverall() && p.getYear() == yr);
+		return overall;
+	}
+
+	/**
+	 * NB: code copy-pasta from Project.js
+	 * 
+	 * This ignores the override (if set)
+	 */
+	Money costPerBeneficiaryCalc(Project project, Output output) {	
+		Double outputCount = output.getNumber();
+		if (outputCount==null) return null;
+		Money projectCost = project.getTotalCost();
+		if (projectCost==null) {
+			Log.d("No project cost?! "+getId(), project);
+			return null;
+		}
+		// overheads?
+		if ( ! project.isOverall()) {
+			int year = project.getYear().intValue();
+			double adjustment = getOverheadAdjustment(year);
+			Money adjustedProjectCost = projectCost.multiply(adjustment);
+//			let v = Money.value(adjustedProjectCost);
+			projectCost = adjustedProjectCost;		
+		}
+//		if ( ! $.isNumeric(outputCount)) {
+//			console.error("NGO.js - Not a number?! "+outputCount, "from", output);
+//			return 1/0; // NaN
+//		}
+//		assMatch(outputCount, Number, "NGO.js outputCount not a Number?! "+outputCount);
+		Money costPerOutput = new Money(projectCost).multiply(1.0/outputCount);
+//		Money.setValue(costPerOutput, projectCost.value / outputCount);
+		return costPerOutput;
+	}
+
+	double getOverheadAdjustment(int year) {
+		try {
+			// get the overall for that year
+			Project overall = getOverall(year);
+			if (overall==null) {
+				return 1;
+			}
+			// get all the projects for that year
+			List<Project> thatYearsProjects = Containers.filter(getProjects(),
+					p -> ! p.isOverall() && p.getYear() == year);
+			// sum project costs, subtracting income
+			Money overallCosts = overall.getTotalCost();
+			// ?? how to handle project level inputs c.f. emails "Overheads calculation"
+			List<Money> thatYearsProjectCosts = Containers.apply(thatYearsProjects, Project::getCost);
+			Money totalProjectCost = Money.total(thatYearsProjectCosts);
+			double adjustment = overallCosts.getValue100p()*1.0 / totalProjectCost.getValue100p();
+			if ( ! Double.isFinite(adjustment)) {
+				return 1;
+			}
+			return adjustment;
+		} catch(Exception err) {
+			Log.w(LOGTAG, Arrays.asList("costPerBen overheads adjustment failed ", err, this, year));		
+			return 1;
+		}
+	};
 
 	
 }

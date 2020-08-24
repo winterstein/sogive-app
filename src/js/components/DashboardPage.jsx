@@ -73,7 +73,7 @@ const DonationListItem = ({donation}) => {
 	niceName = niceName.join(' ');
 	const impact = donation.impact? <div>Your donation funded {printer.prettyNumber(donation.impact.count, 2)} {donation.impact.unit}</div> : null;
 	return (
-		<div className='well'>
+		<Card body>
 			<Misc.Time time={donation.date} />
 			You donated <Misc.Money precision={false} amount={Donation.amount(donation)} />
 			to <a href={'#charity?charityId='+encURI(charityId)}>{niceName}</a>
@@ -82,7 +82,7 @@ const DonationListItem = ({donation}) => {
 			{impact}
 			<div>GiftAid? {donation.giftAid? 'yes' : 'no'} <br />
 			<small>Payment ID: {donation.paymentId}</small></div>
-		</div>
+		</Card>
 	);
 };
 

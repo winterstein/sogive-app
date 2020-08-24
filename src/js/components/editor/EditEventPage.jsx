@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
 import Login from 'you-again';
-import { Alert } from 'reactstrap';
+import { Alert, Card as BSCard } from 'reactstrap';
 import printer from '../../base/utils/printer.js';
 import { modifyHash } from '../../base/utils/miscutils';
 
@@ -160,6 +160,7 @@ const EventEditor = ({id}) => {
 				<TicketTypeEditor key={'tt'+i} i={i} path={path.concat(['ticketTypes', i])} ticketType={tt} event={item} move={move} last={i + 1 === item.ticketTypes.length} />)
 				: <p>No tickets yet!</p>
 			}
+			<hr/>
 			<button className='btn btn-default' onClick={addTicketType} type="button"><Misc.Icon prefix="fas" fa="plus" /> Create</button>
 		</Misc.Card>
 
@@ -202,7 +203,7 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
 		DataStore.update();
 	};
-	return (<div className='well'>
+	return (<BSCard body>
 		<small>{ticketType.id}</small>
 		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
 		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
@@ -231,7 +232,7 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon prefix="fas" fa="arrow-up" /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon prefix="fas" fa="arrow-down" /> down</button>
 		<button className='btn btn-danger' onClick={removeTicketType}><Misc.Icon prefix="fas" fa="trash" /></button>
-	</div>);
+	</BSCard>);
 };
 
 // copy pasta of TicketTypeEditor. We could refactor. We could use ListLoad. But prob copy-paste is optimal for time.
@@ -240,7 +241,7 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 		event.extras = event.extras.filter(tt => tt !== extra);
 		DataStore.update();
 	};
-	return (<div className='well'>
+	return (<BSCard body>
 		<small>{getId(extra)}</small>
 		<PropControl item={extra} path={path} prop='name' label='Name' placeholder='e.g. Event T-Shirt' />
 		<PropControl item={extra} path={path} prop='subtitle' label='SubTitle' placeholder='' />
@@ -253,7 +254,7 @@ const ExtraEditor = ({extra, path, event, i, move, last}) => {
 		<button disabled={i===0} className='btn btn-default' onClick={() => move(i, -1)}><Misc.Icon prefix="fas" fa="arrow-up" /> up</button>
 		<button disabled={last} className='btn btn-default' onClick={() => move(i, 1)}><Misc.Icon prefix="fas" fa="arrow-down" /> down</button>
 		<button className='btn btn-danger' onClick={removeThing}><Misc.Icon prefix="fas" fa="trash" /></button>
-	</div>);
+	</BSCard>);
 };
 
 export default EditEventPage;

@@ -27,6 +27,14 @@ public class CharityServlet extends CrudServlet<NGO> {
 	public CharityServlet() {
 		super(NGO.class, Dep.get(SoGiveConfig.class));
 		config = Dep.get(SoGiveConfig.class);
+		augmentFlag = true;
+	}
+	
+	@Override
+	protected void augment(JThing<NGO> jThing, WebRequest state) {
+		NGO ngo = jThing.java();
+		Output output = ngo.getSimpleImpact();
+		jThing.setJava(ngo);
 	}
 	
 	@Override
@@ -34,17 +42,12 @@ public class CharityServlet extends CrudServlet<NGO> {
 		AppUtils.DEBUG = true; // TODO delete debugging £ bug
 		super.doSave(state);
 		AppUtils.DEBUG = false;
-		
-		// impacts
-		doCalcImpacts(getThing(state));			
 	}	
 
 	@Override
 	protected JThing<NGO> getThingFromDB(WebRequest state) {	
 		JThing<NGO> thing = super.getThingFromDB(state);
 		if (thing==null) return null;
-		// impacts
-		doCalcImpacts(thing.java());
 		return thing;
 	}
 	
@@ -63,22 +66,6 @@ public class CharityServlet extends CrudServlet<NGO> {
 	@Override
 	protected String getJson(WebRequest state) {
 		return state.get(AppUtils.ITEM.getName());
-	}
-	
-	private void doCalcImpacts(NGO charity) {
-		List<Project> projects = charity.getProjects();
-		if (projects==null) {
-			return;
-		}
-		for (Project project : projects) {
-			List<Output> alloutputs = project.getOutputs();	
-			List<Output> outputs = alloutputs; //Thing.getLatestYear(alloutputs);
-//			MonetaryAmount unitMoney = MonetaryAmount.pound(1);
-			for (Output output : outputs) {
-				project.calcCostPerOutput(output); //Impact(outputs, unitMoney);	
-			}			
-//			project.put("impacts", impacts);
-		}		
 	}
 
 	@Override

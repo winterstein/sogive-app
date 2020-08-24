@@ -171,8 +171,8 @@ public class DonationServlet extends CrudServlet<Donation> {
 		return jthing;
 	}
 	
+
 	
-		
 	/**
 	 * Remove sensitive details for privacy
 	 * TODO Export-CSV should e.g. set a prop on the servlet which says "don't sanitize, I need full data"
@@ -181,7 +181,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 * @return
 	 */
 	@Override
-	public List cleanse(List hits2, WebRequest state) {
+	protected void cleanse(JThing<Donation> thing, WebRequest state) {
 		// TODO HACK if returning a list for the event owner - show more info
 		boolean showEmailAndAddress = false;
 		// ...HACK is this for manageDonations?
@@ -204,59 +204,58 @@ public class DonationServlet extends CrudServlet<Donation> {
 			Log.d(LOGTAG, "hack purpose:admin upgrade data for "+tokens);
 		}
 		
-		for (Object dntnObj : hits2) {
-			if (!(dntnObj instanceof Donation)) continue;
-			Donation donation = (Donation) dntnObj;
+		Donation donation = thing.java();
 
-			// We want to be able to display a name unless the donor requested anonymity
-			// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
-			String donorName = null;
-			Boolean anonymous = donation.getAnonymous();
-			if (anonymous == null) anonymous = false;
-			if (showEmailAndAddress) anonymous = false;
-			if ( ! anonymous) {
-				// Try to get an explicitly declared name
-				donorName = donation.getDonorName();
-				PersonLite donor = donation.getDonor();
-				if (donorName == null && donor!=null) donorName = donor.getName();
-				
-				// Still no name? Fall back to email addresses, but just take everything up to the @ for privacy
-				// This mimics the name-reconstructing behaviour used on the front end
-				if (donorName == null) {
-					String donorEmail = donation.getDonorEmail();
-					if (donorEmail == null && donor != null) donorEmail = donor.id;
-					if (donorEmail == null) donorEmail = donation.getFrom().name;
-					// We've done all we can! Strip everything after the @ and go.
-					if (donorEmail != null) donorName = donorEmail.replaceAll("@.*", "");
-				}
-			}
+		// We want to be able to display a name unless the donor requested anonymity
+		// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
+		String donorName = null;
+		Boolean anonymous = donation.getAnonymous();
+		if (anonymous == null) anonymous = false;
+		if (showEmailAndAddress) anonymous = false;
+		if ( ! anonymous) {
+			// Try to get an explicitly declared name
+			donorName = donation.getDonorName();
+			PersonLite donor = donation.getDonor();
+			if (donorName == null && donor!=null) donorName = donor.getName();
 			
-			// We've got a name or proxy, now scrub all possibly-sensitive fields
-			if ( ! showEmailAndAddress) {
-				donation.setFrom(null);
-				donation.setDonor(null);
-				donation.setDonorName(null);
-				donation.setDonorEmail(null);
-				donation.setDonorAddress(null);
-				donation.setDonorPostcode(null);
-				donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
-				donation.setF(null);
-				
-				donation.setTip(null);
-			}
-			// always null out background financial info
-			donation.setPaymentId(null);
-			donation.setStripe(null);						
-			
-			// Now reinstate the "donor" object but with only a name
-			if ( ! anonymous && ! Utils.isBlank(donorName)) {
-				// Fake an XID for the PersonLite object
-				PersonLite donor = new PersonLite(new XId(donorName, "name", false));
-				donor.setName(donorName);
-				donation.setDonor(donor);
+			// Still no name? Fall back to email addresses, but just take everything up to the @ for privacy
+			// This mimics the name-reconstructing behaviour used on the front end
+			if (donorName == null) {
+				String donorEmail = donation.getDonorEmail();
+				if (donorEmail == null && donor != null) donorEmail = donor.id;
+				if (donorEmail == null) donorEmail = donation.getFrom().name;
+				// We've done all we can! Strip everything after the @ and go.
+				if (donorEmail != null) donorName = donorEmail.replaceAll("@.*", "");
 			}
 		}
-		return hits2;
+		
+		// We've got a name or proxy, now scrub all possibly-sensitive fields
+		if ( ! showEmailAndAddress) {
+			donation.setFrom(null);
+			donation.setDonor(null);
+			donation.setDonorName(null);
+			donation.setDonorEmail(null);
+			donation.setDonorAddress(null);
+			donation.setDonorPostcode(null);
+			donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
+			donation.setF(null);
+			
+			donation.setTip(null);
+		}
+		// always null out background financial info
+		donation.setPaymentId(null);
+		donation.setStripe(null);						
+		
+		// Now reinstate the "donor" object but with only a name
+		if ( ! anonymous && ! Utils.isBlank(donorName)) {
+			// Fake an XID for the PersonLite object
+			PersonLite donor = new PersonLite(new XId(donorName, "name", false));
+			donor.setName(donorName);
+			donation.setDonor(donor);
+		}
+		
+		// done
+		thing.setJava(donation);
 	}
 	
 
