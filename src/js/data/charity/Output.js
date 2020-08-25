@@ -7,8 +7,8 @@ import DataClass, {getType} from '../../base/data/DataClass';
 {
 	name {String}
 	number: {Number} Number of units output, e.g. the number of malaria nets
-	cost: {Money} total cost, ie cost = costPerOutput * number
-	costPerOutput {Money}
+	cost: {Money} total cost, ie cost = costPerBeneficiary * number
+	costPerBeneficiary {Money} Should really be called costPerOutput
 	amount: {String} non-numerical descriptions of how much was output
 	confidence {String}
 	description: {String}
@@ -25,8 +25,8 @@ class Output extends DataClass {
 	name;
 	/** @type {Number} Number of units output, e.g. the number of malaria nets */
 	number;
-	// cost: {Money} total cost, ie cost = costPerOutput * number
-	// costPerOutput {Money}
+	// cost: {Money} total cost, ie cost = costPerBeneficiary * number
+	// costPerBeneficiary {Money}
 	// amount: {String} non-numerical descriptions of how much was output
 	// confidence {String}
 	// description: {String}

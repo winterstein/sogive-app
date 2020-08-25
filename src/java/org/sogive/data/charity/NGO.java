@@ -124,12 +124,14 @@ public class NGO extends Thing<NGO> {
 			// add simple impact data
 			Project project = getRepProject();
 			if (project==null) {
-				return new Output(1.0, "No Rep Project!");
-//				return null;
+				Log.d(LOGTAG, "No impact cos no Rep Project for "+getId());
+				return null;
 			}
 			// add cost of a single output as "simpleImpact"
 			Output unitOutput = calcSimpleImpact(project);
-			if (unitOutput==null) unitOutput = new Output(1.0, "No impact! Rep project is "+project);
+			if (unitOutput==null) {
+				Log.d(LOGTAG, "No impact for "+getId()+" Rep project is "+project);
+			}
 			put("simpleImpact", unitOutput);
 			return unitOutput;
 		} catch(Throwable ex) {

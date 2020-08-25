@@ -69,6 +69,9 @@ public class DBSoGive {
 //				.noIndex() not for type:text
 		ESType money = Money.ESTYPE;
 		
+		ESType outputType = new ESType().object()
+				.property("costPerBeneficiary", money);
+		
 		ESType charitymapping = new ESType()
 				.property("ready", new ESType().bool())
 				.property("impact", ESType.keyword)
@@ -80,11 +83,9 @@ public class DBSoGive {
 							.property("end", new ESType().date())
 							.property("end_raw", raw)
 //							.property("inputs", money) TODO => reindex
-							.property("outputs", 
-									new ESType().object()
-//									.property("costPerOutput", money) TODO => reindex
-									)
-						) // ./projects				
+							.property("outputs", outputType)
+						) // ./projects	
+				.property("simpleImpact", outputType) // ./projects
 				.property("suggest", new ESType().completion());	
 
 		// mappings
