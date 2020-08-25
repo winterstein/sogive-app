@@ -131,11 +131,6 @@ public class Project extends Thing<Project> {
 	}
 	
 	
-	@Deprecated // set on per-charity basis now
-	public boolean isReady() {
-		return Utils.truthy(get("ready"));
-	}
-	
 	public boolean isRep() {
 		Object ir = get("isRep");
 		return Utils.truthy(ir);

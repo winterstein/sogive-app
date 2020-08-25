@@ -75,7 +75,7 @@ public class NGO extends Thing<NGO> {
 			return null;
 		}
 		// Representative and ready for use?
-		List<Project> projects2 = Containers.filter(projects, p -> p.isReady() && p.isRep());
+		List<Project> projects2 = Containers.filter(projects, p -> p.isRep());
 		List<Project> overalls = Containers.filter(projects, p -> p.getName().equals("overall"));
 
 		if ( ! Utils.isEmpty(projects2)) {
