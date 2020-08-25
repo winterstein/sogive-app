@@ -435,7 +435,7 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 		<td><Misc.PropControl prop="name" path={inputPath} item={output} /></td>
 		<td><Misc.PropControl prop="number" type="number" path={inputPath} item={output} /></td>
 		<td>
-			<Misc.PropControl prop="costPerBeneficiary" type="Money" path={inputPath} item={output} size={4} />
+			<Misc.PropControl prop="costPerBeneficiary" type="Money" path={inputPath} item={output} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
