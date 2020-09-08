@@ -408,10 +408,10 @@ const MakeDirectFundRaiser = ({charity}) => {
 	if ( ! charity) return null;
 	if ( ! Login.isLoggedIn()) return null;
 	NGO.assIsa(charity);
-	return (<Misc.Card title='Create a Fund-raiser'>
-		Create a Fund-Raiser for you to raise money for this charity
-		(do not use this if you want a fund-raiser as part of an event)
-		<CreateButton type={C.TYPES.FundRaiser} />
+	return (<Misc.Card title='Create a Fundraiser'>
+		<p>Create a fresh Fundraiser, for you to raise money for this charity
+		(do not use this if you want a fund-raiser as part of an event).</p>
+		<CreateButton type={C.TYPES.FundRaiser} navpage='editFundraiser' />
 	</Misc.Card>);
 };
 
