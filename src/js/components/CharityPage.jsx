@@ -336,7 +336,7 @@ const ProjectList = ({projects, charity}) => {
 	);
 };
 
-const COSTNAMES = {
+const COSTNAMES = { 	
 	annualCosts: "Annual costs",
 	fundraisingCosts: "Fundraising costs",
 	tradingCosts: "Trading costs",
@@ -348,7 +348,7 @@ const ProjectPanel = ({project}) => {
 	const outputs = project.outputs || [];
 	const inputs = project.inputs || [];
 	return (
-		<div className='col-md-12 ProjectPanel'>
+		<div className="col-md-12 ProjectPanel">
 			<div className='charity-project-title-div'>
 				<h4 className='project-name'>{project.name}: {project.year}</h4>
 				<p className='project-description'>{project.description}</p>
