@@ -56,6 +56,7 @@ const CharityPage = () => {
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
 			<div className="header">
+				{charity.logo? <div><img src={charity.logo} alt='Charity logo' className='charity-logo'/></div> : null}
 				<h1 className="charity-name">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
