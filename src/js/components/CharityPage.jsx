@@ -59,6 +59,9 @@ const CharityPage = () => {
 				<h1 className="charity-name">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
+				<div className='description-short'>
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
 				<CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} />
 			</div>
 			<CharityDonate charity={charity} />
