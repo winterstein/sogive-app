@@ -93,7 +93,6 @@ const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 const CharityDonate = ({charity}) => (
 	<div className='donation-column'>
 		<CharityPageImpactAndDonate charity={charity} />
-		<SocialShare charity={charity} />
 	</div>
 );
 
