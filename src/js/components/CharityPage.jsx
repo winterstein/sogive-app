@@ -66,6 +66,25 @@ const CharityPage = () => {
 				<CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} />
 			</div>
 			<CharityDonate charity={charity} />
+			<div className="header">
+				<h2 className="charity-section-title">
+					About {charity.displayName || charity.name}
+				</h2>
+			</div>
+			<div className='charity-section-text'>
+				<div className='description-short'>
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
+				<div className='description-long'>
+					{charity.description? <MDText source={charity.description} /> : null}
+				</div>
+			</div>
+			<div className="header">
+				<h2 className="charity-section-title">Our Analysis</h2>
+			</div>
+			<div className="charity-section-text">
+				<MDText source={charity.recommendation} />
+			</div>
 		</Col>
 	);
 	const spacerColumn = <Col md="1" xs="hidden" />;
