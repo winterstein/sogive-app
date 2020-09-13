@@ -59,8 +59,7 @@ const CharityPage = () => {
 				<h1 className="charity-name">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
-				<CharityTags className="why-tags" tagsString={charity.whyTags} />
-				<CharityTags className="where-tags" tagsString={charity.whereTags} />
+				<CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} />
 			</div>
 			<CharityDonate charity={charity} />
 		</Col>
@@ -79,15 +78,11 @@ const CharityPage = () => {
 }; // ./CharityPage
 
 
-const CharityTags = ({className, tagsString = ''}) => (
-	// should tags be lower-cased??
+const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 	// TODO <a href={'/#search?q=tag:'+encURI(tag)}> -- needs server-side support
-	<h3 className={'tags ' + className}>
-		{
-			tagsString.split(/,\s*/g)
-				.map(tag => <span key={tag}>{tag} </span>)
-		}
-	</h3>
+	<div className={'tags'}>
+		Tags: {whyTagsString.toLocaleLowerCase()}, {whereTagsString.toLocaleLowerCase()}
+	</div>
 );
 
 
