@@ -69,11 +69,6 @@ const CharityPage = () => {
 
 	return (
 		<div>
-			<div className='top-bands'>
-				<div className='band1' />
-				<div className='band2' />
-				<div className='band3' />
-			</div>
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
