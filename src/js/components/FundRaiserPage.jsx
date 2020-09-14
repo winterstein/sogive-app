@@ -42,7 +42,7 @@ const FundRaiserTop = () => {
 	return (
 		<div>
 			<h2>Pick a Fundraiser</h2>
-			<ListLoad type={type} />
+			<ListLoad type={type} status={C.KStatus.ALL_BAR_TRASH} />
 			<hr/>
 			<div>
 				Fundraisers are personal pages linked to a specific event, e.g.
