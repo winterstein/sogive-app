@@ -20,7 +20,7 @@ describe('a-safety-test', () => {
 	});
 
 	// Journey: visit the web-app, check APIBASE is test or local
-	test('Dont point the API at production in a test', async () => {
+	test('FIX THIS NOW! Dont point the API at production in a test! You might do horrible things to the live database', async () => {
 		if ( ! server) throw new Error("No server url specified");
 		await serverSafetyCheck(page, server);		
 		// OK :)
