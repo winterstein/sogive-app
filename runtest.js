@@ -1,5 +1,6 @@
 'use strict';
 
+// Run via `node runtest.js`
 // Copied from wwappbase.js/template - because symlinks dont work
 // Calls npm run test = jest, with config set in process
 const shell = require('shelljs');
