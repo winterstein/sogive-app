@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const { username, password } = require("../Credentials");
 const { targetServers } = require('../testConfig');
-const {doLogin} = require('../test-base/UtilityFunctions');
+const {doLogin, serverSafetyCheck} = require('../test-base/UtilityFunctions');
 const config = JSON.parse(process.env.__CONFIGURATION);
 
 const baseSite = targetServers[config.site];
@@ -20,6 +20,9 @@ const eventData = {
 };
 
 describe("Create-Event-Tests", () => {
+	
+	serverSafetyCheck(page, url);
+
 	const longName = "supercalifragilisticexpialidocious";
 	let id = '';
 

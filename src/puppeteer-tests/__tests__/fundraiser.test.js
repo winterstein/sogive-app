@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { doLogin, donate, fillInForm } = require("../test-base/UtilityFunctions");
+const { doLogin, donate, fillInForm, serverSafetyCheck } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General, Register, Fundraiser } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -46,6 +46,8 @@ const fundraiserIdClip = () => {
 };
 
 describe("!!broken Fundraiser tests", () => {
+	
+	serverSafetyCheck(page, url);
 
 	// nobbled TODO fix
 	test("!! tests OFF", async () => {

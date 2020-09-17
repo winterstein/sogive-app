@@ -15,8 +15,15 @@ describe('a-safety-test', () => {
 	// Journey: visit the web-app	
 	test('smoke test site', async () => {
 		if ( ! server) throw new Error("No server url specified");
+		await page.goto(server);
+		// no smoke :)
+	});
+
+	// Journey: visit the web-app, check APIBASE is test or local
+	test('Dont point the API at production in a test', async () => {
+		if ( ! server) throw new Error("No server url specified");
 		await serverSafetyCheck(page, server);		
 		// OK :)
 	});
-
+	
 });
