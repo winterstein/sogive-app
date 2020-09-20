@@ -52,6 +52,8 @@ const CharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
 	}
+	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
 
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
@@ -62,6 +64,9 @@ const CharityPage = () => {
 				</h1>
 				<div className='description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
+				<div className='impact'>
+					{charity.impact ? <img alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
 				</div>
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
