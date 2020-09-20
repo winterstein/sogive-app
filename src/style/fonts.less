@@ -1,0 +1,32 @@
+@import "colours.less";
+@import "positioning.less";
+
+@standard-text-font: 'Nunito Sans';
+
+.header-title {
+	text-transform: capitalize;
+	font-family: @standard-text-font;
+	font-weight: 800;
+	font-size: 32px;
+	color: @charity-page-summary-text-colour;
+	margin-top: 0;
+	margin-bottom: 0;
+	.extend-bg-to-sides(@bs-column-padding);
+	line-height: @band-2-height;
+}
+
+.header-section-title {
+	text-transform: capitalize;
+	font-family: @standard-text-font;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 24px;
+}
+
+.div-section-text {
+	font-family: @standard-text-font;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 22px;
+}
