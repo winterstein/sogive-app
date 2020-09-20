@@ -57,34 +57,17 @@ const CharityPage = () => {
 		<Col md="7" xs="12" className="column impact-column">
 			<div className="header">
 				{charity.logo? <div><img src={charity.logo} alt='Charity logo' className='charity-logo'/></div> : null}
-				<h1 className="charity-name">
+				<h1 className="header-title">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
 				<div className='description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
-				<CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} />
+				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
 			<CharityDonate charity={charity} />
-			<div className="header">
-				<h2 className="charity-section-title">
-					About {charity.displayName || charity.name}
-				</h2>
-			</div>
-			<div className='charity-section-text'>
-				<div className='description-short'>
-					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
-				</div>
-				<div className='description-long'>
-					{charity.description? <MDText source={charity.description} /> : null}
-				</div>
-			</div>
-			<div className="header">
-				<h2 className="charity-section-title">Our Analysis</h2>
-			</div>
-			<div className="charity-section-text">
-				<MDText source={charity.recommendation} />
-			</div>
+			{charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null}
+			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
 	);
 	const spacerColumn = <Col md="1" xs="hidden" />;
@@ -115,6 +98,34 @@ const CharityDonate = ({charity}) => (
 	</div>
 );
 
+const CharityAboutSection = ({charity}) => (
+	<div>
+			<div className="header">
+				<h2 className="header-section-title">
+					About {charity.displayName || charity.name}
+				</h2>
+			</div>
+			<div className='div-section-text'>
+				<div className='description-short'>
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
+				<div className='description-long'>
+					{charity.description? <MDText source={charity.description} /> : null}
+				</div>
+			</div>
+	</div>
+);
+
+const CharityAnalysisSection = ({charity}) => (
+	<div>
+		<div className="header">
+			<h2 className="header-section-title">Our Analysis</h2>
+		</div>
+		<div className="div-section-text">
+			<MDText source={charity.recommendation} />
+		</div>
+	</div>
+);
 
 const CharityAbout = ({charity}) => {
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
