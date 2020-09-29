@@ -27,7 +27,15 @@ export default Ticket;
  */
 Ticket.CARD_KIND = 'card';
 
+/**
+ * 
+ * @param {!Ticket} ticket 
+ * @returns {Monet}
+ */
+Ticket.price = ticket => ticket.price;
+
 Ticket.isCard = ticket => ticket.kind && ticket.kind.toLowerCase() === Ticket.CARD_KIND;
+Ticket.isTip = ticket => ticket.kind && ticket.kind.toLowerCase() === "tip";
 
 // This.isa = (obj) => isa(obj, This.type)
 // 		// sneaky place to add safety checks
