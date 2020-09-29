@@ -127,13 +127,6 @@ const BehaviourBasketDone = ({basket, doneBasket}) => {
 
 /**
  * 
- * @param {Ticket} ticket
- * @returns {Boolean}
- */
-const isGift = ticket => ticket && ticket.kind && ticket.kind.toLowerCase() === 'card';
-
-/**
- * 
  */
 const TicketTypes = ({event, basket}) => {
 	// Event.assIsa(event); // may be an empty dummy object
@@ -345,7 +338,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 
 	// first ticket - fill in from user details
 	// HACK: unless it is a card
-	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn() && ! isGift(ticket)) {
+	if (i===0 && ! ticket.attendeeName && ! ticket.attendeeEmail && Login.isLoggedIn() && ! Ticket.isCard(ticket)) {
 		const user = Login.getUser();
 		ticket.attendeeName = user.name;
 		ticket.attendeeEmail = Login.getEmail();
@@ -371,7 +364,7 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			<hr />
 			<div className='AttendeeDetails'>
 				<PropControl type='text' item={ticket} path={path} prop='attendeeName'
-					label={noun+' Full Name'} help={isGift()} />
+					label={noun+' Full Name'} />
 				<PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label={noun+' Email'}
 					help="Include their email to also send an e-Card at no extra cost. You can leave this blank if you don't want to do that." />
 				{ i!==0? <PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address as first person' /> : null}
@@ -380,13 +373,13 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 						<PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
 					</div>
 				}
-				{isGift(ticket)?
+				{Ticket.isCard(ticket) &&
 					<PropControl prop='message' label='Message'
 						rows={6}
 						help={`Your message to ${ticket.attendeeName || 'them'}, which will be written inside the card. Please include their name and yours.`}
 						dflt={defaultCardMessage(ticket)}
 						path={path} type='textarea' />
-				: null}
+				}
 			</div>
 		</div>
 	);

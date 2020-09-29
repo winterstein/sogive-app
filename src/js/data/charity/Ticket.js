@@ -4,7 +4,7 @@ import DataClass, {nonce} from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 
 class Ticket extends DataClass {
-	
+
 	price = new Money();
 
 	constructor(base) {
@@ -21,6 +21,13 @@ class Ticket extends DataClass {
 DataClass.register(Ticket, "Ticket");
 const This = Ticket;
 export default Ticket;
+
+/**
+ * Hack: special value for ticket.kind to mark it as a greetings card
+ */
+Ticket.CARD_KIND = 'card';
+
+Ticket.isCard = ticket => ticket.kind && ticket.kind.toLowerCase() === Ticket.CARD_KIND;
 
 // This.isa = (obj) => isa(obj, This.type)
 // 		// sneaky place to add safety checks
