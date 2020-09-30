@@ -207,8 +207,8 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		<small>{ticketType.id}</small>
 		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
 		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
-		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child / Card'
-			help="'Card' is a special value for setting up charity Xmas Cards" />
+		<PropControl item={ticketType} path={path} prop='kind' label='Kind' placeholder='e.g. Adult / Child / Card / Tip'
+			help="'Card' is a special value for setting up charity Xmas Cards. 'Tip' is a special value for setting a custom opt-out payment at donation checkout." />
 		
 		<PropControl path={path} prop='charityId' label='Charity ID' disabled={Event.charityId(event)}
 			placeholder='Link a charity to this ticket'

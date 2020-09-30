@@ -41,7 +41,7 @@ public class Ticket extends AThing {
 	NB: name is the title, e.g. "Wee Wander" */
 	String subtitle;
 
-	/** Adult / Child */
+	/** Adult / Child / card (HACK: special value) */
 	String kind;
 
 	Money price;

@@ -6,9 +6,10 @@ import DataStore from '../../base/plumbing/DataStore';
 import XId from '../../base/data/XId';
 
 /**
- * Note: SuggestedDonation can be viewed as a small subset of this {amount, repeat}
+ * Note: SuggestedDonation can be viewed as a small subset of this {amount, repeat, name} + img, text
  */
 class Donation extends DataClass {
+
 	/** crude duck type: needs an amount or total */
 	static isa(obj) {
 		if ( ! obj) return false;

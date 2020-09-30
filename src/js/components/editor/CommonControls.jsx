@@ -13,7 +13,7 @@ const SuggestedDonationEditor = ({item, path}) => {
 		<PropControl path={path} prop='amount' label='Amount' type='Money' />
 		
 		<PropControl label='Repeating?' type='radio' path={path} prop='repeat'
-			options={['OFF','MINUTE','HOUR','DAY','WEEK','MONTH','YEAR']} labels={Donation.strRepeat} inline />
+			options={['OFF','MINUTE','HOUR','WEEK','MONTH','YEAR']} labels={Donation.strRepeat} inline />
 
 		<PropControl path={path} prop='name' label='Name (optional)' />
 		<PropControl path={path} prop='text' label='Text (optional)' />

@@ -27,6 +27,8 @@ import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import {notifyUser} from '../base/plumbing/Messaging';
 import {errorPath} from '../base/plumbing/Crud';
 import XId from '../base/data/XId';
+import Ticket from '../data/charity/Ticket';
+import { space } from '../base/utils/miscutils';
 
 
 const widgetPath = ['widget', 'DonationWizard'];
@@ -200,7 +202,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	const amountOK = amount !== null && Money.value(amount) > 0.7; // avoid 1p donations
 
 	const emailOkay = C.emailRegex.test(DataStore.getValue(path.concat("donorEmail")));
-	console.warn(emailOkay);
+	// if ( ! emailOkay) console.warn("email not OK", DataStore.getValue(path.concat("donorEmail")));
 
 	// isOpen is always true - since we 
 
@@ -232,7 +234,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 					</WizardStage> : null}
 				
 					<WizardStage title='Payment' next={false}>
-						<PaymentSection path={path} donation={donationDraft} item={item} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
+						<PaymentSection path={path} donation={donationDraft} item={item} event={event} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
 
 					<WizardStage title='Receipt' previous={false}>
@@ -612,7 +614,7 @@ const onToken_doPayment = ({donation}) => {
 
 const TQ_PATH = ['widget', 'ThankYouSection', 'donation'];
 
-const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) => {
+const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightbox}) => {
 	// HACK - store info for the TQ section
 	DataStore.setValue(TQ_PATH, donation, false);
 
@@ -627,10 +629,20 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 		return null;
 	}
 	Money.assIsa(amount);
-	// tip?
-	// default: £1
+
+	// tip? default: £1
 	if (donation.hasTip === undefined) donation.hasTip = true;
-	if (donation.tip === undefined) donation.tip = new Money({currency:'GBP', value:1});
+	// Is there a Ticket with kind=Tip?
+	let tipTicket = event && event.ticketTypes && event.ticketTypes.find(Ticket.isTip);
+	if (donation.tip === undefined) {
+		donation.tip = tipTicket? Ticket.price(tipTicket) : new Money({currency:'GBP', value:1});
+	}
+	let tipLabel =`Include a tip to cover SoGive's operating costs?`;	
+	if (tipTicket) {
+		tipLabel = [tipTicket.subtitle, tipTicket.description].filter(x => x).join(': ') || 'Include a tip to cover costs?';
+		donation.tip.name = tipTicket.name;
+	}
+	// ...add in the tip to the total
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
 
@@ -665,9 +677,9 @@ const PaymentSection = ({path, donation, item, paidElsewhere, closeLightbox}) =>
 
 	return (<div>
 		<div className='padded-block'>
-			<PropControl type='checkbox' path={path} item={donation} prop='hasTip'
-				label={`Include a ${Donation.isRepeating(donation)? 'one-off' : ''} tip to cover SoGive's operating costs?`} />
-			<PropControl type='Money' path={path} item={donation} prop='tip' label='Tip amount' disabled={donation.hasTip===false} />
+			<PropControl type='checkbox' path={path} item={donation} prop='hasTip' label={tipLabel} />
+			<PropControl type='Money' path={path} item={donation} prop='tip' 
+				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
 	</div>);
@@ -700,7 +712,7 @@ const ThankYouSection = ({path, item, did}) => {
 			<h3>Thank You!</h3>
 			<big>
 				<p>We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> {repeat} to {item.name}</p>
-				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover SoGive's costs). <br /></p> : null}
+				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover costs). <br /></p> : null}
 				<p>Thanks for using SoGive!</p>
 				{Login.user ? '' : registerMessage}
 			</big>
