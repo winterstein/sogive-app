@@ -14,6 +14,17 @@ class Event extends DataClass {
 DataClass.register(Event, "Event");
 export default Event;
 
+/**
+ * Tickets (but not Cards or custom Tips)
+ * @param {!Event} event 
+ * @returns {!Ticket[]} Can be empty.
+ */
+Event.ticketTypes = event => {
+	let tts = event.ticketTypes || [];
+	let justTickets = tts.filter(tt => ! Ticket.isCard(tt) && ! Ticket.isTip(tt));
+	return justTickets;
+};
+
 Event.charityId = e => e && e.charityId;
 
 Event.date = e => e && e.date;

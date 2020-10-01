@@ -137,11 +137,12 @@ const RegisterPage = () => {
  */
 const TicketTypes = ({event, basket}) => {
 	Event.assIsa(event); Basket.assIsa(basket);
-	if ( ! event.ticketTypes) {
+	let ticketTypes = Event.ticketTypes(event);
+	if ( ! ticketTypes || ! ticketTypes.length) {
 		return <div className='alert alert-warning'>No tickets have been setup for this event. Please speak to the event organiser.</div>;
-	}
+	}	
 	const nameToTickets = {};
-	event.ticketTypes.forEach(tt => {
+	ticketTypes.forEach(tt => {
 		const ticketsForName = nameToTickets[tt.name];
 		if (ticketsForName && ticketsForName.types) {
 			ticketsForName.types.push(tt);
