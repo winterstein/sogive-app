@@ -678,7 +678,7 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	return (<div>
 		<div className="padded-block">
 			<PropControl type="checkbox" path={path} item={donation} prop="hasTip" label={tipLabel} />
-			<PropControl type="Money" path={path} item={donation} prop="tip" 
+			<PropControl type="Money" path={path} item={donation} prop="tip" min={0}
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
@@ -696,8 +696,11 @@ const ThankYouSection = ({path, item, did}) => {
 	if ( ! donation || ! Money.value(donation.amount)) {
 		donation = DataStore.getValue(TQ_PATH);
 	}
+	// Did we get a tip? NB: ignore tip=0	
 	let amountPlusTip;
-	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(donation.amount, donation.tip);
+	if (donation.tip && donation.hasTip && Money.value(donation.tip)) {
+		amountPlusTip = Money.add(donation.amount, donation.tip);
+	}
 
 	// pull this out to make "We've received..." a one-liner & make natural spacing easy
 	const repeat = Donation.isRepeating(donation) ? <span> {Donation.strRepeat(donation.repeat)} </span> : null;

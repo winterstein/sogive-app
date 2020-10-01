@@ -445,7 +445,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		email.setSubject("Thank you for donating :)");
 		String amount = donation.getAmount().toString();
 		String tip = "";
-		if (Utils.yes(donation.getHasTip())) {
+		if (Utils.yes(donation.getHasTip()) && donation.getTip()!=null && ! donation.getTip().isZero()) {
 			tip = " (including a tip of "+donation.getTip()+" to cover SoGive's costs)";
 		}
 		String cid = donation.getTo();
