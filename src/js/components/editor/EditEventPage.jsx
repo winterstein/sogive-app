@@ -45,7 +45,9 @@ const EditEventPage = () => {
 	if ( ! pvCanWrite.value && ! isAdmin ) {
 		return <AccessDenied thingId={eventId} />;
 	}
-	if (eventId) return <EventEditor id={eventId} />;
+	if (eventId) {
+		return <EventEditor id={eventId} />;
+	}
 	return (<div>
 		<CreateButton type={type} />
 		<h2>Edit an Event</h2>
