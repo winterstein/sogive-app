@@ -640,7 +640,7 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	let tipLabel =`Include a tip to cover SoGive's operating costs?`;	
 	if (tipTicket) {
 		tipLabel = [tipTicket.subtitle, tipTicket.description].filter(x => x).join(': ') || 'Include a tip to cover costs?';
-		donation.tip.name = tipTicket.name;
+		if (donation.tip) donation.tip.name = tipTicket.name;
 	}
 	// ...add in the tip to the total
 	let amountPlusTip = amount;
