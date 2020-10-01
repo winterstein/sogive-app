@@ -55,8 +55,8 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 	// no donations to draft fundraisers or charities
 	if (false && (item.status === C.KStatus.DRAFT || item.status === C.KStatus.MODIFIED)) {
 		return (
-			<button className='btn btn-lg btn-primary disabled' type='button'
-				title='This is a draft preview page - publish to actually donate'>Donate</button>
+			<button className="btn btn-lg btn-primary disabled" type="button"
+				title="This is a draft preview page - publish to actually donate">Donate</button>
 		);
 	}
 
@@ -211,7 +211,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 			<ModalHeader toggle={closeLightbox}>Donate to {causeName}</ModalHeader>
 			<ModalBody>
 				<Wizard stagePath={stagePath}>
-					<WizardStage title='Amount' sufficient={amountOK} complete={amountOK}>
+					<WizardStage title="Amount" sufficient={amountOK} complete={amountOK}>
 						<AmountSection path={path} fromEditor={fromEditor} item={item}
 							paidElsewhere={paidElsewhere} credit={credit}
 							proposedSuggestedDonation={proposedSuggestedDonation}
@@ -221,23 +221,23 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 						/>
 					</WizardStage>
 
-					{showGiftAidSection? <WizardStage title='Gift Aid'>
+					{showGiftAidSection? <WizardStage title="Gift Aid">
 						<GiftAidSection path={path} charity={charity} stagePath={stagePath} setNavStatus />
 					</WizardStage> : null}
 				
-					{showDetailsSection? <WizardStage title='Details' sufficient={emailOkay} complete={emailOkay}>
+					{showDetailsSection? <WizardStage title="Details" sufficient={emailOkay} complete={emailOkay}>
 						<DetailsSection path={path} stagePath={stagePath} fromEditor={fromEditor} />
 					</WizardStage> : null}
 				
-					{showMessageSection? <WizardStage title='Message'>
+					{showMessageSection? <WizardStage title="Message">
 						<MessageSection path={path} recipient={item.owner} item={item} />
 					</WizardStage> : null}
 				
-					<WizardStage title='Payment' next={false}>
+					<WizardStage title="Payment" next={false}>
 						<PaymentSection path={path} donation={donationDraft} item={item} event={event} paidElsewhere={paidElsewhere} closeLightbox={closeLightbox} />
 					</WizardStage>
 
-					<WizardStage title='Receipt' previous={false}>
+					<WizardStage title="Receipt" previous={false}>
 						<ThankYouSection path={path} item={item} did={donationDraft.id} />
 					</WizardStage>
 				</Wizard>
@@ -317,7 +317,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{preferredCurrency?
 				<CurrencyConvertor path={path} preferredCurrency={preferredCurrency} val={val} />
 				:
-				<PropControl prop='amount' path={path} type='Money' label='Donation'
+				<PropControl prop="amount" path={path} type="Money" label="Donation"
 					value={val} changeCurrency={false} min={new Money(1)} 
 					append={Donation.isRepeating(dntn)? "per "+dntn.repeat.toLowerCase() : null}
 				/>				
@@ -325,14 +325,14 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 			{Money.value(credit) ? <p><i>You have <Misc.Money amount={credit} /> in credit.</i></p> : null}
 			
 			{showRepeatControls ?
-				<PropControl type='radio' path={path} prop='repeat'
+				<PropControl type="radio" path={path} prop="repeat"
 					options={repeatDonations} labels={Donation.strRepeat} inline
 				/> : null}
 			{event && showRepeatControls && Donation.isRepeating(dntn) ?			
 				<PropControl
-					label='Stop recurring donations after the event? (you can also cancel at any time)'
-					type='checkbox'
-					path={path} prop='repeatStopsAfterEvent'
+					label="Stop recurring donations after the event? (you can also cancel at any time)"
+					type="checkbox"
+					path={path} prop="repeatStopsAfterEvent"
 				/> : null}
 		</div>);
 }; // ./AmountSection
@@ -357,7 +357,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	return <>
 		<Row>
 			<Col md="6" sm="12">
-				<PropControl prop='localAmount' currency={preferredCurrency} changeCurrency={false} path={transPath} type='Money'
+				<PropControl prop="localAmount" currency={preferredCurrency} changeCurrency={false} path={transPath} type="Money"
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
 						let dollars = e.target.value;
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
@@ -369,7 +369,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 				/>
 			</Col>
 			<Col md="6" sm="12">
-				<PropControl prop='amount' path={path} type='Money' label='= Donation (£)' value={val} changeCurrency={false}
+				<PropControl prop="amount" path={path} type="Money" label="= Donation (£)" value={val} changeCurrency={false}
 					onChange={e => {
 						let pounds = e.target.value;
 						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
@@ -404,7 +404,7 @@ const SDButton = ({path, sd, donation}) => {
 			{sd.name ? <span>{sd.name} </span> : null}
 			<Misc.Money amount={sd.amount} />
 			{sd.repeat ? <span> {Donation.strRepeat(sd.repeat)}</span> : null}
-			{sd.text ? <div className='btn-smallprint'>{sd.text}</div> : null}
+			{sd.text ? <div className="btn-smallprint">{sd.text}</div> : null}
 		</Button>
 	);
 };
@@ -500,27 +500,27 @@ const GiftAidSection = ({path, charity, stagePath, setNavStatus}) => {
 	}
 
 	return (
-		<div className='section donation-amount'>
-			<img src='/img/giftaid-it-logo.gif' alt='Gift Aid It' />
+		<div className="section donation-amount">
+			<img src="/img/giftaid-it-logo.gif" alt="Gift Aid It" />
 			<p>
 				GiftAid can add considerably to your donation at no extra cost.<br />
 				Please answer the questions below to see if this donation qualifies for GiftAid.
 			</p>
-			<PropControl prop='giftAidOwnMoney' path={path} type='yesNo'
-				label='This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection.'
+			<PropControl prop="giftAidOwnMoney" path={path} type="yesNo"
+				label="This donation is my own money. It has not come from anyone else e.g. a business, friends, or a collection."
 			/>
-			<PropControl prop='giftAidFundRaisedBySale' path={path} type='yesNo'
-				label='This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash.'
+			<PropControl prop="giftAidFundRaisedBySale" path={path} type="yesNo"
+				label="This is the proceeds from the sale of goods or provision of service e.g. a cake sale, auction or car wash."
 			/>
-			<PropControl prop='giftAidBenefitInReturn' path={path} type='yesNo'
-				label='I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake.'
+			<PropControl prop="giftAidBenefitInReturn" path={path} type="yesNo"
+				label="I am receiving a benefit from this donation e.g. entry to an event, raffle or sweepstake."
 			/>
-			<PropControl prop='giftAidTaxpayer' path={path} type='yesNo'
-				label='I am a UK taxpayer.'
+			<PropControl prop="giftAidTaxpayer" path={path} type="yesNo"
+				label="I am a UK taxpayer."
 			/>
 			{giftAidMessage}
-			<PropControl prop='giftAid' path={path} type='checkbox' disabled={ ! canGiftAid}
-				label='I want to Gift Aid this donation, and agree to sharing my details for this.'
+			<PropControl prop="giftAid" path={path} type="checkbox" disabled={ ! canGiftAid}
+				label="I want to Gift Aid this donation, and agree to sharing my details for this."
 			/>
 		</div>
 	);
@@ -539,40 +539,40 @@ const DetailsSection = ({path, charity, fromEditor}) => {
 	// dflt={Login.getEmail()}
 	let reqrd = giftAid;
 	return (
-		<div className='section donation-amount'>
+		<div className="section donation-amount">
 			{giftAid? <p>These details will be passed to the charity so they can claim Gift-Aid.</p> : null}
-			{fromEditor? <PropControl label='Donor ID' path={path} prop='from' /> : null}
-			<PropControl prop='donorName' label='Name' placeholder='Enter your name' path={path} type='text' required={reqrd} optional={ ! reqrd} />
-			<PropControl prop='donorEmail' label='Email' placeholder='Enter your address' path={path} type='email' required />
-			<PropControl prop='donorAddress' label='Address' placeholder='Enter your address' path={path} type='address' required={reqrd} optional={ ! reqrd} />
-			<PropControl prop='donorPostcode' label='Postcode' placeholder='Enter your postcode' path={path} type='postcode' required={reqrd} optional={ ! reqrd} />
-			{ ! giftAid? <PropControl prop='consentToSharePII'
+			{fromEditor? <PropControl label="Donor ID" path={path} prop="from" /> : null}
+			<PropControl prop="donorName" label="Name" placeholder="Enter your name" path={path} type="text" required={reqrd} optional={ ! reqrd} />
+			<PropControl prop="donorEmail" label="Email" placeholder="Enter your address" path={path} type="email" required />
+			<PropControl prop="donorAddress" label="Address" placeholder="Enter your address" path={path} type="address" required={reqrd} optional={ ! reqrd} />
+			<PropControl prop="donorPostcode" label="Postcode" placeholder="Enter your postcode" path={path} type="postcode" required={reqrd} optional={ ! reqrd} />
+			{ ! giftAid? <PropControl prop="consentToSharePII"
 				label={'Can '+(charity? NGO.displayName(charity) : 'the charity')+' use these details to contact you?'}
-				path={path} type='checkbox' />
+				path={path} type="checkbox" />
 				: null}
 		</div>);
 };
 
 
 const MessageSection = ({path, recipient, item}) => (
-	<div className='section donation-amount'>
+	<div className="section donation-amount">
 		<PropControl
-			prop='message'
-			label='Message'
+			prop="message"
+			label="Message"
 			placeholder={`Do you have a message for ${recipient? recipient.name : 'them'}?`}
-			path={path} type='textarea'
+			path={path} type="textarea"
 		/>
 
 		<p>
 			By default we list your name and the amount.
 			Your name, amount, and your email are also shared with the organiser.
 		</p>
-		<PropControl prop='anonymous' label="Give anonymously?" path={path} type='checkbox'
+		<PropControl prop="anonymous" label="Give anonymously?" path={path} type="checkbox"
 			help={item && item.shareDonorsWithOrganiser && DataStore.getValue(path.concat('anonymous'))?
 				"Your name will not be listed on the website. However your name, email, and donation will still be shared with the organiser" : null}
 		/>
 
-		<PropControl prop='anonAmount' label="Don't show the donation amount?" path={path} type='checkbox' />
+		<PropControl prop="anonAmount" label="Don't show the donation amount?" path={path} type="checkbox" />
 
 	</div>
 );
@@ -651,8 +651,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 		donation.paidElsewhere = true;
 		return (<div>
 			<p>This form is for donations that have already been paid.</p>
-			<PropControl label='Where did the payment come from?' prop='paymentMethod' path={path} type='text' />
-			<PropControl label='Payment ID, if known?' prop='paymentId' path={path} type='text' />
+			<PropControl label="Where did the payment come from?" prop="paymentMethod" path={path} type="text" />
+			<PropControl label="Payment ID, if known?" prop="paymentId" path={path} type="text" />
 			<Button color="primary" onClick={e => {
 				ActionMan.publishEdits(C.TYPES.Donation, donation.id, donation)
 					.then(res => {
@@ -676,9 +676,9 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	let payError = DataStore.getValue(errorPath({type:getType(donation), id:donation.id, action:'publish'}));
 
 	return (<div>
-		<div className='padded-block'>
-			<PropControl type='checkbox' path={path} item={donation} prop='hasTip' label={tipLabel} />
-			<PropControl type='Money' path={path} item={donation} prop='tip' 
+		<div className="padded-block">
+			<PropControl type="checkbox" path={path} item={donation} prop="hasTip" label={tipLabel} />
+			<PropControl type="Money" path={path} item={donation} prop="tip" 
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
 		</div>
 		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
@@ -708,7 +708,7 @@ const ThankYouSection = ({path, item, did}) => {
 	</>);
 
 	return (
-		<div className='text-center'>
+		<div className="text-center">
 			<h3>Thank You!</h3>
 			<big>
 				<p>We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> {repeat} to {item.name}</p>
