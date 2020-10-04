@@ -64,7 +64,7 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 	const showWizard = getWidgetProp(getId(item), 'open');
 	
 	return <>
-		<Button color="primary" size="lg"
+		<Button color="primary" size="lg" height="50px"
 			onClick={() => {
 				// poke the paidElsewhere flag
 				setWidgetProp(getId(item), 'paidElsewhere', paidElsewhere, false);
