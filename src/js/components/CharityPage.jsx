@@ -65,8 +65,9 @@ const CharityPage = () => {
 				<div className='description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
-				<div className='impact'>
-					{charity.impact ? <img alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
+				<div class="container" className='impact'>
+					{charity.impact ? <img class="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
+					<DonateButton item={charity}/>
 				</div>
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
