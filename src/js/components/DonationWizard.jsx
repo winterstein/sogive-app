@@ -714,8 +714,8 @@ const ThankYouSection = ({path, item, did}) => {
 		<div className="text-center">
 			<h3>Thank You!</h3>
 			<big>
-				<p>We've received your donation of <Misc.Money amount={amountPlusTip || donation.amount} /> {repeat} to {item.name}</p>
-				{amountPlusTip ? <p>(including a tip of <Misc.Money amount={donation.tip} /> to cover costs). <br /></p> : null}
+				<p>We've received your donation of <Misc.Money amount={donation.amount} /> {repeat} to {item.name}</p>
+				{amountPlusTip ? <p>(plus a tip of <Misc.Money amount={donation.tip} /> to cover costs). <br /></p> : null}
 				<p>Thanks for using SoGive!</p>
 				{Login.user ? '' : registerMessage}
 			</big>
