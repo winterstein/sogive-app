@@ -625,7 +625,7 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	}
 	
 	const {amount} = donation;
-	if (!amount) {
+	if ( ! amount) {
 		return null;
 	}
 	Money.assIsa(amount);
@@ -645,6 +645,12 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	// ...add in the tip to the total
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
+	// repeat
+	let repeatAmount, repeatFreq;
+	if (Donation.isRepeating(donation)) {
+		repeatAmount = amount;
+		repeatFreq = donation.repeat;
+	}
 
 	// Not the normal payment?
 	if (paidElsewhere) {
@@ -681,7 +687,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 			<PropControl type="Money" path={path} item={donation} prop="tip" min={0}
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} />
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} 
+			repeatAmount={repeatAmount} repeatFreq={repeatFreq} />
 	</div>);
 }; // ./PaymentSection
 
