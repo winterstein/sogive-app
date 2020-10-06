@@ -238,9 +238,9 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donation.setDonorAddress(null);
 			donation.setDonorPostcode(null);
 			donation.setVia(null); // The fundraiser owner's email also probably counts as PII, even though it's likely available elsewhere
-			donation.setF(null);
-			
-			donation.setTip(null);
+			donation.setF(null);			
+			// Don't scrub the tip - we may need to show this to the user			
+//			donation.setTip(null);
 		}
 		// always null out background financial info
 		donation.setPaymentId(null);
@@ -413,12 +413,12 @@ public class DonationServlet extends CrudServlet<Donation> {
 			Log.d(LOGTAG, "no fundraiser for "+donation+" so dont call DonateToFundRaiserActor");
 		}
 		
-		// Send an email
+		// Send an email receipt
 		if (email != null) {
 			try {
 				doUploadTransfers2_email(donation, email);
 			} catch(Throwable ex) {
-				Log.e(LOGTAG, ex);
+				Log.e(LOGTAG+".swallow", ex);
 				// don't choke though, carry on
 			}
 		}
@@ -451,9 +451,12 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String cid = donation.getTo();
 		NGO charity = AppUtils.get(cid, NGO.class);
 		
+		String beneficiary = charity!=null? Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
+				: donation.getFundRaiser(); // paranoia / testing
+		
 		String bodyHtml = "<div><h2>Thank You for Donating!</h2><p>We've received your donation of "
 				+amount
-				+" to "+Utils.or(charity.getDisplayName(), charity.getName(), charity.getId())
+				+" to "+beneficiary
 				+tip
 				+".</p><p>Payment ID: "+Utils.or(donation.getPaymentId(),donation.getPaymentMethod(),donation.getId())
 				+"<br>Donation ID: "+donation.getId()+"</p></div>";
