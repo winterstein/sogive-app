@@ -32,8 +32,6 @@ public class Donation extends AThing implements IForSale {
 	Boolean anonymous;
 	Boolean anonAmount;
 	
-	setTip
-	
 	/**
 	 * used to create RepeatDonation
 	 * Uses TUnit strings, WEEK / MONTH
