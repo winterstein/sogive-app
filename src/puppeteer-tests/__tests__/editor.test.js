@@ -1,6 +1,6 @@
 // checks functionality of sogive.org/#edit
 const puppeteer = require('puppeteer');
-const { doLogin,serverSafetyCheck } = require("../test-base/UtilityFunctions");
+const { doLogin } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -21,8 +21,6 @@ const timeStamp = new Date().toISOString();
 jest.setTimeout(30000);
 
 describe('Edit organisation tests', () => {
-	
-	serverSafetyCheck(page, url);
 
 	test('Edit and publish field', async () => {
 		// Increase from default (800*600) as workaround for issue where off-screen elements added to DOM after

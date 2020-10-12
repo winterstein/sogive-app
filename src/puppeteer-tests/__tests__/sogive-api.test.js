@@ -1,10 +1,9 @@
 
 const { targetServers } = require('../testConfig');
-const {getConfig, doLogin, fetch, serverSafetyCheck} = require('../test-base/UtilityFunctions');
+const {getConfig, doLogin, fetch} = require('../test-base/UtilityFunctions');
 const server = targetServers[getConfig().site];
 
 describe("API-Tests", () => {
-	serverSafetyCheck(page, server);
 
 	// Journey: requesting a list of charities
 	// Result: at least one charity
