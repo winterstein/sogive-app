@@ -20,14 +20,8 @@
 			right: 0;
 		}
 		
-		.will-fund, .donation-arrow-right, .donation-arrow-down {
+		.will-fund {
 			display: none;
-		}
-		
-		.donate-button {
-			margin: auto;
-			float: none;
-			text-align: center;
 		}
 	}
 } // mobile media
@@ -41,19 +35,6 @@
 	position: relative;
 	z-index: 10;
 
-	.project-image {
-		text-align: center;
-		img {
-			max-width: 100%; // overspill bug Jan 2019 - reported by Sanjay
-			max-height: 380px;
-			min-height: 50px;
-			// IE 11 and Edge 15 do not understand object-fit
-			// object-fit: contain;
-			width: auto;
-			margin: auto;
-		}
-	}
-
 	/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
 	.left-column, .right-column {
 		height: 200px;
@@ -66,11 +47,6 @@
 		color: @donation-amt-fg;
 		/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
 		z-index: 10;
-
-		img.donation-sun {
-			height: 200px;
-			position: absolute;
-		}
 
 		button.donation-up, button.donation-down {
 			position: absolute;
@@ -132,7 +108,6 @@
 				color: @donation-number-fg
 			}
 			.form-control, .input-group-prepend {
-				background-color: @donation-amt-input-bg;
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
@@ -141,18 +116,6 @@
 				z-index: 11; /* Must appear in front of the sun graphic */
 			}
 		}
-
-		.donation-hand {
-			position: absolute;
-			left: 100px;
-		}
-	}
-
-	.donation-arrow-right {
-		position: absolute;
-		top: 0;
-		right: -25px;
-		height: 200px;
 	}
 
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
@@ -167,25 +130,6 @@
 		}
 	}
 
-	/* The wide down-arrow decoration flowing from the output column to the donate button */
-	.donation-arrow-down {
-		float:right;
-		// height:30px;
-		width:100%;
-	}
-
-	.below-arrow {
-		margin-top: -15px; // cos the down arrow has lots of whitespace
-		clear:both;
-		padding-bottom:5px;
-	}
-
-	.donate-button {
-		margin-right: 60px;
-		float:right;
-		padding:15px;
-		padding-top:0px;
-	}
 } // ./donation-impact
 
 
