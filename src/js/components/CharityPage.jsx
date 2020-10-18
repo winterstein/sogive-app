@@ -20,7 +20,7 @@ import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
-import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
+import ImpactCalculator from './ImpactCalculator';
 import SocialShare from './SocialShare';
 import { DonateButton } from './DonationWizard';
 
@@ -100,7 +100,7 @@ const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 
 const CharityDonate = ({charity}) => (
 	<div className='donation-column'>
-		<CharityPageImpactAndDonate charity={charity} />
+		<ImpactCalculator charity={charity} />
 	</div>
 );
 
