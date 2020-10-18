@@ -70,7 +70,7 @@ General.CRUD = {
 	Discard: `div.SavePublishDiscard > button.btn.btn-warning`,
 	Delete: `div.SavePublishDiscard > button.btn.btn-danger`
 };
-General.CharityPageImpactAndDonate = {
+General.ImpactCalculator = {
 	DonationButton: `button.btn.btn-lg.btn-primary`,//Unforunately isn't anything more concrete to identify donation button specifically
 	Next: `div.WizardStage div.nav-buttons.clearfix button.pull-right`,
 	Previous: `div.WizardStage > div.nav-buttons.clearfix > button.btn-lg.pull-left`,
