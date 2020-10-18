@@ -243,7 +243,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	// We also need to store the suggested donation amount so the user can tweak it on the fly with buttons
 	let targetCount = DataStore.getValue(['widget','SearchResults', cid, 'targetCount']);
 	// The donation picker needs to store its value
-	// DataStore.setValue(['widget','CharityPageImpactAndDonate', NGO.id(item), 'amount'], newAmount);
+	// DataStore.setValue(['widget','ImpactCalculator', NGO.id(item), 'amount'], newAmount);
 	const impact = project ? impactCalc({
 		charity: item,
 		project,

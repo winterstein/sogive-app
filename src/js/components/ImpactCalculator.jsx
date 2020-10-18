@@ -42,7 +42,7 @@ const donationIncrements = {
 };
 
 // TODO refactor into a function
-class CharityPageImpactAndDonate extends Component {
+class ImpactCalculator extends Component {
 
 	// Bump the donation up or down by a "reasonable" amount for current value
 	// ...and round it to a clean multiple of the increment used
@@ -57,7 +57,7 @@ class CharityPageImpactAndDonate extends Component {
 		const rawValue = Money.value(amount) + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
 		const newAmount = new Money({ value, currency: 'GBP' });
-		DataStore.setValue(['widget', 'CharityPageImpactAndDonate', NGO.id(charity), 'amount'], newAmount);
+		DataStore.setValue(['widget', 'ImpactCalculator', NGO.id(charity), 'amount'], newAmount);
 	}
 
 
@@ -69,7 +69,7 @@ class CharityPageImpactAndDonate extends Component {
 		if (charity.noPublicDonations) {
 			const reason = charity.meta && charity.meta.noPublicDonations && charity.meta.noPublicDonations.notes;
 			return (
-				<div className="CharityPageImpactAndDonate noPublicDonations">
+				<div className="ImpactCalculator noPublicDonations">
 					<p>Sorry: This charity does not accept public donations.</p>
 					{reason ? (<p>The stated reason is: {reason}</p>) : ''}
 				</div>
@@ -83,7 +83,7 @@ class CharityPageImpactAndDonate extends Component {
 			console.error("No Charity ID?!",charity);
 			return <div />;
 		}
-		const formPath = ['widget', 'CharityPageImpactAndDonate', cid];
+		const formPath = ['widget', 'ImpactCalculator', cid];
 		const formData = DataStore.getValue(formPath) || {};
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
@@ -133,7 +133,7 @@ class CharityPageImpactAndDonate extends Component {
 			</div>
 		);
 	}
-} // ./CharityPageImpactAndDonate
+} // ./ImpactCalculator
 
 const DonationOutput = ({impact, charity}) => {
 	if ( ! impact) {
@@ -155,4 +155,4 @@ const DonationOutput = ({impact, charity}) => {
 	</div>);
 };
 
-export default CharityPageImpactAndDonate;
+export default ImpactCalculator;

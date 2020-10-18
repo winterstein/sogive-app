@@ -99,7 +99,7 @@ describe("!!broken Fundraiser tests", () => {
 			await fillInForm({
 				page,
 				data: fundraiserData.payment,
-				Selectors: General.CharityPageImpactAndDonate
+				Selectors: General.ImpactCalculator
 			});
 			await page.click(Register.TestSubmit);
 		}
