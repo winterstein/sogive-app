@@ -71,7 +71,7 @@ const CharityPage = () => {
 				</div>
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
-			<CharityDonate charity={charity} />
+			<ImpactCalculatorSection charity={charity} />
 			{charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null}
 			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
@@ -98,8 +98,11 @@ const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 );
 
 
-const CharityDonate = ({charity}) => (
-	<div className='donation-column'>
+const ImpactCalculatorSection = ({charity}) => (
+	<div>
+		<h2 className="header-section-title">
+			Impact Calculator
+		</h2>
 		<ImpactCalculator charity={charity} />
 	</div>
 );
