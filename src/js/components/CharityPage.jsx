@@ -97,7 +97,6 @@ const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 	</div>
 );
 
-
 const ImpactCalculatorSection = ({charity}) => (
 	<div>
 		<h2 className="header-section-title">
