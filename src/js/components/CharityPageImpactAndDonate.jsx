@@ -110,15 +110,9 @@ class CharityPageImpactAndDonate extends Component {
 
 		return (
 			<div className='donation-impact'>
-				{project && project.images ? (
-					<div className='project-image'>
-						<img src={project.images} alt='' />
-					</div>
-				) : null}
 				<div className='row donation-io-row'>
 					<div className='col-sm-6 left-column'>
 						<div className='donation-buttons'>
-							<img className='donation-sun' src='/img/donation-bg.svg' alt="" />
 							<button onClick={donationUp} className='donation-up'>+</button>
 							{' '}
 							<button onClick={donationDown} className='donation-down'>-</button>
@@ -129,20 +123,10 @@ class CharityPageImpactAndDonate extends Component {
 									path={formPath} changeCurrency={false} />
 							</div>
 							<div className='will-fund'>may fund</div>
-							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
 						</div>
-						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
 					</div>
 					<div className='col-sm-6 right-column'>
 						<DonationOutput impact={impact} charity={charity} />
-					</div>
-				</div>
-
-				<img className='donation-arrow-down' src='/img/donation-arrow-down-wide.png' alt="" />
-				
-				<div className='below-arrow'>
-					<div className='donate-button'>
-						<DonateButton item={charity} />
 					</div>
 				</div>
 				<div className='clearfix' />
