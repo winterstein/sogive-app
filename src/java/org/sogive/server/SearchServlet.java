@@ -239,9 +239,9 @@ public class SearchServlet implements IServlet {
 						}
 						return cost.get("value");
 					}				
-					if (h.contains("costPer")) {
-						System.out.println(h);
-					}
+//					if (h.contains("costPer")) { // debug
+//						System.out.println(h);
+//					}
 					String[] p = h.split("\\.");
 					Object v = SimpleJson.get(hit, p);
 					return v;
