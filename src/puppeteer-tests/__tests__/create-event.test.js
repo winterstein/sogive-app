@@ -21,7 +21,9 @@ const eventData = {
 
 describe("Create-Event-Tests", () => {
 	
-	serverSafetyCheck(page, url);
+	beforeAll(async() => {
+		await serverSafetyCheck(page, url);
+	});
 
 	const longName = "supercalifragilisticexpialidocious";
 	let id = '';

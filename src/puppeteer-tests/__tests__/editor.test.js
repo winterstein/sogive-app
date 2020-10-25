@@ -22,7 +22,9 @@ jest.setTimeout(30000);
 
 describe('Edit organisation tests', () => {
 	
-	serverSafetyCheck(page, url);
+	beforeAll(async() => {
+		await serverSafetyCheck(page, url);
+	});
 
 	test('Edit and publish field', async () => {
 		// Increase from default (800*600) as workaround for issue where off-screen elements added to DOM after

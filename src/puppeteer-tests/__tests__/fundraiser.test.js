@@ -47,7 +47,9 @@ const fundraiserIdClip = () => {
 
 describe("!!broken Fundraiser tests", () => {
 	
-	serverSafetyCheck(page, url);
+	beforeAll(async() => {
+		await serverSafetyCheck(page, url);
+	});
 
 	// nobbled TODO fix
 	test("!! tests OFF", async () => {

@@ -4,7 +4,9 @@ const {getConfig, doLogin, fetch, serverSafetyCheck} = require('../test-base/Uti
 const server = targetServers[getConfig().site];
 
 describe("API-Tests", () => {
-	serverSafetyCheck(page, server);
+	beforeAll(async() => {
+		await serverSafetyCheck(page, url);
+	});
 
 	// Journey: requesting a list of charities
 	// Result: at least one charity

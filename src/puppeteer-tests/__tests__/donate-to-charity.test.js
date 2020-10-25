@@ -21,7 +21,9 @@ let url = `${baseSite}`;
 
 describe("!!broken Charity donation tests", () => {
 	
-	serverSafetyCheck(page, url);
+	beforeAll(async() => {
+		await serverSafetyCheck(page, url);
+	});
 
 	// nobbled TODO fix
 	test("!! tests OFF", async () => {
