@@ -2,6 +2,7 @@ package org.sogive.server;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +25,15 @@ import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Key;
+import com.winterwell.utils.Printer;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.CSVWriter;
+import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
@@ -41,6 +45,7 @@ import com.winterwell.web.app.WebRequest.KResponseType;
 import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.EnumField;
 import com.winterwell.web.fields.IntField;
+import com.winterwell.web.fields.ListField;
 import com.winterwell.web.fields.SField;
 /**
  * Should this be replaced with {@link CharityServlet} _list??
@@ -66,6 +71,8 @@ public class SearchServlet implements IServlet {
 	 * What will ES allow without scrolling??
 	 */
 	private static final int MAX_RESULTS = 10000;
+	private static final ListField<String> HEADERS = new ListField("headers");
+	
 	
 	public void process(WebRequest state) throws Exception {
 		WebUtils2.CORS(state, false);
@@ -170,46 +177,36 @@ public class SearchServlet implements IServlet {
 		WebUtils2.sendJson(output, state);
 	}
 
+	
+	
+	
 	private void doSendCsv(WebRequest state, List<Map> hits2) {
 		// ?? maybe refactor and move into a default method in IServlet?
+		// ?? stream out to the web response?
 		StringWriter sout = new StringWriter();
 		CSVWriter w = new CSVWriter(sout, new CSVSpec());
 
-		// what headers??
-		// TODO proper recursive
-		ObjectDistribution<String> headers = new ObjectDistribution();
-		for (Map<String,Object> hit : hits2) {
-			getHeaders(hit, new ArrayList(), headers);
-		}
-		// prune
-		if (hits2.size() >= 1) {
-			int min = (int) (hits2.size() * 0.2);
-			if (min>0) headers.pruneBelow(min);
-		}
-		// sort
-		ArrayList<String> hs = new ArrayList(headers.keySet());
-		// all the level 1 headers
-		List<String> level1 = Containers.filter(hs, h -> ! h.contains("."));
-		hs.removeAll(level1);
-		Collections.sort(hs);
-		Collections.sort(level1);		
-		// start with ID, name
-		level1.remove("name");
-		level1.remove("@id");
-		Collections.reverse(level1);
-		level1.add("name");
-		level1.add("@id");		
-		level1.forEach(h -> hs.add(0, h));
-		hs.removeIf(h -> h.contains("@type") || h.contains("value100"));
+		final List<String> STD_HEADERS = Arrays.asList((
+			"@id, name, displayName, project.name, project.year, "
+			+"project.outputs.0.number, project.outputs.0.name, project.outputs.0.costPerBeneficiary, "
+			+"project.outputs.1.number, project.outputs.1.name, project.outputs.1.costPerBeneficiary, "
+			// NB (there may sometimes be more than 2 outputs, but they won't be in the csv, for those you'll have to go to the SoGive app to see those)
+			+"project.costs.annualCosts, project.costs.tradingCosts, project.costs.incomeFromBeneficiaries, "
+			+"summaryDescription, description, reserves, "
+			+"englandWalesCharityRegNum, scotlandCharityRegNum, ukCompanyRegNum, "
+			+"whyTags, howTags, whereTags, "
+			+"url, "
+			+"impact, confidence, recommendation, "
+			+"simpleImpact.name, simpleImpact.costPerBeneficiary.value, "
+			+"isReady"
+			).split(",\\s*"));
+		
+		List<String> headers = state.get(HEADERS, STD_HEADERS);
 		
 		// write
-		w.write(hs);
+		w.write(Containers.apply(headers, SearchServlet::prettyCSVHeader));
 		for (Map hit : hits2) {
-			List<Object> line = Containers.apply(hs, h -> {
-				String[] p = h.split("\\.");
-				return SimpleJson.get(hit, p);
-			});
-			w.write(line);
+			doSendCsv2(w, headers, hit);
 		}
 		w.close();
 		// send
@@ -218,31 +215,78 @@ public class SearchServlet implements IServlet {
 		WebUtils2.sendText(csv, state.getResponse());
 	}
 
-	private void getHeaders(Object hit, ArrayList path, ObjectDistribution<String> headers) {
-		if (hit instanceof Map) {
-			Map<String,Object> hmap = (Map<String, Object>) hit;
-			hmap.keySet().forEach(key -> {
-				Object v = hmap.get(key);
-				ArrayList path2 = new ArrayList(path);
-				path2.add(key);
-				getHeaders(v, path2, headers);
+
+
+
+	private void doSendCsv2(CSVWriter w, List<String> headers, Map hit) {
+		// split by project
+		List<Map> projects = (List<Map>) hit.get("projects");
+		if (projects==null) projects = new ArrayList();
+		if (projects.isEmpty()) projects.add(new ArrayMap()); // so we send something
+		// one line per project
+		for (Map project : projects) {
+			hit.put("project", project);
+			List<Object> line = Containers.apply(headers, h -> {
+				try {
+					// HACK for project costs
+					if (h.startsWith("project.costs")) {
+						String costName = h.substring("project.costs.".length());
+						List<Map> inputs = (List<Map>) project.get("inputs");
+						if (inputs==null) return null;
+						Map cost = Containers.first(inputs, input -> costName.equals(input.get("name")));
+						if (cost==null) {
+							return null;
+						}
+						return cost.get("value");
+					}				
+					if (h.contains("costPer")) {
+						System.out.println(h);
+					}
+					String[] p = h.split("\\.");
+					Object v = SimpleJson.get(hit, p);
+					return v;
+				} catch(Exception ex) {
+					Log.e(ex);
+					return null;
+				}
 			});
-			return;
+			w.write(line);		
 		}
-		if (hit instanceof List) {
-			List subhit = (List) hit;
-			for(int i=0; i<subhit.size(); i++) {
-				Object sv = subhit.get(i);
-				ArrayList path2 = new ArrayList(path);
-				path2.add(i);
-				getHeaders(sv, path2, headers);
-			};
-			return;
-		}
-		// as is
-		if (path.isEmpty()) return;
-		headers.count(StrUtils.join(path, "."));
 	}
+
+
+
+
+	private static String prettyCSVHeader(String h) {
+		return h.replace("costPerBeneficiary", "costPerOutput");
+	}
+
+	// deprecated - work out which headers from the data
+//	private void getHeaders(Object hit, ArrayList path, ObjectDistribution<String> headers) {
+//		if (hit instanceof Map) {
+//			Map<String,Object> hmap = (Map<String, Object>) hit;
+//			hmap.keySet().forEach(key -> {
+//				Object v = hmap.get(key);
+//				ArrayList path2 = new ArrayList(path);
+//				path2.add(key);
+//				getHeaders(v, path2, headers);
+//			});
+//			return;
+//		}
+//		if (hit instanceof List) {
+//			List subhit = (List) hit;
+//			for(int i=0; i<subhit.size(); i++) {
+//				Object sv = subhit.get(i);
+//				ArrayList path2 = new ArrayList(path);
+//				path2.add(i);
+//				getHeaders(sv, path2, headers);
+//			};
+//			return;
+//		}
+//		// as is
+//		if (path.isEmpty()) return;
+//		headers.count(StrUtils.join(path, "."));
+//	}
 
 
 }
