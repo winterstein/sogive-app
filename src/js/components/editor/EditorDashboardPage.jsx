@@ -11,6 +11,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
 // import ChartWidget from './../base/components/ChartWidget';
 import Misc from '../../base/components/Misc';
+import {notifyUser} from '../../base/plumbing/Messaging';
 
 
 const EditorDashboardPage = () => (
@@ -19,6 +20,7 @@ const EditorDashboardPage = () => (
 		<h3>In development...</h3>
 		<AddCharityWidget />
 		<AddEditorWidget />
+		<UploadEditorialsWidget />
 		<p><a href='/#manageDonations'>Manage Donations</a></p>
 	</div>
 ); // ./EditorDashboardPage
@@ -50,6 +52,22 @@ const AddEditorWidget = () => {
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
 		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
+	</Misc.Card>);
+};
+
+const doUploadEditorials = function() {
+	let googleDocUrl = DataStore.appstate.widget.UploadEditorialsWidget.form.publishedEditorialsDoc;
+	if ( ! googleDocUrl) return;
+	notifyUser("Successfully imported editorials.");
+	ServerIO.importEditorials(googleDocUrl);
+	DataStore.setValue(['widget', 'UploadEditorialsWidget', 'form'], {});
+};
+
+const UploadEditorialsWidget = () => {
+	return (<Misc.Card title='Upload Editorials' >
+		<p>Use this form to upload SoGive editorials from a published Google Doc.</p>
+		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label='Published google doc webpage URL:' path={['widget','UploadEditorialsWidget', 'form']} />
+		<button className='btn btn-warning' onClick={doUploadEditorials} name='uploadEditorials'>Upload Editorials</button>
 	</Misc.Card>);
 };
 
