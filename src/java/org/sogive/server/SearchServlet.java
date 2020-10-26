@@ -4,10 +4,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.charity.NGO;
+import org.sogive.data.charity.Output;
 import org.sogive.data.charity.SoGiveConfig;
 
 import com.winterwell.data.KStatus;
@@ -37,6 +39,7 @@ import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.SimpleJson;
 import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.IServlet;
@@ -187,12 +190,12 @@ public class SearchServlet implements IServlet {
 		CSVWriter w = new CSVWriter(sout, new CSVSpec());
 
 		final List<String> STD_HEADERS = Arrays.asList((
-			"@id, name, displayName, project.name, project.year, "
-			+"project.outputs.0.number, project.outputs.0.name, project.outputs.0.costPerBeneficiary, "
-			+"project.outputs.1.number, project.outputs.1.name, project.outputs.1.costPerBeneficiary, "
+			"@id, project.name, project.year, name, displayName, summaryDescription, description, "
+			+"project.outputs.0.number, project.outputs.0.name, project.outputs.0.costPerBeneficiary, project.outputs.0.description, "
+			+"project.outputs.1.number, project.outputs.1.name, project.outputs.1.costPerBeneficiary, project.outputs.1.description, "
 			// NB (there may sometimes be more than 2 outputs, but they won't be in the csv, for those you'll have to go to the SoGive app to see those)
 			+"project.costs.annualCosts, project.costs.tradingCosts, project.costs.incomeFromBeneficiaries, "
-			+"summaryDescription, description, reserves, "
+			+"reserves, "
 			+"englandWalesCharityRegNum, scotlandCharityRegNum, ukCompanyRegNum, "
 			+"whyTags, howTags, whereTags, "
 			+"url, "
@@ -218,20 +221,26 @@ public class SearchServlet implements IServlet {
 
 
 
-	private void doSendCsv2(CSVWriter w, List<String> headers, Map hit) {
+	private void doSendCsv2(CSVWriter w, List<String> headers, Map _hit) {
+		// HACK simpleImpact
+		JThing<NGO> jThing = new JThing().setType(NGO.class).setMap(_hit);
+		NGO ngo = jThing.java();
+		Output output = ngo.getSimpleImpact();
+		jThing.setJava(ngo);
+		Map<String, Object> fhit = new HashMap(jThing.map());
 		// split by project
-		List<Map> projects = (List<Map>) hit.get("projects");
+		List<Map> projects = Containers.asList(fhit.get("projects"));
 		if (projects==null) projects = new ArrayList();
 		if (projects.isEmpty()) projects.add(new ArrayMap()); // so we send something
 		// one line per project
 		for (Map project : projects) {
-			hit.put("project", project);
+			fhit.put("project", project);
 			List<Object> line = Containers.apply(headers, h -> {
-				try {
+				try { // paranoia
 					// HACK for project costs
 					if (h.startsWith("project.costs")) {
 						String costName = h.substring("project.costs.".length());
-						List<Map> inputs = (List<Map>) project.get("inputs");
+						List<Map> inputs = Containers.asList(project.get("inputs"));
 						if (inputs==null) return null;
 						Map cost = Containers.first(inputs, input -> costName.equals(input.get("name")));
 						if (cost==null) {
@@ -243,7 +252,7 @@ public class SearchServlet implements IServlet {
 //						System.out.println(h);
 //					}
 					String[] p = h.split("\\.");
-					Object v = SimpleJson.get(hit, p);
+					Object v = SimpleJson.get(fhit, p);
 					return v;
 				} catch(Exception ex) {
 					Log.e(ex);
