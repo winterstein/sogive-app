@@ -222,12 +222,19 @@ public class SearchServlet implements IServlet {
 
 
 	private void doSendCsv2(CSVWriter w, List<String> headers, Map _hit) {
-		// HACK simpleImpact
-		JThing<NGO> jThing = new JThing().setType(NGO.class).setMap(_hit);
-		NGO ngo = jThing.java();
-		Output output = ngo.getSimpleImpact();
-		jThing.setJava(ngo);
-		Map<String, Object> fhit = new HashMap(jThing.map());
+		// NB: This code does json -> java -> json, to invoke the simpleImpact compute.
+		// This isn't the most efficient - we might want to test for whether simpleImpact is present first
+		// HACK simpleImpact		
+		try {
+			JThing<NGO> jThing = new JThing().setType(NGO.class).setMap(_hit);
+			NGO ngo = jThing.java();
+			Output output = ngo.getSimpleImpact();
+			jThing.setJava(ngo);
+			_hit = new HashMap(jThing.map());
+		} catch(Throwable ex) { // paranoia
+			Log.e(ex);
+		}
+		final Map<String, Object> fhit = _hit;
 		// split by project
 		List<Map> projects = Containers.asList(fhit.get("projects"));
 		if (projects==null) projects = new ArrayList();
@@ -236,7 +243,7 @@ public class SearchServlet implements IServlet {
 		for (Map project : projects) {
 			fhit.put("project", project);
 			List<Object> line = Containers.apply(headers, h -> {
-				try { // paranoia
+				try { // paranoia					
 					// HACK for project costs
 					if (h.startsWith("project.costs")) {
 						String costName = h.substring("project.costs.".length());
@@ -253,6 +260,10 @@ public class SearchServlet implements IServlet {
 //					}
 					String[] p = h.split("\\.");
 					Object v = SimpleJson.get(fhit, p);
+					// HACK year - no trailing .0
+					if ("project.year".equals(h) && v instanceof Number) {
+						v = ((Number) v).intValue();
+					}
 					return v;
 				} catch(Exception ex) {
 					Log.e(ex);
