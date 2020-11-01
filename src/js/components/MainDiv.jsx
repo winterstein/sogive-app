@@ -18,7 +18,7 @@ import LoginWidget, { setShowLogin } from '../base/components/LoginWidget';
 import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
 import AccountPage from './AccountPage';
-import AboutPage from '../base/components/AboutPage';
+import AboutPage, { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
 import CharityPage from './CharityPage';
 import EditCharityPage from './editor/EditCharityPage';
 import SimpleEditCharityPage from './editor/SimpleEditCharityPage';
@@ -71,6 +71,12 @@ const PAGES = {
 
 // NB: MainDivBase does this too, but not until after getRoles is called below
 Login.app = C.app.service;
+
+addFunderCredit("SMART:Scotland");
+addFunderCredit("The Hunter Foundation");
+addDataCredit({author:"Crown Copyright and database right 2017", name:"UK government charity data"});
+addDataCredit({author:"Office of the Scottish Charity Regulator (OSCR)", name:"Scottish Charity Register", 
+	url:"https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license:"Open Government Licence v.2.0"});
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
