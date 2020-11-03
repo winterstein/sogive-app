@@ -206,19 +206,13 @@ public class NGO extends Thing<NGO> {
 		}
 		// overheads?
 		if ( ! project.isOverall()) {
-			int year = project.getYear().intValue();
+			// NB: catch bad no-year data
+			int year = project.getYear()==null? 2020 : project.getYear().intValue();
 			double adjustment = getOverheadAdjustment(year);
 			Money adjustedProjectCost = projectCost.multiply(adjustment);
-//			let v = Money.value(adjustedProjectCost);
 			projectCost = adjustedProjectCost;		
 		}
-//		if ( ! $.isNumeric(outputCount)) {
-//			console.error("NGO.js - Not a number?! "+outputCount, "from", output);
-//			return 1/0; // NaN
-//		}
-//		assMatch(outputCount, Number, "NGO.js outputCount not a Number?! "+outputCount);
 		Money costPerOutput = new Money(projectCost).multiply(1.0/outputCount);
-//		Money.setValue(costPerOutput, projectCost.value / outputCount);
 		return costPerOutput;
 	}
 
