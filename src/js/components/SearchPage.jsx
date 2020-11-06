@@ -45,7 +45,8 @@ const SearchPage = () => {
 	// search hits
 	const lpath = ['list', 'NGO', status||'pub', q || 'all', from]; // listPath({type:C.TYPES.NGO, status, q});
 	let pvList = DataStore.fetch(lpath, () => {
-		return ServerIO.searchCharities({q, from, size: RESULTS_PER_PAGE, status, impact});
+		// size: RESULTS_PER_PAGE <- no, caps the results at 20
+		return ServerIO.searchCharities({q, from, status, impact});
 	});
 	console.log(pvList);	
 	let total = pvList.value? List.total(pvList.value) : null;
