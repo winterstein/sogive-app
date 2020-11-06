@@ -151,9 +151,10 @@ public class SearchServlet implements IServlet {
 		// s.addSort("@id", SortOrder.ASC);
 		s.setDebug(true);
 		
+		// TODO paging - this uses a cap at 1k results
 		int size = state.get(SIZE, 
 				// HACK: csv => unlimited
-				state.getResponseType() == KResponseType.csv? MAX_RESULTS : 20);
+				state.getResponseType() == KResponseType.csv? MAX_RESULTS : 1000);
 		s.setSize(size);
 		s.setFrom(state.get(FROM, 0));
 		SearchResponse sr = s.get();
@@ -237,8 +238,10 @@ public class SearchServlet implements IServlet {
 		final Map<String, Object> fhit = _hit;
 		// split by project
 		List<Map> projects = Containers.asList(fhit.get("projects"));
-		if (projects==null) projects = new ArrayList();
-		if (projects.isEmpty()) projects.add(new ArrayMap()); // so we send something
+		if (Utils.isEmpty(projects)) {
+			projects = new ArrayList();
+			projects.add(new ArrayMap()); // so we send something		
+		}
 		// one line per project
 		for (Map project : projects) {
 			fhit.put("project", project);
