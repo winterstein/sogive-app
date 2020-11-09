@@ -52,6 +52,13 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 	
 	@Override
+	protected void doBeforeSaveOrPublish(JThing<NGO> _jthing, WebRequest stateIgnored) {
+		augment(_jthing, stateIgnored); // insert simple-impact
+		// revenue for sorting??
+		super.doBeforeSaveOrPublish(_jthing, stateIgnored);	
+	}
+	
+	@Override
 	public void process(WebRequest state) throws Exception {
 		super.process(state);
 	}
