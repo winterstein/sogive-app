@@ -1,5 +1,5 @@
 const runtestConfig = {
-    appURL: "app.sogive.org",
+    appURL: "sogive.org",
 	testHostname: "baker", // Name of test server
 	// The possible values for `site` are defined in testConfig.js, targetServers
 	site: 'local',

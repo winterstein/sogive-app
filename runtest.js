@@ -66,7 +66,10 @@ process.env.__CONFIGURATION = JSON.stringify(config);
 process.argv = argv;
 
 const isLocal = config.site === "local";
-const infoURL = (isLocal ? "http://" : "https://") + config.site + config.appURL + config.gitlogPath;
+const baseUrlHasPrefix = config.appURL.split(".").length > 2;
+const sitePrefix = config.site === "prod" ? "" : config.site;
+const addLeadingDot = !baseUrlHasPrefix && config.site !== "prod"
+const infoURL = (isLocal ? "http://" : "https://") + sitePrefix + (addLeadingDot ? "." : "") + config.appURL + config.gitlogPath;
 
 const runTest = () => {
 	shell.exec(`npm run test ${testPath} ${runInBand}`);
@@ -123,3 +126,4 @@ const askToRunTest = (question) => {
 		rl.close();
 	});
 };
+
