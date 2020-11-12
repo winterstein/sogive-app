@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { doLogin, donate, serverSafetyCheck } = require("../test-base/UtilityFunctions");
+const { doLogin, donate } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
@@ -20,8 +20,6 @@ const protocol = config.site === 'local' ? 'http://' : 'https://';
 let url = `${baseSite}`;
 
 describe("!!broken Charity donation tests", () => {
-	
-	serverSafetyCheck(page, url);
 
 	// nobbled TODO fix
 	test("!! tests OFF", async () => {
