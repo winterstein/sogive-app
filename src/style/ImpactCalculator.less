@@ -31,6 +31,7 @@
 	background-color: white;
 	border: 1px solid @grey-border-colour;
 	box-sizing: border-box;
+	color: @charity-page-impact-calculator-text;
 
 	/* Drop Shadow */
 	box-shadow: 0px 3px 6px rgba(81, 81, 81, 0.125);
@@ -50,7 +51,6 @@
 		position: absolute;
 		width: 150px;
 		height: 200px;
-		color: @donation-amt-fg;
 		/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
 		z-index: 10;
 
@@ -59,7 +59,8 @@
 			padding: 0;
 			border: 5px solid @donation-amt-fg;
 			border-radius: 50%;
-			background-color: transparent;
+			background-color: @donation-amt-fg;
+			color: @white;
 			height: 60px;
 			width: 60px;
 			font-size: 60px;
@@ -107,6 +108,9 @@
 					border-radius: 0;
 					background-color: transparent;
 					font-size: 100%;
+				}
+				.input-group-text {
+					color: @donation-number-fg;
 				}
 			}
 			.input-group .form-control {
