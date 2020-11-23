@@ -61,10 +61,10 @@
 			border-radius: 50%;
 			background-color: @donation-amt-fg;
 			color: @white;
-			height: 60px;
-			width: 60px;
-			font-size: 60px;
-			line-height: 30px;
+			height: 28px;
+			width: 28px;
+			font-size: 28px;
+			line-height: 15px;
 			font-weight: bold;
 			&:focus {
 				outline: none;
@@ -93,7 +93,7 @@
 		padding-right: 50px;
 
 		.will-fund {
-			font-size: 2em;
+			font-size: 1.125em;
 		}
 
 		.amount-input {
@@ -108,6 +108,7 @@
 					border-radius: 0;
 					background-color: transparent;
 					font-size: 100%;
+					font-weight: 800;
 				}
 				.input-group-text {
 					color: @donation-number-fg;
@@ -121,7 +122,8 @@
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
-				font-size: 2.5em;
+				font-size: 1.75em; //this interacts with line 110
+				font-weight: 800;
 				height: inherit;
 				z-index: 11; /* Must appear in front of the sun graphic */
 			}
@@ -131,12 +133,13 @@
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 	.donation-output {
 		.output-number {
-			font-size: 300%;
+			font-size: 1.75em;
+			font-weight: 800;
 			color: @donation-number-fg;
 		}
 
 		.output-units {
-			font-size: 200%;
+			font-size: 1.125em;
 		}
 	}
 
@@ -176,7 +179,7 @@
 			display: block;
 		}
 		.impact-units-amount {
-			font-size: 2.5em;
+			font-size: 1.75em;
 			margin-bottom: 0;
 		}
 	}
