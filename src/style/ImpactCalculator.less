@@ -32,6 +32,10 @@
 	border: 1px solid @grey-border-colour;
 	box-sizing: border-box;
 	color: @charity-page-impact-calculator-text;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.25em 2em 1.25em 1.25em;
 
 	/* Drop Shadow */
 	box-shadow: 0px 3px 6px rgba(81, 81, 81, 0.125);
@@ -47,15 +51,8 @@
 		height: 200px;
 	}
 
-	.donation-buttons {
-		position: absolute;
-		width: 150px;
-		height: 200px;
-		/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
-		z-index: 10;
-
+	
 		button.donation-up, button.donation-down {
-			position: absolute;
 			padding: 0;
 			border: 5px solid @donation-amt-fg;
 			border-radius: 50%;
@@ -71,36 +68,17 @@
 			}
 		}
 
-		button.donation-down {
-			top: 10px;
-			left: 50px;
-		}
-
-		button.donation-up {
-			top: 10px;
-			left: 200px;
-		}
-	}
-
 	.donation-input, .donation-output {
 		height: 200px;
 	}
 
-	.donation-input {
-		text-align: right;
-		position: absolute;
-		z-index: 9;
-		padding-right: 50px;
-
-		.will-fund {
+	.will-fund {
 			font-size: 1.125em;
-		}
-
-		.amount-input {
+	}
+	.form-group {
+		margin-bottom: 0;
+	}
 			.input-group .input-group-prepend {
-				padding-left: 120px;
-				z-index: 9; /* Must appear behind the sun graphic */
-				padding-right: 0;
 				// blanket nuke Bootstrap 4's button styling rules on children
 				* {
 					padding: 0;
@@ -115,23 +93,20 @@
 				}
 			}
 			.input-group .form-control {
+				width: 3em;
 				padding-left: 0;
-				color: @donation-number-fg
+				color: @donation-number-fg;
 			}
 			.form-control, .input-group-prepend {
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
-				font-size: 1.75em; //this interacts with line 110
+				font-size: 1.75em;
 				font-weight: 800;
 				height: inherit;
-				z-index: 11; /* Must appear in front of the sun graphic */
 			}
-		}
-	}
 
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
-	.donation-output {
 		.output-number {
 			font-size: 1.75em;
 			font-weight: 800;
@@ -141,10 +116,8 @@
 		.output-units {
 			font-size: 1.125em;
 		}
-	}
 
-} // ./donation-impact
-
+}
 
 // TODO the shadow on the donation row. This line is too wide, and doesn't work with the image.
 // .donation-io-row .left-column, .donation-io-row .right-column {
