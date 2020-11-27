@@ -1,8 +1,8 @@
 package org.sogive.data.user;
 
 import org.junit.Test;
-import com.goodloop.data.Money;
 
+import com.goodloop.data.Money;
 import com.winterwell.web.data.XId;
 
 public class RepeatDonationActorTest {

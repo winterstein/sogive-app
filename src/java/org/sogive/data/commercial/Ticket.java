@@ -1,7 +1,6 @@
 package org.sogive.data.commercial;
 
 import com.goodloop.data.Money;
-
 import com.winterwell.data.AThing;
 import com.winterwell.es.ESKeyword;
 import com.winterwell.web.data.XId;

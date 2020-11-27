@@ -1,10 +1,10 @@
 package org.sogive.data.commercial;
 
 import org.junit.Test;
-import com.goodloop.data.Money;
 import org.sogive.server.SoGiveServer;
 
 import com.goodloop.data.KCurrency;
+import com.goodloop.data.Money;
 import com.winterwell.utils.Utils;
 import com.winterwell.web.data.XId;
 

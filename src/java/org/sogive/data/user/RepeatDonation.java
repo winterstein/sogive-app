@@ -12,7 +12,6 @@ import com.winterwell.es.ESKeyword;
 import com.winterwell.ical.ICalEvent;
 import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Utils;
-import com.winterwell.utils.log.Log;
 import com.winterwell.utils.log.Report;
 import com.winterwell.utils.time.Time;
 import com.winterwell.web.app.AppUtils;

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.goodloop.data.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.user.Person;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.data.PostLite;

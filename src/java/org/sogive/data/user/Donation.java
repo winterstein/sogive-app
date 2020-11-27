@@ -3,13 +3,13 @@ package org.sogive.data.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.goodloop.data.Money;
 import org.sogive.data.charity.Output;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.server.payment.IForSale;
 import org.sogive.server.payment.StripeAuth;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESKeyword;

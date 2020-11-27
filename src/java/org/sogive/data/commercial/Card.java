@@ -2,7 +2,6 @@ package org.sogive.data.commercial;
 
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.GiftCard;
-import org.sogive.server.payment.IForSale;
 
 import com.winterwell.data.AThing;
 import com.winterwell.es.ESKeyword;

@@ -1,11 +1,9 @@
 package org.sogive.server;
 
-import java.util.List;
 import java.util.Map;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
-import org.sogive.data.charity.Project;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
 

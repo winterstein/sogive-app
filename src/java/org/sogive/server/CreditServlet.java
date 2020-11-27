@@ -8,10 +8,10 @@ import java.util.List;
 import javax.mail.internet.InternetAddress;
 
 import org.sogive.data.DBSoGive;
-import com.goodloop.data.Money;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Person;
 
+import com.goodloop.data.Money;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.utils.Dep;

@@ -2,7 +2,6 @@ package org.sogive.data;
 
 import java.util.List;
 
-import com.goodloop.data.Money;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.commercial.Basket;
@@ -17,6 +16,7 @@ import org.sogive.data.user.Person;
 import org.sogive.data.user.RepeatDonation;
 import org.sogive.data.user.Team;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.es.ESPath;

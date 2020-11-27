@@ -10,10 +10,6 @@ import org.sogive.data.commercial.Card;
 import com.goodloop.data.KCurrency;
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
-import com.winterwell.data.KStatus;
-import com.winterwell.es.ESPath;
-import com.winterwell.web.ajax.JThing;
-import com.winterwell.web.app.AppUtils;
 
 /**
  * Give a money voucher.

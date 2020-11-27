@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
-import com.goodloop.data.Money;
 import org.sogive.data.user.Person;
 
+import com.goodloop.data.Money;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;

@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
-import com.goodloop.data.Money;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripePlugin;
 
+import com.goodloop.data.Money;
 import com.stripe.Stripe;
 import com.stripe.model.Token;
 import com.winterwell.datalog.server.TrackingPixelServlet;

@@ -4,11 +4,11 @@ package org.sogive.data.commercial;
 import java.util.Arrays;
 import java.util.List;
 
-import com.goodloop.data.Money;
 import org.sogive.data.user.Donation;
 import org.sogive.data.user.Person;
 import org.sogive.server.payment.StripeAuth;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;

@@ -6,13 +6,13 @@ import java.util.Map;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.junit.Test;
-import com.goodloop.data.Money;
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.commercial.FundRaiser;
 import org.sogive.data.commercial.Ticket;
 import org.sogive.server.payment.StripePlugin;
 
+import com.goodloop.data.Money;
 import com.stripe.Stripe;
 import com.stripe.model.Token;
 import com.winterwell.es.ESPath;

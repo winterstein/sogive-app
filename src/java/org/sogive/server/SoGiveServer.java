@@ -3,12 +3,12 @@ package org.sogive.server;
 import java.io.File;
 
 import org.sogive.data.DBSoGive;
-import com.goodloop.data.Money;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.RepeatDonationProcessor;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
 
+import com.goodloop.data.Money;
 import com.winterwell.datalog.DataLog;
 import com.winterwell.datalog.DataLogConfig;
 import com.winterwell.es.XIdTypeAdapter;

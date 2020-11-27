@@ -8,7 +8,6 @@ import org.sogive.data.commercial.Event;
 import org.sogive.data.user.Person;
 
 import com.winterwell.utils.Dep;
-import com.winterwell.web.LoginDetails;
 import com.winterwell.web.app.CommonFields;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.Emailer;

@@ -1,10 +1,7 @@
 package org.sogive.data.user;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.sogive.server.SoGiveServer;
-import org.sogive.server.SoGiveTestUtils;
 
 import com.winterwell.web.ajax.JThing;
 

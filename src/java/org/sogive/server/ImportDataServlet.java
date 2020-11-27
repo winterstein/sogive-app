@@ -1,7 +1,5 @@
 package org.sogive.server;
 
-import java.io.File;
-
 import org.sogive.data.loader.ImportOSCRData;
 
 import com.winterwell.web.WebEx;
