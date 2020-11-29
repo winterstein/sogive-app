@@ -28,3 +28,8 @@ build-lib
 package-lock.json
 web/style
 uploads
+
+# IntelliJ project files
+.idea
+*.iml
+target/
