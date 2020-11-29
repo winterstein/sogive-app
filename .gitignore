@@ -32,3 +32,4 @@ uploads
 # IntelliJ project files
 .idea
 *.iml
+target/
