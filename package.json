@@ -9,10 +9,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.11.0",
     "chart.js": "^2.9.3",
-    "easy-enums": "^1.1.7",	
+    "easy-enums": "^1.1.7",
     "easyi18n": "^1.1.1",
-	"fast-json-patch": "^3.0.0-1",
+    "fast-json-patch": "^3.0.0-1",
     "hashmap": "^2.4.0",
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
@@ -26,8 +28,6 @@
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
     "react-markdown": "^4.3.1",
-    "react-stripe-checkout": "^2.6.3",
-    "react-stripe-elements": "^2.0.3",
     "reactstrap": "^8.5.1",
     "sjtest": "^0.4.9",
     "you-again": "^0.8.8"

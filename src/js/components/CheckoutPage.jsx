@@ -406,6 +406,8 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 
 	// does onToken mean on-successful-payment-auth??
 	const onToken = (token) => {
+		console.log('onToken called with:', token);
+		return;
 		basket.stripe = {
 			...basket.stripe,
 			...token
