@@ -675,6 +675,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	 *  |source owner: {email, verified_email}
 	 */
 	const onToken = (token) => {
+		console.log('onToken called with:', token);
+		return;
 		donation.stripe = token;
 		onToken_doPayment({donation});
 	};
