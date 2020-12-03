@@ -101,6 +101,7 @@ class ImpactCalculator extends Component {
 			const outputs = Project.outputs(project);
 			impact = impactCalc({ charity, project, output:outputs[0], cost: amount });
 		}
+
 		// if ( ! impact) { // the display will fallback to "funds the charity"
 		// 	impact = { name: NGO.displayName(charity) };
 		// }
@@ -110,12 +111,13 @@ class ImpactCalculator extends Component {
 
 		return (
 			<div className='donation-impact'>
-							<button onClick={donationDown} className='donation-down'>-</button>
-								<Misc.PropControl type='Money' prop='amount'
-									path={formPath} changeCurrency={false} />
-							<button onClick={donationUp} className='donation-up'>+</button>
-							<div className='will-fund'>can fund</div>
-						<DonationOutput impact={impact} charity={charity} />
+				<button onClick={donationDown} className='donation-down'>-</button>
+				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} />
+				<button onClick={donationUp} className='donation-up'>+</button>
+				<div className='will-fund'>can fund</div>
+				<DonationOutput impact={impact} charity={charity} />
+				<p className='donation-description'><i>{impact ? impact.description : null}</i></p>
+
 			</div>
 		);
 	}
@@ -137,6 +139,7 @@ const DonationOutput = ({impact, charity}) => {
 			<div className='output-units'>
 				{Output.getName(impact)}
 			</div>
+
 	</>);
 };
 
