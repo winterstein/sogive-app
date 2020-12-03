@@ -10,7 +10,7 @@ import org.sogive.data.charity.NGO;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ImportEditorialsDataTaskTest {
 
@@ -34,7 +34,9 @@ public class ImportEditorialsDataTaskTest {
     }
 
     @Test
-    public void testImportEditorials_singleCharity_oneLineEditorial() {
+    public void testImportEditorials_singleCharity_alreadyInDatabase() {
+        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID));
+
         fakeDocumentFetcher.setDocumentAtUrl(
                 VALID_URL,
                 generateDocumentContainingCharityEditorials(ImmutableMap.of(
@@ -46,7 +48,20 @@ public class ImportEditorialsDataTaskTest {
     }
 
     @Test
-    public void testImportEditorials_singleCharity_multiParagraphEditorial() {
+    public void testImportEditorials_singleCharity_notInDatabase_doesNotImport() {
+        fakeDocumentFetcher.setDocumentAtUrl(
+                VALID_URL,
+                generateDocumentContainingCharityEditorials(ImmutableMap.of(
+                        TBD_CHARITY_ID, Collections.singletonList(TBD_CHARITY_EDITORIAL_TEXT))));
+
+        importEditorialsDataTask.run(VALID_URL);
+
+        assertNull(databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
+    }
+
+    @Test
+    public void testImportEditorials_singleCharity_multiParagraphEditorial_alreadyInDatabase() {
+        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID));
         fakeDocumentFetcher.setDocumentAtUrl(
                 VALID_URL,
                 generateDocumentContainingCharityEditorials(ImmutableMap.of(
@@ -58,7 +73,24 @@ public class ImportEditorialsDataTaskTest {
     }
 
     @Test
-    public void testImportEditorials_multipleCharities() {
+    public void testImportEditorials_singleCharity_multiParagraphEditorialContainingH2() {
+        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID));
+        // TODO: fake an editorial containing a header two
+        fakeDocumentFetcher.setDocumentAtUrl(
+                VALID_URL,
+                generateDocumentContainingCharityEditorials(ImmutableMap.of(
+                        TBD_CHARITY_ID, Arrays.asList("first paragraph", "second paragraph"))));
+
+        importEditorialsDataTask.run(VALID_URL);
+
+        // TODO proper assert
+        assertTrue(false);
+    }
+
+    @Test
+    public void testImportEditorials_multipleCharities_alreadyInDatabase() {
+        databaseWriter.upsertCharityRecord(new NGO("charity-one"));
+        databaseWriter.upsertCharityRecord(new NGO("charity-two"));
         fakeDocumentFetcher.setDocumentAtUrl(
                 VALID_URL,
                 generateDocumentContainingCharityEditorials(ImmutableMap.of(
@@ -102,7 +134,15 @@ public class ImportEditorialsDataTaskTest {
             charityRecords.put(ngo.getId(), ngo);
         }
 
+        @Override
+        public boolean contains(String charityId) {
+            return charityRecords.containsKey(charityId);
+        }
+
         public String getCharityRecommendation(String charityId) {
+            if (charityRecords.get(charityId) == null) {
+                return null;
+            }
             return (String) charityRecords.get(charityId).get("recommendation");
         }
     }

@@ -2,7 +2,6 @@ package org.sogive.data.loader;
 
 import com.winterwell.utils.log.Log;
 import org.sogive.data.charity.NGO;
-import org.sogive.server.SoGiveServer;
 
 import java.io.IOException;
 
@@ -18,11 +17,11 @@ public class ImportEditorialsDataTask {
 	private volatile boolean running;
 
 	private final EditorialsFetcher editorialsFetcher;
-	private final DatabaseWriter databaseWriter;
+	private final DatabaseWriter database;
 
-	public ImportEditorialsDataTask(JsoupDocumentFetcher jsoupDocumentFetcher, DatabaseWriter databaseWriter) {
+	public ImportEditorialsDataTask(JsoupDocumentFetcher jsoupDocumentFetcher, DatabaseWriter database) {
 		editorialsFetcher = new EditorialsFetcher(jsoupDocumentFetcher);
-		this.databaseWriter = databaseWriter;
+		this.database = database;
 	}
 
 	public synchronized void run(String publishedGoogleDocsUrl) {
@@ -42,9 +41,13 @@ public class ImportEditorialsDataTask {
 	private void writeEditorials(Editorials editorials) {
 		for (Editorial editorial : editorials) {
 			String charityId = editorial.getCharityId();
+			// If it's not already in the charity database, we don't want to insert it.
+			if (!database.contains(charityId)) {
+				continue;
+			}
 			NGO ngo = new NGO(charityId);
 			ngo.put("recommendation", editorial.getEditorialText());
-			databaseWriter.upsertCharityRecord(ngo);
+			database.upsertCharityRecord(ngo);
 		}
 	}
 
