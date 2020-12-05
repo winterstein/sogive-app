@@ -7,6 +7,11 @@ import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.SField;
 
+/**
+ * a bit hacky but useful: import data into SoGive 
+ * @author daniel
+ *
+ */
 public class ImportDataServlet implements IServlet {
 
 	private static ImportOSCRData oscr;
@@ -15,6 +20,7 @@ public class ImportDataServlet implements IServlet {
 	@Override
 	public void process(WebRequest state) throws Exception {
 		String dataset = state.getRequired(new SField("dataset"));
+		// Scottish official data?
 		if ("OSCR".equals(dataset)) {
 			oscr = new ImportOSCRData();
 			if (oscr.isRunning()) {
@@ -22,6 +28,7 @@ public class ImportDataServlet implements IServlet {
 			}
 			oscr.run();
 		}
+		// A Google doc of editorials?
 		if ("editorials".equals(dataset)) {
 			String url = state.get("url");
 			JsoupDocumentFetcher jsoupDocumentFetcher = new JsoupDocumentFetcherImpl();

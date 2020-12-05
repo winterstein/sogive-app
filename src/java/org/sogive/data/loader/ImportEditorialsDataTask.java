@@ -1,5 +1,6 @@
 package org.sogive.data.loader;
 
+import com.winterwell.utils.Utils;
 import com.winterwell.utils.log.Log;
 import org.sogive.data.charity.NGO;
 
@@ -7,6 +8,8 @@ import java.io.IOException;
 
 /**
  * Imports editorials from a given published Google Doc url.
+ * Such as ??url
+ * 
  * @author anita
  *
  */
@@ -14,7 +17,10 @@ public class ImportEditorialsDataTask {
 
 	private static final String TAG = ImportEditorialsDataTask.class.getSimpleName();
 
-	private volatile boolean running;
+	/**
+	 * prevent overlapping runs
+	 */
+	private static volatile boolean running;
 
 	private final EditorialsFetcher editorialsFetcher;
 	private final DatabaseWriter database;
@@ -26,16 +32,21 @@ public class ImportEditorialsDataTask {
 
 	public synchronized void run(String publishedGoogleDocsUrl) {
 		running = true;
-		Editorials editorials;
 		try {
-			editorials = editorialsFetcher.getEditorials(publishedGoogleDocsUrl);
-		} catch (IOException e) {
-			Log.e(TAG, String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
+			Editorials editorials;
+			try {
+				editorials = editorialsFetcher.getEditorials(publishedGoogleDocsUrl);
+			} catch (IOException e) {
+				Log.e(TAG, String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
+				running = false;
+				return;
+			}
+			writeEditorials(editorials);
+		} catch(Throwable ex) {
+			throw Utils.runtime(ex);
+		} finally {
 			running = false;
-			return;
 		}
-		writeEditorials(editorials);
-		running = false;
 	}
 
 	private void writeEditorials(Editorials editorials) {

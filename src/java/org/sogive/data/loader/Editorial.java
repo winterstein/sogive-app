@@ -34,4 +34,11 @@ public class Editorial {
     public int hashCode() {
         return Objects.hash(charityId, editorialParagraphs);
     }
+
+	@Override
+	public String toString() {
+		return "Editorial[charityId=" + charityId + ", editorialParagraphs=" + editorialParagraphs + "]";
+	}
+    
+    
 }

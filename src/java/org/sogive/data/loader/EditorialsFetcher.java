@@ -9,6 +9,15 @@ import com.winterwell.utils.log.Log;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Fetch data from a Google Doc
+ * Assumes format:
+ * h1: charity ID
+ * editorial text (which can be across a few paragraphs)
+ * 
+ * @author Anita
+ *
+ */
 public class EditorialsFetcher {
     private final JsoupDocumentFetcher documentFetcher;
 
@@ -25,7 +34,7 @@ public class EditorialsFetcher {
         List<Editorial> charityEditorials = new ArrayList<>();
         Elements header1s = document.getElementsByTag("h1");
         for (Element h1 : header1s) {
-            String charityId = h1.text();
+            String charityId = h1.text().trim();
             List<String> editorialParagraphs = new ArrayList<>();
 
             Element firstParagraphElement = h1.nextElementSibling();
