@@ -8,8 +8,8 @@ import java.util.Map;
 class FakeJsoupDocumentFetcher implements JsoupDocumentFetcher {
     private final Map<String, Document> documents = new HashMap<>();
 
-    public void setDocumentAtUrl(String url, Document document) {
-        documents.put(url, document);
+    public void setDocumentAtUrl(Document document) {
+        documents.put(document.baseUri(), document);
     }
 
     @Override
