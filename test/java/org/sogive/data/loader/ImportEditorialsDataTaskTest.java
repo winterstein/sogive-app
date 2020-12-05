@@ -3,6 +3,7 @@ package org.sogive.data.loader;
 import com.google.common.collect.ImmutableMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 import org.sogive.data.charity.NGO;
@@ -75,16 +76,26 @@ public class ImportEditorialsDataTaskTest {
     @Test
     public void testImportEditorials_singleCharity_multiParagraphEditorialContainingH2() {
         databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID));
-        // TODO: fake an editorial containing a header two
-        fakeDocumentFetcher.setDocumentAtUrl(
-                VALID_URL,
-                generateDocumentContainingCharityEditorials(ImmutableMap.of(
-                        TBD_CHARITY_ID, Arrays.asList("first paragraph", "second paragraph"))));
+
+        Document document = Document.createShell(VALID_URL);
+
+        Element headerDiv = new Element("div");
+        document.appendChild(headerDiv);
+
+        Element contentsDiv = new Element("div");
+        contentsDiv.appendChild(new Element("h1").text(TBD_CHARITY_ID));
+        contentsDiv.appendChild(new Element("p").text("paragraph text"));
+        contentsDiv.appendChild(new Element("p").text("second paragraph text"));
+        contentsDiv.appendChild(new Element("h2").text("**Section Header**"));
+        contentsDiv.appendChild(new Element("p").text("more paragraph text"));
+        document.appendChild(contentsDiv);
+
+        fakeDocumentFetcher.setDocumentAtUrl(VALID_URL, document);
 
         importEditorialsDataTask.run(VALID_URL);
 
-        // TODO proper assert
-        assertTrue(false);
+        assertEquals("paragraph text\n\nsecond paragraph text\n\n**Section Header**\n\nmore paragraph text",
+                databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
     }
 
     @Test

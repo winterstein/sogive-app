@@ -28,12 +28,11 @@ public class EditorialsFetcher {
             String charityId = h1.text();
             List<String> editorialParagraphs = new ArrayList<>();
 
-            Element paragraphElement = h1.nextElementSibling();
-            assert paragraphElement.tagName().equals("p");
-            editorialParagraphs.add(paragraphElement.text());
+            Element firstParagraphElement = h1.nextElementSibling();
+            editorialParagraphs.add(firstParagraphElement.text());
 
-            Element nextElement = paragraphElement.nextElementSibling();
-            while (nextElement != null && nextElement.tagName().equals("p")) {
+            Element nextElement = firstParagraphElement.nextElementSibling();
+            while (nextElement != null && !nextElement.tagName().equals("h1")) {
                 String paragraphText = nextElement.text();
                 if (!paragraphText.isEmpty()) {
                     editorialParagraphs.add(paragraphText);
