@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /**
  * Imports editorials from a given published Google Doc url.
- * Such as ??url
+ * Such as https://docs.google.com/document/d/e/2PACX-1vTT_o-nxdI07X9CwybFQLEDEjbKvAvtEEbZPnf7XpKBMFSC4xpMa0rJYM7MwpvZqdb1O9GMuVtC7QAT/pub
  * 
  * @author anita
  *
