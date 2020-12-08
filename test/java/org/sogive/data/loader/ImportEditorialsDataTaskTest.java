@@ -48,6 +48,20 @@ public class ImportEditorialsDataTaskTest {
     }
 
     @Test
+    public void testImportEditorials_singleCharityPascalCase_alreadyInDatabaseAsLowercase() {
+        databaseWriter.upsertCharityRecord(new NGO("doctors-without-borders"));
+
+        fakeDocumentFetcher.setDocumentAtUrl(
+                generateDocumentContainingCharityEditorials(
+                        TEST_URL,
+                        ImmutableMap.of("Doctors-Without-Borders", Collections.singletonList("Great charity *****"))));
+
+        importEditorialsDataTask.run(TEST_URL);
+
+        assertEquals("Great charity *****", databaseWriter.getCharityRecommendation("doctors-without-borders"));
+    }
+
+    @Test
     public void testImportEditorials_singleCharity_notInDatabase_doesNotImport() {
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
