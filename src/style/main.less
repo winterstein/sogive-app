@@ -3,21 +3,10 @@
 @import "../js/base/style/main-base.less";
 @import "./bs3-4polyfill.less";
 
+@import "sogive-fonts.less";
 @import "colours.less";
 @import "positioning.less";
 @import "buttons.less";
-
-html {
-	font-size: 14px; // Make new rem sizing approximately match Bootstrap 3 sizing
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url('/fonts/Roboto-Regular.ttf');
-}
-h1, .h1, h2, .h2, h3, .h3 {
-	font-family: Roboto;
-}
 
 .avoid-navbar {
     margin-top: @navbar-height + 1;
