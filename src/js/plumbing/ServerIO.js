@@ -89,4 +89,17 @@ ServerIO.addCharity = function(charity, status=C.KStatus.DRAFT) {
 	return ServerIO.load('/charity.json', params);
 };
 
+/**
+ * Import editorials for existing charities in database from a published Google doc.
+ * 
+ * @param publishedEditorialsUrl the URL of the pubslished Google doc containing SoGive editorials.
+ */
+ServerIO.importEditorials = function(publishedEditorialsUrl) {
+	let params = {
+		data: {	dataset: 'editorials', url: publishedEditorialsUrl },
+		method: 'PUT'
+	};
+	return ServerIO.load('/import.json', params)
+};
+
 export default ServerIO;
