@@ -13,6 +13,8 @@ const protocol = config.site === 'local' ? 'http://' : 'https://';
 let url = `${baseSite}`;
 const charityId = "tbd";
 const expectedEditorial = "tbd is an okay charity doing mediocre things\nso overall we think they are bronze"
+
+// Published doc containing charityId (as a Header 2) followed by expectedEditorial
 let editorialsUrl = 'https://docs.google.com/document/d/e/2PACX-1vTJ018R_FZ1_efPZKe17KhjPajEzm_folfOdSUUNtBDyBCK-URyOQ02K7K9TxsEotv5oSMUOdkZZV_m/pub';
 
 // Increase default timeout to prevent occasional flaky failures.
@@ -21,7 +23,7 @@ jest.setTimeout(30000);
 
 describe('Editor dashboard tests', () => {
 
-	test('Upload charity editorials from published gdoc', async () => {
+	test('Import charity editorials from published gdoc', async () => {
 		await page.goto(`${url}#editordashboard`);
 
 		// log in
@@ -36,7 +38,7 @@ describe('Editor dashboard tests', () => {
 		await page.waitForSelector('.login-email [name=email]', { hidden: true, timeout: 5000 });
 
 		await page.type('[name=editorialsUrl]', editorialsUrl);
-		await page.click('[name=uploadEditorials]');
+		await page.click('[name=importEditorials]');
 
 		// give elastic search time to update
 		await page.waitFor(1000);

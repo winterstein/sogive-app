@@ -20,7 +20,7 @@ const EditorDashboardPage = () => (
 		<h3>In development...</h3>
 		<AddCharityWidget />
 		<AddEditorWidget />
-		<UploadEditorialsWidget />
+		<ImportEditorialsWidget />
 		<p><a href='/#manageDonations'>Manage Donations</a></p>
 	</div>
 ); // ./EditorDashboardPage
@@ -55,19 +55,19 @@ const AddEditorWidget = () => {
 	</Misc.Card>);
 };
 
-const doUploadEditorials = function() {
-	let googleDocUrl = DataStore.appstate.widget.UploadEditorialsWidget.form.publishedEditorialsDoc;
+const doImportEditorials = function() {
+	let googleDocUrl = DataStore.appstate.widget.ImportEditorialsWidget.form.publishedEditorialsDoc;
 	if ( ! googleDocUrl) return;
 	notifyUser("Successfully imported editorials.");
 	ServerIO.importEditorials(googleDocUrl);
-	DataStore.setValue(['widget', 'UploadEditorialsWidget', 'form'], {});
+	DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
 };
 
-const UploadEditorialsWidget = () => {
-	return (<Misc.Card title='Upload Editorials' >
-		<p>Use this form to upload SoGive editorials from a published Google Doc.</p>
-		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label='Published google doc webpage URL:' path={['widget','UploadEditorialsWidget', 'form']} />
-		<button className='btn btn-warning' onClick={doUploadEditorials} name='uploadEditorials'>Upload Editorials</button>
+const ImportEditorialsWidget = () => {
+	return (<Misc.Card title='Import Editorials' >
+		<p>Use this form to import SoGive editorials from a published Google Doc.</p>
+		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label='Published google doc webpage URL:' path={['widget','ImportEditorialsWidget', 'form']} />
+		<button className='btn btn-warning' onClick={doImportEditorials} name='importEditorials'>Import Editorials</button>
 	</Misc.Card>);
 };
 
