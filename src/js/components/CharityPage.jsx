@@ -20,7 +20,7 @@ import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
-import CharityPageImpactAndDonate from './CharityPageImpactAndDonate';
+import ImpactCalculator from './ImpactCalculator';
 import SocialShare from './SocialShare';
 import { DonateButton } from './DonationWizard';
 
@@ -52,28 +52,34 @@ const CharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
 	}
+	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
 
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
 			<div className="header">
-				<h1 className="charity-name">
+				{charity.logo? <div><img src={charity.logo} alt='Charity logo' className='charity-logo'/></div> : null}
+				<h1 className="header-title">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
-				<CharityTags className="why-tags" tagsString={charity.whyTags} />
-				<CharityTags className="where-tags" tagsString={charity.whereTags} />
+				<div className='description-short'>
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
+				<div class="container" className='impact'>
+					{charity.impact ? <img class="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
+					<DonateButton item={charity}/>
+				</div>
+				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
-			<CharityDonate charity={charity} />
+			<ImpactCalculatorSection charity={charity} />
+			{charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null}
+			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
 	);
 	const spacerColumn = <Col md="1" xs="hidden" />;
 
 	return (
 		<div>
-			<div className='top-bands'>
-				<div className='band1' />
-				<div className='band2' />
-				<div className='band3' />
-			</div>
 			<div className='charity-page row'>
 				{impactColumn}
 				{spacerColumn}
@@ -84,25 +90,51 @@ const CharityPage = () => {
 }; // ./CharityPage
 
 
-const CharityTags = ({className, tagsString = ''}) => (
-	// should tags be lower-cased??
+const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 	// TODO <a href={'/#search?q=tag:'+encURI(tag)}> -- needs server-side support
-	<h3 className={'tags ' + className}>
-		{
-			tagsString.split(/,\s*/g)
-				.map(tag => <span key={tag}>{tag} </span>)
-		}
-	</h3>
-);
-
-
-const CharityDonate = ({charity}) => (
-	<div className='donation-column'>
-		<CharityPageImpactAndDonate charity={charity} />
-		<SocialShare charity={charity} />
+	<div className={'tags'}>
+		Tags: {whyTagsString.toLocaleLowerCase()}, {whereTagsString.toLocaleLowerCase()}
 	</div>
 );
 
+
+const ImpactCalculatorSection = ({charity}) => (
+	<div>
+		<h2 className="header-section-title">
+			Impact Calculator
+		</h2>
+		<ImpactCalculator charity={charity} />
+	</div>
+);
+
+const CharityAboutSection = ({charity}) => (
+	<div>
+			<div className="header">
+				<h2 className="header-section-title">
+					About {charity.displayName || charity.name}
+				</h2>
+			</div>
+			<div className='div-section-text'>
+				<div className='description-short'>
+					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
+				</div>
+				<div className='description-long'>
+					{charity.description? <MDText source={charity.description} /> : null}
+				</div>
+			</div>
+	</div>
+);
+
+const CharityAnalysisSection = ({charity}) => (
+	<div>
+		<div className="header">
+			<h2 className="header-section-title">Our Analysis</h2>
+		</div>
+		<div className="div-section-text">
+			<MDText source={charity.recommendation} />
+		</div>
+	</div>
+);
 
 const CharityAbout = ({charity}) => {
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)

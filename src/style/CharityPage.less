@@ -1,4 +1,5 @@
 @import "colours.less";
+@import "fonts.less";
 @import "positioning.less";
 
 // TODO move some of this from page-specific styling to "these are our widgets"
@@ -6,7 +7,6 @@
 
 #charity {
 	.column {
-		box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
 		background-color: white;
 
 		ul.nav.nav-tabs {
@@ -66,47 +66,23 @@
 			}
 		}
 	} // ./column
-
-	.top-bands {
-		position: fixed;
-		top: @navbar-height;
-		left: 0;
-		width: 100%;
-		.band1 {
-			background: linear-gradient(to right, #819EB7, #C1DEF2);
-			height: @band-1-height;
-		}
-		.band2 {
-			background: linear-gradient(to right,#ACB09F, #D2D6C3);
-			height: @band-2-height;
-		}
-		.band3 {
-			background: linear-gradient(to right, #819EB7, #C1DEF2);
-			height: @band-3-height;
-		}
-	}
 }
 
 #charity {
 	.impact-column {
 		.header {
-			background: #C1DEF2;
 			.extend-bg-to-sides(@bs-column-padding);
 			padding-top: @band-1-height;
 			margin-bottom: 30px;
-
-			.charity-name {
-				background-color: #D2D6C3;
-				text-transform: uppercase;
-				font-weight: bold;
-				margin-top: 0;
-				margin-bottom: 0;
-				.extend-bg-to-sides(@bs-column-padding);
-				line-height: @band-2-height;
+			.charity-logo {
+				height: 60px;
 			}
 			.tags {
-				color: white;
-				text-transform: lowercase;
+				color: @charity-page-summary-text-colour;
+				font-family: @standard-text-font;
+				font-size: 14px;
+				font-style: italic;
+				font-weight: normal;
 				margin-top: 0;
 				margin-bottom: 0;
 				border-left: 0;
@@ -118,19 +94,6 @@
 					line-height: 32px;
 				}
 
-				&.why-tags {					
-					span {
-						border-left: 15px solid @why-tags-fade;
-						background-color: @why-tags;
-					}
-				}
-				&.where-tags {					
-					span {
-						border-left: 15px solid @where-tags-fade;
-						background-color: @where-tags;
-					}
-				}
-
 				a {
 					color: inherit;
 				}
@@ -138,6 +101,9 @@
 			}
 
 		} // ./header
+		.impact {
+			margin-bottom: 30px;
+		}
 	} // ./.impact-column
 } 
 

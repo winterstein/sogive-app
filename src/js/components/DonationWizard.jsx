@@ -63,7 +63,7 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 	const showWizard = getWidgetProp(getId(item), 'open');
 	
 	return <>
-		<Button color="primary" size="lg"
+		<Button color="primary" size="lg" height="50px"
 			onClick={() => {
 				// poke the paidElsewhere flag
 				setWidgetProp(getId(item), 'paidElsewhere', paidElsewhere, false);
@@ -88,7 +88,7 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
  */
 const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
-	assert(id, "CharityPageImpactAndDonate", item);
+	assert(id, "ImpactCalculator", item);
 	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 	let pvEvent = {};
@@ -245,7 +245,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 			<Misc.SavePublishDiscard type={type} id={donationDraft.id} hidden />
 		</Modal>
 	);
-}; // ./CharityPageImpactAndDonate
+}; // ./ImpactCalculator
 
 
 /**
@@ -452,10 +452,10 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) 
 		return sd;
 	}
 
-	// HACK: grab the amount from the impact widget of CharityPageImpactAndDonate?
+	// HACK: grab the amount from the impact widget of ImpactCalculator?
 	const dontn = DataStore.getValue(path);
 	let cid = Donation.to(dontn);
-	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
+	let val = DataStore.getValue(['widget', 'ImpactCalculator', cid, 'amount']);
 	let amount = Money.isa(val)? val : new Money({value:val});
 	let repeat = event ? 'OFF' : 'MONTH'
 	return {amount, repeat};

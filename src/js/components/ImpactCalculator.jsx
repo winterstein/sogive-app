@@ -42,7 +42,7 @@ const donationIncrements = {
 };
 
 // TODO refactor into a function
-class CharityPageImpactAndDonate extends Component {
+class ImpactCalculator extends Component {
 
 	// Bump the donation up or down by a "reasonable" amount for current value
 	// ...and round it to a clean multiple of the increment used
@@ -57,7 +57,7 @@ class CharityPageImpactAndDonate extends Component {
 		const rawValue = Money.value(amount) + (increment * Math.sign(sign));
 		const value = Math.max(increment * Math.round(rawValue / increment), 1);
 		const newAmount = new Money({ value, currency: 'GBP' });
-		DataStore.setValue(['widget', 'CharityPageImpactAndDonate', NGO.id(charity), 'amount'], newAmount);
+		DataStore.setValue(['widget', 'ImpactCalculator', NGO.id(charity), 'amount'], newAmount);
 	}
 
 
@@ -69,7 +69,7 @@ class CharityPageImpactAndDonate extends Component {
 		if (charity.noPublicDonations) {
 			const reason = charity.meta && charity.meta.noPublicDonations && charity.meta.noPublicDonations.notes;
 			return (
-				<div className="CharityPageImpactAndDonate noPublicDonations">
+				<div className="ImpactCalculator noPublicDonations">
 					<p>Sorry: This charity does not accept public donations.</p>
 					{reason ? (<p>The stated reason is: {reason}</p>) : ''}
 				</div>
@@ -83,7 +83,7 @@ class CharityPageImpactAndDonate extends Component {
 			console.error("No Charity ID?!",charity);
 			return <div />;
 		}
-		const formPath = ['widget', 'CharityPageImpactAndDonate', cid];
+		const formPath = ['widget', 'ImpactCalculator', cid];
 		const formData = DataStore.getValue(formPath) || {};
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
@@ -101,6 +101,7 @@ class CharityPageImpactAndDonate extends Component {
 			const outputs = Project.outputs(project);
 			impact = impactCalc({ charity, project, output:outputs[0], cost: amount });
 		}
+
 		// if ( ! impact) { // the display will fallback to "funds the charity"
 		// 	impact = { name: NGO.displayName(charity) };
 		// }
@@ -110,46 +111,17 @@ class CharityPageImpactAndDonate extends Component {
 
 		return (
 			<div className='donation-impact'>
-				{project && project.images ? (
-					<div className='project-image'>
-						<img src={project.images} alt='' />
-					</div>
-				) : null}
-				<div className='row donation-io-row'>
-					<div className='col-sm-6 left-column'>
-						<div className='donation-buttons'>
-							<img className='donation-sun' src='/img/donation-bg.svg' alt="" />
-							<button onClick={donationUp} className='donation-up'>+</button>
-							{' '}
-							<button onClick={donationDown} className='donation-down'>-</button>
-						</div>
-						<div className='donation-input'>
-							<div className='amount-input'>
-								<Misc.PropControl type='Money' prop='amount'
-									path={formPath} changeCurrency={false} />
-							</div>
-							<div className='will-fund'>may fund</div>
-							<img className='donation-hand' src='/img/donation-hand.png' alt='' />
-						</div>
-						<img className='donation-arrow-right' src='/img/donation-arrow-right.png' alt="" />
-					</div>
-					<div className='col-sm-6 right-column'>
-						<DonationOutput impact={impact} charity={charity} />
-					</div>
-				</div>
+				<button onClick={donationDown} className='donation-down'>-</button>
+				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} />
+				<button onClick={donationUp} className='donation-up'>+</button>
+				<div className='will-fund'>can fund</div>
+				<DonationOutput impact={impact} charity={charity} />
+				<p className='donation-description'><i>{impact ? impact.description : null}</i></p>
 
-				<img className='donation-arrow-down' src='/img/donation-arrow-down-wide.png' alt="" />
-				
-				<div className='below-arrow'>
-					<div className='donate-button'>
-						<DonateButton item={charity} />
-					</div>
-				</div>
-				<div className='clearfix' />
 			</div>
 		);
 	}
-} // ./CharityPageImpactAndDonate
+} // ./ImpactCalculator
 
 const DonationOutput = ({impact, charity}) => {
 	if ( ! impact) {
@@ -159,16 +131,16 @@ const DonationOutput = ({impact, charity}) => {
 		</div>);
 	}
 
-	return (<div className='donation-output'>
-		<center>
+	return (
+	<>
 			{impact.number ? <div className='output-number'>
 				{printer.prettyNumber(impact.number, 2)}
 			</div> : null}
 			<div className='output-units'>
 				{Output.getName(impact)}
 			</div>
-		</center>
-	</div>);
+
+	</>);
 };
 
-export default CharityPageImpactAndDonate;
+export default ImpactCalculator;

@@ -1,6 +1,6 @@
 @import "colours.less";
 
-.CharityPageImpactAndDonate {
+.ImpactCalculator {
 	width: 100%;
 }
 
@@ -20,14 +20,8 @@
 			right: 0;
 		}
 		
-		.will-fund, .donation-arrow-right, .donation-arrow-down {
+		.will-fund {
 			display: none;
-		}
-		
-		.donate-button {
-			margin: auto;
-			float: none;
-			text-align: center;
 		}
 	}
 } // mobile media
@@ -35,89 +29,62 @@
 
 .donation-impact {
 	background-color: white;
-	box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.2);
+	border: 1px solid @grey-border-colour;
+	box-sizing: border-box;
+	color: @charity-page-impact-calculator-text;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: center;
+	padding: 1.25em 2em 1.25em 1.25em;
+
+	/* Drop Shadow */
+	box-shadow: 0px 3px 6px rgba(81, 81, 81, 0.125);
+
+	border-radius: 4px;
 
 	/* Appear in front of the social share buttons */
 	position: relative;
 	z-index: 10;
-
-	.project-image {
-		text-align: center;
-		img {
-			max-width: 100%; // overspill bug Jan 2019 - reported by Sanjay
-			max-height: 380px;
-			min-height: 50px;
-			// IE 11 and Edge 15 do not understand object-fit
-			// object-fit: contain;
-			width: auto;
-			margin: auto;
-		}
-	}
 
 	/* Columns populated with only position: absolute elements don't naturally have height - so when they stack on mobile they collide */
 	.left-column, .right-column {
 		height: 200px;
 	}
 
-	.donation-buttons {
-		position: absolute;
-		width: 150px;
-		height: 200px;
-		color: @donation-amt-fg;
-		/* Must appear in front of the left side of the donation input box but behind everything else - to make the box clickable */
-		z-index: 10;
-
-		img.donation-sun {
-			height: 200px;
-			position: absolute;
-		}
-
+	
 		button.donation-up, button.donation-down {
-			position: absolute;
 			padding: 0;
 			border: 5px solid @donation-amt-fg;
 			border-radius: 50%;
-			background-color: transparent;
-			height: 60px;
-			width: 60px;
-			font-size: 60px;
-			line-height: 30px;
+			background-color: @donation-amt-fg;
+			color: @white;
+			height: 28px;
+			width: 28px;
+			font-size: 28px;
+			line-height: 15px;
 			font-weight: bold;
 			&:focus {
 				outline: none;
 			}
 		}
 
-		button.donation-up {
-			top: 50px;
-			left: 10px;
-		}
-
-		button.donation-down {
-			top: 120px;
-			left: 55px;
-		}
-	}
-
 	.donation-input, .donation-output {
 		height: 200px;
 	}
 
-	.donation-input {
-		text-align: right;
-		position: absolute;
-		z-index: 9;
-		padding-right: 50px;
+	.will-fund {
+		font-size: 1.286em;
+	}
 
-		.will-fund {
-			font-size: 2em;
-		}
+	.donation-description {
+		font-size: 1.143em;
+	}
 
-		.amount-input {
+	.form-group {
+		margin-bottom: 0;
+	}
 			.input-group .input-group-prepend {
-				padding-left: 120px;
-				z-index: 9; /* Must appear behind the sun graphic */
-				padding-right: 0;
 				// blanket nuke Bootstrap 4's button styling rules on children
 				* {
 					padding: 0;
@@ -125,69 +92,38 @@
 					border-radius: 0;
 					background-color: transparent;
 					font-size: 100%;
+					font-weight: 800;
+				}
+				.input-group-text {
+					color: @donation-number-fg;
 				}
 			}
 			.input-group .form-control {
+				width: 3em;
 				padding-left: 0;
-				color: @donation-number-fg
+				color: @donation-number-fg;
 			}
 			.form-control, .input-group-prepend {
-				background-color: @donation-amt-input-bg;
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
-				font-size: 2.5em;
+				font-size: 2em;
+				font-weight: 800;
 				height: inherit;
-				z-index: 11; /* Must appear in front of the sun graphic */
 			}
-		}
-
-		.donation-hand {
-			position: absolute;
-			left: 100px;
-		}
-	}
-
-	.donation-arrow-right {
-		position: absolute;
-		top: 0;
-		right: -25px;
-		height: 200px;
-	}
 
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
-	.donation-output {
 		.output-number {
-			font-size: 300%;
+			font-size: 2em;
+			font-weight: 800;
 			color: @donation-number-fg;
 		}
 
 		.output-units {
-			font-size: 200%;
+			font-size: 1.286em;
 		}
-	}
 
-	/* The wide down-arrow decoration flowing from the output column to the donate button */
-	.donation-arrow-down {
-		float:right;
-		// height:30px;
-		width:100%;
-	}
-
-	.below-arrow {
-		margin-top: -15px; // cos the down arrow has lots of whitespace
-		clear:both;
-		padding-bottom:5px;
-	}
-
-	.donate-button {
-		margin-right: 60px;
-		float:right;
-		padding:15px;
-		padding-top:0px;
-	}
-} // ./donation-impact
-
+}
 
 // TODO the shadow on the donation row. This line is too wide, and doesn't work with the image.
 // .donation-io-row .left-column, .donation-io-row .right-column {
@@ -213,7 +149,7 @@
 	background-color: @colour-04;
 }
 
-.CharityPageImpactAndDonate {
+.ImpactCalculator {
 	.impact {
 		.impact-text {
 			text-align: center;
@@ -222,7 +158,7 @@
 			display: block;
 		}
 		.impact-units-amount {
-			font-size: 2.5em;
+			font-size: 1.75em;
 			margin-bottom: 0;
 		}
 	}
@@ -253,4 +189,8 @@
 }
 .facebook-btn:hover {
 	color: @color-facebook;
+}
+
+.header .description-short p {
+	font-size: 1.143em;
 }
