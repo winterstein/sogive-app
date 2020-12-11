@@ -65,8 +65,21 @@ const doImportEditorials = function() {
 
 const ImportEditorialsWidget = () => {
 	return (<Misc.Card title='Import Editorials' >
-		<p>Use this form to import SoGive editorials from a published Google Doc.</p>
-		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label='Published google doc webpage URL:' path={['widget','ImportEditorialsWidget', 'form']} />
+		<p>Use this form to import SoGive editorials from a Google Doc. Editorials in the doc must be in the following format:</p>
+		<br/>
+		<p><b>charity-id-1</b> (styled as Heading 1)</p>
+		<p>Editorial One (styled as Normal text or subheadings, may be multiple paragraphs)</p>
+		<p><b>charity-id-2</b> (styled as Heading 1)</p>
+		<p>Editorial Two (styled as Normal text or subheadings, may be multiple paragraphs)</p>
+		<p>etc.</p>
+		<br/>
+		<p>Import Instructions:</p>
+		<ol>
+			<li>Open the Google Doc</li>
+			<li>In the Docs menu, select <b>File</b> &gt; <b>Publish to the web</b>, and click <b>[Publish]</b>.</li>
+			<li>Copy the link from that dialog.</li>
+		</ol>
+		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label="Published link: (should end in '/pub')" path={['widget','ImportEditorialsWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doImportEditorials} name='importEditorials'>Import Editorials</button>
 	</Misc.Card>);
 };
