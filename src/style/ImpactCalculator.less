@@ -58,7 +58,7 @@
 			border: 5px solid @donation-amt-fg;
 			border-radius: 50%;
 			background-color: @donation-amt-fg;
-			color: @white;
+			color: white;
 			height: 28px;
 			width: 28px;
 			font-size: 28px;
@@ -71,14 +71,6 @@
 
 	.donation-input, .donation-output {
 		height: 200px;
-	}
-
-	.will-fund {
-		font-size: 1.286em;
-	}
-
-	.donation-description {
-		font-size: 1.143em;
 	}
 
 	.form-group {
@@ -107,6 +99,7 @@
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
+				//font-size and weight set here to match figma - bold & 28px
 				font-size: 2em;
 				font-weight: 800;
 				height: inherit;
@@ -114,15 +107,11 @@
 
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 		.output-number {
+			//font-size and weight set here to match figma - bold & 28px
 			font-size: 2em;
 			font-weight: 800;
 			color: @donation-number-fg;
 		}
-
-		.output-units {
-			font-size: 1.286em;
-		}
-
 }
 
 // TODO the shadow on the donation row. This line is too wide, and doesn't work with the image.
@@ -189,8 +178,4 @@
 }
 .facebook-btn:hover {
 	color: @color-facebook;
-}
-
-.header .description-short p {
-	font-size: 1.143em;
 }
