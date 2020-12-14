@@ -21,7 +21,7 @@ These instructions assume Linux.
 3. Clone this repo, and its sibling wwappbase.js (which contains widgets and utility code)
 
        git clone git@github.com:winterstein/sogive-app.git
-       git clone git@github.com:winterstein/wwappbase.js.git
+       git clone git@github.com:good-loop/wwappbase.js.git
 
 Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js repo. Your folders should look like this:
 
