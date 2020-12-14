@@ -76,6 +76,7 @@ const ImportEditorialsWidget = () => {
 		<p>Import Instructions:</p>
 		<ol>
 			<li>Open the Google Doc</li>
+			<li>Open the document outline (View &gt; Show document outline, or click on the icon on the left-hand side) and check that all the charity-ids are styled as Heading 1s.</li>
 			<li>In the Docs menu, select <b>File</b> &gt; <b>Publish to the web</b>, and click <b>[Publish]</b>.</li>
 			<li>Copy the link from that dialog.</li>
 		</ol>
