@@ -21,7 +21,7 @@ public class BuildSoGiveApp extends BuildWinterwellProject {
 		List<BuildTask> deps = new ArrayList(super.getDependencies());
 		
 		MavenDependencyTask mdt = new MavenDependencyTask();
-		mdt.addDependency("com.stripe:stripe-java:16.5.0");
+		mdt.addDependency("com.stripe:stripe-java:20.30.0");
 		mdt.addDependency("org.projectlombok:lombok:1.18.12");
 		mdt.addDependency("org.mockito:mockito-core:3.3.3");
 		deps.add(mdt);

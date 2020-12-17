@@ -11,10 +11,12 @@ import org.sogive.data.user.Person;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentIntent;
 //import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
 import com.stripe.net.RequestOptions;
+import com.stripe.param.PaymentIntentCreateParams;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
@@ -83,7 +85,7 @@ public class StripePlugin {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Charge collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+	public static Charge collectLegacy(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
 		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
@@ -136,14 +138,64 @@ public class StripePlugin {
         Log.d(LOGTAG, "A charge was made! "+c);
         if (user!=null && c.getCustomer() != null) {
         	Customer cobj = c.getCustomerObject();
-	        user.put("stripe", new ArrayMap(
-	        			"customerId", c.getCustomer(),
-	        			"email", cobj==null? c.getReceiptEmail() : cobj.getEmail()
-	        		));
+        	Map cInfo = new ArrayMap(
+    			"customerId", c.getCustomer(),
+				"email", cobj==null? c.getReceiptEmail() : cobj.getEmail()
+    		);
+	        user.put("stripe", cInfo);
         }
         // TODO turn into a map
 		return c;
 	}
+	
+	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+			throws Exception
+	{
+		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
+		if (amount.getValue100p() <= 0) {
+			throw new IllegalArgumentException(amount.toString());
+		}
+		
+		// Amount to charge in pence (rounding up before casting to int)
+		Long pence = (long) Math.ceil(amount.getValue100p() / 100);
+		String currency = (String) Utils.or(amount.getCurrency(), "GBP");
+		
+		StripePlugin.prep();
+		PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+				.setCurrency(currency)
+				.setAmount(pence)
+				.setPaymentMethod(sa.id)
+				.setCustomer(sa.customerId)
+				.setConfirm(true) // ?? (from migration docs)
+				.setOffSession(true) // The customer is not present to confirm payment (so you'd better have run SCA and got permission for repeat payments)
+				.setStatementDescriptor("Donation via SoGive") // To appear on credit card statement
+				.setDescription(description) // Our internal description
+				.setReceiptEmail(sa.email)
+				.build();
+
+//		Add idempotency key to request (https://stripe.com/docs/api#idempotent_requests)
+        RequestOptions ro = null;
+        if (Utils.isBlank(idempotencyKey)) {
+        	Log.w(LOGTAG, "No idempotency-key protection for PaymentIntent " + params);
+        } else {
+        	ro = RequestOptions.builder().setIdempotencyKey(idempotencyKey).build();
+        }
+
+        PaymentIntent pi = PaymentIntent.create(params, ro);
+
+        Log.d(LOGTAG, "A PaymentIntent was created! " + pi);
+        if (user != null && pi.getCustomer() != null) {
+        	Customer cobj = pi.getCustomerObject();
+        	Map cInfo = new ArrayMap(
+    			"customerId", pi.getCustomer(),
+    			"email", cobj == null ? pi.getReceiptEmail() : cobj.getEmail()
+    		);
+	        user.put("stripe", cInfo);
+        }
+        // TODO turn into a map
+		return pi;
+	}
+	
 
 	public static String secretKey() {		
 		StripeConfig stripeConfig = Dep.get(StripeConfig.class);

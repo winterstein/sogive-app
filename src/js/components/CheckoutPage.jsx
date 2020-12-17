@@ -401,16 +401,15 @@ const getEmail = (basket) => {
 };
 
 const CheckoutTab = ({basket, event, stagePath}) => {
-	if ( ! basket) return <Misc.Loading />;
-	if ( ! basket.stripe) basket.stripe = {};
+	if (!basket) return <Misc.Loading />;
+	if (!basket.stripe) basket.stripe = {};
 
-	// does onToken mean on-successful-payment-auth??
-	const onToken = (token) => {
-		console.log('onToken called with:', token);
-		return;
+	/** PaymentWidget has passed back a confirmed PaymentIntent - attach it to the basket & publish to backend. */
+	const onToken = (payment_intent) => {
+		console.log('onToken called with:', payment_intent);
 		basket.stripe = {
 			...basket.stripe,
-			...token
+			...payment_intent
 		};
 		ActionMan.crud({type: C.TYPES.Basket, id:getId(basket), action:C.CRUDACTION.publish, item:basket})
 			.then(res => {
