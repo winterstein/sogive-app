@@ -267,7 +267,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 	}
 	
 	// What repeat options?
-	let repeatDonations = event ? ['OFF'] : ['OFF', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
+	let repeatDonations = event ? ['OFF'] : ['OFF', 'HOUR', 'MONTH', 'YEAR']; // NB: always offer monthly/annual repeats for charities
 	repeatDonations.push(proposedSuggestedDonation.repeat);
 	suggestedDonations.forEach(sd => repeatDonations.push(sd.repeat));
 	repeatDonations.push(dntn.repeat); // if something is set, then include it
@@ -457,7 +457,7 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) 
 	let cid = Donation.to(dontn);
 	let val = DataStore.getValue(['widget', 'CharityPageImpactAndDonate', cid, 'amount']);
 	let amount = Money.isa(val)? val : new Money({value:val});
-	let repeat = event ? 'OFF' : 'MONTH'
+	let repeat = event ? 'OFF' : 'MONTH';
 	return {amount, repeat};
 };
 
