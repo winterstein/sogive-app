@@ -15,6 +15,7 @@ import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentIntent;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -24,6 +25,8 @@ import com.winterwell.web.data.XId;
 /**
  * 
  * TODO handle repeat donations
+ * Won't actually collect money unless takePayment is set TRUE before calling run()
+ * - new Stripe API means initial payments are completed client-side & server only needs to collect for repeat donations.
  * @author daniel
  *
  */
@@ -39,6 +42,9 @@ public class MoneyCollector {
 		this.state = state;
 		Utils.check4null(basket, buyer);
 	}
+	
+	/** Set TRUE to create a new PaymentIntent or Charge when run() is called */
+	public boolean takePayment = false;
 
 
 	private static final String LOGTAG = "money";
@@ -73,7 +79,7 @@ public class MoneyCollector {
 			return transfers;
 		}
 		
-		// paid on credit?		
+		// paid on credit?
 		StripeAuth sa = basket.getStripe();
 		boolean allOnCredit = false;
 		if (sa != null && StripeAuth.credit_token.equals(sa.id)) {
@@ -81,8 +87,8 @@ public class MoneyCollector {
 		}
 		
 		Money credit = Transfer.getTotalCredit(user);
-		if (credit!=null && credit.getValue100p() > 0) {
-			// NB if your account is in debt i.e. < 0, then you cant pay on credit
+		if (credit != null && credit.getValue100p() > 0) {
+			// NB if your account is empty or in debt i.e. <= 0, then you can't pay on credit
 			Money residual = doCollectMoney2(credit, allOnCredit);
 			if (residual==null || residual.getValue100p()==0) {
 				Log.d(LOGTAG, "full payment on credit "+basket+".");
@@ -113,11 +119,17 @@ public class MoneyCollector {
 				// TODO security check!
 				Log.d(LOGTAG, "skip payment: "+basket);
 				return transfers; 
-			}						
+			}
 
 			// attach source to customer
 			if (sa.isSource()) {
 				Customer customer = addStripeSourceToCustomer(sa);
+				Log.d(LOGTAG, "Made customer "+customer);
+			}
+			
+			// Copy-paste from above
+			if (sa.isPaymentMethod()) {
+				Customer customer = addPaymentMethodToCustomer(sa);
 				Log.d(LOGTAG, "Made customer "+customer);
 			}
 			
@@ -127,13 +139,29 @@ public class MoneyCollector {
 //				return transfers;
 //			}
 			
-			// one off or first payment
-			String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();						
-			Charge charge = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
-			Log.d("stripe.collect", charge);
-			basket.setPaymentId(charge.getId());
-			basket.setPaymentCollected(true);
+			// For one-off donations or Basket purchases (cards, event registrations)
+			// the payment happens client-side and we just need to do internal accounting.
+			// Default to this mode.
 			
+			// For repeat donations, we create and confirm a new PaymentIntent using the
+			// PaymentMethod the user set up at the time of their original donation.
+			if (this.takePayment) {
+				String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
+				if (sa.isSource()) {
+					// Legacy repeat-donations: Use the Source we saved at creation time
+					Charge charge = StripePlugin.collectLegacy(total, chargeDescription, sa, userObj, ikey);
+					Log.d("stripe.collect-legacy", charge);
+					basket.setPaymentId(charge.getId());
+					basket.setPaymentCollected(true);
+				} else if (sa.isPaymentMethod()) {
+					// Post-Dec-2012 repeat-donations: Use the PaymentMethod we saved at creation time
+					PaymentIntent pi = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
+					Log.d("stripe.collect", pi);
+					basket.setPaymentId(pi.getId());
+					basket.setPaymentCollected(true);
+				}
+			}
+
 			// TODO save the "paid" edit straight away
 //			AppUtils.doSaveEdit(basket, state);
 			
@@ -180,6 +208,39 @@ public class MoneyCollector {
 			throw ex;
 		}
 	}
+	
+	/**
+	 * Copy-pasted from addStripeSourceToCustomer
+	 * https://stripe.com/docs/api/customers/create
+	 * @param sa
+	 * @return shouldn't be null, but best to handle that
+	 * @throws StripeException
+	 */
+	private Customer addPaymentMethodToCustomer(StripeAuth sa) throws StripeException {
+		if (sa.getCustomerId() != null) {
+			Log.d(LOGTAG, "NOT adding PaymentMethod to customer 'cos its hopefully already set");
+			Customer customer = Customer.retrieve(sa.getCustomerId());
+			return customer;
+		}
+		assert "payment_method".equals(sa.getObject()) : sa;
+		try {
+			Map<String, Object> customerParams = new ArrayMap<>(
+				"email", getBuyerEmail(),
+				"payment_method", sa.id
+			);
+			Customer customer = Customer.create(customerParams);
+			sa.setCustomerId(customer.getId());
+			Log.d(LOGTAG, "added Stripe PaymentMethod "+sa.getId()+" to customer "+customer.getId());
+			return customer;
+		} catch(InvalidRequestException ex) {
+			if (ex.toString().contains("already been attached")) {
+				// already done? well that shouldn't happen but it's OK
+				Log.w(LOGTAG, ex);
+				return null;
+			}
+			throw ex;
+		}
+	}
 
 	private String getBuyerEmail() {
 		if (buyerEmail!=null) return buyerEmail;		
@@ -188,8 +249,7 @@ public class MoneyCollector {
 	}
 
 
-	private Money doCollectMoney2(Money credit, boolean allOnCredit) 
-	{		
+	private Money doCollectMoney2(Money credit, boolean allOnCredit) {
 		// TODO check credit more robustly		
 		Money amount = basket.getAmount();
 		Money paidOnCredit = amount;

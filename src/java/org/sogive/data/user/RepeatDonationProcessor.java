@@ -134,7 +134,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 			if ( ! WebUtils2.isValidEmail(email)) {
 				email = msg.getOriginalDonation().getDonorEmail();
 			}
-			List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
+			List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email, true);
 			for (MsgToActor m : msgs) {
 				m.post();
 			}

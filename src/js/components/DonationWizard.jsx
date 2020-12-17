@@ -645,11 +645,14 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	// ...add in the tip to the total
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
-	// repeat
-	let repeatAmount, repeatFreq;
+
+	// repeating?
+	let repeat;
 	if (Donation.isRepeating(donation)) {
-		repeatAmount = amount;
-		repeatFreq = donation.repeat;
+		repeat = {
+			amount,
+			freq: donation.repeat
+		};
 	}
 
 	// Not the normal payment?
@@ -670,14 +673,14 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	}
 
 	/**
-	 * Add the stripe token to the Donation object and publish the Donation
+	 * Add the completed PaymentIntent to the Donation object and publish the Donation
+	 * TODO The signatures below aren't accurate since the Dec 2020 API migration
 	 * @param {id:String, type:String, token:String} token
 	 *  |source owner: {email, verified_email}
 	 */
-	const onToken = (token) => {
-		console.log('onToken called with:', token);
-		return;
-		donation.stripe = token;
+	const onToken = (payment_intent) => {
+		console.log('onToken called with:', payment_intent);
+		donation.stripe = payment_intent;
 		onToken_doPayment({donation});
 	};
 
@@ -687,10 +690,10 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 		<div className="padded-block">
 			<PropControl type="checkbox" path={path} item={donation} prop="hasTip" label={tipLabel} />
 			<PropControl type="Money" path={path} item={donation} prop="tip" min={0}
-				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
+				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false}
+			/>
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} 
-			repeatAmount={repeatAmount} repeatFreq={repeatFreq} />
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} />
 	</div>);
 }; // ./PaymentSection
 

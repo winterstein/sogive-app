@@ -62,7 +62,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements		
 		MoneyCollector mc = new MoneyCollector(basket, user, email, to, state);
 		mc.run();
-						
+		
 		// store in the database (this will save the edited basket)
 		super.doPublish(state, forceRefresh, deleteDraft);
 		// store the tickets
