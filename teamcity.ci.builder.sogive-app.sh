@@ -21,6 +21,7 @@ PROJECT_USES_NPM='yes' # yes or no
 PROJECT_USES_WEBPACK='yes' #yes or no
 PROJECT_USES_JERBIL='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
+BRANCH='sogive-release-2020-12-18'
 
 # Where is the test server?
 TARGET_SERVERS=(baker.good-loop.com)
