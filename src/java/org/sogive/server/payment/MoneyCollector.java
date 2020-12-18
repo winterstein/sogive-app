@@ -16,6 +16,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -127,8 +128,10 @@ public class MoneyCollector {
 				Log.d(LOGTAG, "Made customer "+customer);
 			}
 			
-			// Copy-paste from above
-			if (sa.isPaymentMethod()) {
+			// One-time PaymentIntents are created without a customer and can't have one attached.
+			// Only create + attach a Customer if the PaymentMethod has permission for off-session future usage.
+			// (i.e. for a repeat donation)
+			if (basket.getRepeat() != null && sa.isPaymentIntent()) {
 				Customer customer = addPaymentMethodToCustomer(sa);
 				Log.d(LOGTAG, "Made customer "+customer);
 			}
@@ -153,7 +156,7 @@ public class MoneyCollector {
 					Log.d("stripe.collect-legacy", charge);
 					basket.setPaymentId(charge.getId());
 					basket.setPaymentCollected(true);
-				} else if (sa.isPaymentMethod()) {
+				} else if (sa.isPaymentIntent()) {
 					// Post-Dec-2012 repeat-donations: Use the PaymentMethod we saved at creation time
 					PaymentIntent pi = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 					Log.d("stripe.collect", pi);
@@ -222,11 +225,24 @@ public class MoneyCollector {
 			Customer customer = Customer.retrieve(sa.getCustomerId());
 			return customer;
 		}
-		assert "payment_method".equals(sa.getObject()) : sa;
+		assert sa.isPaymentIntent() : sa;
+		
+		// Get the PaymentIntent...
+		PaymentIntent pi = PaymentIntent.retrieve(sa.id);
+		// Does it have a Customer already?
+		String custId = pi.getCustomer();
+		if (custId != null) {
+			Customer customer = Customer.retrieve(custId);
+			return customer;
+		}
+		
+		// No customer on the PaymentIntent - create and attach one.
+		PaymentMethod pm = StripePlugin.paymentMethodFromStripeAuth(sa);
+		
 		try {
 			Map<String, Object> customerParams = new ArrayMap<>(
 				"email", getBuyerEmail(),
-				"payment_method", sa.id
+				"payment_method", pm.getId()
 			);
 			Customer customer = Customer.create(customerParams);
 			sa.setCustomerId(customer.getId());

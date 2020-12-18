@@ -131,6 +131,10 @@ verified_phone
 	}
 	
 	/** @return true if this is a PaymentMethod (should be all StripeAuths after Dec 2020 API migration) */
+	public boolean isPaymentIntent() {
+		return "payment_intent".equals(object);
+	}
+	
 	public boolean isPaymentMethod() {
 		return "payment_method".equals(object);
 	}

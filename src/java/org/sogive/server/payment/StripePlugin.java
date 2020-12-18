@@ -9,9 +9,11 @@ import com.goodloop.data.Money;
 import org.sogive.data.user.Person;
 
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
 //import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
@@ -158,14 +160,17 @@ public class StripePlugin {
 		
 		// Amount to charge in pence (rounding up before casting to int)
 		Long pence = (long) Math.ceil(amount.getValue100p() / 100);
-		String currency = (String) Utils.or(amount.getCurrency(), "GBP");
+		String currency = Utils.or(amount.getCurrency(), "GBP").toString();
 		
 		StripePlugin.prep();
+		// Get whatever payment method was originally used
+		PaymentMethod pm = paymentMethodFromStripeAuth(sa);
+		// and ask for a new PaymentIntent using it
 		PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
 				.setCurrency(currency)
 				.setAmount(pence)
-				.setPaymentMethod(sa.id)
-				.setCustomer(sa.customerId)
+				.setPaymentMethod(pm.getId())
+				.setCustomer(pm.getCustomer())
 				.setConfirm(true) // ?? (from migration docs)
 				.setOffSession(true) // The customer is not present to confirm payment (so you'd better have run SCA and got permission for repeat payments)
 				.setStatementDescriptor("Donation via SoGive") // To appear on credit card statement
@@ -194,6 +199,24 @@ public class StripePlugin {
         }
         // TODO turn into a map
 		return pi;
+	}
+	
+	/**
+	 * A StripeAuth created after the 2020-12 update may contain an ID for a PaymentIntent or a PaymentMethod.
+	 * To make a new payment we always need the PaymentMethod - this abstracts away the extra retrieval steps. 
+	 * @param sa
+	 * @return
+	 * @throws StripeException
+	 */
+	public static PaymentMethod paymentMethodFromStripeAuth(StripeAuth sa) throws StripeException {
+		PaymentMethod pm = null;
+		if (sa.isPaymentIntent()) {
+			PaymentIntent pi = PaymentIntent.retrieve(sa.getId());
+			pm = PaymentMethod.retrieve(pi.getPaymentMethod());
+		} else if (sa.isPaymentMethod()) {
+			pm = PaymentMethod.retrieve(sa.getId());
+		}
+		return pm;
 	}
 	
 
