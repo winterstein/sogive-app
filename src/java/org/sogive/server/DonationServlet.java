@@ -135,7 +135,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	}
 	
 	@Override
-	protected JThing doPublish(WebRequest state, KRefresh forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) {
+	protected JThing doPublish(WebRequest state, KRefresh forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) throws Exception {
 		Log.d(LOGTAG, "doPublish "+state);
 		// make/save Donation
 		super.doSave(state);

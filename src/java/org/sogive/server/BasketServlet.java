@@ -30,7 +30,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 
 	@Override
 	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, KRefresh forceRefresh,
-			boolean deleteDraft) 
+			boolean deleteDraft) throws Exception 
 	{
 		Basket basket = getThing(state);
 		if (basket==null) {
