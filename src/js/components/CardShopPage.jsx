@@ -2,7 +2,7 @@ import React from 'react';
 
 import XId from '../base/data/XId';
 import {encURI, modifyHash } from '../base/utils/miscutils';
-import Login from '../you-again';
+import Login from '../base/youagain';
 import { Row, Col, Button } from 'reactstrap';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';

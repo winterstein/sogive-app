@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Login from '../you-again';
+import Login from '../base/youagain';
 import { Container } from 'reactstrap';
 import _ from 'lodash';
 

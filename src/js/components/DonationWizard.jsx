@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
 import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
-import Login from '../base/you-again';
+import Login from '../base/youagain';
 import $ from 'jquery';
 
 import C from '../C';

@@ -4,7 +4,7 @@ import { Jumbotron, Button, Badge } from 'reactstrap';
 
 import { assert } from 'sjtest';
 import {encURI} from '../base/utils/miscutils';
-import Login from '../base/you-again';
+import Login from '../base/youagain';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';

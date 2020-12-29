@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import {assert, assMatch} from 'sjtest';
-import Login from '../base/you-again';
+import Login from '../../base/youagain';
 import { Alert } from 'reactstrap';
 
 import ServerIO from '../../plumbing/ServerIO';
