@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from 'you-again';
+import Login from '../you-again';
 import _ from 'lodash';
 import XId from '../base/data/XId';
 import {encURI} from '../base/utils/miscutils';

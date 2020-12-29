@@ -5,7 +5,7 @@ import Enum from 'easy-enums';
 import _ from 'lodash';
 import React from 'react';
 import { assert, assMatch } from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import PropControl from '../../base/components/PropControl';

@@ -1,6 +1,6 @@
 
 import {assert, assMatch} from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 import PV from 'promise-value';
 import _ from 'lodash';
 import md5 from 'md5';

@@ -29,8 +29,7 @@
     "react-dropzone": "^11.0.1",
     "react-markdown": "^4.3.1",
     "reactstrap": "^8.5.1",
-    "sjtest": "^0.4.9",
-    "you-again": "^0.8.8"
+    "sjtest": "^0.4.9"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",

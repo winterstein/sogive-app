@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { assMatch } from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 import { Container, Row, Col } from 'reactstrap';
 import _ from 'lodash';
 import {encURI} from '../base/utils/miscutils';

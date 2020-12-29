@@ -11,7 +11,7 @@
 // @Flow
 import React, { Component } from 'react';
 import { assert } from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 
 import MDText from '../base/components/MDText';
 

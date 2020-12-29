@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 
 import C from '../../C';
 import Roles from '../../base/Roles';

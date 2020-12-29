@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SJTest, {assert, assMatch} from 'sjtest';
-import Login from 'you-again';
+import Login from '../you-again';
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
