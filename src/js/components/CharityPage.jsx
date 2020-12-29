@@ -27,17 +27,8 @@ import { DonateButton } from './DonationWizard';
 
 const InfoColumn = ({charity}) => (
 	<Col md="4" xs="12" className="column info-column">
-		<div className="header">&nbsp;</div>
-		<Tabs id="rhsTabs" defaultTabId="1">
-			<Tab tabId="1" title="About">
-				<CharityAbout charity={charity} />
-			</Tab>
-			<Tab tabId="2" title="Analysis">
-				<CharityExtra charity={charity} />
-				<LogOffSiteDonation item={charity} />
-				<MakeDirectFundRaiser charity={charity} />
-			</Tab>
-		</Tabs>
+		
+		<CharityAbout charity={charity} />
 	</Col>
 );
 
@@ -145,19 +136,11 @@ const CharityAbout = ({charity}) => {
 		<div className='charity-about'>
 			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
 			<CharityAboutImage charity={charity} />
-			<div className='descriptions'>
-				<div className='description-short'>
-					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
-				</div>
-				<div className='description-long'>
-					{charity.description? <MDText source={charity.description} /> : null}
-				</div>
-			</div>
-			<div className='url'>
-				<a href={churl} target='_blank'>{charity.url}</a>
-			</div>
-			<div className='official-details'>
-				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}
+			<div className='charity-about-details'>
+			<p><b>Details on the {charity.name}</b></p>
+			<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
+			{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+		
 			</div>
 		</div>
 	);
@@ -168,9 +151,7 @@ const CharityAboutImage = ({charity}) => {
 		{NGO.image(charity)? <div className='charity-image'>
 			<img src={NGO.image(charity)} alt='Charity' />
 		</div> : null}
-		{charity.logo? <div className='charity-logo'>
-			<img src={charity.logo} alt='Charity logo' />
-		</div> : null}
+
 	</div>);
 };
 
