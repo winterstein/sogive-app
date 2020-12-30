@@ -34,24 +34,6 @@ public class StripePlugin {
 	public static final String SERVICE = "stripe";
 	private static final String LOGTAG = "stripe";
 
-//	/**
-//	 * 
-//	 * @param gateway {id: stripe-customer-id}
-//	 * @throws Exception
-//	 */
-//	public static void cancelPlan(Map gateway) throws Exception {
-//		Log.i(SERVICE, "cancelPlan "+gateway);
-//		String id = (String) gateway.get("id");
-//		String secretKey = Dep.get(StripeConfig.class).secretKey;
-//		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
-//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
-//		Customer customer = Customer.retrieve(id, requestOptions);
-//		// TODO just cancel one plan
-////		CustomerSubscriptionCollection subs = customer.getSubscriptions();
-//		customer.cancelSubscription(new ArrayMap(
-//				"at_period_end", true
-//				));
-//	}
 
 	/**
 	 * 
