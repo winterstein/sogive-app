@@ -89,7 +89,7 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "CharityPageImpactAndDonate", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx - odd item!", item);
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 	let pvEvent = {};
 	if ( ! charity) {
@@ -618,8 +618,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	// HACK - store info for the TQ section
 	DataStore.setValue(TQ_PATH, donation, false);
 
-	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
+	assert(C.TYPES.isDonation(getType(donation)), "DonationWziard.jsx - Not a donation?!", ['path',path,'donation',donation]);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx - PaymentSection - odd item", item);
 	if ( ! donation) {
 		return null;
 	}

@@ -24,7 +24,7 @@ import com.winterwell.es.ESType;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.query.BoolQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
@@ -140,7 +140,7 @@ public class DBSoGive {
 	public static List<NGO> getCharityById(NGO ngo) {
 		ESConfig ec = Dep.get(ESConfig.class);
 		ESHttpClient esjc = new ESHttpClient(ec);
-		SearchRequestBuilder search = esjc.prepareSearch("charity");
+		SearchRequest search = esjc.prepareSearch("charity");
 		BoolQueryBuilder qb = ESQueryBuilders.boolQuery();
 		for (String f : new String[] {
 				NGO.ID, "englandWalesCharityRegNum", ImportOSCRData.OSCR_REG,

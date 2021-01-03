@@ -11,7 +11,7 @@ import org.sogive.data.commercial.Ticket;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -45,7 +45,7 @@ public class EventReportServlet implements IServlet {
 
 	private void returnTicketList(String eventId, WebRequest state) throws IOException {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequestBuilder s = new SearchRequestBuilder(es);
+		SearchRequest s = new SearchRequest(es);
 		IESRouter esRouter = Dep.get(IESRouter.class);
 		s.setIndices(esRouter.getPath(Ticket.class, null, KStatus.PUBLISHED).index());
 		

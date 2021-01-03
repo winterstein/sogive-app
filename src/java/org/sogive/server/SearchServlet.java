@@ -14,7 +14,7 @@ import org.sogive.data.charity.SoGiveConfig;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -76,7 +76,7 @@ public class SearchServlet implements IServlet {
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
 		ESPath path = config.getPath(null, NGO.class, null, status);
-		SearchRequestBuilder s = new SearchRequestBuilder(client).setPath(path);
+		SearchRequest s = new SearchRequest(client).setPath(path);
 		s.setDebug(true);		
 		String q = state.get(Q);
 		

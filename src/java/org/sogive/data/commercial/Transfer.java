@@ -15,7 +15,7 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.KRefresh;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -166,7 +166,7 @@ public class Transfer extends AThing {
 			return null;
 		}
 		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequestBuilder s = new SearchRequestBuilder(es);	
+		SearchRequest s = new SearchRequest(es);	
 		String idx = Dep.get(IESRouter.class).getPath(Transfer.class, null).index();
 		s.setIndex(idx);
 		String toFrom = user.toString();

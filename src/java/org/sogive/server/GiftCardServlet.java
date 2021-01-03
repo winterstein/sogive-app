@@ -11,7 +11,7 @@ import org.sogive.data.user.Person;
 
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -119,7 +119,7 @@ public class GiftCardServlet extends CrudServlet<GiftCard> {
 		String hashedCode = StrUtils.sha1(code);
 		
 		// Check DB for code
-		SearchRequestBuilder s = new SearchRequestBuilder(es);
+		SearchRequest s = new SearchRequest(es);
 		s.setIndex(esRouter.getPath(dataspace, type, null, KStatus.PUBLISHED).index());
 		ESQueryBuilder filter = ESQueryBuilders.termQuery("code", hashedCode);
 		

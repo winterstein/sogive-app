@@ -21,7 +21,7 @@ import com.winterwell.datalog.server.TrackingPixelServlet;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.IndexRequestBuilder;
+import com.winterwell.es.client.IndexRequest;
 import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -271,7 +271,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		// publish
 //		AppUtils.doPublish(rep, false, true);		
 		ESHttpClient esjc = new ESHttpClient(Dep.get(ESConfig.class));
-		IndexRequestBuilder index = esjc.prepareIndex(path);
+		IndexRequest index = esjc.prepareIndex(path);
 		index.setBodyDoc(rep);
 		index.execute();
 	}
