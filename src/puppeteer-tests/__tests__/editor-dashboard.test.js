@@ -21,22 +21,27 @@ let editorialsUrl = 'https://docs.google.com/document/d/e/2PACX-1vTJ018R_FZ1_efP
 // Note, this must be higher than any specific timeouts set within the tests below, otherwise they have no effect.
 jest.setTimeout(30000);
 
+beforeAll(async () => {
+	await page.goto(`${url}#editordashboard`);
+	// log in
+	await page.click('.login-link');
+	await page.click('.login-email [name=email]');
+	await page.type('.login-email [name=email]', username);
+	await page.click('[name=password]');
+	await page.type('[name=password]', password);
+	await page.keyboard.press('Enter');
+
+	// wait for login dialog to disappear
+	// (decrease timeout so we fail-fast & get a better error message if it doesn't)
+	await page.waitForSelector('.login-email [name=email]', { hidden: true, timeout: 5000 });
+  });
+
 describe('Editor dashboard tests', () => {
+	beforeEach(async () => {
+		await page.goto(`${url}#editordashboard`);
+	});
 
 	test('Import charity editorials from published gdoc', async () => {
-		await page.goto(`${url}#editordashboard`);
-
-		// log in
-		await page.click('.login-link');
-		await page.click('.login-email [name=email]');
-		await page.type('.login-email [name=email]', username);
-		await page.click('[name=password]');
-		await page.type('[name=password]', password);
-		await page.keyboard.press('Enter');
-		// wait for login dialog to disappear
-		// (decrease timeout so we fail-fast & get a better error message if it doesn't)
-		await page.waitForSelector('.login-email [name=email]', { hidden: true, timeout: 5000 });
-
 		await page.type('[name=editorialsUrl]', editorialsUrl);
 		await page.click('[name=importEditorials]');
 
@@ -59,6 +64,18 @@ describe('Editor dashboard tests', () => {
 
 		const charityEditorial = await page.$$eval('.charity-extra .quote p', els => els.map(el => el.innerText).join('\n'));
 		expect(charityEditorial).toEqual(expectedEditorial);
+	});
+
+	test('Do not show success alert for a malformed URL', async () => {
+		await page.type('[name=editorialsUrl]', "malformedURLjckdsljkldjkls");
+		await page.click('[name=importEditorials]');
+
+		// give elastic search time to update
+		await page.waitFor(1000);
+
+		await(page.waitForSelector('div.alert'))
+		const alertMessage = await page.$eval('div.alert', e => e.innerText);
+		expect(alertMessage).not.toEqual(expect.stringContaining('Successfully imported editorials'));
 	});
 
 });
