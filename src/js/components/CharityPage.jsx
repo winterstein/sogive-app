@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Login from '../base/youagain';
 import { Col, Label } from 'reactstrap';
 import {yessy } from '../base/utils/miscutils';
+import { PieChart } from 'react-minimal-pie-chart';
 
 import printer from '../base/utils/printer';
 import DataStore from '../base/plumbing/DataStore';
@@ -127,19 +128,65 @@ const CharityAnalysisSection = ({charity}) => (
 	</div>
 );
 
+//? decide: should it stay or should it go
+const getProjectData = (charity, outputarray) => {
+	// Sort all projects by year, descending, and filter out other years
+	let programSplit = charity.projects.sort((a,b) => {
+		if (a.year > b.year) return -1;
+		if (a.year < b.year) return 1;
+		return 0;
+	})
+	let mostRecentYear = programSplit[0].year;
+	programSplit = programSplit.filter(proj =>  proj.year === mostRecentYear)
+
+	programSplit.map((obj) => {
+		var randomColor = "#000000".replace(/0/g, function () {
+		  return (~~(Math.random() * 16)).toString(16);
+		});
+	
+		if (obj.inputs.findIndex(elem => elem.name === "projectCosts") !== -1) {
+			let insert = {
+				color: randomColor,
+				title: obj.name,
+				value: obj.inputs[obj.inputs.findIndex(elem => elem.name === "projectCosts")].value,
+			};
+			if (insert.value) outputarray.push(insert);
+		}
+	});
+}
+
 const CharityAbout = ({charity}) => {
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
+	let pieChartData = [];
+	if (charity.projects !== undefined) {
+		getProjectData(charity, pieChartData)
+	}
+
 	return (
 		<div className='charity-about'>
 			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
 			<CharityAboutImage charity={charity} />
 			<div className='charity-about-details'>
-			<p><b>Details on the {charity.name}</b></p>
-			<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
-			{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
-		
+				<p><b>Details on {charity.name}</b></p>
+				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
+				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+				<p><b>Program Split:</b></p>
+				<ul>
+					{/* {programSplit.map(prog => <li>{prog.name} - {}</li>)} */}
+				</ul>
+				<PieChart
+					data={pieChartData}
+					label={({ dataEntry }) => dataEntry.title + " " + Math.round(dataEntry.percentage) + '%'}
+					labelStyle={(index) => ({
+						fill: pieChartData[index].color,
+						fontSize: '4px',
+						fontFamily: 'sans-serif',
+					  })}
+					  radius={42}
+					  labelPosition={112}
+					/>;
 			</div>
 		</div>
 	);
