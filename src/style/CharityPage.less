@@ -76,6 +76,16 @@
 			margin-bottom: 30px;
 			.charity-logo {
 				height: 60px;
+			.charity-name {
+				text-transform: capitalize;
+				font-family: 'Nunito Sans';
+				font-weight: 800;
+				font-size: 32px;
+				color: #414141;
+				margin-top: 0;
+				margin-bottom: 0;
+				.extend-bg-to-sides(@bs-column-padding);
+				line-height: @band-2-height;
 			}
 			.tags {
 				color: @charity-page-summary-text-colour;
@@ -240,3 +250,4 @@
 		text-align: center;
 	}
 } // /.charity-about
+}
