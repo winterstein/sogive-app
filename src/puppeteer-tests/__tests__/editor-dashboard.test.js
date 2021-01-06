@@ -41,6 +41,14 @@ describe('Editor dashboard tests', () => {
 		await page.goto(`${url}#editordashboard`);
 	});
 
+	afterEach(async () => {
+		// dismiss any leftover dialogs
+		await page.evaluate(() => {
+			document.querySelectorAll(".alert-warning > .close").forEach(el => el.click());
+			document.querySelectorAll(".alert-danger > .close").forEach(el => el.click());
+		});
+	});
+
 	test('Import charity editorials from published gdoc', async () => {
 		await page.type('[name=editorialsUrl]', editorialsUrl);
 		await page.click('[name=importEditorials]');

@@ -58,8 +58,13 @@ const AddEditorWidget = () => {
 const doImportEditorials = function() {
 	let googleDocUrl = DataStore.appstate.widget.ImportEditorialsWidget.form.publishedEditorialsDoc;
 	if ( ! googleDocUrl) return;
-	notifyUser("Successfully imported editorials.");
-	ServerIO.importEditorials(googleDocUrl);
+	ServerIO.importEditorials(googleDocUrl)
+		.then(importResult => {
+			notifyUser("Successfully imported editorials.");
+		})
+		.catch(errorResponse => {
+			console.log("Error importing editorials: ", errorResponse);
+		});
 	DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
 };
 
