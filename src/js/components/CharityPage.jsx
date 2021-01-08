@@ -128,7 +128,7 @@ const CharityAnalysisSection = ({charity}) => (
 	</div>
 );
 
-//? decide: should it stay or should it go
+//this function gets project data of a certain charity, pushes the most recent projects to the outputarray and returns the total cost
 const getProjectData = (charity, outputarray) => {
 	// Sort all projects by year, descending, and filter out other years
 	let programSplit = charity.projects.sort((a,b) => {
@@ -138,21 +138,25 @@ const getProjectData = (charity, outputarray) => {
 	})
 	let mostRecentYear = programSplit[0].year;
 	programSplit = programSplit.filter(proj =>  proj.year === mostRecentYear)
+	let i = 0;
 
 	programSplit.map((obj) => {
-		var randomColor = "#000000".replace(/0/g, function () {
-		  return (~~(Math.random() * 16)).toString(16);
-		});
+		const colours = ["#27AE60", "#F2994A", "#2D9CDB", "#C32DDB", "#F24A4F"]
 	
 		if (obj.inputs.findIndex(elem => elem.name === "projectCosts") !== -1) {
+			if (i >= colours.length) i = 0; //limiting colours to only those in the array
 			let insert = {
-				color: randomColor,
+				color: colours[i],
 				title: obj.name,
 				value: obj.inputs[obj.inputs.findIndex(elem => elem.name === "projectCosts")].value,
 			};
 			if (insert.value) outputarray.push(insert);
+			else i--;
+			i++;
 		}
 	});
+	return outputarray.reduce((acc, elem) => acc + Number(elem.value), 0)
+
 }
 
 const CharityAbout = ({charity}) => {
@@ -160,8 +164,9 @@ const CharityAbout = ({charity}) => {
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
 	let pieChartData = [];
+	let totalProjectValue = 0;
 	if (charity.projects !== undefined) {
-		getProjectData(charity, pieChartData)
+		totalProjectValue = getProjectData(charity, pieChartData)
 	}
 
 	return (
@@ -169,24 +174,24 @@ const CharityAbout = ({charity}) => {
 			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
 			<CharityAboutImage charity={charity} />
 			<div className='charity-about-details'>
-				<p><b>Details on {charity.name}</b></p>
-				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
-				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
-				<p><b>Program Split:</b></p>
-				<ul>
-					{/* {programSplit.map(prog => <li>{prog.name} - {}</li>)} */}
+				<h3 className='header-section-title'><b>Details on {charity.name}</b></h3>
+				<p className='div-section-text'><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
+				{NGO.registrationNumbers(charity).map(reg => <p className='div-section-text' key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+				<p className='div-section-text'><b>Program Split:</b></p>
+				<ul className='div-section-text'>
+					{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
 				</ul>
-				<PieChart
+				{pieChartData.length !== 0 ? <PieChart
 					data={pieChartData}
-					label={({ dataEntry }) => dataEntry.title + " " + Math.round(dataEntry.percentage) + '%'}
+					label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
 					labelStyle={(index) => ({
 						fill: pieChartData[index].color,
 						fontSize: '4px',
-						fontFamily: 'sans-serif',
-					  })}
-					  radius={42}
-					  labelPosition={112}
-					/>;
+						fontFamily: 'Tajawal',
+					})}
+					radius={42}
+					labelPosition={107}
+					/>:<p>Unknown</p>}
 			</div>
 		</div>
 	);
