@@ -1,28 +1,27 @@
-// checks functionality of sogive.org/#edit
+// checks functionality of sogive.org/#editordashboard
+
 const puppeteer = require('puppeteer');
 const { doLogin,serverSafetyCheck } = require("../test-base/UtilityFunctions");
 const { username, password } = require("../Credentials");
 const { CommonSelectors, Search, General } = require('../SoGiveSelectors');
 const { targetServers } = require('../testConfig');
-
 const config = JSON.parse(process.env.__CONFIGURATION);
 
-const baseSite = targetServers[config.site];
-const protocol = config.site === 'local' ? 'http://' : 'https://';
+const  sogiveUrl = `${targetServers[config.site]}`;
 
-let url = `${baseSite}`;
-const charityId = "tbd";
+// ID of a charity that is assumed to always be in the database prior to these tests running.
+const idOfCharityInDb = "tbd";
 const expectedEditorial = "tbd is an okay charity doing mediocre things\nso overall we think they are bronze"
 
-// Published doc containing charityId (as a Header 2) followed by expectedEditorial
-let editorialsUrl = 'https://docs.google.com/document/d/e/2PACX-1vTJ018R_FZ1_efPZKe17KhjPajEzm_folfOdSUUNtBDyBCK-URyOQ02K7K9TxsEotv5oSMUOdkZZV_m/pub';
+// Published doc containing {idOfCharityInDb} followed by {expectedEditorial}, in correct format
+const publishedUrlWithCharityInDbEditorial = 'https://docs.google.com/document/d/e/2PACX-1vTJ018R_FZ1_efPZKe17KhjPajEzm_folfOdSUUNtBDyBCK-URyOQ02K7K9TxsEotv5oSMUOdkZZV_m/pub';
 
 // Increase default timeout to prevent occasional flaky failures.
 // Note, this must be higher than any specific timeouts set within the tests below, otherwise they have no effect.
 jest.setTimeout(30000);
 
 beforeAll(async () => {
-	await page.goto(`${url}#editordashboard`);
+	await page.goto(`${sogiveUrl}#editordashboard`);
 	// log in
 	await page.click('.login-link');
 	await page.click('.login-email [name=email]');
@@ -38,27 +37,22 @@ beforeAll(async () => {
 
 describe('Editor dashboard tests', () => {
 	beforeEach(async () => {
-		await page.goto(`${url}#editordashboard`);
-		// dismiss any leftover dialogs
-		await page.evaluate(() => {
-			document.querySelectorAll(".alert-warning > .close").forEach(el => el.click());
-			document.querySelectorAll(".alert-danger > .close").forEach(el => el.click());
-		});
-		// wait for alert dialog to disappear
-		// (decrease timeout so we fail-fast & get a better error message if it doesn't)
-		await page.waitForSelector('.alert-danger', { hidden: true, timeout: 5000 });
+		await page.goto(`${sogiveUrl}#editordashboard`);
+		// wait for any user notifications to disappear
+		// (decrease timeout so we fail-fast & get a better error message if they don't)
+		await page.waitForSelector('.MessageBar .alert', { hidden: true, timeout: 1000 });
 	});
 
 	afterEach(async () => {
-		// dismiss any leftover dialogs
+		// dismiss any leftover notifications
 		await page.evaluate(() => {
 			document.querySelectorAll(".alert-warning > .close").forEach(el => el.click());
 			document.querySelectorAll(".alert-danger > .close").forEach(el => el.click());
 		});
 	});
 
-	test('Import charity editorials from published gdoc', async () => {
-		await page.type('[name=editorialsUrl]', editorialsUrl);
+	test('Import editorial for charity in the database', async () => {
+		await page.type('[name=editorialsUrl]', publishedUrlWithCharityInDbEditorial);
 		await page.click('[name=importEditorials]');
 
 		// give elastic search time to update
@@ -72,7 +66,7 @@ describe('Editor dashboard tests', () => {
 		expect (editorialsUrlText).toBe('');
 
 		// navigate to charity page
-		await page.goto(`${url}#charity?charityId=${charityId}`);
+		await page.goto(`${sogiveUrl}#charity?charityId=${idOfCharityInDb}`);
 
 		// click on 'Analysis'
 		await page.waitForSelector('#rhsTabs');
@@ -82,8 +76,8 @@ describe('Editor dashboard tests', () => {
 		expect(charityEditorial).toEqual(expectedEditorial);
 	});
 
-	test('Show error alert for a malformed URL', async () => {
-		await page.type('[name=editorialsUrl]', "malformedURLjckdsljkldjkls");
+	test('Show error notification for a malformed URL', async () => {
+		await page.type('[name=editorialsUrl]', "foobarjckdsljkldjkls");
 
 		await page.click('[name=importEditorials]');
 
