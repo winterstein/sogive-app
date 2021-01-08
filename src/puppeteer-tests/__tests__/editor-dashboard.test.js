@@ -39,6 +39,14 @@ beforeAll(async () => {
 describe('Editor dashboard tests', () => {
 	beforeEach(async () => {
 		await page.goto(`${url}#editordashboard`);
+		// dismiss any leftover dialogs
+		await page.evaluate(() => {
+			document.querySelectorAll(".alert-warning > .close").forEach(el => el.click());
+			document.querySelectorAll(".alert-danger > .close").forEach(el => el.click());
+		});
+		// wait for alert dialog to disappear
+		// (decrease timeout so we fail-fast & get a better error message if it doesn't)
+		await page.waitForSelector('.alert-danger', { hidden: true, timeout: 5000 });
 	});
 
 	afterEach(async () => {
@@ -74,16 +82,13 @@ describe('Editor dashboard tests', () => {
 		expect(charityEditorial).toEqual(expectedEditorial);
 	});
 
-	test('Do not show success alert for a malformed URL', async () => {
+	test('Show error alert for a malformed URL', async () => {
 		await page.type('[name=editorialsUrl]', "malformedURLjckdsljkldjkls");
+
 		await page.click('[name=importEditorials]');
 
-		// give elastic search time to update
-		await page.waitFor(1000);
-
-		await(page.waitForSelector('div.alert'))
+		await(page.waitForSelector('div.alert-danger'))
 		const alertMessage = await page.$eval('div.alert', e => e.innerText);
-		expect(alertMessage).not.toEqual(expect.stringContaining('Successfully imported editorials'));
+		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
 	});
-
 });
