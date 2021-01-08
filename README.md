@@ -8,7 +8,7 @@ This repo contains both the Java server code and the js client code.
 
 ## Javascript: Front-End Installation
 
-These instructions assume Linux.
+### Linux
 
 1. Install npm, and less
 
@@ -41,7 +41,8 @@ Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js 
 Note: This is done using `webpack` and `webpack.config.js`. The watch.sh script is a handy way of doing that during development. On the production server, we use `npm run compile`.
 
 6. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
-  	1. Install nginx (the command below is for debian-flavour Linux, eg Ubuntu or Mint)
+  	
+	1. Install nginx (the command below is for debian-flavour Linux, eg Ubuntu or Mint)
 	
   			sudo apt install nginx
   
@@ -76,6 +77,60 @@ Your local SoGive should now connect to a test server, which has some data.
 10 Celebrate as you see best. Ask Sanjay if you want a recommendation for
 a high impact celebration.
 
+### Mac OS
+
+1. Follow steps 1 - 5 in the Linux instructions to install npm, clone the repositories and run `npm i` & `./watch.sh`.
+
+
+2. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
+
+	1. Install nginx
+		```
+		brew install nginx
+		```
+	
+  	2. Copy the config file to nginx. Following convention, it goes in two places, symlinked together:
+		```
+		cd /usr/local/etc/nginx/sites-available
+		sudo cp ~/winterwell/sogive-app/config/local.sogive.org.nginx .
+		cd ../sites-enabled
+		sudo ln -s ../sites-available/local.sogive.org.nginx .
+		```
+	3. The config file expects the sogive files to be in `/home/winterwell`, so open the file and change that to
+	the location of your winterwell directory.
+		```
+		cd ../sites-available
+		sudo nano local.sogive.org.nginx
+		```
+
+		Replace the path in `root /home/winterwell/sogive-app/web` to the full path of `sogive-app/web` on your Mac, e.g.
+		```
+		root /Users/anita/winterwell/sogive-app/web;
+		```
+		
+		Save and exit (Ctrl-X, 'y', Enter).
+
+	4. Modify the nginx config to include the sites-enabled directory:
+		```
+		cd /usr/local/etc/nginx
+		sudo nano nginx.conf
+		```
+		
+		Add the following line within the `http { }` section:
+
+		```
+		include /usr/local/etc/nginx/sites-enabled/*;
+		```
+		
+		Save and exit (Ctrl-X, 'y', Enter).
+	
+	5. Restart nginx
+		```
+		sudo nginx -s reload
+		```
+
+4. Continue following Linux instructions from Step 7 ("Modify your `/etc/hosts` file ...")
+
 
 ## Java: Server Installation
 
@@ -104,6 +159,7 @@ If you should want to run from the command line, it is `java -ea -cp build-lib/s
    - Test your local java SoGiveServer is running: http://localhost:8282
    - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
    - Test your local web-app: http://local.sogive.org/
+   
 
 ## Running the tests
 
