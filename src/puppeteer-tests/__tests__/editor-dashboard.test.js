@@ -16,6 +16,9 @@ const expectedEditorial = "tbd is an okay charity doing mediocre things\nso over
 // Published doc containing {idOfCharityInDb} followed by {expectedEditorial}, in correct format
 const publishedUrlWithCharityInDbEditorial = 'https://docs.google.com/document/d/e/2PACX-1vTJ018R_FZ1_efPZKe17KhjPajEzm_folfOdSUUNtBDyBCK-URyOQ02K7K9TxsEotv5oSMUOdkZZV_m/pub';
 
+// Published doc containing editorials for unknown charities (not in the database)
+const publishedUrlWithUnrecognisedCharities = 'https://docs.google.com/document/d/e/2PACX-1vRk52OOb1-yS3hejnqdeGfjT6m5wIXBYcjVGqaxDwYcpJZVVeefR6IpED8tMb09O_9PIE-c0YFkhpBR/pub';
+
 // Increase default timeout to prevent occasional flaky failures.
 // Note, this must be higher than any specific timeouts set within the tests below, otherwise they have no effect.
 jest.setTimeout(30000);
@@ -84,6 +87,20 @@ describe('Editor dashboard tests', () => {
 		await(page.waitForSelector('div.alert-danger'))
 		const alertMessage = await page.$eval('div.alert', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
+	});
+
+	test('Do not import editorials for charities not in the database', async () => {
+		await page.type('[name=editorialsUrl]', publishedUrlWithUnrecognisedCharities);
+		await page.click('[name=importEditorials]');
+
+		// give elastic search time to update
+		await page.waitFor(1000);
+
+		await(page.waitForSelector('div.alert'))
+		const alertMessage = await page.$eval('div.alert', e => e.innerText);
+		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 0 editorials'));
+
+		// TODO: Test we notify the user which charity editorials were rejected.
 	});
 
 });
