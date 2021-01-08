@@ -66,7 +66,7 @@ describe('Editor dashboard tests', () => {
 
 		await(page.waitForSelector('div.alert'))
 		const alertMessage = await page.$eval('div.alert', e => e.innerText);
-		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported editorials'));
+		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 1 editorials'));
 
 		const editorialsUrlText = await page.$eval('[name=editorialsUrl]', e => e.value);
 		expect (editorialsUrlText).toBe('');
@@ -91,4 +91,5 @@ describe('Editor dashboard tests', () => {
 		const alertMessage = await page.$eval('div.alert', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
 	});
+
 });

@@ -60,7 +60,8 @@ const doImportEditorials = function() {
 	if ( ! googleDocUrl) return;
 	ServerIO.importEditorials(googleDocUrl)
 		.then(importResult => {
-			notifyUser("Successfully imported editorials.");
+			const totalImported = importResult.cargo.totalImported;
+			notifyUser("Successfully imported " + totalImported + " editorials.");
 		})
 		.catch(errorResponse => {
 			console.log("Error importing editorials: ", errorResponse);

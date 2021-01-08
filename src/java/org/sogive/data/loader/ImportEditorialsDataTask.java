@@ -30,7 +30,7 @@ public class ImportEditorialsDataTask {
 		this.database = database;
 	}
 
-	public synchronized void run(String publishedGoogleDocsUrl) {
+	public synchronized int run(String publishedGoogleDocsUrl) {
 		running = true;
 		try {
 			Editorials editorials;
@@ -39,9 +39,9 @@ public class ImportEditorialsDataTask {
 			} catch (IOException e) {
 				Log.e(TAG, String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
 				running = false;
-				return;
+				return 0;
 			}
-			writeEditorials(editorials);
+			return writeEditorials(editorials);
 		} catch(Throwable ex) {
 			throw Utils.runtime(ex);
 		} finally {
@@ -49,7 +49,8 @@ public class ImportEditorialsDataTask {
 		}
 	}
 
-	private void writeEditorials(Editorials editorials) {
+	private int writeEditorials(Editorials editorials) {
+		int count = 0;
 		for (Editorial editorial : editorials) {
 			String charityId = editorial.getCharityId();
 			// If it's not already in the charity database, we don't want to insert it.
@@ -59,7 +60,9 @@ public class ImportEditorialsDataTask {
 			NGO ngo = new NGO(charityId);
 			ngo.put("recommendation", editorial.getEditorialText());
 			database.upsertCharityRecord(ngo);
+			count++;
 		}
+		return count;
 	}
 
 	public boolean isRunning() {

@@ -42,8 +42,9 @@ public class ImportEditorialsDataTaskTest {
                         TEST_URL,
                         ImmutableMap.of(TBD_CHARITY_ID, Collections.singletonList(TBD_CHARITY_EDITORIAL_TEXT))));
 
-        importEditorialsDataTask.run(TEST_URL);
+        int totalImported = importEditorialsDataTask.run(TEST_URL);
 
+        assertEquals(1, totalImported);
         assertEquals(TBD_CHARITY_EDITORIAL_TEXT, databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
     }
 
@@ -122,8 +123,9 @@ public class ImportEditorialsDataTaskTest {
                                 "charity-one", Collections.singletonList("Charity One Editorial"),
                                 "charity-two", Arrays.asList("Charity Two Editorial", "Second paragraph"))));
 
-        importEditorialsDataTask.run(TEST_URL);
+        int totalImported = importEditorialsDataTask.run(TEST_URL);
 
+        assertEquals(2, totalImported);
         assertEquals("Charity One Editorial", databaseWriter.getCharityRecommendation("charity-one"));
         assertEquals("Charity Two Editorial\n\nSecond paragraph",
                 databaseWriter.getCharityRecommendation("charity-two"));
