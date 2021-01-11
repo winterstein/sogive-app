@@ -188,14 +188,14 @@
 
 // .info-column
 .charity-about {
-	@circles-width: 320px;
-	@big-circle: (@circles-width * 0.6545);
-	@small-circle: (@circles-width * 0.4727);
+	// @circles-width: 320px;
+	// @big-circle: (@circles-width * 0.6545);
+	// @small-circle: (@circles-width * 0.4727);
 
 	.images {
 		position: relative;
 		height: 225px;
-		width: @circles-width;
+		// width: @circles-width;
 		margin: 40px auto;
 
 		.charity-image, .charity-logo {
@@ -205,9 +205,10 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			height: inherit;
 
 			img {
-				border-radius: 50%;
+				// border-radius: 50%;
 				object-fit: contain;
 				background-color: white;
 			}
@@ -217,9 +218,9 @@
 		.charity-image {
 			z-index: 10;
 			left: 0;
-			background-image: url('/img/circle-bg-left.svg');
-			height: @big-circle;
-			width: @big-circle;
+			// background-image: url('/img/circle-bg-left.svg');
+			// height: @big-circle;
+			// width: @big-circle;
 			img {
 				height: 85%;
 				width: 85%;
@@ -228,9 +229,9 @@
 		.charity-logo {
 			z-index: 20;
 			right: 0;
-			background-image: url(/img/circle-bg-right.svg);
-			height: @small-circle;
-			width: @small-circle;
+			// background-image: url(/img/circle-bg-right.svg);
+			// height: @small-circle;
+			// width: @small-circle;
 			img {
 				width: 70%;
 				height: 70%;
@@ -249,5 +250,5 @@
 		width: 100%;
 		text-align: center;
 	}
-} // /.charity-about
+} // /.charity-about-details
 }
