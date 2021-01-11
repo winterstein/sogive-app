@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Login from '../base/youagain';
-import { Col, Label } from 'reactstrap';
+import { Col, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import {yessy } from '../base/utils/miscutils';
 import { PieChart } from 'react-minimal-pie-chart';
 
@@ -65,7 +65,7 @@ const CharityPage = () => {
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
 			<ImpactCalculatorSection charity={charity} />
-			{charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null}
+			{/* {charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null} */}
 			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
 	);
@@ -171,14 +171,14 @@ const CharityAbout = ({charity}) => {
 
 	return (
 		<div className='charity-about'>
-			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
+			{/* {NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null} */}
 			<CharityAboutImage charity={charity} />
-			<div className='charity-about-details'>
+			<div className='charity-about-details div-section-text'>
 				<h3 className='header-section-title'><b>Details on {charity.name}</b></h3>
-				<p className='div-section-text'><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
-				{NGO.registrationNumbers(charity).map(reg => <p className='div-section-text' key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
-				<p className='div-section-text'><b>Program Split:</b></p>
-				<ul className='div-section-text'>
+				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
+				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+				<p><b>Program Split:</b></p>
+				<ul>
 					{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
 				</ul>
 				{pieChartData.length !== 0 ? <PieChart
@@ -189,8 +189,8 @@ const CharityAbout = ({charity}) => {
 						fontSize: '4px',
 						fontFamily: 'Tajawal',
 					})}
-					radius={42}
-					labelPosition={107}
+					radius={40}
+					labelPosition={105}
 					/>:<p>Unknown</p>}
 			</div>
 		</div>
