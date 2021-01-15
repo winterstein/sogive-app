@@ -16,7 +16,7 @@ import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
-import Crud from '../../base/plumbing/Crud'; //publish
+import Crud, { getDataItem } from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
 import { ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, CONFIDENCE_VALUES } from './SimpleEditCharityPage';
@@ -61,20 +61,7 @@ const EditCharityPage = () => {
 
 	// HACK load a fresh draft the first time.
 	if (C.KStatus.isPUBLISHED(charity.status)) {
-		if ( ! charity.uptodatedraft) {
-			ServerIO.getCharity(cid, C.KStatus.DRAFT)
-				.then(res => {
-					console.warn("res", res);
-					if (res.cargo) {
-						res.cargo.status = C.KStatus.DRAFT;
-						res.cargo.uptodatedraft = "yes";
-						console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
-						DataStore.setData(C.KStatus.DRAFT, res.cargo);
-					}
-				});
-		}
-	} else if (C.KStatus.isDRAFT(charity.status)) {
-		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once
+		let pvc = getDataItem({type:"NGO", id:cid, status:C.KStatus.DRAFT});		
 	}
 
 	// projects
