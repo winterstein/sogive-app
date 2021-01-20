@@ -1,10 +1,13 @@
 package org.sogive.data.loader;
 
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
 import org.sogive.data.charity.NGO;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Imports editorials from a given published Google Doc url.
@@ -30,7 +33,7 @@ public class ImportEditorialsDataTask {
 		this.database = database;
 	}
 
-	public synchronized int run(String publishedGoogleDocsUrl) {
+	public synchronized ArrayMap run(String publishedGoogleDocsUrl) {
 		running = true;
 		try {
 			Editorials editorials;
@@ -39,7 +42,7 @@ public class ImportEditorialsDataTask {
 			} catch (IOException e) {
 				Log.e(TAG, String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
 				running = false;
-				return 0;
+				return new ArrayMap();
 			}
 			return writeEditorials(editorials);
 		} catch(Throwable ex) {
@@ -49,12 +52,14 @@ public class ImportEditorialsDataTask {
 		}
 	}
 
-	private int writeEditorials(Editorials editorials) {
+	private ArrayMap writeEditorials(Editorials editorials) {
 		int count = 0;
+		List<String> rejectedIds = new ArrayList<>();
 		for (Editorial editorial : editorials) {
 			String charityId = editorial.getCharityId();
 			// If it's not already in the charity database, we don't want to insert it.
 			if (!database.contains(charityId)) {
+				rejectedIds.add(charityId);
 				continue;
 			}
 			NGO ngo = new NGO(charityId);
@@ -62,7 +67,7 @@ public class ImportEditorialsDataTask {
 			database.upsertCharityRecord(ngo);
 			count++;
 		}
-		return count;
+		return new ArrayMap("totalImported", count, "rejectedIds", rejectedIds);
 	}
 
 	public boolean isRunning() {

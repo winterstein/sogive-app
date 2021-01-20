@@ -21,7 +21,7 @@ const publishedUrlWithUnrecognisedCharities = 'https://docs.google.com/document/
 
 // Increase default timeout to prevent occasional flaky failures.
 // Note, this must be higher than any specific timeouts set within the tests below, otherwise they have no effect.
-jest.setTimeout(30000);
+jest.setTimeout(10000);
 
 beforeAll(async () => {
 	await page.goto(`${sogiveUrl}#editordashboard`);
@@ -58,11 +58,8 @@ describe('Editor dashboard tests', () => {
 		await page.type('[name=editorialsUrl]', publishedUrlWithCharityInDbEditorial);
 		await page.click('[name=importEditorials]');
 
-		// give elastic search time to update
-		await page.waitFor(1000);
-
-		await(page.waitForSelector('div.alert'))
-		const alertMessage = await page.$eval('div.alert', e => e.innerText);
+		await(page.waitForSelector('.MessageBar div.alert-warning'))
+		const alertMessage = await page.$eval('.MessageBar div.alert-warning', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 1 editorials'));
 
 		const editorialsUrlText = await page.$eval('[name=editorialsUrl]', e => e.value);
@@ -85,7 +82,7 @@ describe('Editor dashboard tests', () => {
 		await page.click('[name=importEditorials]');
 
 		await(page.waitForSelector('.MessageBar div.alert-danger'))
-		const alertMessage = await page.$eval('.MessageBar div.alert', e => e.innerText);
+		const alertMessage = await page.$eval('.MessageBar div.alert-danger', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
 	});
 
@@ -93,14 +90,11 @@ describe('Editor dashboard tests', () => {
 		await page.type('[name=editorialsUrl]', publishedUrlWithUnrecognisedCharities);
 		await page.click('[name=importEditorials]');
 
-		// give elastic search time to update
-		await page.waitFor(1000);
-
-		await(page.waitForSelector('.MessageBar div.alert'))
-		const alertMessage = await page.$eval('.MessageBar div.alert', e => e.innerText);
-		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 0 editorials'));
-
-		// TODO: Test we notify the user which charity editorials were rejected.
+		await page.waitForSelector('.MessageBar div.alert-danger', { timeout: 3000 });
+		const alertDanger = await page.$eval('.MessageBar div.alert-danger', e => e.innerText);
+		expect(alertDanger).toEqual(expect.stringContaining('Rejected 2 charities not in database:'));
+		expect(alertDanger).toEqual(expect.stringContaining('unknown-charity'));
+		expect(alertDanger).toEqual(expect.stringContaining('yet-another-unknown-charity'));
 	});
 
 });

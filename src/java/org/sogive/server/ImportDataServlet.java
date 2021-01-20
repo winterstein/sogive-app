@@ -41,10 +41,8 @@ public class ImportDataServlet implements IServlet {
 			if (importEditorialsTask.isRunning()) {
 				throw new WebEx.E400("Repeat call");
 			}
-			int totalImported = importEditorialsTask.run(url);
-			JsonResponse output = new JsonResponse(state, new ArrayMap(
-					"totalImported", totalImported
-			));
+			ArrayMap result = importEditorialsTask.run(url);
+			JsonResponse output = new JsonResponse(state, result);
 			WebUtils2.sendJson(output, state);
 		}
 	}

@@ -61,7 +61,15 @@ const doImportEditorials = function() {
 	ServerIO.importEditorials(googleDocUrl)
 		.then(importResult => {
 			const totalImported = importResult.cargo.totalImported;
-			notifyUser("Successfully imported " + totalImported + " editorials.");
+			if (totalImported > 0) {
+				notifyUser("Successfully imported " + totalImported + " editorials.");
+			}
+			const rejectedIds = importResult.cargo.rejectedIds;
+			if (rejectedIds && rejectedIds.length > 0) {
+				let errorMessage = `Rejected ${rejectedIds.length} charities not in database:\n`;
+				errorMessage += rejectedIds.join(", ");
+				notifyUser(new Error(errorMessage))
+			}
 		})
 		.catch(errorResponse => {
 			console.log("Error importing editorials: ", errorResponse);
