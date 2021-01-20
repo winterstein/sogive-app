@@ -49,8 +49,8 @@ describe('Editor dashboard tests', () => {
 	afterEach(async () => {
 		// dismiss any leftover notifications
 		await page.evaluate(() => {
-			document.querySelectorAll(".alert-warning > .close").forEach(el => el.click());
-			document.querySelectorAll(".alert-danger > .close").forEach(el => el.click());
+			document.querySelectorAll(".MessageBar .alert-warning > .close").forEach(el => el.click());
+			document.querySelectorAll(".MessageBar .alert-danger > .close").forEach(el => el.click());
 		});
 	});
 
@@ -84,8 +84,8 @@ describe('Editor dashboard tests', () => {
 
 		await page.click('[name=importEditorials]');
 
-		await(page.waitForSelector('div.alert-danger'))
-		const alertMessage = await page.$eval('div.alert', e => e.innerText);
+		await(page.waitForSelector('.MessageBar div.alert-danger'))
+		const alertMessage = await page.$eval('.MessageBar div.alert', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
 	});
 
@@ -96,8 +96,8 @@ describe('Editor dashboard tests', () => {
 		// give elastic search time to update
 		await page.waitFor(1000);
 
-		await(page.waitForSelector('div.alert'))
-		const alertMessage = await page.$eval('div.alert', e => e.innerText);
+		await(page.waitForSelector('.MessageBar div.alert'))
+		const alertMessage = await page.$eval('.MessageBar div.alert', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 0 editorials'));
 
 		// TODO: Test we notify the user which charity editorials were rejected.
