@@ -97,4 +97,18 @@ describe('Editor dashboard tests', () => {
 		expect(alertDanger).toEqual(expect.stringContaining('yet-another-unknown-charity'));
 	});
 
+	test('Do not show dashboard when logged out', async () => {
+		// Log out
+		await page.click('.navbar .dropdown-toggle');
+		await page.click('.logout-link');
+		await page.waitForSelector('.login-link');
+
+		// Logging out takes you back to the homepage, so navigate back to the dashboard
+		await page.goto(`${sogiveUrl}#editordashboard`);
+
+		await expect(page).not.toMatchElement('.EditorDashboardPage');
+		await expect(page).not.toMatchElement('[name=importEditorials]');
+		await expect(page).toMatch('Log in');
+	});
+
 });
