@@ -9,21 +9,25 @@ import printer from '../../base/utils/printer';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
+import { LoginLink } from '../../base/components/LoginWidget';
 // import ChartWidget from './../base/components/ChartWidget';
 import Misc from '../../base/components/Misc';
 import {notifyUser} from '../../base/plumbing/Messaging';
 
 
-const EditorDashboardPage = () => (
-	<div className="page EditorDashboardPage">
+const EditorDashboardPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginLink />;
+	}
+	return (<div className="page EditorDashboardPage">
 		<h2>Editorial Dashboard</h2>
 		<h3>In development...</h3>
 		<AddCharityWidget />
 		<AddEditorWidget />
 		<ImportEditorialsWidget />
 		<p><a href='/#manageDonations'>Manage Donations</a></p>
-	</div>
-); // ./EditorDashboardPage
+	</div>);
+}; // ./EditorDashboardPage
 
 
 const AddCharityWidget = () => {
