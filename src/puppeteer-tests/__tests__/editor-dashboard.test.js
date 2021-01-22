@@ -77,13 +77,23 @@ describe('Editor dashboard tests', () => {
 	});
 
 	test('Show error notification for a malformed URL', async () => {
-		await page.type('[name=editorialsUrl]', "foobarjckdsljkldjkls");
+		await page.type('[name=editorialsUrl]', "2PACX-1vRk52OOb1-yS3hejnqdeGfjT6m5wIXBYcjVGqaxDwYcpJZVVeefR6IpED8tMb09O_9PIE-c0YFkhpBR/pub");
 
 		await page.click('[name=importEditorials]');
 
-		await(page.waitForSelector('.MessageBar div.alert-danger'))
+		await(page.waitForSelector('.MessageBar div.alert-danger', { timeout: 3000 }))
 		const alertMessage = await page.$eval('.MessageBar div.alert-danger', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Malformed URL'));
+	});
+
+	test('Show error notification for URL not ending in /pub', async () => {
+		await page.type('[name=editorialsUrl]', "https://docs.google.com/document/d/1A4dPVA2SxgynQa7DrRJi59pC0DxGxiFS0q9M2fVcDxI/edit");
+
+		await page.click('[name=importEditorials]');
+
+		await(page.waitForSelector('.MessageBar div.alert-danger', { timeout: 3000 }))
+		const alertMessage = await page.$eval('.MessageBar div.alert-danger', e => e.innerText);
+		expect(alertMessage).toEqual(expect.stringContaining('Link given *must* end in /pub'));
 	});
 
 	test('Do not import editorials for charities not in the database', async () => {

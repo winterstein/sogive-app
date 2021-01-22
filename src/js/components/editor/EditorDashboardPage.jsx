@@ -60,8 +60,13 @@ const AddEditorWidget = () => {
 };
 
 const doImportEditorials = function() {
-	let googleDocUrl = DataStore.appstate.widget.ImportEditorialsWidget.form.publishedEditorialsDoc;
-	if ( ! googleDocUrl) return;
+	const googleDocUrl = DataStore.appstate.widget.ImportEditorialsWidget.form.publishedEditorialsDoc;
+	if ( ! googleDocUrl ) return;
+	if ( googleDocUrl.slice(-4) !== '/pub') {
+		DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
+		notifyUser(new Error("Link given *must* end in /pub - Please read instructions!"))
+		return;
+	}
 	ServerIO.importEditorials(googleDocUrl)
 		.then(importResult => {
 			const totalImported = importResult.cargo.totalImported;
@@ -77,6 +82,7 @@ const doImportEditorials = function() {
 		})
 		.catch(errorResponse => {
 			console.log("Error importing editorials: ", errorResponse);
+			DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
 		});
 	DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
 };
