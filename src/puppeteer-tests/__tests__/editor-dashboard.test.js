@@ -58,7 +58,7 @@ describe('Editor dashboard tests', () => {
 		await page.type('[name=editorialsUrl]', publishedUrlWithCharityInDbEditorial);
 		await page.click('[name=importEditorials]');
 
-		await(page.waitForSelector('.MessageBar div.alert-warning'))
+		await(page.waitForSelector('.MessageBar div.alert-warning', { timeout: 3000 }))
 		const alertMessage = await page.$eval('.MessageBar div.alert-warning', e => e.innerText);
 		expect(alertMessage).toEqual(expect.stringContaining('Successfully imported 1 editorials'));
 
