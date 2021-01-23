@@ -13,11 +13,15 @@ import { LoginLink } from '../../base/components/LoginWidget';
 // import ChartWidget from './../base/components/ChartWidget';
 import Misc from '../../base/components/Misc';
 import {notifyUser} from '../../base/plumbing/Messaging';
+import ShareWidget, {AccessDenied} from '../../base/components/ShareWidget';
 
 
 const EditorDashboardPage = () => {
 	if ( ! Login.isLoggedIn()) {
 		return <LoginLink />;
+	}
+	if ( ! Roles.iCan(C.CAN.edit).value ) {
+		return <AccessDenied/>
 	}
 	return (<div className="page EditorDashboardPage">
 		<h2>Editorial Dashboard</h2>
