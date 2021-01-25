@@ -1,6 +1,7 @@
 package org.sogive.data.loader;
 
 import com.google.common.collect.ImmutableMap;
+import com.winterwell.utils.containers.ArrayMap;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Before;
@@ -42,9 +43,24 @@ public class ImportEditorialsDataTaskTest {
                         TEST_URL,
                         ImmutableMap.of(TBD_CHARITY_ID, Collections.singletonList(TBD_CHARITY_EDITORIAL_TEXT))));
 
+        ArrayMap result = importEditorialsDataTask.run(TEST_URL);
+
+        assertEquals(1, result.get("totalImported"));
+        assertEquals(TBD_CHARITY_EDITORIAL_TEXT, databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
+    }
+
+    @Test
+    public void testImportEditorials_singleCharityPascalCase_alreadyInDatabaseAsLowercase() {
+        databaseWriter.upsertCharityRecord(new NGO("doctors-without-borders"));
+
+        fakeDocumentFetcher.setDocumentAtUrl(
+                generateDocumentContainingCharityEditorials(
+                        TEST_URL,
+                        ImmutableMap.of("Doctors-Without-Borders", Collections.singletonList("Great charity *****"))));
+
         importEditorialsDataTask.run(TEST_URL);
 
-        assertEquals(TBD_CHARITY_EDITORIAL_TEXT, databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
+        assertEquals("Great charity *****", databaseWriter.getCharityRecommendation("doctors-without-borders"));
     }
 
     @Test
@@ -54,9 +70,11 @@ public class ImportEditorialsDataTaskTest {
                         TEST_URL,
                         ImmutableMap.of(TBD_CHARITY_ID, Collections.singletonList(TBD_CHARITY_EDITORIAL_TEXT))));
 
-        importEditorialsDataTask.run(TEST_URL);
+        ArrayMap result = importEditorialsDataTask.run(TEST_URL);
 
         assertNull(databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
+        assertEquals(0, result.get("totalImported"));
+        assertEquals(Arrays.asList(TBD_CHARITY_ID), result.get("rejectedIds"));
     }
 
     @Test
@@ -108,8 +126,10 @@ public class ImportEditorialsDataTaskTest {
                                 "charity-one", Collections.singletonList("Charity One Editorial"),
                                 "charity-two", Arrays.asList("Charity Two Editorial", "Second paragraph"))));
 
-        importEditorialsDataTask.run(TEST_URL);
+        ArrayMap result = importEditorialsDataTask.run(TEST_URL);
+        int totalImported = (int) result.get("totalImported");
 
+        assertEquals(2, totalImported);
         assertEquals("Charity One Editorial", databaseWriter.getCharityRecommendation("charity-one"));
         assertEquals("Charity Two Editorial\n\nSecond paragraph",
                 databaseWriter.getCharityRecommendation("charity-two"));

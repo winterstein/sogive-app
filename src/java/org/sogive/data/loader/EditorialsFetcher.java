@@ -34,7 +34,7 @@ public class EditorialsFetcher {
         List<Editorial> charityEditorials = new ArrayList<>();
         Elements header1s = document.getElementsByTag("h1");
         for (Element h1 : header1s) {
-            String charityId = h1.text().trim();
+            String charityId = h1.text().trim().toLowerCase();
             List<String> editorialParagraphs = new ArrayList<>();
 
             Element firstParagraphElement = h1.nextElementSibling();

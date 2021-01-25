@@ -9,21 +9,29 @@ import printer from '../../base/utils/printer';
 import ServerIO from '../../plumbing/ServerIO';
 import DataStore from '../../base/plumbing/DataStore';
 import ActionMan from '../../plumbing/ActionMan';
+import { LoginLink } from '../../base/components/LoginWidget';
 // import ChartWidget from './../base/components/ChartWidget';
 import Misc from '../../base/components/Misc';
 import {notifyUser} from '../../base/plumbing/Messaging';
+import ShareWidget, {AccessDenied} from '../../base/components/ShareWidget';
 
 
-const EditorDashboardPage = () => (
-	<div className="page EditorDashboardPage">
+const EditorDashboardPage = () => {
+	if ( ! Login.isLoggedIn()) {
+		return <LoginLink />;
+	}
+	if ( ! Roles.iCan(C.CAN.edit).value ) {
+		return <AccessDenied/>
+	}
+	return (<div className="page EditorDashboardPage">
 		<h2>Editorial Dashboard</h2>
 		<h3>In development...</h3>
 		<AddCharityWidget />
 		<AddEditorWidget />
-		<UploadEditorialsWidget />
+		<ImportEditorialsWidget />
 		<p><a href='/#manageDonations'>Manage Donations</a></p>
-	</div>
-); // ./EditorDashboardPage
+	</div>);
+}; // ./EditorDashboardPage
 
 
 const AddCharityWidget = () => {
@@ -55,19 +63,53 @@ const AddEditorWidget = () => {
 	</Misc.Card>);
 };
 
-const doUploadEditorials = function() {
-	let googleDocUrl = DataStore.appstate.widget.UploadEditorialsWidget.form.publishedEditorialsDoc;
-	if ( ! googleDocUrl) return;
-	notifyUser("Successfully imported editorials.");
-	ServerIO.importEditorials(googleDocUrl);
-	DataStore.setValue(['widget', 'UploadEditorialsWidget', 'form'], {});
+const doImportEditorials = function() {
+	const googleDocUrl = DataStore.appstate.widget.ImportEditorialsWidget.form.publishedEditorialsDoc;
+	if ( ! googleDocUrl ) return;
+	if ( googleDocUrl.slice(-4) !== '/pub') {
+		DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
+		notifyUser(new Error("Link given *must* end in /pub - Please read instructions!"))
+		return;
+	}
+	ServerIO.importEditorials(googleDocUrl)
+		.then(importResult => {
+			const totalImported = importResult.cargo.totalImported;
+			if (totalImported > 0) {
+				notifyUser("Successfully imported " + totalImported + " editorials.");
+			}
+			const rejectedIds = importResult.cargo.rejectedIds;
+			if (rejectedIds && rejectedIds.length > 0) {
+				let errorMessage = `Rejected ${rejectedIds.length} charities not in database:\n`;
+				errorMessage += rejectedIds.join(", ");
+				notifyUser(new Error(errorMessage))
+			}
+		})
+		.catch(errorResponse => {
+			console.log("Error importing editorials: ", errorResponse);
+			DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
+		});
+	DataStore.setValue(['widget', 'ImportEditorialsWidget', 'form'], {});
 };
 
-const UploadEditorialsWidget = () => {
-	return (<Misc.Card title='Upload Editorials' >
-		<p>Use this form to upload SoGive editorials from a published Google Doc.</p>
-		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label='Published google doc webpage URL:' path={['widget','UploadEditorialsWidget', 'form']} />
-		<button className='btn btn-warning' onClick={doUploadEditorials} name='uploadEditorials'>Upload Editorials</button>
+const ImportEditorialsWidget = () => {
+	return (<Misc.Card title='Import Editorials' >
+		<p>Use this form to import SoGive editorials from a Google Doc. Editorials in the doc must be in the following format:</p>
+		<br/>
+		<p><b>charity-id-1</b> (styled as Heading 1)</p>
+		<p>Editorial One (styled as Normal text or subheadings, may be multiple paragraphs)</p>
+		<p><b>charity-id-2</b> (styled as Heading 1)</p>
+		<p>Editorial Two (styled as Normal text or subheadings, may be multiple paragraphs)</p>
+		<p>etc.</p>
+		<br/>
+		<p>Import Instructions:</p>
+		<ol>
+			<li>Open the Google Doc</li>
+			<li>Open the document outline (View &gt; Show document outline, or click on the icon on the left-hand side) and check that all the charity-ids are styled as Heading 1s.</li>
+			<li>In the Docs menu, select <b>File</b> &gt; <b>Publish to the web</b>, and click <b>[Publish]</b>.</li>
+			<li>Copy the link from that dialog.</li>
+		</ol>
+		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label="Published link: (should end in '/pub')" path={['widget','ImportEditorialsWidget', 'form']} />
+		<button className='btn btn-warning' onClick={doImportEditorials} name='importEditorials'>Import Editorials</button>
 	</Misc.Card>);
 };
 

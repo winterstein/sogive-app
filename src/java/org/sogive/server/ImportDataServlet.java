@@ -1,5 +1,9 @@
 package org.sogive.server;
 
+import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.log.Log;
+import com.winterwell.utils.web.WebUtils2;
+import com.winterwell.web.ajax.JsonResponse;
 import org.sogive.data.loader.*;
 
 import com.winterwell.web.WebEx;
@@ -37,7 +41,9 @@ public class ImportDataServlet implements IServlet {
 			if (importEditorialsTask.isRunning()) {
 				throw new WebEx.E400("Repeat call");
 			}
-			importEditorialsTask.run(url);
+			ArrayMap result = importEditorialsTask.run(url);
+			JsonResponse output = new JsonResponse(state, result);
+			WebUtils2.sendJson(output, state);
 		}
 	}
 
