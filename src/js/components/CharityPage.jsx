@@ -2,7 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Login from '../base/youagain';
-import { Col, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Button, Col, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import {yessy } from '../base/utils/miscutils';
 import { PieChart } from 'react-minimal-pie-chart';
 
@@ -61,7 +61,7 @@ const CharityPage = () => {
 					{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
 					<DonateButton item={charity}/>
 				</div>
-				<p>Learn about our ratings</p>
+				<LearnAboutRatingsModal />
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
 			<ImpactCalculatorSection charity={charity} />
@@ -173,7 +173,7 @@ const CharityAbout = ({charity}) => {
 		<div className='charity-about'>
 			{/* {NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null} */}
 			<CharityAboutImage charity={charity} />
-			<div className='charity-about-details div-section-text'>
+			<div className='charity-about-details div-section-text border'>
 				<h3 className='header-section-title'><b>Details on {charity.name}</b></h3>
 				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
 				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
@@ -381,9 +381,12 @@ const CharityProfile = ({charity}) => {
 const EditLink = ({charity}) => {
 	if ( ! Login.isLoggedIn()) return null;
 	const cid = NGO.id(charity);
-	return (<div className='pull-right'>
-		<a href={'#simpleedit?charityId='+escape(cid)}>edit</a>
-	</div>);
+	return (
+		// <div className='pull-right'>
+		// 	<a href={'#simpleedit?charityId='+escape(cid)}>edit</a>
+		// </div>);
+			<Button variant="outline-light" href={'#simpleedit?charityId='+escape(cid)}>Edit</Button>
+	)
 };
 
 const ProjectList = ({projects, charity}) => {
@@ -479,5 +482,27 @@ const MakeDirectFundRaiser = ({charity}) => {
 		<CreateButton type={C.TYPES.FundRaiser} navpage='editFundraiser' />
 	</Misc.Card>);
 };
+
+const LearnAboutRatingsModal = () => {
+	const [ratingsModalOpen, setRatingsModalOpen] = React.useState(false);
+	const toggle = () => setRatingsModalOpen(!ratingsModalOpen)
+
+	return (
+		<>
+			<button onClick={toggle} className="ratings-button">Learn about our ratings</button>
+			<Modal isOpen={ratingsModalOpen} toggle={toggle}>
+				<ModalHeader toggle={toggle}>Our ratings</ModalHeader>
+				<ModalBody>
+					<ul>
+						<li>When we describe an organisation as <b>Gold</b>-rated, we mean that the organisation's work likely outperforms that of a Silver-rated organisation, and likely outperforms a Bronze-rated organisation by a substantial margin, as assessed considering cost-effectiveness and evidence of effectiveness. A gold charity is an outperformer.</li>
+						<li>When we describe an organisation as <b>Silver</b>-rated, we mean that the organisation's work likely outperforms that of a Bronze-rated organisation, typically by a substantial margin, but underperforms compared to a Gold-rated organisation. A silver charity is an outperformer.</li>
+						<li>When we describe an organisation as <b>Bronze</b>-rated, we mean that that the organisation's work likely has a positive impact, but underperforms compared to a Silver or Gold-rated charity. A Bronze-rated organisation may underperform a silver charity by a substantial margin. By assigning a charity or organisation a Bronze rating, we are not guaranteeing that the organisation does have net positive impact, however we are expressing confidence that the charity's impact underperforms our Gold Standard Benchmarks</li>
+					</ul>
+				</ModalBody>
+			</Modal>
+		</>
+	)
+}
+
 
 export default CharityPage;
