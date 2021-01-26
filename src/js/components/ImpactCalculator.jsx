@@ -110,7 +110,7 @@ class ImpactCalculator extends Component {
 		const donationUp = () => this.incrementDonation(amount, 1, charity);
 
 		return (
-			<div className='donation-impact'>
+			<div className='donation-impact border'>
 				<button onClick={donationDown} className='donation-down'>-</button>
 				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} />
 				<button onClick={donationUp} className='donation-up'>+</button>
