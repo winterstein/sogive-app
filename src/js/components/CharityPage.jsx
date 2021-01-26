@@ -155,7 +155,10 @@ const getProjectData = (charity, outputarray) => {
 			i++;
 		}
 	});
-	return outputarray.reduce((acc, elem) => acc + Number(elem.value), 0)
+	const returnObj = {};
+	returnObj.totalProjectValue = outputarray.reduce((acc, elem) => acc + Number(elem.value), 0);
+	returnObj.year = mostRecentYear;
+	return returnObj;
 
 }
 
@@ -165,8 +168,13 @@ const CharityAbout = ({charity}) => {
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
 	let pieChartData = [];
 	let totalProjectValue = 0;
+	let mostRecentProjectYear;
 	if (charity.projects !== undefined) {
-		totalProjectValue = getProjectData(charity, pieChartData)
+		const projectData = getProjectData(charity, pieChartData);
+		totalProjectValue = projectData.totalProjectValue;
+		if (pieChartData.length > 0) {
+			mostRecentProjectYear = ` (${projectData.year})`;
+		}
 	}
 
 	return (
@@ -177,7 +185,7 @@ const CharityAbout = ({charity}) => {
 				<h3 className='header-section-title'><b>Details on {charity.name}</b></h3>
 				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
 				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
-				<p><b>Program Split:</b></p>
+				<p><b>Program Split{mostRecentProjectYear}:</b></p>
 				<ul>
 					{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
 				</ul>
