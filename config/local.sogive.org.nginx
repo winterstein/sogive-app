@@ -1,4 +1,11 @@
 # copy this to nginx sites-available, also modify etc/hosts
+map $sent_http_content_type $expires {
+    default                         off;
+    text/html                       epoch;
+    text/css                        epoch;
+    application/javascript          epoch;
+    ~image/                         epoch;
+}
 server {
 	listen   80; ## listen for ipv4; this line is default and implied
 
@@ -7,10 +14,13 @@ server {
 
 	server_name local.sogive.org;
 
+	expires $expires;
+
 	location / {
 			try_files $uri $uri/ @backend;
 			add_header 'Access-Control-Allow-Origin' "$http_origin";
 			add_header 'Access-Control-Allow-Credentials' 'true';
+			add_header 'Cache-Control' 'no-cache';
 	}
 
 	location @backend {
