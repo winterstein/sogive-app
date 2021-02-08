@@ -450,7 +450,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String amount = donation.getAmount().toString();
 		String tip = "";
 		if (Utils.yes(donation.getHasTip()) && donation.getTip()!=null && ! donation.getTip().isZero()) {
-			tip = " (including a tip of "+donation.getTip()+" to cover SoGive's costs)";
+			tip = " (including a tip of "+donation.getTip()+" to cover costs)";
 		}
 		String cid = donation.getTo();
 		NGO charity = AppUtils.get(cid, NGO.class);
