@@ -467,5 +467,6 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String bodyPlain = WebUtils2.getPlainText(bodyHtml);
 		email.setHtmlContent(bodyHtml, bodyPlain);
 		emailer.send(email);
+		Log.d(LOGTAG, "email sent for "+donation);
 	}
 }

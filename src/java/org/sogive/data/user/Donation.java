@@ -289,8 +289,7 @@ public class Donation extends AThing implements IForSale {
 
 	@Override
 	public String toString() {
-		return "Donation[id="+id+"]"; // NB id includes from, to, amount
-		// , from=" + from + ", to=" + to + ", total=" + getTotal() + ", time=" + date + "]";
+		return "Donation[id="+id+", amount="+amount+", total to charity="+getTotal()+", tip="+tip+"]";
 	}
 
 	public void addContribution(MoneyItem matchAmount) {
