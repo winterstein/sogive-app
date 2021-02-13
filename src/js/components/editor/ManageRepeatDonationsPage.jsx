@@ -18,6 +18,7 @@ import PropControl from '../../base/components/PropControl';
 import XId from '../../base/data/XId';
 import ListLoad from '../../base/components/ListLoad';
 import KStatus from '../../base/data/KStatus';
+import { copyTextToClipboard, stopEvent } from '../../base/utils/miscutils';
 
 const COLUMNS = [
 	{
@@ -96,7 +97,7 @@ const ManageRepeatDonationsPage = () => {
 	return (
 		<div className=''>
 			<h2>Manage Repeat Donations</h2>
-			<ListLoad canFilter canDelete status={KStatus.ALL_BAR_TRASH} type={C.TYPES.RepeatDonation} ListItem={RDItem} />
+			<ListLoad filterLocally notALink canFilter canDelete status={KStatus.ALL_BAR_TRASH} type={C.TYPES.RepeatDonation} ListItem={RDItem} />
 			{/* <SimpleTable data={dons} columns={columns} csv hasFilter
 				rowsPerPage={100}
 			/> */}
@@ -105,17 +106,17 @@ const ManageRepeatDonationsPage = () => {
 };
 
 const RDItem = ({type, servlet, navpage, item, sort}) => {
-	return <div>
-	ID: {item.id} 
-	Donation ID: {item.did}
-	Date: {item.date && <Misc.DateTag />}
-	From: {XId.dewart(item.from)}
-	To: {item.to}
-	Amount: {item.amount && <Misc.Money amount={item.amount} />}
-	"ical",
-	"done",	
-	fundRaiser: {item.fundRaiser && <a href={'/#fundraiser/'+escape(item.fundRaiser)}>{item.fundRaiser}</a>}
-	Status: {getStatus(item)}
+	return <div onClick={e => console.log(e) && stopEvent(e) && copyTextToClipboard(JSON.stringify(item))}>
+	ID: {item.id}, 
+	Donation ID: {item.did}, 
+	Date created: <Misc.DateTag date={item.date || item.created} />, 
+	From: {XId.dewart(item.from)}, 
+	To: {item.to}, 
+	Amount: {item.amount && <Misc.Money amount={item.amount} />}, 
+	ical: {item.ical && item.ical.repeat && item.ical.repeat.freq+" until: "+item.ical.repeat.until}, 
+	done: {item.done}, 
+	fundRaiser: {item.fundRaiser && <a href={'/#fundraiser/'+escape(item.fundRaiser)}>{item.fundRaiser}</a>}, 
+	Status: {getStatus(item)}, 
 	</div>
 };
 
