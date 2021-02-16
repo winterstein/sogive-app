@@ -689,7 +689,7 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	return (<div>
 		<div className="padded-block">
 			<PropControl type="checkbox" path={path} item={donation} prop="hasTip" label={tipLabel} />
-			<PropControl type="Money" path={path} item={donation} prop="tip" min={0}
+			<PropControl type="Money" path={path} item={donation} prop="tip" min={new Money(0)}
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false}
 			/>
 		</div>
