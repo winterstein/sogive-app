@@ -57,7 +57,7 @@ const CharityPage = () => {
 				<div className='div-section-text description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
-				<div className="container" className='impact'>
+				<div className="container impact">
 					{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
 					<DonateButton item={charity}/>
 				</div>
@@ -129,7 +129,8 @@ const CharityAnalysisSection = ({charity}) => (
 );
 
 //this function gets project data of a certain charity, pushes the most recent projects to the outputarray and returns the total cost
-const getProjectData = (charity, outputarray) => {
+const getProjectData = (charity) => {
+	let  outputarray = []
 	// Sort all projects by year, descending, and filter out other years
 	let programSplit = charity.projects.sort((a,b) => {
 		if (a.year > b.year) return -1;
@@ -158,6 +159,7 @@ const getProjectData = (charity, outputarray) => {
 	const returnObj = {};
 	returnObj.totalProjectValue = outputarray.reduce((acc, elem) => acc + Number(elem.value), 0);
 	returnObj.year = mostRecentYear;
+	returnObj.data = outputarray;
 	return returnObj;
 
 }
@@ -166,44 +168,63 @@ const CharityAbout = ({charity}) => {
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
-	let pieChartData = [];
-	let totalProjectValue = 0;
-	let mostRecentProjectYear;
-	if (charity.projects !== undefined) {
-		const projectData = getProjectData(charity, pieChartData);
-		totalProjectValue = projectData.totalProjectValue;
-		if (pieChartData.length > 0) {
-			mostRecentProjectYear = ` (${projectData.year})`;
-		}
-	}
-
+	
 	return (
 		<div className='charity-about'>
 			{/* {NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null} */}
 			<CharityAboutImage charity={charity} />
 			<div className='charity-about-details div-section-text border'>
-				<h3 className='header-section-title'><b>Details on {charity.name}</b></h3>
+				<h3 className='header-section-title'><b>Details on {NGO.displayName(charity)}</b></h3>
 				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
 				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
-				<p><b>Program Split{mostRecentProjectYear}:</b></p>
-				<ul>
-					{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
-				</ul>
-				{pieChartData.length !== 0 ? <PieChart
-					data={pieChartData}
-					label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
-					labelStyle={(index) => ({
-						fill: pieChartData[index].color,
-						fontSize: '4px',
-						fontFamily: 'Tajawal',
-					})}
-					radius={40}
-					labelPosition={105}
-					/>:<p>Unknown</p>}
+				<ProgramSplit charity={charity} />
 			</div>
 		</div>
 	);
 };
+
+const ProgramSplit = ({charity}) => {
+	let pieChartData = [];
+	let totalProjectValue = 0;
+	let mostRecentProjectYear;
+	
+
+	if (charity.projects !== undefined) {
+		const projectData = getProjectData(charity);
+		totalProjectValue = projectData.totalProjectValue;
+		if (projectData.data.length > 0) {
+			mostRecentProjectYear = ` (${projectData.year})`;
+			pieChartData = projectData.data
+		}
+	}
+
+	return (
+		<>
+		{pieChartData.length > 1? 
+			<>
+			<p><b>Program Split{mostRecentProjectYear}:</b></p>
+			<ul>
+				{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
+			</ul>
+			<PieChart
+				data={pieChartData}
+				label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+				labelStyle={(index) => ({
+					fill: pieChartData[index].color,
+					fontSize: '4px',
+					fontFamily: 'Tajawal',
+				})}
+				radius={40}
+				labelPosition={105}
+				/>
+			</>
+			:<></>
+		}
+		</>
+	)
+}
+
+
 const CharityAboutImage = ({charity}) => {
 	if ( ! NGO.image(charity) && ! charity.logo) return null;
 	return (<div className='images'>
