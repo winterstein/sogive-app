@@ -25,6 +25,8 @@ import com.winterwell.web.data.XId;
 
 /**
  * 
+ * ??When is the basket saved??
+ * 
  * TODO handle repeat donations
  * Won't actually collect money unless takePayment is set TRUE before calling run()
  * - new Stripe API means initial payments are completed client-side & server only needs to collect for repeat donations.
@@ -151,13 +153,13 @@ public class MoneyCollector {
 			if (this.takePayment) {
 				String chargeDescription = basket.getClass().getSimpleName()+" "+basket.getId()+" "+basket.getDescription();
 				if (sa.isSource()) {
-					// Legacy repeat-donations: Use the Source we saved at creation time
+					// Legacy: Use the Source we saved at creation time
 					Charge charge = StripePlugin.collectLegacy(total, chargeDescription, sa, userObj, ikey);
 					Log.d("stripe.collect-legacy", charge);
 					basket.setPaymentId(charge.getId());
 					basket.setPaymentCollected(true);
 				} else if (sa.isPaymentIntent()) {
-					// Post-Dec-2012 repeat-donations: Use the PaymentMethod we saved at creation time
+					// Post-Dec-2012 Use the PaymentMethod we saved at creation time
 					PaymentIntent pi = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
 					Log.d("stripe.collect", pi);
 					basket.setPaymentId(pi.getId());

@@ -18,14 +18,17 @@ import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 
 /**
- * /stripe/webhook
- * @author daniel
+ * ?? Doc - Where does this fit in the checkout flow??
+ * 
+ * /stripe-paymentintent
+ * @author Roscoe
  *
  */
 public class StripePaymentIntentServlet implements IServlet {
 
 
 	public void process(WebRequest state) throws Exception {		
+		Log.d("StripePaymentIntentServlet", state);
 		String amtString = state.get("amount");
 		Long amt;
 		try {
@@ -64,9 +67,10 @@ public class StripePaymentIntentServlet implements IServlet {
 			cargo.put("id", intent.getId());
 			output.setCargo(cargo);
 			
+			Log.d("StripePaymentIntentServlet", "intent made: "+intent.getId()+" for "+amt+" "+state.getUserId());
+			
 			WebUtils2.sendJson(output, state);
 			
-			return;
 		} catch (StripeException e) {
 			WebUtils2.sendError(500, "Stripe error: " + e.getLocalizedMessage(), state.getResponse());
 		}

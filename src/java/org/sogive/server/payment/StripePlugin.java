@@ -72,7 +72,7 @@ public class StripePlugin {
 	public static Charge collectLegacy(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
-		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
+		Log.d(LOGTAG, "collectLegacy() "+amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
@@ -135,7 +135,7 @@ public class StripePlugin {
 	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
-		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
+		Log.d(LOGTAG, amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
@@ -168,6 +168,7 @@ public class StripePlugin {
         	ro = RequestOptions.builder().setIdempotencyKey(idempotencyKey).build();
         }
 
+        Log.d(LOGTAG, "Create... PaymentIntent idempotencyKey:" + idempotencyKey+" customer: "+pm.getCustomer()+" amount:"+amount+" user: "+user);
         PaymentIntent pi = PaymentIntent.create(params, ro);
 
         Log.d(LOGTAG, "A PaymentIntent was created! " + pi);
@@ -204,7 +205,7 @@ public class StripePlugin {
 
 	public static String secretKey() {		
 		StripeConfig stripeConfig = Dep.get(StripeConfig.class);
-		Log.d("stripe.setup", JSON.toString(stripeConfig));
+//		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
 			String skey = stripeConfig.testSecretKey;
 			assert skey != null : "No Stripe TEST secret key :(";
