@@ -223,8 +223,9 @@ public class MoneyCollector {
 	 */
 	private Customer addPaymentMethodToCustomer(StripeAuth sa) throws StripeException {
 		if (sa.getCustomerId() != null) {
-			Log.d(LOGTAG, "NOT adding PaymentMethod to customer 'cos its hopefully already set");
+			Log.d(LOGTAG, "NOT adding PaymentMethod to customer 'cos its hopefully already set "+sa.getId()+" "+sa.getCustomerId());
 			Customer customer = Customer.retrieve(sa.getCustomerId());
+			Log.d(LOGTAG, "Got customer "+customer+" for StripeAuth "+sa.getId());
 			return customer;
 		}
 		assert sa.isPaymentIntent() : sa;
@@ -235,6 +236,7 @@ public class MoneyCollector {
 		String custId = pi.getCustomer();
 		if (custId != null) {
 			Customer customer = Customer.retrieve(custId);
+			Log.d(LOGTAG, "Got customer "+customer.getId()+" for PaymentIntent "+pi.getId());
 			return customer;
 		}
 		
