@@ -42,6 +42,12 @@ public class StripePaymentIntentServlet implements IServlet {
 		
 		StripePlugin.prep();
 		
+		// optional meta-data
+		String desc = state.get("description");
+		if (desc==null && state.get("basket")!=null) {
+			desc = "basket "+state.get("basket");
+		}
+		
 		try {
 			PaymentIntent intent;
 			
@@ -51,10 +57,11 @@ public class StripePaymentIntentServlet implements IServlet {
 						.setAmount(amt)
 						.build();
 				intent = intent.update(params);
-			} else {
+			} else {				
 				// See https://stripe.com/docs/api/payment_intents/create
 				PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
 						.setAmount(amt)
+						.setDescription(desc)
 						.setCurrency("gbp")
 						.addPaymentMethodType("card")
 						.build();

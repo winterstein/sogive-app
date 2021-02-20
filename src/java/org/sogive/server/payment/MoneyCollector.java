@@ -127,7 +127,7 @@ public class MoneyCollector {
 			// attach source to customer
 			if (sa.isSource()) {
 				Customer customer = addStripeSourceToCustomer(sa);
-				Log.d(LOGTAG, "Made customer "+customer);
+				Log.d(LOGTAG, "addStripeSourceToCustomer Made customer "+customer+" for basket "+basket);
 			}
 			
 			// One-time PaymentIntents are created without a customer and can't have one attached.
@@ -135,7 +135,7 @@ public class MoneyCollector {
 			// (i.e. for a repeat donation)
 			if (basket.getRepeat() != null && sa.isPaymentIntent()) {
 				Customer customer = addPaymentMethodToCustomer(sa);
-				Log.d(LOGTAG, "Made customer "+customer);
+				Log.d(LOGTAG, "addPaymentMethodToCustomer Made customer "+customer+" basket: "+basket);
 			}
 			
 			// Use polling to do repeats
@@ -155,13 +155,13 @@ public class MoneyCollector {
 				if (sa.isSource()) {
 					// Legacy: Use the Source we saved at creation time
 					Charge charge = StripePlugin.collectLegacy(total, chargeDescription, sa, userObj, ikey);
-					Log.d("stripe.collect-legacy", charge);
+					Log.d("stripe.collect-legacy", charge+" for "+basket);
 					basket.setPaymentId(charge.getId());
 					basket.setPaymentCollected(true);
 				} else if (sa.isPaymentIntent()) {
 					// Post-Dec-2012 Use the PaymentMethod we saved at creation time
 					PaymentIntent pi = StripePlugin.collect(total, chargeDescription, sa, userObj, ikey);
-					Log.d("stripe.collect", pi);
+					Log.d("stripe.collect", pi+" for "+basket);
 					basket.setPaymentId(pi.getId());
 					basket.setPaymentCollected(true);
 				}

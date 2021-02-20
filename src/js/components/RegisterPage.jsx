@@ -501,6 +501,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 					recipient={event.name}
 					email={email}
 					username={Login.getId()}
+					basketId={basket.id}
 				/>
 			</div>
 		</div>

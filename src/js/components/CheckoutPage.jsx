@@ -431,6 +431,7 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 					amount={Basket.getTotal(basket)}
 					onToken={onToken}
 					recipient={event.name || "Basket"+basket.id}
+					basketId={basket.id}
 					email={email}
 					username={Login.getId()}
 				/>

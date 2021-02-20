@@ -693,7 +693,7 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false}
 			/>
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} />
+		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} basketId={donation.id} />
 	</div>);
 }; // ./PaymentSection
 
