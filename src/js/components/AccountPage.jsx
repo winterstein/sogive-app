@@ -15,6 +15,7 @@ import {LoginLink} from '../base/components/LoginWidget';
 import {RolesCard, LoginCard} from '../base/components/AccountPageWidgets';
 import ListLoad from '../base/components/ListLoad';
 import XId from '../base/data/XId';
+import {RDItem} from './editor/ManageRepeatDonationsPage';
 
 const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -49,7 +50,7 @@ const AccountPage = () => {
 const RepeatingDonations = () => {
 	// ListItem={RDListItem}
 	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation'
-		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH}
+		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH} ListItem={RDItem}
 		canDelete />;
 	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {
 	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });

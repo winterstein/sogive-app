@@ -105,7 +105,7 @@ const ManageRepeatDonationsPage = () => {
 	);
 };
 
-const RDItem = ({type, servlet, navpage, item, sort}) => {
+export const RDItem = ({type, servlet, navpage, item, sort}) => {
 	return <div onClick={e => console.log(e) && stopEvent(e) && copyTextToClipboard(JSON.stringify(item))}>
 	ID: {item.id}, 
 	Donation ID: {item.did}, 
