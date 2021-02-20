@@ -1,8 +1,10 @@
 package org.sogive.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -18,6 +20,8 @@ import org.sogive.server.payment.MoneyCollector;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.datalog.server.TrackingPixelServlet;
+import com.winterwell.depot.merge.Diff;
+import com.winterwell.depot.merge.Merger;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
@@ -30,11 +34,14 @@ import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Tree;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.MsgToActor;
 import com.winterwell.utils.time.Period;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.JsonPatch;
+import com.winterwell.utils.web.JsonPatchOp;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JThing;
@@ -174,10 +181,11 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 * TODO Export-CSV should e.g. set a prop on the servlet which says "don't sanitize, I need full data"
 	 * @param hits2
 	 * @param state
+	 * @return 
 	 * @return
 	 */
 	@Override
-	protected void cleanse(JThing<Donation> thing, WebRequest state) {
+	protected JThing<Donation> cleanse(JThing<Donation> thing, WebRequest state) {
 		// TODO HACK if returning a list for the event owner - show more info
 		boolean showEmailAndAddress = false;
 		// ...HACK is this for manageDonations?
@@ -200,7 +208,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 			Log.d(LOGTAG, "hack purpose:admin upgrade data for "+tokens);
 		}
 		
-		Donation donation = thing.java();
+		Donation donation = Utils.copy(thing.java());
 
 		// We want to be able to display a name unless the donor requested anonymity
 		// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
@@ -249,9 +257,8 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donor.setName(donorName);
 			donation.setDonor(donor);
 		}
-		
-		// done
-		thing.setJava(donation);
+		// done?
+		return new JThing(donation);
 	}
 	
 

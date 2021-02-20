@@ -29,10 +29,11 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 	
 	@Override
-	protected void augment(JThing<NGO> jThing, WebRequest state) {
+	protected JThing<NGO> augment(JThing<NGO> jThing, WebRequest state) {
 		NGO ngo = jThing.java();
 		Output output = ngo.getSimpleImpact();
 		jThing.setJava(ngo);
+		return jThing;
 	}
 	
 	@Override
