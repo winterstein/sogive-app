@@ -20,6 +20,7 @@ import com.stripe.model.SubscriptionCollection;
 import com.stripe.net.RequestOptions;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -135,7 +136,7 @@ public class StripePlugin {
 	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
-		Log.d(LOGTAG, amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
+		Log.d(LOGTAG, amount+" "+description+" "+sa+" "+user+" "+idempotencyKey+" "+ReflectionUtils.getSomeStack(8));
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
