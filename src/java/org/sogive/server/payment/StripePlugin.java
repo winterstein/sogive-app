@@ -136,7 +136,7 @@ public class StripePlugin {
 	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
-		Log.d(LOGTAG, amount+" "+description+" "+sa+" "+user+" "+idempotencyKey+" "+ReflectionUtils.getSomeStack(8));
+		Log.d(LOGTAG, amount+" description: "+description+" SA:"+sa+" user:"+user+" ikey:"+idempotencyKey+" "+ReflectionUtils.getSomeStack(8));
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
