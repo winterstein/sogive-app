@@ -115,7 +115,7 @@ export const RDItem = ({type, servlet, navpage, item, sort}) => {
 	Amount: {item.amount && <Misc.Money amount={item.amount} />}, 
 	ical: {item.ical && item.ical.repeat && item.ical.repeat.freq+" until: "+item.ical.repeat.until}, 
 	done: {item.done}, 
-	fundRaiser: {item.fundRaiser && <a href={'/#fundraiser/'+escape(item.fundRaiser)}>{item.fundRaiser}</a>}, 
+	{item.fundRaiser && <>Fundraiser: <a href={'/#fundraiser/'+escape(item.fundRaiser)}>{item.fundRaiser}</a>, </>}
 	Status: {getStatus(item)}, 
 	</div>
 };
