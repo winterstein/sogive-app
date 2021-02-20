@@ -268,6 +268,14 @@ public class Donation extends AThing implements IForSale {
 		return collected;
 	}
 	
+	public String getPaymentId() {
+		if (paymentId==null && stripe!=null) {
+			String sid = stripe.getId();
+			return sid;
+		}
+		return paymentId;
+	}
+	
 	/**
 	 * from - who provided this info. There can be multiple sources
 	 *  - e.g. if a bot infers the data, then both bot and original source should be listed here.

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
-import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, Alert } from 'reactstrap';
 import Login from '../base/youagain';
 import $ from 'jquery';
 
@@ -20,7 +20,7 @@ import Basket from '../data/Basket';
 
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import { getId, getType, nonce } from '../base/data/DataClass';
+import { getId, getStatus, getType, nonce } from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -29,6 +29,7 @@ import {errorPath} from '../base/plumbing/Crud';
 import XId from '../base/data/XId';
 import Ticket from '../data/charity/Ticket';
 import { space } from '../base/utils/miscutils';
+import KStatus from '../base/data/KStatus';
 
 
 const widgetPath = ['widget', 'DonationWizard'];
@@ -150,26 +151,29 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	// paid elsewhere, or (the default) paid here?
 	let paidElsewhere = getWidgetProp(id, 'paidElsewhere');
 
+	const pvDonationDraft = ActionMan.getDonationDraft({item});
+
 	// close dialog and reset the wizard stage
 	const closeLightbox = () => {
 		setWidgetProp(id, 'open', false);
 		DataStore.setValue(stagePath, null);
-
-		// Donation has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
-		// We checked for PUBLISHED status before - BUT the draft under draft.Donation.from:donorId.to:itemId isn't marked as such.
+		const donation = pvDonationDraft.value || {};
+		// Donation is PUBLISHED or has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
+		// We checked for PUBLISHED status before - BUT the draft under draft.Donation.from:donorId.to:itemId isn't marked as such. 
 		// TODO Stripe ID will also be truthy for a declined transaction - there's no indication that the token is bad
 		// until we publish and DonationServlet tries to redeem it. Mark declined on publish & retain the draft so user can try another card
-		const pvDonationDraft = ActionMan.getDonationDraft({item}); // resolve use-before-declare warnings
-		if (pvDonationDraft.value && pvDonationDraft.value.stripe && pvDonationDraft.value.stripe.id) {
-			ActionMan.clearDonationDraft({donation: donationDraft});
+		
+		if (getStatus(donation)===KStatus.PUBLISHED || (donation.stripe && donation.stripe.id)) {
+			ActionMan.clearDonationDraft({donation});
+		} else {
+			console.log("Keep draft donation",getId(donation),donation);
 		}
 	};
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
-	let pDonation = ActionMan.getDonationDraft({item});
 	// if the promise is running, wait for it before making a new draft
-	if (!pDonation.resolved) {
+	if (!pvDonationDraft.resolved) {
 		return (
 			<Modal isOpen={isOpen} className="donate-modal" toggle={closeLightbox}>
 				<ModalBody>
@@ -179,7 +183,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 		);
 	}
 
-	let donationDraft = pDonation.value;
+	let donationDraft = pvDonationDraft.value;
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id:donationDraft.id});
@@ -579,10 +583,11 @@ const MessageSection = ({path, recipient, item}) => (
 
 
 /**
- * Process the actual payment! Which is done by publishing the Donation.
+ * Process the payment - Which is done by publishing the Donation.
  *
- * PaymentWidget talks to Stripe, then passes over to this method for the actual payment.
- * TODO refactor this into PaymentWidget
+ * Note: Most of the time, Stripe will have already collected the money
+ * 
+ * PaymentWidget talks to Stripe, then passes over to this method.
  */
 const onToken_doPayment = ({donation}) => {
 	DataStore.setData(C.KStatus.DRAFT, donation);
@@ -680,8 +685,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	 */
 	const onToken = (payment_intent) => {
 		console.log('onToken called with:', payment_intent);
-		donation.stripe = payment_intent;
-		onToken_doPayment({donation});
+		donation.stripe = payment_intent; // ?? also set paymentId?
+		onToken_doPayment({donation});		
 	};
 
 	let payError = DataStore.getValue(errorPath({type:getType(donation), id:donation.id, action:'publish'}));
@@ -693,7 +698,10 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false}
 			/>
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} basketId={donation.id} />
+		{getStatus(donation)==KStatus.PUBLISHED || getStatus(donation)==KStatus.MODIFIED? 
+			<Alert color="warning">This donation has already been made. Please reload the page if you want to make another donation.</Alert>
+			: <PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} basketId={donation.id} />
+		}
 	</div>);
 }; // ./PaymentSection
 
