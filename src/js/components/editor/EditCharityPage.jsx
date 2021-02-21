@@ -20,6 +20,7 @@ import Crud, { getDataItem } from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
 import { ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, CONFIDENCE_VALUES } from './SimpleEditCharityPage';
+import KStatus from '../../base/data/KStatus';
 
 const EditCharityPage = () => {
 	// HACK - see isAdvanced()
@@ -32,10 +33,7 @@ const EditCharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
-	let pvCharity = DataStore.fetch(cpath,
-		// NB: swallow 'cos error display is done below
-		() => ServerIO.getDataItem({type:C.TYPES.NGO, id:cid, status:C.KStatus.DRAFT, swallow:true})
-	);
+	let pvCharity = getDataItem({type:C.TYPES.NGO, id:cid, status:KStatus.DRAFT, swallow:true});
 	// if ( ! pvCharity.resolved) return <Misc.Loading text="Loading..." />; FIXME weird - the error isnt coming through?! Is is a racce-condition / failure to update react??
 	let charity = pvCharity.value;
 	// error?
