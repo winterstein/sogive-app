@@ -44,8 +44,6 @@ const CharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
 	}
-	const label = C.IMPACT_LABEL4VALUE[charity.impact];
-	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
 
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
@@ -57,10 +55,7 @@ const CharityPage = () => {
 				<div className='div-section-text description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
-				<div className="container impact">
-					{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
-					<DonateButton item={charity}/>
-				</div>
+				<RatingBadgeandDonate charity={charity} />
 				<LearnAboutRatingsModal />
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
@@ -82,6 +77,17 @@ const CharityPage = () => {
 	);
 }; // ./CharityPage
 
+const RatingBadgeandDonate = ({charity}) => {
+	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
+
+	return (
+		<div className="container impact">
+			{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
+			<DonateButton item={charity}/>
+		</div>
+	)
+}
 
 const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 	// TODO <a href={'/#search?q=tag:'+encURI(tag)}> -- needs server-side support
@@ -122,6 +128,7 @@ const CharityAnalysisSection = ({charity}) => (
 		<div className="header">
 			<h2 className="header-section-title">Our Analysis</h2>
 		</div>
+		<RatingBadgeandDonate charity={charity} />
 		<div className="div-section-text">
 			<MDText source={charity.recommendation} />
 		</div>
