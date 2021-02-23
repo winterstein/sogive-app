@@ -128,7 +128,8 @@ const CharityAnalysisSection = ({charity}) => (
 	</div>
 );
 
-//this function gets project data of a certain charity, pushes the most recent projects to the outputarray and returns the total cost
+//this function gets project data of a certain charity and returns on object containing project data, total project value and the year its from
+//project data is in this format because of the pie chart package
 const getProjectData = (charity) => {
 	let  outputarray = []
 	// Sort all projects by year, descending, and filter out other years
@@ -140,20 +141,19 @@ const getProjectData = (charity) => {
 	let mostRecentYear = programSplit[0].year;
 	programSplit = programSplit.filter(proj =>  proj.year === mostRecentYear)
 	let i = 0;
-
+	
 	programSplit.map((obj) => {
 		const colours = ["#27AE60", "#F2994A", "#2D9CDB", "#C32DDB", "#F24A4F"]
-	
+		
 		if (obj.inputs.findIndex(elem => elem.name === "projectCosts") !== -1) {
-			if (i >= colours.length) i = 0; //limiting colours to only those in the array
+			i = outputarray.length
+			if (i >= colours.length) i = outputarray.length % colours.length; //limiting colours to only those in the array
 			let insert = {
 				color: colours[i],
 				title: obj.name,
 				value: obj.inputs[obj.inputs.findIndex(elem => elem.name === "projectCosts")].value,
 			};
 			if (insert.value) outputarray.push(insert);
-			else i--;
-			i++;
 		}
 	});
 	const returnObj = {};
@@ -161,7 +161,6 @@ const getProjectData = (charity) => {
 	returnObj.year = mostRecentYear;
 	returnObj.data = outputarray;
 	return returnObj;
-
 }
 
 const CharityAbout = ({charity}) => {
