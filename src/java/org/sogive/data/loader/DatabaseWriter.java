@@ -8,10 +8,18 @@ import org.sogive.data.charity.NGO;
  *
  */
 public interface DatabaseWriter {
-    void upsertCharityRecord(NGO ngo);
+
+    enum Status {
+        PUBLISHED,
+        DRAFT,
+        ABSENT
+    }
+
+    void upsertCharityRecord(NGO ngo, Status status);
 
     /**
      * Checks if this charity is published in the database.
+     * @return
      */
-    boolean contains(String charityId);
+    Status contains(String charityId);
 }

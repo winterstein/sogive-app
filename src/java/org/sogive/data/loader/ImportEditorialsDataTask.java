@@ -57,14 +57,15 @@ public class ImportEditorialsDataTask {
 		List<String> rejectedIds = new ArrayList<>();
 		for (Editorial editorial : editorials) {
 			String charityId = editorial.getCharityId();
+			DatabaseWriter.Status status = database.contains(charityId);
 			// If it's not already in the charity database, we don't want to insert it.
-			if (!database.contains(charityId)) {
+			if (status == DatabaseWriter.Status.ABSENT) {
 				rejectedIds.add(charityId);
 				continue;
 			}
 			NGO ngo = new NGO(charityId);
 			ngo.put("recommendation", editorial.getEditorialText());
-			database.upsertCharityRecord(ngo);
+			database.upsertCharityRecord(ngo, status);
 			count++;
 		}
 		return new ArrayMap("totalImported", count, "rejectedIds", rejectedIds);

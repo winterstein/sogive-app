@@ -11,17 +11,28 @@ import org.sogive.data.charity.SoGiveConfig;
 
 public class ElasticSearchDatabaseWriter implements DatabaseWriter {
     @Override
-    public void upsertCharityRecord(NGO ngo) {
+    public void upsertCharityRecord(NGO ngo, Status status) {
         String charityId = ngo.getId();
         ESPath draftPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.DRAFT);
-        ESPath pubPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.PUBLISHED);
-        AppUtils.doPublish(new JThing(ngo), draftPath, pubPath);
+        if (status == Status.DRAFT) {
+            AppUtils.doSaveEdit(draftPath, new JThing(ngo), null);
+        }
+        if (status == Status.PUBLISHED) {
+            ESPath pubPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.PUBLISHED);
+            AppUtils.doPublish(new JThing(ngo), draftPath, pubPath);
+        }
     }
 
     @Override
-    public boolean contains(String charityId) {
-        ESPath path = Dep.get(SoGiveConfig.class).getPath(null, NGO.class, charityId, KStatus.PUBLISHED);
-        NGO got = AppUtils.get(path, NGO.class);
-        return got != null;
+    public Status contains(String charityId) {
+        ESPath publishedPath = Dep.get(SoGiveConfig.class).getPath(null, NGO.class, charityId, KStatus.PUBLISHED);
+        if (AppUtils.get(publishedPath, NGO.class) != null) {
+            return Status.PUBLISHED;
+        }
+        ESPath draftPath = Dep.get(SoGiveConfig.class).getPath(null, NGO.class, charityId, KStatus.DRAFT);
+        if (AppUtils.get(draftPath, NGO.class) != null) {
+            return Status.DRAFT;
+        }
+        return Status.ABSENT;
     }
 }
