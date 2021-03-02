@@ -36,7 +36,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_alreadyPublishedInDatabase() {
-        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -51,7 +51,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_alreadyInDraftInDatabase_updatesEditorialButDoesNotPublish() {
-        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.DRAFT);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.DRAFT);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -67,7 +67,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharityPascalCase_alreadyInDatabaseAsLowercase() {
-        databaseWriter.upsertCharityRecord(new NGO("doctors-without-borders"), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("doctors-without-borders"), DatabaseWriter.Status.PUBLISHED);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -95,7 +95,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_multiParagraphEditorial_alreadyInDatabase() {
-        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
                         TEST_URL,
@@ -108,7 +108,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_multiParagraphEditorialContainingH2_alreadyInDatabase() {
-        databaseWriter.upsertCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
 
         Document document = Document.createShell(TEST_URL);
 
@@ -133,8 +133,8 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_multipleCharities_alreadyInDatabase() {
-        databaseWriter.upsertCharityRecord(new NGO("charity-one"), DatabaseWriter.Status.PUBLISHED);
-        databaseWriter.upsertCharityRecord(new NGO("charity-two"), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("charity-one"), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("charity-two"), DatabaseWriter.Status.PUBLISHED);
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
                         TEST_URL,
@@ -194,7 +194,7 @@ public class ImportEditorialsDataTaskTest {
         }
 
         @Override
-        public void upsertCharityRecord(NGO ngo, Status status) {
+        public void updateCharityRecord(NGO ngo, Status status) {
             switch (status) {
                 case DRAFT:
                     draftCharityRecords.put(ngo.getId(), ngo);

@@ -11,7 +11,7 @@ import org.sogive.data.charity.SoGiveConfig;
 
 public class ElasticSearchDatabaseWriter implements DatabaseWriter {
     @Override
-    public void upsertCharityRecord(NGO ngo, Status status) {
+    public void updateCharityRecord(NGO ngo, Status status) {
         String charityId = ngo.getId();
         ESPath draftPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.DRAFT);
         if (status == Status.DRAFT) {

@@ -15,7 +15,7 @@ public interface DatabaseWriter {
         ABSENT
     }
 
-    void upsertCharityRecord(NGO ngo, Status status);
+    void updateCharityRecord(NGO ngo, Status status);
 
     /**
      * Checks if this charity is published in the database.

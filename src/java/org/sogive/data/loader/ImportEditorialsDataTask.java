@@ -65,7 +65,7 @@ public class ImportEditorialsDataTask {
 			}
 			NGO ngo = new NGO(charityId);
 			ngo.put("recommendation", editorial.getEditorialText());
-			database.upsertCharityRecord(ngo, status);
+			database.updateCharityRecord(ngo, status);
 			count++;
 		}
 		return new ArrayMap("totalImported", count, "rejectedIds", rejectedIds);
