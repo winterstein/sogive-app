@@ -1,5 +1,6 @@
 package org.sogive.data.loader;
 
+import com.winterwell.data.KStatus;
 import org.sogive.data.charity.NGO;
 
 /**
@@ -9,17 +10,15 @@ import org.sogive.data.charity.NGO;
  */
 public interface DatabaseWriter {
 
-    enum Status {
-        PUBLISHED,
-        DRAFT,
-        ABSENT
-    }
-
-    void updateCharityRecord(NGO ngo, Status status);
+    /**
+     * Updates the charity's properties with the given status in the database.
+     */
+    void updateCharityRecord(NGO ngo, KStatus status);
 
     /**
-     * Checks if this charity is published in the database.
-     * @return
+     * Checks this charity's status in the database.
+     *
+     * @return PUBLISHED, DRAFT or ABSENT (if neither PUBLISHED or DRAFT).
      */
-    Status contains(String charityId);
+    KStatus contains(String charityId);
 }

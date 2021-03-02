@@ -1,6 +1,7 @@
 package org.sogive.data.loader;
 
 import com.google.common.collect.ImmutableMap;
+import com.winterwell.data.KStatus;
 import com.winterwell.utils.containers.ArrayMap;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,7 +37,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_alreadyPublishedInDatabase() {
-        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), KStatus.PUBLISHED);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -51,7 +52,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_alreadyInDraftInDatabase_updatesEditorialButDoesNotPublish() {
-        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.DRAFT);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), KStatus.DRAFT);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -62,12 +63,12 @@ public class ImportEditorialsDataTaskTest {
 
         assertEquals(1, result.get("totalImported"));
         assertEquals(TBD_CHARITY_EDITORIAL_TEXT, databaseWriter.getCharityRecommendation(TBD_CHARITY_ID));
-        assertEquals(DatabaseWriter.Status.DRAFT, databaseWriter.contains(TBD_CHARITY_ID));
+        assertEquals(KStatus.DRAFT, databaseWriter.contains(TBD_CHARITY_ID));
     }
 
     @Test
     public void testImportEditorials_singleCharityPascalCase_alreadyInDatabaseAsLowercase() {
-        databaseWriter.updateCharityRecord(new NGO("doctors-without-borders"), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("doctors-without-borders"), KStatus.PUBLISHED);
 
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
@@ -95,7 +96,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_multiParagraphEditorial_alreadyInDatabase() {
-        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), KStatus.PUBLISHED);
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
                         TEST_URL,
@@ -108,7 +109,7 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_singleCharity_multiParagraphEditorialContainingH2_alreadyInDatabase() {
-        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO(TBD_CHARITY_ID), KStatus.PUBLISHED);
 
         Document document = Document.createShell(TEST_URL);
 
@@ -133,8 +134,8 @@ public class ImportEditorialsDataTaskTest {
 
     @Test
     public void testImportEditorials_multipleCharities_alreadyInDatabase() {
-        databaseWriter.updateCharityRecord(new NGO("charity-one"), DatabaseWriter.Status.PUBLISHED);
-        databaseWriter.updateCharityRecord(new NGO("charity-two"), DatabaseWriter.Status.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("charity-one"), KStatus.PUBLISHED);
+        databaseWriter.updateCharityRecord(new NGO("charity-two"), KStatus.PUBLISHED);
         fakeDocumentFetcher.setDocumentAtUrl(
                 generateDocumentContainingCharityEditorials(
                         TEST_URL,
@@ -194,7 +195,7 @@ public class ImportEditorialsDataTaskTest {
         }
 
         @Override
-        public void updateCharityRecord(NGO ngo, Status status) {
+        public void updateCharityRecord(NGO ngo, KStatus status) {
             switch (status) {
                 case DRAFT:
                     draftCharityRecords.put(ngo.getId(), ngo);
@@ -207,14 +208,14 @@ public class ImportEditorialsDataTaskTest {
         }
 
         @Override
-        public Status contains(String charityId) {
+        public KStatus contains(String charityId) {
             if (publishedCharityRecords.containsKey(charityId)) {
-                return Status.PUBLISHED;
+                return KStatus.PUBLISHED;
             }
             if (draftCharityRecords.containsKey(charityId)) {
-                return Status.DRAFT;
+                return KStatus.DRAFT;
             }
-            return Status.ABSENT;
+            return KStatus.ABSENT;
         }
 
         public String getCharityRecommendation(String charityId) {
