@@ -99,6 +99,7 @@ const MainDiv = () => {
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
+		fullWidthPages={['search']}
 	/>);
 };
 

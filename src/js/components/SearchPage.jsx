@@ -106,13 +106,17 @@ const SearchForm = ({q, status}) => {
 	);
 
 	return (
-		<div className="SearchForm">
-			<h2 className="header-section-title">Search for a charity</h2>
-			<Form onSubmit={onSubmit} className="sogive-search-box">
-				<PropControl path={PATH} prop="rawq" type="search" placeholder="Enter a charity's name" prepend={searchIcon} append={submitButton} size="lg" />
-				<FieldClearButton />
-				{status? <div>Include listings with status: {status}</div> : null}
-			</Form>
+		<div className="gradient">
+			<div className="worldImage">
+				<div className="SearchForm">
+					<h2 className="header-section-title">Search for a charity</h2>
+					<Form onSubmit={onSubmit} className="sogive-search-box">
+						<PropControl path={PATH} prop="rawq" type="search" placeholder="Enter a charity's name" prepend={searchIcon} append={submitButton} size="lg" />
+						<FieldClearButton />
+						{status? <div>Include listings with status: {status}</div> : null}
+					</Form>
+				</div>
+			</div>
 		</div>
 	);
 }; //./SearchForm

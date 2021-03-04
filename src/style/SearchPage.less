@@ -185,12 +185,29 @@
 }
 
 .SearchForm {
-	background: linear-gradient(to right, #f9ce6e, #dd912f);
-	box-shadow: 0px 5px 3px 1px rgba(221,145,47, 0.5);
-	padding: 2em 5em;
+	padding: 3em 5em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
 	h2 {
 		color: white;
 	}
+}
+
+.gradient {
+	height: 50vh;
+	background: linear-gradient(135deg, #79D579 0%, #005484 100%);
+	margin-right: -15px;
+	margin-left: -15px;
+}
+
+.worldImage {
+	background-image: url('/img/world.png');
+	background-size: cover;
+	background-position: center;
+	margin: auto;
+    height: 100%;
 }
 
 .search-pager {
@@ -241,13 +258,25 @@
 }
 
 .sogive-search-box {
+	.input-group {
+		border: 1px solid #757575;
+		border-radius: 4px;
+	}
 	input, button {
 		font-size: 150% ;
-		height: 2.5em ;
-		border-radius: 0px !important;
 		border: none;
 		outline: 0;
 	}
+	button {
+		margin: -1px; // this avoids the input-group border appearing around this button
+		border-radius: 2px;
+	}
+}
+
+.sogive-search-box .input-group-text {
+	background-color: white;
+	border: none;
+	border-radius: 0px;
 }
 
 .field-clear-button {
