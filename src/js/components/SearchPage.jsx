@@ -95,18 +95,25 @@ const SearchForm = ({q, status}) => {
 		DataStore.setUrlValue('q', rawq);
 	};
 
+	const searchIcon = (
+		<Misc.Icon prefix="fas" fa="search" />
+	);
+
 	const submitButton = (
 		<Button type="submit" color="primary" className="sogive-search-box">
-			<Misc.Icon prefix="fas" fa="search" />
+			Search
 		</Button>
 	);
 
 	return (
-		<div className="SearchForm"><Form onSubmit={onSubmit} className="sogive-search-box">
-			<PropControl path={PATH} prop="rawq" type="search" placeholder="Keyword search" append={submitButton} size="lg" />
-			<FieldClearButton />
-			{status? <div>Include listings with status: {status}</div> : null}
-		</Form></div>
+		<div className="SearchForm">
+			<h2 className="header-section-title">Search for a charity</h2>
+			<Form onSubmit={onSubmit} className="sogive-search-box">
+				<PropControl path={PATH} prop="rawq" type="search" placeholder="Enter a charity's name" prepend={searchIcon} append={submitButton} size="lg" />
+				<FieldClearButton />
+				{status? <div>Include listings with status: {status}</div> : null}
+			</Form>
+		</div>
 	);
 }; //./SearchForm
 
