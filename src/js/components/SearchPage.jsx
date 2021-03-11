@@ -234,9 +234,8 @@ const ellipsize = (string, length) => {
 
 const DefaultCTA = ({itemUrl, onClick, item}) => {
 	return (
-		<a href={itemUrl} onClick={onClick} className='read-more btn btn-default'>
+		<a href={itemUrl} onClick={onClick} className='btn btn-primary btn-lg'>
 			Read more
-			<img className='read-more-caret' src='/img/read-more-caret.svg' />
 		</a>
 	);
 };
@@ -316,8 +315,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 		</div>
 	) : null;
 	return (
-		<div className={'SearchResult row impact-'+NGO.impact(item)} data-id={cid} >
-			{NGO.isHighImpact(item)? <span className='recommended-tab'><Misc.Icon fa='award' className='text-gold recommended-icon' /> Recommended Charity</span> : null}
+		<div className={'std-border SearchResult  row impact-'+NGO.impact(item)} data-id={cid} >
 			<a href={charityUrl} onClick={onClick} className='logo col-md-2 col-xs-4'>
 				{item.logo? (
 					<img className='charity-logo' src={NGO.logo(item)} alt={`Logo for ${charityName}`} />
@@ -326,7 +324,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 				)}
 			</a>
 			<a href={charityUrl} onClick={onClick} className='text-summary col-md-4 col-xs-8'>
-				<span className='name'>{charityName} <ImpactBadge charity={item} /></span>
+				<h3 className='name charity-card-title'>{charityName}</h3>	
 				<span className='description'>{ellipsize(charityDesc, 140)}</span>
 			</a>
 			{impactExplanation}

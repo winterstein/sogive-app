@@ -179,7 +179,7 @@ const CharityAbout = ({charity}) => {
 		<div className='charity-about'>
 			{/* {NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null} */}
 			<CharityAboutImage charity={charity} />
-			<div className='charity-about-details div-section-text border'>
+			<div className='charity-about-details div-section-text std-border std-box-shadow '>
 				<h3 className='header-section-title'><b>Details on {NGO.displayName(charity)}</b></h3>
 				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
 				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
