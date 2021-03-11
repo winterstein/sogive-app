@@ -29,6 +29,12 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 	
 	@Override
+	protected JThing<NGO> augmentListItem(JThing<NGO> jThing, WebRequest state) {
+		// do include simpleImpact in lists
+		return augment(jThing, state);
+	}
+	
+	@Override
 	protected JThing<NGO> augment(JThing<NGO> jThing, WebRequest state) {
 		NGO ngo = jThing.java();
 		Output output = ngo.getSimpleImpact();
