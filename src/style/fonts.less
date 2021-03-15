@@ -3,6 +3,15 @@
 
 @standard-text-font: 'Nunito Sans';
 
+.header-centred {
+	text-transform: none; // without this bootstrap makes headers all caps
+	font-family: @standard-text-font;
+	font-weight: 800;
+	font-size: 28px;
+	color: @dark-turquoise;
+	text-align: center;
+}
+
 .header-title {
 	text-transform: capitalize;
 	font-family: @standard-text-font;
@@ -16,7 +25,7 @@
 }
 
 .header-section-title {
-	text-transform: none; // without this bootstrap makes it all caps
+	text-transform: none; // without this bootstrap makes headers all caps
 	font-family: @standard-text-font;
 	color: @header-section-title-colour;
 	font-style: normal;

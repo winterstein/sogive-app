@@ -150,21 +150,21 @@ const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, 
 
 	let resultsForText = '';
 	if (all) {
-		resultsForText = `Showing all ${impact? impact+' impact':''} charities`;
+		resultsForText = `All charities by rating`;
 	} else {
-		resultsForText = `Results for “${query}”`;
+		resultsForText = `Searching for “${query}”`;
 	}
 
 	return (
 		<div className='SearchResults'>
-			{tabs !== false? <div className='top-tab'>{resultsForText}</div> : null}
+			{tabs !== false? <h1 className='top-tab header-centred'>{resultsForText}</h1> : null}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				{ unready.length ? (
 					<div className='unready-results'>
 						<h3>Analysis in progress</h3>
-						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
+						SoGive is working to collect data and model the impact of ev	ery UK charity -- all 200,000.
 					</div>
 				) : null}
 				{ unready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }

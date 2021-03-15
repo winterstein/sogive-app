@@ -11,23 +11,11 @@
 		}
 
 		.top-tab {
-			position: absolute;
-			bottom: 100%;
-			left: 0;
-			font-size: 150%;
-			padding-left: 1.25em;
-			&:before {
-				content: '';
-				position: absolute;
-				transform: perspective(150px) rotateX(30deg);
-				transform-origin: bottom left;
-				z-index: -2;
-				background: #f2f2f2;
-				top: -50%; // font-independent: make the element tall enough to still contain the text after rotation
-				right: -2em; // Push the right edge ~2 characters away from the text
-				bottom: -1px; // Sometimes the rotation leaves a seam
-				left: 0;
-			}
+			// position: absolute;
+			// bottom: 100%;
+			// left: 0;
+			// font-size: 150%;
+			// padding-left: 1.25em;
 		}
 }
 
@@ -190,7 +178,7 @@
 }
 
 .gradient {
-	height: 50vh;
+	height: 25vh;
 	background: linear-gradient(135deg, #79D579 0%, #005484 100%);
 	margin-right: -15px;
 	margin-left: -15px;
