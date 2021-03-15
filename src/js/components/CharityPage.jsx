@@ -113,12 +113,8 @@ const CharityAboutSection = ({charity}) => (
 				</h2>
 			</div>
 			<div className='div-section-text'>
-				<div className='description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
-				</div>
-				<div className='description-long'>
 					{charity.description? <MDText source={charity.description} /> : null}
-				</div>
 			</div>
 	</div>
 );
