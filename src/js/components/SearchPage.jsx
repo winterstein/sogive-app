@@ -40,13 +40,15 @@ const SearchPage = () => {
 	if (q==='ERROR') { // HACK
 		throw new Error("Argh!");
 	}
-	
+
+	// HACK experimenting
+	const use_list = DataStore.getUrlValue('use_list');
 	
 	// search hits
 	const lpath = ['list', 'NGO', status||'pub', q || 'all', from]; // listPath({type:C.TYPES.NGO, status, q});
 	let pvList = DataStore.fetch(lpath, () => {
 		// size: RESULTS_PER_PAGE <- no, caps the results at 20
-		return ServerIO.searchCharities({q, from, status, impact});
+		return ServerIO.searchCharities({q, from, status, impact, use_list});
 	});
 	console.log(pvList);	
 	let total = pvList.value? List.total(pvList.value) : null;
@@ -58,6 +60,7 @@ const SearchPage = () => {
 		<div className='SearchPage row'>
 			<div className='col-md-12'>
 				<SearchForm query={q} from={from} status={status} />
+				<PropControl prop='use_list' type='yesNo' label="Use /charity/_list" className="bg-warning" help="Temp debug experiment!" />
 			</div>
 
 			<div className='col-md-12'>

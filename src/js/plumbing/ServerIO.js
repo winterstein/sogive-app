@@ -38,8 +38,11 @@ ServerIO.getServletForType = (type) => {
  * @param {?Boolean} recommended If true, return only high-impact "gold" charities. Also fetches legacy recommended charities. @deprecated in favour of impact=high
  * @param {?String} impact e.g. "high" Filter by impact
  */
-ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact}) {
-	// assMatch( q || prefix, String);
+ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact, use_list}) {
+	if (use_list) { // HACK experiment
+		if ( ! status) status=KStatus.PUBLISHED;
+		return ServerIO.load('/charity/_list.json', {data: {q, prefix, from, size, status, recommended, impact}} );
+	}
 	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
 };
 
