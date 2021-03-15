@@ -19,6 +19,7 @@ import {impactCalc} from './ImpactWidgetry';
 import C from '../C';
 import {getId} from '../base/data/DataClass';
 import PropControl from '../base/components/PropControl';
+import KStatus from '../base/data/KStatus';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -239,7 +240,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 	if ( ! CTA) CTA = DefaultCTA;
 	let project = NGO.getProject(item);
 	let status = item.status;
-	let page = C.KStatus.isDRAFT(status)? 'edit' : 'charity';
+	let page = KStatus.isDRAFT(status)? 'edit' : 'charity';
 	const cid = NGO.id(item);
 	const charityUrl = '#'+page+'?charityId='+encURI(cid);
 
