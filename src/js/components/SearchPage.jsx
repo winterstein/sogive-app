@@ -158,18 +158,23 @@ const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, 
 	return (
 		<div className='SearchResults'>
 			{tabs !== false? <h1 className='top-tab header-centred'>{resultsForText}</h1> : null}
+			<div className='search-page-description'>
+				<p className='div-section-text'>We've listed here all charities based on their rating, from gold to bronze.
+					You can read more about what the gold, silver, and bronze ratings mean here.</p>
+				<Button outline color="primary">Learn about our ratings</Button>
+			</div>
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				{ unready.length ? (
 					<div className='unready-results'>
 						<h3>Analysis in progress</h3>
-						SoGive is working to collect data and model the impact of ev	ery UK charity -- all 200,000.
+						SoGive is working to collect data and model the impact of every UK charity -- all 200,000.
 					</div>
 				) : null}
 				{ unready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
 				<SearchPager total={total} from={from} />
-			</div>
+			</div> 
 			{results.length===0 && query && ! loading? <SuggestCharityForm /> : null}
 			{download !== false? <div className='col-md-12'><DownloadLink total={total} /></div> : null}
 		</div>

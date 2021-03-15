@@ -29,7 +29,22 @@
 	.btn-primary {
 		background: @primary-button-colour;
 		border-radius: 4px;
+		font-weight: bold;
 	}
+
+	.btn-outline-primary {
+		color: @primary-button-colour;
+		border-color: @primary-button-colour;
+		border-radius: 4px;
+		padding: 12px 24px;
+		font-weight: bold;
+		&:hover {
+			background: @primary-button-colour;
+			color: white;
+		}
+	}
+
+
 
 	.btn-square {
 		background-color: @default-button-colour;
