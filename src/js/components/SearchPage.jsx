@@ -155,15 +155,18 @@ const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, 
 	} else {
 		resultsForText = `Searching for “${query}”`;
 	}
-
-	return (
-		<div className='SearchResults'>
-			{tabs !== false? <h1 className='top-tab header-centred'>{resultsForText}</h1> : null}
+	const ratingsDescription = (
 			<div className='search-page-description'>
 				<p className='div-section-text'>We've listed here all charities based on their rating, from gold to bronze.
 					You can read more about what the gold, silver, and bronze ratings mean here.</p>
 				<LearnAboutRatings isButton={true}/>
 			</div>
+	)
+
+	return (
+		<div className='SearchResults'>
+			{tabs !== false? <h1 className='top-tab header-centred'>{resultsForText}</h1> : null}
+			{all ? ratingsDescription : null}
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
 				{ ready.map(item => <SearchResult key={getId(item)} item={item} onPick={onPick} CTA={CTA} />) }
