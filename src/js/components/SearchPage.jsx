@@ -20,6 +20,7 @@ import {getId} from '../base/data/DataClass';
 import PropControl from '../base/components/PropControl';
 import KStatus from '../base/data/KStatus';
 import { assMatch } from '../base/utils/assert';
+import { LearnAboutRatings } from './LearnAboutRatings';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -161,7 +162,7 @@ const SearchResults = ({ results, total, query, from, all, impact, CTA, onPick, 
 			<div className='search-page-description'>
 				<p className='div-section-text'>We've listed here all charities based on their rating, from gold to bronze.
 					You can read more about what the gold, silver, and bronze ratings mean here.</p>
-				<Button outline color="primary">Learn about our ratings</Button>
+				<LearnAboutRatings isButton={true}/>
 			</div>
 			<SearchResultsNum results={results} total={total} query={query} />
 			<div className='results-list'>
