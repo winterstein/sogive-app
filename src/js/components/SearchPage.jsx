@@ -26,6 +26,7 @@ import C from "../C";
 import { getId } from "../base/data/DataClass";
 import PropControl from "../base/components/PropControl";
 import { LearnAboutRatings } from "./LearnAboutRatings";
+import { DonateButton } from './DonationWizard';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -328,8 +329,8 @@ const ellipsize = (string, length) => {
 
 const DefaultCTA = ({ itemUrl, onClick, item }) => {
     return (
-        <a href={itemUrl} onClick={onClick} className="btn btn-primary btn-lg">
-            Read more
+        <a href={itemUrl} onClick={onClick}>
+            <Button color="primary">Read more</Button>
         </a>
     );
 };
@@ -409,7 +410,10 @@ const SearchResult = ({ item, CTA, onPick }) => {
                 <span className="impact-count">{printer.prettyNumber(Output.number(impact), 2)}</span>
                 <span className="impact-calculator-text">{Output.getName(impact)}</span>
             </p>
-            <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
+            <div className="click-through-action">
+                <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
+            </div>
+            <DonateButton item={item} isOutlined={true} isLarge={false} />
         </div>
     ) : null;
 

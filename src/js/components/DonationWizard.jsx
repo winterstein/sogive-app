@@ -51,7 +51,7 @@ const getWidgetProp = (forItem, prop) => (
 /**
  * NB: We can have several DonateButtons, but only one modal form
  */
-const DonateButton = ({item, paidElsewhere, ...props}) => {
+const DonateButton = ({item, paidElsewhere, isOutlined = false, isLarge = true, ...props}) => {
 	assert(item && getId(item), "DonationWizard.js - DonateButton: no item "+item);
 
 	// no donations to draft fundraisers or charities
@@ -65,7 +65,10 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 	const showWizard = getWidgetProp(getId(item), 'open');
 	
 	return <>
-		<Button color="primary" size="lg" height="50px"
+		<Button 
+			color="primary"
+			outline={isOutlined}
+			size={isLarge ? "lg" : "md"}
 			onClick={() => {
 				// poke the paidElsewhere flag
 				setWidgetProp(getId(item), 'paidElsewhere', paidElsewhere, false);
