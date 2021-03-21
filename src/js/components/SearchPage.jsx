@@ -398,21 +398,17 @@ const SearchResult = ({ item, CTA, onPick }) => {
     // NB re formatting below - beware of React eating spaces
     const impactExplanation = impact ? (
         <div className="impact col-md-6 d-none d-sm-block">
-            <div className="impact-summary">
+            <h4>IMPACT CALCULATOR</h4>
+            <p className="impact-summary">
                 <Misc.Money
                     amount={Output.cost(impact)}
                     maximumFractionDigits={0}
                     maximumSignificantDigits={2}
                 />
-                &nbsp; may fund{" "}
-                <span className="impact-count">
-                    {printer.prettyNumber(Output.number(impact), 2)}
-                </span>{" "}
-                {Output.getName(impact)}
-            </div>
-            <div className="impact-detail">
-                {ellipsize(impact.description, 140)}
-            </div>
+                <span className="impact-calculator-text">may fund</span>
+                <span className="impact-count">{printer.prettyNumber(Output.number(impact), 2)}</span>
+                <span className="impact-calculator-text">{Output.getName(impact)}</span>
+            </p>
             <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
         </div>
     ) : null;

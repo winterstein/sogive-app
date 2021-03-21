@@ -106,42 +106,27 @@
 			color: #262741
 		}
 	}
-	.amount-picker {
-		display: flex;
-    flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		font-size: 175%;
-		&.long-amount .money {
-			font-size: 80%;
-		}
-		.money {
-			.amount {
-				color: @bold-text-colour;
-			}
-		}
-		.change-donation-amount {
-			width: 1em;
-			height: 1em;
-		}
-	}
 	.impact {
+		h4 {
+			font-size: 14px;
+			font-weight: bold;
+			font-family: @standard-text-font;
+			color: @dark-grey;
+		}
 		.impact-summary {
 			margin-top: 0.5em;
-			.impact-count, .money .amount {
-				color: @bold-text-colour;
-				font-size: 120%;
+			font-size: 16px;
+			display: flex;
+			align-items: center;
+			.impact-count, .money .amount, .currency-symbol {
+				color: @donation-number-fg;
+				//size and weight set locally to match figma as not reused
+				font-size: 24px;
+				font-weight: 800;
 			}
-			h3 {
-				color: @bold-text-colour;
-				// no size boost -- we want the impact content stronger than the header.
-				// text-decoration: underline;
-				margin: 0.5em 0 0.25em 0;
+			.impact-calculator-text {
+				padding: 0px 16px;
 			}
-			border-bottom: 1px solid @bold-text-colour;
-		}
-		.impact-detail {
-
 		}
 	} // ./impact
 	.read-more {
