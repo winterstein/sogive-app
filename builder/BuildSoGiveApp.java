@@ -13,6 +13,7 @@ public class BuildSoGiveApp extends BuildWinterwellProject {
 
 	public BuildSoGiveApp() throws Exception {
 		super(new WinterwellProjectFinder().apply("sogive-app"), "sogive");
+		setVersion("1.0.0"); // 22 Mar 2021
 	}
 
 	@Override
