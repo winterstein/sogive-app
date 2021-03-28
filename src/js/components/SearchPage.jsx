@@ -309,7 +309,7 @@ const SearchResultsNum = ({ results, total, query }) => {
     if (results.length || query) {
         const plural = total !== 1 ? "charities found" : "charity found";
         return (
-            <div className="num-results">
+            <div className="num-results div-section-text">
                 {total} {plural}
             </div>
         );
