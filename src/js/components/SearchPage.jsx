@@ -398,7 +398,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
 
     // NB re formatting below - beware of React eating spaces
     const impactExplanation = impact ? (
-        <div className="impact col-md-6 d-none d-sm-block">
+        <div className="impact std-padding col-md-6 d-none d-sm-block">
             <h4>IMPACT CALCULATOR</h4>
             <p className="impact-summary">
                 <Misc.Money
@@ -454,7 +454,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
             <a
                 href={charityUrl}
                 onClick={onClick}
-                className="text-summary col-md-4 col-xs-8"
+                className="text-summary std-padding col-md-4 col-xs-8"
             >
                 <h3 className="name charity-card-title">{charityName}</h3>
                 <span className="description">
