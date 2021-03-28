@@ -418,9 +418,11 @@ const SearchResult = ({ item, CTA, onPick }) => {
     ) : null;
 
     const noImpact = !impact ? (
-        <div className="noImpact col-md-6 d-none d-sm-block">
-            Impact information is not available for this charity.
-            <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
+        <div className="impact std-padding col-md-6 d-none d-sm-block">
+            <p>Impact information is not available for this charity.</p>
+            <div>
+                <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
+            </div>
         </div>
     ) : null;
     return (

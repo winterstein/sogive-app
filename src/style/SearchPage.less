@@ -2,8 +2,9 @@
 @import "positioning.less";
 
 .SearchResults {
+		max-width: @max-content-width;
+		margin: 1em auto;
 		position: relative;
-		margin-top: 50px;
 		padding: 2em;
 
 		.search-page-description {
@@ -153,6 +154,8 @@
 	flex-direction: column;
 	justify-content: center;
 	height: 100%;
+	max-width: @max-content-width;
+	margin: auto;
 	h2 {
 		color: white;
 	}
