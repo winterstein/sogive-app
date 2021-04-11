@@ -77,15 +77,21 @@ const CharityPage = () => {
 	);
 }; // ./CharityPage
 
-const RatingBadgeandDonate = ({charity}) => {
+const RatingBadgeandDonate = ({charity}) => (
+		<div className="container impact">
+			<RatingBadge charity={charity} />
+			<DonateButton item={charity}/>
+		</div>
+	)
+
+export const RatingBadge = ({charity, heightpx = 48}) => {
 	const label = C.IMPACT_LABEL4VALUE[charity.impact];
 	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
 
 	return (
-		<div className="container impact">
-			{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
-			<DonateButton item={charity}/>
-		</div>
+		<>
+			{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath} height={heightpx} /> : <img alt='Not yet rated' src='/img/not-yet-rated.svg' height={heightpx} />}
+		</>
 	)
 }
 

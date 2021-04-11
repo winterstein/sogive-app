@@ -27,6 +27,7 @@ import { getId } from "../base/data/DataClass";
 import PropControl from "../base/components/PropControl";
 import { LearnAboutRatings } from "./LearnAboutRatings";
 import { DonateButton } from './DonationWizard';
+import { RatingBadge } from "./CharityPage";
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -460,9 +461,10 @@ const SearchResult = ({ item, CTA, onPick }) => {
                 className="text-summary std-padding col-md-4 col-xs-8"
             >
                 <h3 className="name charity-card-title">{charityName}</h3>
-                <span className="description">
+                <p className="description">
                     {ellipsize(charityDesc, 140)}
-                </span>
+                </p>
+                <RatingBadge charity={item} heightpx="36" />
             </a>
             {impactExplanation}
             {noImpact}
