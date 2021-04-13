@@ -25,6 +25,13 @@ import { getDataItem } from '../../base/plumbing/Crud';
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
 
+const CONFIDENCE_LABEL4VALUE = {
+	"high": "firm",
+	"medium": "tentative",
+	"low": "low [not being used]",
+	"very-low": "very low [not being used]"
+};
+
 /**
  * HACK flag for simple vs advanced editor -- lets us mix in some advanced controls here.
  */
@@ -140,6 +147,7 @@ const EditorialEditor = ({charity}) => {
 		<EditField item={charity} field="confidence"
 			type="select"
 			options={CONFIDENCE_VALUES.values}
+			labels={CONFIDENCE_LABEL4VALUE}
 			label="Overall Confidence"
 			help="How confident are we that the charity will achieve its aims? This is often low for even good lobbying charities."
 		/>

@@ -336,7 +336,7 @@ const ImpactBadge = ({charity}) => {
 	let help = {
 		high: 'Gold: a high impact charity with solid data',
 		medium: 'Silver: an effective charity',
-		low: 'Bronze: Either the impact or the impact measurement/reporting could be better',
+		low: 'Not Recommended: we believe the charity does less good than our Gold-rated charities',
 	}[charity.impact];
 	return <span className={'impact-rating pull-right text-'+label} title={help}><Misc.Icon fa='award' /> {label}</span>;
 };
