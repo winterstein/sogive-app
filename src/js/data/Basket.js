@@ -1,6 +1,6 @@
 
 import _ from 'lodash';
-import {assert, assMatch} from 'sjtest';
+
 import DataClass, {nonce} from '../base/data/DataClass';
 import Money from '../base/data/Money';
 import C from '../C';

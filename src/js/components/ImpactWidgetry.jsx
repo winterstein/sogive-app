@@ -1,5 +1,4 @@
 import React from 'react';
-import {assert, assMatch} from 'sjtest';
 import _ from 'lodash';
 import Enum from 'easy-enums';
 

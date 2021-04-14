@@ -2,7 +2,7 @@
 // TODO move social share buttons from CharityPageImpactAndDonate here
 
 import React from 'react';
-import {assert, assMatch} from 'sjtest';
+
 import { encURI } from '../base/utils/miscutils';
 
 

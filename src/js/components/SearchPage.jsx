@@ -1,7 +1,6 @@
 /* eslint-disable react/no-multi-comp */ // Don't complain about more than one React class in the file
 import React from 'react';
 import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
 // import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
 import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import {encURI, modifyHash, stopEvent } from '../base/utils/miscutils';
