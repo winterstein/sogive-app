@@ -46,5 +46,5 @@ C.IMPACT_LABEL4VALUE = {
 	"more-info-needed-promising": "more information needed (promising)",
 	"more-info-needed": "more information needed",
 	"too-rich": "too rich",
-	"very-low": "do not donate"
+	"very-low": "not recommended, too rich"
 };

@@ -329,10 +329,10 @@ const ImpactBadge = ({charity}) => {
 	if ( ! NGO.isReady(charity)) return null;
 	if (NGO.isHighImpact(charity)) charity.impact='high'; // old data HACK
 	if ( ! charity.impact || charity.impact==='more-info-needed') return null;
-	if (charity.impact==='very-low') {
-		return <span className='impact-rating pull-right text-warning' title='We suggest avoiding this charity'><Misc.Icon fa='times' /> dubious impact</span>;
-	}
 	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	if (charity.impact==='very-low') {
+		return <span className='impact-rating pull-right text-warning' title='We suggest avoiding this charity'><Misc.Icon fa='times' /> {label}</span>;
+	}
 	let help = {
 		high: 'Gold: a high impact charity with solid data',
 		medium: 'Silver: an effective charity',
