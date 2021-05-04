@@ -136,7 +136,9 @@ a high impact celebration.
 
 Not needed for UI edits, but if you want to do backend work...
 
-1. Install Java (e.g. via apt-get install)
+Recommended minimum system requirements: Linux with > 8gb ram and better than Intel i3
+
+1. Install Java (e.g. via apt-get install default-jdk)
 
 2. Install ElasticSearch. June 2020: We now use version 7
 
@@ -144,21 +146,81 @@ Not needed for UI edits, but if you want to do backend work...
 
        sudo npm i -g java-bob
 
-4. Use Bob to fetch dependency jars:
+4. Download & install [the Eclipse IDE](https://www.eclipse.org/downloads/) for Java development
+
+5. Import sogive-app into Eclipse (File > Open Projects from Filesystem)
+
+   You will notice some errors in Eclipse's Problems panel.
+
+6. To fix missing Java project dependencies, clone the following repositories and import them into
+   Eclipse:
+
+   - https://github.com/sodash/open-code 
+
+     ```
+     cd ~/winterwell && git clone git@github.com:sodash/open-code.git
+     ```
+
+     In Eclipse, File > Import > General > Import existing projects into workspace
+     
+     In 'Select root directory', browse to `~/wintwerwell/open-code` and check 'Search for nested projects`.
+     Select just the following subdirectories:
+      
+	      - winterwell.bob
+	      - winterwell.datalog
+	      - winterwell.depot
+	      - winterwell.maths
+	      - winterwell.optimization
+	      - winterwell.utils
+	      - winterwell.web
+	      - winterwell.webappbase
+	      - youagain-java-client
+
+     Click [Finish].
+     
+   - https://github.com/good-loop/elasticsearch-java-client
+   
+     ```
+     cd ~/winterwell && git clone git@github.com:good-loop/elasticsearch-java-client.git
+     ```
+     
+     File > Import > Import existing projects into workspace. Select root directory ~/winterwell/elasticsearch-java-client and [Finish].
+
+- https://github.com/winterstein/flexi-gson
+
+     ```
+     cd ~/winterwell && git clone git@github.com:winterstein/flexi-gson.git
+     ```
+     
+     File > Import >  Import existing projects into workspace. Select root directory ~/winterwell/flexi-gson and [Finish].
+
+7. You will now see 'missing required libraries' errors in Eclipse. To fix these, use Bob to fetch dependency
+   jars in **each of the projects that were imported**. e.g.:
 
        cd ~/winterwell/sogive-app
        bob
+       
+   If you see nothing much in the output, run `bob` a second time.
+   
+   Repeat for each project you imported into Eclipse, including each of the sub-directories of open-code that you imported.
+   
+   To get Eclipse to pick up on the new dependencies, right-click on each project and Refresh. 
+   You can check dependencies show up in the `dependencies` subdirectory of each project in Eclipse.
+   
+   Do not be alarmed if many more errors appear in Eclipse's Problems panel once you have resolved all the
+   'missing required libraries' - these ones can be ignored.
 
-5. Start ElasticSearch
+8. Start ElasticSearch
 
-6. Run SoGive Server -- *Running SogiveServer from inside Eclipse is probably easiest*. 
-If you should want to run from the command line, it is `java -ea -cp build-lib/sogive.jar:build-lib/* org.sogive.server.SoGiveServer`
+9. Run SoGive Server -- *Running SogiveServer from inside Eclipse is probably easiest*. 
 
-7. Some tests:
-   - Test your local ElasticSearch is running: http://localhost:9200
-   - Test your local java SoGiveServer is running: http://localhost:8282
-   - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
-   - Test your local web-app: http://local.sogive.org/
+   If you should want to run from the command line, copy the command from Eclipse > Run > Run configurations > [Show Command Line]
+
+10. Some tests:
+    - Test your local ElasticSearch is running: http://localhost:9200
+    - Test your local java SoGiveServer is running: http://localhost:8282
+    - Test nginx is routing your local java SoGiveServer: http://local.sogive.org/manifest
+    - Test your local web-app: http://local.sogive.org/ (make sure to set ServerIO.APIBASE back to `''` to point to the local server)
    
 
 ## Running the tests
