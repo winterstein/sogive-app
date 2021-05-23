@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { assert } from 'sjtest';
+
 import { Button, Modal, ModalHeader, ModalBody, Row, Col, Alert } from 'reactstrap';
 import Login from '../base/youagain';
 import $ from 'jquery';
@@ -30,6 +30,7 @@ import XId from '../base/data/XId';
 import Ticket from '../data/charity/Ticket';
 import { space } from '../base/utils/miscutils';
 import KStatus from '../base/data/KStatus';
+import { assert } from '../base/utils/assert';
 
 
 const widgetPath = ['widget', 'DonationWizard'];

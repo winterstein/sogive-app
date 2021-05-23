@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Jumbotron, Button, Badge } from 'reactstrap';
-import { assert } from 'sjtest';
+
 import {encURI, modifyHash, yessy } from '../base/utils/miscutils';
 import Login from '../base/youagain';
 

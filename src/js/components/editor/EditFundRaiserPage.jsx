@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { assMatch } from 'sjtest';
 import { encURI, } from '../../base/utils/miscutils';
 
 

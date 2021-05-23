@@ -5,7 +5,7 @@ import $ from 'jquery';
 import HashMap from 'hashmap';
 import Enum from 'easy-enums';
 import DataClass from '../../base/data/DataClass';
-import {assert, assMatch} from 'sjtest';
+
 import Project from './Project';
 import Output from './Output';
 import Money from '../../base/data/Money';

@@ -114,7 +114,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		// ES router - done in the super method
 
 		// login
-		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp));
+		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp, "app.sogive.org"));
 		
 		// local DataLog
 		DataLogConfig dlc = AppUtils.getConfig(this.appName, DataLog.getImplementation().getConfig(), args);

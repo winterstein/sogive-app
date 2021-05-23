@@ -1,7 +1,6 @@
 /** Data model functions for the NGO data-type */
 
 import _ from 'lodash';
-import {assert} from 'sjtest';
 import DataClass from '../../base/data/DataClass';
 import Money from '../../base/data/Money';
 

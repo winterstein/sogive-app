@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {assert} from 'sjtest';
 import DataClass from '../../base/data/DataClass';
 import { asNum } from '../../base/utils/miscutils';
 

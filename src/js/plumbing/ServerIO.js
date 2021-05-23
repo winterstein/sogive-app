@@ -4,7 +4,6 @@
  */
 import _ from 'lodash';
 import $ from 'jquery';
-import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
 import NGO from '../data/charity/NGO2';
@@ -14,10 +13,11 @@ import DataStore from '../base/plumbing/DataStore';
 import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 
 import ServerIO from '../base/plumbing/ServerIOBase';
+import KStatus from '../base/data/KStatus.js';
 
 ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
-// ServerIO.APIBASE = 'https://app.sogive.org';
+ServerIO.APIBASE = 'https://app.sogive.org';
 
 // ?? use media.good-loop.com??
 ServerIO.MEDIA_ENDPOINT = '/upload.json';
@@ -38,8 +38,11 @@ ServerIO.getServletForType = (type) => {
  * @param {?Boolean} recommended If true, return only high-impact "gold" charities. Also fetches legacy recommended charities. @deprecated in favour of impact=high
  * @param {?String} impact e.g. "high" Filter by impact
  */
-ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact}) {
-	// assMatch( q || prefix, String);
+ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact, use_list}) {
+	if (use_list) { // HACK experiment
+		if ( ! status) status=KStatus.PUBLISHED;
+		return ServerIO.load('/charity/_list.json', {data: {q, prefix, from, size, status, recommended, impact}} );
+	}
 	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
 };
 

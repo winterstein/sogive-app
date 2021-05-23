@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest, {assert} from 'sjtest';
 import Login from '../../base/youagain';
 import { Alert, Card as BSCard } from 'reactstrap';
 import printer from '../../base/utils/printer.js';
