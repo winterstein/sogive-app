@@ -1,4 +1,4 @@
-import {assert} from 'sjtest';
+
 import DataClass, {nonce} from '../../base/data/DataClass';
 import C from '../../C';
 import Money from '../../base/data/Money';

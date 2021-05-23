@@ -206,7 +206,7 @@ public class StripePlugin {
 
 	public static String secretKey() {		
 		StripeConfig stripeConfig = Dep.get(StripeConfig.class);
-//		Log.d("stripe.setup", JSON.toString(stripeConfig));
+//		Log.d("stripe.setup", WebUtils2.generateJSON(stripeConfig));
 		if (stripeConfig.testStripe) {
 			String skey = stripeConfig.testSecretKey;
 			assert skey != null : "No Stripe TEST secret key :(";

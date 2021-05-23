@@ -1,4 +1,4 @@
-import {assert} from 'sjtest';
+
 import DataClass, {getId} from '../../base/data/DataClass';
 import C from '../../C';
 import Ticket from './Ticket';

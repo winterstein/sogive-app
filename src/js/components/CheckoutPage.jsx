@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Jumbotron, Button, Badge } from 'reactstrap';
 
-import { assert } from 'sjtest';
 import {encURI} from '../base/utils/miscutils';
 import Login from '../base/youagain';
 import C from '../C';
@@ -21,6 +20,7 @@ import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { defaultCardMessage } from './CardShopPage';
 import deepCopy from '../base/utils/deepCopy';
+import { assert } from '../base/utils/assert';
 
 /**
  * Buy cards. Copy pasta from RegisterPage.jsx TODO unify the two

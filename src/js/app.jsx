@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import SJTest from 'sjtest';
 
 import Misc from './base/components/Misc';
 import MainDiv from './components/MainDiv';

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import SJTest, {assert, assMatch} from 'sjtest';
 import Login from '../../base/youagain';
 
 import ActionMan from '../../plumbing/ActionMan';

@@ -1,5 +1,6 @@
 package org.sogive.data.loader;
 
+import com.winterwell.data.KStatus;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -57,14 +58,15 @@ public class ImportEditorialsDataTask {
 		List<String> rejectedIds = new ArrayList<>();
 		for (Editorial editorial : editorials) {
 			String charityId = editorial.getCharityId();
+			KStatus status = database.contains(charityId);
 			// If it's not already in the charity database, we don't want to insert it.
-			if (!database.contains(charityId)) {
+			if (status == KStatus.ABSENT) {
 				rejectedIds.add(charityId);
 				continue;
 			}
 			NGO ngo = new NGO(charityId);
 			ngo.put("recommendation", editorial.getEditorialText());
-			database.upsertCharityRecord(ngo);
+			database.updateCharityRecord(ngo, status);
 			count++;
 		}
 		return new ArrayMap("totalImported", count, "rejectedIds", rejectedIds);

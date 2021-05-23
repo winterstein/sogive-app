@@ -22,6 +22,7 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.web.WebUtils;
+import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.FakeBrowser;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
@@ -93,11 +94,11 @@ public class BasketServletTest {
 							"action", CrudServlet.ACTION_PUBLISH
 							)
 					);
-			Map response = (Map) JSON.parse(json);
+			Map response = (Map) WebUtils2.parseJSON(json);
 			Map esres = (Map) response.get("cargo");
 			
 			System.out.println(esres);
-			Basket don2 = Dep.get(Gson.class).fromJson(JSON.toString(esres));
+			Basket don2 = Dep.get(Gson.class).fromJson(WebUtils2.generateJSON(esres));
 			System.out.println(don2);
 			
 			// check a fund-raiser page is made

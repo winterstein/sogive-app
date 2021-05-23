@@ -10,7 +10,6 @@
 
 // @Flow
 import React, { Component } from 'react';
-import { assert } from 'sjtest';
 import Login from '../base/youagain';
 
 import MDText from '../base/components/MDText';
@@ -25,6 +24,7 @@ import Money from '../base/data/Money';
 import Misc from '../base/components/Misc';
 import { impactCalc } from './ImpactWidgetry';
 import { DonateButton } from './DonationWizard';
+import { assert } from '../base/utils/assert';
 
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps

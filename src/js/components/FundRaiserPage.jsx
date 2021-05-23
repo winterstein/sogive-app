@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { assMatch } from 'sjtest';
 import Login from '../base/youagain';
 import { Container, Row, Col } from 'reactstrap';
 import _ from 'lodash';
@@ -28,6 +27,7 @@ import Donation from '../data/charity/Donation';
 import { DonateButton } from './DonationWizard';
 import { ImpactDesc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
+import { assMatch } from '../base/utils/assert';
 
 
 const FundRaiserTop = () => {

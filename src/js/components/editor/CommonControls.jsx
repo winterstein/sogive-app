@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { assert, assMatch } from 'sjtest';
 
 import {Card as BSCard} from 'reactstrap';
 import Misc from '../../base/components/Misc';
