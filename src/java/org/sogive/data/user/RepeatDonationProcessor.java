@@ -13,7 +13,7 @@ import com.winterwell.es.ESPath;
 import com.winterwell.es.IESRouter;
 import com.winterwell.es.client.ESHttpClient;
 import com.winterwell.es.client.KRefresh;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.SearchResponse;
 import com.winterwell.es.client.sort.KSortOrder;
 import com.winterwell.es.client.sort.Sort;
@@ -70,7 +70,7 @@ class RepeatTask extends TimerTask {
 			// poll ES
 			// TODO checking all every 8 hours is fine for now but not efficient or scalable to the bigtime.
 			ESHttpClient es = Dep.get(ESHttpClient.class);
-			SearchRequestBuilder s = new SearchRequestBuilder(es);
+			SearchRequest s = new SearchRequest(es);
 			ESPath path = Dep.get(IESRouter.class).getPath(RepeatDonation.class, null, KStatus.PUBLISHED);
 			s.setPath(path);
 			s.setSize(10000); // TODO paging
@@ -134,7 +134,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 			if ( ! WebUtils2.isValidEmail(email)) {
 				email = msg.getOriginalDonation().getDonorEmail();
 			}
-			List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email);
+			List<MsgToActor> msgs = DonationServlet.doPublish3_ShowMeTheMoney(null, don, from, email, true);
 			for (MsgToActor m : msgs) {
 				m.post();
 			}
@@ -154,7 +154,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 
 	Time getNextRepeat(RepeatDonation rdon) {
 		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequestBuilder s = new SearchRequestBuilder(es);
+		SearchRequest s = new SearchRequest(es);
 		ESPath path = Dep.get(IESRouter.class).getPath(Donation.class, null, KStatus.PUBLISHED);
 		s.setPath(path);
 		s.setSize(2); // don't need many!

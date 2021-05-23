@@ -8,7 +8,7 @@ import org.sogive.data.charity.NGO;
 
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.SearchRequestBuilder;
+import com.winterwell.es.client.SearchRequest;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
@@ -31,7 +31,7 @@ public class CharityMatcher {
 		
 		ESConfig ec = Dep.get(ESConfig.class);
 		ESHttpClient esjc = new ESHttpClient(ec);
-		SearchRequestBuilder search = esjc.prepareSearch("charity");
+		SearchRequest search = esjc.prepareSearch("charity");
 		String q = Utils.or(ngo.get("displayName"), ngo.getName()).toString(); 
 		q = StrUtils.toCanonical(q);			
 		// this will query _all

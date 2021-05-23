@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { assert } from 'sjtest';
-import { Button, Modal, ModalHeader, ModalBody, Row, Col } from 'reactstrap';
-import Login from 'you-again';
+import { Button, Modal, ModalHeader, ModalBody, Row, Col, Alert } from 'reactstrap';
+import Login from '../base/youagain';
 import $ from 'jquery';
 
 import C from '../C';
@@ -20,7 +20,7 @@ import Basket from '../data/Basket';
 
 import Misc from '../base/components/Misc';
 import PropControl from '../base/components/PropControl';
-import { getId, getType, nonce } from '../base/data/DataClass';
+import { getId, getStatus, getType, nonce } from '../base/data/DataClass';
 import PaymentWidget from '../base/components/PaymentWidget';
 import { RegisterLink } from '../base/components/LoginWidget';
 import Wizard, {WizardStage} from '../base/components/WizardProgressWidget';
@@ -29,6 +29,7 @@ import {errorPath} from '../base/plumbing/Crud';
 import XId from '../base/data/XId';
 import Ticket from '../data/charity/Ticket';
 import { space } from '../base/utils/miscutils';
+import KStatus from '../base/data/KStatus';
 
 
 const widgetPath = ['widget', 'DonationWizard'];
@@ -89,7 +90,7 @@ const DonateButton = ({item, paidElsewhere, ...props}) => {
 const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	const id = getId(item);
 	assert(id, "ImpactCalculator", item);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx - odd item!", item);
 	if ( ! causeName) causeName = item.displayName || item.name || id;
 	let pvEvent = {};
 	if ( ! charity) {
@@ -150,26 +151,29 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 	// paid elsewhere, or (the default) paid here?
 	let paidElsewhere = getWidgetProp(id, 'paidElsewhere');
 
+	const pvDonationDraft = ActionMan.getDonationDraft({item});
+
 	// close dialog and reset the wizard stage
 	const closeLightbox = () => {
 		setWidgetProp(id, 'open', false);
 		DataStore.setValue(stagePath, null);
-
-		// Donation has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
-		// We checked for PUBLISHED status before - BUT the draft under draft.Donation.from:donorId.to:itemId isn't marked as such.
+		const donation = pvDonationDraft.value || {};
+		// Donation is PUBLISHED or has a Stripe token? It's completed, and it shouldn't show up again next time the lightbox opens.
+		// We checked for PUBLISHED status before - BUT the draft under draft.Donation.from:donorId.to:itemId isn't marked as such. 
 		// TODO Stripe ID will also be truthy for a declined transaction - there's no indication that the token is bad
 		// until we publish and DonationServlet tries to redeem it. Mark declined on publish & retain the draft so user can try another card
-		const pvDonationDraft = ActionMan.getDonationDraft({item}); // resolve use-before-declare warnings
-		if (pvDonationDraft.value && pvDonationDraft.value.stripe && pvDonationDraft.value.stripe.id) {
-			ActionMan.clearDonationDraft({donation: donationDraft});
+		
+		if (getStatus(donation)===KStatus.PUBLISHED || (donation.stripe && donation.stripe.id)) {
+			ActionMan.clearDonationDraft({donation});
+		} else {
+			console.log("Keep draft donation",getId(donation),donation);
 		}
 	};
 
 	// get/make the draft donation
 	let type = C.TYPES.Donation;
-	let pDonation = ActionMan.getDonationDraft({item});
 	// if the promise is running, wait for it before making a new draft
-	if (!pDonation.resolved) {
+	if (!pvDonationDraft.resolved) {
 		return (
 			<Modal isOpen={isOpen} className="donate-modal" toggle={closeLightbox}>
 				<ModalBody>
@@ -179,7 +183,7 @@ const DonationWizard = ({item, charity, causeName, fromEditor}) => {
 		);
 	}
 
-	let donationDraft = pDonation.value;
+	let donationDraft = pvDonationDraft.value;
 	Donation.assIsa(donationDraft);
 	
 	const path = DataStore.getDataPath({status:C.KStatus.DRAFT, type, id:donationDraft.id});
@@ -457,7 +461,7 @@ const getSetDonationAmount2 = ({path, item, credit, suggestedDonations, event}) 
 	let cid = Donation.to(dontn);
 	let val = DataStore.getValue(['widget', 'ImpactCalculator', cid, 'amount']);
 	let amount = Money.isa(val)? val : new Money({value:val});
-	let repeat = event ? 'OFF' : 'MONTH'
+	let repeat = event ? 'OFF' : 'MONTH';
 	return {amount, repeat};
 };
 
@@ -579,10 +583,11 @@ const MessageSection = ({path, recipient, item}) => (
 
 
 /**
- * Process the actual payment! Which is done by publishing the Donation.
+ * Process the payment - Which is done by publishing the Donation.
  *
- * PaymentWidget talks to Stripe, then passes over to this method for the actual payment.
- * TODO refactor this into PaymentWidget
+ * Note: Most of the time, Stripe will have already collected the money
+ * 
+ * PaymentWidget talks to Stripe, then passes over to this method.
  */
 const onToken_doPayment = ({donation}) => {
 	DataStore.setData(C.KStatus.DRAFT, donation);
@@ -618,8 +623,8 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	// HACK - store info for the TQ section
 	DataStore.setValue(TQ_PATH, donation, false);
 
-	assert(C.TYPES.isDonation(getType(donation)), ['path',path,'donation',donation]);
-	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx", item);
+	assert(C.TYPES.isDonation(getType(donation)), "DonationWziard.jsx - Not a donation?!", ['path',path,'donation',donation]);
+	assert(NGO.isa(item) || FundRaiser.isa(item) || Basket.isa(item), "DonationWizard.jsx - PaymentSection - odd item", item);
 	if ( ! donation) {
 		return null;
 	}
@@ -645,11 +650,14 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	// ...add in the tip to the total
 	let amountPlusTip = amount;
 	if (donation.tip && donation.hasTip) amountPlusTip = Money.add(amount, donation.tip);
-	// repeat
-	let repeatAmount, repeatFreq;
+
+	// repeating?
+	let repeat;
 	if (Donation.isRepeating(donation)) {
-		repeatAmount = amount;
-		repeatFreq = donation.repeat;
+		repeat = {
+			amount,
+			freq: donation.repeat
+		};
 	}
 
 	// Not the normal payment?
@@ -670,13 +678,15 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	}
 
 	/**
-	 * Add the stripe token to the Donation object and publish the Donation
+	 * Add the completed PaymentIntent to the Donation object and publish the Donation
+	 * TODO The signatures below aren't accurate since the Dec 2020 API migration
 	 * @param {id:String, type:String, token:String} token
 	 *  |source owner: {email, verified_email}
 	 */
-	const onToken = (token) => {
-		donation.stripe = token;
-		onToken_doPayment({donation});
+	const onToken = (payment_intent) => {
+		console.log('onToken called with:', payment_intent);
+		donation.stripe = payment_intent; // ?? also set paymentId?
+		onToken_doPayment({donation});		
 	};
 
 	let payError = DataStore.getValue(errorPath({type:getType(donation), id:donation.id, action:'publish'}));
@@ -684,11 +694,14 @@ const PaymentSection = ({path, donation, item, event, paidElsewhere, closeLightb
 	return (<div>
 		<div className="padded-block">
 			<PropControl type="checkbox" path={path} item={donation} prop="hasTip" label={tipLabel} />
-			<PropControl type="Money" path={path} item={donation} prop="tip" min={0}
-				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false} />
+			<PropControl type="Money" path={path} item={donation} prop="tip" min={new Money(0)}
+				label={space('Amount', Donation.isRepeating(donation) && '(one-off payment)')} disabled={donation.hasTip===false}
+			/>
 		</div>
-		<PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} 
-			repeatAmount={repeatAmount} repeatFreq={repeatFreq} />
+		{getStatus(donation)==KStatus.PUBLISHED || getStatus(donation)==KStatus.MODIFIED? 
+			<Alert color="warning">This donation has already been made. Please reload the page if you want to make another donation.</Alert>
+			: <PaymentWidget onToken={onToken} amount={amountPlusTip} recipient={item.name} error={payError} repeat={repeat} basketId={donation.id} />
+		}
 	</div>);
 }; // ./PaymentSection
 

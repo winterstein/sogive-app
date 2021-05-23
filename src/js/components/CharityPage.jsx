@@ -1,7 +1,7 @@
 // @Flow
 import React from 'react';
 import _ from 'lodash';
-import Login from 'you-again';
+import Login from '../base/youagain';
 import { Col, Label } from 'reactstrap';
 import {yessy } from '../base/utils/miscutils';
 

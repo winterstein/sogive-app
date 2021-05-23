@@ -9,13 +9,18 @@ import org.sogive.data.user.Person;
 
 import com.goodloop.data.Money;
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentMethod;
 //import com.stripe.model.CustomerSubscriptionCollection;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
 import com.stripe.net.RequestOptions;
+import com.stripe.param.PaymentIntentCreateParams;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
@@ -30,24 +35,6 @@ public class StripePlugin {
 	public static final String SERVICE = "stripe";
 	private static final String LOGTAG = "stripe";
 
-//	/**
-//	 * 
-//	 * @param gateway {id: stripe-customer-id}
-//	 * @throws Exception
-//	 */
-//	public static void cancelPlan(Map gateway) throws Exception {
-//		Log.i(SERVICE, "cancelPlan "+gateway);
-//		String id = (String) gateway.get("id");
-//		String secretKey = Dep.get(StripeConfig.class).secretKey;
-//		Stripe.apiKey = secretKey; // WTF? This method (but not it seems other Stripe methods) needs the key set at the global level!
-//		RequestOptions requestOptions = RequestOptions.builder().setApiKey(secretKey).build();
-//		Customer customer = Customer.retrieve(id, requestOptions);
-//		// TODO just cancel one plan
-////		CustomerSubscriptionCollection subs = customer.getSubscriptions();
-//		customer.cancelSubscription(new ArrayMap(
-//				"at_period_end", true
-//				));
-//	}
 
 	/**
 	 * 
@@ -83,10 +70,10 @@ public class StripePlugin {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Charge collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+	public static Charge collectLegacy(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
 			throws Exception
 	{
-		Log.d("stripe", amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
+		Log.d(LOGTAG, "collectLegacy() "+amount+" "+description+" "+sa+" "+user+" "+idempotencyKey);
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
@@ -136,18 +123,90 @@ public class StripePlugin {
         Log.d(LOGTAG, "A charge was made! "+c);
         if (user!=null && c.getCustomer() != null) {
         	Customer cobj = c.getCustomerObject();
-	        user.put("stripe", new ArrayMap(
-	        			"customerId", c.getCustomer(),
-	        			"email", cobj==null? c.getReceiptEmail() : cobj.getEmail()
-	        		));
+        	Map cInfo = new ArrayMap(
+    			"customerId", c.getCustomer(),
+				"email", cobj==null? c.getReceiptEmail() : cobj.getEmail()
+    		);
+	        user.put("stripe", cInfo);
         }
         // TODO turn into a map
 		return c;
 	}
+	
+	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user, String idempotencyKey) 
+			throws Exception
+	{
+		Log.d(LOGTAG, amount+" description: "+description+" SA:"+sa+" user:"+user+" ikey:"+idempotencyKey+" "+ReflectionUtils.getSomeStack(8));
+		if (amount.getValue100p() <= 0) {
+			throw new IllegalArgumentException(amount.toString());
+		}
+		
+		// Amount to charge in pence (rounding up before casting to int)
+		Long pence = (long) Math.ceil(amount.getValue100p() / 100);
+		String currency = Utils.or(amount.getCurrency(), "GBP").toString();
+		
+		StripePlugin.prep();
+		// Get whatever payment method was originally used
+		PaymentMethod pm = paymentMethodFromStripeAuth(sa);
+		// and ask for a new PaymentIntent using it
+		PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+				.setCurrency(currency)
+				.setAmount(pence)
+				.setPaymentMethod(pm.getId())
+				.setCustomer(pm.getCustomer())
+				.setConfirm(true) // ?? (from migration docs)
+				.setOffSession(true) // The customer is not present to confirm payment (so you'd better have run SCA and got permission for repeat payments)
+				.setStatementDescriptor("Donation via SoGive") // To appear on credit card statement
+				.setDescription(description) // Our internal description
+				.setReceiptEmail(sa.email)
+				.build();
+
+//		Add idempotency key to request (https://stripe.com/docs/api#idempotent_requests)
+        RequestOptions ro = null;
+        if (Utils.isBlank(idempotencyKey)) {
+        	Log.w(LOGTAG, "No idempotency-key protection for PaymentIntent " + params);
+        } else {
+        	ro = RequestOptions.builder().setIdempotencyKey(idempotencyKey).build();
+        }
+
+        Log.d(LOGTAG, "Create... PaymentIntent idempotencyKey:" + idempotencyKey+" customer: "+pm.getCustomer()+" amount:"+amount+" user: "+user);
+        PaymentIntent pi = PaymentIntent.create(params, ro);
+
+        Log.d(LOGTAG, "A PaymentIntent was created! " + pi);
+        if (user != null && pi.getCustomer() != null) {
+        	Customer cobj = pi.getCustomerObject();
+        	Map cInfo = new ArrayMap(
+    			"customerId", pi.getCustomer(),
+    			"email", cobj == null ? pi.getReceiptEmail() : cobj.getEmail()
+    		);
+	        user.put("stripe", cInfo);
+        }
+        // TODO turn into a map
+		return pi;
+	}
+	
+	/**
+	 * A StripeAuth created after the 2020-12 update may contain an ID for a PaymentIntent or a PaymentMethod.
+	 * To make a new payment we always need the PaymentMethod - this abstracts away the extra retrieval steps. 
+	 * @param sa
+	 * @return
+	 * @throws StripeException
+	 */
+	public static PaymentMethod paymentMethodFromStripeAuth(StripeAuth sa) throws StripeException {
+		PaymentMethod pm = null;
+		if (sa.isPaymentIntent()) {
+			PaymentIntent pi = PaymentIntent.retrieve(sa.getId());
+			pm = PaymentMethod.retrieve(pi.getPaymentMethod());
+		} else if (sa.isPaymentMethod()) {
+			pm = PaymentMethod.retrieve(sa.getId());
+		}
+		return pm;
+	}
+	
 
 	public static String secretKey() {		
 		StripeConfig stripeConfig = Dep.get(StripeConfig.class);
-		Log.d("stripe.setup", JSON.toString(stripeConfig));
+//		Log.d("stripe.setup", JSON.toString(stripeConfig));
 		if (stripeConfig.testStripe) {
 			String skey = stripeConfig.testSecretKey;
 			assert skey != null : "No Stripe TEST secret key :(";

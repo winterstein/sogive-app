@@ -1,6 +1,6 @@
 
 import {assert, assMatch} from 'sjtest';
-import Login from 'you-again';
+import Login from '../base/youagain';
 import PV from 'promise-value';
 import _ from 'lodash';
 import md5 from 'md5';
@@ -317,6 +317,7 @@ ActionMan.getDonationDraft = ({item, charity, fundRaiser}) => {
  * Hacky fix to deal with seperate donations in the same session overriding each other
  */
 ActionMan.clearDonationDraft = ({donation}) => {
+	console.log("clearDonationDraft",getId(donation), donation);
 	let from = Login.getId();
 	let charity = donation.to;
 	let fundRaiser = donation.fundRaiser;

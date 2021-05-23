@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
-import Login from 'you-again';
+import Login from '../base/youagain';
 import printer from '../base/utils/printer.js';
 import C from '../C';
 import DataStore from '../base/plumbing/DataStore';
@@ -15,6 +15,7 @@ import {LoginLink} from '../base/components/LoginWidget';
 import {RolesCard, LoginCard} from '../base/components/AccountPageWidgets';
 import ListLoad from '../base/components/ListLoad';
 import XId from '../base/data/XId';
+import {RDItem} from './editor/ManageRepeatDonationsPage';
 
 const AccountPage = () => {
 	if ( ! Login.isLoggedIn()) {
@@ -48,8 +49,8 @@ const AccountPage = () => {
 
 const RepeatingDonations = () => {
 	// ListItem={RDListItem}
-	return <ListLoad type={C.TYPES.RepeatDonation} servlet='repeatdonation'
-		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH}
+	return <ListLoad type={C.TYPES.RepeatDonation} navpage='repeatdonation'
+		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH} ListItem={RDItem}
 		canDelete />;
 	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {
 	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });

@@ -4,8 +4,7 @@ import com.winterwell.utils.io.Option;
 
 public class StripeConfig {
 
-	public StripeConfig() {	
-	}
+	public StripeConfig() { }
 	
 	@Option
 	String secretKey;

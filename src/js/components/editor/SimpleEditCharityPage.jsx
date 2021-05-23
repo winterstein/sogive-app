@@ -5,7 +5,7 @@ import Enum from 'easy-enums';
 import _ from 'lodash';
 import React from 'react';
 import { assert, assMatch } from 'sjtest';
-import Login from 'you-again';
+import Login from '../../base/youagain';
 import { LoginLink } from '../../base/components/LoginWidget';
 import Misc from '../../base/components/Misc';
 import PropControl from '../../base/components/PropControl';
@@ -20,6 +20,7 @@ import ActionMan from '../../plumbing/ActionMan';
 import ServerIO from '../../plumbing/ServerIO';
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
+import { getDataItem } from '../../base/plumbing/Crud';
 
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
@@ -39,28 +40,10 @@ const SimpleEditCharityPage = () => {
 	// fetch data
 	const cid = DataStore.getUrlValue('charityId');
 	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
-	let {value:charity} = DataStore.fetch(cpath,
-		() => ServerIO.getCharity(cid, C.KStatus.DRAFT).then(result => result.cargo)
-	);
+	let {value:charity} = getDataItem({id:cid, status:C.KStatus.DRAFT,type:"NGO"});
+	
 	if ( ! charity) {
 		return <Misc.Loading />;
-	}
-	// HACK load a fresh draft the first time.
-	if (C.KStatus.isPUBLISHED(charity.status)) {
-		if ( ! charity.uptodatedraft) {
-			ServerIO.getCharity(cid, C.KStatus.DRAFT)
-				.then(res => {
-					console.warn("res", res);
-					if (res.cargo) {
-						res.cargo.status = C.KStatus.DRAFT;
-						res.cargo.uptodatedraft = "yes";
-						console.warn("Lets see what's under the hood", C.KStatus.DRAFT);
-						DataStore.setData(C.KStatus.DRAFT, res.cargo);
-					}
-				});
-		}
-	} else if (C.KStatus.isDRAFT(charity.status)) {
-		charity.uptodatedraft = "probably"; // HACK as part of load-draft-once
 	}
 
 	// projects

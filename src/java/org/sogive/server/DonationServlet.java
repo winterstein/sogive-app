@@ -1,8 +1,10 @@
 package org.sogive.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -18,10 +20,12 @@ import org.sogive.server.payment.MoneyCollector;
 import com.winterwell.data.KStatus;
 import com.winterwell.data.PersonLite;
 import com.winterwell.datalog.server.TrackingPixelServlet;
+import com.winterwell.depot.merge.Diff;
+import com.winterwell.depot.merge.Merger;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESConfig;
 import com.winterwell.es.client.ESHttpClient;
-import com.winterwell.es.client.IndexRequestBuilder;
+import com.winterwell.es.client.IndexRequest;
 import com.winterwell.es.client.KRefresh;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
@@ -30,11 +34,14 @@ import com.winterwell.ical.Repeat;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Tree;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.threads.MsgToActor;
 import com.winterwell.utils.time.Period;
 import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.JsonPatch;
+import com.winterwell.utils.web.JsonPatchOp;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
 import com.winterwell.web.ajax.JThing;
@@ -82,11 +89,11 @@ public class DonationServlet extends CrudServlet<Donation> {
 		super(Donation.class);
 		defaultSort = "date-desc";
 	}
-
-	/*public void process(WebRequest state) throws Exception {
-		// crud + list
+	
+	
+	public void process(WebRequest state) throws Exception {
 		super.process(state);
-	}*/
+	}
 	
 	@Override
 	protected ESQueryBuilder doList3_ESquery(String q, String prefix, Period period, WebRequest stateOrNull) {
@@ -135,7 +142,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 	}
 	
 	@Override
-	protected JThing doPublish(WebRequest state, KRefresh forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) {
+	protected JThing doPublish(WebRequest state, KRefresh forceRefreshIgnoredToTrue, boolean deleteDraftIgnoredToTrue) throws Exception {
 		Log.d(LOGTAG, "doPublish "+state);
 		// make/save Donation
 		super.doSave(state);
@@ -174,10 +181,11 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 * TODO Export-CSV should e.g. set a prop on the servlet which says "don't sanitize, I need full data"
 	 * @param hits2
 	 * @param state
+	 * @return 
 	 * @return
 	 */
 	@Override
-	protected void cleanse(JThing<Donation> thing, WebRequest state) {
+	protected JThing<Donation> cleanse(JThing<Donation> thing, WebRequest state) {
 		// TODO HACK if returning a list for the event owner - show more info
 		boolean showEmailAndAddress = false;
 		// ...HACK is this for manageDonations?
@@ -200,7 +208,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 			Log.d(LOGTAG, "hack purpose:admin upgrade data for "+tokens);
 		}
 		
-		Donation donation = thing.java();
+		Donation donation = Utils.copy(thing.java());
 
 		// We want to be able to display a name unless the donor requested anonymity
 		// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
@@ -249,9 +257,8 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donor.setName(donorName);
 			donation.setDonor(donor);
 		}
-		
-		// done
-		thing.setJava(donation);
+		// done?
+		return new JThing(donation);
 	}
 	
 
@@ -271,7 +278,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		// publish
 //		AppUtils.doPublish(rep, false, true);		
 		ESHttpClient esjc = new ESHttpClient(Dep.get(ESConfig.class));
-		IndexRequestBuilder index = esjc.prepareIndex(path);
+		IndexRequest index = esjc.prepareIndex(path);
 		index.setBodyDoc(rep);
 		index.execute();
 	}
@@ -312,7 +319,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		}
 		
 		// do it!
-		List<MsgToActor> msgs = doPublish3_ShowMeTheMoney(state, donation, from, email);		
+		List<MsgToActor> msgs = doPublish3_ShowMeTheMoney(state, donation, from, email, false);
 		
 		jthing.setJava(donation); // Is this needed to avoid any stale json?
 		return msgs;
@@ -339,9 +346,11 @@ public class DonationServlet extends CrudServlet<Donation> {
 	 * @param donation
 	 * @param user Cannot be null (use email if not logged in)
 	 * @param email Can be null for e.g. Good-Loop "donations" But must be set for "proper" SoGive donations 
+	 * @param takePayment False = Payment has already been made client-side (initial donation). True = Payment should be taken now (repeat donation)
 	 * @return unposted message, to allow it to be posted after the donation is published
+	 * 
 	 */
-	public static List<MsgToActor> doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email) 
+	public static List<MsgToActor> doPublish3_ShowMeTheMoney(WebRequest state, Donation donation, XId user, String email, boolean takePayment)
 	
 	{
 		Utils.check4null(donation, user);
@@ -365,6 +374,8 @@ public class DonationServlet extends CrudServlet<Donation> {
 		}
 								
 		// collect the money
+		
+		// Do we have a recipient on the donation? Try to recover if it looks like we don't.
 		if (Utils.isBlank(donation.getTo())) {
 			Log.w(LOGTAG, "doPublishFirstTime null to?! "+donation+" "+state);
 			String frid = donation.getFundRaiser();
@@ -385,14 +396,17 @@ public class DonationServlet extends CrudServlet<Donation> {
 			donation.setTo(cid);
 			Log.w(LOGTAG, "doPublishFirstTime null to - set to "+cid+" Donation: "+donation);
 		}
+		
+		
 		if (donation.isPaidElsewhere()) {
 			Log.d(LOGTAG, "paid elsewhere "+donation);
-		} else {					
+		} else {
 			Utils.check4null(donation, email);
 			String _to = donation.getTo();
 			assert _to != null : "No charity ID?! "+donation;
 			XId to = NGO.xidFromId(_to);
 			MoneyCollector mc = new MoneyCollector(donation, user, email, to, state);
+			mc.takePayment = takePayment; // Only create a new PaymentIntent if the invoking code says (ie if this is a repeat donation)
 			mc.run(); // what if this fails??
 		}
 		
@@ -420,6 +434,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		}
 		return msgs;
 	}
+	
 
 	/**
 	 * copy pasta code TODO refactor
@@ -442,7 +457,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String amount = donation.getAmount().toString();
 		String tip = "";
 		if (Utils.yes(donation.getHasTip()) && donation.getTip()!=null && ! donation.getTip().isZero()) {
-			tip = " (including a tip of "+donation.getTip()+" to cover SoGive's costs)";
+			tip = " (including a tip of "+donation.getTip()+" to cover costs)";
 		}
 		String cid = donation.getTo();
 		NGO charity = AppUtils.get(cid, NGO.class);
@@ -459,5 +474,6 @@ public class DonationServlet extends CrudServlet<Donation> {
 		String bodyPlain = WebUtils2.getPlainText(bodyHtml);
 		email.setHtmlContent(bodyHtml, bodyPlain);
 		emailer.send(email);
+		Log.d(LOGTAG, "email sent for "+donation);
 	}
 }

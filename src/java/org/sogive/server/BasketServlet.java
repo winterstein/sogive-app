@@ -30,7 +30,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 
 	@Override
 	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, KRefresh forceRefresh,
-			boolean deleteDraft) 
+			boolean deleteDraft) throws Exception 
 	{
 		Basket basket = getThing(state);
 		if (basket==null) {
@@ -62,7 +62,7 @@ public class BasketServlet extends CrudServlet<Basket> {
 		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements		
 		MoneyCollector mc = new MoneyCollector(basket, user, email, to, state);
 		mc.run();
-						
+		
 		// store in the database (this will save the edited basket)
 		super.doPublish(state, forceRefresh, deleteDraft);
 		// store the tickets

@@ -6,7 +6,7 @@ import { assert, assMatch } from 'sjtest';
 import { Form, FormGroup, Input, InputGroup, InputGroupAddon, Button } from 'reactstrap';
 import {encURI, modifyHash, stopEvent } from '../base/utils/miscutils';
 
-import Login from 'you-again';
+import Login from '../base/youagain';
 import printer from '../base/utils/printer';
 import ServerIO from '../plumbing/ServerIO';
 import List from '../base/data/List';

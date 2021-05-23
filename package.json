@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -9,6 +9,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.11.0",
     "chart.js": "^2.9.3",
     "easy-enums": "^1.1.7",
     "easyi18n": "^1.1.1",
@@ -19,18 +21,15 @@
     "lodash": "^4.17.20",
     "md5": "^2.2.1",
     "node-fetch": "^2.6.1",
-    "promise-value": "^1.2.9",
+    "promise-value": "^1.2.10",
     "react": "^16.13.1",
     "react-autocomplete": "^1.8.1",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^11.0.1",
     "react-markdown": "^4.3.1",
-    "react-stripe-checkout": "^2.6.3",
-    "react-stripe-elements": "^2.0.3",
     "reactstrap": "^8.5.1",
-    "sjtest": "^0.4.9",
-    "you-again": "^0.8.8"
+    "sjtest": "^0.4.9"
   },
   "scripts": {
     "compile": "webpack --config $PWD/webpack.config.js --progress --colors && ./gitstamp.sh",

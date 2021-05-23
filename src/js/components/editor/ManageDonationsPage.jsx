@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SJTest, {assert, assMatch} from 'sjtest';
-import Login from 'you-again';
+import Login from '../../base/youagain';
 
 import ActionMan from '../../plumbing/ActionMan';
 import DataStore from '../../base/plumbing/DataStore';
@@ -182,7 +182,7 @@ const ManageDonationsPage = () => {
 			<PropControl label='Format' prop='format' options={['normal', 'hmrc']}
 				labels={['Normal', 'HMRC Gift Aid Format']} type='select' />
 			{isGiftAidFormat? <p>The table below is filtered to ONLY include donations with gift-aid.</p> : null}
-			<SimpleTable data={dons} columns={columns} csv hasFilter
+			<SimpleTable data={dons} columns={columns} hasCsv hasFilter
 				addTotalRow={ ! isGiftAidFormat} hideEmpty={ ! isGiftAidFormat}
 				rowsPerPage={100}
 			/>

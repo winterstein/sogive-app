@@ -52,10 +52,28 @@ NGO.impact = ngo => ngo.impact || (ngo.recommended && 'high');
  * Get the summary or description, capped at 280 chars. Can be blank never null.
  */
 NGO.shortDescription = ngo => ellipsize(ngo.summaryDescription || ngo.description || '', 280);
+/**
+ * 
+ * @param {!NGO} ngo 
+ * @returns array of {regulator, id, key}
+ */
 NGO.registrationNumbers = (ngo) => {
-	// TODO OSCR, companies house
-	if (ngo.englandWalesCharityRegNum) return [{regulator:'Charity Commission', id:ngo.englandWalesCharityRegNum}];
-	return [];
+	// OSCR, companies house
+	let regulators = [
+		{regulator:'Charity Commission', key:"englandWalesCharityRegNum"},
+		{regulator:'OSCR (Scotland) registration', key:"scotlandCharityRegNum"},
+		{regulator:'Northern Ireland registration', key:"niCharityRegNum"},
+		{regulator:'UK Companies House', key:"ukCompanyRegNum"},
+		{regulator:'USA registration (e.g. EIN)', key:"usCharityRegNum"}
+	];
+	let regs = [];
+	regulators.forEach(r => {
+		if (ngo[r.key]) {
+			r.id = ngo[r.key];
+			regs.push(r);
+		}
+	});
+	return regs;
 };
 /**
  * @return {?Project} the representative project, or null if the charity is not ready.

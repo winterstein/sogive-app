@@ -7,7 +7,6 @@ import $ from 'jquery';
 import {SJTest, assert, assMatch} from 'sjtest';
 import C from '../C.js';
 
-import Login from 'you-again';
 import NGO from '../data/charity/NGO2';
 
 // Try to avoid using this for modularity!
@@ -22,6 +21,7 @@ ServerIO.APIBASE = '';
 
 // ?? use media.good-loop.com??
 ServerIO.MEDIA_ENDPOINT = '/upload.json';
+ServerIO.MEDIA_ENDPOINT = 'https://testmedia.good-loop.com/upload.json';
 
 ServerIO.checkBase();
 
@@ -41,14 +41,6 @@ ServerIO.getServletForType = (type) => {
 ServerIO.searchCharities = function({q, prefix, from, size, status, recommended, impact}) {
 	// assMatch( q || prefix, String);
 	return ServerIO.load('/search.json', {data: {q, prefix, from, size, status, recommended, impact}} );
-};
-
-
-/**
- @deprecated convenience for ServerIO.getDataItem
- */
-ServerIO.getCharity = function(charityId, status) {
-	return ServerIO.getDataItem({type: C.TYPES.NGO, id: charityId, status: status});
 };
 
 
@@ -87,6 +79,19 @@ ServerIO.addCharity = function(charity, status=C.KStatus.DRAFT) {
 		data: {action: 'new', item: JSON.stringify(charity), status: status},
 		method: 'PUT'};
 	return ServerIO.load('/charity.json', params);
+};
+
+/**
+ * Import editorials for existing charities in database from a published Google doc.
+ * 
+ * @param publishedEditorialsUrl the URL of the pubslished Google doc containing SoGive editorials.
+ */
+ServerIO.importEditorials = function(publishedEditorialsUrl) {
+	let params = {
+		data: {	dataset: 'editorials', url: publishedEditorialsUrl },
+		method: 'PUT'
+	};
+	return ServerIO.load('/import.json', params)
 };
 
 export default ServerIO;

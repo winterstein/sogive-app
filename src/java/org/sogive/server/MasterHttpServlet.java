@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.sogive.data.charity.SoGiveConfig;
+import org.sogive.server.payment.StripePaymentIntentServlet;
 import org.sogive.server.payment.StripeWebhookServlet;
 
 import com.winterwell.utils.Dep;
@@ -78,6 +79,10 @@ public class MasterHttpServlet extends HttpServlet {
 				return;
 			case "repeatdonation":
 				s = new RepeatdonationServlet();
+				s.process(request);
+				return;
+			case "stripe-paymentintent":
+				s = new StripePaymentIntentServlet();
 				s.process(request);
 				return;
 			case "stripe":

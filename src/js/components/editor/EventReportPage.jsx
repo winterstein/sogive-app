@@ -2,14 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import SJTest, {assert} from 'sjtest';
-import Login from 'you-again';
+import Login from '../../base/youagain';
 
 import C from '../../C';
-import Roles from '../../base/Roles';
 import Misc from '../../base/components/Misc';
 import DataStore from '../../base/plumbing/DataStore';
 import ServerIO from '../../plumbing/ServerIO';
-import ActionMan from '../../plumbing/ActionMan';
 import {getType, getId, nonce} from '../../base/data/DataClass';
 import Ticket from '../../data/charity/Ticket';
 import Event from '../../data/charity/Event';

@@ -125,12 +125,18 @@ verified_phone
 				+ email + "]";
 	}
 
-	/**
-	 * 
-	 * @return true if this is a (probably reusable) money source
-	 */
+	/** @return true if this is a (probably reusable) money source */
 	public boolean isSource() {
 		return "source".equals(object);
+	}
+	
+	/** @return true if this is a PaymentMethod (should be all StripeAuths after Dec 2020 API migration) */
+	public boolean isPaymentIntent() {
+		return "payment_intent".equals(object);
+	}
+	
+	public boolean isPaymentMethod() {
+		return "payment_method".equals(object);
 	}
 
 }
