@@ -2,8 +2,9 @@
 import React from 'react';
 import _ from 'lodash';
 import Login from '../base/youagain';
-import { Col, Label } from 'reactstrap';
+import { Button, Col, Label, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import {yessy } from '../base/utils/miscutils';
+import { PieChart } from 'react-minimal-pie-chart';
 
 import printer from '../base/utils/printer';
 import DataStore from '../base/plumbing/DataStore';
@@ -27,17 +28,8 @@ import { DonateButton } from './DonationWizard';
 
 const InfoColumn = ({charity}) => (
 	<Col md="4" xs="12" className="column info-column">
-		<div className="header">&nbsp;</div>
-		<Tabs id="rhsTabs" defaultTabId="1">
-			<Tab tabId="1" title="About">
-				<CharityAbout charity={charity} />
-			</Tab>
-			<Tab tabId="2" title="Analysis">
-				<CharityExtra charity={charity} />
-				<LogOffSiteDonation item={charity} />
-				<MakeDirectFundRaiser charity={charity} />
-			</Tab>
-		</Tabs>
+		
+		<CharityAbout charity={charity} />
 	</Col>
 );
 
@@ -52,8 +44,6 @@ const CharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
 	}
-	const label = C.IMPACT_LABEL4VALUE[charity.impact];
-	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
 
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
@@ -62,17 +52,15 @@ const CharityPage = () => {
 				<h1 className="header-title">
 					{charity.displayName || charity.name} <small><EditLink charity={charity} /></small>
 				</h1>
-				<div className='description-short'>
+				<div className='div-section-text description-short'>
 					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
 				</div>
-				<div class="container" className='impact'>
-					{charity.impact ? <img class="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
-					<DonateButton item={charity}/>
-				</div>
+				<RatingBadgeandDonate charity={charity} />
+				<LearnAboutRatingsModal />
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
 			<ImpactCalculatorSection charity={charity} />
-			{charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null}
+			{/* {charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null} */}
 			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
 	);
@@ -89,6 +77,17 @@ const CharityPage = () => {
 	);
 }; // ./CharityPage
 
+const RatingBadgeandDonate = ({charity}) => {
+	const label = C.IMPACT_LABEL4VALUE[charity.impact];
+	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
+
+	return (
+		<div className="container impact">
+			{charity.impact ? <img className="mr-4" alt={label} src={ratingIconPath}/> : <img alt='Not yet rated' src='/img/not-yet-rated.svg'/>}
+			<DonateButton item={charity}/>
+		</div>
+	)
+}
 
 const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 	// TODO <a href={'/#search?q=tag:'+encURI(tag)}> -- needs server-side support
@@ -96,7 +95,6 @@ const CharityTags = ({whyTagsString = '', whereTagsString = ''}) => (
 		Tags: {whyTagsString.toLocaleLowerCase()}, {whereTagsString.toLocaleLowerCase()}
 	</div>
 );
-
 
 const ImpactCalculatorSection = ({charity}) => (
 	<div>
@@ -130,46 +128,116 @@ const CharityAnalysisSection = ({charity}) => (
 		<div className="header">
 			<h2 className="header-section-title">Our Analysis</h2>
 		</div>
+		<RatingBadgeandDonate charity={charity} />
 		<div className="div-section-text">
 			<MDText source={charity.recommendation} />
 		</div>
 	</div>
 );
 
+//this function gets project data of a certain charity and returns on object containing project data, total project value and the year its from
+//project data is in this format because of the pie chart package
+const getProjectData = (charity) => {
+	let  outputarray = []
+	// Sort all projects by year, descending, and filter out other years
+	let programSplit = charity.projects.sort((a,b) => {
+		if (a.year > b.year) return -1;
+		if (a.year < b.year) return 1;
+		return 0;
+	})
+	let mostRecentYear = programSplit[0].year;
+	programSplit = programSplit.filter(proj =>  proj.year === mostRecentYear)
+	let i = 0;
+	
+	programSplit.map((obj) => {
+		const colours = ["#27AE60", "#F2994A", "#2D9CDB", "#C32DDB", "#F24A4F"]
+		
+		if (obj.inputs.findIndex(elem => elem.name === "projectCosts") !== -1) {
+			i = outputarray.length
+			if (i >= colours.length) i = outputarray.length % colours.length; //limiting colours to only those in the array
+			let insert = {
+				color: colours[i],
+				title: obj.name,
+				value: obj.inputs[obj.inputs.findIndex(elem => elem.name === "projectCosts")].value,
+			};
+			if (insert.value) outputarray.push(insert);
+		}
+	});
+	const returnObj = {};
+	returnObj.totalProjectValue = outputarray.reduce((acc, elem) => acc + Number(elem.value), 0);
+	returnObj.year = mostRecentYear;
+	returnObj.data = outputarray;
+	return returnObj;
+}
+
 const CharityAbout = ({charity}) => {
 	// Safety: in case the url is e.g. wwww.mysite.com with no http(s)
 	let churl = charity.url;
 	if (churl && churl.indexOf('http') !== 0) churl = 'http://'+churl;
+	
 	return (
 		<div className='charity-about'>
-			{NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null}
+			{/* {NGO.getName(charity) !== NGO.displayName(charity)? <h4 className='official-name'>{NGO.getName(charity)}</h4> : null} */}
 			<CharityAboutImage charity={charity} />
-			<div className='descriptions'>
-				<div className='description-short'>
-					{charity.summaryDescription? <MDText source={charity.summaryDescription} /> : null}
-				</div>
-				<div className='description-long'>
-					{charity.description? <MDText source={charity.description} /> : null}
-				</div>
-			</div>
-			<div className='url'>
-				<a href={churl} target='_blank'>{charity.url}</a>
-			</div>
-			<div className='official-details'>
-				{NGO.registrationNumbers(charity).map(reg => <small key={reg.id}>{reg.regulator}: {reg.id}</small>)}
+			<div className='charity-about-details div-section-text border'>
+				<h3 className='header-section-title'><b>Details on {NGO.displayName(charity)}</b></h3>
+				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
+				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+				<ProgramSplit charity={charity} />
 			</div>
 		</div>
 	);
 };
+
+const ProgramSplit = ({charity}) => {
+	let pieChartData = [];
+	let totalProjectValue = 0;
+	let mostRecentProjectYear;
+	
+
+	if (charity.projects !== undefined) {
+		const projectData = getProjectData(charity);
+		totalProjectValue = projectData.totalProjectValue;
+		if (projectData.data.length > 0) {
+			mostRecentProjectYear = ` (${projectData.year})`;
+			pieChartData = projectData.data
+		}
+	}
+
+	return (
+		<>
+		{pieChartData.length > 1? 
+			<>
+			<p><b>Program Split{mostRecentProjectYear}:</b></p>
+			<ul>
+				{pieChartData.map(prog => <li key={prog.title} style= {{'color': prog.color}}>{prog.title} - {Math.round(Number(prog.value) * 100/totalProjectValue)}%</li>)}
+			</ul>
+			<PieChart
+				data={pieChartData}
+				label={({ dataEntry }) => Math.round(dataEntry.percentage) + '%'}
+				labelStyle={(index) => ({
+					fill: pieChartData[index].color,
+					fontSize: '4px',
+					fontFamily: 'Tajawal',
+				})}
+				radius={40}
+				labelPosition={105}
+				/>
+			</>
+			:<></>
+		}
+		</>
+	)
+}
+
+
 const CharityAboutImage = ({charity}) => {
 	if ( ! NGO.image(charity) && ! charity.logo) return null;
 	return (<div className='images'>
 		{NGO.image(charity)? <div className='charity-image'>
 			<img src={NGO.image(charity)} alt='Charity' />
 		</div> : null}
-		{charity.logo? <div className='charity-logo'>
-			<img src={charity.logo} alt='Charity logo' />
-		</div> : null}
+
 	</div>);
 };
 
@@ -348,9 +416,12 @@ const CharityProfile = ({charity}) => {
 const EditLink = ({charity}) => {
 	if ( ! Login.isLoggedIn()) return null;
 	const cid = NGO.id(charity);
-	return (<div className='pull-right'>
-		<a href={'#simpleedit?charityId='+escape(cid)}>edit</a>
-	</div>);
+	return (
+		// <div className='pull-right'>
+		// 	<a href={'#simpleedit?charityId='+escape(cid)}>edit</a>
+		// </div>);
+			<Button variant="outline-light" href={'#simpleedit?charityId='+escape(cid)}>Edit</Button>
+	)
 };
 
 const ProjectList = ({projects, charity}) => {
@@ -446,5 +517,27 @@ const MakeDirectFundRaiser = ({charity}) => {
 		<CreateButton type={C.TYPES.FundRaiser} navpage='editFundraiser' />
 	</Misc.Card>);
 };
+
+const LearnAboutRatingsModal = () => {
+	const [ratingsModalOpen, setRatingsModalOpen] = React.useState(false);
+	const toggle = () => setRatingsModalOpen(!ratingsModalOpen)
+
+	return (
+		<>
+			<button onClick={toggle} className="ratings-button">Learn about our ratings</button>
+			<Modal isOpen={ratingsModalOpen} toggle={toggle}>
+				<ModalHeader toggle={toggle}>Our ratings</ModalHeader>
+				<ModalBody>
+					<ul>
+						<li>When we describe an organisation as <b>Gold</b>-rated, we mean that the organisation's work likely outperforms that of a Silver-rated organisation, and likely outperforms a Bronze-rated organisation by a substantial margin, as assessed considering cost-effectiveness and evidence of effectiveness. A gold charity is an outperformer.</li>
+						<li>When we describe an organisation as <b>Silver</b>-rated, we mean that the organisation's work likely outperforms that of a Bronze-rated organisation, typically by a substantial margin, but underperforms compared to a Gold-rated organisation. A silver charity is an outperformer.</li>
+						<li>When we describe an organisation as <b>Bronze</b>-rated, we mean that that the organisation's work likely has a positive impact, but underperforms compared to a Silver or Gold-rated charity. A Bronze-rated organisation may underperform a silver charity by a substantial margin. By assigning a charity or organisation a Bronze rating, we are not guaranteeing that the organisation does have net positive impact, however we are expressing confidence that the charity's impact underperforms our Gold Standard Benchmarks</li>
+					</ul>
+				</ModalBody>
+			</Modal>
+		</>
+	)
+}
+
 
 export default CharityPage;

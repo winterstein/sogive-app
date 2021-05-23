@@ -29,19 +29,11 @@
 
 .donation-impact {
 	background-color: white;
-	border: 1px solid @grey-border-colour;
-	box-sizing: border-box;
 	color: @charity-page-impact-calculator-text;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
 	align-items: center;
-	padding: 1.25em 2em 1.25em 1.25em;
-
-	/* Drop Shadow */
-	box-shadow: 0px 3px 6px rgba(81, 81, 81, 0.125);
-
-	border-radius: 4px;
 
 	/* Appear in front of the social share buttons */
 	position: relative;
@@ -58,7 +50,7 @@
 			border: 5px solid @donation-amt-fg;
 			border-radius: 50%;
 			background-color: @donation-amt-fg;
-			color: @white;
+			color: white;
 			height: 28px;
 			width: 28px;
 			font-size: 28px;
@@ -71,14 +63,6 @@
 
 	.donation-input, .donation-output {
 		height: 200px;
-	}
-
-	.will-fund {
-		font-size: 1.286em;
-	}
-
-	.donation-description {
-		font-size: 1.143em;
 	}
 
 	.form-group {
@@ -107,6 +91,7 @@
 				border: none;
 				border-radius: 0;
 				box-shadow: none;
+				//font-size and weight set here to match figma - bold & 28px - specific to this widget for emphasis
 				font-size: 2em;
 				font-weight: 800;
 				height: inherit;
@@ -114,15 +99,11 @@
 
 	/* The output column - weird margins and padding on left to make room for the arrow graphic between the columns */
 		.output-number {
+			//font-size and weight set here to match figma - bold & 28px
 			font-size: 2em;
 			font-weight: 800;
 			color: @donation-number-fg;
 		}
-
-		.output-units {
-			font-size: 1.286em;
-		}
-
 }
 
 // TODO the shadow on the donation row. This line is too wide, and doesn't work with the image.
@@ -189,8 +170,4 @@
 }
 .facebook-btn:hover {
 	color: @color-facebook;
-}
-
-.header .description-short p {
-	font-size: 1.143em;
 }

@@ -110,13 +110,13 @@ class ImpactCalculator extends Component {
 		const donationUp = () => this.incrementDonation(amount, 1, charity);
 
 		return (
-			<div className='donation-impact'>
+			<div className='donation-impact border'>
 				<button onClick={donationDown} className='donation-down'>-</button>
 				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} />
 				<button onClick={donationUp} className='donation-up'>+</button>
-				<div className='will-fund'>can fund</div>
+				<div className='will-fund div-section-larger-text'>can fund</div>
 				<DonationOutput impact={impact} charity={charity} />
-				<p className='donation-description'><i>{impact ? impact.description : null}</i></p>
+				<p className='div-section-text donation-description'><i>{impact ? impact.description : null}</i></p>
 
 			</div>
 		);
@@ -136,7 +136,7 @@ const DonationOutput = ({impact, charity}) => {
 			{impact.number ? <div className='output-number'>
 				{printer.prettyNumber(impact.number, 2)}
 			</div> : null}
-			<div className='output-units'>
+			<div className='output-units div-section-larger-text'>
 				{Output.getName(impact)}
 			</div>
 
