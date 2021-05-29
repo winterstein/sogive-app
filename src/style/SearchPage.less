@@ -2,39 +2,21 @@
 @import "positioning.less";
 
 .SearchResults {
+		max-width: @max-content-width;
+		margin: 1em auto;
 		position: relative;
-		margin-top: 50px;
-		background: #f2f2f2;
 		padding: 2em;
 
-		.results-list {
-			background-color: #dcdcdc;
-			padding: 2em;
-		}
-
-		.top-tab {
-			position: absolute;
-			bottom: 100%;
-			left: 0;
-			font-size: 150%;
-			padding-left: 1.25em;
-			&:before {
-				content: '';
-				position: absolute;
-				transform: perspective(150px) rotateX(30deg);
-				transform-origin: bottom left;
-				z-index: -2;
-				background: #f2f2f2;
-				top: -50%; // font-independent: make the element tall enough to still contain the text after rotation
-				right: -2em; // Push the right edge ~2 characters away from the text
-				bottom: -1px; // Sometimes the rotation leaves a seam
-				left: 0;
-			}
+		.search-page-description {
+			margin: auto;
+			max-width: 550px; 
+			text-align: center;
 		}
 }
 
 .num-results {
-
+	color: @primary-blue;
+	margin-bottom: 10px;
 }
 
 .unready-results {
@@ -50,12 +32,7 @@
 	margin-left: 0;
 	margin-right: 0;
 	margin-bottom: 2em;
-	background-color: white;
-	box-shadow: 0px 3px 6px 3px rgba(0, 0, 0, 0.1);
-	/* Extra space for the "recommended" tab */
-	&.impact-high {
-		margin-top: 3em;
-	}
+	box-shadow: none;
 	
 	.recommended-tab {
 		position: absolute;
@@ -85,7 +62,6 @@
 	}
 
 	a, a:hover {
-		color: #262741;
 		text-decoration: none;
 	}
 	
@@ -94,6 +70,7 @@
 		align-items: center;
 		justify-content: center;
 		text-align: center;
+		margin-top: 1.25em;
 
 		.charity-logo {
 			width: 100%;
@@ -108,52 +85,39 @@
 		}
 	}
 	.text-summary {
-		background-color: #e5e5e5;
-		padding: 0.5em;
 		.name {
-			color: @bold-text-colour;
 			margin-right: 0.3em;
 		}
 		.description, .description:hover {
 			color: #262741
 		}
 	}
-	.amount-picker {
-		display: flex;
-    flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		font-size: 175%;
-		&.long-amount .money {
-			font-size: 80%;
-		}
-		.money {
-			.amount {
-				color: @bold-text-colour;
-			}
-		}
-		.change-donation-amount {
-			width: 1em;
-			height: 1em;
-		}
-	}
 	.impact {
+		border-left: solid 1px @light-grey;
+		h4 {
+			font-size: 14px;
+			font-weight: bold;
+			font-family: @standard-text-font;
+			color: @dark-grey;
+		}
 		.impact-summary {
 			margin-top: 0.5em;
-			.impact-count, .money .amount {
-				color: @bold-text-colour;
-				font-size: 120%;
+			font-size: 16px;
+			display: flex;
+			align-items: center;
+			.impact-count, .money .amount, .currency-symbol {
+				color: @donation-number-fg;
+				//size and weight set locally to match figma as not reused
+				font-size: 24px;
+				font-weight: 800;
 			}
-			h3 {
-				color: @bold-text-colour;
-				// no size boost -- we want the impact content stronger than the header.
-				// text-decoration: underline;
-				margin: 0.5em 0 0.25em 0;
+			.impact-calculator-text {
+				padding: 0px 16px;
 			}
-			border-bottom: 1px solid @bold-text-colour;
 		}
-		.impact-detail {
-
+		.click-through-action {
+			margin-right: 24px;
+			display: inline-block;
 		}
 	} // ./impact
 	.read-more {
@@ -185,9 +149,31 @@
 }
 
 .SearchForm {
-	background: linear-gradient(to right, #f9ce6e, #dd912f);
-	box-shadow: 0px 5px 3px 1px rgba(221,145,47, 0.5);
-	padding: 2em 5em;
+	padding: 3em 5em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	max-width: @max-content-width;
+	margin: auto;
+	h2 {
+		color: white;
+	}
+}
+
+.gradient {
+	height: 25vh;
+	background: linear-gradient(135deg, #79D579 0%, #005484 100%);
+	margin-right: -15px;
+	margin-left: -15px;
+}
+
+.worldImage {
+	background-image: url('/img/world.png');
+	background-size: cover;
+	background-position: center;
+	margin: auto;
+    height: 100%;
 }
 
 .search-pager {
@@ -238,13 +224,25 @@
 }
 
 .sogive-search-box {
+	.input-group {
+		border: 1px solid #757575;
+		border-radius: 4px;
+	}
 	input, button {
 		font-size: 150% ;
-		height: 2.5em ;
-		border-radius: 0px !important;
 		border: none;
 		outline: 0;
 	}
+	button {
+		margin: -1px; // this avoids the input-group border appearing around this button
+		border-radius: 2px;
+	}
+}
+
+.sogive-search-box .input-group-text {
+	background-color: white;
+	border: none;
+	border-radius: 0px;
 }
 
 .field-clear-button {
@@ -268,20 +266,14 @@
 
 		position: relative;
 		margin-top: 50px;
-		background: #f2f2f2;
 		padding: 2em;
 
 		.results-list {
-			background-color: #dcdcdc;
 			padding: 2em;
 		}
 
 		.top-tab {
-			background-color: #f2f2f2;
 			width: 100%;
-			&:before {
-				content: none;
-			}
 		}
 
 		.num-results {

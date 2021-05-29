@@ -23,8 +23,8 @@ import Money from '../base/data/Money';
 
 import Misc from '../base/components/Misc';
 import { impactCalc } from './ImpactWidgetry';
-import { DonateButton } from './DonationWizard';
 import { assert } from '../base/utils/assert';
+
 
 
 // The +/- buttons don't just work linearly - bigger numbers = bigger jumps
@@ -110,7 +110,7 @@ class ImpactCalculator extends Component {
 		const donationUp = () => this.incrementDonation(amount, 1, charity);
 
 		return (
-			<div className='donation-impact border'>
+			<div className='donation-impact std-border std-padding std-box-shadow '>
 				<button onClick={donationDown} className='donation-down'>-</button>
 				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} />
 				<button onClick={donationUp} className='donation-up'>+</button>
