@@ -376,7 +376,7 @@ function catch_JVM_success_or_error {
                 echo ""
             ;;
             *)
-                printf "The JVM was given 10 seconds to report either success or that an elasticsearch index requires a re-index and re-aliasing before it could start. No such indication was received and parsed.  Please check your service and the log file for this project\n"       ;;
+                printf "The JVM was given 10 seconds to report either success or that an elasticsearch index requires a re-index and re-aliasing before it could start. No such indication was received and parsed.  Please check your service and the log file for this project\n"
             ;;
         esac
     fi
