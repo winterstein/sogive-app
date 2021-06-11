@@ -90,11 +90,10 @@ const navbarPagesFn = () => {
 };
 
 /**
-		Top-level: tabs
+	Top-level: tabs
 */
 const MainDiv = () => {
-	
-	
+		
 	return (<MainDivBase
 		pageForPath={PAGES}
 		navbarPages={navbarPagesFn}
