@@ -77,6 +77,7 @@ Login.app = C.app.service;
 addFunderCredit("SMART:Scotland");
 addFunderCredit("The Hunter Foundation");
 addFunderCredit("Good-Loop");
+
 addDataCredit({author:"Crown Copyright and database right 2017", name:"UK government charity data"});
 addDataCredit({author:"Office of the Scottish Charity Regulator (OSCR)", name:"Scottish Charity Register", 
 	url:"https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license:"Open Government Licence v.2.0"});
