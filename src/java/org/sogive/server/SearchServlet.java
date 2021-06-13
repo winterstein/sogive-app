@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.BoostingQueryBuilder;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
 import org.sogive.data.charity.SoGiveConfig;
@@ -110,12 +112,18 @@ public class SearchServlet implements IServlet {
 			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
 			searchRequest.addQuery(qb);
 		} else {
-			// prefer high impact, but dont force it			
-//			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", "high");
-//			ESQueryBuilder preferHigh = new BoostingQueryBuilder().positive(qb);
-//			searchRequest.addQuery(preferHigh);
-			// Ought to work, but seems to act as a hard filter?! Apr 2020
-			// use a post-search sort instead
+			// prefer high impact, but don't force it
+			BoolQueryBuilder preferHigh = new BoolQueryBuilder();
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "high", 10.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "medium", 8.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "slightly-low", 6.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "low", 5.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed-promising", 4.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed", 3.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "too-rich", 2.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "very-low", 1.0));
+			preferHigh.must(ESQueryBuilders.match_all());
+			searchRequest.addQuery(preferHigh);
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
@@ -129,7 +137,6 @@ public class SearchServlet implements IServlet {
 		}
 		
 		// TODO test ordering.
-		// TODO sort by impact - show high-impact charities before all other results
 //		Sort recSort = new Sort("recommended", KSortOrder.desc);
 				//.setMissing("_last").unmappedType("boolean");
 //		searchRequest.addSort(recSort);
@@ -153,11 +160,6 @@ public class SearchServlet implements IServlet {
 		Map<String, Object> jobj = searchResponse.getParsedJson();
 		List<Map> hits = prefix==null? searchResponse.getHits() : searchResponse.getSuggesterHits("autocomplete");
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
-		
-		// Move high impact to be first
-		List<Map> highImpact = Containers.filter(hits2, hit -> "high".equals(hit.get("impact")));
-		hits2.removeAll(highImpact);
-		hits2.addAll(0, highImpact);
 		
 		// HACK: send back csv?
 		if (state.getResponseType() == KResponseType.csv) {

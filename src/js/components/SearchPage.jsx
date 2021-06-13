@@ -45,7 +45,6 @@ const SearchPage = () => {
     let from = DataStore.getUrlValue("from") || 0;
     const status = DataStore.getUrlValue("status") || "";
     let impact = DataStore.getUrlValue("impact");
-    if (!q && !impact) impact = "high"; // just show recommended charities
     if (q === "ERROR") {
         // HACK
         throw new Error("Argh!");
