@@ -22,6 +22,7 @@ import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
 import ImpactCalculator from './ImpactCalculator';
+import { impactCalc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
 import { DonateButton } from './DonationWizard';
 import { LearnAboutRatings } from './LearnAboutRatings';
@@ -44,6 +45,18 @@ const CharityPage = () => {
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
 	}
+	let impact;
+	let project = NGO.getProject(charity);
+	if (project) {
+		let targetCount = DataStore.getValue([
+			"widget",
+			"SearchResults",
+			cid,
+			"targetCount",
+		]);
+		const outputs = Project.outputs(project);
+		impact = impactCalc({ charity, project, output:outputs[0], targetCount: targetCount || 1 });
+	}
 
 	const impactColumn = (
 		<Col md="7" xs="12" className="column impact-column">
@@ -59,7 +72,7 @@ const CharityPage = () => {
 				<LearnAboutRatings isButton={false} />
 				{charity.whyTags? <CharityTags whyTagsString={charity.whyTags} whereTagsString={charity.whereTags} /> : null}
 			</div>
-			<ImpactCalculatorSection charity={charity} />
+			{impact && <ImpactCalculatorSection charity={charity} />}
 			{/* {charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null} */}
 			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
