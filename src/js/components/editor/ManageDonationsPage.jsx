@@ -113,7 +113,8 @@ const ManageDonationsPage = () => {
 
 	const pvDonations = ActionMan.list({
 		type: C.TYPES.Donation, status: C.KStatus.ALL_BAR_TRASH,
-		q:'ALL purpose:admin'
+		q:'ALL purpose:admin',
+		size:2000 // hack to go a bit further back
 	});
 
 	if ( ! pvDonations.resolved) {

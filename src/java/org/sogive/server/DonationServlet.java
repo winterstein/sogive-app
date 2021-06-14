@@ -209,6 +209,7 @@ public class DonationServlet extends CrudServlet<Donation> {
 		}
 		
 		Donation donation = Utils.copy(thing.java());
+		assert donation != null : thing;
 
 		// We want to be able to display a name unless the donor requested anonymity
 		// So grab (or scrape a proxy name from email if necessary) before we scrub other PII
@@ -227,9 +228,13 @@ public class DonationServlet extends CrudServlet<Donation> {
 			if (donorName == null) {
 				String donorEmail = donation.getDonorEmail();
 				if (donorEmail == null && donor != null) donorEmail = donor.id;
-				if (donorEmail == null) donorEmail = donation.getFrom().name;
+				if (donorEmail == null && donation.getFrom()!=null) {
+					donorEmail = donation.getFrom().name;
+				}
 				// We've done all we can! Strip everything after the @ and go.
-				if (donorEmail != null) donorName = donorEmail.replaceAll("@.*", "");
+				if (donorEmail != null) {
+					donorName = donorEmail.replaceAll("@.*", "");
+				}
 			}
 		}
 		
