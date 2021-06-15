@@ -240,7 +240,15 @@ public class NGO extends Thing<NGO> {
 			Log.w(LOGTAG, Arrays.asList("costPerBen overheads adjustment failed ", err, this, year));		
 			return 1;
 		}
-	};
+	}
+
+	/**
+	 * Usually null. ID for a charity to redirect to
+	 * @return
+	 */
+	public String getRedirect() {
+		return (String) get("redirect");
+	}
 
 	
 }
