@@ -168,7 +168,7 @@ class RepeatDonationActor extends Actor<RepeatDonation> {
 		
 		ICalEvent ical = rdon.getIcal();
 		// NB: This includes stop-at-event-date 'cos its in the ical repeat rule
-		Time next = ical.repeat.getNext(prev);		
+		Time next = ical.getRepeat().getNext(prev);		
 		return next;	
 	}
 }
