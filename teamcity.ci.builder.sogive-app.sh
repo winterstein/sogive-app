@@ -23,7 +23,6 @@ PROJECT_USES_JERBIL='no' #yes or no
 PROJECT_USES_WWAPPBASE_SYMLINK='yes'
 BRANCH='master' # If target machine is NOT defined in BuildHacks.java, then it is treated as a 'test' device and will be LOCKED TO THE MASTER BRANCH.  
                 # If changed -- you must also change the VCS settings for this project in teamcity
-BRANCH='revamp-2020'
 
 # Where is the test server?
 TARGET_SERVERS=(baker.good-loop.com)
