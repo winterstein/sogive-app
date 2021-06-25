@@ -48,12 +48,13 @@ const CharityPage = () => {
 	let impact;
 	let project = NGO.getProject(charity);
 	if (project) {
+		// targetCount is "How many units should we talk about?" It is usually 1 (I forget the business use-case for having a flexible number)
 		let targetCount = DataStore.getValue([
 			"widget",
 			"SearchResults",
 			cid,
 			"targetCount",
-		]);
+		]);		
 		const outputs = Project.outputs(project);
 		impact = impactCalc({ charity, project, output:outputs[0], targetCount: targetCount || 1 });
 	}
