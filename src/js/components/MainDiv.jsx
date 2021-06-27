@@ -97,6 +97,8 @@ const MainDiv = () => {
 	return (<MainDivBase
 		pageForPath={PAGES}
 		navbarPages={navbarPagesFn}
+		navbarDarkTheme={false}
+		navbarBackgroundColour='white'
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
