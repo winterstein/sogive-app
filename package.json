@@ -12,6 +12,7 @@
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
     "chart.js": "^2.9.4",
+	"data-pivot": "^1.0.2",
     "easy-enums": "^1.1.8",
     "easyi18n": "^1.1.1",
     "fast-json-patch": "^3.0.0-1",
