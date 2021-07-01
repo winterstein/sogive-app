@@ -59,8 +59,8 @@ const SearchPage = () => {
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
     let results = pvList.value ? List.hits(pvList.value) : null;
-    // const results = DataStore.resolveDataList(results0);
-    console.log("results", results, "vs", results0);
+    // const results = DataStore.resolveDataList(results0); // NB: This emitted errors "bad ref in DataStore list - missing status|type|id"
+    // console.log("results", results, "vs", results0);
 
     return (
         <div className="SearchPage row">
