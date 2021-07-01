@@ -59,7 +59,7 @@ const SearchPage = () => {
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
     let results0 = pvList.value ? List.hits(pvList.value) : null;
-    const results = DataStore.getDataList(results0);
+    const results = DataStore.resolveDataList(results0);
     console.log("results", results, "vs", results0);
 
     return (
