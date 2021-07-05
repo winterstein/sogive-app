@@ -170,7 +170,7 @@ const ManageDonationsPage = () => {
 				type: 'date',
 				accessor: don => don.date? new Date(don.date).toLocaleDateString("en-GB") : ""
 			},
-			columns.find(c => c.Header==='Amount'),
+			COLUMNS.find(c => c.Header==='Amount')
 			// columns.find(c => c.accessor==='giftAid'),
 		];
 		dons = dons.filter(don => don.giftAid);
