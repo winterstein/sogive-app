@@ -108,6 +108,7 @@ const navbarPagesFn = () => {
 const MainDiv = () => {
 		
 	return (<MainDivBase
+		homeLink={C.app.website}
 		pageForPath={PAGES}
 		navbarLabels={PAGE_LABELS}
 		navbarPages={navbarPagesFn}
