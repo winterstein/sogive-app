@@ -72,7 +72,10 @@ const PAGES = {
 };
 
 const PAGE_LABELS = {
-	search: 'Home'
+	search: "Home",
+	about: "About",
+	contact: "Contact",
+	faq: "FAQ"
 }
 
 const EXTERNAL_PAGE_LINKS = {
@@ -94,7 +97,7 @@ addDataCredit({author:"Office of the Scottish Charity Regulator (OSCR)", name:"S
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
-	let pages = ['search'];
+	let pages = ['search', 'about', 'contact', 'faq'];
 	if (!Roles.iCan(C.CAN.test).value) return pages;
 	return [...pages];
 };
@@ -114,6 +117,7 @@ const MainDiv = () => {
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
 		fullWidthPages={['search']}
+		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 	/>);
 };
 
