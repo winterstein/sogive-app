@@ -71,6 +71,16 @@ const PAGES = {
 	checkout: CheckoutPage
 };
 
+const PAGE_LABELS = {
+	search: 'Home'
+}
+
+const EXTERNAL_PAGE_LINKS = {
+	about: "https://sogive.org/about.html",
+	contact: "https://sogive.org/contact.html",
+	faq: "https://sogive.org/faq.html"
+}
+
 // NB: MainDivBase does this too, but not until after getRoles is called below
 Login.app = C.app.service;
 
@@ -84,9 +94,9 @@ addDataCredit({author:"Office of the Scottish Charity Regulator (OSCR)", name:"S
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
-	let pages = ['dashboard', 'search'];
+	let pages = ['search'];
 	if (!Roles.iCan(C.CAN.test).value) return pages;
-	return [...pages, 'event', 'fundraiser'];
+	return [...pages];
 };
 
 /**
@@ -96,6 +106,7 @@ const MainDiv = () => {
 		
 	return (<MainDivBase
 		pageForPath={PAGES}
+		navbarLabels={PAGE_LABELS}
 		navbarPages={navbarPagesFn}
 		navbarDarkTheme={false}
 		navbarBackgroundColour='white'
