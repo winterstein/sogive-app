@@ -61,7 +61,7 @@ const SearchPage = () => {
 		<div className='SearchPage row'>
 			<div className='col-md-12'>
 				<SearchForm query={q} from={from} status={status} />
-				<PropControl prop='use_list' type='yesNo' label="Use /charity/_list" className="bg-warning" help="Temp debug experiment!" />
+				{/* <PropControl prop='use_list' type='yesNo' label="Use /charity/_list" className="bg-warning" help="Temp debug experiment!" /> */}
 			</div>
 
 			<div className='col-md-12'>
