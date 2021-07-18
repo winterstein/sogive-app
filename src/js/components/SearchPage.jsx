@@ -433,31 +433,23 @@ const SearchResult = ({ item, CTA, onPick }) => {
             }
             data-id={cid}
         >
-            <a
-                href={charityUrl}
-                onClick={onClick}
-                className="logo col-md-2 col-xs-4"
-            >
-                {item.logo ? (
+            {item.logo && (
+                <a
+                    href={charityUrl}
+                    onClick={onClick}
+                    className="logo col-md-2 col-xs-4"
+                >
                     <img
                         className="charity-logo"
                         src={NGO.logo(item)}
                         alt={`Logo for ${charityName}`}
                     />
-                ) : (
-                    <div
-                        className={`charity-logo-placeholder ${
-                            longName ? "long-name" : ""
-                        }`}
-                    >
-                        {charityName}
-                    </div>
-                )}
             </a>
+            )}
             <a
                 href={charityUrl}
                 onClick={onClick}
-                className="text-summary std-padding col-md-4 col-xs-8"
+                className="text-summary std-padding searchpg-flex-grow col-md-4 col-xs-8"
             >
                 <h3 className="name charity-card-title">{charityName}</h3>
                 <p className="description">
