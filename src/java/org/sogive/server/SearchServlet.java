@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.winterwell.es.client.query.BoolQueryBuilder;
+import com.winterwell.es.client.query.BoostingQueryBuilder;
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
 import org.sogive.data.charity.SoGiveConfig;
@@ -76,8 +78,8 @@ public class SearchServlet implements IServlet {
 		SoGiveConfig config = Dep.get(SoGiveConfig.class); 
 		KStatus status = state.get(AppUtils.STATUS, KStatus.PUBLISHED);
 		ESPath path = config.getPath(null, NGO.class, null, status);
-		SearchRequest s = new SearchRequest(client).setPath(path);
-		s.setDebug(true);		
+		SearchRequest searchRequest = new SearchRequest(client).setPath(path);
+		searchRequest.setDebug(true);
 		String q = state.get(Q);
 		
 		String impact = state.get(IMPACT);
@@ -89,7 +91,7 @@ public class SearchServlet implements IServlet {
 			q = StrUtils.toCanonical(q);
 			// this will query _all			
 			ESQueryBuilder qbq = ESQueryBuilders.simpleQueryStringQuery(q);
-			s.addQuery(qbq);
+			searchRequest.addQuery(qbq);
 			
 //			SearchQuery sq = new SearchQuery(q);
 			// TODO AppUtils.makeESFilterFromSearchQuery(sq, start, end)
@@ -102,62 +104,62 @@ public class SearchServlet implements IServlet {
 		// prefix search for auto-complete
 		String prefix = state.get("prefix");
 		if (prefix != null) {
-			s.addSuggester(Suggesters.autocomplete("suggest", prefix));
+			searchRequest.addSuggester(Suggesters.autocomplete("suggest", prefix));
 		}
 		
 		// Data status Filters
 		if (impact != null) {
 			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", impact);
-			s.addQuery(qb);
+			searchRequest.addQuery(qb);
 		} else {
-			// prefer high impact, but dont force it			
-//			ESQueryBuilder qb = ESQueryBuilders.termQuery("impact", "high");
-//			ESQueryBuilder preferHigh = new BoostingQueryBuilder().positive(qb);
-//			s.addQuery(preferHigh);
-			// Ought to work, but seems to act as a hard filter?! Apr 2020
-			// use a post-search sort instead
+			// prefer high impact, but don't force it
+			BoolQueryBuilder preferHigh = new BoolQueryBuilder();
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "high", 10.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "medium", 8.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "slightly-low", 6.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "low", 5.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed-promising", 4.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed", 3.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "too-rich", 2.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "very-low", 1.0));
+			preferHigh.must(ESQueryBuilders.match_all());
+			searchRequest.addQuery(preferHigh);
 		}
 		boolean onlyHasImpact = state.get(new BoolField("hasImpact"), false);
 		if (onlyHasImpact) {
 			ESQueryBuilder qb = ESQueryBuilders.existsQuery("projects");
-			s.addQuery(qb);
+			searchRequest.addQuery(qb);
 		}
 		Boolean onlyReady = state.get(new BoolField("ready"));
 		if (Utils.yes(onlyReady)) {
 			ESQueryBuilder qb = ESQueryBuilders.termQuery("ready", "true");
-			s.addQuery(qb);
+			searchRequest.addQuery(qb);
 		}
 		
 		// TODO test ordering.
-		// TODO sort by impact - show high-impact charities before all other results
 //		Sort recSort = new Sort("recommended", KSortOrder.desc);
 				//.setMissing("_last").unmappedType("boolean");
-//		s.addSort(recSort);
+//		searchRequest.addSort(recSort);
 		// Prioritise charities marked "ready for use"
 		Sort readySort = new Sort("ready", KSortOrder.desc);
 				//.setMissing("_last").unmappedType("boolean");
-		s.addSort(readySort);
+               searchRequest.addSort(readySort);
 		// After that - just use the relevance score
-		s.addSort(Sort.scoreSort());
-		// s.addSort("name.raw", SortOrder.ASC);
-		// s.addSort("@id", SortOrder.ASC);
-		s.setDebug(true);
+		searchRequest.addSort(Sort.scoreSort());
+		// searchRequest.addSort("name.raw", SortOrder.ASC);
+		// searchRequest.addSort("@id", SortOrder.ASC);
+		searchRequest.setDebug(true);
 		
 		// TODO paging - this uses a cap at 1k results
 		int size = state.get(SIZE, 
 				// HACK: csv => unlimited
 				state.getResponseType() == KResponseType.csv? MAX_RESULTS : 1000);
-		s.setSize(size);
-		s.setFrom(state.get(FROM, 0));
-		SearchResponse sr = s.get();
-		Map<String, Object> jobj = sr.getParsedJson();
-		List<Map> hits = prefix==null? sr.getHits() : sr.getSuggesterHits("autocomplete");
+		searchRequest.setSize(size);
+		searchRequest.setFrom(state.get(FROM, 0));
+		SearchResponse searchResponse = searchRequest.get();
+		Map<String, Object> jobj = searchResponse.getParsedJson();
+		List<Map> hits = prefix==null? searchResponse.getHits() : searchResponse.getSuggesterHits("autocomplete");
 		List<Map> hits2 = Containers.apply(hits, h -> (Map)h.get("_source"));
-		
-		// Move high impact to be first
-		List<Map> highImpact = Containers.filter(hits2, hit -> "high".equals(hit.get("impact")));
-		hits2.removeAll(highImpact);
-		hits2.addAll(0, highImpact);
 		
 		// HACK: send back csv?
 		if (state.getResponseType() == KResponseType.csv) {
@@ -165,7 +167,7 @@ public class SearchServlet implements IServlet {
 			return;
 		}
 		
-		long total = sr.getTotal();
+		long total = searchResponse.getTotal();
 		JsonResponse output = new JsonResponse(state, new ArrayMap(
 				"hits", hits2,
 				"total", total

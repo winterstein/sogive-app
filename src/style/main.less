@@ -16,7 +16,6 @@
 .navbar-brand, .navbar-nav li a {
     line-height: @navbar-height;   // Is this needed? May 2020
     height: @navbar-height;
-    text-transform: lowercase;
 }
 
 /* Override the above so the account/logout menu looks normal */
@@ -25,17 +24,18 @@
 	height: auto !important;
 }
 
-#navbar {
-	background-color: @colour-03;
-	font-size: 1em;
+.navbar .navbar-nav .nav-item {
+	padding: 15px;
 }
 
-.navbar-inverse {
-	background-color: @colour-03;
+.navbar .navbar-nav .nav-item .nav-link {
+	color: @dark-grey;
+	font-size: 16px;
+	font-weight: bold
 }
 
-.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
-	background-color: @colour-03;
+.navbar .navbar-nav .nav-item.active .nav-link {
+	color: @primary-blue;
 }
 
 .messagebar {

@@ -45,7 +45,6 @@ const SearchPage = () => {
     let from = DataStore.getUrlValue("from") || 0;
     const status = DataStore.getUrlValue("status") || "";
     let impact = DataStore.getUrlValue("impact");
-    if (!q && !impact) impact = "high"; // just show recommended charities
     if (q === "ERROR") {
         // HACK
         throw new Error("Argh!");
@@ -59,9 +58,9 @@ const SearchPage = () => {
     });
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
-    let results0 = pvList.value ? List.hits(pvList.value) : null;
-    const results = DataStore.getDataList(results0);
-    console.log("results", results, "vs", results0);
+    let results = pvList.value ? List.hits(pvList.value) : null;
+    // const results = DataStore.resolveDataList(results0); // NB: This emitted errors "bad ref in DataStore list - missing status|type|id"
+    // console.log("results", results, "vs", results0);
 
     return (
         <div className="SearchPage row">
@@ -434,31 +433,23 @@ const SearchResult = ({ item, CTA, onPick }) => {
             }
             data-id={cid}
         >
-            <a
-                href={charityUrl}
-                onClick={onClick}
-                className="logo col-md-2 col-xs-4"
-            >
-                {item.logo ? (
+            {item.logo && (
+                <a
+                    href={charityUrl}
+                    onClick={onClick}
+                    className="logo col-md-2 col-xs-4"
+                >
                     <img
                         className="charity-logo"
                         src={NGO.logo(item)}
                         alt={`Logo for ${charityName}`}
                     />
-                ) : (
-                    <div
-                        className={`charity-logo-placeholder ${
-                            longName ? "long-name" : ""
-                        }`}
-                    >
-                        {charityName}
-                    </div>
-                )}
             </a>
+            )}
             <a
                 href={charityUrl}
                 onClick={onClick}
-                className="text-summary std-padding col-md-4 col-xs-8"
+                className="text-summary std-padding searchpg-flex-grow col-md-4 col-xs-8"
             >
                 <h3 className="name charity-card-title">{charityName}</h3>
                 <p className="description">
