@@ -86,7 +86,8 @@ public class DBSoGive {
 							.property("outputs", outputType)
 						) // ./projects	
 				.property("simpleImpact", outputType) // ./projects
-				.property("suggest", new ESType().completion());	
+				.property("suggest", new ESType().completion())
+				.property("redirect", ESType.keyword);	
 
 		// mappings
 		AppUtils.initESMappings(KStatus.main(), 
