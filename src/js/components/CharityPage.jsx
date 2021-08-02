@@ -1,4 +1,5 @@
 // @Flow
+import Enum from 'easy-enums';
 import React from 'react';
 import _ from 'lodash';
 import Login from '../base/youagain';
@@ -26,6 +27,8 @@ import { impactCalc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
 import { DonateButton } from './DonationWizard';
 import { LearnAboutRatings } from './LearnAboutRatings';
+
+const BADGES_WITH_TENTATIVE_VERSIONS = new Enum("high medium slightly-low");
 
 const InfoColumn = ({charity}) => (
 	<Col md="4" xs="12" className="column info-column">
@@ -100,7 +103,12 @@ const RatingBadgeandDonate = ({charity}) => (
 
 export const RatingBadge = ({charity, heightpx = 48}) => {
 	const label = C.IMPACT_LABEL4VALUE[charity.impact];
-	let ratingIconPath = '/img/rating-' + charity.impact + '.svg';
+
+	let ratingIconPath = '/img/rating-' + charity.impact;
+	if (charity.confidence != "high" && charity.impact in BADGES_WITH_TENTATIVE_VERSIONS) {
+	    ratingIconPath = ratingIconPath + "-tentative";
+	}
+	ratingIconPath = ratingIconPath + '.svg'
 
 	return (
 		<>
