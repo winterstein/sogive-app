@@ -97,7 +97,7 @@ const EditCharityPage = () => {
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value}
 				/>
-				<EditField item={charity} type="redirect" field="redirect" label="Redirect (if any)" />
+				<EditField item={charity} type="text" field="redirect" label="Redirect (if any)" />
 			</Misc.Card>
 			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
