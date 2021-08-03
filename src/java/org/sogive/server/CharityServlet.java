@@ -40,17 +40,17 @@ public class CharityServlet extends CrudServlet<NGO> {
 		augmentFlag = true;
 	}
 	
-	// @Override
-	// protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
-	// 	// no redirects by default
-	// 	Boolean r = state.get(new Checkbox("redirects"));
-	// 	if (r==null) return null; // shouldn't happen
-	// 	ESQueryBuilder hasRedirect = ESQueryBuilders.existsQuery("redirect");
-	// 	if (r) {
-	// 		return hasRedirect;
-	// 	}
-	// 	return ESQueryBuilders.boolQuery().mustNot(hasRedirect);
-	// }
+	@Override
+	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
+		// no redirects by default
+		Boolean r = state.get(new Checkbox("redirects"));
+		if (r==null) return null; // shouldn't happen
+		ESQueryBuilder hasRedirect = ESQueryBuilders.existsQuery("redirect");
+		if (r) {
+			return hasRedirect;
+		}
+		return ESQueryBuilders.boolQuery().mustNot(hasRedirect);
+	}
 	
 	@Override
 	protected JThing<NGO> augment(JThing<NGO> jThing, WebRequest state) {
@@ -71,31 +71,31 @@ public class CharityServlet extends CrudServlet<NGO> {
 	protected JThing<NGO> getThingFromDB(WebRequest state) {
 		return getThingFromDB2(state, new ArrayList());
 	}
-	// protected JThing<NGO> getThingFromDB2(WebRequest state, List<String> ids) {
-	// 	JThing<NGO> thing = super.getThingFromDB(state);
-	// 	if (thing==null) {
-	// 		return null;
-	// 	}
-	// 	// redirect from a 2nd id to the main one?
-	// 	String redirect = thing.java().getRedirect();
-	// 	if (redirect == null) {
-	// 		return thing;
-	// 	}
-	// 	// paranoia: detect loops
-	// 	ids.add(thing.java().getId());
-	// 	if (ids.contains(redirect)) {
-	// 		Log.e(LOGTAG(), "redirect loop! "+redirect+" "+state);
-	// 		state.addMessage(AjaxMsg.error("redirect-loop", "Redirect loop: "+ids));
-	// 		return thing;
-	// 	}		
-	// 	// ...recurse with a new ID
-	// 	setId(redirect); // hack
-	// 	JThing<NGO> thing2 = getThingFromDB2(state, ids);
-	// 	if (thing2==null) {
-	// 		state.addMessage(AjaxMsg.error("broken-redirect", "Redirect leads to 404: "+ids));
-	// 	}
-	// 	return thing2;
-	// }
+	protected JThing<NGO> getThingFromDB2(WebRequest state, List<String> ids) {
+		JThing<NGO> thing = super.getThingFromDB(state);
+		if (thing==null) {
+			return null;
+		}
+		// redirect from a 2nd id to the main one?
+		String redirect = thing.java().getRedirect();
+		if (redirect == null) {
+			return thing;
+		}
+		// paranoia: detect loops
+		ids.add(thing.java().getId());
+		if (ids.contains(redirect)) {
+			Log.e(LOGTAG(), "redirect loop! "+redirect+" "+state);
+			state.addMessage(AjaxMsg.error("redirect-loop", "Redirect loop: "+ids));
+			return thing;
+		}		
+		// ...recurse with a new ID
+		setId(redirect); // hack
+		JThing<NGO> thing2 = getThingFromDB2(state, ids);
+		if (thing2==null) {
+			state.addMessage(AjaxMsg.error("broken-redirect", "Redirect leads to 404: "+ids));
+		}
+		return thing2;
+	}
 	
 	@Override
 	protected void doBeforeSaveOrPublish(JThing<NGO> _jthing, WebRequest stateIgnored) {
