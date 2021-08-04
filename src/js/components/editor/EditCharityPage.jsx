@@ -33,7 +33,7 @@ const EditCharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
-	let pvCharity = getDataItem({type:C.TYPES.NGO, id:cid, status:KStatus.DRAFT, swallow:true});
+	let pvCharity = getDataItem({type:C.TYPES.NGO, id:cid, status:KStatus.DRAFT, swallow:true, noRedirect:true});
 	// if ( ! pvCharity.resolved) return <Misc.Loading text="Loading..." />; FIXME weird - the error isnt coming through?! Is is a racce-condition / failure to update react??
 	let charity = pvCharity.value;
 	// error?
