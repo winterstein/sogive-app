@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
 import org.sogive.data.charity.SoGiveConfig;
@@ -79,6 +81,11 @@ public class CharityServlet extends CrudServlet<NGO> {
 		// redirect from a 2nd id to the main one?
 		String redirect = thing.java().getRedirect();
 		if (redirect == null) {
+			return thing;
+		}
+		// do not redirect in editor
+		String testGet = state.getRequest().getQueryString();
+		if (testGet.contains("noRedirect=true")) {
 			return thing;
 		}
 		// paranoia: detect loops

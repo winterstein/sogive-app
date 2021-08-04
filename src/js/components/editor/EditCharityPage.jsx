@@ -33,7 +33,7 @@ const EditCharityPage = () => {
 	// fetch data
 	let cid = DataStore.getUrlValue('charityId');
 	const cpath = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:cid});
-	let pvCharity = getDataItem({type:C.TYPES.NGO, id:cid, status:KStatus.DRAFT, swallow:true});
+	let pvCharity = getDataItem({type:C.TYPES.NGO, id:cid, status:KStatus.DRAFT, swallow:true, noRedirect:true});
 	// if ( ! pvCharity.resolved) return <Misc.Loading text="Loading..." />; FIXME weird - the error isnt coming through?! Is is a racce-condition / failure to update react??
 	let charity = pvCharity.value;
 	// error?
@@ -80,11 +80,29 @@ const EditCharityPage = () => {
 		</li>
 	));
 
+	// check redirect
+	const ifRedirect = charity.redirect;
+	const RedirectWarning = () => {
+		if (ifRedirect) {
+			return (
+				<div>
+					<a className="large" href={`/#simpleedit?charityId=${escape(ifRedirect)}`} >Click here to edit the redirect target chairty</a>
+					<p>This Charity have a redirection, <b>do not edit this page</b>. </p>
+				</div>
+			);
+		} else {
+			return (
+				<div/>
+			);
+		}
+	}
+
 	// put it together
 	console.log("EditCharity", charity);
 	return (
 		<div className="EditCharityPage">
 			<Misc.Card title={'Editing: '+NGO.displayName(charity)}>
+				<RedirectWarning />
 				<p><a href={`/#charity?charityId=${NGO.id(charity)}`} target="_new">view profile page</a></p>
 				<p>NOTE: Please hover over the <Misc.Icon prefix="fa" fa="question-circle" title="question mark" /> icon -- this often includes useful information!</p>
 				<div>
@@ -97,6 +115,7 @@ const EditCharityPage = () => {
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value}
 				/>
+				<EditField item={charity} type="text" field="redirect" label="Redirect (if any)" />
 			</Misc.Card>
 			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
