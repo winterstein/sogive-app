@@ -45,8 +45,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	@Override
 	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		// no redirects by default
-		Boolean r = state.get(new Checkbox("redirects"));
-		if (r==null) return null; // shouldn't happen
+		boolean r = state.get(new Checkbox("redirects"));
 		ESQueryBuilder hasRedirect = ESQueryBuilders.existsQuery("redirect");
 		if (r) {
 			return hasRedirect;
@@ -84,8 +83,8 @@ public class CharityServlet extends CrudServlet<NGO> {
 			return thing;
 		}
 		// do not redirect in editor
-		String testGet = state.getRequest().getQueryString();
-		if (testGet.contains("noRedirect=true")) {
+		String testGet = state.get("noRedirect");
+		if ("true".equals(testGet)) {
 			return thing;
 		}
 		// paranoia: detect loops
