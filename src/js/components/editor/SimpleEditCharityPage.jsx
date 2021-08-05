@@ -20,6 +20,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
 import { getDataItem } from '../../base/plumbing/Crud';
+import { Alert } from 'reactstrap';
 
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
@@ -76,8 +77,9 @@ const SimpleEditCharityPage = () => {
 		if (ifRedirect) {
 			return (
 				<div>
-					<a className="large" href={`/#simpleedit?charityId=${escape(ifRedirect)}`} >Click here to edit the redirect target chairty</a>
-					<p>This Charity have a redirection, <b>do not edit this page</b>. </p>
+					<Alert color="warning">This Charity have a redirection, <b>do not edit this page</b>. <br/> 
+						<a className="btn btn-default btn-sm" href={`/#simpleedit?charityId=${escape(ifRedirect)}`} >Click here to edit the redirect target chairty</a>
+					</Alert>
 				</div>
 			);
 		} else {
