@@ -13,6 +13,7 @@ import org.sogive.data.charity.Thing;
 
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
+import com.winterwell.es.client.query.BoolQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
@@ -44,14 +45,24 @@ public class CharityServlet extends CrudServlet<NGO> {
 	
 	@Override
 	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
+		BoolQueryBuilder noUnlisted = ESQueryBuilders.boolQuery();
+		if (state.get(new Checkbox("unlisted"))) {
+			// Huh?? Well if you really want them, we can include them
+		} else {
+			// Normal: no unlisted
+			noUnlisted = noUnlisted.mustNot(ESQueryBuilders.termQuery("unlisted", true));
+		}
 		// no redirects by default
-		Boolean r = state.get(new Checkbox("redirects"));
-		if (r==null) return null; // shouldn't happen
+		boolean r = state.get(new Checkbox("redirects"));
 		ESQueryBuilder hasRedirect = ESQueryBuilders.existsQuery("redirect");
 		if (r) {
-			return hasRedirect;
+			// Must have redirects? Odd but OK
+			noUnlisted.must(hasRedirect);
+		} else {
+			// Normal - no redirects
+			noUnlisted.mustNot(hasRedirect);
 		}
-		return ESQueryBuilders.boolQuery().mustNot(hasRedirect);
+		return noUnlisted;
 	}
 	
 	@Override
@@ -85,7 +96,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		}
 		// do not redirect in editor
 		String testGet = state.get("noRedirect");
-		if (testGet.contains("true")) {
+		if ("true".equals(testGet)) {
 			return thing;
 		}
 		// paranoia: detect loops

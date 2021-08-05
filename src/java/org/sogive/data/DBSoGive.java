@@ -74,6 +74,7 @@ public class DBSoGive {
 		
 		ESType charitymapping = new ESType()
 				.property("ready", new ESType().bool())
+				.property("unlisted", new ESType().bool()) // for e.g. Good-Loop entries
 				.property("impact", ESType.keyword)
 				.property("projects", 
 						new ESType().object()
