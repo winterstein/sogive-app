@@ -84,8 +84,8 @@ public class CharityServlet extends CrudServlet<NGO> {
 			return thing;
 		}
 		// do not redirect in editor
-		String testGet = state.getRequest().getQueryString();
-		if (testGet.contains("noRedirect=true")) {
+		String testGet = state.get("noRedirect");
+		if (testGet.contains("true")) {
 			return thing;
 		}
 		// paranoia: detect loops
