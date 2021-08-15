@@ -52,6 +52,9 @@ const getWidgetProp = (forItem, prop) => (
  * NB: We can have several DonateButtons, but only one modal form
  */
 const DonateButton = ({item, paidElsewhere, isOutlined = false, isLarge = true, ...props}) => {
+	if (NGO.noPublicDonations(item)) {
+		return null;
+	}
 	assert(item && getId(item), "DonationWizard.js - DonateButton: no item "+item);
 
 	// no donations to draft fundraisers or charities
