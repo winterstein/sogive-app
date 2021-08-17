@@ -113,10 +113,11 @@ public class SearchServlet implements IServlet {
 			searchRequest.addQuery(qb);
 		} else {
 			// prefer high impact, but don't force it
+			// scaling the boost value to prevent charity with lower ranking show on top
 			BoolQueryBuilder preferHigh = new BoolQueryBuilder();
-			preferHigh.should(ESQueryBuilders.termQuery("impact", "high", 10.0));
-			preferHigh.should(ESQueryBuilders.termQuery("impact", "medium", 8.0));
-			preferHigh.should(ESQueryBuilders.termQuery("impact", "slightly-low", 6.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "high", 50.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "medium", 30.0));
+			preferHigh.should(ESQueryBuilders.termQuery("impact", "slightly-low", 10.0));
 			preferHigh.should(ESQueryBuilders.termQuery("impact", "low", 5.0));
 			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed-promising", 4.0));
 			preferHigh.should(ESQueryBuilders.termQuery("impact", "more-info-needed", 3.0));
