@@ -513,7 +513,6 @@ This is also a good place to point if, for example, the impacts shown are an ave
 const STD_INPUTS = {
 	projectCosts: "Project costs",
 	annualCosts: "Annual costs",
-	fundraisingCosts: "Fundraising costs",
 	tradingCosts: "Trading costs",
 	incomeFromBeneficiaries: "Income from Beneficiaries"
 };

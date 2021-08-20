@@ -11,7 +11,6 @@ class Project extends DataClass {
 
 	inputs = [
 		{"@type":"Money","name":"annualCosts","currency":"GBP"},
-		{"@type":"Money","name":"fundraisingCosts","currency":"GBP"},
 		{"@type":"Money","name":"tradingCosts","currency":"GBP"},
 		{"@type":"Money","name":"incomeFromBeneficiaries","currency":"GBP"}
 	];
@@ -91,4 +90,9 @@ Project.getTotalCost = (project) => {
 	return new Money({currency, value});
 };
 
-const deductibleInputs = ['incomeFromBeneficiaries', 'fundraisingCosts', 'tradingCosts'];
+// Re tradingCosts (e.g. spending on charity shops) -- these are expected to generate income at the same or higher level,
+// which is why we deduct them.
+// E.g. if British Heart Foundation spend £100m, but £25m is on their charity shops -- then £75m was on charity.
+// And we assume (as a 1st approximation) that that £25m was neutral: Your donation will not go to fund charity shops, 'cos they
+// generate income.
+const deductibleInputs = ['incomeFromBeneficiaries', 'tradingCosts'];
