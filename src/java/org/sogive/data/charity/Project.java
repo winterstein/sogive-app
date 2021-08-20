@@ -160,7 +160,7 @@ public class Project extends Thing<Project> {
 		return total;
 	}
 
-	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "fundraisingCosts", "tradingCosts"};
+	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "tradingCosts"};
 
 	public boolean isOverall() {
 		return getName()!=null && getName().toLowerCase().equals("overall");
