@@ -18,6 +18,7 @@ export const LearnAboutRatings = ({isButton}) => {
 						<li>Not recommended means that we do not have good evidence that the charity’s work is effective, and that we do have confidence that its cost-effectiveness underperforms the Gold Standard.</li>
 						<li>Too Rich means we believe the charity already has lots of money, so donations will likely have minimal impact for some time.</li>
 						<li>More info needed means we do not have good evidence that the charity’s work is effective, nor do we have an indication of its cost-effectiveness.</li> 
+						<li>More info needed (promising) means we do not have sufficient evidence that the charity’s work is effective, nor do we have sufficient indication of its cost-effectiveness. However, we have some reason to think the charity’s efficacy might be promising, pending additional information.</li>
 					</ul>
 				</ModalBody>
 			</Modal>
