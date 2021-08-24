@@ -1,25 +1,30 @@
 package org.sogive.server;
 
-import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.log.Log;
-import com.winterwell.utils.web.WebUtils2;
-import com.winterwell.web.ajax.JsonResponse;
-import org.sogive.data.loader.*;
+import org.sogive.data.loader.DatabaseWriter;
+import org.sogive.data.loader.ElasticSearchDatabaseWriter;
+import org.sogive.data.loader.ImportEditorialsDataTask;
+import org.sogive.data.loader.ImportOSCRData;
+import org.sogive.data.loader.JsoupDocumentFetcher;
+import org.sogive.data.loader.JsoupDocumentFetcherImpl;
 
+import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
+import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.IServlet;
 import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.SField;
 
 /**
- * a bit hacky but useful: import data into SoGive 
+ * a bit hacky but useful: import data into SoGive
+ * 
  * @author daniel
  *
  */
 public class ImportDataServlet implements IServlet {
 
-	private static ImportOSCRData oscr;
 	private static ImportEditorialsDataTask importEditorialsTask;
+	private static ImportOSCRData oscr;
 
 	@Override
 	public void process(WebRequest state) throws Exception {

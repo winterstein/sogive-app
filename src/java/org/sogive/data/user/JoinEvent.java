@@ -11,21 +11,21 @@ import com.winterwell.web.data.XId;
  */
 public class JoinEvent {
 
-	Time when;
-	
-	/**
-	 * The user who joined
-	 */
-	XId who;
-	
-	/**
-	 * The team / event / cabal they joined
-	 */
-	XId what;
-	
 	/**
 	 * cache info like name & image on the person for fast display
 	 */
 	PersonLite person;
-	
+
+	/**
+	 * The team / event / cabal they joined
+	 */
+	XId what;
+
+	Time when;
+
+	/**
+	 * The user who joined
+	 */
+	XId who;
+
 }

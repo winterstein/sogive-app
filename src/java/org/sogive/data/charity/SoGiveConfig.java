@@ -15,46 +15,51 @@ public class SoGiveConfig implements IESRouter, ISiteConfig {
 
 	@Option
 	public int port = 8282;
-	
-	@Override
-	public int getPort() {
-		return port;
-	}
-	
-	@Option
-	public String youagainApp = "sogive";
 
 	@Option
 	public File uploadDir;
 
+	@Option
+	public String youagainApp = "sogive";
+
 	@Override
 	public ESPath getPath(CharSequence dataspaceIsIgnored, Class type, CharSequence id, Object status) {
 		// map personlite and person to the same DB
-		if (type==PersonLite.class) type = Person.class;
-		String stype = type==NGO.class? "charity" : type.getSimpleName().toLowerCase();
+		if (type == PersonLite.class)
+			type = Person.class;
+		String stype = type == NGO.class ? "charity" : type.getSimpleName().toLowerCase();
 		String index = stype;
 		KStatus ks = (KStatus) status;
-		if (ks==null) ks = KStatus.PUBLISHED;
-		switch(ks) {
-		case PUBLISHED: 
+		if (ks == null)
+			ks = KStatus.PUBLISHED;
+		switch (ks) {
+		case PUBLISHED:
 		case ARCHIVED: // lets keep archived in the published index.
 		case PUB_OR_ARC: // ...which means PUB_OR_ARC = PUB here
 			break;
-		case DRAFT: case PENDING: case REQUEST_PUBLISH: case MODIFIED:
+		case DRAFT:
+		case PENDING:
+		case REQUEST_PUBLISH:
+		case MODIFIED:
 			index += ".draft";
 			break;
 		case TRASH:
 			index += ".trash";
-			break;		
+			break;
 		case ALL_BAR_TRASH:
 			String i1 = index;
-			String i2 = index+".draft";
-			ESPath esp = new ESPath(new String[] {i1, i2}, stype, id);
+			String i2 = index + ".draft";
+			ESPath esp = new ESPath(new String[] { i1, i2 }, stype, id);
 			return esp;
 		default:
-			throw new IllegalArgumentException(type+" "+status);
+			throw new IllegalArgumentException(type + " " + status);
 		}
 		return new ESPath(index, stype, id);
+	}
+
+	@Override
+	public int getPort() {
+		return port;
 	}
 
 //	/**

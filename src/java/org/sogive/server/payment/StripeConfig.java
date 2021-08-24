@@ -4,20 +4,21 @@ import com.winterwell.utils.io.Option;
 
 public class StripeConfig {
 
-	public StripeConfig() { }
-	
-	@Option
-	String secretKey;
-	
-	@Option
-	String testSecretKey;
-	
-	@Option
-	String testPubKey;
-		
 	@Option
 	String pubKey;
-	
-	@Option(description="Default to true (test) for safety, so you have to explicitly request 'its real money'")
+
+	@Option
+	String secretKey;
+
+	@Option
+	String testPubKey;
+
+	@Option
+	String testSecretKey;
+
+	@Option(description = "Default to true (test) for safety, so you have to explicitly request 'its real money'")
 	boolean testStripe = true;
+
+	public StripeConfig() {
+	}
 }

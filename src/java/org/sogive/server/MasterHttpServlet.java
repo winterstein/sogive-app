@@ -31,19 +31,9 @@ import com.winterwell.web.app.WebRequest;
 public class MasterHttpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doGet(req, resp);
-	}
-	
 	public MasterHttpServlet() {
 	}
-	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doPost(req, resp);
-	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String servletName = null;
@@ -54,17 +44,17 @@ public class MasterHttpServlet extends HttpServlet {
 			String path = request.getRequestPath();
 			String[] pathBits = path.split("/");
 			servletName = FileUtils.getBasename(pathBits[1]);
-			Thread.currentThread().setName("servlet: "+servletName);
+			Thread.currentThread().setName("servlet: " + servletName);
 			IServlet s;
-			switch(servletName) {
+			switch (servletName) {
 			case "search":
 				s = new SearchServlet();
 				s.process(request);
-				return;			
+				return;
 			case "charity":
 				s = new CharityServlet();
 				s.process(request);
-				return;			
+				return;
 			case "donation":
 				s = new DonationServlet();
 				s.process(request);
@@ -88,7 +78,7 @@ public class MasterHttpServlet extends HttpServlet {
 			case "stripe":
 				s = new StripeWebhookServlet();
 				s.process(request);
-				return;			
+				return;
 			case "share":
 				s = new ShareServlet();
 				s.process(request);
@@ -97,11 +87,12 @@ public class MasterHttpServlet extends HttpServlet {
 				// upload
 				UploadServlet us = new UploadServlet();
 				SoGiveConfig conf = Dep.get(SoGiveConfig.class);
-				if (conf.uploadDir!=null) us.setUploadDir(conf.uploadDir);				
+				if (conf.uploadDir != null)
+					us.setUploadDir(conf.uploadDir);
 				KServerType serverType = AppUtils.getServerType(request);
-				us.setServer(AppUtils.getServerUrl(serverType, "app.sogive.org").toString());				
+				us.setServer(AppUtils.getServerUrl(serverType, "app.sogive.org").toString());
 				us.process(request);
-				return;			
+				return;
 			case "log":
 				s = new LogServlet();
 				s.process(request);
@@ -117,7 +108,7 @@ public class MasterHttpServlet extends HttpServlet {
 			case "eventReport":
 				s = new EventReportServlet();
 				s.process(request);
-				return;				
+				return;
 			case "basket":
 				s = new BasketServlet();
 				s.process(request);
@@ -137,14 +128,24 @@ public class MasterHttpServlet extends HttpServlet {
 			case "manifest":
 				s = new ManifestServlet();
 				s.process(request);
-			}			
-			WebUtils2.sendError(500, "TODO - no servlet for "+servletName+" full path: "+path, resp);
-		} catch(Throwable ex) {			
+			}
+			WebUtils2.sendError(500, "TODO - no servlet for " + servletName + " full path: " + path, resp);
+		} catch (Throwable ex) {
 			HttpServletWrapper.doCatch(ex, resp, request);
 		} finally {
-			Thread.currentThread().setName("...done servlet: "+servletName);
+			Thread.currentThread().setName("...done servlet: " + servletName);
 			WebRequest.close(req, resp);
 		}
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
 	}
 
 }

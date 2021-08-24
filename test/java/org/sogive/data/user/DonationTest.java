@@ -8,7 +8,8 @@ import com.winterwell.web.ajax.JThing;
 public class DonationTest {
 
 	/**
-	 * NB: Investigating a bug where the client was returning "yes"/"no" instead of true/false.
+	 * NB: Investigating a bug where the client was returning "yes"/"no" instead of
+	 * true/false.
 	 */
 	@Test
 	public void testDonationFromJson() {

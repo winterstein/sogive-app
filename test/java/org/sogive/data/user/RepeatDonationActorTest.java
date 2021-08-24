@@ -15,7 +15,7 @@ public class RepeatDonationActorTest {
 		Money userContribution = Money.pound(1);
 		Donation donation = new Donation(from, to, userContribution);
 		RepeatDonation rd = new RepeatDonation(donation);
-		
+
 		rda.consume(rd, null);
 	}
 

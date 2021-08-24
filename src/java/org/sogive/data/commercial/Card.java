@@ -10,24 +10,58 @@ import com.winterwell.web.data.XId;
 
 /**
  * eg a Xmas card
+ * 
  * @see GiftCard which unlike this transfers money
  * @author daniel
  *
  */
 public class Card extends AThing {
 
+	public static final String KIND_CARD = "Card";
+
 	@ESKeyword
-	String img;
+	String basketId;
+
+	@ESKeyword
+	String charityId;
 
 	String description;
+
+	// TODO
+	Donation donation;
+
+	Boolean emailed;
+
+	/** Who created this giftcard? */
+	XId generatedBy;
+
+	@ESKeyword
+	String img;
 
 	String message;
 
 	XId oxid;
-	
+
+	@ESKeyword
+	String parentTicketId;
+
+	Boolean posted;
+
+	@ESKeyword
+	String shopId;
+
+	@ESKeyword
+	String ticketId;
+
+	String toAddress;
+
+	@ESKeyword
+	String toEmail;
+
+	String toName;
 	public Card(Ticket ticket, Basket basket) {
 		// important - duplicated in js
-		this.id = "card."+FundRaiser.getIDForTicket(ticket);
+		this.id = "card." + FundRaiser.getIDForTicket(ticket);
 //		generatedBy = basket.get // TODO!
 		this.name = ticket.name;
 		ticketId = ticket.getId();
@@ -45,39 +79,7 @@ public class Card extends AThing {
 		emailed = false;
 		oxid = basket.oxid;
 	}
-	public static final String KIND_CARD = "Card";
 
-	/** Who created this giftcard? */	
-	XId generatedBy;
-
-	// TODO
-	Donation donation;
-	
-	@ESKeyword
-	String ticketId;
-
-	@ESKeyword
-	String parentTicketId;
-
-	@ESKeyword
-	String shopId;
-	
-	@ESKeyword
-	String basketId;
-	
-	@ESKeyword
-	String charityId;
-	
-	String toName;
-	
-	@ESKeyword
-	String toEmail;
-	
-	String toAddress;
-
-	Boolean posted;
-	Boolean emailed;
-	
 	public void setEmailed(boolean emailed) {
 		this.emailed = emailed;
 	}

@@ -26,7 +26,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="dependencies/gson.jar"/>
 	<classpathentry kind="lib" path="dependencies/stripe-java.jar" sourcepath="dependencies/stripe-java-17.8.0.zip"/>
-	<classpathentry kind="lib" path="dependencies/lombok.jar"/>
 	<classpathentry kind="lib" path="dependencies/mockito-core.jar"/>
 	<classpathentry kind="lib" path="dependencies/jsoup.jar"/>
 	<classpathentry kind="output" path="bin"/>

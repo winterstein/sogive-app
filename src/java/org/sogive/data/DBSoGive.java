@@ -37,99 +37,97 @@ import com.winterwell.web.data.XId;
 /**
  * What do we store in SQL? Low latency stuff.
  * 
- *  - Transactions
- *  - Is that it?
- *  
+ * - Transactions - Is that it?
+ * 
  * @author daniel
  *
  */
 public class DBSoGive {
 
-	private static final Class[] DBCLASSES = new Class[] {
-			NGO.class, 
-			Person.class, Team.class, Event.class, 
-			FundRaiser.class,
-			Basket.class, Donation.class, Ticket.class,
-			Transfer.class,
-			RepeatDonation.class
-			};
+	private static final Class[] DBCLASSES = new Class[] { NGO.class, Person.class, Team.class, Event.class,
+			FundRaiser.class, Basket.class, Donation.class, Ticket.class, Transfer.class, RepeatDonation.class };
+
+	public static List<NGO> getCharityById(NGO ngo) {
+		ESConfig ec = Dep.get(ESConfig.class);
+		ESHttpClient esjc = new ESHttpClient(ec);
+		SearchRequest search = esjc.prepareSearch("charity");
+		BoolQueryBuilder qb = ESQueryBuilders.boolQuery();
+		for (String f : new String[] { NGO.ID, "englandWalesCharityRegNum", ImportOSCRData.OSCR_REG, "niCharityRegNum",
+				"ukCompanyRegNum", "usCompanyRegNum" }) {
+			if (ngo.get(f) != null) {
+				qb.should(ESQueryBuilders.termQuery(f, ngo.get(f)));
+			}
+		}
+		qb.minimumNumberShouldMatch(1);
+		search.setQuery(qb);
+		List<NGO> hits = search.get().getSearchResults(NGO.class);
+		return hits;
+	}
+
+	public static Person getCreateUser(XId user) {
+		ESPath path = Dep.get(IESRouter.class).getPath(Person.class, user.toString(), KStatus.PUBLISHED);
+		Person peep = AppUtils.get(path, Person.class);
+		if (peep != null)
+			return peep;
+		PersonLite peepLite = AppUtils.getCreatePersonLite(user, null);
+		// HACK copy over
+		peep = new Person(peepLite);
+		peep.isFresh = true; // HACK
+		return peep;
+	}
 
 	public static void init() {
-		assert(Dep.has(Gson.class));
+		assert (Dep.has(Gson.class));
 		ESHttpClient es = Dep.get(ESHttpClient.class);
 		SoGiveConfig config = Dep.get(SoGiveConfig.class);
 
 		AppUtils.initESIndices(KStatus.main(), DBCLASSES);
-		
+
 		// charity mapping
-		
+
 		// dates also have a "raw" string field, for storing badly formatted input
 		// This is handled in Project.init()
 		ESType raw = new ESType().text().noAnalyzer();
 //				.noIndex() not for type:text
 		ESType money = Money.ESTYPE;
-		
-		ESType outputType = new ESType().object()
-				.property("costPerBeneficiary", money);
-		
-		ESType charitymapping = new ESType()
-				.property("ready", new ESType().bool())
+
+		ESType outputType = new ESType().object().property("costPerBeneficiary", money);
+
+		ESType charitymapping = new ESType().property("ready", new ESType().bool())
 				.property("unlisted", new ESType().bool()) // for e.g. Good-Loop entries
 				.property("impact", ESType.keyword)
-				.property("projects", 
-						new ESType().object()
-							.property("year", new ESType().INTEGER())
-							.property("start", new ESType().date())
-							.property("start_raw", raw)
-							.property("end", new ESType().date())
-							.property("end_raw", raw)
+				.property("projects",
+						new ESType().object().property("year", new ESType().INTEGER())
+								.property("start", new ESType().date()).property("start_raw", raw)
+								.property("end", new ESType().date()).property("end_raw", raw)
 //							.property("inputs", money) TODO => reindex
-							.property("outputs", outputType)
-						) // ./projects	
+								.property("outputs", outputType)) // ./projects
 				.property("simpleImpact", outputType) // ./projects
-				.property("suggest", new ESType().completion())
-				.property("redirect", ESType.keyword);	
+				.property("suggest", new ESType().completion()).property("redirect", ESType.keyword);
 
 		// mappings
-		AppUtils.initESMappings(KStatus.main(), 
+		AppUtils.initESMappings(KStatus.main(),
 				// default handling for Basket Ticket etc.
-				DBCLASSES,
-				new ArrayMap(
-					
-					NGO.class, charitymapping,
-						
-					Donation.class,
-						new ESType()
-							.property("from", ESType.keyword)
-							.property("to", ESType.keyword)
-							.property("fundRaiser", ESType.keyword)
-							.property("via", ESType.keyword)
-							.property("date", new ESType().date())
-							.property("amount", money)
-							.property("total", money),
-					
-					Transfer.class,
-							new ESType()
-								.property("from", ESType.keyword)
-								.property("to", ESType.keyword)
-								.property("date", new ESType().date())
-								.property("amount", money)
-								.property("total", money)
-								,
-					
-					Ticket.class, 
-							new ESType()
-								.property("eventId", ESType.keyword)
-					,
-					GiftCard.class,
-						new ESType()
-							.property("code", ESType.keyword)
-							.property("redeemed", new ESType().bool())
-							.property("redeemedBy", new ESType().text())
-							.property("amount", money)
-							.property("generatedBy", new ESType().text())
-				));
-		
+				DBCLASSES, new ArrayMap(
+
+						NGO.class, charitymapping,
+
+						Donation.class,
+						new ESType().property("from", ESType.keyword).property("to", ESType.keyword)
+								.property("fundRaiser", ESType.keyword).property("via", ESType.keyword)
+								.property("date", new ESType().date()).property("amount", money)
+								.property("total", money),
+
+						Transfer.class,
+						new ESType().property("from", ESType.keyword).property("to", ESType.keyword)
+								.property("date", new ESType().date()).property("amount", money)
+								.property("total", money),
+
+						Ticket.class, new ESType().property("eventId", ESType.keyword), GiftCard.class,
+						new ESType().property("code", ESType.keyword).property("redeemed", new ESType().bool())
+								.property("redeemedBy", new ESType().text()).property("amount", money)
+								.property("generatedBy", new ESType().text())));
+
 		// Dummy TBD charity
 		NGO ngo = new NGO("tbd");
 		ngo.put("name", "TBD: To Be Decided");
@@ -137,37 +135,6 @@ public class DBSoGive {
 		ESPath draftPath = Dep.get(IESRouter.class).getPath(NGO.class, "tbd", KStatus.DRAFT);
 		ESPath pubPath = Dep.get(IESRouter.class).getPath(NGO.class, "tbd", KStatus.PUBLISHED);
 		AppUtils.doPublish(new JThing(ngo), draftPath, pubPath);
-	}
-
-	public static List<NGO> getCharityById(NGO ngo) {
-		ESConfig ec = Dep.get(ESConfig.class);
-		ESHttpClient esjc = new ESHttpClient(ec);
-		SearchRequest search = esjc.prepareSearch("charity");
-		BoolQueryBuilder qb = ESQueryBuilders.boolQuery();
-		for (String f : new String[] {
-				NGO.ID, "englandWalesCharityRegNum", ImportOSCRData.OSCR_REG,
-				"niCharityRegNum",
-				"ukCompanyRegNum", "usCompanyRegNum"
-		}) {
-			if (ngo.get(f) != null) {
-				qb.should(ESQueryBuilders.termQuery(f, ngo.get(f)));
-			}
-		}
-		qb.minimumNumberShouldMatch(1);
-		search.setQuery(qb);
-		List<NGO> hits = search.get().getSearchResults(NGO.class);		
-		return hits;
-	}
-
-	public static Person getCreateUser(XId user) {
-		ESPath path = Dep.get(IESRouter.class).getPath(Person.class, user.toString(), KStatus.PUBLISHED);
-		Person peep = AppUtils.get(path, Person.class);
-		if (peep != null) return peep;
-		PersonLite peepLite = AppUtils.getCreatePersonLite(user, null);
-		// HACK copy over
-		peep = new Person(peepLite);
-		peep.isFresh = true; // HACK 
-		return peep;
 	}
 
 }

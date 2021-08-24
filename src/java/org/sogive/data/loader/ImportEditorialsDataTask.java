@@ -1,37 +1,42 @@
 package org.sogive.data.loader;
 
-import com.winterwell.data.KStatus;
-import com.winterwell.utils.Utils;
-import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.log.Log;
-import org.sogive.data.charity.NGO;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sogive.data.charity.NGO;
+
+import com.winterwell.data.KStatus;
+import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.log.Log;
+
 /**
- * Imports editorials from a given published Google Doc url.
- * Such as https://docs.google.com/document/d/e/2PACX-1vTT_o-nxdI07X9CwybFQLEDEjbKvAvtEEbZPnf7XpKBMFSC4xpMa0rJYM7MwpvZqdb1O9GMuVtC7QAT/pub
+ * Imports editorials from a given published Google Doc url. Such as
+ * https://docs.google.com/document/d/e/2PACX-1vTT_o-nxdI07X9CwybFQLEDEjbKvAvtEEbZPnf7XpKBMFSC4xpMa0rJYM7MwpvZqdb1O9GMuVtC7QAT/pub
  * 
  * @author anita
  *
  */
 public class ImportEditorialsDataTask {
 
-	private static final String TAG = ImportEditorialsDataTask.class.getSimpleName();
-
 	/**
 	 * prevent overlapping runs
 	 */
 	private static volatile boolean running;
 
-	private final EditorialsFetcher editorialsFetcher;
+	private static final String TAG = ImportEditorialsDataTask.class.getSimpleName();
+
 	private final DatabaseWriter database;
+	private final EditorialsFetcher editorialsFetcher;
 
 	public ImportEditorialsDataTask(JsoupDocumentFetcher jsoupDocumentFetcher, DatabaseWriter database) {
 		editorialsFetcher = new EditorialsFetcher(jsoupDocumentFetcher);
 		this.database = database;
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 
 	public synchronized ArrayMap run(String publishedGoogleDocsUrl) {
@@ -41,12 +46,13 @@ public class ImportEditorialsDataTask {
 			try {
 				editorials = editorialsFetcher.getEditorials(publishedGoogleDocsUrl);
 			} catch (IOException e) {
-				Log.e(TAG, String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
+				Log.e(TAG,
+						String.format("Failed to get editorials from %s: %s", publishedGoogleDocsUrl, e.getMessage()));
 				running = false;
 				return new ArrayMap();
 			}
 			return writeEditorials(editorials);
-		} catch(Throwable ex) {
+		} catch (Throwable ex) {
 			throw Utils.runtime(ex);
 		} finally {
 			running = false;
@@ -70,10 +76,6 @@ public class ImportEditorialsDataTask {
 			count++;
 		}
 		return new ArrayMap("totalImported", count, "rejectedIds", rejectedIds);
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 
 }
