@@ -246,7 +246,7 @@ const SuggestCharityForm = () => {
     let formData = DataStore.getValue(fpath);
 
     // extra MyLoop vars
-    DataStore.setValue(fpath.concat("notify"), "daniel@sodash.com", false);
+    DataStore.setValue(fpath.concat("notify"), "matt@sogive.org,sanjay@sogive.org", false);
     DataStore.setValue(fpath.concat("controller"), "sogive.org", false);
 
     let profilerEndpoint = "https://profiler.good-loop.com/form/sogive";
