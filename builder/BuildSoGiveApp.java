@@ -1,3 +1,4 @@
+
 //import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +20,13 @@ public class BuildSoGiveApp extends BuildWinterwellProject {
 	@Override
 	public List<BuildTask> getDependencies() {
 		List<BuildTask> deps = new ArrayList(super.getDependencies());
-		
+
 		MavenDependencyTask mdt = new MavenDependencyTask();
 		mdt.addDependency("com.stripe:stripe-java:20.30.0");
-		mdt.addDependency("org.projectlombok:lombok:1.18.12");
 		mdt.addDependency("org.mockito:mockito-core:3.3.3");
 		mdt.addDependency("org.jsoup:jsoup:1.13.1");
 		deps.add(mdt);
-		
+
 		return deps;
 	}
 

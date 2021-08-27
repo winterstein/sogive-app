@@ -8,6 +8,7 @@ import com.winterwell.web.app.WebRequest;
 
 /**
  * /stripe/webhook
+ * 
  * @author daniel
  *
  */
@@ -19,9 +20,9 @@ public class StripeWebhookServlet implements IServlet {
 		this.state = _state;
 		// Retrieve the request's body and parse it as JSON
 		Event eventJson = ApiResource.GSON.fromJson(state.getPostBody(), Event.class);
-		Log.d("stripe", "json: "+state.getPostBody());
+		Log.d("stripe", "json: " + state.getPostBody());
 		// Do something with eventJson??
-		Log.d("stripe", eventJson.getType()+" "+eventJson.getData());
+		Log.d("stripe", eventJson.getType() + " " + eventJson.getData());
 	}
-	
+
 }

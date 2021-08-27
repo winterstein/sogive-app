@@ -4,13 +4,13 @@ import com.goodloop.data.Money;
 
 public class SuggestedDonation {
 
-	String name;
+	Money amount;
 	String img;
-	String text;
+	String name;
 	/**
 	 * TODO TUnit
 	 */
 	String repeat;
-	Money amount;
-	
+	String text;
+
 }

@@ -26,40 +26,39 @@ import com.winterwell.youagain.client.YouAgainClient;
 
 /**
  * See also WWAppTestUtils
+ * 
  * @author daniel
  *
  */
 public class SoGiveTestUtils {
 
 	static SoGiveServer server;
-	
+
 	/**
 	 * An in-memory server for unit testing
+	 * 
 	 * @return http://localhost:7312
 	 */
 	public static String getStartServer() {
-		if (server==null) {
+		if (server == null) {
 			server = new SoGiveServer();
-			String[] args = new String[] {
-				"-port", "7312",
-				"-testStripe", "true"
-			};
+			String[] args = new String[] { "-port", "7312", "-testStripe", "true" };
 			server.doMain(args);
 		}
 		SoGiveConfig config = server.getConfig();
-		return "http://localhost:"+config.port; 
+		return "http://localhost:" + config.port;
 	}
 
 	public static FundRaiser getTestFundRaiser() {
 		Event event = getTestEvent();
 		IESRouter r = Dep.get(IESRouter.class);
-		String id = event.getId()+".testFundRaiser";
+		String id = event.getId() + ".testFundRaiser";
 		ESPath path = r.getPath(FundRaiser.class, id);
 		FundRaiser fr = AppUtils.get(path, FundRaiser.class);
-		
+
 		Person walker = doTestWalker();
-		
-		if (fr==null) {
+
+		if (fr == null) {
 			fr = new FundRaiser();
 			fr.setId(id);
 			// by fork
@@ -67,17 +66,16 @@ public class SoGiveTestUtils {
 			fr.setOwner(walker.getPersonLite());
 			// event
 			fr.setEventId(event.getId());
-			fr.name = "Test FundRaiser by "+walker.getName()+" for event "+event.getName();
-			
+			fr.name = "Test FundRaiser by " + walker.getName() + " for event " + event.getName();
+
 			ESPath dpath = r.getPath(FundRaiser.class, id, KStatus.DRAFT);
 			JThing item = new JThing().setJava(fr);
 			AppUtils.doSaveEdit(dpath, item, null);
 			AppUtils.doPublish(item, dpath, path);
-		}		
-		
+		}
+
 		return fr;
 	}
-
 
 	static Event getTestEvent() {
 		Class<Event> klass = Event.class;
@@ -85,7 +83,7 @@ public class SoGiveTestUtils {
 		String id = "dummyEvent";
 		ESPath path = r.getPath(klass, id);
 		Event obj = AppUtils.get(path, klass);
-		if (obj==null) {
+		if (obj == null) {
 			obj = new Event();
 			obj.setId(id);
 			ESPath dpath = r.getPath(klass, id, KStatus.DRAFT);
@@ -95,8 +93,7 @@ public class SoGiveTestUtils {
 		}
 		return obj;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param host
@@ -108,7 +105,7 @@ public class SoGiveTestUtils {
 		try {
 			AuthToken auth = yac.login("spoonmcguffin@gmail.com", "my1stpassword");
 			return auth;
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			AuthToken reg = yac.register("spoonmcguffin@gmail.com", "my1stpassword");
 			return reg;
 		}
@@ -120,7 +117,7 @@ public class SoGiveTestUtils {
 		String id = "against-malaria-foundation";
 		ESPath path = r.getPath(klass, id);
 		NGO obj = AppUtils.get(path, klass);
-		if (obj==null) {
+		if (obj == null) {
 			obj = new NGO(id);
 			ESPath dpath = r.getPath(klass, id, KStatus.DRAFT);
 			JThing item = new JThing().setJava(obj);
@@ -144,14 +141,14 @@ public class SoGiveTestUtils {
 
 	/**
 	 * Put in a mock emailer
+	 * 
 	 * @return sent emails list
 	 */
 	public static List<SimpleMessage> mockEmailer() {
 		ArrayList sent = new ArrayList();
 		Emailer emailer = Mockito.mock(Emailer.class);
-		Mockito.when(emailer.send(Mockito.any())).thenAnswer(
-				invocation -> sent.add((SimpleMessage) invocation.getArguments()[0])
-				);
+		Mockito.when(emailer.send(Mockito.any()))
+				.thenAnswer(invocation -> sent.add((SimpleMessage) invocation.getArguments()[0]));
 		Mockito.when(emailer.getBotEmail()).thenReturn(WebUtils2.internetAddress("testbot@example.com"));
 		Dep.set(Emailer.class, emailer);
 		return sent;

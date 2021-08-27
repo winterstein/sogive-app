@@ -1,5 +1,4 @@
 
-
 import java.util.List;
 
 import com.winterwell.bob.BuildTask;
@@ -9,7 +8,6 @@ import com.winterwell.web.app.build.PublishProjectTask;
 /**
  */
 public class PublishSoGiveApp extends PublishProjectTask {
-	
 
 	public PublishSoGiveApp() throws Exception {
 		super("sogive", "/home/winterwell/sogive-app");
@@ -18,7 +16,7 @@ public class PublishSoGiveApp extends PublishProjectTask {
 		typeOfPublish = KPubType.production;
 //		notests = true;
 	}
-	
+
 	@Override
 	public List<BuildTask> getDependencies() {
 		List<BuildTask> deps = super.getDependencies();
@@ -28,10 +26,10 @@ public class PublishSoGiveApp extends PublishProjectTask {
 
 	@Override
 	protected void doTask() throws Exception {
-		super.doTask();		
-		
-		doSendEmail("daniel.winterstein@gmail.com,sanjay@sogive.org,daniel.appel.winterwell@gmail.com,roscoe@winterwell.com");
-	}
+		super.doTask();
 
+		doSendEmail(
+				"daniel.winterstein@gmail.com,sanjay@sogive.org,daniel.appel.winterwell@gmail.com,roscoe@winterwell.com");
+	}
 
 }

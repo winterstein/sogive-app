@@ -1,55 +1,52 @@
 package org.sogive.data.loader;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.winterwell.utils.log.Log;
-
-import java.io.IOException;
-import java.util.*;
-
 /**
- * Fetch data from a Google Doc
- * Assumes format:
- * h1: charity ID
- * editorial text (which can be across a few paragraphs)
+ * Fetch data from a Google Doc Assumes format: h1: charity ID editorial text
+ * (which can be across a few paragraphs)
  * 
  * @author Anita
  *
  */
 public class EditorialsFetcher {
-    private final JsoupDocumentFetcher documentFetcher;
+	private static Editorials parseFromDocument(Document document) {
+		List<Editorial> charityEditorials = new ArrayList<>();
+		Elements header1s = document.getElementsByTag("h1");
+		for (Element h1 : header1s) {
+			String charityId = h1.text().trim().toLowerCase();
+			List<String> editorialParagraphs = new ArrayList<>();
 
-    public EditorialsFetcher(JsoupDocumentFetcher documentFetcher) {
-        this.documentFetcher = documentFetcher;
-    }
+			Element firstParagraphElement = h1.nextElementSibling();
+			editorialParagraphs.add(firstParagraphElement.text());
 
-    public Editorials getEditorials(String publishedGoogleDocsUrl) throws IOException {
-        Document editorialsDocument = documentFetcher.fetchDocument(publishedGoogleDocsUrl);
-        return parseFromDocument(editorialsDocument);
-    }
+			Element nextElement = firstParagraphElement.nextElementSibling();
+			while (nextElement != null && !nextElement.tagName().equals("h1")) {
+				String paragraphText = nextElement.text();
+				if (!paragraphText.isEmpty()) {
+					editorialParagraphs.add(paragraphText);
+				}
+				nextElement = nextElement.nextElementSibling();
+			}
+			charityEditorials.add(new Editorial(charityId, editorialParagraphs));
+		}
+		return new Editorials(charityEditorials);
+	}
 
-    private static Editorials parseFromDocument(Document document) {
-        List<Editorial> charityEditorials = new ArrayList<>();
-        Elements header1s = document.getElementsByTag("h1");
-        for (Element h1 : header1s) {
-            String charityId = h1.text().trim().toLowerCase();
-            List<String> editorialParagraphs = new ArrayList<>();
+	private final JsoupDocumentFetcher documentFetcher;
 
-            Element firstParagraphElement = h1.nextElementSibling();
-            editorialParagraphs.add(firstParagraphElement.text());
+	public EditorialsFetcher(JsoupDocumentFetcher documentFetcher) {
+		this.documentFetcher = documentFetcher;
+	}
 
-            Element nextElement = firstParagraphElement.nextElementSibling();
-            while (nextElement != null && !nextElement.tagName().equals("h1")) {
-                String paragraphText = nextElement.text();
-                if (!paragraphText.isEmpty()) {
-                    editorialParagraphs.add(paragraphText);
-                }
-                nextElement = nextElement.nextElementSibling();
-            }
-            charityEditorials.add(new Editorial(charityId, editorialParagraphs));
-        }
-        return new Editorials(charityEditorials);
-    }
+	public Editorials getEditorials(String publishedGoogleDocsUrl) throws IOException {
+		Document editorialsDocument = documentFetcher.fetchDocument(publishedGoogleDocsUrl);
+		return parseFromDocument(editorialsDocument);
+	}
 }

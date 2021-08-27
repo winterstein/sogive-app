@@ -16,9 +16,7 @@ public class RepeatDonationTest {
 
 	@Test
 	public void testGson() {
-		String json = FileUtils.read(
-				RepeatDonationTest.class.getResourceAsStream("egrepeatdonation.json")
-				);
+		String json = FileUtils.read(RepeatDonationTest.class.getResourceAsStream("egrepeatdonation.json"));
 		SoGiveServer ss = new SoGiveServer();
 		ss.init();
 
@@ -26,13 +24,10 @@ public class RepeatDonationTest {
 		Object rd = gson.fromJson(json);
 		System.out.println(rd);
 	}
-	
 
 	@Test
 	public void testGsonLight() {
-		String json = FileUtils.read(
-				RepeatDonationTest.class.getResourceAsStream("egrepeatdonation0.json")
-				);
+		String json = FileUtils.read(RepeatDonationTest.class.getResourceAsStream("egrepeatdonation0.json"));
 		SoGiveServer ss = new SoGiveServer();
 		ss.init();
 
@@ -40,27 +35,26 @@ public class RepeatDonationTest {
 		Object rd = gson.fromJson(json);
 		System.out.println(rd);
 	}
-	
+
 	@Test
 	public void testGsonInMemory() {
 		SoGiveServer ss = new SoGiveServer();
 		ss.init();
 
 		Gson gson = Dep.get(Gson.class);
-		
-		XId from = new XId("spoon@gmail.com");		
+
+		XId from = new XId("spoon@gmail.com");
 		String to = "oxfam";
 		Money userContribution = new Money(KCurrency.GBP, 1);
 		Donation don = new Donation(from, to, userContribution);
 		don.setRepeat("WEEK");
 		RepeatDonation rd = new RepeatDonation(don);
-		
+
 		String json = gson.toJson(rd);
 		System.out.println(json);
-		
+
 		Object rd2 = gson.fromJson(json);
-		
-		
+
 		System.out.println(rd2);
 	}
 }

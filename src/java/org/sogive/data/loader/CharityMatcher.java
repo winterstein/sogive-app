@@ -24,25 +24,25 @@ public class CharityMatcher {
 		// TODO search the DB by name, ID
 		// by ID?
 		List<NGO> charity = DBSoGive.getCharityById(ngo);
-		if (charity != null && ! charity.isEmpty()) {
+		if (charity != null && !charity.isEmpty()) {
 			od.train(charity);
 			return od;
 		}
-		
+
 		ESConfig ec = Dep.get(ESConfig.class);
 		ESHttpClient esjc = new ESHttpClient(ec);
 		SearchRequest search = esjc.prepareSearch("charity");
-		String q = Utils.or(ngo.get("displayName"), ngo.getName()).toString(); 
-		q = StrUtils.toCanonical(q);			
+		String q = Utils.or(ngo.get("displayName"), ngo.getName()).toString();
+		q = StrUtils.toCanonical(q);
 		// this will query _all
 		ESQueryBuilder qb = ESQueryBuilders.simpleQueryStringQuery(q)
 //							.defaultOperator(Operator.AND)
-				;
+		;
 		search.setQuery(qb);
-		List<Map> hits = search.get().getHits();		
+		List<Map> hits = search.get().getHits();
 		Gson gson = Dep.get(Gson.class);
 		for (Map hit : hits) {
-			NGO ngoHit = gson.fromJson(gson.toJson(hit), NGO.class); 
+			NGO ngoHit = gson.fromJson(gson.toJson(hit), NGO.class);
 			od.count(ngoHit);
 		}
 		return od;

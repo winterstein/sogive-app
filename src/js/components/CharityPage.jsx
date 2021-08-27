@@ -43,7 +43,7 @@ const CharityPage = () => {
 	let cid = DataStore.getUrlValue('charityId');
 	if ( ! cid) cid = DataStore.getValue('location', 'path')[1]; // TODO switch to this more RESTful path naming as the standard
 	let status = DataStore.getUrlValue('status') || C.KStatus.PUBLISHED;
-	let pvCharity = ActionMan.getDataItem({status, type:C.TYPES.$NGO(), id:cid});
+	let pvCharity = ActionMan.getDataItem({status, type:C.TYPES.$NGO(), id:cid, noRedirect:true});
 	let charity = pvCharity.value;
 	if ( ! charity) {
 		return <Misc.Loading pv={pvCharity} />;
