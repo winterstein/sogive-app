@@ -465,7 +465,6 @@ const ProjectList = ({projects, charity}) => {
 
 const COSTNAMES = { 	
 	annualCosts: "Annual costs",
-	fundraisingCosts: "Fundraising costs",
 	tradingCosts: "Trading costs",
 	incomeFromBeneficiaries: "Income from beneficiaries"
 };

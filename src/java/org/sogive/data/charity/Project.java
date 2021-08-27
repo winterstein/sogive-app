@@ -121,6 +121,7 @@ public class Project extends Thing<Project> {
 		return total;
 	}
 
+	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "tradingCosts"};
 	@Override
 	public void init() {
 		super.init();
