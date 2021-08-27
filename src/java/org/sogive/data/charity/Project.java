@@ -20,7 +20,7 @@ public class Project extends Thing<Project> {
 
 	private static final long serialVersionUID = 1L;;
 
-	final String[] deductibleInputs = new String[] { "incomeFromBeneficiaries", "fundraisingCosts", "tradingCosts" };
+	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "tradingCosts"};
 
 	Project() {
 	}
@@ -121,7 +121,7 @@ public class Project extends Thing<Project> {
 		return total;
 	}
 
-	final String[] deductibleInputs = new String[]{"incomeFromBeneficiaries", "tradingCosts"};
+
 	@Override
 	public void init() {
 		super.init();
