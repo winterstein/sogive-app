@@ -30,10 +30,9 @@ public class BasketServlet extends CrudServlet<Basket> {
 
 	@Override
 	protected JThing<org.sogive.data.commercial.Basket> doPublish(WebRequest state, KRefresh forceRefresh,
-			boolean deleteDraft) throws Exception 
-	{
+			boolean deleteDraft) throws Exception {
 		Basket basket = getThing(state);
-		if (basket==null) {
+		if (basket == null) {
 			jthing = getThingFromDB(state);
 		}
 		// copy pasta from DonationServlet
@@ -42,27 +41,28 @@ public class BasketServlet extends CrudServlet<Basket> {
 		Basket donation = basket;
 
 		String email = DonationServlet.getEmail(state, basket);
-		XId user = state.getUserId();		
-		if (user==null) {
-			if (email==null) throw new NoAuthException("Stripe requires authentication to process a payment");
+		XId user = state.getUserId();
+		if (user == null) {
+			if (email == null)
+				throw new NoAuthException("Stripe requires authentication to process a payment");
 			user = new XId(email, "email");
 		}
 		assert user != null;
-		
+
 		// collect the money
 		String eventId = basket.getEventId();
-		if (eventId==null) {
+		if (eventId == null) {
 			// HACK grab an event-id from a ticket (assumes only one event per basket)
 			List<Ticket> items = basket.getItems();
-			assert ! items.isEmpty() : "empty basket?! "+basket+" from "+state;
+			assert !items.isEmpty() : "empty basket?! " + basket + " from " + state;
 			Ticket item0 = items.get(0);
-			assert item0 != null : "No ticket 0?! items:"+items+" basket:"+basket+" from "+state;
+			assert item0 != null : "No ticket 0?! items:" + items + " basket:" + basket + " from " + state;
 			eventId = item0.getEventId();
 		}
-		XId to = new XId(eventId+"@sogive-event", false); // HACK we want a better schema for saving money movements		
+		XId to = new XId(eventId + "@sogive-event", false); // HACK we want a better schema for saving money movements
 		MoneyCollector mc = new MoneyCollector(basket, user, email, to, state);
 		mc.run();
-		
+
 		// store in the database (this will save the edited basket)
 		super.doPublish(state, forceRefresh, deleteDraft);
 		// store the tickets
@@ -70,23 +70,23 @@ public class BasketServlet extends CrudServlet<Basket> {
 		List<JThing<Ticket>> pubTickets = new ArrayList();
 		for (Ticket ticket : items) {
 			String id = ticket.getId();
-			Utils.check4null(id); 
+			Utils.check4null(id);
 			ESPath draftPath = esRouter.getPath(dataspace, Ticket.class, id, KStatus.DRAFT);
 			ESPath publishPath = esRouter.getPath(dataspace, Ticket.class, id, KStatus.PUBLISHED);
 			JThing jticket = new JThing().setJava(ticket);
-			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);			
+			JThing obj = AppUtils.doPublish(jticket, draftPath, publishPath);
 			pubTickets.add(obj);
-			Log.d("basket", "published ticket "+id+" "+ticket);
+			Log.d("basket", "published ticket " + id + " " + ticket);
 		}
-		
+
 		// Process the order!
-		Log.d("basket", "send process basket "+basket+" message...");
+		Log.d("basket", "send process basket " + basket + " message...");
 		BasketPublishedActor bpa = Dep.get(BasketPublishedActor.class);
 		bpa.send(donation);
-		
+
 		return jthing;
 	}
-	
+
 	@Override
 	protected void doSecurityCheck(WebRequest state) throws SecurityException {
 		// try to auth
@@ -95,5 +95,5 @@ public class BasketServlet extends CrudServlet<Basket> {
 		// But can work without auth
 		// TODO low-level safety against editing someone else's basket
 	}
-	
+
 }

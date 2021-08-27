@@ -8,10 +8,9 @@ import com.winterwell.web.app.CrudServlet;
  * 
  */
 public class CardServlet extends CrudServlet {
-	
+
 	public CardServlet() {
 		super(Card.class);
 	}
-	
-	
+
 }

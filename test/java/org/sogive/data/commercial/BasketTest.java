@@ -11,17 +11,17 @@ public class BasketTest {
 	public void testInit() {
 		SoGiveServer sg = new SoGiveServer();
 		sg.init();
-		
+
 		Basket basket = new Basket();
 		basket.name = "foo";
-		
+
 		JThing jb = new JThing().setJava(basket);
-		
-		String json = jb.string();		
-		
+
+		String json = jb.string();
+
 		System.out.println(json);
-		
-		assert json.contains("Basket") : json;		
+
+		assert json.contains("Basket") : json;
 	}
 
 }

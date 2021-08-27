@@ -19,42 +19,49 @@ import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.Checkbox;
 
 public class EmailServlet extends CrudServlet<Event> implements IServlet {
-	
+
 	private static final String DEFAULT_MESSAGE = "default message";
-		
+
 	public EmailServlet() {
 		super(Event.class);
 	}
-	
+
+	// This isn't strictly necessary at the moment. Felt that it'd come in handy
+	// later when we want to insert the message body into a more complete email
+	// template.
+	public String generateMessageBody(WebRequest state) {
+		String message = state.get("optionalMessage");
+
+		if (message == null)
+			return DEFAULT_MESSAGE;
+		else
+			return message;
+	}
+
 	@Override
 	public void process(WebRequest state) throws Exception {
-		//Think it might be better to check enableNotification before the email request is sent. Feels a bit wasteful to send an extraneous request
-		Boolean enableNotification = state.get(new Checkbox("enableNotification"));		
+		// Think it might be better to check enableNotification before the email request
+		// is sent. Feels a bit wasteful to send an extraneous request
+		Boolean enableNotification = state.get(new Checkbox("enableNotification"));
 		String message = generateMessageBody(state);
 		Person sender = DBSoGive.getCreateUser(new XId(state.get("senderId")));
 		String senderName = sender.getName() != null ? sender.getName() : sender.getEmail();
-		
+
 		InternetAddress recipient = state.get(CommonFields.EMAIL);
-		if(enableNotification){
+		if (enableNotification) {
 			sendAnEmail(recipient, message, senderName);
 		}
 	}
-	
+
 	public void sendAnEmail(InternetAddress recipient, String message, String senderName) throws AddressException {
-		EmailConfig ec = Dep.get(EmailConfig.class);		
+		EmailConfig ec = Dep.get(EmailConfig.class);
 		InternetAddress sender = new InternetAddress(ec.emailFrom);
-		Emailer e = new Emailer(ec);		
-		
-		//Might be nice to retrieve sender's ID and append to front of title. Feel people are more likely to open email if they recognise the sender's name
-		SimpleMessage email = new SimpleMessage(sender, recipient, senderName + " has invited you to an event on sogive.org", message);
+		Emailer e = new Emailer(ec);
+
+		// Might be nice to retrieve sender's ID and append to front of title. Feel
+		// people are more likely to open email if they recognise the sender's name
+		SimpleMessage email = new SimpleMessage(sender, recipient,
+				senderName + " has invited you to an event on sogive.org", message);
 		e.send(email);
-	}
-	
-	//This isn't strictly necessary at the moment. Felt that it'd come in handy later when we want to insert the message body into a more complete email template.
-	public String generateMessageBody(WebRequest state) {
-		String message = state.get("optionalMessage");
-		
-		if(message == null) return DEFAULT_MESSAGE;
-		else return message;
 	}
 }

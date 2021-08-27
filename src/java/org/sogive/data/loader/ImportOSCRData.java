@@ -22,9 +22,11 @@ import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.KErrorPolicy;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
+
 /**
- * OSCR is the Scottish charity register. This can upload the _basic_ data from their register into SoGive.
- * TODO upload more of what they hold
+ * OSCR is the Scottish charity register. This can upload the _basic_ data from
+ * their register into SoGive. TODO upload more of what they hold
+ * 
  * @author daniel
  *
  */
@@ -32,14 +34,60 @@ public class ImportOSCRData {
 
 	public static final String OSCR_REG = "scotlandCharityRegNum";
 
-	public static void main(String[] args) {		
-		
+	private static void doCreateCharity(NGO ngo, String[] row) {
+		// 0 Charity Number, Charity Name, Registered Date, Known As, Charity Status,
+		// 5 Postcode, Constitutional Form, Previous Constitutional Form 1, Geographical
+		// Spread, Main Operating Location,
+		// 10 Purposes, Beneficiaries, Activities, Objectives, Principal Office/Trustees
+		// Address,
+		// 15 Website, Most recent year income, Most recent year expenditure, Mailing
+		// cycle, Year End,
+		// Parent charity name, Parent charity number, Parent charity country of
+		// registration, Designated religious body
+
+		ngo.put("uk_giftaid", true);
+
+		SoGiveConfig config;
+		if (Dep.has(SoGiveConfig.class)) {
+			config = Dep.get(SoGiveConfig.class);
+		} else {
+			config = AppUtils.getConfig("sogive", new SoGiveConfig(), null);
+		}
+
+		String ourId = ngo.getId();
+		if (Utils.isBlank(ourId)) {
+			ourId = NGO.idFromName(ngo.getName());
+			ngo.put(ngo.ID, ourId);
+		}
+		ESPath draftPath = config.getPath(null, NGO.class, ourId, KStatus.DRAFT);
+		ESPath publishPath = config.getPath(null, NGO.class, ourId, KStatus.PUBLISHED);
+
+		JThing item = new JThing().setJava(ngo);
+		AppUtils.doSaveEdit(draftPath, item, null);
+		AppUtils.doPublish(item, draftPath, publishPath);
+	}
+
+	private static Desc<File> getDesc() {
+		Desc desc = new Desc("OSCR-CharityExport.csv.zip", File.class);
+		desc.setServer(Desc.CENTRAL_SERVER);
+		desc.setTag("sogive");
+		desc.put("src", "oscr");
+		desc.put("year", 2017);
+		return desc;
+	}
+
+	public static void main(String[] args) {
+
 		new SoGiveServer().init();
-		
+
 		new ImportOSCRData().run();
 	}
 
 	private volatile boolean running;
+
+	public boolean isRunning() {
+		return running;
+	}
 
 	public synchronized void run() {
 		running = true;
@@ -57,24 +105,28 @@ public class ImportOSCRData {
 		Printer.out(headers);
 		for (String[] row : reader) {
 			Printer.out(row);
-			// 0 Charity Number, Charity Name, Registered Date, Known As, Charity Status, 
-			// 5 Postcode, Constitutional Form, Previous Constitutional Form 1, Geographical Spread, Main Operating Location, 
-			// 10 Purposes, Beneficiaries, Activities, Objectives, Principal Office/Trustees Address, 
-			// 15 Website, Most recent year income, Most recent year expenditure, Mailing cycle, Year End, Parent charity name, 
-			// Parent charity number, Parent charity country of registration, Designated religious body
+			// 0 Charity Number, Charity Name, Registered Date, Known As, Charity Status,
+			// 5 Postcode, Constitutional Form, Previous Constitutional Form 1, Geographical
+			// Spread, Main Operating Location,
+			// 10 Purposes, Beneficiaries, Activities, Objectives, Principal Office/Trustees
+			// Address,
+			// 15 Website, Most recent year income, Most recent year expenditure, Mailing
+			// cycle, Year End, Parent charity name,
+			// Parent charity number, Parent charity country of registration, Designated
+			// religious body
 			String website = row[15];
 			String charityName = row[1];
 			String parentName = row[19];
 			String parentId = row[20];
 			String active = row[4];
 			boolean isActive = active.equalsIgnoreCase(active.trim());
-			if ( ! isActive) {
+			if (!isActive) {
 				continue;
 			}
 			String ourId = NGO.idFromName(charityName);
-			NGO ngo = new NGO(ourId);			
+			NGO ngo = new NGO(ourId);
 			ngo.put(NGO.name, charityName);
-			ngo.put("displayName", row[3]);						
+			ngo.put("displayName", row[3]);
 			ngo.put(OSCR_REG, row[0]);
 			ngo.put(Thing.url, website);
 			ngo.put("parentCharityName", row[20]);
@@ -85,7 +137,7 @@ public class ImportOSCRData {
 				// create!
 				doCreateCharity(ngo, row);
 			} else {
-				// TODO merge?!				
+				// TODO merge?!
 			}
 			cnt++;
 //			if (cnt>10) break;
@@ -94,46 +146,4 @@ public class ImportOSCRData {
 		running = false;
 	}
 
-	private static void doCreateCharity(NGO ngo, String[] row) {
-		// 0 Charity Number, Charity Name, Registered Date, Known As, Charity Status, 
-		// 5 Postcode, Constitutional Form, Previous Constitutional Form 1, Geographical Spread, Main Operating Location, 
-		// 10 Purposes, Beneficiaries, Activities, Objectives, Principal Office/Trustees Address, 
-		// 15 Website, Most recent year income, Most recent year expenditure, Mailing cycle, Year End, 
-		// Parent charity name, Parent charity number, Parent charity country of registration, Designated religious body
-		
-		ngo.put("uk_giftaid", true);		
-		
-		SoGiveConfig config;
-		if (Dep.has(SoGiveConfig.class)) {
-			config = Dep.get(SoGiveConfig.class);	
-		} else {
-			config = AppUtils.getConfig("sogive", new SoGiveConfig(), null);
-		}		
-		
-		String ourId = ngo.getId();
-		if (Utils.isBlank(ourId)) {
-			ourId = NGO.idFromName(ngo.getName());
-			ngo.put(ngo.ID, ourId);
-		}
-		ESPath draftPath = config.getPath(null, NGO.class, ourId, KStatus.DRAFT);
-		ESPath publishPath = config.getPath(null, NGO.class, ourId, KStatus.PUBLISHED);
-		
-		JThing item = new JThing().setJava(ngo);
-		AppUtils.doSaveEdit(draftPath, item, null);
-		AppUtils.doPublish(item, draftPath, publishPath);						
-	}
-
-	private static Desc<File> getDesc() {
-		Desc desc = new Desc("OSCR-CharityExport.csv.zip", File.class);
-		desc.setServer(Desc.CENTRAL_SERVER);
-		desc.setTag("sogive");
-		desc.put("src", "oscr");
-		desc.put("year", 2017);
-		return desc;
-	}
-
-	public boolean isRunning() {
-		return running;
-	}
-	
 }

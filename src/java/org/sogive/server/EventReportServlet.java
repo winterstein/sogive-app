@@ -31,67 +31,14 @@ import com.winterwell.web.app.WebRequest.KResponseType;
 
 public class EventReportServlet implements IServlet {
 
-	@Override
-	public void process(WebRequest state) throws Exception {
-		String eventId = state.getSlugBits(1);
-		String sub = state.getSlugBits(2);
-		// ticket sales?
-		
-		// ticket list?
-		if ("tickets".equals(sub)) {
-			returnTicketList(eventId, state);
-		}
-	}
-
-	private void returnTicketList(String eventId, WebRequest state) throws IOException {
-		ESHttpClient es = Dep.get(ESHttpClient.class);
-		SearchRequest s = new SearchRequest(es);
-		IESRouter esRouter = Dep.get(IESRouter.class);
-		s.setIndices(esRouter.getPath(Ticket.class, null, KStatus.PUBLISHED).index());
-		
-		// query ?? cf crudservlet
-//		String q = state.get("q");
-		ESQueryBuilder qb = 
-				ESQueryBuilders.boolQuery().must(
-						ESQueryBuilders.termQuery("eventId", eventId)
-						);
-		
-		s.setQuery(qb);
-		
-		// TODO paging!
-		s.setSize(10000);
-		s.setDebug(true);
-		SearchResponse sr = s.get();
-		Map<String, Object> jobj = sr.getParsedJson();
-		List<Map> hits = sr.getHits();
-		
-		// NB: may be Map or AThing
-		List hits2 = Containers.apply(hits, h -> h.get("_source"));
-				
-		// HACK: send back csv?
-		if (state.getResponseType() == KResponseType.csv) {
-			doSendCsv(state, hits2);
-			return;
-		}
-			
-		long total = sr.getTotal();
-		String json = Dep.get(Gson.class).toJson(
-				new ArrayMap(
-					"hits", hits2, 
-					"total", total
-				));
-		JsonResponse output = new JsonResponse(state).setCargoJson(json);
-		WebUtils2.sendJson(output, state);		
-	}
-	
 	protected void doSendCsv(WebRequest state, List<Map> hits2) {
 		// ?? maybe refactor and move into a default method in IServlet?
 		StringWriter sout = new StringWriter();
 		CSVWriter w = new CSVWriter(sout, new CSVSpec());
-	
+
 		// what headers?
 		Set<String> headers = Containers.objectAsMap(new Ticket()).keySet();
-		
+
 		// write
 		w.write(headers);
 		for (Map hit : hits2) {
@@ -107,5 +54,50 @@ public class EventReportServlet implements IServlet {
 		WebUtils2.sendText(csv, state.getResponse());
 	}
 
+	@Override
+	public void process(WebRequest state) throws Exception {
+		String eventId = state.getSlugBits(1);
+		String sub = state.getSlugBits(2);
+		// ticket sales?
+
+		// ticket list?
+		if ("tickets".equals(sub)) {
+			returnTicketList(eventId, state);
+		}
+	}
+
+	private void returnTicketList(String eventId, WebRequest state) throws IOException {
+		ESHttpClient es = Dep.get(ESHttpClient.class);
+		SearchRequest s = new SearchRequest(es);
+		IESRouter esRouter = Dep.get(IESRouter.class);
+		s.setIndices(esRouter.getPath(Ticket.class, null, KStatus.PUBLISHED).index());
+
+		// query ?? cf crudservlet
+//		String q = state.get("q");
+		ESQueryBuilder qb = ESQueryBuilders.boolQuery().must(ESQueryBuilders.termQuery("eventId", eventId));
+
+		s.setQuery(qb);
+
+		// TODO paging!
+		s.setSize(10000);
+		s.setDebug(true);
+		SearchResponse sr = s.get();
+		Map<String, Object> jobj = sr.getParsedJson();
+		List<Map> hits = sr.getHits();
+
+		// NB: may be Map or AThing
+		List hits2 = Containers.apply(hits, h -> h.get("_source"));
+
+		// HACK: send back csv?
+		if (state.getResponseType() == KResponseType.csv) {
+			doSendCsv(state, hits2);
+			return;
+		}
+
+		long total = sr.getTotal();
+		String json = Dep.get(Gson.class).toJson(new ArrayMap("hits", hits2, "total", total));
+		JsonResponse output = new JsonResponse(state).setCargoJson(json);
+		WebUtils2.sendJson(output, state);
+	}
 
 }

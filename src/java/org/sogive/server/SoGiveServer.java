@@ -31,43 +31,42 @@ import com.winterwell.web.data.XId;
 import com.winterwell.youagain.client.YouAgainClient;
 
 public class SoGiveServer extends AMain<SoGiveConfig> {
-	
+
 	private static SoGiveServer main;
 	private static RepeatDonationProcessor rdp;
-
-	public SoGiveServer() {
-		super("sogive", SoGiveConfig.class);
-	}
 
 	public static void main(String[] args) {
 		main = new SoGiveServer();
 
 		logFile = new LogFile(new File("sogive.log"))
-					// keep 8 weeks of 1 week log files ??revise this??
-					.setLogRotation(TUnit.WEEK.dt, 8);
+				// keep 8 weeks of 1 week log files ??revise this??
+				.setLogRotation(TUnit.WEEK.dt, 8);
 		try {
 			main.doMain(args);
-		} catch(Throwable ex) {
+		} catch (Throwable ex) {
 			Log.e(ex);
 			System.exit(-1);
 		}
 	}
-	
-	@Override
-	protected void doMain2() {
-		if (rdp==null) {
-			rdp = new RepeatDonationProcessor();
-			rdp.main(null);
-		}
+
+	public SoGiveServer() {
+		super("sogive", SoGiveConfig.class);
 	}
-	
+
 	@Override
-	protected void addJettyServlets(JettyLauncher jl) {		
+	protected void addJettyServlets(JettyLauncher jl) {
 		super.addJettyServlets(jl);
 		jl.addServlet("/*", new MasterHttpServlet());
 	}
 
-	
+	@Override
+	protected void doMain2() {
+		if (rdp == null) {
+			rdp = new RepeatDonationProcessor();
+			rdp.main(null);
+		}
+	}
+
 	@Override
 	protected void init2(SoGiveConfig config) {
 		super.init2(config);
@@ -76,52 +75,47 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		DBSoGive.init();
 		// actors
 		Dep.set(BasketPublishedActor.class, new BasketPublishedActor());
-		Dep.set(DonateToFundRaiserActor.class, new DonateToFundRaiserActor());		
+		Dep.set(DonateToFundRaiserActor.class, new DonateToFundRaiserActor());
 	}
-	
+
 	@Override
-	public SoGiveConfig init2_config(String[] args) {		
-		if (initFlag) return Dep.get(SoGiveConfig.class);
+	public SoGiveConfig init2_config(String[] args) {
+		if (initFlag)
+			return Dep.get(SoGiveConfig.class);
 		SoGiveConfig config = AppUtils.getConfig("sogive", SoGiveConfig.class, args);
-		StripeConfig sc = AppUtils.getConfig("sogive", StripeConfig.class, args); 
+		StripeConfig sc = AppUtils.getConfig("sogive", StripeConfig.class, args);
 		Log.d("stripe.config", FlexiGson.toJSON(sc));
 		Log.d("stripe.config.key", StripePlugin.secretKey());
 
-		// gson		
-		Gson gson = new FlexiGsonBuilder()
-		.setLenientReader(true)
-		.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
-		.registerTypeAdapter(XId.class, new XIdTypeAdapter())
-		.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))		
+		// gson
+		Gson gson = new FlexiGsonBuilder().setLenientReader(true)
+				.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
+				.registerTypeAdapter(XId.class, new XIdTypeAdapter())
+				.registerTypeAdapter(long.class, new StandardAdapters.LenientLongAdapter(0L))
 //		.registerTypeHierarchyAdapter(AThing.class, new AThingAdapter())		
-		.serializeSpecialFloatingPointValues()
-		.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+				.serializeSpecialFloatingPointValues().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 //		.setClassProperty(null) // NB: "@type" would conflict, so use the @class default
-		.setClassMapping("org.sogive.data.MonetaryAmount", Money.class) // update old data
-		.setClassMapping("org.sogive.data.charity.Money", Money.class)
-		.setLoopPolicy(KLoopPolicy.QUIET_NULL)
-		.create();
+				.setClassMapping("org.sogive.data.MonetaryAmount", Money.class) // update old data
+				.setClassMapping("org.sogive.data.charity.Money", Money.class).setLoopPolicy(KLoopPolicy.QUIET_NULL)
+				.create();
 		Dep.set(Gson.class, gson);
-				
+
 		// config
 		ESConfig value = new ESConfig();
 		value.setGson(gson);
 		Dep.set(ESConfig.class, value);
 		// client
-		Dep.setSupplier(ESHttpClient.class, true, 
-				() -> new ESHttpClient(Dep.get(ESConfig.class))
-				);
+		Dep.setSupplier(ESHttpClient.class, true, () -> new ESHttpClient(Dep.get(ESConfig.class)));
 		// ES router - done in the super method
 
 		// login
 		Dep.set(YouAgainClient.class, new YouAgainClient(config.youagainApp, "app.sogive.org"));
-		
+
 		// local DataLog
 		DataLogConfig dlc = AppUtils.getConfig(this.appName, DataLog.getImplementation().getConfig(), args);
 		DataLog.init(dlc);
-		
+
 		return config;
 	}
-
 
 }

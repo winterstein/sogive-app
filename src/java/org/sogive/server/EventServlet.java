@@ -11,11 +11,11 @@ public class EventServlet extends CrudServlet<Event> implements IServlet {
 	public EventServlet() {
 		super(Event.class);
 	}
-	
+
 	@Override
 	public void process(WebRequest state) throws Exception {
 		super.process(state);
-		
+
 	}
 
 }

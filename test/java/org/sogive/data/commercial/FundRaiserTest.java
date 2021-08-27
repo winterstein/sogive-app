@@ -12,8 +12,8 @@ public class FundRaiserTest {
 		ticket.eventId = "eid2";
 		String fid = FundRaiser.getIDForTicket(ticket);
 		System.out.println(fid);
-		
-		// Use this to test in js:		
+
+		// Use this to test in js:
 //		XId = {id: xid => xid.substring(0, xid.lastIndexOf('@')) };
 //		ticket = {eventId:'eid2', attendeeEmail:'daniel@sodash.com', id:'tid1'}
 //		FundRaiser.getIdForTicket(ticket)

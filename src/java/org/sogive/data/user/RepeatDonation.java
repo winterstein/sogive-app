@@ -19,51 +19,49 @@ import com.winterwell.web.data.XId;
 
 /**
  * Use ical code
+ * 
  * @author daniel
  *
  */
 //@Data
 public class RepeatDonation extends AThing {
-	
+
 	private static final String LOGTAG = "RepeatDonation";
-	
+
+	public static String idForDonation(Donation donation) {
+		return "repeat" + donation.getId();
+	}
 	Money amount;
-	/**
-	 * donation id
-	 */
-	String did;
-	
-	/**
-	 * The user who donated
-	 */
-	final XId from;
-	
-	/**
-	 * 
-	 * @return done = off. true if this donation is finished
-	 */
-	public boolean isOff() {
-		return done;
-	}
-	public void setDone(boolean done) {
-		this.done = done;
-	}
-
-	public ICalEvent ical = new ICalEvent();
-
-	@ESKeyword
-	private String to;
-
-	@ESKeyword
-	private String fundRaiser;
 
 	/**
 	 * created time
 	 */
 	private Time date;
 
+	/**
+	 * donation id
+	 */
+	String did;
+
+	boolean done;
+
+	/**
+	 * The user who donated
+	 */
+	final XId from;
+
+	@ESKeyword
+	private String fundRaiser;
+
+	public ICalEvent ical = new ICalEvent();
+
+	private List log;
+
 	private transient Donation originalDonation;
-	
+
+	@ESKeyword
+	private String to;
+
 	public RepeatDonation(Donation donation) {
 		super();
 		date = donation.getTime();
@@ -74,26 +72,44 @@ public class RepeatDonation extends AThing {
 		fundRaiser = donation.getFundRaiser();
 		to = donation.getTo();
 		from = donation.getFrom();
-		ical.start = donation.getTime();		
+		ical.start = donation.getTime();
 		Repeat repeater = donation.getRepeat();
-		if (repeater==null) {
-			throw new IllegalArgumentException("Not a repeat: "+donation);
+		if (repeater == null) {
+			throw new IllegalArgumentException("Not a repeat: " + donation);
 		}
-		ical.setRepeat(repeater);		
+		ical.setRepeat(repeater);
 	}
 
-
-	public static String idForDonation(Donation donation) {
-		return "repeat"+donation.getId();
+	public void addLog(Report report) {
+		if (log == null)
+			log = new ArrayList();
+		log.add(report);
 	}
 
-	@Override
-	public String toString() {
-		return "RepeatDonation[amount=" + amount + ", did=" + did + ", ical=" + ical + "]";
+	public Time getDate() {
+		return date;
 	}
 
+	public ICalEvent getIcal() {
+		return ical;
+	}
 
-	public Donation newDraftDonation() {		
+	public Donation getOriginalDonation() {
+		if (originalDonation == null) {
+			originalDonation = AppUtils.get(did, Donation.class);
+		}
+		return originalDonation;
+	}
+
+	/**
+	 * 
+	 * @return done = off. true if this donation is finished
+	 */
+	public boolean isOff() {
+		return done;
+	}
+
+	public Donation newDraftDonation() {
 		Donation don0 = getOriginalDonation();
 		Utils.check4null(from, to, don0, this);
 		Money uc = don0.getRawAmount();
@@ -105,7 +121,7 @@ public class RepeatDonation extends AThing {
 		don.setDonorEmail(don0.getDonorEmail());
 		don.setDonorName(don0.getDonorName());
 		don.setDonorPostcode(don0.getDonorPostcode());
-		Event event = don0.getEvent();		
+		Event event = don0.getEvent();
 		don.setEvent(event);
 //		don.setF(f);
 //		don.setFees(fees); // is this set by the payment processor?? Ditto for contibutions??
@@ -118,34 +134,18 @@ public class RepeatDonation extends AThing {
 		don.setStripe(don0.getStripe()); // ?? it'd be good if payment handling could update
 //		don.setTip(don0.getTip());		
 		don.setVia(don0.getVia());
-		
+
 		don.setStatus(KStatus.DRAFT);
 		return don;
 	}
 
-
-	public Donation getOriginalDonation() {
-		if (originalDonation==null) {
-			originalDonation = AppUtils.get(did, Donation.class);
-		}
-		return originalDonation;
+	public void setDone(boolean done) {
+		this.done = done;
 	}
 
-
-	boolean done;
-
-	private List log;
-
-	public Time getDate() {
-		return date;
+	@Override
+	public String toString() {
+		return "RepeatDonation[amount=" + amount + ", did=" + did + ", ical=" + ical + "]";
 	}
-	
-	public ICalEvent getIcal() {
-		return ical;
-	}
-	public void addLog(Report report) {
-		if (log==null) log = new ArrayList();
-		log.add(report);
-	}
-	
+
 }

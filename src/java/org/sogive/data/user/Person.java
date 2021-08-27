@@ -10,28 +10,29 @@ import com.winterwell.web.data.XId;
 
 /**
  * See https://schema.org/Person
+ * 
  * @author daniel
  */
 public class Person extends Thing {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * HACK is this a newly created user??
 	 */
 	public transient boolean isFresh;
 
+	public Person() {
+	}
+
 	public Person(PersonLite peepLite) {
-		Map peepLiteMap = Containers.objectAsMap(peepLite);		
+		Map peepLiteMap = Containers.objectAsMap(peepLite);
 		putAll(peepLiteMap);
 		// email?
 		XId xid = peepLite.getXId();
 		if (xid.isService("email")) {
 			put("email", xid.name);
 		}
-	}
-	
-	public Person() {	
 	}
 
 	public String getEmail() {
