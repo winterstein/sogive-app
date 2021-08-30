@@ -115,6 +115,7 @@ const EditCharityPage = () => {
 				<Misc.SavePublishDiscard type={C.TYPES.NGO} id={cid}
 					cannotPublish={ ! Roles.iCan(C.CAN.publish).value}
 					cannotDelete={ ! Roles.iCan(C.CAN.publish).value}
+					sendDiff
 				/>
 				<EditField item={charity} type="text" field="redirect" label="Redirect (if any)" />
 			</Misc.Card>
