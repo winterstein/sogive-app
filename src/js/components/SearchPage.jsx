@@ -403,7 +403,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
             <p className="impact-summary">
                 <Misc.Money
                     amount={Output.cost(impact)}
-                    maximumFractionDigits={0}
+                    maximumFractionDigits={2}
                     maximumSignificantDigits={2}
                 />
                 <span className="impact-calculator-text">may fund</span>
