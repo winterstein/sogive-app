@@ -127,7 +127,7 @@ public class ImportOSCRData {
 			String ourId = NGO.idFromName(charityName);
 			
 			// Build the NGO object
-			// NB: filter out null values
+			// NB: filter out null values, to avoid potentially overwriting existing data 
 			ArrayMap<String,String> _ngoTemp = new ArrayMap(
 				NGO.name, charityName,
 				"displayName", row[3],
