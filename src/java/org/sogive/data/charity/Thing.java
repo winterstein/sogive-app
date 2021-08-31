@@ -210,9 +210,11 @@ public class Thing<SubThing extends Thing> extends HashMap<String, Object> imple
 	 */
 	@Override
 	public Object put(String key, Object value) {
-		if (value instanceof String && Utils.isBlank((String) value)) {
-			value = null;
-		}
+		// NB: August 2021: allow "" values. These were previously blocked (I think!) to allow repeated csv imports to not blank-out data. 
+		// Instead, the ImportOSCRData class now tests for blank. 
+//		if (value instanceof String && Utils.isBlank((String) value)) {
+//			value = null;
+//		}
 		if (value == null) {
 			return remove(key);
 		}

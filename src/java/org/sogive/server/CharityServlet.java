@@ -23,9 +23,12 @@ import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.WebRequest;
+import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.Checkbox;
 
 public class CharityServlet extends CrudServlet<NGO> {
+	
+	public static BoolField NO_REDIRECT = new BoolField("noRedirect");
 
 	public static NGO getCharity(String id, KStatus status) {
 		ESPath path = Dep.get(SoGiveConfig.class).getPath(null, NGO.class, id, status);
@@ -158,11 +161,15 @@ public class CharityServlet extends CrudServlet<NGO> {
 		if (redirect == null) {
 			return thing;
 		}
-		// do not redirect in editor
-		String testGet = state.get("noRedirect");
-		if ("true".equals(testGet)) {
+		
+		// Don't traverse redirects when explicitly directed not to
+		Boolean noRedirect = state.get(NO_REDIRECT);
+		// Don't traverse redirects during a save
+		if (state.actionIs(ACTION_SAVE) || state.actionIs(ACTION_PUBLISH)) noRedirect = true;
+		if (noRedirect) {
 			return thing;
 		}
+		
 		// paranoia: detect loops
 		ids.add(thing.java().getId());
 		if (ids.contains(redirect)) {

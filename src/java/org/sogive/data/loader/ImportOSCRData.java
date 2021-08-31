@@ -16,6 +16,7 @@ import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.CSVReader;
 import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.FileUtils;
@@ -124,13 +125,24 @@ public class ImportOSCRData {
 				continue;
 			}
 			String ourId = NGO.idFromName(charityName);
-			NGO ngo = new NGO(ourId);
-			ngo.put(NGO.name, charityName);
-			ngo.put("displayName", row[3]);
-			ngo.put(OSCR_REG, row[0]);
-			ngo.put(Thing.url, website);
-			ngo.put("parentCharityName", row[20]);
-			ngo.put("parentCharity", row[21]);
+			
+			// Build the NGO object
+			// NB: filter out null values, to avoid potentially overwriting existing data 
+			ArrayMap<String,String> _ngoTemp = new ArrayMap(
+				NGO.name, charityName,
+				"displayName", row[3],
+				OSCR_REG, row[0],
+				Thing.url, website,
+				"parentCharityName", row[20],
+				"parentCharity", row[21]
+			);
+			NGO ngo = new NGO(ourId);			
+			for(String key : _ngoTemp.keySet()) {
+				String v = _ngoTemp.get(key);
+				if (Utils.isBlank(v)) continue;
+				ngo.put(key, v);
+			}
+			
 			// look for a match
 			ObjectDistribution<NGO> matches = new CharityMatcher().match(ngo);
 			if (matches.isEmpty()) {
