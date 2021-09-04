@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Login from '../base/youagain';
-import { Container } from 'reactstrap';
+import { Button } from 'reactstrap';
 import _ from 'lodash';
 
 // Plumbing
-import DataStore from '../base/plumbing/DataStore';
+import DataStore, { getValue } from '../base/plumbing/DataStore';
 import Roles from '../base/Roles';
 import CRUD from '../base/plumbing/Crud';
 import C from '../C';
@@ -14,6 +14,9 @@ import Messaging from '../base/plumbing/Messaging';
 import MessageBar from '../base/components/MessageBar';
 import NavBar from '../base/components/NavBar';
 import LoginWidget, { setShowLogin } from '../base/components/LoginWidget';
+import PropControl from '../base/components/PropControl';
+// Components
+import { FieldClearButton } from './SearchPage';
 // Pages
 import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
@@ -84,6 +87,9 @@ const EXTERNAL_PAGE_LINKS = {
 	faq: "https://sogive.org/faq.html"
 }
 
+const SEARCH_QUERY_DATASTORE_PATH = ['widget', 'navbarsearch'];
+const SEARCH_QUERY_DATASTORE_PROP = "search_query";
+
 // NB: MainDivBase does this too, but not until after getRoles is called below
 Login.app = C.app.service;
 
@@ -102,6 +108,48 @@ const navbarPagesFn = () => {
 	return [...pages];
 };
 
+const SearchWidget = () => {
+    const searchIcon = <Misc.Icon prefix="fas" fa="search" />;
+
+    const searchQuery = getValue([...SEARCH_QUERY_DATASTORE_PATH, SEARCH_QUERY_DATASTORE_PROP]);
+    const onSubmit = (e) => {
+        DataStore.setUrlValue("q", searchQuery);
+    };
+
+    const url = '#search?q=' + DataStore.getUrlValue('q');
+    const submitButton = (
+        <a href={url}>
+            <Button
+                type="submit"
+                onClick={onSubmit}
+                color="primary"
+                className="sogive-search-box"
+            >
+                Search
+            </Button>
+        </a>
+    );
+
+    return (
+        // Unable to use a Form here because it prevents the submitButton navigating to the
+        // Search page when the user is on the Charity page (the PropControl prop gets appended
+        // to the URL before the '#search' page anchor). (Unfortunately this means the user
+        // can't press 'Enter' in the textbox to search, they must click the submit button.)
+        <div className="navbar-search-widget ml-auto">
+            <PropControl
+                path={SEARCH_QUERY_DATASTORE_PATH}
+                prop={SEARCH_QUERY_DATASTORE_PROP}
+                type="search"
+                placeholder="Enter a charity's name"
+                prepend={searchIcon}
+                append={submitButton}
+                size="lg"
+            />
+            <FieldClearButton />
+        </div>
+    );
+}
+
 /**
 	Top-level: tabs
 */
@@ -119,6 +167,7 @@ const MainDiv = () => {
 		defaultPage='search'
 		fullWidthPages={['search']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
+		navbarChildren={<SearchWidget/>}
 	/>);
 };
 

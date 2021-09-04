@@ -139,7 +139,7 @@ const SearchForm = ({ q, status }) => {
     );
 }; //./SearchForm
 
-const FieldClearButton = ({ onClick }) => (
+export const FieldClearButton = ({ onClick }) => (
     <span className="field-clear-button visible-xs-block" onClick={onClick}>
         <Misc.Icon prefix="fas" fa="remove-circle" />
     </span>
