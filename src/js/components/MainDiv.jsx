@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Login from '../base/youagain';
-import { Button } from 'reactstrap';
+import { Button, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 import _ from 'lodash';
 
 // Plumbing
@@ -39,6 +39,8 @@ import MainDivBase from '../base/components/MainDivBase';
 import CardShopPage from './CardShopPage';
 import CardPage from './CardPage';
 import CheckoutPage from './CheckoutPage';
+import { modifyHash, stopEvent } from '../base/utils/miscutils';
+import Icon from '../base/components/Icon';
 
 // HACK: Squash "attempt to reuse idempotent Stripe key" error messages - server should be safe now so user doesn't need to see them
 Messaging.registerFilter(msg => {
@@ -87,9 +89,6 @@ const EXTERNAL_PAGE_LINKS = {
 	faq: "https://sogive.org/faq.html"
 }
 
-const SEARCH_QUERY_DATASTORE_PATH = ['widget', 'navbarsearch'];
-const SEARCH_QUERY_DATASTORE_PROP = "search_query";
-
 // NB: MainDivBase does this too, but not until after getRoles is called below
 Login.app = C.app.service;
 
@@ -97,9 +96,11 @@ addFunderCredit("SMART:Scotland");
 addFunderCredit("The Hunter Foundation");
 addFunderCredit("Good-Loop");
 
-addDataCredit({author:"Crown Copyright and database right 2017", name:"UK government charity data"});
-addDataCredit({author:"Office of the Scottish Charity Regulator (OSCR)", name:"Scottish Charity Register", 
-	url:"https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license:"Open Government Licence v.2.0"});
+addDataCredit({ author: "Crown Copyright and database right 2017", name: "UK government charity data" });
+addDataCredit({
+	author: "Office of the Scottish Charity Regulator (OSCR)", name: "Scottish Charity Register",
+	url: "https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license: "Open Government Licence v.2.0"
+});
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
@@ -108,53 +109,39 @@ const navbarPagesFn = () => {
 	return [...pages];
 };
 
+/**
+ * navbar search widget
+ */
 const SearchWidget = () => {
-    const searchIcon = <Misc.Icon prefix="fas" fa="search" />;
+	// NB: PropControl or Input + useState? 
+	// PropControl is best if the data is shared with other components, or if the data should be maintained across page changes, or if extras like help and error text are wanted. 
+	// useState is best for purely local state.
+	let [q, setQ] = useState("");
+	const onSubmit = (e) => {
+		stopEvent(e);
+		modifyHash(['search'], {q});
+	};
 
-    const searchQuery = getValue([...SEARCH_QUERY_DATASTORE_PATH, SEARCH_QUERY_DATASTORE_PROP]);
-    const onSubmit = (e) => {
-        DataStore.setUrlValue("q", searchQuery);
-    };
-
-    const url = '#search?q=' + DataStore.getUrlValue('q');
-    const submitButton = (
-        <a href={url}>
-            <Button
-                type="submit"
-                onClick={onSubmit}
-                color="primary"
-                className="sogive-search-box"
-            >
-                Search
-            </Button>
-        </a>
-    );
-
-    return (
-        // Unable to use a Form here because it prevents the submitButton navigating to the
-        // Search page when the user is on the Charity page (the PropControl prop gets appended
-        // to the URL before the '#search' page anchor). (Unfortunately this means the user
-        // can't press 'Enter' in the textbox to search, they must click the submit button.)
-        <div className="navbar-search-widget ml-auto">
-            <PropControl
-                path={SEARCH_QUERY_DATASTORE_PATH}
-                prop={SEARCH_QUERY_DATASTORE_PROP}
-                type="search"
-                placeholder="Enter a charity's name"
-                prepend={searchIcon}
-                append={submitButton}
-                size="lg"
-            />
-            <FieldClearButton />
-        </div>
-    );
+	return (
+		<div className="navbar-search-widget ml-auto">
+			<form onSubmit={onSubmit}>
+				<InputGroup>
+					<Input type="search"
+						value={q} onChange={e => setQ(e.target.value)}
+						placeholder="Search for a charity"
+					/>
+					<InputGroupAddon addonType="append"><Button color="outline-secondary"><Icon name="search" onClick={onSubmit} /></Button></InputGroupAddon>
+				</InputGroup>
+			</form>
+		</div>
+	);
 }
 
 /**
 	Top-level: tabs
 */
 const MainDiv = () => {
-		
+
 	return (<MainDivBase
 		homeLink={C.app.website}
 		pageForPath={PAGES}
@@ -167,7 +154,7 @@ const MainDiv = () => {
 		defaultPage='search'
 		fullWidthPages={['search']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
-		navbarChildren={<SearchWidget/>}
+		navbarChildren={<SearchWidget />}
 	/>);
 };
 

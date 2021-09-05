@@ -14,6 +14,13 @@
 	.btn-lg {
 		border-radius: 12px;
 	}
+	/* switch off rounding for input appends; copy paste from BS 'cos we changed border-radius above */
+	.input-group>.input-group-append>.btn, 
+	.input-group>.input-group-prepend:first-child>.btn:not(:first-child), 
+	.input-group>.input-group-prepend:not(:first-child)>.btn {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
 
 	.btn-round {
 		// Border-radius can't overlap, so it gets clamped to the largest non-overlapping value - giving us semicircular ends
