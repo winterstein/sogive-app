@@ -164,6 +164,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		
 		// Don't traverse redirects when explicitly directed not to
 		Boolean noRedirect = state.get(NO_REDIRECT);
+		if (noRedirect == null) noRedirect = false;
 		// Don't traverse redirects during a save
 		if (state.actionIs(ACTION_SAVE) || state.actionIs(ACTION_PUBLISH)) noRedirect = true;
 		if (noRedirect) {
