@@ -87,7 +87,7 @@ const EditCharityPage = () => {
 			return (
 				<div>
 					<Alert color="warning">This Charity has a redirection, <b>do not edit this page</b>. <br/>
-					 <a className="btn btn-default btn-sm" href={`/#edit?charityId=${escape(ifRedirect)}`} >Click here to edit the redirect target chairty</a>
+					 <a className="btn btn-default btn-sm" href={`/#edit?charityId=${escape(ifRedirect)}`} >Click here to edit the redirect target charity</a>
 					</Alert>
 				</div>
 			);
