@@ -130,7 +130,7 @@ const SearchWidget = () => {
 						value={q} onChange={e => setQ(e.target.value)}
 						placeholder="Search for a charity"
 					/>
-					<InputGroupAddon addonType="append"><Button color="outline-secondary"><Icon name="search" onClick={onSubmit} /></Button></InputGroupAddon>
+					<InputGroupAddon addonType="append"><Button color="light"><Icon /* NB: color="grey" looks ugly for this icon */ name="search" onClick={onSubmit} /></Button></InputGroupAddon>
 				</InputGroup>
 			</form>
 		</div>
