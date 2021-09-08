@@ -247,7 +247,7 @@ public class SearchServlet implements IServlet {
 		// TODO paging - this uses a cap at 1k results
 		int size = state.get(SIZE,
 				// HACK: csv => unlimited
-				state.getResponseType() == KResponseType.csv ? MAX_RESULTS : 1000);
+				state.getResponseType() == KResponseType.csv ? MAX_RESULTS : 100);
 		searchRequest.setSize(size);
 		searchRequest.setFrom(state.get(FROM, 0));
 		SearchResponse searchResponse = searchRequest.get();
