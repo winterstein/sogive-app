@@ -60,13 +60,15 @@ Project.getLatest = (projects) => {
 };
 
 /**
- * Find the projectCosts or annualCosts input
+ * Find the projectCosts input
+ * 
+ * NB: WAS projectCosts or annualCosts -- changed Sept 2021 ^Dan
  * @returns {Money}
  */
 Project.getCost = (project) => {
 	Project.assIsa(project);
 	let inputs = Project.inputs(project);
-	let costs = inputs.filter(input => input.name==='projectCosts' || input.name==='annualCosts');
+	let costs = inputs.filter(input => input.name==='projectCosts');
 	return costs[0]; // can be null
 };
 

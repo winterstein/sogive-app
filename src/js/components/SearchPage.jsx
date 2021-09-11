@@ -54,13 +54,28 @@ const SearchPage = () => {
     const lpath = ["list", "NGO", status || "pub", q || "all", from]; // listPath({type:C.TYPES.NGO, status, q});
     let pvList = DataStore.fetch(lpath, () => {
         // size: RESULTS_PER_PAGE <- no, caps the results at 20
-        return ServerIO.searchCharities({ q, from, status, impact });
+        return ServerIO.searchCharities({ q, from, status, impact }); // size:1000 if you need more results
     });
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
     let results = pvList.value ? List.hits(pvList.value) : null;
+
+    // if (results) { // DEBUG HACK to pick out certain data of interest
+    //     results = results.filter(r => {
+    //         let ps = r.projects || [];
+    //         for(let pi=0; pi<ps.length; pi++) {
+    //             let p = ps[pi];
+    //             if (Project.isOverall(p)) continue;
+    //             let ac = Project.inputs(p).find(m => "annualCosts" === m.name);
+    //             if (ac && Money.hasValue(ac)) {
+    //                 return true;
+    //             }
+    //         }
+    //         return false;
+    //     });
+    // }
+
     // const results = DataStore.resolveDataList(results0); // NB: This emitted errors "bad ref in DataStore list - missing status|type|id"
-    // console.log("results", results, "vs", results0);
 
     return (
         <div className="SearchPage row">
