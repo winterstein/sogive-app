@@ -9,8 +9,10 @@ import java.util.Map;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
+import org.sogive.data.charity.Project;
 import org.sogive.data.charity.SoGiveConfig;
 
+import com.goodloop.data.Money;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
@@ -254,7 +256,7 @@ public class SearchServlet implements IServlet {
 		Map<String, Object> jobj = searchResponse.getParsedJson();
 		List<Map> hits = prefix == null ? searchResponse.getHits() : searchResponse.getSuggesterHits("autocomplete");
 		List<Map> hits2 = Containers.apply(hits, h -> (Map) h.get("_source"));
-
+		
 		// HACK: send back csv?
 		if (state.getResponseType() == KResponseType.csv) {
 			doSendCsv(state, hits2);

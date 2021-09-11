@@ -110,7 +110,7 @@ const SimpleEditCharityPage = () => {
 			<Misc.Card title="Preview: Impact">
 				<ImpactDesc charity={charity} amount={new Money({value:10, currency:'GBP'})} />
 				<small><ul>
-					<li>Representative project: {repProj? repProj.name+' '+repProj.year : "none"}</li>
+					<li>Representative project: {repProj? repProj.name+' '+repProj.year : "none"} { ! NGO.isReady(charity) && "not-ready"}</li>
 					<li>Outputs: {repProj? Project.outputs(repProj).map(o => o.number+" "+o.name) : null}</li>
 				</ul></small>
 			</Misc.Card>

@@ -164,20 +164,27 @@ NGO.costPerBeneficiaryCalc = ({charity, project, output}) => {
 	// NB: asNum is paranoia
 	let outputCount = asNum(output.number);
 	if ( ! outputCount) return null;
-	let projectCost = Project.getTotalCost(project);
+	let projectCost = Project.getTotalCost(project); // projectCosts ( + optionally overridden annualCosts)
 	if ( ! projectCost) {
 		console.warn("No project cost?!", project);
 		return null;
 	}
 	// overheads?
 	if ( ! Project.isOverall(project)) {
-		let year = Project.year(project);
-		const adjustment = NGO.getOverheadAdjustment({charity, year});
-		let adjustedProjectCost = Money.mul(projectCost, adjustment);
-		let v = Money.value(adjustedProjectCost);
-		projectCost = adjustedProjectCost;		
+		// If the Project manually overrides annualCosts, then don't adjust for overall overheads
+		let ac = Project.inputs(project).find(m => "annualCosts" === m.name);
+		if (ac && Money.hasValue(ac)) {
+			// no adjustment NB the local annualCosts are included already
+			Money.assIsa(projectCost);		
+		} else {
+			let year = Project.year(project);		
+			const adjustment = NGO.getOverheadAdjustment({charity, year});
+			let adjustedProjectCost = Money.mul(projectCost, adjustment);
+			let v = Money.value(adjustedProjectCost);
+			projectCost = adjustedProjectCost;		
+			Money.assIsa(projectCost);
+		}
 	}
-	Money.assIsa(projectCost);
 	if ( ! $.isNumeric(outputCount)) {
 		console.error("NGO.js - Not a number?! "+outputCount, "from", output);
 		return 1/0; // NaN
