@@ -3,7 +3,7 @@ import React from 'react';
 const BlogPage = () => {
 
     return (
-        <div className="AboutPage row">
+        <div className="BlogPage row">
             <div className="col-md-12">
             <Banner/>
             </div>
@@ -14,7 +14,7 @@ const BlogPage = () => {
 const Banner = () => {
 
     return (
-        <div className="gradient">
+        <div className="gradient-banner">
             <div className="worldImage d-flex justify-content-center align-items-center">
                 <h1>Blog</h1>
             </div>
