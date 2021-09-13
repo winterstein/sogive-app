@@ -39,6 +39,9 @@ import MainDivBase from '../base/components/MainDivBase';
 import CardShopPage from './CardShopPage';
 import CardPage from './CardPage';
 import CheckoutPage from './CheckoutPage';
+import HomePage from './HomePage';
+import MethodPage from './MethodPage';
+import BlogPage from './BlogPage';
 import { modifyHash, stopEvent } from '../base/utils/miscutils';
 import Icon from '../base/components/Icon';
 
@@ -73,38 +76,43 @@ const PAGES = {
 	test: TestPage,
 	cardshop: CardShopPage,
 	card: CardPage,
-	checkout: CheckoutPage
+	checkout: CheckoutPage,
+	home: HomePage,
+	methodology: MethodPage,
+	blog: BlogPage,
 };
 
 const PAGE_LABELS = {
-	search: "Home",
-	about: "About",
-	contact: "Contact",
-	faq: "FAQ"
+	home: "Home",
+	search: "Top Charities",
+	methodology: "Methodology",
+	about: "About Us",
+	blog: "Blog"
 }
 
 const EXTERNAL_PAGE_LINKS = {
-	about: "https://sogive.org/about.html",
-	contact: "https://sogive.org/contact.html",
-	faq: "https://sogive.org/faq.html"
+	// about: "https://sogive.org/about.html",
+	// contact: "https://sogive.org/contact.html",
+	// faq: "https://sogive.org/faq.html"
 }
 
+// This part is for the old AboutPage, delete later
 // NB: MainDivBase does this too, but not until after getRoles is called below
-Login.app = C.app.service;
+// Login.app = C.app.service;
 
-addFunderCredit("SMART:Scotland");
-addFunderCredit("The Hunter Foundation");
-addFunderCredit("Good-Loop");
+// addFunderCredit("SMART:Scotland");
+// addFunderCredit("The Hunter Foundation");
+// addFunderCredit("Good-Loop");
 
-addDataCredit({ author: "Crown Copyright and database right 2017", name: "UK government charity data" });
-addDataCredit({
-	author: "Office of the Scottish Charity Regulator (OSCR)", name: "Scottish Charity Register",
-	url: "https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license: "Open Government Licence v.2.0"
-});
+// addDataCredit({ author: "Crown Copyright and database right 2017", name: "UK government charity data" });
+// addDataCredit({
+// 	author: "Office of the Scottish Charity Regulator (OSCR)", name: "Scottish Charity Register",
+// 	url: "https://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download", license: "Open Government Licence v.2.0"
+// });
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
-	let pages = ['search', 'about', 'contact', 'faq'];
+	let pages = ['home', 'search', 'methodology', 'about', 'blog'];
 	if (!Roles.iCan(C.CAN.test).value) return pages;
 	return [...pages];
 };
@@ -152,7 +160,7 @@ const MainDiv = () => {
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
-		fullWidthPages={['search']}
+		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 		navbarChildren={<SearchWidget />}
 	/>);
