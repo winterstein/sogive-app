@@ -1,25 +1,16 @@
 import React from 'react';
+import { Banner } from './AboutPage';
 
 const BlogPage = () => {
 
     return (
         <div className="BlogPage row">
             <div className="col-md-12">
-            <Banner/>
-            </div>
-        </div>
-    );
-};
-
-const Banner = () => {
-
-    return (
-        <div className="gradient-banner">
-            <div className="worldImage d-flex justify-content-center align-items-center">
-                <h1>Blog</h1>
+            <Banner title="Blog"/>
             </div>
         </div>
     );
 };
 
 export default BlogPage;
+ 

@@ -21,7 +21,7 @@ import { FieldClearButton } from './SearchPage';
 import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
 import AccountPage from './AccountPage';
-import AboutPage, { addDataCredit, addFunderCredit } from '../base/components/AboutPage';
+import AboutPage from './AboutPage';
 import CharityPage from './CharityPage';
 import EditCharityPage from './editor/EditCharityPage';
 import SimpleEditCharityPage from './editor/SimpleEditCharityPage';

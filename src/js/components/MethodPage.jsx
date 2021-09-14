@@ -1,22 +1,12 @@
 import React from 'react';
+import { Banner } from './AboutPage';
 
 const MethodPage = () => {
 
     return (
         <div className="MethodPage row">
             <div className="col-md-12">
-            <Banner/>
-            </div>
-        </div>
-    );
-};
-
-const Banner = () => {
-
-    return (
-        <div className="gradient-banner">
-            <div className="worldImage d-flex justify-content-center align-items-center">
-                <h1>Our Methodology</h1>
+            <Banner title="Our Methodology"/>
             </div>
         </div>
     );
