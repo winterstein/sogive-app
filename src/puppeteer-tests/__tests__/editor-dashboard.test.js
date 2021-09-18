@@ -26,7 +26,7 @@ jest.setTimeout(10000);
 beforeAll(async () => {
 	await page.goto(`${sogiveUrl}#editordashboard`);
 	// log in
-	await page.click('.login-link');
+	await page.click('.login-link a');
 	await page.click('.login-email [name=email]');
 	await page.type('.login-email [name=email]', username);
 	await page.click('[name=password]');
@@ -68,12 +68,9 @@ describe('Editor dashboard tests', () => {
 		// navigate to charity page
 		await page.goto(`${sogiveUrl}#charity?charityId=${idOfCharityInDb}`);
 
-		// click on 'Analysis'
-		await page.waitForSelector('#rhsTabs');
-		await page.click('#rhsTabs .nav-item:not(.active) a.nav-link');
-
-		const charityEditorial = await page.$$eval('.charity-extra .quote p', els => els.map(el => el.innerText).join('\n'));
-		expect(charityEditorial).toEqual(expectedEditorial);
+		await(page.waitForSelector('.div-section-text p', { timeout: 3000 }));
+		const charityEditorial = await page.$$eval('.div-section-text p', els => els.map(el => el.innerText).join('\n'));
+		expect(charityEditorial).toMatch(expectedEditorial);
 	});
 
 	test('Show error notification for a malformed URL', async () => {
