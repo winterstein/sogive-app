@@ -62,7 +62,7 @@ describe('Edit organisation tests', () => {
 		await page.goto(`${url}#charity?charityId=${charityId}`);
 		await page.waitForSelector('.description-short');
 
-		const profileShortDescription = await page.$eval('.donation-output p', e => e.innerText);
+		const profileShortDescription = await page.$eval('.description-short p', e => e.innerText);
 
 		expect(profileShortDescription).toBe(timeStamp);
 	});
