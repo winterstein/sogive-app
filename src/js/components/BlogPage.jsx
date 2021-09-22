@@ -1,13 +1,13 @@
 import React from 'react';
-import { Banner } from './AboutPage';
+import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 
 const BlogPage = () => {
 
     return (
-        <div className="BlogPage row">
-            <div className="col-md-12">
-            <Banner title="Blog"/>
-            </div>
+        <div className="BlogPage">
+            <Banner title="Blog"/> 
+            <NewsletterCard />
+            <ImpactRatingCard />
         </div>
     );
 };
