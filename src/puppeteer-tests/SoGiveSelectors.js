@@ -65,10 +65,10 @@ Fundraiser.EditFundraiser = {
 
 const General = {};
 General.CRUD = {
-	Save: `div.SavePublishDiscard > button.btn.btn-default`,
-	Publish: `div.SavePublishDiscard > button.btn.btn-primary`,
-	Discard: `div.SavePublishDiscard > button.btn.btn-warning`,
-	Delete: `div.SavePublishDiscard > button.btn.btn-danger`
+	Save: `div.SavePublishDeleteEtc > button.btn.btn-default`,
+	Publish: `div.SavePublishDeleteEtc > button.btn.btn-primary`,
+	Discard: `div.SavePublishDeleteEtc > button.btn.btn-warning`,
+	Delete: `div.SavePublishDeleteEtc > button.btn.btn-danger`
 };
 General.ImpactCalculator = {
 	DonationButton: `button.btn.btn-lg.btn-primary`,//Unforunately isn't anything more concrete to identify donation button specifically
@@ -133,12 +133,12 @@ const CommonSelectors = {
 	logIn: '.login-link',
 	logInEmail: '#loginByEmail input[name="email"]',
 	logInPassword: '#loginByEmail input[name="password"]',
-	Save: '.SavePublishDiscard button[name="save"]',
-	SaveAs: '.SavePublishDiscard button[name="save-as"]',
-	Publish: '.SavePublishDiscard button[name="publish"]',
-	DiscardEdits: '.SavePublishDiscard button[name="discard-edits"]',
-	Unpublish: '.SavePublishDiscard button[name="unpublish"]',
-	Delete: '.SavePublishDiscard button[name="delete"]',
+	Save: '.SavePublishDeleteEtc button[name="save"]',
+	SaveAs: '.SavePublishDeleteEtc button[name="save-as"]',
+	Publish: '.SavePublishDeleteEtc button[name="publish"]',
+	DiscardEdits: '.SavePublishDeleteEtc button[name="discard-edits"]',
+	Unpublish: '.SavePublishDeleteEtc button[name="unpublish"]',
+	Delete: '.SavePublishDeleteEtc button[name="delete"]',
 	facebookLogin: '.social-signin .facebook',
 	twitterLogin: '.social-signin .twitter'
 };
