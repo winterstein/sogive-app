@@ -46,22 +46,22 @@ const MethodCard = () => {
             <div className="container py-5">
                 <h2>Our Methodology</h2>
                 <div className="row method-4-steps">
-                    <div className="col">
+                    <div className="col-md">
                         <img src="/img/homepage/1-analyse.png" alt="" className="w-100" />
                         <p>1. Analyse financial statements</p>
                         <p>We review charities' financial and program spending.</p>
                     </div>
-                    <div className="col">
+                    <div className="col-md">
                         <img src="/img/homepage/2-assess.png" alt="" className="w-100" />
                         <p>2. Assess outcomes</p>
                         <p>We determine what the charity achieved for each program in measurable units.</p>
                     </div>
-                    <div className="col">
+                    <div className="col-md">
                         <img src="/img/homepage/3-calculate.png" alt="" className="w-100" />
                         <p>3. Calculate cost-effectiveness</p>
                         <p>We divide the costs by the outcomes achieved to get the cost per outcome.</p>
                     </div>
-                    <div className="col">
+                    <div className="col-md">
                         <img src="/img/homepage/4-compare.png" alt="" className="w-100" />
                         <p>4. Compare to others</p>
                         <p>We compare the cost per outcomes with other charities to find the most effective ones.</p>
@@ -122,10 +122,10 @@ const FAQCard = () => {
       <div className="container py-5">
         <h2>Frequently answered questions</h2>
         <div className="row mt-3">
-            <div className="col">
+            <div className="col-md">
                 <Faq data={FAQdataL}/> 
             </div>
-            <div className="col">
+            <div className="col-md">
                 <Faq data={FAQdataR}/>
             </div>
         </div>
@@ -138,11 +138,11 @@ const ContactCard = () => {
     return (<div id="contact-card">
       <div className="container py-5">
         <div className="row">
-          <div className="col">
+          <div className="col-md">
             <h3>Contact Us</h3>
             <p>Want to learn more about SoGive's work? Need help with your giving decisions? Contact the SoGive team using this form, and we'll be in touch.</p>
           </div>
-          <div className="col">
+          <div className="col-md">
             <ContactForm />
           </div>
         </div>

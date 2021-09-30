@@ -16,11 +16,11 @@ const NewsletterCard = () => {
 		<div id="newsletter-card" className="bg-light">
 			<div className="container py-5">
 				<div className="row">
-						<div className="col">
+						<div className="col-md">
 								<h3>Subscribe to our newsletter</h3>
 								<p>We send a monthly newsletter with our commentary on the latest news in the charity sector, as well as updates on our new analyses. Sign up here.</p>
 						</div>
-						<div className="col">
+						<div className="col-md">
 								<p>Your email address</p>
 								<div className="email-input row">
 									<div className="col pr-0">
@@ -43,11 +43,11 @@ const ImpactRatingCard = ({title}) => {
 		<div id="impact-rating-card" className="">
 			<div className="container py-5">
 				<div className="row">
-						<div className="col col-md-6">
+						<div className="col-md-6">
 								<h3>{title}</h3>
 								<a href="#" className="btn btn-primary mt-3">Explore impact ratings</a>
 						</div>
-						<div className="col col-md-6">
+						<div className="col-md-6">
 								<p className="press-caption text-center">SoGive in the press</p>
 								<div className="row">
 										<div className="col"><a href="#"><img src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></a></div>
