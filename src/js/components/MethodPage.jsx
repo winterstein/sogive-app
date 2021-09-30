@@ -46,7 +46,7 @@ const MethodologyContent = () => {
             <li>the charity doesn't have enough information in the public domain to be able find out the answer to question 1 (the cost question)</li>
             <li>sometimes the charity's intervention is sufficiently low cost that it doesn't obviously underperform a high impact charity, however there may be so little information about the impact that we can't tell whether it's high-impact or not.</li>
             </ul>
-            <p>Our blog ADD HYPERLINK offers more information on our methdology.</p>
+            <p><a href="#blog">Our blog</a> offers more information on our methdology.</p>
         </div>
     )
 }

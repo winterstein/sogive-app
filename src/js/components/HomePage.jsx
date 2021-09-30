@@ -19,18 +19,20 @@ const HomePage = () => {
 const HeroBanner = () => {
 
     return (
-        <div className="gradient">
+        <div className="container-fulid gradient">
             <div className="worldImage">
-                <div className="row px-5 py-md-5">
-                    <div className="col-md-6 mt-5">
-                        <div className="">
-                            <h2>Donate to Charity More Effectively</h2>
-                            <p>SoGive researches which charities achieve outsized impact through analysing independent evaluations and financial data.</p>
-                            <a href="#search" className="btn btn-primary mt-5 p-3">Explore impact ratings</a>
+                <div className="container">
+                    <div className="row px-5 py-md-5">
+                        <div className="col-md-6 mt-5">
+                            <div>
+                                <h2>Donate to Charity More Effectively</h2>
+                                <p>SoGive researches which charities achieve outsized impact through analysing independent evaluations and financial data.</p>
+                                <a href="#search" className="btn btn-primary mt-3 p-3">Explore impact ratings</a>
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-md-6 mt-3">
-                        <img className="top-cards" src="/img/homepage/top-cards.png" />
+                        <div className="col-md-6 mt-3">
+                            <img className="top-cards" src="/img/homepage/top-cards.png" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,33 +43,33 @@ const HeroBanner = () => {
 const MethodCard = () => {
     return (
         <div id="method-card" className="bg-light">
-            <div className="container-fluid p-5">
+            <div className="container py-5">
                 <h2>Our Methodology</h2>
                 <div className="row method-4-steps">
                     <div className="col">
-                        <img src="" alt="" />
+                        <img src="/img/homepage/1-analyse.png" alt="" className="w-100" />
                         <p>1. Analyse financial statements</p>
                         <p>We review charities' financial and program spending.</p>
                     </div>
                     <div className="col">
-                        <img src="" alt="" />
+                        <img src="/img/homepage/2-assess.png" alt="" className="w-100" />
                         <p>2. Assess outcomes</p>
                         <p>We determine what the charity achieved for each program in measurable units.</p>
                     </div>
                     <div className="col">
-                        <img src="" alt="" />
+                        <img src="/img/homepage/3-calculate.png" alt="" className="w-100" />
                         <p>3. Calculate cost-effectiveness</p>
                         <p>We divide the costs by the outcomes achieved to get the cost per outcome.</p>
                     </div>
                     <div className="col">
-                        <img src="" alt="" />
+                        <img src="/img/homepage/4-compare.png" alt="" className="w-100" />
                         <p>4. Compare to others</p>
                         <p>We compare the cost per outcomes with other charities to find the most effective ones.</p>
                     </div>
                 </div>
                 <div className="text-center">
                     <h4>Read more about our methodology</h4>
-                    <a href="#methodology" className="btn btn-secondary">Learn more</a>
+                    <a href="#methodology" className="btn btn-white">Learn more</a>
                 </div>
             </div>
         </div>
@@ -117,7 +119,7 @@ const FAQCard = () => {
     }
 
     return (<div id="method-card" className="bg-light">
-      <div className="container-fluid p-5">
+      <div className="container py-5">
         <h2>Frequently answered questions</h2>
         <div className="row mt-3">
             <div className="col">
@@ -134,7 +136,7 @@ const FAQCard = () => {
 const ContactCard = () => {
 
     return (<div id="contact-card">
-      <div className="container-fluid p-5">
+      <div className="container py-5">
         <div className="row">
           <div className="col">
             <h3>Contact Us</h3>

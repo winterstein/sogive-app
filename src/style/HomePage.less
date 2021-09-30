@@ -18,7 +18,12 @@
 
         h2, p, a {
             color: white;
+						text-align: left;
         }
+
+				p {
+					font-size: 1.2rem;
+				}
     }
 }
 
@@ -30,10 +35,74 @@ h2 {
 
 .top-cards {
 	max-height: 380px;
-	max-width: 100%;
+	max-width: 125%;
+}
+
+@media (max-width: 768px) {
+	.top-cards {
+		max-width: 100%;
+	}
 }
 
 #method-card, #contact-card {
 	overflow: hidden;
 	margin: 0 -1em;
+}
+
+// FQA Style
+.faq-body {
+	background-color: unset;
+}
+
+.faq-row {
+	margin: 1em 0;
+	padding: 0 !important;
+	border: 1px solid #757575 !important;
+	border-radius: 10px;
+}
+
+.row-title {
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+.row-title-text {
+	margin: 0 1rem;
+}
+
+.row-content-text {
+	margin: 1rem;
+}
+
+.row-title.expanding {
+	background-color: @dark-turquoise;
+	border-bottom: 1px solid #757575;
+	transition: background-color .1s linear;
+	transition: border-bottom .1s linear;
+
+	.icon-wrapper svg {
+		fill: white !important;
+		transition: fill .1s linear;
+	}
+	.row-title-text {
+		color: white;
+		transition: color .1s linear;
+	}
+}
+
+.row-title.expanded {
+	background-color: @dark-turquoise;
+	border-bottom: 1px solid #757575;
+
+	.icon-wrapper svg {
+		fill: white !important;
+	}
+	.row-title-text {
+		color: white;
+	}
+}
+
+.row-title.closing {
+	background-color: white;
+	transition: background-color .1s linear;
 }

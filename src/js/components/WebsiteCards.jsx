@@ -14,7 +14,7 @@ const Banner = ({title}) => {
 const NewsletterCard = () => {
 	return (
 		<div id="newsletter-card" className="bg-light">
-			<div className="container-fluid p-5">
+			<div className="container py-5">
 				<div className="row">
 						<div className="col">
 								<h3>Subscribe to our newsletter</h3>
@@ -22,9 +22,13 @@ const NewsletterCard = () => {
 						</div>
 						<div className="col">
 								<p>Your email address</p>
-								<div className="email-input">
-										<input type="email" placeholder="johndoe@companyxyz.com" />
+								<div className="email-input row">
+									<div className="col pr-0">
+										<input className="w-100 h-100" type="email" placeholder="johndoe@companyxyz.com" />
+									</div>
+									<div className="col pl-0">
 										<a href="" className="btn btn-primary">Subscribe</a>
+									</div>
 								</div>
 						</div>
 				</div>
@@ -37,13 +41,13 @@ const ImpactRatingCard = ({title}) => {
 
 	return (
 		<div id="impact-rating-card" className="">
-			<div className="container-fluid p-5">
+			<div className="container py-5">
 				<div className="row">
 						<div className="col col-md-6">
 								<h3>{title}</h3>
 								<a href="#" className="btn btn-primary mt-3">Explore impact ratings</a>
 						</div>
-						<div className="col col-md-4">
+						<div className="col col-md-6">
 								<p className="press-caption text-center">SoGive in the press</p>
 								<div className="row">
 										<div className="col"><a href="#"><img src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></a></div>
