@@ -42,6 +42,10 @@ import CheckoutPage from './CheckoutPage';
 import HomePage from './HomePage';
 import MethodPage from './MethodPage';
 import BlogPage from './BlogPage';
+import FinancialAdvisersPage from './FinancialAdvisersPage';
+import CorporatesPage from './CorporatesPage';
+import PrivacyPolicyPage from './PrivacyPolicyPage';
+import TermsPage from './TermsPage';
 import { modifyHash, stopEvent } from '../base/utils/miscutils';
 import Icon from '../base/components/Icon';
 
@@ -80,6 +84,10 @@ const PAGES = {
 	home: HomePage,
 	methodology: MethodPage,
 	blog: BlogPage,
+	financialadvisers : FinancialAdvisersPage,
+	corporates : CorporatesPage,
+	privacypolicy : PrivacyPolicyPage,
+	terms: TermsPage, 
 };
 
 const PAGE_LABELS = {
@@ -87,7 +95,11 @@ const PAGE_LABELS = {
 	search: "Top Charities",
 	methodology: "Methodology",
 	about: "About Us",
-	blog: "Blog"
+	blog: "Blog",
+	financialadvisers: "Financial Advisers",
+	corporates: "Corporates",
+	privacypolicy: "Privacy Policy",
+	terms: "Terms of Service", 
 }
 
 const EXTERNAL_PAGE_LINKS = {
@@ -160,7 +172,7 @@ const MainDiv = () => {
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='search'
-		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog']}
+		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 		navbarChildren={<SearchWidget />}
 	/>);

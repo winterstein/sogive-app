@@ -1,6 +1,6 @@
 import React from 'react';
 import Faq from 'react-faq-component';
-import { NewsletterCard, ContactForm, ImpactRatingCard } from './WebsiteCards';
+import { NewsletterCard, ContactForm, ImpactRatingCard, MethodCard } from './WebsiteCards';
 
 const HomePage = () => {
 
@@ -34,42 +34,6 @@ const HeroBanner = () => {
                             <img className="top-cards" src="/img/homepage/top-cards.png" />
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const MethodCard = () => {
-    return (
-        <div id="method-card" className="">
-            <div className="container py-5">
-                <h2>Our Methodology</h2>
-                <div className="row method-4-steps">
-                    <div className="col-md">
-                        <img src="/img/homepage/1-analyse.png" alt="" className="w-100" />
-                        <p>1. Analyse financial statements</p>
-                        <p>We review charities' financial and program spending.</p>
-                    </div>
-                    <div className="col-md">
-                        <img src="/img/homepage/2-assess.png" alt="" className="w-100" />
-                        <p>2. Assess outcomes</p>
-                        <p>We determine what the charity achieved for each program in measurable units.</p>
-                    </div>
-                    <div className="col-md">
-                        <img src="/img/homepage/3-calculate.png" alt="" className="w-100" />
-                        <p>3. Calculate cost-effectiveness</p>
-                        <p>We divide the costs by the outcomes achieved to get the cost per outcome.</p>
-                    </div>
-                    <div className="col-md">
-                        <img src="/img/homepage/4-compare.png" alt="" className="w-100" />
-                        <p>4. Compare to others</p>
-                        <p>We compare the cost per outcomes with other charities to find the most effective ones.</p>
-                    </div>
-                </div>
-                <div className="text-center">
-                    <h4>Read more about our methodology</h4>
-                    <a href="#methodology" className="btn btn-white">Learn more</a>
                 </div>
             </div>
         </div>
@@ -118,7 +82,7 @@ const FAQCard = () => {
         }]
     }
 
-    return (<div id="method-card" className="bg-light">
+    return (<div id="faq-card" className="bg-light">
       <div className="container py-5">
         <h2>Frequently answered questions</h2>
         <div className="row mt-3">
@@ -141,6 +105,14 @@ const ContactCard = () => {
           <div className="col-md">
             <h3>Contact Us</h3>
             <p>Want to learn more about SoGive's work? Need help with your giving decisions? Contact the SoGive team using this form, and we'll be in touch.</p>
+						<div className="row mb-5">
+							<div className="col-3 col-md-2">
+								<img src="/img/profilepic/sanjay.png" alt="" className="w-100" />
+							</div>
+							<div className="col-3 col-md-2">
+								<img src="/img/profilepic/daniel.png" alt="" className="w-100" />
+							</div>
+						</div>
           </div>
           <div className="col-md">
             <ContactForm />

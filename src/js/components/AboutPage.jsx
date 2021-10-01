@@ -20,14 +20,14 @@ const FoundingteamCard = () => {
 	<div className="container py-5">
 		<h2>Founding Team</h2>
 		<div className="row">
-			<div className="col-2"><img src="/img/aboutpage/sanjay.png" alt="" className="w-100" /></div>
+			<div className="col-2"><img src="/img/profilepic/sanjay.png" alt="" className="w-100" /></div>
 			<div className="col-10">
 				<h3>Sanjay Joshi, CEO</h3>
 				<p>Sanjay has spent 15 years of his career in various analytical roles in finance, including experience as a senior credit analyst at Standard & Poors, a senior strategy consultant, and has qualified as a Fellow of the Institute and Faculty of Actuaries. He also has substantial experience of the charity sector, having served on the boards of 7 charities and provided hands-on consulting support to a further 8 charities. He has also founded several initiatives apart from SoGive, including an EdTech company serving investment banks and a web service applying AI techniques to help people feeling low. Aside from his interest in data-driven and model-driven charitable giving, he also has an interest in ESG (Environmental, Social and Governance) Finance.</p>
 			</div>
 		</div>
 		<div className="row">
-			<div className="col-2"><img src="/img/aboutpage/daniel.png" alt="" className="w-100" /></div>
+			<div className="col-2"><img src="/img/profilepic/daniel.png" alt="" className="w-100" /></div>
 			<div className="col-10">
 				<h3>Daniel Winterstein, CTO</h3>
 				<p>Aside from being the CTO of SoGive, Daniel is the CTO of Good-Loop, an advertising firm that gives 50% of ad revenue to a relevant charitable cause. He has played a leading role in the launch of several startups, and has a PhD in artificial intelligence. </p>
