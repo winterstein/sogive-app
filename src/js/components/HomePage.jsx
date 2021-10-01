@@ -42,7 +42,7 @@ const HeroBanner = () => {
 
 const MethodCard = () => {
     return (
-        <div id="method-card" className="bg-light">
+        <div id="method-card" className="">
             <div className="container py-5">
                 <h2>Our Methodology</h2>
                 <div className="row method-4-steps">
