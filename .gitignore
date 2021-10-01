@@ -16,6 +16,7 @@ logins.sogive.properties
 web/uploads
 **.png
 !web/img/*.png
+!web/img/*/*.png
 bob-all.jar
 lib/
 dependencies/

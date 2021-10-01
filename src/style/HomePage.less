@@ -1,0 +1,50 @@
+@import "colours.less";
+@import "positioning.less";
+
+.HomePage {
+	.gradient {
+		height: 500px;
+		background: linear-gradient(135deg, #79D579 0%, #005484 100%);
+		margin: 0 -15px;
+		overflow: hidden;
+	}
+	
+	.worldImage {
+		background-image: url('/img/world.png');
+		background-size: cover;
+		background-position: center;
+		margin: auto;
+		height: 100%;
+
+        h2, p, a {
+            color: white;
+						text-align: left;
+        }
+
+				p {
+					font-size: 1.2rem;
+				}
+    }
+}
+
+h2 {
+	text-transform: unset !important;
+	color: @green;
+	text-align: center;
+}
+
+.top-cards {
+	max-height: 380px;
+	max-width: 120%;
+}
+
+@media (max-width: 768px) {
+	.top-cards {
+		max-width: 100%;
+	}
+}
+
+#method-card, #contact-card, #faq-card, #method-card, #text-banner {
+	overflow: hidden;
+	margin: 0 -1em;
+}

@@ -9,6 +9,8 @@
 @import "positioning.less";
 @import "buttons.less";
 
+@import "Faq.less";
+
 .avoid-navbar {
     margin-top: @navbar-height + 1;
 }
@@ -67,6 +69,9 @@
 @import "footer.less";
 @import "EventPage.less";
 @import "ShareWidget.less";
+@import "HomePage.less";
+@import "AboutPage.less";
+@import "WebsiteCards.less"; 
 
 /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 .flexbox-1row {
@@ -114,4 +119,46 @@ body {
 
 .std-box-shadow {
 	box-shadow: 0px 3px 6px rgba(81, 81, 81, 0.125);
+}
+
+// Banner shared with Methodology, About Us and Blog Page
+.gradient-banner {
+    height: 15vh;
+    background: linear-gradient(135deg, #79D579 0%, #005484 100%);
+    margin-right: -15px;
+    margin-left: -15px;
+
+    .worldImage {
+        background-image: url('/img/world.png');
+        background-size: cover;
+        background-position: center;
+        margin: auto;
+        height: 100%;
+    
+        h1 {
+            color: white;
+			text-transform: unset !important;
+        }
+    }
+}
+
+// New kind of btn
+.btn-white {
+	background-color: white;
+	text-align: center;
+  border-color: @primary-blue;
+	color: @primary-blue;
+	padding: 1em 1.3em;
+}
+
+.btn-white:hover {
+	background-color: @primary-blue;
+	color: white;
+	border-color: white;
+}
+
+// BlogPage
+.blog-iframe {
+	width: 100%;
+	height: 80vh;
 }
