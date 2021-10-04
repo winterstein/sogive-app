@@ -4,7 +4,7 @@ import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 const PrivacyPolicyContent = () => {
     return (
         <div className="container py-5">
-						<center><p class="text-muted">Version 1.1</p></center>
+						<center><p className="text-muted">Version 1.1</p></center>
 						<center><h3>We will respect and protect your privacy</h3></center>
 						<p>&nbsp;</p>
 						<center><h4>We promise:</h4></center>
@@ -13,7 +13,7 @@ const PrivacyPolicyContent = () => {
 						<li>We will never sell or share your private information with a third party without your agreement (unless we are required to do so by law)</li>
 						<li>No SoGive person will look at your private information, unless it's to fix an issue in the system</li>
 						<li>Our staff all sign non-disclosure agreements</li>
-						<li>You can delete your data from our systems (unless we are required to keep it by law or for audit purposes). To request deletion of your data from our systems, email&nbsp;<span class="email"><a href="mailto:support@sogive.org">support@sogive.org</a></span>&nbsp;with the subject "Request for user data deletion".</li>
+						<li>You can delete your data from our systems (unless we are required to keep it by law or for audit purposes). To request deletion of your data from our systems, email&nbsp;<span className="email"><a href="mailto:support@sogive.org">support@sogive.org</a></span>&nbsp;with the subject "Request for user data deletion".</li>
 						</ul>
 						<br />
 						<center><h4>In using SoGive, you agree:</h4></center>
