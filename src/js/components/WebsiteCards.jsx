@@ -100,7 +100,7 @@ const ContactForm = () => {
 			<div className="contact-message row">
 				<div className="col d-flex flex-column">
 					<label>Your message</label>
-					<input className="p-5" type="text"id="message" />
+					<textarea id="message" form="contact-card"></textarea>
 				</div>
 			</div>
 			<button className="btn btn-primary mt-1" type='submit'>Sumbit</button>
@@ -175,7 +175,7 @@ const ContactCardLight = ({title}) => {
 };
 
 export {
-  ContactForm,
+	ContactForm,
 	NewsletterCard,
 	ImpactRatingCard,
 	Banner,
