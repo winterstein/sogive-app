@@ -42,14 +42,14 @@ const NewsletterCard = () => {
 								<h3>Subscribe to our newsletter</h3>
 								<p>We send a monthly newsletter with our commentary on the latest news in the charity sector, as well as updates on our new analyses. Sign up here.</p>
 						</div>
-						<form id='mailing-list' action='https://profiler.good-loop.com/form/sogive.org' class='col-md'>
-							<label class=''>Your email address</label>
+						<form id='mailing-list' action='https://profiler.good-loop.com/form/sogive.org' className='col-md'>
+							<label className=''>Your email address</label>
 							<div className="email-input row">
 								<div className="col pr-0">
-									<input class='form-control w-100 h-100' type='email' name='email' placeholder='Your Email' />
+									<input className='form-control w-100 h-100' type='email' name='email' placeholder='Your Email' />
 								</div>
 								<div className="col pl-0">
-									<button class="btn btn-primary" type='submit'>Sign up</button>
+									<button className="btn btn-primary" type='submit'>Sign up</button>
 								</div>
 							</div>
 						</form>
@@ -85,7 +85,7 @@ const ImpactRatingCard = ({title}) => {
 const ContactForm = () => {
 
 	return (<>
-		<form id='contact-card' action='https://profiler.good-loop.com/form/sogive.org' class=''>
+		<form id='contact-card' action='https://profiler.good-loop.com/form/sogive.org' className=''>
 
 			<div className="contact-info row">
 				<div className="col d-flex flex-column">
@@ -100,10 +100,10 @@ const ContactForm = () => {
 			<div className="contact-message row">
 				<div className="col d-flex flex-column">
 					<label>Your message</label>
-					<input className="p-5" type="text"id="message" />
+					<textarea id="message" form="contact-card"></textarea>
 				</div>
 			</div>
-			<button class="btn btn-primary mt-1" type='submit'>Sumbit</button>
+			<button className="btn btn-primary mt-1" type='submit'>Sumbit</button>
 		</form>
 	</>)
 }
@@ -175,7 +175,7 @@ const ContactCardLight = ({title}) => {
 };
 
 export {
-  ContactForm,
+	ContactForm,
 	NewsletterCard,
 	ImpactRatingCard,
 	Banner,

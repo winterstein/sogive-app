@@ -4,7 +4,7 @@ import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 const TermsContent = () => {
     return (
         <div className="container py-5">
-						<center><p class="text-muted">Version 1.0.1</p></center>
+						<center><p className="text-muted">Version 1.0.1</p></center>
 						<h3>1. Introduction</h3>
 						<p>SoGive ("us") provide data and information about charity impact, and the facility to make donations to charities (the "Service").</p>
 						<p>The following terms and conditions of use, plus our privacy policy which collectively make up the "Terms of Service", govern your use of the Service.</p>
