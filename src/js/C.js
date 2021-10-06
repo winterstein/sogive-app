@@ -16,7 +16,7 @@ C.app = {
 	logo: "/img/SoGive-Light-70px.png",
 	website: "https://sogive.org",
 	facebookAppId: "1847521215521290",
-	privacyPolicy: 'https://sogive.org/privacy-policy.html',
+	privacyPolicy: 'https://sogive.org/#privacypolicy',
 	version: {app: '1.0.1'}
 };
 

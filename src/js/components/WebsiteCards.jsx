@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Alert } from "reactstrap";
 import { toTitleCase } from "../base/utils/miscutils";
 
 const Banner = ({title}) => {
@@ -34,24 +35,39 @@ const TextBanner = ({page, title, subtitle, image}) => {
 }
 
 const NewsletterCard = () => {
+	const [email, setEmail] = useState('');
+	const [showAlert, setShowAlert] = useState(false);
+	const noEmail = email === '' ? true : false;
+
+	const submitSubscribeForm = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		$.ajax({
+			url: 'https://profiler.good-loop.com/form/sogive.org',
+			data: {email}
+		}).then(() => setShowAlert(true));
+	};
+
 	return (
 		<div id="newsletter-card" className="bg-light">
 			<div className="container py-5">
 				<div className="row">
-						<div className="col-md">
-								<h3>Subscribe to our newsletter</h3>
-								<p>We send a monthly newsletter with our commentary on the latest news in the charity sector, as well as updates on our new analyses. Sign up here.</p>
-						</div>
-						<form id='mailing-list' action='https://profiler.good-loop.com/form/sogive.org' className='col-md'>
-							<label className=''>Your email address</label>
-							<div className="email-input row">
-								<div className="col pr-0">
-									<input className='form-control w-100 h-100' type='email' name='email' placeholder='Your Email' />
-								</div>
-								<div className="col pl-0">
-									<button className="btn btn-primary" type='submit'>Sign up</button>
-								</div>
+					<div className="col-md">
+							<h3>Subscribe to our newsletter</h3>
+							<p>We send a monthly newsletter with our commentary on the latest news in the charity sector, as well as updates on our new analyses. Sign up here.</p>
+					</div>
+					<form id="mailing-list" action="" className="col-md" onSubmit={submitSubscribeForm}>
+						<label className="">Your email address</label>
+						<div className="email-input row">
+							<div className="col pr-0">
+								<input className='form-control w-100 h-100' type='email' name='email' placeholder='Your Email' onChange={e => setEmail(e.target.value)}/>
 							</div>
+							<div className="col pl-0">
+								{ noEmail ? <button className="btn btn-primary" type='submit' disabled>Sign up</button> : <button className="btn btn-primary" type='submit'>Sign up</button>}
+							</div>
+						</div>
+						{ showAlert ? <Alert color="success">Thank you for signing up to our mailing list.</Alert> : null}
 						</form>
 				</div>
 			</div>
@@ -72,8 +88,8 @@ const ImpactRatingCard = ({title}) => {
 						<div className="col-md-6">
 								<p className="press-caption text-center">SoGive in the press</p>
 								<div className="row">
-										<div className="col"><a href="#"><img src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></a></div>
-										<div className="col"><a href="#"><img src="/img/logo/TEDxCourtauld-logo.jpg" alt="TED" className="w-100" /></a></div>
+										<div className="col"><img src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></div>
+										<div className="col"><img src="/img/logo/TEDxCourtauld-logo.jpg" alt="TED" className="w-100" /></div>
 								</div>
 						</div>
 				</div>
@@ -83,27 +99,43 @@ const ImpactRatingCard = ({title}) => {
 };
 
 const ContactForm = () => {
+	const [email, setEmail] = useState('');
+	const [name, setName] = useState('');
+	const [message, setMessage] = useState('');
+	const [showAlert, setShowAlert] = useState(false);
+	const noMessage = email === '' || name === '' || message === '' ? true : false; 
+
+	const submitContactForm = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		$.ajax({
+			url: 'https://profiler.good-loop.com/form/sogive.org',
+			data: {name, email, message}
+		}).then(() => setShowAlert(true));
+	};
 
 	return (<>
-		<form id='contact-card' action='https://profiler.good-loop.com/form/sogive.org' className=''>
+		<form id='contact-card' onSubmit={submitContactForm}>
 
 			<div className="contact-info row">
 				<div className="col d-flex flex-column">
 					<label>Your name</label>
-					<input type="text" id="name" />
+					<input type="text" id="name" onChange={e => setName(e.target.value)}/>
 				</div>
 				<div className="col d-flex flex-column">
 					<label>Your email</label>
-					<input type="email" id="email" />
+					<input type="email" id="email" onChange={e => setEmail(e.target.value)}/>
 				</div>
 			</div>
 			<div className="contact-message row">
 				<div className="col d-flex flex-column">
 					<label>Your message</label>
-					<textarea id="message" form="contact-card"></textarea>
+					<textarea id="message" form="contact-card" onChange={e => setMessage(e.target.value)}></textarea>
 				</div>
 			</div>
-			<button className="btn btn-primary mt-1" type='submit'>Sumbit</button>
+			{ noMessage ? <button className="btn btn-primary mt-1" type='submit' disabled>Sumbit</button> : <button className="btn btn-primary mt-1" type='submit'>Sumbit</button>}
+			{ showAlert ? <Alert color="success">Thank you - we will be in touch soon.</Alert> : null}
 		</form>
 	</>)
 }

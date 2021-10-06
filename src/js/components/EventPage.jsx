@@ -31,10 +31,10 @@ const EventPage = () => {
 	return (
 		<div>
 			<h2>Pick an Event</h2>
+			<CreateButton type={type} navpage='editEvent' /> <p/>
 			<ListLoad type={type} status={C.KStatus.PUBLISHED} canFilter />
 			{pvCanEdit.value? <div><h4>Draft Events</h4>
 				<ListLoad type={type} status={C.KStatus.DRAFT} />
-				<CreateButton type={type} navpage='editEvent' />
 			</div>
 				: null}
 		</div>
