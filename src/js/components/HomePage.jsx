@@ -50,15 +50,15 @@ const FAQCard = () => {
           },
           {
             title: "Who works at SoGive?",
-            content: "Nunc maximus, magna at ultricies elementum, risus turpis vulputate quam."
+            content: "Most of our team are volunteers, including the directors Sanjay and Daniel. We also have a couple of paid staff."
           },
           {
             title: "How does SoGive make money?",
-            content: "Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc"
+            content: <p>SoGive is a not-for-profit organisation. You can give us a tip when making a donation to a charity. You can also <a className='' href='/#charity?charityId=sogive'>donate directly to SoGive</a>.</p>
           },
           {
             title: "Does SoGive contact charities to assess them?",
-            content: "Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc"
+            content: "We sometimes contact charities for information. Most of our assessments are from publicly available data though."
           }]
       }
 
@@ -66,19 +66,19 @@ const FAQCard = () => {
         rows: [
         {
         title: "Will my donation be tax-deductible?",
-        content: "Lorem ipsum dolor sit amet, consectetur "
+        content: "Usually. That depends on the charity and your personal circumstances. We cannot provide tax advice."
         },
         {
         title: "Does SoGive recommend charities for every cause?",
-        content: "Nunc maximus, magna at ultricies elementum, risus turpis vulputate quam."
+        content: "Not yet! We are working to provide recommendations for most major cause areas. However some causes are hard to assess objectively."
         },
         {
         title: "Can I get SoGive to analyze a charity I'm interested in?",
-        content: "Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc"
+        content: "Please contact us to request it. We will try to prioritise it, but we can't guarantee when a charity will be assessed."
         },
         {
         title: "Can I help in volunteering to analyze charities?",
-        content: "Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc"
+        content: "Yes - please do. Contact us, and we'll get in touch."
         }]
     }
 

@@ -45,6 +45,7 @@ import BlogPage from './BlogPage';
 import FinancialAdvisersPage from './FinancialAdvisersPage';
 import CorporatesPage from './CorporatesPage';
 import PrivacyPolicyPage from './PrivacyPolicyPage';
+import CareersPage from './CareersPage';
 import TermsPage from './TermsPage';
 import { modifyHash, stopEvent } from '../base/utils/miscutils';
 import Icon from '../base/components/Icon';
@@ -88,6 +89,7 @@ const PAGES = {
 	corporates : CorporatesPage,
 	privacypolicy : PrivacyPolicyPage,
 	terms: TermsPage, 
+	careers: CareersPage,
 };
 
 const PAGE_LABELS = {
@@ -100,6 +102,7 @@ const PAGE_LABELS = {
 	corporates: "Corporates",
 	privacypolicy: "Privacy Policy",
 	terms: "Terms of Service", 
+	careers: "Carrers",
 }
 
 const EXTERNAL_PAGE_LINKS = {
@@ -171,8 +174,8 @@ const MainDiv = () => {
 		navbarBackgroundColour='white'
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
-		defaultPage='search'
-		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms']}
+		defaultPage='home'
+		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms', 'careers']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 		navbarChildren={<SearchWidget />}
 	/>);
