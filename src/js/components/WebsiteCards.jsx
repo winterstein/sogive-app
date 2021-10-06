@@ -116,7 +116,7 @@ const ContactForm = () => {
 	};
 
 	return (<>
-		<form id='contact-card' onSubmit={submitContactForm}>
+		<form id='contact-card' className='px-3' onSubmit={submitContactForm}>
 
 			<div className="contact-info row">
 				<div className="col d-flex flex-column">
