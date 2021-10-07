@@ -83,7 +83,7 @@ const ImpactRatingCard = ({title}) => {
 				<div className="row">
 						<div className="col-md-6">
 								<h3>{title}</h3>
-								<a href="#" className="btn btn-primary mt-3">Explore impact ratings</a>
+								<a href="#search" className="btn btn-primary mt-3">Explore impact ratings</a>
 						</div>
 						<div className="col-md-6">
 								<p className="press-caption text-center">SoGive in the press</p>
