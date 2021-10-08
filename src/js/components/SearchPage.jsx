@@ -376,6 +376,8 @@ const SearchResult = ({ item, CTA, onPick }) => {
     if (charityDesc.substr(0, charityName.length).toLowerCase() === charityName.toLowerCase()) {
         charityDesc = "... "+charityDesc.slice(charityName.length).trim();
     }
+    // hack: remove markdown links
+    charityDesc = charityDesc.replace(/\[([^\]]+)\]\(\S+\)/g,"$1");
     // Some elements need to be shrunk down if they're too long
     const longName = charityName.length > 25;
 
