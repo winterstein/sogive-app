@@ -369,20 +369,12 @@ const SearchResult = ({ item, CTA, onPick }) => {
           })
         : null;
 
-    // Does the desc begin with the charity name (or a substring)? Strip it and make a sentence!
+    // Does the desc begin with the charity name? Strip it and make a sentence!
+    // NB: exact matches only, to avoid mangling names
     const charityName = NGO.displayName(item);
     let charityDesc = item.summaryDescription || item.description || "";
-    let commonPrefixLength = 0;
-    for (let i = 0; i < charityName.length && i < charityDesc.length; i++) {
-        if (charityName[i] === charityDesc[i]) {
-            commonPrefixLength = i + 1;
-        } else {
-            break;
-        }
-    }
-
-    if (commonPrefixLength >= 3) {
-        charityDesc = charityDesc.slice(commonPrefixLength).trim();
+    if (charityDesc.substr(0, charityName.length).toLowerCase() === charityName.toLowerCase()) {
+        charityDesc = "... "+charityDesc.slice(charityName.length).trim();
     }
     // Some elements need to be shrunk down if they're too long
     const longName = charityName.length > 25;
