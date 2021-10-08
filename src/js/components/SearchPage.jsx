@@ -59,22 +59,6 @@ const SearchPage = () => {
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
     let results = pvList.value ? List.hits(pvList.value) : null;
-
-    // if (results) { // DEBUG HACK to pick out certain data of interest
-    //     results = results.filter(r => {
-    //         let ps = r.projects || [];
-    //         for(let pi=0; pi<ps.length; pi++) {
-    //             let p = ps[pi];
-    //             if (Project.isOverall(p)) continue;
-    //             let ac = Project.inputs(p).find(m => "annualCosts" === m.name);
-    //             if (ac && Money.hasValue(ac)) {
-    //                 return true;
-    //             }
-    //         }
-    //         return false;
-    //     });
-    // }
-
     // const results = DataStore.resolveDataList(results0); // NB: This emitted errors "bad ref in DataStore list - missing status|type|id"
 
     return (
@@ -188,9 +172,11 @@ const SearchResults = ({
     if (!results) results = [];
     // NB: looking for a ready project is deprecated, but left for backwards data compatibility
     // TODO adjust the DB to have ready always on the charity
-    const ready = _.filter(results, NGO.isReady);
-    const unready = _.filter(results, (r) => !NGO.isReady(r));
-
+    let ready = _.filter(results, NGO.isReady);
+    let unready = _.filter(results, (r) => !NGO.isReady(r));
+    // cap size
+    ready = ready.slice(0, RESULTS_PER_PAGE);
+    unready = unready.slice(0, RESULTS_PER_PAGE);
     let resultsForText = "";
     if (all) {
         resultsForText = `All charities by rating`;
@@ -207,7 +193,7 @@ const SearchResults = ({
             <LearnAboutRatings isButton={true} />
         </div>
     );
-
+    // TODO refactor to use ListLoad
     return (
         <div className="SearchResults">
             {tabs !== false ? (

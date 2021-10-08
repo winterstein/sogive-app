@@ -10,7 +10,7 @@ const AboutHeroCard = () => {
 				<li>First, we do a broad-and-shallow analysis to gauge the general cost-effectiveness of charities. </li>
 				<li>For charities that do well in our shallow analysis, we then conduct a deeper analysis that assesses how strong the causal evidence is that the charity's work led to the outcomes it states.</li>
 			</ol>
-			<p>More detailed information about our approach can be found on our Methodology page. (hyperlink)</p>
+			<p>More detailed information about our approach can be found on our <a href='/#methodology'>Methodology page</a>.</p>
 		</div>
 	)
 }
