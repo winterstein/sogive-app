@@ -13,7 +13,7 @@ import Misc from '../base/components/Misc';
 import DataStore from '../base/plumbing/DataStore';
 import ActionMan from '../plumbing/ActionMan';
 import {getType, getId, nonce} from '../base/data/DataClass';
-import ListLoad, {CreateButton} from '../base/components/ListLoad';
+import ListLoad, {CreateButton, DefaultListItem, SimplePrettyListItem} from '../base/components/ListLoad';
 import FundRaiser from '../data/charity/FundRaiser';
 import Money from '../base/data/Money';
 import CSS from '../base/components/CSS';
@@ -96,6 +96,7 @@ const FundRaiserList = ({event, eventId}) => {
 			status={C.KStatus.PUBLISHED} q={q}
 			hasFilter={false}
 			checkboxes={false} canDelete={false} canCreate={false}
+			ListItem={SimplePrettyListItem}
 		/>
 	</div>);
 };
