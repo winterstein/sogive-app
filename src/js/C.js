@@ -17,7 +17,7 @@ C.app = {
 	website: "https://sogive.org",
 	facebookAppId: "1847521215521290",
 	privacyPolicy: 'https://sogive.org/#privacypolicy',
-	version: {app: '1.0.1'}
+	version: {app: '1.2.0'}
 };
 
 C.TYPES = new Enum("NGO User Donation RepeatDonation Project Event FundRaiser Basket Ticket Card Money Transfer");
