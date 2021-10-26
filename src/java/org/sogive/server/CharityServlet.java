@@ -44,6 +44,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		super(NGO.class, Dep.get(SoGiveConfig.class));
 		config = Dep.get(SoGiveConfig.class);
 		augmentFlag = true;
+		gitAuditTrail = true;
 	}
 
 	@Override
