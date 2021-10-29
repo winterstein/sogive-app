@@ -102,7 +102,7 @@ const PAGE_LABELS = {
 	corporates: "Corporates",
 	privacypolicy: "Privacy Policy",
 	terms: "Terms of Service", 
-	careers: "Carrers",
+	careers: "Careers",
 }
 
 const EXTERNAL_PAGE_LINKS = {
