@@ -64,7 +64,7 @@ public class ImportOSCRData {
 		ESPath publishPath = config.getPath(null, NGO.class, ourId, KStatus.PUBLISHED);
 
 		JThing item = new JThing().setJava(ngo);
-		AppUtils.doSaveEdit(draftPath, item, null);
+		AppUtils.doSaveEdit(draftPath, item, null, null);
 		AppUtils.doPublish(item, draftPath, publishPath);
 	}
 
