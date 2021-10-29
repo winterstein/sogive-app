@@ -46,15 +46,15 @@ const FAQCard = () => {
         rows: [
           {
             title: "What is SoGive?",
-            content: "SoGive is an independent nonprofit that analyses charities to help donors find the best places to give. We produce ratings of charities based on how much impact they make."
+            content: "SoGive is an independent nonprofit that analysis charities to help donors find the best places to give. We produce ratings of charities based on how much impact they make."
           },
           {
             title: "Who works at SoGive?",
-            content: "Most of our team are volunteers, including the directors Sanjay and Daniel. We also have a couple of paid staff."
+            content: "SoGive is co-founded by Sanjay Joshi and Daniel Winterstein. For more about them, click here (link to AboutUs). Our staff consists of analysts, developers, creatives, and our operations team."
           },
           {
             title: "How does SoGive make money?",
-            content: <p>SoGive is a not-for-profit organisation. You can give us a tip when making a donation to a charity. You can also <a className='' href='/#charity?charityId=sogive'>donate directly to SoGive</a>.</p>
+            content: "In some cases, we do contact a charity to get sufficient information to make our assessments. In other cases, there is ample information about a charity for us to confidently make assessments without said contact."
           },
           {
             title: "Does SoGive contact charities to assess them?",
@@ -78,7 +78,7 @@ const FAQCard = () => {
         },
         {
         title: "Can I help in volunteering to analyze charities?",
-        content: "Yes - please do. Contact us, and we'll get in touch."
+        content: <p>Yes! We are often recruiting volunteers for our analysis and development teams, respectively. We also offer limited paid positions, and those are posted on our website at <a href="#careers">careers</a>. For more information, please reach out to <a href="mailto:sarah@sogive.org">sarah@sogive.org</a> .</p>
         }]
     }
 
