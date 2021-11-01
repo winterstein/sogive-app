@@ -29,7 +29,7 @@ public class ElasticSearchDatabaseWriter implements DatabaseWriter {
 		String charityId = ngo.getId();
 		ESPath draftPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.DRAFT);
 		if (KStatus == KStatus.DRAFT) {
-			AppUtils.doSaveEdit(draftPath, new JThing(ngo), null);
+			AppUtils.doSaveEdit(draftPath, new JThing(ngo), null, null);
 		}
 		if (KStatus == KStatus.PUBLISHED) {
 			ESPath pubPath = Dep.get(IESRouter.class).getPath(NGO.class, charityId, KStatus.PUBLISHED);
