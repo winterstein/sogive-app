@@ -134,7 +134,7 @@ const ContactForm = () => {
 					<textarea id="message" form="contact-card" onChange={e => setMessage(e.target.value)}></textarea>
 				</div>
 			</div>
-			{ noMessage ? <button className="btn btn-primary mt-1" type='submit' disabled>Sumbit</button> : <button className="btn btn-primary mt-1" type='submit'>Sumbit</button>}
+			{ noMessage ? <button className="btn btn-primary mt-1" type='submit' disabled>Submit</button> : <button className="btn btn-primary mt-1" type='submit'>Sumbit</button>}
 			{ showAlert ? <Alert color="success">Thank you - we will be in touch soon.</Alert> : null}
 		</form>
 	</>)
