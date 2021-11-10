@@ -27,6 +27,7 @@ import { impactCalc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
 import { DonateButton } from './DonationWizard';
 import { LearnAboutRatings } from './LearnAboutRatings';
+import LinkOut from '../base/components/LinkOut';
 
 const BADGES_WITH_TENTATIVE_VERSIONS = new Enum("high medium slightly-low");
 
@@ -206,11 +207,23 @@ const CharityAbout = ({charity}) => {
 			<div className='charity-about-details div-section-text std-border std-padding std-box-shadow '>
 				<h3 className='header-section-title'><b>Details on {NGO.displayName(charity)}</b></h3>
 				<p><b>Website:</b> <a href={churl} target='_blank'>{charity.url}</a></p>
-				{NGO.registrationNumbers(charity).map(reg => <p key={reg.id}><b>{reg.regulator}</b>: {reg.id}</p>)}
+				{NGO.registrationNumbers(charity).map(reg => <NGOReg key={reg.id} reg={reg} />)}
 				<ProgramSplit charity={charity} />
 			</div>
 		</div>
 	);
+};
+
+const NGORep = ({reg}) => {
+	if ( ! reg.id) return null;
+	let $reg = reg.id;
+	// HACK: link to OSCR for Scottish charities
+	if (reg.key === "scotlandCharityRegNum") {
+		$reg = <LinkOut href={"https://www.oscr.org.uk/about-charities/search-the-register/charity-details?number="+reg.id.replace("SCO","")}>{reg.id}</LinkOut>
+	} else if (reg.key==="englandWalesCharityRegNum") {
+		$reg = <LinkOut href={"https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/"+reg.id}>{reg.id}</LinkOut>		
+	}
+	return <p><b>{reg.regulator}</b>: {$reg}</p>;
 };
 
 const ProgramSplit = ({charity}) => {
