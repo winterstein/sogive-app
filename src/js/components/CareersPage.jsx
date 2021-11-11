@@ -63,7 +63,7 @@ const PrivacyPolicyContent = () => {
                     <li>A portfolio of your best work</li>
                     <li>A Cover letter expressing your interest and fit for the role</li>
                 </ul>
-                To <span className='email' name='sarah' domain='sogive.org'>sarah (at) sogive.org</span> with the subject line: "CTO Application"
+                To <span className='email' name='sarah' domain='sogive.org'>sarah (at) sogive.org</span> with the subject line: "SENIOR DEV Application"
                 <br/><br/>
                 We will collect applications, and get in touch with you once we're ready. This may take a couple of weeks.
             </span>
