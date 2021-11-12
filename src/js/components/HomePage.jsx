@@ -46,11 +46,11 @@ const FAQCard = () => {
         rows: [
           {
             title: "What is SoGive?",
-            content: "SoGive is an independent nonprofit that analysis charities to help donors find the best places to give. We produce ratings of charities based on how much impact they make."
+            content: "SoGive is an independent nonprofit that analysis charities to help donors find the best places to give. We produce ratings of charities based on how much impact they have."
           },
           {
             title: "Who works at SoGive?",
-            content: "SoGive is co-founded by Sanjay Joshi and Daniel Winterstein. For more about them, click here (link to AboutUs). Our staff consists of analysts, developers, creatives, and our operations team."
+            content: <p>SoGive is co-founded by Sanjay Joshi and Daniel Winterstein. For more about them, <a href="#about">click here</a>. Our staff consists of analysts, developers, creatives, and our operations team.</p>
           },
           {
             title: "How does SoGive make money?",
@@ -58,7 +58,7 @@ const FAQCard = () => {
           },
           {
             title: "Does SoGive contact charities to assess them?",
-            content: "We sometimes contact charities for information. Most of our assessments are from publicly available data though."
+            content: "We aim to recommend charities within every major cause area. However, due to limited time, there are some cause areas we do not currently have recommendations for. We hope to improve and expand our analyses in the coming year."
           }]
       }
 
@@ -66,15 +66,15 @@ const FAQCard = () => {
         rows: [
         {
         title: "Will my donation be tax-deductible?",
-        content: "Usually. That depends on the charity and your personal circumstances. We cannot provide tax advice."
+        content: "It depends. If the charity you choose offers a tax deduction and they are UK based, it should be. Unfortunately, we cannot provide tax advice."
         },
         {
         title: "Does SoGive recommend charities for every cause?",
-        content: "Not yet! We are working to provide recommendations for most major cause areas. However some causes are hard to assess objectively."
+        content: "We aim to recommend charities within every major cause area. However, due to limited time, there are some cause areas we do not currently have recommendations for. We hope to improve and expand our analyses in the coming year."
         },
         {
         title: "Can I get SoGive to analyze a charity I'm interested in?",
-        content: "Please contact us to request it. We will try to prioritise it, but we can't guarantee when a charity will be assessed."
+        content: <p>To speak to us about a particular charity, feel free to reach out to <a href="mailto:matt@sogive.org">matt@sogive.org</a>.</p>
         },
         {
         title: "Can I help in volunteering to analyze charities?",
