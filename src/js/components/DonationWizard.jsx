@@ -360,9 +360,13 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	});
 
 	let rate = 0.80341;
-	if (pvRate.value) {
-		rate = pvRate.value.rates.GBP / pvRate.value.rates[preferredCurrency];
-		console.warn(preferredCurrency+"->GBP "+rate, pvRate.value);
+	if (pvRate.value && pvRate.value.rates) {
+		try {
+			rate = pvRate.value.rates.GBP / pvRate.value.rates[preferredCurrency];
+			console.warn(preferredCurrency+"->GBP "+rate, pvRate.value);
+		} catch(err) {	// paranoia (bugs, Nov 2021)
+			console.error(err); // swallow it
+		}
 	}
 
 	return <>
