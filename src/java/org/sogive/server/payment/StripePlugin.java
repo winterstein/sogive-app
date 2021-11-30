@@ -18,11 +18,14 @@ import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
 import com.stripe.net.RequestOptions;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.winterwell.bob.wwjobs.BuildHacks;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.ReflectionUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.web.WebUtils;
+import com.winterwell.web.app.KServerType;
 
 /**
  * Take money from people.
@@ -59,13 +62,14 @@ public class StripePlugin {
 	}
 
 	public static PaymentIntent collect(Money amount, String description, StripeAuth sa, Person user,
-			String idempotencyKey) throws Exception {
+			String idempotencyKey) throws Exception 
+	{
 		Log.d(LOGTAG, amount + " description: " + description + " SA:" + sa + " user:" + user + " ikey:"
 				+ idempotencyKey + " " + ReflectionUtils.getSomeStack(8));
 		if (amount.getValue100p() <= 0) {
 			throw new IllegalArgumentException(amount.toString());
 		}
-
+		
 		// Amount to charge in pence (rounding up before casting to int)
 		Long pence = (long) Math.ceil(amount.getValue100p() / 100);
 		String currency = Utils.or(amount.getCurrency(), "GBP").toString();
@@ -74,13 +78,15 @@ public class StripePlugin {
 		// Get whatever payment method was originally used
 		PaymentMethod pm = paymentMethodFromStripeAuth(sa);
 		// and ask for a new PaymentIntent using it
+		String desc = description+" server:"+WebUtils.hostname(); // debug 2021-09-06 stray donation - was it from a test server?
 		PaymentIntentCreateParams params = PaymentIntentCreateParams.builder().setCurrency(currency).setAmount(pence)
 				.setPaymentMethod(pm.getId()).setCustomer(pm.getCustomer()).setConfirm(true) // ?? (from migration docs)
 				.setOffSession(true) // The customer is not present to confirm payment (so you'd better have run SCA
 										// and got permission for repeat payments)
 				.setStatementDescriptor("Donation via SoGive") // To appear on credit card statement
-				.setDescription(description) // Our internal description
-				.setReceiptEmail(sa.email).build();
+				.setDescription(desc) // Our internal description
+				.setReceiptEmail(sa.email)
+				.build();
 
 //		Add idempotency key to request (https://stripe.com/docs/api#idempotent_requests)
 		RequestOptions ro = null;
@@ -215,6 +221,7 @@ public class StripePlugin {
 		}
 		String skey = stripeConfig.secretKey;
 		assert skey != null : "No Stripe secret key :(";
+		assert BuildHacks.getServerType() == KServerType.PRODUCTION : "Can't use live Stripe from a "+BuildHacks.getServerType()+" server";
 		return skey;
 	}
 

@@ -70,7 +70,7 @@ public class SoGiveTestUtils {
 
 			ESPath dpath = r.getPath(FundRaiser.class, id, KStatus.DRAFT);
 			JThing item = new JThing().setJava(fr);
-			AppUtils.doSaveEdit(dpath, item, null);
+			AppUtils.doSaveEdit(dpath, item, null, null);
 			AppUtils.doPublish(item, dpath, path);
 		}
 
@@ -88,7 +88,7 @@ public class SoGiveTestUtils {
 			obj.setId(id);
 			ESPath dpath = r.getPath(klass, id, KStatus.DRAFT);
 			JThing item = new JThing().setJava(obj);
-			AppUtils.doSaveEdit(dpath, item, null);
+			AppUtils.doSaveEdit(dpath, item, null, null);
 			AppUtils.doPublish(item, dpath, path);
 		}
 		return obj;
@@ -121,7 +121,7 @@ public class SoGiveTestUtils {
 			obj = new NGO(id);
 			ESPath dpath = r.getPath(klass, id, KStatus.DRAFT);
 			JThing item = new JThing().setJava(obj);
-			AppUtils.doSaveEdit(dpath, item, null);
+			AppUtils.doSaveEdit(dpath, item, null, null);
 			AppUtils.doPublish(item, dpath, path);
 		}
 		return obj;

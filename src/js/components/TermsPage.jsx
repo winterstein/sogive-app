@@ -50,13 +50,13 @@ const TermsContent = () => {
 			<li>Prices of all Services are subject to change upon 30 days' notice from us. Such notice may be provided at any time by posting the changes to the SoGive Site (SoGive.org). SoGive shall not be liable to you or to any third party for any modification, price change, suspension or discontinuance of the Service</li>
 			<li>While not necessarily imposing a charge on You, we may offer You the opportunity to make a donation to SoGive to support Our running costs. Where we do this, references elsewhere in this document to donation amounts going to recipient charities are net of this donation to SoGive</li>
 			<li>Where we charge for access to content and services, the following conditions apply:</li>
-			</ol>
 			<ul>
 			<li>At our discretion, payment may be required either upfront or in-arrears</li>
 			<li>Payment will be deemed to have been made when the payment is either cleared funds in our bank account, or (b) cleared funds in our PayPal account or Stripe account (or other such payment system which we may specify). Any taxes or third party charges which are subtracted from a payment will not count as part of the payment</li>
 			<li>Where payments are late or short, we may cancel or restrict your access to any or all of our services</li>
 			</ul>
-			<ol>
+			</ol>
+			<ol start="5">
 			<li>Prices of all Services to paying customers are subject to change upon 30 days' notice from us. Such notice may be provided at any time by posting the changes to the SoGive Site (sogive.org). SoGive shall not be liable to you or to any third party for any modification, price change, suspension or discontinuance of the Service.</li>
 			</ol>
 			<h3>7. Processing of donations and Gift Aid</h3>

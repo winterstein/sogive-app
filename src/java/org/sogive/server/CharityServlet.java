@@ -1,5 +1,6 @@
 package org.sogive.server;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.sogive.data.charity.Output;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
 
+import com.winterwell.data.AThing;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.query.BoolQueryBuilder;
@@ -17,9 +19,12 @@ import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.time.Time;
 import com.winterwell.web.ajax.AjaxMsg;
 import com.winterwell.web.ajax.JThing;
+import com.winterwell.web.app.AMain;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.CrudServlet;
 import com.winterwell.web.app.WebRequest;
@@ -44,6 +49,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		super(NGO.class, Dep.get(SoGiveConfig.class));
 		config = Dep.get(SoGiveConfig.class);
 		augmentFlag = true;
+		gitAuditTrail = true;
 	}
 
 	@Override
@@ -57,8 +63,49 @@ public class CharityServlet extends CrudServlet<NGO> {
 	@Override
 	protected void doBeforeSaveOrPublish(JThing<NGO> _jthing, WebRequest stateIgnored) {
 		augment(_jthing, stateIgnored); // insert simple-impact
-		// revenue for sorting??
+
+		// copy pasta from super for NGO c'so its not an AThing
+		try {
+			// set last modified??
+			NGO ngo = _jthing.java();
+	//		ngo.setLastModified(new Time());
+	
+			// Git audit trail?
+			if (gitAuditTrail) {
+				KStatus status = KStatus.DRAFT;
+				if (stateIgnored!=null && stateIgnored.actionIs(ACTION_PUBLISH)) status= KStatus.PUBLISHED; 
+				File fd = getGitFile(ngo, status);
+				if (fd != null) {
+					String json = prettyPrinter().toJson(ngo);
+					doSave2_file_and_git(stateIgnored, json, fd);
+				}
+			}
+		} catch(Throwable ex) {
+			Log.e(LOGTAG(), ex);
+		}
+		
 		super.doBeforeSaveOrPublish(_jthing, stateIgnored);
+	}
+
+	/**
+	 * HACK cos NGO is not an AThing and so cant use the base methos
+	 * @param ngo
+	 * @param status
+	 * @return
+	 */
+	private File getGitFile(NGO ngo, KStatus status) {
+		File dir = new File(FileUtils.getWinterwellDir(), AMain.appName+"-files");
+		if ( ! dir.isDirectory()) {
+			return null;
+		}
+		String wart = "";
+		if (status==KStatus.DRAFT || status==KStatus.MODIFIED) wart = "~";
+		String safename = FileUtils.safeFilename(wart+ngo.getId(), false);
+		File f = new File(dir, ngo.getClass().getSimpleName()+"/"+safename);
+		if ( ! f.getParentFile().isDirectory()) {
+			f.getParentFile().mkdir(); // create the repo/Type folder if needed
+		}
+		return f;
 	}
 
 	@Override

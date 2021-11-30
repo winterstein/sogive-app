@@ -18,11 +18,12 @@ public class StripeWebhookServlet implements IServlet {
 
 	public void process(WebRequest _state) throws Exception {
 		this.state = _state;
+		Log.d("StripeWebhookServlet", _state);
 		// Retrieve the request's body and parse it as JSON
 		Event eventJson = ApiResource.GSON.fromJson(state.getPostBody(), Event.class);
-		Log.d("stripe", "json: " + state.getPostBody());
+		Log.d("StripeWebhookServlet", "json: " + state.getPostBody());
 		// Do something with eventJson??
-		Log.d("stripe", eventJson.getType() + " " + eventJson.getData());
+		Log.d("StripeWebhookServlet", eventJson.getType() + " " + eventJson.getData());
 	}
 
 }

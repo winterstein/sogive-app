@@ -8,6 +8,7 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.PaymentIntentUpdateParams;
 import com.winterwell.utils.log.Log;
+import com.winterwell.utils.web.WebUtils;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.ajax.JsonResponse;
 import com.winterwell.web.app.IServlet;
@@ -43,19 +44,25 @@ public class StripePaymentIntentServlet implements IServlet {
 		String desc = state.get("description");
 		if (desc == null && state.get("basket") != null) {
 			desc = "basket " + state.get("basket");
-		}
+		} else if (desc==null) desc = "";
+		desc += " server:"+WebUtils.hostname(); // debug 2021-09-06 stray donation - was it from a test server?
 
 		try {
 			PaymentIntent intent;
 
 			if (oldId != null) {
 				intent = PaymentIntent.retrieve(oldId);
-				PaymentIntentUpdateParams params = PaymentIntentUpdateParams.builder().setAmount(amt).build();
+				PaymentIntentUpdateParams params = PaymentIntentUpdateParams.builder()
+						.setAmount(amt)
+						.build();
 				intent = intent.update(params);
 			} else {
 				// See https://stripe.com/docs/api/payment_intents/create
-				PaymentIntentCreateParams params = PaymentIntentCreateParams.builder().setAmount(amt)
-						.setDescription(desc).setCurrency("gbp").addPaymentMethodType("card").build();
+				PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
+						.setAmount(amt)
+						.setDescription(desc)
+						.setCurrency("gbp")
+						.addPaymentMethodType("card").build();
 				intent = PaymentIntent.create(params);
 			}
 

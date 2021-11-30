@@ -16,12 +16,8 @@ import ServerIO from '../base/plumbing/ServerIOBase';
 import KStatus from '../base/data/KStatus.js';
 
 ServerIO.APIBASE = '';
-ServerIO.APIBASE = 'https://test.sogive.org';
+// ServerIO.APIBASE = 'https://test.sogive.org';
 // ServerIO.APIBASE = 'https://app.sogive.org';
-
-// ?? use media.good-loop.com??
-ServerIO.MEDIA_ENDPOINT = '/upload.json';
-ServerIO.MEDIA_ENDPOINT = 'https://testmedia.good-loop.com/upload.json';
 
 ServerIO.checkBase();
 

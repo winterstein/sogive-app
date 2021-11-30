@@ -136,9 +136,10 @@ const EventEditor = ({id}) => {
 				dflt
 			/>
 
-			{/* TODO a nice charity picker like RegisterPage.jsx CharityChoiceTab */}
 			<PropControl path={path} prop='charityId' item={item}
-				label='Charity ID' />
+				label='Charity ID' 
+				type="DataItem" itemType="NGO"
+			/>
 
 			<PropControl path={path} prop='teams' item={item}
 				label='User teams?' type='checkbox' />
