@@ -11,7 +11,7 @@ const PrivacyPolicyContent = () => {
             <h2>Senior Dev / Team Lead</h2>
             <h3>About SoGive</h3>
             <span>
-                SoGive is an independent nonprofit that analyses charities to help donors find the best places to give. We produce ratings of charities based on how much impact they make.
+                SoGive is a volunteer-driven organisation which analyses charities and makes that analysis freely available on our website. Our mission is to help donors do more good with their donations.
                 <br/><br/>
                 We're hiring a Senior Dev with project & team management experience to help grow the technical side of our operations, and maximize our ability to most effectively help donors maximize their charitable impact. SoGive is still very much in a start-up phase of its growth. Due to this, there is tremendous potential for having a large impact on the organization, while also involving the risk and excitement of an early stage organization.
                 <br/><br/>
@@ -75,15 +75,17 @@ const PrivacyPolicyContent = () => {
             <h2>Analyst / Senior Analyst</h2>
             <h3>About SoGive</h3>
             <span>
-                SoGive is a volunteer-driven organisation which <b>analyses charities</b> and makes that analysis freely available on our website. Our mission is to help donors do more good with their donations.
+                <a href="https://app.sogive.org/">SoGive</a> is a volunteer-driven organisation which <b>analyses charities</b> and makes that analysis freely available on our website. Our mission is to help donors do more good with their donations.
                 <br/><br/>
-                Our analytical method involves applying what we call the <b>SoGive two-question method</b>, a charity analysis approach which focuses on cost-effectiveness.
+                Our analytical method involves applying what we call the <b>SoGive</b> <a href="https://thinkingaboutcharity.blogspot.com/2021/04/sogives-analysis-methodology.html">two-question method</a>, a charity analysis approach which focuses on cost-effectiveness.
                 <br/><br/>
                 Our approach has similarities with that followed by charity analysis organisations like GiveWell and Founders Pledge.
                 <br/><br/>
                 We differentiate by applying a rating to a <b>very broad range</b> of charities, covering almost all of the large charities in the UK, many small charities and several internationally. We aim to achieve strong brand recognition, at first in the UK.
                 <br/><br/>
-                We currently move over <b>£1m</b> pa, most of which comes from a very small number of major donors. We also provide some support to fundraising events. We plan to grow this donor base. Our growth plans include partnerships with other organisations moving material amounts of funds.
+                Our approach includes two types of analysis, the “<b>broad and shallow</b>“ analysis, sometimes referred to as “public information only” analysis, which aims to cover as many charities as possible. We also perform “<b>in-depth</b>” analysis, which is typically to help a donor or group of donors decide where to donate.
+                <br/><br/>
+                We currently move over <b>£1m</b> per year, most of which comes from a very small number of major donors. We also provide some support to fundraising events. We plan to grow this donor base. Our growth plans include partnerships with other organisations moving material amounts of funds.
                 <br/><br/>
                 Our <b>key priorities</b> for the next 12 months are improving our website, continuing to expand our (already substantial) analysis of charities and further developing our analysis methodology, reaching more donors, and continuing to strengthen our team of volunteer analysts.
                 <br/><br/>
@@ -92,6 +94,9 @@ const PrivacyPolicyContent = () => {
             <hr/>
             <h3>The role: your responsibilities (Senior Analyst)</h3>
             <span>
+                <br/>
+                SoGive is expanding its team, hence we are seeking someone to join us, at a senior or possibly more junior level of experience. 
+                <br/><br/>
                 <ul>
                     <li>Take senior-level ownership for part of SoGive’s analytical output. This includes: </li>
                     <li><ul>
@@ -108,7 +113,9 @@ const PrivacyPolicyContent = () => {
             <hr/>
             <h3>Some responsibilities yet to be shared out</h3>
             <span>
+                <br/>
                 The below lists out several areas of responsibility which will need to be covered by either you or the current Principal Analyst. This will be decided partly based on the preferences and aptitudes of the individuals in question.
+                <br/><br/>
                 <ul>
                     <li>Ensure that meetings with key stakeholders function effectively, especially the charities being reviewed and the major donors that SoGive works with</li>
                     <li>Liaise with the wider team the SoGive Founder/CEO to ensure that the staffing of the SoGive analysis function is adequate</li>
@@ -192,7 +199,7 @@ const PrivacyPolicyContent = () => {
             <hr/>
             <h3>Application process</h3>
             <span>
-                Please contact Matt on <a href="mailto:matt@sogive.org">matt@sogive.org</a> including a CV and covering letter and say how you found out about the role. Your subject line should say “Analyst application”. The recruitment process will also include interviews conducted via Zoom/video call and an analysis task.
+                Please contact Matt, our Principal Analyst, on <a href="mailto:matt@sogive.org">matt@sogive.org</a> including a CV and covering letter and say how you found out about the role. Your subject line should say “Analyst application”. The recruitment process will also include interviews conducted via Zoom/video call and an analysis task.
                 <br/><br/>
                 If you would like an informal conversation prior to your application, feel free to reach out to Matt on <a href="mailto:matt@sogive.org">matt@sogive.org</a> or Sanjay on <a href="mailto:sanjay@sogive.org">sanjay@sogive.org</a>.
                 <br/><br/>
