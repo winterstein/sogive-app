@@ -6,7 +6,8 @@ const PrivacyPolicyContent = () => {
         <>
         <br/><br/>
         <center><p className="text-muted">Current Vacancies</p></center>
-        <div className="container">
+
+        <div id="senior-dev-team-lead" className="container">
             <h2>Senior Dev / Team Lead</h2>
             <h3>About SoGive</h3>
             <span>
@@ -68,8 +69,9 @@ const PrivacyPolicyContent = () => {
                 We will collect applications, and get in touch with you once we're ready. This may take a couple of weeks.
             </span>
         </div>
+
         <br/><hr/><br/>
-        <div className="container">
+        <div id="analyst" className="container">
             <h2>Analyst / Senior Analyst</h2>
             <h3>About SoGive</h3>
             <span>
@@ -213,6 +215,19 @@ const PrivacyPolicyContent = () => {
 }
 
 const CareersPage = () => {
+    
+    const viewSection = () => {
+        if (document.getElementById('analyst')) {
+            if (window.location.hash == "#careers?view=analyst") {
+                document.getElementById('analyst').scrollIntoView();
+                window.scrollBy(0,-100);
+            }
+        } else {
+            setTimeout(viewSection, 15);
+        }
+    }
+    
+    viewSection();
 
     return (
         <div className="privacy-policy">
