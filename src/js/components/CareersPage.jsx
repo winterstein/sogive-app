@@ -29,7 +29,6 @@ const PrivacyPolicyContent = () => {
                     <li>Backend development experience in Java</li>
                     <li>2+ years of team and project management experience (as CTO, team-leader, or similar)</li>
                     <li>4+ years of industry experience</li>
-                    <li>A university degree, 2nd className or higher, from a respected university. </li>
                     <li>Experience in agile development</li>
                     <li>Examples of your experience doing UX / User-centred design</li>
                     <li>Good communication skills</li>
