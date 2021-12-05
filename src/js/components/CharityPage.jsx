@@ -214,7 +214,7 @@ const CharityAbout = ({charity}) => {
 	);
 };
 
-const NGORep = ({reg}) => {
+const NGOReg = ({reg}) => {
 	if ( ! reg.id) return null;
 	let $reg = reg.id;
 	// HACK: link to OSCR for Scottish charities
