@@ -204,7 +204,7 @@ const TicketTypeEditor = ({ticketType, path, event, i, move, last}) => {
 		event.ticketTypes = event.ticketTypes.filter(tt => tt !== ticketType);
 		DataStore.update();
 	};
-	return (<BSCard body>
+	return (<BSCard body className="mb-3" style={{backgroundColor:"rgba(255,200,100,0.25)"}}>
 		<small>{ticketType.id}</small>
 		<PropControl item={ticketType} path={path} prop='name' label='Name' placeholder='e.g. The Wee Wander' />
 		<PropControl item={ticketType} path={path} prop='subtitle' label='SubTitle' placeholder='e.g. a 10 mile gentle walk' />
