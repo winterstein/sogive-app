@@ -465,14 +465,14 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 			...basket.stripe,
 			...payment_intent
 		};
-		ActionMan.crud({type: C.TYPES.Basket, id:getId(basket), action:C.CRUDACTION.publish, item:basket})
-			.then(res => {
-				let n = Number.parseInt(DataStore.getValue(stagePath)) + 1;
-				DataStore.setValue(stagePath, n);
-				DataStore.setUrlValue('registerStage', n);
-			}, err => {
-				console.error(err); // TODO
-			});
+		let pvPubBasket = ActionMan.crud({type: C.TYPES.Basket, id:getId(basket), action:C.CRUDACTION.publish, item:basket});
+		pvPubBasket.promise.then(res => {
+			let n = Number.parseInt(DataStore.getValue(stagePath)) + 1;
+			DataStore.setValue(stagePath, n);
+			DataStore.setUrlValue('registerStage', n);
+		}, err => {
+			console.error(err); // TODO
+		});
 	};
 
 	const email = getEmail();
