@@ -19,6 +19,8 @@ ServerIO.APIBASE = '';
 // ServerIO.APIBASE = 'https://test.sogive.org';
 // ServerIO.APIBASE = 'https://app.sogive.org';
 
+Login.ENDPOINT = 'http://localyouagain.good-loop.com/youagain.json';
+
 ServerIO.checkBase();
 
 ServerIO.getServletForType = (type) => {
