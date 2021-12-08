@@ -20,6 +20,7 @@ import Ticket from '../data/charity/Ticket';
 import FundRaiser from '../data/charity/FundRaiser';
 
 import Misc from '../base/components/Misc';
+import PropControl from '../base/components/PropControl';
 import { LoginWidgetEmbed } from '../base/components/LoginWidget';
 import Wizard, { WizardStage } from '../base/components/WizardProgressWidget';
 import PaymentWidget from '../base/components/PaymentWidget';
@@ -355,13 +356,13 @@ const AttendeeDetails = ({i, ticket, path, ticket0}) => {
 			</center>
 			<hr />
 			<div className='AttendeeDetails'>
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
-				<Misc.PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
-				{ i!==0? <Misc.PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
+				<PropControl type='text' item={ticket} path={path} prop='attendeeName' label={`${noun} Name`} />
+				<PropControl type='text' item={ticket} path={path} prop='attendeeEmail' label='Email' />
+				{ i!==0? <PropControl type='checkbox' path={path} prop='sameAsFirst' label='Same address and team as first person' /> : null}
 				{ sameAsFirst? null :
 					<div>
-						<Misc.PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
-						<Misc.PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />
+						<PropControl type='textarea' path={path} prop='attendeeAddress' label='Address' />
+						<PropControl type='text' item={ticket} path={path} prop='emergencyContact' label='Emergency contact phone number' />
 						<TeamControl ticket={ticket} path={path} />
 					</div>
 				}
@@ -381,9 +382,9 @@ const TeamControl = ({ticket, path}) => {
 	}
 
 	return (<Misc.Col2>
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)'
+		<PropControl type='text' item={ticket} path={path} prop='team' label='Join Team (optional)'
 			help='Families or colleagues can fundraise as a team, with a Team Page here.' />
-		<Misc.PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
+		<PropControl type='text' item={ticket} path={path} prop='team' label='Create Team (optional)' />
 	</Misc.Col2>);
 };
 
@@ -417,7 +418,7 @@ const CharityChoiceTab = ({basket}) => {
 			<p>
 				Please choose a charity to support.
 			</p>
-			<Misc.PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
+			<PropControl label='My Charity' item={basket} path={bpath} prop='charityId' />
 		</div>
 		<SearchResults results={results} query={charityId} recommended={ ! charityId}
 			onPick={onPick} CTA={PickCTA} tabs={false} download={false} loading={ ! pvCharities.resolved} />
@@ -484,10 +485,10 @@ const CheckoutTab = ({basket, event, stagePath}) => {
 	// 	basket.tip = new Money({value:1});
 	// }
 	// 		<div className='padded-block'>
-	// 			<Misc.PropControl type='checkbox' path={bpath} item={basket} prop='hasTip'
+	// 			<PropControl type='checkbox' path={bpath} item={basket} prop='hasTip'
 	// 				label={`Include a tip to cover SoGive's operating costs?`} />
 	// 			{basket.hasTip ? (
-	// 				<Misc.PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
+	// 				<PropControl type='Money' path={bpath} item={basket} prop='tip' label='Tip amount' />
 	// 			) : ''}
 	// 		</div>
 

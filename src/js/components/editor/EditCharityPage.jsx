@@ -14,6 +14,7 @@ import NGO from '../../data/charity/NGO2';
 import Project from '../../data/charity/Project';
 import Money from '../../base/data/Money';
 import Misc from '../../base/components/Misc';
+import PropControl from '../../base/components/PropControl';
 import Roles from '../../base/Roles';
 import {LoginLink} from '../../base/components/LoginWidget';
 import Crud, { getDataItem } from '../../base/plumbing/Crud'; //publish
@@ -416,8 +417,8 @@ const ProjectInputEditor = ({charity, project, input}) => {
 	return (<tr>
 		<td>{iname}</td>
 		<td>
-			{ isOverall || input.name==="projectCosts"? null : <Misc.PropControl label={'Manual entry for '+iname} type="checkbox" prop="manualEntry" path={widgetPath} /> }
-			<Misc.PropControl type="Money" prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
+			{ isOverall || input.name==="projectCosts"? null : <PropControl label={'Manual entry for '+iname} type="checkbox" prop="manualEntry" path={widgetPath} /> }
+			<PropControl type="Money" prop={ii} path={inputsPath} item={project.inputs} readOnly={readonly} />
 		</td>
 	</tr>);
 };
@@ -438,19 +439,19 @@ const ProjectOutputEditor = ({charity, project, output}) => {
 	let cpb = output? output.costPerBeneficiary : null;
 	let cpbraw = output? NGO.costPerBeneficiaryCalc({charity:charity, project:project, output:output}) : null;
 	return (<tr>
-		<td><Misc.PropControl prop="name" path={inputPath} item={output} /></td>
-		<td><Misc.PropControl prop="number" type="number" path={inputPath} item={output} /></td>
+		<td><PropControl prop="name" path={inputPath} item={output} /></td>
+		<td><PropControl prop="number" type="number" path={inputPath} item={output} /></td>
 		<td>
-			<Misc.PropControl prop="costPerBeneficiary" type="Money" path={inputPath} item={output} />
+			<PropControl prop="costPerBeneficiary" type="Money" path={inputPath} item={output} />
 			<small>Calculated: <Misc.Money amount={cpbraw} /></small>
 		</td>
 		<td>
-			<Misc.PropControl prop="confidence" type="select" options={CONFIDENCE_VALUES.values}
+			<PropControl prop="confidence" type="select" options={CONFIDENCE_VALUES.values}
 				defaultValue={CONFIDENCE_VALUES.medium} path={inputPath} item={output}
 			/>
 		</td>
 		<td>
-			<Misc.PropControl prop="description" type="textarea"
+			<PropControl prop="description" type="textarea"
 				path={inputPath} item={output}
 			/>
 		</td>
@@ -489,7 +490,7 @@ const EditField2 = ({item, field, type, help, label, path, parentItem, userFilte
 	return (
 		<div>
 			<Misc.Col2>
-				<Misc.PropControl label={label || field} type={type} prop={field}
+				<PropControl label={label || field} type={type} prop={field}
 					path={path} item={item}
 					tooltip={help}
 					{ ...other}
@@ -550,7 +551,7 @@ const MetaEditorItem = ({meta, itemField, metaField, metaPath, icon, title, type
 	return (
 		<div className="MetaEditorItem">
 			{ricon}
-			<Misc.PropControl label={title} prop={metaField}
+			<PropControl label={title} prop={metaField}
 				path={metaPath}
 				item={meta} type={type}
 				saveFn={saveFn}
