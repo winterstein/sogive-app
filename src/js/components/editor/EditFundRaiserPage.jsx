@@ -8,6 +8,7 @@ import DataStore from '../../base/plumbing/DataStore';
 import C from '../../C';
 
 import Misc from '../../base/components/Misc';
+import PropControl from '../../base/components/PropControl';
 import FundRaiser from '../../data/charity/FundRaiser';
 import { DonateButton } from '../DonationWizard';
 import ShareWidget, {ShareLink, canWrite} from '../../base/components/ShareWidget';
@@ -70,21 +71,21 @@ const FundRaiserEditor = ({id}) => {
 					<ShareLink item={item} />
 					<ShareWidget item={item} />
 				</small></p>
-				<Misc.PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
-				<Misc.PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
-				<Misc.PropControl path={path} prop='description' item={item} label='Description' />
-				<Misc.PropControl path={path} prop='charityId' item={item} label='Charity' />
-				<Misc.PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money'
+				<PropControl path={path} prop='name' item={item} label='Fundraiser Name' />
+				<PropControl path={path} prop='img' label='Fundraiser Photo' type='imgUpload' />
+				<PropControl path={path} prop='description' item={item} label='Description' />
+				<PropControl path={path} prop='charityId' item={item} label='Charity' />
+				<PropControl path={path} prop='userTarget' item={item} label='Fixed £ Target' type='Money'
 					placeholder='Leave blank for an automatic target (recommended). Set to -1 to switch off the targets.'
 				/>
 
-				<Misc.PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
-				<Misc.PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
+				<PropControl path={path} prop='donated' item={item} label='DEBUG: Set donated' type='Money' />
+				<PropControl path={path} prop='donationCount' item={item} label='DEBUG: Set donor count' type='number' />
 
-				<Misc.PropControl path={peepPath} prop='name' label='Your Name' />
-				<Misc.PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
-				<Misc.PropControl path={peepPath} prop='description' label='About You' type='textarea' />
-				<Misc.PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
+				<PropControl path={peepPath} prop='name' label='Your Name' />
+				<PropControl path={peepPath} prop='img' label='Your Photo' type='imgUpload' />
+				<PropControl path={peepPath} prop='description' label='About You' type='textarea' />
+				<PropControl path={path} prop='story' item={item} label='Your Story' type='textarea' />
 				<hr />
 				<p className='CTA'><a href={'#fundraiser/'+encURI(id)}>Go to Your FundRaiser Page</a></p>
 

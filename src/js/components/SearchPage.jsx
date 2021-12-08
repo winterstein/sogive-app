@@ -2,14 +2,7 @@
 import React from 'react';
 import _ from 'lodash';
 // import {Button, Form, FormGroup, FormControl, Glyphicon, InputGroup} from 'react-bootstrap';
-import {
-    Form,
-    FormGroup,
-    Input,
-    InputGroup,
-    InputGroupAddon,
-    Button,
-} from "reactstrap";
+import { Form, Button } from "reactstrap";
 import { encURI, modifyHash, stopEvent } from "../base/utils/miscutils";
 
 import Login from "../base/youagain";
@@ -21,10 +14,10 @@ import NGO from "../data/charity/NGO2";
 import Project from "../data/charity/Project";
 import Output from "../data/charity/Output";
 import Misc from "../base/components/Misc";
+import PropControl from '../base/components/PropControl';
 import { impactCalc } from "./ImpactWidgetry";
 import C from "../C";
 import { getId } from "../base/data/DataClass";
-import PropControl from "../base/components/PropControl";
 import { LearnAboutRatings } from "./LearnAboutRatings";
 import { DonateButton } from './DonationWizard';
 import { RatingBadge } from "./CharityPage";
@@ -88,7 +81,7 @@ export default SearchPage;
 const FeaturedCharities = () => null;
 
 /**
- * TODO change into a Misc.PropControl??
+ * TODO change into a PropControl??
  */
 const SearchForm = ({ q, status }) => {
     let rawq = getValue([...PATH, "rawq"]);
@@ -261,32 +254,32 @@ const SuggestCharityForm = () => {
                 registering for an event, you can go ahead - enter "TBD" and you
                 can come back and set the charity later.
             </p>
-            <Misc.PropControl
+            <PropControl
                 path={fpath}
                 prop="charityName"
                 label="Name of charity"
             />
-            <Misc.PropControl
+            <PropControl
                 path={fpath}
                 prop="website"
                 label="Charity website"
             />
-            <Misc.PropControl
+            <PropControl
                 path={fpath}
                 prop="facebook"
                 label="Charity Facebook page (if applicable)"
             />
-            <Misc.PropControl
+            <PropControl
                 path={fpath}
                 prop="contactEmail"
                 label="Contact email for charity"
             />
-            <Misc.PropControl
+            <PropControl
                 path={fpath}
                 prop="contactPhone"
                 label="Contact phone number for charity"
             />
-            <Misc.PropControl path={fpath} prop="email" label="Your email" />
+            <PropControl path={fpath} prop="email" label="Your email" />
             <Misc.SubmitButton
                 url={profilerEndpoint}
                 path={fpath}

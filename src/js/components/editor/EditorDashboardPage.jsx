@@ -12,7 +12,8 @@ import ActionMan from '../../plumbing/ActionMan';
 import { LoginLink } from '../../base/components/LoginWidget';
 // import ChartWidget from './../base/components/ChartWidget';
 import Misc from '../../base/components/Misc';
-import {notifyUser} from '../../base/plumbing/Messaging';
+import PropControl from '../../base/components/PropControl';
+import { notifyUser } from '../../base/plumbing/Messaging';
 import ShareWidget, {AccessDenied} from '../../base/components/ShareWidget';
 
 
@@ -43,7 +44,7 @@ const AddCharityWidget = () => {
 		<div className='alert alert-warning'>
 			ALWAYS <a href={'#search?status=ALL_BAR_TRASH'}>search</a> first to check the charity isn't already in the database.
 			Otherwise we will have ugly merge problems.</div>
-		<Misc.PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
+		<PropControl prop='name' label='Name' path={['widget','AddCharityWidget', 'form']} />
 		<button className='btn btn-warning' onClick={() => ActionMan.addCharity()}>Add Charity</button>
 	</Misc.Card>);
 };
@@ -58,7 +59,7 @@ const doAddEditor = function() {
 const AddEditorWidget = () => {
 	return (<Misc.Card title='Add a new Editor' >
 		<p>Use this form to add someone to the editors team. Anyone can make edits, but only approved editors can publish them.</p>
-		<Misc.PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
+		<PropControl prop='email' label='Email' path={['widget','AddEditorWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doAddEditor}>Add Them</button>
 	</Misc.Card>);
 };
@@ -108,7 +109,7 @@ const ImportEditorialsWidget = () => {
 			<li>In the Docs menu, select <b>File</b> &gt; <b>Publish to the web</b>, and click <b>[Publish]</b>.</li>
 			<li>Copy the link from that dialog.</li>
 		</ol>
-		<Misc.PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label="Published link: (should end in '/pub')" path={['widget','ImportEditorialsWidget', 'form']} />
+		<PropControl prop='publishedEditorialsDoc' name='editorialsUrl' label="Published link: (should end in '/pub')" path={['widget','ImportEditorialsWidget', 'form']} />
 		<button className='btn btn-warning' onClick={doImportEditorials} name='importEditorials'>Import Editorials</button>
 	</Misc.Card>);
 };

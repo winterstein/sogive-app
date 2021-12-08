@@ -21,7 +21,7 @@ import Project from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Money from '../base/data/Money';
 
-import Misc from '../base/components/Misc';
+import PropControl from '../base/components/PropControl';
 import { impactCalc } from './ImpactWidgetry';
 import { assert } from '../base/utils/assert';
 
@@ -112,7 +112,7 @@ class ImpactCalculator extends Component {
 		return (
 			<div className='donation-impact std-border std-padding std-box-shadow '>
 				<button onClick={donationDown} className='donation-down'>-</button>
-				<Misc.PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} rawValue={null}/>
+				<PropControl type='Money' prop='amount' path={formPath} changeCurrency={false} rawValue={null}/>
 				<button onClick={donationUp} className='donation-up'>+</button>
 				<div className='will-fund div-section-larger-text'>can fund</div>
 				<DonationOutput impact={impact} charity={charity} />
