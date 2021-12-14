@@ -182,7 +182,7 @@ public class NGO extends Thing<NGO> {
 		if (!Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);
 			if (latest.size() != 1) {
-				Log.e("getRepProject",
+				Log.i("getRepProject",
 						"Bogus project info in " + this + ": More than one latest rep project! " + projects2);
 			}
 			return latest.get(0);
