@@ -52,6 +52,11 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 	public SoGiveServer() {
 		super("sogive", SoGiveConfig.class);
 	}
+	
+	@Override
+	public String getAppNameFull() {
+		return "sogive.org";
+	}
 
 	@Override
 	protected void addJettyServlets(JettyLauncher jl) {
