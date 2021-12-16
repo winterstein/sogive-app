@@ -355,7 +355,8 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 
 	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
-		let got = $.get('https://api.exchangeratesapi.io/latest?symbols='+preferredCurrency+',GBP');
+		let got = $.get('http://api.exchangeratesapi.io/v1/latest?access_key=5ddbce9daf299ed4b46804a0101c5046&symbols=GBP,'+preferredCurrency);
+		// https://lg.good-loop.com/data?dataspace=fx&q=evt:currrate&sort=time&size=1
 		return got;
 	});
 

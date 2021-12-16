@@ -202,7 +202,7 @@ const PrivacyPolicyContent = () => {
                 <br/><br/>
                 If you would like an informal conversation prior to your application, feel free to reach out to Matt on <a href="mailto:matt@sogive.org">matt@sogive.org</a> or Sanjay on <a href="mailto:sanjay@sogive.org">sanjay@sogive.org</a>.
                 <br/><br/>
-                The deadline for applications is 23:59 UK time on December 15th 2021 
+                The deadline for applications is 23:59 UK time on December 24th 2021 
             </span>
         </div>
 
