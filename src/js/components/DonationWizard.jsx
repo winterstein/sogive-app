@@ -352,12 +352,12 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
-
+	
 	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
 		let got = $.get('https://api.exchangerate.host/latest?base=GBP');
 		return got;
 	});
-
+	
 	let rate = 0.7562;
 	if (pvRate.value && pvRate.value.rates) {
 		try {
@@ -367,6 +367,9 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 			console.error(err); // swallow it
 		}
 	}
+	
+	// let testConvert = Money.convertCurrencyAPI(new Money("£10"), 'USD');
+	// console.log("testConvert", testConvert)
 
 	return <>
 		<Row>
