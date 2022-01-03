@@ -1,7 +1,7 @@
 import React from 'react';
 import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 
-const PrivacyPolicyContent = () => {
+const CareersPageContent = () => {
     return (
         <>
         <br/><br/>
@@ -91,26 +91,25 @@ const PrivacyPolicyContent = () => {
                 SoGive is still very much in a start-up phase of its growth. Due to this, there is tremendous potential for having a large impact on the organisation, while also involving the risk and excitement of an early stage organisation.
             </span>
             <hr/>
-            <h3>The role: your responsibilities (Senior Analyst)</h3>
+            <h3>The role: Senior Analyst</h3>
             <span>
                 <br/>
-                SoGive is expanding its team, hence we are seeking someone to join us, at a senior or possibly more junior level of experience. 
+                SoGive is expanding its team, hence we are seeking someone to join us, at a senior or possibly more junior level of experience. Responsibilities include:
                 <br/><br/>
                 <ul>
                     <li>Take senior-level ownership for part of SoGive’s analytical output. This includes: </li>
-                    <li><ul>
+                    <ul>
                     <li>Overseeing or producing some in-depth reports on effective giving, specific charities and cause areas</li>
                     <li>Contributing to the “public information only” charity reviews (aka broad and shallow analysis), and contributing to the further development of our analytical methodology for these reviews</li>
                     <li>Overseeing the further development of our analytical methodology with regard to the in-depth analysis, and liaise with the Principal Analyst to ensure this is consistent with the methodology relating to “public information only” analysis</li>
-                    <li>A university degree, 2nd className or higher, from a respected university. </li>
-                    </ul></li>
+                    </ul>
                     <li>Have a strong handle on SoGive’s analytical methodology and writing style, and liaise with the rest of the team to ensure that the way the information is presented on the website strikes the right balance of conveying insights succinctly and providing the full detail around caveats and assumptions</li>
                     <li>Liaise with the members of the volunteer analyst team who are involved in your work (the volunteer team is currently c15 analysts spread across many countries and timezones</li>
                 </ul>
                 If employed at the level of Analyst, your responsibilities will be similar to that of the Senior Analyst, but with greater support and oversight being provided by the Principal Analyst.
             </span>
             <hr/>
-            <h3>Some responsibilities yet to be shared out</h3>
+            <h3>Potential Additional Responsibilities</h3>
             <span>
                 <br/>
                 The below lists out several areas of responsibility which will need to be covered by either you or the current Principal Analyst. This will be decided partly based on the preferences and aptitudes of the individuals in question.
@@ -126,6 +125,7 @@ const PrivacyPolicyContent = () => {
             <hr/>
             <h3>Experience</h3>
             <span>
+                We require a university degree, in addition to the following:
                 <style type="text/css" dangerouslySetInnerHTML={{__html: "\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-59o9{background-color:#00009b;color:#ffffff;text-align:left;vertical-align:top}\n.tg .tg-0lax{text-align:left;vertical-align:top}\n@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;}}" }} />
                 <div className="tg-wrap"><table className="tg">
                     <thead>
@@ -202,7 +202,7 @@ const PrivacyPolicyContent = () => {
                 <br/><br/>
                 If you would like an informal conversation prior to your application, feel free to reach out to Matt on <a href="mailto:matt@sogive.org">matt@sogive.org</a> or Sanjay on <a href="mailto:sanjay@sogive.org">sanjay@sogive.org</a>.
                 <br/><br/>
-                The deadline for applications is 23:59 UK time on December 15th 2021 
+                The deadline for applications is 23:59 UK time on December 24th 2021 
             </span>
         </div>
 
@@ -281,7 +281,7 @@ const CareersPage = () => {
     return (
         <div className="privacy-policy">
             <Banner title="Careers"/> 
-            <PrivacyPolicyContent />
+            <CareersPageContent />
             <NewsletterCard />
             <ImpactRatingCard title="Find a charity you can trust to be effective." />
         </div>
