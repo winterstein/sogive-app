@@ -207,6 +207,46 @@ const PrivacyPolicyContent = () => {
         </div>
 
         <br/><hr/><br/>
+        <div id="volunteer" className="container">
+            <h2>Volunteer Analysts Wanted!</h2>
+            <h3>About SoGive</h3>
+            <span>
+                SoGive are looking for volunteer analysts to undertake charity cost-effectiveness analysis. Initially this work will involve ‘shallow analysis’ of some of the UK’s biggest and most well-known charities to help inform donors who are using SoGive’s services. A few examples of recently updated charities include the following:
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=oxfam'>https://app.sogive.org/#charity?charityId=oxfam</a>
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=shelter-national-campaign-for-homeless-people-limited'>https://app.sogive.org/#charity?charityId=shelter-national-campaign-for-homeless-people-limited</a>
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=international-planned-parenthood-foundation'>https://app.sogive.org/#charity?charityId=international-planned-parenthood-foundation</a>
+                <br/><br/>
+                After mastering the shallow analysis, volunteers will then have the opportunity to take on more responsibility – for example doing more in-depth work of particularly promising/interesting charities, looking at charities within a particular cause area, improving SoGive’s analytical approach, or leading other volunteer analysts. 
+                <br/><br/>
+                As well as the impact you will have on influencing donations, we think analysts can benefit from improved career options – e.g. former SoGive volunteers have gone on to work at other effective altruism-aligned organisations, including 80,000 Hours and Founder’s Pledge.
+            </span>
+            <hr/>
+            <h3>Experience and Skills required</h3>
+            <span>
+                SoGive’s approach is data-driven, but in-depth data science experience is not required. Some analytical abilities and an understanding of fairly straightforward quantitative models is needed. You will have the opportunity to learn a lot about applying analytical methods related to effective altruism, and will benefit from weekly in-depth 1:1 support sessions from an experienced analyst.
+                <br/><br/>
+                We do need people with a good standard of written English – this doesn’t have to be perfect, but we want to be able to focus on analysis, rather than correcting grammar.
+            </span>
+            <hr/>
+            <h3>Time and Location requirements</h3>
+            <span>
+                We ask quite a lot of volunteers – typically an average of one day per week for a year. There is obviously some flexibility here to allow for holidays, exams, coursework, particularly busy periods at work etc.
+                <br/><br/>
+                This role can be done remotely - we currently have volunteers across Australia, Asia, Europe, and the US.
+            </span>
+            <hr/>
+            <h3>If you’re interested in getting involved, or want to find out more:</h3>
+            <span>
+                please contact <a href="mailto:matt@sogive.org">matt@sogive.org</a> and share (a) your location/timezone, (b) CV/resume/LinkedIn profile, (c) a piece of writing on any topic that demonstrates your ability to write clearly in English, and (d) mention how you found out about the role.
+                <br/><br/>
+                The deadline to apply is 14th January 2022. Interviews will likely be held towards the end of January (dates TBC).
+            </span>
+        </div>
+
+        <br/><hr/><br/>
         <div className="container">
             <center><p className="text-muted">We anticipate that we might have needs in the following areas in the future:</p></center>
 			<ul>
@@ -223,9 +263,12 @@ const PrivacyPolicyContent = () => {
 const CareersPage = () => {
     
     const viewSection = () => {
-        if (document.getElementById('analyst')) {
+        if (document.getElementById('volunteer')) {
             if (window.location.hash == "#careers?view=analyst") {
                 document.getElementById('analyst').scrollIntoView();
+                window.scrollBy(0,-100);
+            } else if (window.location.hash == "#careers?view=volunteer") {
+                document.getElementById('volunteer').scrollIntoView();
                 window.scrollBy(0,-100);
             }
         } else {
