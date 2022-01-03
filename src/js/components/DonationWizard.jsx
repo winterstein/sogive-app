@@ -270,6 +270,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 {
 	const dntn = DataStore.getValue(path) || {};
 	if (preferredCurrency === 'GBP') preferredCurrency = null; // HACK GBP is the default
+	preferredCurrency = 'USD'; // FIXME!!!
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
 	if (Money.hasValue(val) && ! Money.hasValue(dntn.amount)) {

@@ -1,5 +1,4 @@
 /** Data model functions for the NGO data-type - extends NGO.js */
-
 import _ from 'lodash';
 import $ from 'jquery';
 import HashMap from 'hashmap';
