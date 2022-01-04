@@ -17,7 +17,7 @@ import KStatus from '../base/data/KStatus.js';
 
 ServerIO.APIBASE = '';
 
-Login.ENDPOINT = 'http://localyouagain.good-loop.com/youagain.json';
+Login.ENDPOINT = 'https://youagain.good-loop.com/youagain.json';
 
 ServerIO.checkBase();
 
