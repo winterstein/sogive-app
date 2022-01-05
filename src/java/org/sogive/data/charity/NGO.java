@@ -177,7 +177,7 @@ public class NGO extends Thing<NGO> {
 		}
 		// Representative and ready for use?
 		List<Project> projects2 = Containers.filter(projects, p -> p.isRep());
-		List<Project> overalls = Containers.filter(projects, p -> p.getName().equals("overall"));
+		List<Project> overalls = Containers.filter(projects, p -> "overall".equals(p.getName()));
 
 		if (!Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);

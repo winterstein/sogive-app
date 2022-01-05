@@ -1,7 +1,7 @@
 import React from 'react';
 import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 
-const PrivacyPolicyContent = () => {
+const CareersPageContent = () => {
     return (
         <>
         <br/><br/>
@@ -91,26 +91,25 @@ const PrivacyPolicyContent = () => {
                 SoGive is still very much in a start-up phase of its growth. Due to this, there is tremendous potential for having a large impact on the organisation, while also involving the risk and excitement of an early stage organisation.
             </span>
             <hr/>
-            <h3>The role: your responsibilities (Senior Analyst)</h3>
+            <h3>The role: Senior Analyst</h3>
             <span>
                 <br/>
-                SoGive is expanding its team, hence we are seeking someone to join us, at a senior or possibly more junior level of experience. 
+                SoGive is expanding its team, hence we are seeking someone to join us, at a senior or possibly more junior level of experience. Responsibilities include:
                 <br/><br/>
                 <ul>
                     <li>Take senior-level ownership for part of SoGive’s analytical output. This includes: </li>
-                    <li><ul>
+                    <ul>
                     <li>Overseeing or producing some in-depth reports on effective giving, specific charities and cause areas</li>
                     <li>Contributing to the “public information only” charity reviews (aka broad and shallow analysis), and contributing to the further development of our analytical methodology for these reviews</li>
                     <li>Overseeing the further development of our analytical methodology with regard to the in-depth analysis, and liaise with the Principal Analyst to ensure this is consistent with the methodology relating to “public information only” analysis</li>
-                    <li>A university degree, 2nd className or higher, from a respected university. </li>
-                    </ul></li>
+                    </ul>
                     <li>Have a strong handle on SoGive’s analytical methodology and writing style, and liaise with the rest of the team to ensure that the way the information is presented on the website strikes the right balance of conveying insights succinctly and providing the full detail around caveats and assumptions</li>
                     <li>Liaise with the members of the volunteer analyst team who are involved in your work (the volunteer team is currently c15 analysts spread across many countries and timezones</li>
                 </ul>
                 If employed at the level of Analyst, your responsibilities will be similar to that of the Senior Analyst, but with greater support and oversight being provided by the Principal Analyst.
             </span>
             <hr/>
-            <h3>Some responsibilities yet to be shared out</h3>
+            <h3>Potential Additional Responsibilities</h3>
             <span>
                 <br/>
                 The below lists out several areas of responsibility which will need to be covered by either you or the current Principal Analyst. This will be decided partly based on the preferences and aptitudes of the individuals in question.
@@ -126,6 +125,7 @@ const PrivacyPolicyContent = () => {
             <hr/>
             <h3>Experience</h3>
             <span>
+                We require a university degree, in addition to the following:
                 <style type="text/css" dangerouslySetInnerHTML={{__html: "\n.tg  {border-collapse:collapse;border-spacing:0;}\n.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n.tg .tg-59o9{background-color:#00009b;color:#ffffff;text-align:left;vertical-align:top}\n.tg .tg-0lax{text-align:left;vertical-align:top}\n@media screen and (max-width: 767px) {.tg {width: auto !important;}.tg col {width: auto !important;}.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;}}" }} />
                 <div className="tg-wrap"><table className="tg">
                     <thead>
@@ -202,7 +202,47 @@ const PrivacyPolicyContent = () => {
                 <br/><br/>
                 If you would like an informal conversation prior to your application, feel free to reach out to Matt on <a href="mailto:matt@sogive.org">matt@sogive.org</a> or Sanjay on <a href="mailto:sanjay@sogive.org">sanjay@sogive.org</a>.
                 <br/><br/>
-                The deadline for applications is 23:59 UK time on December 15th 2021 
+                The deadline for applications is 23:59 UK time on December 24th 2021 
+            </span>
+        </div>
+
+        <br/><hr/><br/>
+        <div id="volunteer" className="container">
+            <h2>Volunteer Analysts Wanted!</h2>
+            <h3>About SoGive</h3>
+            <span>
+                SoGive are looking for volunteer analysts to undertake charity cost-effectiveness analysis. Initially this work will involve ‘shallow analysis’ of some of the UK’s biggest and most well-known charities to help inform donors who are using SoGive’s services. A few examples of recently updated charities include the following:
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=oxfam'>https://app.sogive.org/#charity?charityId=oxfam</a>
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=shelter-national-campaign-for-homeless-people-limited'>https://app.sogive.org/#charity?charityId=shelter-national-campaign-for-homeless-people-limited</a>
+                <br/><br/>
+                <a href='https://app.sogive.org/#charity?charityId=international-planned-parenthood-foundation'>https://app.sogive.org/#charity?charityId=international-planned-parenthood-foundation</a>
+                <br/><br/>
+                After mastering the shallow analysis, volunteers will then have the opportunity to take on more responsibility – for example doing more in-depth work of particularly promising/interesting charities, looking at charities within a particular cause area, improving SoGive’s analytical approach, or leading other volunteer analysts. 
+                <br/><br/>
+                As well as the impact you will have on influencing donations, we think analysts can benefit from improved career options – e.g. former SoGive volunteers have gone on to work at other effective altruism-aligned organisations, including 80,000 Hours and Founder’s Pledge.
+            </span>
+            <hr/>
+            <h3>Experience and Skills required</h3>
+            <span>
+                SoGive’s approach is data-driven, but in-depth data science experience is not required. Some analytical abilities and an understanding of fairly straightforward quantitative models is needed. You will have the opportunity to learn a lot about applying analytical methods related to effective altruism, and will benefit from weekly in-depth 1:1 support sessions from an experienced analyst.
+                <br/><br/>
+                We do need people with a good standard of written English – this doesn’t have to be perfect, but we want to be able to focus on analysis, rather than correcting grammar.
+            </span>
+            <hr/>
+            <h3>Time and Location requirements</h3>
+            <span>
+                We ask quite a lot of volunteers – typically an average of one day per week for a year. There is obviously some flexibility here to allow for holidays, exams, coursework, particularly busy periods at work etc.
+                <br/><br/>
+                This role can be done remotely - we currently have volunteers across Australia, Asia, Europe, and the US.
+            </span>
+            <hr/>
+            <h3>If you’re interested in getting involved, or want to find out more:</h3>
+            <span>
+                please contact <a href="mailto:matt@sogive.org">matt@sogive.org</a> and share (a) your location/timezone, (b) CV/resume/LinkedIn profile, (c) a piece of writing on any topic that demonstrates your ability to write clearly in English, and (d) mention how you found out about the role.
+                <br/><br/>
+                The deadline to apply is 14th January 2022. Interviews will likely be held towards the end of January (dates TBC).
             </span>
         </div>
 
@@ -223,9 +263,12 @@ const PrivacyPolicyContent = () => {
 const CareersPage = () => {
     
     const viewSection = () => {
-        if (document.getElementById('analyst')) {
+        if (document.getElementById('volunteer')) {
             if (window.location.hash == "#careers?view=analyst") {
                 document.getElementById('analyst').scrollIntoView();
+                window.scrollBy(0,-100);
+            } else if (window.location.hash == "#careers?view=volunteer") {
+                document.getElementById('volunteer').scrollIntoView();
                 window.scrollBy(0,-100);
             }
         } else {
@@ -238,7 +281,7 @@ const CareersPage = () => {
     return (
         <div className="privacy-policy">
             <Banner title="Careers"/> 
-            <PrivacyPolicyContent />
+            <CareersPageContent />
             <NewsletterCard />
             <ImpactRatingCard title="Find a charity you can trust to be effective." />
         </div>

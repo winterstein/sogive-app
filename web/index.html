@@ -87,7 +87,7 @@
 			var isDebug = window.location.hostname.match(/^local/) || window.location.hostname.match(/^test/);
 			
 			// Has the user specified debug/production build with a URL param?
-			var debugParam = window.location.search.match(/debug=(\w+)/i);
+			var debugParam = (""+window.location).match(/debug=(\w+)/i); // NB: .search misses parameters after a #
 			if (debugParam && debugParam[1]) {
 				// Require an exact match to change from default
 				if (debugParam[1] === 'false') isDebug = false;

@@ -270,6 +270,7 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 {
 	const dntn = DataStore.getValue(path) || {};
 	if (preferredCurrency === 'GBP') preferredCurrency = null; // HACK GBP is the default
+	preferredCurrency = 'USD'; // FIXME!!!
 	// How much £?
 	const val = proposedSuggestedDonation.amount;
 	if (Money.hasValue(val) && ! Money.hasValue(dntn.amount)) {
@@ -352,14 +353,13 @@ const AmountSection = ({path, item, fromEditor, paidElsewhere, credit,
 const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 	let transPath = ['transient'].concat(path);
 	let trans = DataStore.getValue(transPath);
-
-	// NB: this is X:Euros for each currency, so needs to be combined for USD->GBP
-	let pvRate = DataStore.fetch(['misc','forex','rates'], () => {
-		let got = $.get('https://api.exchangeratesapi.io/latest?symbols='+preferredCurrency+',GBP');
+	
+	let pvRate = DataStore.fetch(['misc','rates'], () => {
+		let got = $.get('https://api.exchangerate.host/latest?base=GBP');
 		return got;
 	});
-
-	let rate = 0.80341;
+	
+	let rate = 0.7562;
 	if (pvRate.value && pvRate.value.rates) {
 		try {
 			rate = pvRate.value.rates.GBP / pvRate.value.rates[preferredCurrency];
@@ -374,7 +374,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 			<Col md="6" sm="12">
 				<PropControl prop="localAmount" currency={preferredCurrency} changeCurrency={false} path={transPath} type="Money"
 					label={'Donation ('+Money.CURRENCY[preferredCurrency]+')'} onChange={e => {
-						let dollars = e.target.value;
+						let dollars = e.value.value;
 						let pounds = dollars ? Math.round(rate*dollars*100) / 100 : null;
 						console.warn(`setting £ donation from local amount: ${pounds} => ${dollars}`);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
@@ -386,7 +386,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 			<Col md="6" sm="12">
 				<PropControl prop="amount" path={path} type="Money" label="= Donation (£)" value={val} changeCurrency={false}
 					onChange={e => {
-						let pounds = e.target.value;
+						let pounds = e.value.value;
 						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
 						console.warn(`setting local donation from £ amount: $${dollars} => £${pounds}`);
 						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:preferredCurrency, value:dollars}));

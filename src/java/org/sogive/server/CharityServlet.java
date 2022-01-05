@@ -159,9 +159,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 
 	@Override
 	protected void doSave(WebRequest state) {
-		AppUtils.DEBUG = true; // TODO delete debugging £ bug
 		super.doSave(state);
-		AppUtils.DEBUG = false;
 	}
 
 	@Override
