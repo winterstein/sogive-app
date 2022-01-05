@@ -2,6 +2,9 @@ package org.sogive.data.loader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.util.Scanner;
+
+import org.sogive.server.SoGiveServer;
 
 import com.winterwell.depot.Depot;
 import com.winterwell.depot.Desc;
@@ -30,43 +33,56 @@ public class ImportCCEWData {
 
 	// not used
 	private static Desc<File> getDesc() {
-		Desc desc = new Desc("publicextract.charity.zip", File.class);
+		Desc desc = new Desc("text.ccew.charities.zip", File.class);
 		desc.setServer(Desc.CENTRAL_SERVER);
 		desc.setTag("sogive");
-		desc.put("src", "ccew");
-		desc.put("year", 2021);
+		desc.put("src", "text_ccew");
+		desc.put("year", 2022);
 		return desc;
 	}
 	
 	public synchronized void run() {
-		
-		/*
+		System.out.println("Test ImportCCEWData run 2");
 		running = true;
+		
 		Desc<File> desc = getDesc();
 		Depot.getDefault().setErrorPolicy(KErrorPolicy.ASK);
 		File file = Depot.getDefault().get(desc);
-		*/
-
-		BufferedReader r = FileUtils.getZIPReader(file);
-		CSVReader reader = new CSVReader(r, new CSVSpec());
+		// File file = new File("data/publicextract.charity.zip");
+		System.out.println(file.getAbsolutePath());
 		int cnt = 0;
-		String[] headers = reader.next(); // discard the headers
-		Printer.out(headers);
 		
+		BufferedReader r = FileUtils.getZIPReader(file);
+		
+		CSVReader reader = new CSVReader(r, new CSVSpec());
+		String[] headers = reader.next(); // discard the headers
+		System.out.println(headers);
 		for (String[] row : reader) {
-			Printer.out(row);
+			System.out.println(row);
+			System.out.print(row[0]);
 			cnt++;
 			if (cnt>10) break;
 		}
 		
+		/*
+		Scanner reader = new Scanner(r);
+		while (reader.hasNextLine() && cnt < 10) {
+			String data = reader.nextLine();
+			System.out.println(data);
+			cnt++;
+		}
+		*/
 		reader.close();
 		running = false;
 	}
-	
+
+	/*
 	public static void main(String[] args) {
 		
+		new SoGiveServer().init();
+		
 		new ImportCCEWData().run();
-
 	}
+	*/
 
 }
