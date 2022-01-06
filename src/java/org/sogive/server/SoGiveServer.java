@@ -7,7 +7,7 @@ import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.user.RepeatDonationProcessor;
 import org.sogive.server.payment.StripeConfig;
 import org.sogive.server.payment.StripePlugin;
-import org.sogive.data.loader.ImportCCEWData;
+import org.sogive.data.loader.ImportEWCCData;
 
 import com.goodloop.data.Money;
 import com.winterwell.datalog.DataLog;
@@ -77,7 +77,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		// actors
 		Dep.set(BasketPublishedActor.class, new BasketPublishedActor());
 		Dep.set(DonateToFundRaiserActor.class, new DonateToFundRaiserActor());
-		new ImportCCEWData().run();
+		new ImportEWCCData().run();
 	}
 
 	@Override

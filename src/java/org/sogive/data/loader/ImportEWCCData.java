@@ -2,29 +2,23 @@ package org.sogive.data.loader;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.util.Scanner;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
 import org.sogive.data.charity.Thing;
-import org.sogive.server.SoGiveServer;
 
 import com.winterwell.data.KStatus;
 import com.winterwell.depot.Depot;
 import com.winterwell.depot.Desc;
 import com.winterwell.es.ESPath;
-import com.winterwell.es.IESRouter;
 import com.winterwell.gson.JsonArray;
 import com.winterwell.gson.JsonElement;
 import com.winterwell.gson.JsonObject;
 import com.winterwell.gson.JsonParser;
 import com.winterwell.maths.stats.distributions.discrete.ObjectDistribution;
 import com.winterwell.utils.Dep;
-import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.io.CSVReader;
-import com.winterwell.utils.io.CSVSpec;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.KErrorPolicy;
 import com.winterwell.web.ajax.JThing;
@@ -37,9 +31,9 @@ import com.winterwell.web.app.AppUtils;
  * @author sarah
  *
  */
-public class ImportCCEWData {
+public class ImportEWCCData {
 
-	public static final String CCEW_REG = "englandWalesCharityRegNum";
+	public static final String EWCC_REG = "englandWalesCharityRegNum";
 	
 	private volatile boolean running;
 
@@ -80,16 +74,16 @@ public class ImportCCEWData {
 	}
 
 	private static Desc<File> getDesc() {
-		Desc desc = new Desc("json.ccew.charities.zip", File.class);
+		Desc desc = new Desc("json.ewcc.charities.zip", File.class);
 		desc.setServer(Desc.CENTRAL_SERVER);
 		desc.setTag("sogive");
-		desc.put("src", "json_ccew");
+		desc.put("src", "json_ewcc");
 		desc.put("year", 2022);
 		return desc;
 	}
 	
 	public synchronized void run() {
-		System.out.println("Test ImportCCEWData run");
+		System.out.println("Test ImportEWCCData run");
 		running = true;
 		
 		Desc<File> desc = getDesc();
@@ -113,7 +107,7 @@ public class ImportCCEWData {
 			ArrayMap<String,String> _ngoTemp = new ArrayMap(
 				NGO.name, cName,
 				"displayName", cName,
-				CCEW_REG, cRegNum,
+				EWCC_REG, cRegNum,
 				Thing.url, cUrl
 			);
 			NGO ngo = new NGO(ourId);			
@@ -129,6 +123,7 @@ public class ImportCCEWData {
 			if (matches.isEmpty()) {
 				if (cStatus.equals("Removed")) continue;
 				doCreateCharity(ngo);
+				System.out.println("New charity created: "+ cName);
 			} else {
 				// TODO merge/update
 				if (cStatus.equals("Removed")) {
