@@ -2,6 +2,7 @@ package org.sogive.data.loader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.time.YearMonth;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
@@ -20,9 +21,11 @@ import com.winterwell.utils.Dep;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.io.FileUtils;
-import com.winterwell.utils.log.KErrorPolicy;
+import com.winterwell.utils.web.WebUtils;
 import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
+import com.winterwell.web.app.CrudClient;
+import com.winterwell.web.FakeBrowser;
 
 /**
  * Charity Commission for England & Wales. This can upload the _basic_ data from
@@ -34,7 +37,9 @@ import com.winterwell.web.app.AppUtils;
 public class ImportEWCCData {
 
 	public static final String EWCC_REG = "englandWalesCharityRegNum";
-	
+	public static final String EWCC_BLOB_ENDPOINT = "https://ccewuksprdoneregsadata1.blob.core.windows.net/data/json";
+	public static final String MAIN_FILE = "publicextract.charity.zip";
+	public static final String ANN_RET_HIST_FILE = "publicextract.charity_annual_return_history.zip";
 	private volatile boolean running;
 
 	public boolean isRunning() {
@@ -43,15 +48,13 @@ public class ImportEWCCData {
 	
 	private static void doCreateCharity(NGO ngo) {
 
-		ngo.put("uk_giftaid", true);
-
 		SoGiveConfig config;
 		if (Dep.has(SoGiveConfig.class)) {
 			config = Dep.get(SoGiveConfig.class);
 		} else {
 			config = AppUtils.getConfig("sogive", new SoGiveConfig(), null);
 		}
-
+		
 		String ourId = ngo.getId();
 		if (Utils.isBlank(ourId)) {
 			ourId = NGO.idFromName(ngo.getName());
@@ -73,22 +76,58 @@ public class ImportEWCCData {
 		
 	}
 
-	private static Desc<File> getDesc() {
-		Desc desc = new Desc("json.ewcc.charities.zip", File.class);
+	private static Desc<File> createDesc(String fileName) {
+		Desc desc = new Desc(fileName, File.class);
 		desc.setServer(Desc.CENTRAL_SERVER);
 		desc.setTag("sogive");
-		desc.put("src", "json_ewcc");
-		desc.put("year", 2022);
+		desc.put("src", "ewcc");
+		/*
+		will the charity commission be issuing yearly updates?
+		the code will check if a desc already exists & use that so we'll want to change
+		the desc every time we grab an update. I'm just grabbing the current year
+		 */
+		int currentYear = YearMonth.now().getYear();
+		desc.put("year", currentYear);
 		return desc;
+	}
+	
+	public static File getEWCCFile(String fileName) {
+		
+		/*
+		could not get build tasks to recognize added method in CrudClient
+		for getFile(), even after cleaning & rebuilding all projects,
+		but changes to FakeBrowser were recognized so idk
+		*/
+		// CrudClient<File> cl = new CrudClient<>(File.class, EWCC_BLOB_ENDPOINT);
+		// File resp = cl.getFile(fileName);
+		
+		FakeBrowser fb = new FakeBrowser();
+		/*
+		MAX_DOWNLOAD is private. The file is too large for the current limit.
+		So either the limit needs to be changed to the following in FakeBrowser class,
+		or is should be made public to change here. It may need to be higher depending
+		on how large the other files will be. I don't know the purpose of the multipliers
+		so I just changed the 10 to 51 (the lowest that would allow the file to download)
+		*/
+		// fb.MAX_DOWNLOAD = 51 * 1024 * 1024;
+		return fb.getFile(EWCC_BLOB_ENDPOINT+"/"+WebUtils.urlEncode(fileName));
 	}
 	
 	public synchronized void run() {
 		System.out.println("Test ImportEWCCData run");
 		running = true;
 		
-		Desc<File> desc = getDesc();
-		Depot.getDefault().setErrorPolicy(KErrorPolicy.ASK);
+		// check if file has already been downloaded & added to Depot
+		Desc<File> desc = createDesc(MAIN_FILE);
 		File file = Depot.getDefault().get(desc);
+		System.out.println("depot file already exist?: "+file);
+		// if no stored file, grab file from ewcc website & store in Depot
+		if (file == null) {
+			file = getEWCCFile(MAIN_FILE);
+			Depot.getDefault().put(desc, file);
+		}
+		System.out.println("start processing file...");
+		
 		BufferedReader r = FileUtils.getZIPReader(file);
 		JsonElement jElement = new JsonParser().parse(r);
 		JsonArray jArray = jElement.getAsJsonArray();
@@ -99,6 +138,7 @@ public class ImportEWCCData {
 			String cStatus = jsonToString(charityObj, "charity_registration_status");
 			String cRegNum = jsonToString(charityObj, "registered_charity_number");
 			String cUrl = jsonToString(charityObj, "charity_contact_web");
+			String giftAid = jsonToString(charityObj, "charity_gift_aid");
 			
 			String ourId = NGO.idFromName(cName);
 			
@@ -108,7 +148,8 @@ public class ImportEWCCData {
 				NGO.name, cName,
 				"displayName", cName,
 				EWCC_REG, cRegNum,
-				Thing.url, cUrl
+				Thing.url, cUrl,
+				"uk_giftaid", giftAid
 			);
 			NGO ngo = new NGO(ourId);			
 			for(String key : _ngoTemp.keySet()) {
@@ -129,7 +170,7 @@ public class ImportEWCCData {
 				if (cStatus.equals("Removed")) {
 					// mark inactive? if not, can check if removed before looking for matches to save time
 				}
-				// if matches > 1, throw error?
+				// if matches > 2, throw error? (2 matches per; will investigate)
 				for (NGO mNGO : matches) {
 					System.out.println("existing match: "+ mNGO.getDisplayName());
 				}
