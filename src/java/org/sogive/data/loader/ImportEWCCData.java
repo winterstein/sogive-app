@@ -69,6 +69,13 @@ public class ImportEWCCData {
 		
 	}
 	
+	/**
+	 * Check if JSON value is null before trying to convert to String
+	 * 
+	 * @param jObject JSON object
+	 * @param label property name
+	 * @return String value or null
+	 */
 	private static String jsonToString(JsonObject jObject, String label) {
 	
 		JsonElement jElement = jObject.get(label);
@@ -76,6 +83,12 @@ public class ImportEWCCData {
 		
 	}
 
+	/**
+	 * Create description for file artifact
+	 * 
+	 * @param fileName
+	 * @return Desc object
+	 */
 	private static Desc<File> createDesc(String fileName) {
 		Desc desc = new Desc(fileName, File.class);
 		desc.setServer(Desc.CENTRAL_SERVER);
@@ -91,8 +104,13 @@ public class ImportEWCCData {
 		return desc;
 	}
 	
+	/**
+	 * Downloads specified file from EW Charity Commission site
+	 * 
+	 * @param fileName file to be downloaded
+	 * @return File object
+	 */
 	public static File getEWCCFile(String fileName) {
-		
 		/*
 		could not get build tasks to recognize added method in CrudClient
 		for getFile(), even after cleaning & rebuilding all projects,
@@ -126,7 +144,6 @@ public class ImportEWCCData {
 			file = getEWCCFile(MAIN_FILE);
 			Depot.getDefault().put(desc, file);
 		}
-		System.out.println("start processing file...");
 		
 		BufferedReader r = FileUtils.getZIPReader(file);
 		JsonElement jElement = new JsonParser().parse(r);
