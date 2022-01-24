@@ -6,7 +6,7 @@
 # The script uses ssh remote commands to target a server -- it does not affect the local machine.
 # For testing, the script can also be run from your local computer.
 #Version 1.4.9
-# Latest Change -- nodejs version checker now checks for version 14.x being present
+# Latest Change -- nodejs version checker now checks for version 16.x being present
 
 #####  GENERAL SETTINGS
 ## This section should be the most widely edited part of this script
@@ -127,14 +127,14 @@ function check_maven_exists {
     fi
 }
 
-# Dependency Check Function - nodejs is at version 14.x - This Function's Version is 0.02
+# Dependency Check Function - nodejs is at version 16.x - This Function's Version is 0.03
 function check_nodejs_version {
     BUILD_PROCESS_NAME='verifying nodejs version'
-    BUILD_STEP='verifying that nodejs is at version 14.x.x'
+    BUILD_STEP='verifying that nodejs is at version 16.x.x'
     if [[ $PROJECT_USES_NPM = 'yes' ]]; then
         for server in ${TARGET_SERVERS[@]}; do
-            if [[ $(ssh winterwell@$server 'node -v | grep "v14"') = '' ]]; then
-                printf "Either nodejs is not installed, or it is not at version 14.x.x\n"
+            if [[ $(ssh winterwell@$server 'node -v | grep "v16"') = '' ]]; then
+                printf "Either nodejs is not installed, or it is not at version 16.x.x\n"
                 send_alert_email
                 exit 0
             fi
