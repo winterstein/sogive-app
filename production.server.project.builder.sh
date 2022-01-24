@@ -151,11 +151,11 @@ function check_java_home {
     fi
 }
 
-# Dependency Check Function - nodejs is at version 14.x - This Function's Version is 0.02
+# Dependency Check Function - nodejs is at version 16.x - This Function's Version is 0.03
 function check_nodejs_version {
     if [[ $PROJECT_USES_NPM = 'yes' ]]; then
-        if [[ $(node -v | grep "v14") = '' ]]; then
-            printf "Either nodejs is not installed, or it is not at version 14.x.x\n"
+        if [[ $(node -v | grep "v16") = '' ]]; then
+            printf "Either nodejs is not installed, or it is not at version 16.x.x\n"
             exit 0
         fi
     fi
