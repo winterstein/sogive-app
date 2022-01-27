@@ -62,8 +62,13 @@ public class Output extends Thing<Output> {
 		return (Money) new JThing().setType(Money.class).setMap((Map) cpb).java();
 	}
 
-	public Double getNumber() {
-		return getDouble("number");
+	/**
+	 * 
+	 * @return default to 1
+	 */
+	public double getNumber() {
+		Double n = getDouble("number");
+		return n==null? 1 : n;
 	}
 
 	/**
