@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="SoGive is a tool that lets you see the impact you’ve made in the world through all your charitable giving. Sign up today to make the world a better place.">
+    <meta name="author" content="">
+    <link rel="icon" href="img/SoGive-Light-64px.png">
+
+    <title>SoGive: Measure your charity</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/sogive-evening.css" type="text/css">
+
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+<meta name='generator' content='Jerbil v0.4.7' />
+</head>
+<body>
+    
+<!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+<!-- <div class="white-bg" style="height:2em;">
+</div> -->
+<!-- End of cheap vertical space -->
+<!-- Modal -->
+<div class="modal fade" id="CTAModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Add charitable gifts to your wedding registry</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>						
+            </div>
+            <div class="modal-body">
+                <form class='CTA' action='https://profiler.good-loop.com/form/sogive.org/'>
+                    <input type='hidden' name='page' value='charity-wedding-gifts' />
+                    <input type='hidden' name='notify' value='sanjay@sogive.org' />
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input class='form-control' name='email' type='email' />
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea class='form-control' name='message'></textarea>
+                    </div>
+                    <button type='submit' class='btn btn-primary'>Send Message</button>
+                </form>
+            </div>
+            <!--<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary">Save changes</button>
+</div>-->
+        </div>
+    </div>
+</div>
+<!-- ./modal -->
+
+    
+<div class="simple-page page-part">
+	  <div class="charity-wedding-gifts-bg">
+		<div class="jumbotron">
+			<div class="col-md-12 hidden-xs hidden-sm">
+				<div class="col-md-offset-2 col-md-8 text-center">
+					<a href="https://sogive.org">
+						<img class="logo" alt="SoGive" src="img/logo.png">
+					</a>
+					<p>
+						<i class="wedding-lead-line">Add charitable gifts to your wedding registry</i>
+					</p>
+					<button class="btn btn-primary btn-lg btn-getinvolved CTA" data-toggle="modal" data-target="#CTAModal">Contact Us Today</a>
+				</div>
+			</div>
+			<div class="col-md-12 visible-xs visible-sm">
+				<div class="col-md-offset-2 col-md-8 text-center">
+					<a href="https://sogive.org">
+						<img class="logo-sm" alt="SoGive" src="img/logo.png">
+					</a>
+					<p>
+						<i class="wedding-lead-line">Add charitable gifts to your wedding registry</i>
+					</p>
+					<button class="btn btn-primary btn-lg btn-getinvolved CTA" data-toggle="modal" data-target="#CTAModal">Contact Us Today</a>
+				</div>
+			</div>
+		</div> <!-- ./jumbotron -->
+	</div> <!-- ./BG photo -->	
+    <div class="white-bg container visible-xs visible-sm">
+        <div class="white-bg navbar navbar-fixed-top">
+            <div class="white-bg btn-group pull-right">
+                <button type="button" class="btn btn-circle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicon glyphicon-menu-hamburger"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="sector/forcompanies.html">For Companies</a>
+                    </li>
+                    <li>
+                        <a href="sector/forfinancialplanners.html">For Financial Planners</a>
+                    </li>
+                    <li>
+                        <a href="sector/forevents.html">For Events</a>
+                    </li>
+                    <li>
+                        <a href="charity-wedding-gifts.html">For a Wedding Registry</a>
+                    </li>
+                    <li>
+                        <a href="volunteering.html">Volunteer</a>
+                    </li>
+                    <li>
+                        <a href="careers.html">Careers</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="halloffame.html">Hall of Fame</a>
+                    </li>
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                    <li>
+                        <a href="faq.html">FAQs</a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/sogivecharity">Facebook</a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/sogivecharity">Twitter</a>
+                    </li>
+                    <li>
+                        <a href="privacy-policy.html">Privacy Policy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="white-bg container hidden-xs hidden-sm col-md-12">
+        <nav class="navbar navbar-default" role="navigation">
+                <div class="white-bg collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li>
+                            <a href="sector/forcompanies.html">For Companies</a>
+                        </li>
+                        <li>
+                            <a href="sector/forfinancialplanners.html">For Financial Planners</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">For Events <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="charity-wedding-gifts.html">For A Wedding Registry</a>
+                                </li>
+                                <li>
+                                    <a href="sector/forevents.html">For Events</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a  href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="about.html">About SoGive</a>
+                                </li>
+                                <li>
+                                    <a href="aims.html">Our Aims</a>
+                                </li>
+                                <li>
+                                    <a href="careers.html">Careers</a>
+                                </li>
+                                <li>
+                                    <a href="volunteering.html">Volunteer</a>
+                                </li>
+                                <li>
+                                    <a href="halloffame.html">Hall of Fame</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="contact.html">Contact</a>
+                        </li>
+                        <li>
+                            <a href="faq.html">FAQs</a>
+                        </li>
+                    </ul>
+                </div>
+        </nav>
+    </div>
+    
+	<div id='page-contents'>
+	    <div class="container simple-page page-part">
+	    <div class="charity-wedding-gifts-bg">
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <center>
+            <H2></H2>
+        </center>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-offset-2 col-md-8">
+            <p class="wedding-p">
+                Love can be a powerful thing. It fills the time around your wedding with kindness and generosity.
+                People spend hundreds on engagement parties, stag/hen nights, bridal showers and gift registries.
+                So, why not use the power of love to make a difference to those who need it most?
+            </p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+    <div class="white-bg col-xs-12" style="height:2em;">
+    </div>
+    <!-- End of cheap vertical space -->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-offset-2 col-md-8">
+            <center>
+            </center>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+    <div class="white-bg col-xs-12" style="height:2em;">
+    </div>
+    <!-- End of cheap vertical space -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-7">
+            <div class="row">
+                <p class="wedding-p">
+                    SoGive is an online giving platform with a difference. We’ve built the largest database of charity
+                    impact data, to help you find the right charity to support and to show you, your family and friends
+                    the real impact your gifts have.
+                </p>
+                <p class="wedding-p">
+                    We’re 100% free – for you, and for the charities (apart from credit-card fees, there's nothing we can
+                    do about those). Other platforms take 5% or have hidden fees – we only suggest donors leave a tip.
+                </p>
+            </div>
+            <div class="row">
+                <ul class="wedding-p">
+                    <li>
+                        No limits on donations
+                    </li>
+                    <li>
+                        Gift-Aid in the UK
+                    </li>
+                    <li>
+                        Set your style/brand across all parts of the app
+                    </li>
+                    <li>
+                        Analytics dashboard to show the impact of fundraising
+                    </li>
+                    <li>
+                        Secure cloud-based platform - no IT work required
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <img class="img-contain" src="img/wedding-fundraiser-example.png">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+    <div class="white-bg col-xs-12" style="height:2em;">
+    </div>
+    <!-- End of cheap vertical space -->
+<div class="row">
+    <div class="col-md-12">
+        <center>
+            <button class="btn btn-primary btn-lg btn-getinvolved CTA" data-toggle="modal" data-target="#CTAModal">Contact Us Today</a>
+        </center>
+    </div>
+</div>
+<div class="row">
+    <!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+    <div class="white-bg col-xs-12" style="height:2em;">
+    </div>
+    <!-- End of cheap vertical space -->
+
+		</div><!-- ./simple-page -->
+	</div>
+
+	<footer>
+        <div class="white-bg col-md-12 container hidden-xs hidden-sm">
+            <nav class="navbar navbar-default">
+                <div class="white-bg col-md-12 container">
+                    <div class="white-bg col-md-offset-3 col-md-6">
+                        <p>
+                        <center>
+                        <a class="btn black-btn" href='https://twitter.com/sogivecharity' data-show-count="false">
+                            <i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i>
+                        </a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                        <a class="btn black-btn" href='https://www.facebook.com/sogivecharity'>
+                            <i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i>
+                        </a>
+                        </center>
+                        </p>
+                    </div>
+                </div>
+                <div class="white-bg col-md-12">
+                  <center>
+                    <p class="text-muted" style="font-size: 12px;">
+                        &copy; 2017-2019 SoGive&trade;. Email: <span class='email' name='sanjay' domain='sogive.org'>sanjay (at) sogive.org</span>
+                        <br>
+                        SoGive Ltd is a not-for-profit social enterprise, registered as a company in England and Wales with company registration number: 09966206
+                        <br>
+                        Registered address: SoGive, 48 Queen Edith's Way, Cambridge, CB1 8PW
+                        <br>
+                        Business address: SoGive, 127 Rose St S Ln, Edinburgh EH2 4BB
+                        <br>
+                        Site design &amp; hosting: <a href='https://good-loop.com'>Good-Loop</a>.
+                        <br>
+                        <a href='privacy-policy.html'>Privacy policy</a>
+                        <br>
+                        <a href='terms.html'>Terms of Service</a>
+                        <br>
+                        <a href='complaints.html'>Complaints</a>
+                        <br>
+                        <button class="btn" id="feesandchargesbtn" onclick="$('#showafterclick').css({'display': 'block'});">Fees and Charges</button>
+                        <div class="showafterclick col-md-6 col-md-offset-3" id="showafterclick">
+                            <p class="font-18 black-font" id="HowMuchDoYouChargeText">SoGive doesn't levy a charge, although we may offer our users the opportunity to make an optional donation to us if they like what they see.</p>
+                            <br>
+                            <p class="text-muted">Here's an example:</p>
+                            <br>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>SoGive</th>
+                                        <th>Virgin Money Giving</th>
+                                        <th>JustGiving</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Your donation</td>
+                                        <td>£100</td>
+                                        <td>£100</td>
+                                        <td>£100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gift Aid</td>
+                                        <td>£25</td>
+                                        <td>£25</td>
+                                        <td>£25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fee (description)</td>
+                                        <td bgcolor="#D9EAD3">No fee</td>
+                                        <td>2% of donation (excl Gift Aid)</td>
+                                        <td>5% of donation (incl Gift Aid)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fee from giving platform</td>
+                                        <td bgcolor="#D9EAD3">£0.00</td>
+                                        <td>£2.00</td>
+                                        <td>£6.25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Card-processing fee</td>
+                                        <td>£1.60</td>
+                                        <td>£1.45</td>
+                                        <td>£1.30</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:bold">Total to charity</td>
+                                        <td style="font-weight:bold">£123.40</td>
+                                        <td style="font-weight:bold">£121.55</td>
+                                        <td style="font-weight:bold">£117.45</td>  
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-md-12 hidden-sm hidden-xs" style="height:3em;">
+                            </div>
+                            <p class="font-18 black-font">
+                                At the time of writing, we have not yet built the feature of allowing donors the option to make a contribution to SoGive - this is because our priority is on enabling funds to go to the charities rather than to ourselves.
+                                <br>
+                                SoGive does not charge charities for the service of receiving donations via SoGive. SoGive does not receive interest on funds donated before they get passed on to the charity. At the time of writing, it is not possible for a donor to opt to cover the payment processing charges; if you would find that of interest, please  <a href="mailto:sanjay@sogive.org?Subject=I%20want%20to%20cover%20payment%20processing%20fees">email
+                                us</a>.
+                            </p>
+                        </div>
+						<div class="col-md-12">
+                            <small>
+								Images (CC) various authors, some icons (CC) Freepik from flaticon.com. 
+                            </small>
+                        </div>
+                        <div class="col-md-12">
+                            <small>
+                                Last updated: 17 Jul 2019 10:53:28 GMT
+                            </small>
+                        </div>
+                    </p>
+                  </center>
+                </div>
+            </nav>
+        </div>
+    </footer>
+</div><!-- ./simple-page -->
+    <!-- JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>    
+    <script src="js/lib/utils.js"></script>    
+    <script src="js/sogive.js"></script>
+    <script src="js/affix.js"></script>
+	
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T2KLQFZ');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T2KLQFZ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+</body>
+</html>

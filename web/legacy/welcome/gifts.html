@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="SoGive is a tool that lets you see the impact you’ve made in the world through all your charitable giving. Sign up today to make the world a better place.">
+	<meta name="author" content="">
+	<link rel="icon" href="/img/SoGive-Light-64px.png">
+
+	<title>SoGive: Give presents that matter</title>
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	 crossorigin="anonymous">
+
+	<link rel="stylesheet" href="welcome.css" type="text/css">
+
+</head>
+
+<body>
+
+	<div id="main" class="container-fluid">
+		<div>
+			<img height='64' src='/img/logo.png'>
+		</div>
+		<div class='row'>
+			<div class="jumbotron col-sm-6">
+				<h1 class='text-center'>Give presents that matter<br/>by donation to a charity as a present</h1>
+				<center>
+					<div class='row'>
+						<div class='col-xs-1' style='margin-right:-15px;'>
+						</div>
+						<div class='charity-logo col-xs-2'>
+							<img src='https://raw.githubusercontent.com/winterstein/SoGive/master/webroot/img/external/Oxfam%20logo.png'>
+						</div>
+						<div class='charity-logo col-xs-2'>
+							<img src='https://www.againstmalaria.com/images/logo_AMF.gif'>
+						</div>
+						<div class='charity-logo col-xs-2'>
+							<img src='https://www.sightsavers.org/wp-content/themes/sightsavers/assets/images/icons/sightsavers-logo.svg'>
+						</div>
+						<div class='charity-logo col-xs-2'>
+							<img src='https://www.mercycorps.org/sites/all/themes/mercycorps/static/logo-new-retina.png'>
+						</div>
+						<div class='charity-logo col-xs-2'>
+							<img src='data:image/png;base64,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'>
+						</div>
+					</div>
+				</center>
+				<h3 class='text-center'>1000+ charities</h3>
+			</div>
+			<!-- ./jumbotron -->
+			<div class="col-sm-6">
+				<form id='emailform' action='https://profiler.good-loop.com/form/sogive'>
+					<h3>Get a list of the charities</h3>
+					<input type='hidden' name='notify' value='daniel@good-loop.com'>
+					<input class='form-control' name='first_name' placeholder='First name'>
+					<input class='form-control' name='last_name' placeholder='Last name'>
+					<div class='form-group'>
+						<input class='form-control' name='email' placeholder='Email address' 
+							type='email' required >
+					</div>
+					<select class='form-control' name='type'>
+						<option>Choose a charity type</option>
+						<option>Health & Medecine</option>
+						<option>Children</option>
+						<option>Animals & the Environment</option>
+						<option>Human Rights</option>
+						<option>Arts</option>
+					</select>
+					<center>
+						<button class='btn btn-primary'>GET A LIST</button>
+					</center>
+				</form>
+
+				<div class='hidden' id='onSuccess'>
+					<h2>Thank You</h2>
+					<p>We will email you soon.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ./container-fluid-->
+
+	<!-- JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	 crossorigin="anonymous"></script>
+	<script src="/js/lib/utils.js"></script>
+	<script src='form.js'></script>
+
+	<script>
+		(function (i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-15749759-9', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+	<img src='//lg.good-loop.com/pxl' style='position:absolute;bottom:0px;left:0px;width:1;height:1;' />
+</body>
+
+</html>
