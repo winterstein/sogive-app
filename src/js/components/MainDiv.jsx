@@ -172,6 +172,7 @@ const MainDiv = () => {
 		navbarPages={navbarPagesFn}
 		navbarDarkTheme={false}
 		navbarBackgroundColour='white'
+		NavExpandSize="xl"
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='home'
