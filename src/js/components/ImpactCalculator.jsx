@@ -41,6 +41,8 @@ const donationIncrements = {
 	Infinity: 10000,
 };
 
+let initialAmount = false;
+
 // TODO refactor into a function
 class ImpactCalculator extends Component {
 
@@ -59,7 +61,6 @@ class ImpactCalculator extends Component {
 		const newAmount = new Money({ value, currency: 'GBP' });
 		DataStore.setValue(['widget', 'ImpactCalculator', NGO.id(charity), 'amount'], newAmount);
 	}
-
 
 	render() {
 		const {charity} = this.props;
@@ -87,9 +88,10 @@ class ImpactCalculator extends Component {
 		const formData = DataStore.getValue(formPath) || {};
 		const amountPath = formPath.concat('amount');
 		let amount = DataStore.getValue(amountPath);
-		if ( ! amount) {
+		if ( !amount && !initialAmount) {
 			amount = new Money({value:10});
 			DataStore.setValue(amountPath, amount, false);
+			initialAmount = true;
 		}
 		const user = Login.getUser();
 

@@ -46,19 +46,19 @@ const FAQCard = () => {
         rows: [
           {
             title: "What is SoGive?",
-            content: "SoGive is an independent nonprofit that analysis charities to help donors find the best places to give. We produce ratings of charities based on how much impact they have."
+            content: "SoGive is an independent nonprofit that analyses charities to help donors find the best places to give. We produce ratings of charities based on how much impact they have."
           },
           {
             title: "Who works at SoGive?",
             content: <p>SoGive is co-founded by Sanjay Joshi and Daniel Winterstein. For more about them, <a href="#about">click here</a>. Our staff consists of analysts, developers, creatives, and our operations team.</p>
           },
-          {
-            title: "How does SoGive make money?",
-            content: "In some cases, we do contact a charity to get sufficient information to make our assessments. In other cases, there is ample information about a charity for us to confidently make assessments without said contact."
-          },
+          // {
+          //   title: "How does SoGive make money?",
+          //   content: ""
+          // },
           {
             title: "Does SoGive contact charities to assess them?",
-            content: "We aim to recommend charities within every major cause area. However, due to limited time, there are some cause areas we do not currently have recommendations for. We hope to improve and expand our analyses in the coming year."
+            content: "In some cases, we do contact a charity to get sufficient information to make our assessments. In other cases, there is ample information about a charity for us to confidently make assessments without said contact."
           }]
       }
 
