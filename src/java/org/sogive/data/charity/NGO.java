@@ -1,10 +1,12 @@
 package org.sogive.data.charity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiPredicate;
 
 import com.goodloop.data.Money;
+import com.goodloop.data.charity.Impact;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.Containers;
@@ -182,6 +184,14 @@ public class NGO extends Thing<NGO> {
 		if (!Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);
 			if (latest.size() != 1) {
+				// ignore overall project if more than one rep project
+				for (Project project : latest) {
+					if (project.toString().contains("overall")) {
+						latest.remove(project);
+					}
+				}
+				if (latest.size() == 1) return latest.get(0);
+				
 				Log.e("getRepProject",
 						"Bogus project info in " + this + ": More than one latest rep project! " + projects2);
 			}
@@ -210,14 +220,15 @@ public class NGO extends Thing<NGO> {
 			if (unitOutput == null) {
 				Log.d(LOGTAG, "No impact for " + getId() + " Rep project is " + project);
 			}
-			put("simpleImpact", unitOutput);
+			setSimpleImpact(unitOutput);
+
 			return unitOutput;
 		} catch (Throwable ex) {
 			Log.e(LOGTAG, ex);
 			return null;
 		}
 	}
-
+	
 	@Override
 	public void init() {
 		super.init();
@@ -239,6 +250,16 @@ public class NGO extends Thing<NGO> {
 	 */
 	public void setSimpleImpact(Output unitOutput) {
 		put("simpleImpact", unitOutput);
+		// for GL
+		ArrayList impacts = new ArrayList();
+		Impact ic = new Impact();
+		ic.setName(unitOutput.getName());
+		ic.setCharity(getId());
+		double n = unitOutput.getNumber(); // probably 1
+		ic.setN(n);
+		ic.setAmount(unitOutput.getCostPerBeneficiary().multiply(n));
+		impacts.add(ic);		
+		put("impacts", impacts);
 	}
 
 	public void setTags(String tags) {

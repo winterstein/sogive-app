@@ -379,7 +379,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 						console.warn(`setting £ donation from local amount: ${pounds} => ${dollars}`);
 						DataStore.setValue(path.concat('amount'), new Money(pounds));
 						DataStore.setModified(path.concat('amount'));
-						return onChange(e);
+						return e; // this was making an error: onChange(e);
 					}}
 				/>
 			</Col>
@@ -390,7 +390,7 @@ const CurrencyConvertor = ({path, val, preferredCurrency='USD', onChange}) => {
 						let dollars = pounds ? Math.round(pounds*100 / rate) / 100 : null;
 						console.warn(`setting local donation from £ amount: $${dollars} => £${pounds}`);
 						DataStore.setValue(transPath.concat('localAmount'), new Money({currency:preferredCurrency, value:dollars}));
-						return onChange(e);
+						return e; // this was making an error: onChange(e);
 					}}
 				/>
 			</Col>

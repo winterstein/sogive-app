@@ -54,7 +54,7 @@ public class BasketPublishedActor extends Actor<Basket> {
 
 		// HACK for safe testing delete
 		if (!e.contains("mcguffin") && !e.contains("winterwell") && !e.contains("sogive") && !e.contains("sodash")) {
-			Log.e("BasketPublished", "Skip email to " + e);
+			Log.w("BasketPublished", "Skip email to " + e);
 			return;
 		}
 

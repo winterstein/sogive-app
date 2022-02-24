@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="SoGive is a tool that lets you see the impact you’ve made in the world through all your charitable giving. Sign up today to make the world a better place.">
+    <meta name="author" content="">
+    <link rel="icon" href="/img/SoGive-Light-64px.png">
+
+    <title>SoGive: Measure your charity</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/sogive-evening.css" type="text/css">
+
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+<meta name='generator' content='Jerbil v1.0.4' />
+</head>
+<body>
+    
+<!-- Cheap vertical space, you can increase or decrease it by changing the em level-->
+<!-- <div class="white-bg" style="height:2em;">
+</div> -->
+<!-- End of cheap vertical space -->
+    
+<div class="simple-page page-part">
+	  <div class="careers-bg">
+		<div class="jumbotron">
+			<div class="col-md-12 hidden-xs hidden-sm">
+				<div class="col-md-offset-2 col-md-8 text-center">
+					<a href="https://sogive.org">
+						<img class="logo" alt="SoGive" src="/img/logo.png">
+					</a>
+					<p class="sogive-lead-line">
+						<i>Keep track of how you make the world a better place</i>
+					</p>
+					<a href="https://app.sogive.org/" class="btn-lg btn-getinvolved" id="getstartedbutton" target="_blank">Get Started</a>
+				</div>
+			</div>
+			<div class="col-md-12 visible-xs visible-sm">
+				<div class="col-md-offset-2 col-md-8 text-center">
+					<a href="https://sogive.org">
+						<img class="logo-sm" alt="SoGive" src="/img/logo.png">
+					</a>
+					<p class="sogive-lead-line">
+						<i>Keep track of how you make the world a better place</i>
+					</p>
+					<a href="https://app.sogive.org/" class="btn-lg btn-getinvolved" id="getstartedbutton" target="_blank">Get Started</a>
+				</div>
+			</div>
+		</div> <!-- ./jumbotron -->
+	</div> <!-- ./BG photo -->	
+
+	
+<!-- navbar -->
+<div class="white-bg container visible-xs visible-sm">
+	<div class="white-bg navbar navbar-fixed-top">
+		<div class="white-bg btn-group pull-right">
+			<button type="button" class="btn btn-circle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<span class="glyphicon glyphicon-menu-hamburger"></span>
+		</button>
+			<ul class="dropdown-menu">
+				<li>
+					<a href="/index.html">Home</a>
+				</li>
+				<li>
+					<a href="/sector/forcompanies.html">For Companies</a>
+				</li>
+				<li>
+					<a href="/sector/forfinancialplanners.html">For Financial Planners</a>
+				</li>
+				<li>
+					<a href="/sector/forevents.html">For Events</a>
+				</li>
+				<li>
+					<a href="/charity-wedding-gifts.html">For a Wedding Registry</a>
+				</li>
+				<li>
+					<a href="/volunteering.html">Volunteer</a>
+				</li>
+				<li>
+					<a href="/careers.html">Careers</a>
+				</li>
+				<li>
+					<a href="/about.html">About</a>
+				</li>
+				<li>
+					<a href="/halloffame.html">Hall of Fame</a>
+				</li>
+				<li>
+					<a href="/contact.html">Contact</a>
+				</li>
+				<li>
+					<a href="/faq.html">FAQs</a>
+				</li>
+				<li>
+					<a href="https://www.facebook.com/sogivecharity">Facebook</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/sogivecharity">Twitter</a>
+				</li>
+				<li>
+					<a href="/privacy-policy.html">Privacy Policy</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="white-bg container hidden-xs hidden-sm col-md-12">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="white-bg collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li>
+					<a href="index.html">Home</a>
+				</li>
+				<li>
+					<a href="sector/forcompanies.html">For Companies</a>
+				</li>
+				<li>
+					<a href="sector/forfinancialplanners.html">For Financial Planners</a>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">For Events <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="charity-wedding-gifts.html">For A Wedding Registry</a>
+						</li>
+						<li>
+							<a href="sector/forevents.html">For Events</a>
+						</li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">About <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="/about.html">About SoGive</a>
+						</li>
+						<li>
+							<a href="/aims.html">Our Aims</a>
+						</li>
+						<li>
+							<a href="/careers.html">Careers</a>
+						</li>
+						<li>
+							<a href="/volunteering.html">Volunteer</a>
+						</li>
+						<li>
+							<a href="/doc/getourdata.html">Use Our Data</a>
+						</li>
+						<li>
+							<a href="/halloffame.html">Hall of Fame</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="/contact.html">Contact</a>
+				</li>
+				<li>
+					<a href="/faq.html">FAQs</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</div>
+<!-- ./navbar -->
+
+    
+	<div id='page-contents'>
+	    <div class="container simple-page page-part">
+	    <div class="careers-bg">
+</div>
+<div class="col-md-12">
+	<center>
+		<H2>Current Vacancies</H2>
+	</center>
+</div>
+<div class="col-md-12">
+	<div class="col-md-offset-2 col-md-8">
+		<!-- <p class="text-muted">
+			<center>
+				We are currently not recruiting at this time
+			</center>
+		</p> -->
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active">
+				<a href="#senior-dev--team-lead" aria-controls="senior-dev--team-lead" role="tab" data-toggle="tab">Senior Dev / Team Lead</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="Director" class="tab-pane fade in active" role="tabpanel">
+				<H2>Senior Dev / Team Lead</H2>
+				<H3>About SoGive</H3>
+				<span class="font-18 black-font">
+					SoGive is an independent nonprofit that analyses charities to help donors find the best places to give. We produce ratings of charities based on how much impact they make.
+					<br>
+					<br>
+					We're hiring a Senior Dev with project & team management experience to help grow the technical side of our operations, and maximize our ability to most effectively help donors maximize their charitable impact. SoGive is still very much in a start-up phase of its growth. Due to this, there is tremendous potential for having a large impact on the organization, while also involving the risk and excitement of an early stage organization.
+					<br>
+					<br>
+					Salary: Depending on skills and experience
+					<br>
+					<br>
+					Location: Remote. Our staff is located largely in the UK, Europe, and the U.S., though our volunteer network is truly global. We are flexible on location as long as we're able to have routine chats as a team. The core team hours are: 3pm to 6pm UK time - any location is OK, as long as those hours work for you in your timezone.
+					<br>
+					<br>
+					Hours: Full-Time (flexible options available)
+				</span>
+				<hr>
+				<H3>ESSENTIAL SKILLS</H3>
+				<span class="font-18 black-font">
+					<ul class="font-18 black-font">
+						<li>
+							Javascript (+ HTML & CSS)
+						</li>
+						<li>
+							Backend development experience in Java
+						</li>
+						<li>
+							2+ years of team and project management experience (as CTO, team-leader, or similar)
+						</li>
+						<li>
+							4+ years of industry experience
+						</li>
+						<li>
+							A university degree, 2nd class or higher, from a respected university. 
+						</li>
+						<li>
+							Experience in agile development
+						</li>
+						<li>
+							Examples of your experience doing UX / User-centred design
+						</li>
+						<li>
+							Good communication skills
+						</li>
+						<li>
+							Entrepreneurial drive and business sense, so you can help define business needs and turn them into development projects
+						</li>
+						<li>
+							Able to work in a team
+						</li>
+						<li>
+							Also must be independent enough to manage your own work
+						</li>
+						<li>
+							Must have example code that you can send us
+						</li>
+					</ul>
+				</span>
+								<hr>
+				<H3>DESIRABLE SKILLS</H3>
+				<span class="font-18 black-font">
+					We don't expect you to have experience in all of these -- let us know which ones you have:
+					<ul class="font-18 black-font">
+						<li>
+							React
+						</li>
+						<li>
+							ElasticSearch
+						</li>
+						<li>
+							Data science
+						</li>
+						<li>
+							Graphic design
+						</li>
+					</ul>
+				</span>
+				<hr>
+				<H3>ABOUT YOU</H3>
+				<span class="font-18 black-font">
+					You should have a passionate can-do attitude to your work and substantial project & team management experience, in addition to the right dev background. Responsibility and independence are important -- combined with flexible team-work. The right candidate will have the chance to shape the job, and will be at the heart of an exciting company.
+				</span>
+				<hr>
+				<H3>HOW TO APPLY</H3>
+				<span class="font-18 black-font">
+					To apply, please email:
+					<ul class="font-18 black-font">
+						<li>
+							Your CV
+						</li>
+						<li>
+							A portfolio of your best work
+						</li>
+						<li>
+							A Cover letter expressing your interest and fit for the role
+						</li>
+					</ul>
+					To <span class='email' name='sarah' domain='sogive.org'>sarah (at) sogive.org</span> with the subject line: "CTO Application"
+					<br>
+					<br>
+					We will collect applications, and get in touch with you once we're ready. This may take a couple of weeks.
+				</span>
+			</div>
+		</div>
+		<br>
+		<br>
+		<p class="sogive-text-body">
+			<center>
+				We anticipate that we might have needs in the following areas in the future:
+			</center>
+			<ul>
+				<li>
+					Software Developers (Frontend &amp; Backend)
+				</li>
+				<li>
+					Charity Impact Analysis Personnel
+				</li>
+				<li>
+					End-User Design/UX
+				</li>
+			</ul>
+		</p>
+		<!-- <ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active">
+				<a href="#Director" aria-controls="Director" role="tab" data-toggle="tab">Director</a>
+			</li>
+			<li role="presentation">
+				<a href="#Senior-Analyst" aria-controls="Senior-Analyst" role="tab" data-toggle="tab">Senior Analyst</a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="Director" class="tab-pane fade in active" role="tabpanel">
+				<H2>Director of SoGive</H2>
+				<H3>About SoGive</H3>
+				<span class="font-18 black-font">
+					SoGive is a volunteer-driven organisation which <b>analyses charities</b> and makes that analysis freely available on our website. Our mission is to help donors do more good with their donations.
+					<br>
+					<br>
+					Our analytical method involves applying what we call the <b>SoGive two-question method</b>, a charity analysis approach which focuses on cost-effectiveness.
+					<br>
+					<br>
+					Our approach has similarities with that followed by charity analysis organisations like GiveWell and Founders Pledge.
+					<br>
+					<br>
+					We differentiate by applying a rating to a <b>very broad range</b> of charities, covering almost all of the large charities in the UK, many small charities and several internationally.
+					<br>
+					<br>
+					We currently move over <b>£1m</b> pa, most of which comes from a very small number of major donors. We also provide some support to fundraising events. We plan to grow this donor base.
+					<br>
+					<br>
+					Our <b>key priorities</b> for the next 12 months are transforming our website, continuing to expand our (already substantial) analysis of charities, reaching more donors, and continuing to strengthen our team of volunteer analysts.
+				</span>
+				<hr>
+				<H3>What the role will involve</H3>
+				<span class="font-18 black-font">
+					<ul class="font-18 black-font">
+						<li>
+							Set and manage strategic direction; strategy to be created with input from SoGive's founder Sanjay Joshi, and in consultation with the wider SoGive team. This includes developing/improving processes for assessing SoGive's own impact
+						</li>
+						<li>
+							Oversee analysis work, including SoGive's broad and shallow charity analysis, SoGive's in-depth charity/intervention/cause area analysis, and SoGive's moral weights analysis. Strengthen existing processes for ensuring consistency of analysis quality, writing style, and how the information is presented on the SoGive website
+						</li>
+						<li>
+							Overseeing the analysis work also involves overseeing the SoGive charity analysis volunteer team; currently c15 volunteers working 1 day per week
+						</li>
+						<li>
+							Maintain relationships with the handful of major donors and partner organisations whose donations are influenced by SoGive's analysis; ensure that donations made achieve excellent impact to the maximum extent possible
+						</li>
+						<li>
+							Maintain relationships with other charity analysis organisations
+						</li>
+						<li>
+							Oversee outreach work, including oversight of digital marketing work, email outreach, and PR
+						</li>
+						<li>
+							Oversee, and (at first) perform operational tasks, including financial management, and governance tasks relating to SoGive's yet-to-be-created charity entity
+						</li>
+						<li>
+							Anticipate future staffing needs and fundraise to meet them
+						</li>
+					</ul>
+				</span>
+				<hr>
+				<H3>Experience</H3>
+				<span class="font-18 black-font">
+					<table class="career-table">
+						<tr class="header-row career-table">
+							<th class="career-table">
+								Requirement
+							</th>
+							<th class="career-table">
+								Essential
+							</th>
+							<th class="career-table">
+								Desirable
+							</th>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Strong project execution capability
+							</td>
+							<td class="career-table">
+								Ability to talk about past projects delivered credibly
+							</td>
+							<td class="career-table">
+								Robust track record of senior experience delivering several projects to a high standard
+							</td>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Person management skills
+							</td>
+							<td class="career-table">
+								Apitude for providing leadership
+							</td>
+							<td class="career-table">
+								Strong experience managing many staff and/or volunteers
+							</td>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Client management skills
+							</td>
+							<td class="career-table">
+								Credible in a formal meeting setting, able to understand the needs of high net worth people
+							</td>
+							<td class="career-table">
+								Experienced in managing critical client relationships at a senior level
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Analytical skills
+							</td>
+							<td  class="career-table">
+								Ability to understand nuanced analytical concepts having had them explained; ability to discuss analysis credibly when internal experts provide the thought leadership. Know when to defer to internal experts
+							</td>
+							<td  class="career-table">
+								Strong analytical thought leadership; ability to guide on nuanced topics like RCTs, meta-studies; ability to use your own thought leadership to identify an analytical path where it's not clear; strong judgement
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Fundraising ability
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Experience applying for and receiving funds
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Ability to grow an organisation
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Strong past experience of growing an organisation, preferably including experience of founding a successful startup
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Website development/design/UX
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Some knowledge of User Experience (UX) or design would add value
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Digital marketing
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Some knowledge of google ads or other digital marketing would add value
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Ability to work with a broad international team
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Experience working across cultures would be a bonus
+							</td>
+						</tr>
+					</table>
+				</span>
+				<hr>
+				<H3>Work schedule / compensation / location</H3>
+				<span class="font-18 black-font">
+					<ul class="font-18 black-font">
+						<li>
+							The role is envisaged as full-time
+						</li>
+						<li>
+							With the right combination of applicants, it may be possible to split the role into a part-time lead analyst role and a part-time Director role. If you are interested in an opportunity like this, please state this in your covering letter
+						</li>
+						<li>
+							The salary for the full time role is &pound;30k-&pound;50k, depending on experience
+						</li>
+						<li>
+							The role will initially be a 12-month contract, extendable depending on SoGive's growth and performance over this period
+						</li>
+						<li>
+							We are fairly flexible on location; our most important clients are in London, and a successful candidate should be ready to at least travel to London occasionally; however otherwise an ability to manage a team remotely will suffice
+						</li>
+						<li>
+							The role would suit a flexible worker. There are no fixed hours. Requirement to be flexible to work outside 9-5 given that some of the team are volunteers who may have day jobs
+						</li>
+						<li>
+							Support available: a catch-up call once a week with SoGive founder and current CEO will be provided
+						</li>
+					</ul>
+				</span>
+				<hr>
+				<H3>Application process</H3>
+				<span class="font-18 black-font">
+					Please contact Sanjay on <span class='email' name='sanjay' domain='sogive.org'>sanjay (at) sogive.org</span> including a CV and covering letter and say how you found out about the role. The recruitment process will also include interviews conducted via Zoom/video call and an analysis task.
+				</span>
+				<hr>
+				<span class="font-18 black-font">
+					The deadline for applications is 23:59 UTC+01:00 on Tuesday 30th March.
+				</span>
+			</div>
+			<div id="Senior-Analyst" class="tab-pane fade" role="tabpanel">
+				<H2>Senior Analyst</H2>
+				<H3>About SoGive</H3>
+				<span class="font-18 black-font">
+					SoGive is a volunteer-driven organisation which <b>analyses charities</b> and makes that analysis freely available on our website. Our mission is to help donors do more good with their donations.
+					<br>
+					<br>
+					Our analytical method involves applying what we call the <b>SoGive two-question method</b>, a charity analysis approach which focuses on cost-effectiveness.
+					<br>
+					<br>
+					Our approach has similarities with that followed by charity analysis organisations like GiveWell and Founders Pledge.
+					<br>
+					<br>
+					We differentiate by applying a rating to a <b>very broad range</b> of charities, covering almost all of the large charities in the UK, many small charities and several internationally.
+					<br>
+					<br>
+					We currently move over <b>£1m</b> pa, most of which comes from a very small number of major donors. We also provide some support to fundraising events. We plan to grow this donor base.
+					<br>
+					<br>
+					Our <b>key priorities</b> for the next 12 months are transforming our website, continuing to expand our (already substantial) analysis of charities, reaching more donors, and continuing to strengthen our team of volunteer analysts.
+				</span>
+				<hr>
+				<H3>What the role will involve</H3>
+				<span class="font-18 black-font">
+					<ul class="font-18 black-font">
+						<li>
+							Take senior-level ownership for SoGive's analytical output. This includes:
+							<ul class="font-18 black-font">
+								<li>
+									Overseeing several hundred "broad and shallow" charity reviews, which will have been conducted by SoGive's volunteers; this also involves providing feedback to volunteers
+								</li>
+								<li>
+									Overseeing or producing some in-depth reports on effective giving, specific charities and cause areas
+								</li>
+								<li>
+									Overseeing and being actively involved in SoGive's moral weights research, which may involve conducting primary research and getting it published
+								</li>
+							</ul>
+						</li>
+						<li>
+							Have a strong handle on SoGive's analytical methodology and writing style, and liaise with the Director to ensure that the way the information is presented on the website strikes the right balance of conveying insights succinctly and providing the full detail around caveats and assumptions
+						</li>
+						<li>
+							Provide day-to-day support to the volunteer analyst team (currently c15 analysts spread across many countries and timezones)
+						</li>
+						<li>
+							Ensure that meetings with key stakeholders function effectively, especially the charities being reviewed and the major donors that SoGive works with
+						</li>
+						<li>
+							Liaise with the Director to ensure that the staffing of the SoGive analysis function is adequate
+						</li>
+					</ul>
+				</span>
+				<hr>
+				<H3>Experience</H3>
+				<span class="font-18 black-font">
+					<table class="career-table">
+						<tr class="header-row career-table">
+							<th class="career-table">
+								Requirement
+							</th>
+							<th class="career-table">
+								Essential
+							</th>
+							<th class="career-table">
+								Desirable
+							</th>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Analytical skills
+							</td>
+							<td class="career-table">
+								Ability to use your own thought leadership to identify an analytical path where it's not clear, and provide clarity for more junior analysts; strong judgement.
+							</td>
+							<td class="career-table">
+								Strong track record of analytical thought leadership that is sufficiently distinctive that your name is well-recognised (e.g. in the Effective Altruism community)
+							</td>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Statistical knowledge
+							</td>
+							<td class="career-table">
+								Familiarity with p-values
+							</td>
+							<td class="career-table">
+								Confident with complex statistical issues such as how to amalgamate meta-studies
+							</td>
+						</tr>
+						<tr class="career-table">
+							<td class="career-table">
+								Modelling capability
+							</td>
+							<td class="career-table">
+								Confident with taking a qualitative description of an activity and creating a cost-effectiveness model
+							</td>
+							<td class="career-table">
+								Very seasoned at creating cost-effectiveness models and robust experience on making models have a consistent style
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Person management skills
+							</td>
+							<td  class="career-table">
+								Ability to delegate and support others
+							</td>
+							<td  class="career-table">
+								Experience managing staff and/or volunteers
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Client management skills
+							</td>
+							<td  class="career-table">
+								Credible in a formal meeting setting
+							</td>
+							<td  class="career-table">
+								Senior client relationship experience, including ability to understand the needs of high net worth people
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Strong project execution capability 
+							</td>
+							<td  class="career-table">
+								Ability to talk about past projects delivered credibly
+							</td>
+							<td  class="career-table">
+								Good track record of delivering projects to a good standard
+							</td>
+						</tr>
+						<tr  class="career-table">
+							<td  class="career-table">
+								Ability to work with a broad international team
+							</td>
+							<td  class="career-table">
+								-
+							</td>
+							<td  class="career-table">
+								Experience working across cultures would be a bonus
+							</td>
+						</tr>
+					</table>
+				</span>
+				<hr>
+				<H3>Work schedule / compensation / location</H3>
+				<span class="font-18 black-font">
+					<ul class="font-18 black-font">
+						<li>
+							The role is envisaged as full-time
+						</li>
+						<li>
+							With the right combination of applicants, it may be possible for the role to be part-time. If you are interested in an opportunity like this, please state this in your covering letter
+						</li>
+						<li>
+							The salary for the full time role is &pound;30k-&pound;50k, depending on experience
+						</li>
+						<li>
+							The role will initially be a 12-month contract, extendable depending on SoGive's growth and performance over this period
+						</li>
+						<li>
+							We are fairly flexible on location; our most important clients are in London, and a successful candidate should be ready to at least travel to London occasionally; however otherwise an ability to interact with donors and teammates remotely will suffice.
+						</li>
+						<li>
+							The role would suit a flexible worker. There are no fixed hours. Requirement to be flexible to work outside 9-5 given that some of the team are volunteers who may have day jobs. The role is remote.
+						</li>
+						<li>
+							This role will report to the SoGive Director (also being recruited currently); analytical support will be available from SoGive's founder Sanjay Joshi
+						</li>
+					</ul>
+				</span>
+				<hr>
+				<H3>Application process</H3>
+				<span class="font-18 black-font">
+					Please contact Sanjay on <span class='email' name='sanjay' domain='sogive.org'>sanjay (at) sogive.org</span> including a CV and covering letter and say how you found out about the role. The recruitment process will also include interviews conducted via Zoom/video call and an analysis task.
+				</span>
+				<hr>
+				<span class="font-18 black-font">
+					The deadline for applications is 23:59 UTC+01:00 on Tuesday 30th March.
+				</span>
+			</div>
+		</div>
+		<p class="sogive-text-body">
+			If you are passionate about SoGive's work and think you may want to work with us, feel free to reach out to Sanjay: : <span class='email' name='sanjay' domain='sogive.org'>sanjay (at) sogive.org</span> to arrange a conversation.
+		</p> -->
+	</div>
+</div>
+
+		</div><!-- ./simple-page -->
+	</div>
+
+	
+<footer>
+	<div class="white-bg col-md-12 container hidden-xs hidden-sm">
+		 <nav class="navbar navbar-default">
+			  <div class="white-bg col-md-12 container">
+					<div class="white-bg col-md-offset-3 col-md-6">
+						 <p>
+						 <center>
+						 <a class="btn black-btn" href='https://twitter.com/sogivecharity' data-show-count="false">
+							  <i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i>
+						 </a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+						 <a class="btn black-btn" href='https://www.facebook.com/sogivecharity'>
+							  <i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i>
+						 </a>
+						 </center>
+						 </p>
+					</div>
+			  </div>
+			  <div class="white-bg col-md-12">
+				 <center>
+					<p class="text-muted" style="font-size: 12px;">
+						 &copy; 2017-2021 SoGive&trade;. Email: <span class='email' name='sanjay' domain='sogive.org'>sanjay (at) sogive.org</span>
+						 <br>
+						 SoGive Ltd is a not-for-profit social enterprise, registered as a company in England and Wales with company registration number: 09966206
+						 <br>
+						 Registered address: SoGive, 48 Queen Edith's Way, Cambridge, CB1 8PW
+						 <br>
+						 Business address: SoGive, 127 Rose St S Ln, Edinburgh EH2 4BB
+						 <br>
+						 Site design &amp; hosting: <a href='https://good-loop.com'>Good-Loop</a>.
+						 <br>
+						 <a href='/privacy-policy.html'>Privacy policy</a>
+						 <br>
+						 <a href='/terms.html'>Terms of Service</a>
+						 <br>
+						 <a href='/complaints.html'>Complaints</a>
+						 <br>
+				 <div class="col-md-12">
+							  <small>
+						 Images (CC) various authors, some icons (CC) Freepik from flaticon.com. 
+							  </small>
+						 </div>
+						 <div class="col-md-12">
+							  <small>
+									Last updated: Wed Sep 08 18:37:41 GMT 2021
+							  </small>
+						 </div>
+					</p>
+				 </center>
+			  </div>
+		 </nav>
+	</div>
+</footer>
+
+
+</div><!-- ./simple-page -->
+    <!-- JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>    
+    <script src="/js/lib/utils.js"></script>    
+    <script src="/js/sogive.js"></script>
+    <script src="/js/affix.js"></script>
+	
+	<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-WVJVKHX');</script>
+<!-- End Google Tag Manager -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVJVKHX"
+	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+</body>
+</html>

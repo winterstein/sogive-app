@@ -151,11 +151,11 @@ function check_java_home {
     fi
 }
 
-# Dependency Check Function - nodejs is at version 14.x - This Function's Version is 0.02
+# Dependency Check Function - nodejs is at version 16.x - This Function's Version is 0.03
 function check_nodejs_version {
     if [[ $PROJECT_USES_NPM = 'yes' ]]; then
-        if [[ $(node -v | grep "v14") = '' ]]; then
-            printf "Either nodejs is not installed, or it is not at version 14.x.x\n"
+        if [[ $(node -v | grep "v16") = '' ]]; then
+            printf "Either nodejs is not installed, or it is not at version 16.x.x\n"
             exit 0
         fi
     fi
@@ -326,7 +326,7 @@ function use_webpack {
         printf "\nNPM is now running a Webpack process for $PROJECT_NAME\n"
         cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE
         printf "\nChecking for errors that occurred during Webpacking process ...\n"
-        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx') = '' ]]; then
+        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx' | grep -v 'NoEmitOnErrorsPlugin') = '' ]]; then
             printf "\nNo Webpacking errors detected\n"
         else
             printf "\nOne or more errors were recorded during the webpacking process. Breaking Operation\n"
