@@ -4,6 +4,7 @@ import org.sogive.data.loader.DatabaseWriter;
 import org.sogive.data.loader.ElasticSearchDatabaseWriter;
 import org.sogive.data.loader.ImportEditorialsDataTask;
 import org.sogive.data.loader.ImportOSCRData;
+import org.sogive.data.loader.ImportEWCCData;
 import org.sogive.data.loader.JsoupDocumentFetcher;
 import org.sogive.data.loader.JsoupDocumentFetcherImpl;
 
@@ -25,6 +26,7 @@ public class ImportDataServlet implements IServlet {
 
 	private static ImportEditorialsDataTask importEditorialsTask;
 	private static ImportOSCRData oscr;
+	private static ImportEWCCData ewcc;
 
 	@Override
 	public void process(WebRequest state) throws Exception {
@@ -36,6 +38,14 @@ public class ImportDataServlet implements IServlet {
 				throw new WebEx.E400("Repeat call");
 			}
 			oscr.run();
+		}
+		// England & Wales official data
+		if ("EWCC".equals(dataset)) {
+			ewcc = new ImportEWCCData();
+			if (ewcc.isRunning()) {
+				throw new WebEx.E400("Repeat call");
+			}
+			ewcc.run();
 		}
 		// A Google doc of editorials?
 		if ("editorials".equals(dataset)) {

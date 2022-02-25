@@ -111,23 +111,12 @@ public class ImportEWCCData {
 	 * @return File object
 	 */
 	public static File getEWCCFile(String fileName) {
-		/*
-		could not get build tasks to recognize added method in CrudClient
-		for getFile(), even after cleaning & rebuilding all projects,
-		but changes to FakeBrowser were recognized so idk
-		*/
-		// CrudClient<File> cl = new CrudClient<>(File.class, EWCC_BLOB_ENDPOINT);
-		// File resp = cl.getFile(fileName);
 		
 		FakeBrowser fb = new FakeBrowser();
 		/*
-		MAX_DOWNLOAD is private. The file is too large for the current limit.
-		So either the limit needs to be changed to the following in FakeBrowser class,
-		or is should be made public to change here. It may need to be higher depending
-		on how large the other files will be. I don't know the purpose of the multipliers
-		so I just changed the 10 to 51 (the lowest that would allow the file to download)
+		The main file is too large for the current MAX_DOWNLOAD limit.
+		So I updated it to 51 from 10 in the FakeBrowser class.
 		*/
-		// fb.MAX_DOWNLOAD = 51 * 1024 * 1024;
 		return fb.getFile(EWCC_BLOB_ENDPOINT+"/"+WebUtils.urlEncode(fileName));
 	}
 	
@@ -151,8 +140,13 @@ public class ImportEWCCData {
 		int cnt = 0;
 		for (JsonElement jElem : jArray) {
 			JsonObject charityObj = jElem.getAsJsonObject();
-			String cName = jsonToString(charityObj, "charity_name");
+			
 			String cStatus = jsonToString(charityObj, "charity_registration_status");
+			if (cStatus.equals("Removed")) {
+				System.out.println("EWCC charity status: removed");
+				continue;
+			}
+			String cName = jsonToString(charityObj, "charity_name");
 			String cRegNum = jsonToString(charityObj, "registered_charity_number");
 			String cUrl = jsonToString(charityObj, "charity_contact_web");
 			String giftAid = jsonToString(charityObj, "charity_gift_aid");
@@ -177,16 +171,12 @@ public class ImportEWCCData {
 			
 			// look for a match
 			ObjectDistribution<NGO> matches = new CharityMatcher().match(ngo);
-			// create if new && not removed
 			if (matches.isEmpty()) {
-				if (cStatus.equals("Removed")) continue;
 				doCreateCharity(ngo);
 				System.out.println("New charity created: "+ cName);
 			} else {
 				// TODO merge/update
-				if (cStatus.equals("Removed")) {
-					// mark inactive? if not, can check if removed before looking for matches to save time
-				}
+				
 				// if matches > 2, throw error? (2 matches per; will investigate)
 				for (NGO mNGO : matches) {
 					System.out.println("existing match: "+ mNGO.getDisplayName());
@@ -199,14 +189,5 @@ public class ImportEWCCData {
 		
 		running = false;
 	}
-
-	/*
-	public static void main(String[] args) {
-		
-		new SoGiveServer().init();
-		
-		new ImportCCEWData().run();
-	}
-	*/
 
 }
