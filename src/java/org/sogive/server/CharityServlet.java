@@ -44,6 +44,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 
 	private final SoGiveConfig config;
+	public static boolean gitAuditTrail;
 
 	public CharityServlet() {
 		super(NGO.class, Dep.get(SoGiveConfig.class));
