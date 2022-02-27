@@ -46,7 +46,7 @@ const SearchPage = () => {
     }
 
     // search hits
-    const lpath = ["list", "NGO", status || "pub", q || "all", from]; // listPath({type:C.TYPES.NGO, status, q});
+    const lpath = ["list", "NGO", status || "pub", q || "all", unready?"unready":"ready", from]; // listPath({type:C.TYPES.NGO, status, q});
     let pvList = DataStore.fetch(lpath, () => {
         // size: RESULTS_PER_PAGE <- no, caps the results at 20
 		let sq = unready? q : SearchQuery.and(q, "ready:true").query;
@@ -306,7 +306,7 @@ const SearchResultsNum = ({ results, total, query }) => {
         const plural = total !== 1 ? "charities found" : "charity found";
         return (
             <div className="num-results div-section-text">
-                {total} {plural}
+                {total<10000? total : "over 10,000"} {plural}
             </div>
         );
     }
