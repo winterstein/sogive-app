@@ -105,14 +105,16 @@ const ContactCard = () => {
           <div className="col-md">
             <h3>Contact Us</h3>
             <p>Want to learn more about SoGive's work? Need help with your giving decisions? Contact the SoGive team using this form, and we'll be in touch.</p>
-						<div className="row mb-5">
-							<div className="col-3 col-md-2">
-								<img src="/img/profilepic/sanjay.png" alt="" className="w-100" />
-							</div>
-							<div className="col-3 col-md-2">
-								<img src="/img/profilepic/daniel.png" alt="" className="w-100" />
-							</div>
-						</div>
+						<a href="#about">
+              <div className="row mb-5">
+                <div className="col-3 col-md-2">
+                  <img src="/img/profilepic/sanjay.png" alt="" className="w-100" />
+                </div>
+                <div className="col-3 col-md-2">
+                  <img src="/img/profilepic/daniel.png" alt="" className="w-100" />
+                </div>
+              </div>
+            </a>
           </div>
           <div className="col-md">
             <ContactForm />
