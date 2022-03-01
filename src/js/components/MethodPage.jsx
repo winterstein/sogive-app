@@ -12,7 +12,7 @@ const MethodologyContent = () => {
             <p>This two-question method includes a suggestive analogy to purchasing. When you are donating to charity, you are essentially "buying" better lives for beneficiaries. We then benchmark our answer against the top recommended charities.</p>
             <p><strong>What do the benchmarks for excellence look like?</strong></p>
             <p>Let's say you have found out how much it costs for a charity to do a thing, and you have found out as much as you can about how good the thing is per beneficiary. How do we know whether that's good?</p>
-            <p>The short answer is that something like a couple of thousand dollars for a life saved is good. More info on the benchmarking that gets to this conclusion can be found here.</p>
+            <p>The short answer is that something like a couple of thousand dollars for a life saved is good. More info on the benchmarking that gets to this conclusion can be found <a rel='noreferrer' target='_blank' href='https://thinkingaboutcharity.blogspot.com/2020/05/how-cost-effective-is-cost-effective.html'>here</a>.</p>
             <p>Those benchmarks are chosen because there is an unusually robust level of evidence supporting those outcomes.</p>
             <p><strong>Do any other organisations analyse charities using a similar approach?</strong></p>
             <p>As far as we're aware, SoGive is unique in describing an analytical approach using this easy-to-understand "purchasing" or "shopping" analogy.</p>
@@ -28,9 +28,9 @@ const MethodologyContent = () => {
             </ul>
             <p>This helps us to sift out some charities which clearly produce substantially lower outcomes.</p>
             <p><strong>Do you take into account the amount spent on overheads?</strong></p>
-            <p>In essence, yes, although we avoid focusing attention on overheads, because we think this measure has received too much attention for the reasons set out here. We do this by ensuring that overheads are costed in when we consider the "how much does it cost for the charity to do its thing" question.</p>
+            <p>In essence, yes, although we avoid focusing attention on overheads, because we think this measure has received too much attention for the reasons set out <a rel='noreferrer' target='_blank' href='https://thinkingaboutcharity.blogspot.com/2015/10/stop-looking-at-admin-expense-ratios.html'>here</a>. We do this by ensuring that overheads are costed in when we consider the "how much does it cost for the charity to do its thing" question.</p>
             <p><strong>What about research and campaigning work?</strong></p>
-            <p>This is a good question. Research and campaigning don't fit into these categories quite so easily. Our views on these are described in more detail here. However you'll note that the approach involves comparing the scale of the impact achieved with the amount of cost needed to get there -- so this is actually essentially the same as the SoGive 2 questions.</p>
+            <p>This is a good question. Research and campaigning don't fit into these categories quite so easily. Our views on these are described in more detail <a rel='noreferrer' target='_blank' href='https://thinkingaboutcharity.blogspot.com/2021/04/sogive-three-question-method-for.html'>here</a>. However you'll note that the approach involves comparing the scale of the impact achieved with the amount of cost needed to get there -- so this is actually essentially the same as the SoGive 2 questions.</p>
             <p><strong>Should the framework not also take into account crowdedness/room for more funding?</strong></p>
             <p>Essentially it does.</p>
             <p>Imagine that a charity and its cause area are already very well funded. What will beneficiaries get for your money? Well, not very much, because the money end up funding a lower impact activity because all of the higher impact work is already being done. Also because of the risk that the money sits in the charity's reserves for want of things for the charity to do.</p>
