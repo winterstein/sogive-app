@@ -54,6 +54,7 @@ const baseConfig = {
 					plugins: [
 						'@babel/plugin-transform-typescript',
 						'@babel/plugin-proposal-object-rest-spread',
+						'@babel/plugin-transform-runtime',
 						'babel-plugin-const-enum',
 						// loose: true specified to silence warnings about mismatch with preset-env loose setting
 						['@babel/plugin-proposal-class-properties', { loose: true }],
@@ -72,6 +73,7 @@ const baseConfig = {
 					],
 					plugins: [
 						'@babel/plugin-transform-react-jsx',
+						'@babel/plugin-transform-runtime',
 						// loose: true specified to silence warnings about mismatch with preset-env loose setting
 						['@babel/plugin-proposal-class-properties', { loose: true }],
 						['@babel/plugin-proposal-private-methods', { loose: true }],

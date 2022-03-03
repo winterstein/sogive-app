@@ -21,6 +21,7 @@ import { getId } from "../base/data/DataClass";
 import { LearnAboutRatings } from "./LearnAboutRatings";
 import { DonateButton } from './DonationWizard';
 import { RatingBadge } from "./CharityPage";
+import SearchQuery from '../base/searchquery';
 
 // #Minor TODO refactor to use DataStore more. Replace the FormControl with a PropControl
 // #Minor TODO refactor to replace components with simpler functions
@@ -34,6 +35,7 @@ const PATH = ["widget", "search"];
 const SearchPage = () => {
     // query comes from the url
     let q = DataStore.getUrlValue("q");
+	let unready = !! DataStore.getUrlValue("unready");
     const all = !q;
     let from = DataStore.getUrlValue("from") || 0;
     const status = DataStore.getUrlValue("status") || "";
@@ -44,10 +46,11 @@ const SearchPage = () => {
     }
 
     // search hits
-    const lpath = ["list", "NGO", status || "pub", q || "all", from]; // listPath({type:C.TYPES.NGO, status, q});
+    const lpath = ["list", "NGO", status || "pub", q || "all", unready?"unready":"ready", from]; // listPath({type:C.TYPES.NGO, status, q});
     let pvList = DataStore.fetch(lpath, () => {
         // size: RESULTS_PER_PAGE <- no, caps the results at 20
-        return ServerIO.searchCharities({ q, from, status, impact }); // size:1000 if you need more results
+		let sq = unready? q : SearchQuery.and(q, "ready:true").query;
+        return ServerIO.searchCharities({ q:sq, from, status, impact }); // size:1000 if you need more results
     });
     console.log(pvList);
     let total = pvList.value ? List.total(pvList.value) : null;
@@ -95,8 +98,6 @@ const SearchForm = ({ q, status }) => {
         DataStore.setUrlValue("q", rawq);
     };
 
-    const searchIcon = <Misc.Icon prefix="fas" fa="search" />;
-
     const submitButton = (
         <Button type="submit" color="primary" className="sogive-search-box">
             Search
@@ -116,11 +117,12 @@ const SearchForm = ({ q, status }) => {
                             prop="rawq"
                             type="search"
                             placeholder="Enter a charity's name"
-                            prepend={searchIcon}
+                            prepend={<Misc.Icon prefix="fas" fa="search" />}
                             append={submitButton}
                             size="lg"
                         />
                         <FieldClearButton />
+						<PropControl prop="unready" type="checkbox" label="All charities, including ones without finished analysis." /> 
                         {status ? (
                             <div>Include listings with status: {status}</div>
                         ) : null}
@@ -304,7 +306,7 @@ const SearchResultsNum = ({ results, total, query }) => {
         const plural = total !== 1 ? "charities found" : "charity found";
         return (
             <div className="num-results div-section-text">
-                {total} {plural}
+                {total<10000? total : "over 10,000"} {plural}
             </div>
         );
     }
