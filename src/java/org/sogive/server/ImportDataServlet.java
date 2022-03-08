@@ -8,6 +8,7 @@ import org.sogive.data.loader.ImportEWCCData;
 import org.sogive.data.loader.JsoupDocumentFetcher;
 import org.sogive.data.loader.JsoupDocumentFetcherImpl;
 
+import com.winterwell.depot.Desc;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
@@ -41,11 +42,15 @@ public class ImportDataServlet implements IServlet {
 		}
 		// England & Wales official data
 		if ("EWCC".equals(dataset)) {
-			ewcc = new ImportEWCCData();
+			DatabaseWriter databaseWriter = new ElasticSearchDatabaseWriter(); 
+			String depotServer = Desc.CENTRAL_SERVER;
+			ewcc = new ImportEWCCData(databaseWriter, depotServer);
 			if (ewcc.isRunning()) {
 				throw new WebEx.E400("Repeat call");
 			}
-			ewcc.run();
+			ArrayMap results = ewcc.run();
+			JsonResponse output = new JsonResponse(state, results);
+			WebUtils2.sendJson(output, state);
 		}
 		// A Google doc of editorials?
 		if ("editorials".equals(dataset)) {
