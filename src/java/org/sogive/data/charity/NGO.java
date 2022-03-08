@@ -219,9 +219,9 @@ public class NGO extends Thing<NGO> {
 			Output unitOutput = calcSimpleImpact(project);
 			if (unitOutput == null) {
 				Log.d(LOGTAG, "No impact for " + getId() + " Rep project is " + project);
+			} else {
+				setSimpleImpact(unitOutput);
 			}
-			setSimpleImpact(unitOutput);
-
 			return unitOutput;
 		} catch (Throwable ex) {
 			Log.e(LOGTAG, ex);
@@ -248,9 +248,13 @@ public class NGO extends Thing<NGO> {
 	 * 
 	 * @param unitOutput
 	 */
-	public void setSimpleImpact(Output unitOutput) {
+	public void setSimpleImpact(Output unitOutput) {		
 		put("simpleImpact", unitOutput);
 		// for GL
+		if (unitOutput==null) {
+			Log.e(LOGTAG, "setSimpleImact null?!");
+			return;
+		}
 		ArrayList impacts = new ArrayList();
 		Impact ic = new Impact();
 		ic.setName(unitOutput.getName());

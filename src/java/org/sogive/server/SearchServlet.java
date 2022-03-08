@@ -24,6 +24,7 @@ import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.es.client.sort.KSortOrder;
 import com.winterwell.es.client.sort.Sort;
 import com.winterwell.es.client.suggest.Suggesters;
+import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
 import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
@@ -183,17 +184,19 @@ public class SearchServlet implements IServlet {
 			// Can ES do it instead??
 			// See
 			// https://www.elastic.co/guide/en/elasticsearch/reference/5.5/analysis-asciifolding-tokenfilter.html
-			q = StrUtils.toCanonical(q);
+//			q = StrUtils.toCanonical(q);
 			// this will query _all
-			ESQueryBuilder qbq = ESQueryBuilders.simpleQueryStringQuery(q);
-			searchRequest.addQuery(qbq);
+//			ESQueryBuilder qbq = ESQueryBuilders.simpleQueryStringQuery(q);
+//			searchRequest.addQuery(qbq);
 
-//			SearchQuery sq = new SearchQuery(q);
-			// TODO AppUtils.makeESFilterFromSearchQuery(sq, start, end)
+			SearchQuery sq = new SearchQuery(q);
+			BoolQueryBuilder esq = AppUtils.makeESFilterFromSearchQuery(sq, null, null);
+			searchRequest.addQuery(esq);
+			
 			// NB: this required all terms in one field, which felt wrong
 //			QueryBuilder qb = QueryBuilders.multiMatchQuery(q, 
 //					"id", "englandWalesCharityRegNum", "name", "displayName", "description", "whoTags", "whyTags", "whereTags", "howTags")
-//							.operator(Operator.AND);			
+//							.operator(Operator.AND);					
 
 		}
 		// prefix search for auto-complete
@@ -264,7 +267,8 @@ public class SearchServlet implements IServlet {
 		}
 
 		long total = searchResponse.getTotal();
-		JsonResponse output = new JsonResponse(state, new ArrayMap("hits", hits2, "total", total));
+		JsonResponse output = new JsonResponse(state, 
+				new ArrayMap("hits", hits2, "total", total));
 		WebUtils2.sendJson(output, state);
 	}
 

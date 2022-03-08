@@ -162,7 +162,7 @@ const SearchWidget = () => {
 
 /**
 	Top-level: tabs
-*/
+*/ 
 const MainDiv = () => {
 
 	return (<MainDivBase
@@ -179,6 +179,7 @@ const MainDiv = () => {
 		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms', 'careers']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 		navbarChildren={<SearchWidget />}
+		isBeta={true} 
 	/>);
 };
 

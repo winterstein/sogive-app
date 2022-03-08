@@ -326,7 +326,8 @@ function use_webpack {
         printf "\nNPM is now running a Webpack process for $PROJECT_NAME\n"
         cd $PROJECT_ROOT_ON_SERVER && npm run compile &> $NPM_RUN_COMPILE_LOGFILE
         printf "\nChecking for errors that occurred during Webpacking process ...\n"
-        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx' | grep -v 'NoEmitOnErrorsPlugin') = '' ]]; then
+	# NB: mean_squared_error is one of the TensorFlow library files - which includes the keyword "error"
+        if [[ $(cat $NPM_RUN_COMPILE_LOGFILE | grep -i 'error' | grep -iv 'ErrorAlert.jsx' | grep -v 'mean_squared_error') = '' ]]; then
             printf "\nNo Webpacking errors detected\n"
         else
             printf "\nOne or more errors were recorded during the webpacking process. Breaking Operation\n"
@@ -362,9 +363,15 @@ function start_service {
 ###                         chance to back out if this was executed accidentally.
 ################
 function get_branch_and_print_warning {
-    printf "\n\e[34;107mWhat branch would you like to use for this production build?\033[0m\n"
+    # git incantation for "What's the current branch?"
+    cbranch=`git symbolic-ref --short HEAD`
+    printf "\n\e[34;107mWhat branch would you like to use for this production build? (return for current branch $cbranch)\033[0m\n"
     read branch
     BRANCH_NAME=$branch
+    if [[ -z "$BRANCH_NAME" ]]; then
+        BRANCH_NAME=$cbranch
+    fi
+
     printf "\n\e[34;107mAre you absolutely certain that you want to build and release $PROJECT_NAME on this Production Server\033[0m\n\e[34;107mBased on your specified branch of $BRANCH_NAME ?\033[0m"
     if [[ $PROJECT_USES_WWAPPBASE_SYMLINK = 'yes' ]]; then
         printf "\n\t\e[34;107mFurther, are you certain that the branch $BRANCH_NAME exists in the wwappbase.js repo?\033[0m\n"
