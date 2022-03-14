@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "reactstrap";
+import DynImg from "../base/components/DynImg";
 import { toTitleCase } from "../base/utils/miscutils";
 
 const Banner = ({title}) => {
@@ -26,7 +27,7 @@ const TextBanner = ({page, title, subtitle, image}) => {
 					<a className="btn btn-primary mb-5" href="#about">Inquire now</a>
 				</div>
 				<div className="col-md">
-					<img src={image} alt="" className="w-100" />
+					<DynImg src={image} alt="" className="w-100" />
 				</div>
 			</div>
 			</div>
@@ -88,8 +89,8 @@ const ImpactRatingCard = ({title}) => {
 						<div className="col-md-6">
 								<p className="press-caption text-center">SoGive in the press</p>
 								<div className="row">
-										<div className="col"><img src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></div>
-										<div className="col"><img src="/img/logo/TEDxCourtauld-logo.jpg" alt="TED" className="w-100" /></div>
+										<div className="col"><DynImg src="/img/logo/The-Scotsman-logo.jpg" alt="The Scotsman" className="w-100" /></div>
+										<div className="col"><DynImg src="/img/logo/TEDxCourtauld-logo.jpg" alt="TED" className="w-100" /></div>
 								</div>
 						</div>
 				</div>
@@ -148,22 +149,22 @@ const MethodCard = () => {
 							<h2>Our Methodology</h2>
 							<div className="row method-4-steps">
 									<div className="col-md">
-											<img src="/img/homepage/1-analyse.png" alt="" className="w-100" />
+											<DynImg src="/img/homepage/1-analyse.png" alt="" className="w-100" />
 											<p>1. Analyse financial statements</p>
 											<p>We review charities' financial and program spending.</p>
 									</div>
 									<div className="col-md">
-											<img src="/img/homepage/2-assess.png" alt="" className="w-100" />
+											<DynImg src="/img/homepage/2-assess.png" alt="" className="w-100" />
 											<p>2. Assess outcomes</p>
 											<p>We determine what the charity achieved for each program in measurable units.</p>
 									</div>
 									<div className="col-md">
-											<img src="/img/homepage/3-calculate.png" alt="" className="w-100" />
+											<DynImg src="/img/homepage/3-calculate.png" alt="" className="w-100" />
 											<p>3. Calculate cost-effectiveness</p>
 											<p>We divide the costs by the outcomes achieved to get the cost per outcome.</p>
 									</div>
 									<div className="col-md">
-											<img src="/img/homepage/4-compare.png" alt="" className="w-100" />
+											<DynImg src="/img/homepage/4-compare.png" alt="" className="w-100" />
 											<p>4. Compare to others</p>
 											<p>We compare the cost per outcomes with other charities to find the most effective ones.</p>
 									</div>
@@ -189,10 +190,10 @@ const ContactCardLight = ({title}) => {
 						<p>Want to learn more about how SoGive can help you as a financial adviser? Contact us using the form and we'll get in touch with you to help.</p>
 						<div className="row mb-5">
 							<div className="col-3 col-md-2">
-								<img src="/img/profilepic/sanjay.png" alt="" className="w-100" />
+								<DynImg src="/img/profilepic/sanjay.png" alt="" className="w-100" />
 							</div>
 							<div className="col-3 col-md-2">
-								<img src="/img/profilepic/daniel.png" alt="" className="w-100" />
+								<DynImg src="/img/profilepic/daniel.png" alt="" className="w-100" />
 							</div>
 						</div>
 					</div>
