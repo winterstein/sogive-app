@@ -252,7 +252,12 @@ public class NGO extends Thing<NGO> {
 		put("simpleImpact", unitOutput);
 		// for GL
 		if (unitOutput==null) {
-			Log.e(LOGTAG, "setSimpleImact null?!");
+			Log.e(LOGTAG, "(swallow) setSimpleImact null?! "+getId());
+			return;
+		}
+		Money cpb = unitOutput.getCostPerBeneficiary();
+		if (cpb==null) {
+			Log.e(LOGTAG, "(swallow) setSimpleImact - unitOutput with null CostPerBen?! "+getId()+" "+unitOutput);
 			return;
 		}
 		ArrayList impacts = new ArrayList();
@@ -260,8 +265,8 @@ public class NGO extends Thing<NGO> {
 		ic.setName(unitOutput.getName());
 		ic.setCharity(getId());
 		double n = unitOutput.getNumber(); // probably 1
-		ic.setN(n);
-		ic.setAmount(unitOutput.getCostPerBeneficiary().multiply(n));
+		ic.setN(n);		
+		ic.setAmount(cpb.multiply(n));
 		impacts.add(ic);		
 		put("impacts", impacts);
 	}
