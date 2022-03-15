@@ -252,12 +252,12 @@ public class NGO extends Thing<NGO> {
 		put("simpleImpact", unitOutput);
 		// for GL
 		if (unitOutput==null) {
-			Log.e(LOGTAG, "(swallow) setSimpleImact null?! "+getId());
+			Log.d(LOGTAG, "setSimpleImact null unitOutput "+getId());
 			return;
 		}
 		Money cpb = unitOutput.getCostPerBeneficiary();
 		if (cpb==null) {
-			Log.e(LOGTAG, "(swallow) setSimpleImact - unitOutput with null CostPerBen?! "+getId()+" "+unitOutput);
+			Log.d(LOGTAG, "setSimpleImact - unitOutput with null CostPerBen "+getId()+" "+unitOutput);
 			return;
 		}
 		ArrayList impacts = new ArrayList();
