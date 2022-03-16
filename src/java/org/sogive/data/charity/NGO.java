@@ -189,7 +189,7 @@ public class NGO extends Thing<NGO> {
 			}
 			// ignore overall project if more than one rep project			
 			latest = Containers.filter(latest, 
-				project -> project != null && ! "overall".equals(project.getName())
+				project -> ! "overall".equals(project.getName())
 				);
 			if (latest.size() == 1) {
 				return latest.get(0);
