@@ -181,23 +181,29 @@ public class NGO extends Thing<NGO> {
 		List<Project> projects2 = Containers.filter(projects, p -> p.isRep());
 		List<Project> overalls = Containers.filter(projects, p -> "overall".equals(p.getName()));
 
-		if (!Utils.isEmpty(projects2)) {
+		if ( ! Utils.isEmpty(projects2)) {
 			List<Project> latest = getLatestYear(projects2);
-			if (latest.size() != 1) {
-				// ignore overall project if more than one rep project
-				for (Project project : latest) {
-					if (project.toString().contains("overall")) {
-						latest.remove(project);
-					}
-				}
-				if (latest.size() == 1) return latest.get(0);
-				
-				Log.e("getRepProject",
-						"Bogus project info in " + this + ": More than one latest rep project! " + projects2);
+			Project firstLatest = latest.get(0);
+			if (latest.size() == 1) {
+				return firstLatest;
 			}
+			// ignore overall project if more than one rep project			
+			latest = Containers.filter(latest, 
+				project -> ! "overall".equals(project.getName())
+				);
+			if (latest.size() == 1) {
+				return latest.get(0);
+			}
+			if (latest.isEmpty()) {
+				// All overall in the same year?!
+				return firstLatest;		
+			}
+			Log.w("getRepProject",
+					"Bogus project info in " + this + ": More than one latest rep project! " + latest);
 			return latest.get(0);
 		}
-		if (!Utils.isEmpty(overalls)) {
+		// an overall year project
+		if ( ! Utils.isEmpty(overalls)) {
 			List<Project> latest = getLatestYear(overalls);
 			assert latest.size() == 1 : latest;
 			return latest.get(0);
@@ -252,12 +258,12 @@ public class NGO extends Thing<NGO> {
 		put("simpleImpact", unitOutput);
 		// for GL
 		if (unitOutput==null) {
-			Log.e(LOGTAG, "(swallow) setSimpleImact null?! "+getId());
+			Log.d(LOGTAG, "setSimpleImact null unitOutput "+getId());
 			return;
 		}
 		Money cpb = unitOutput.getCostPerBeneficiary();
 		if (cpb==null) {
-			Log.e(LOGTAG, "(swallow) setSimpleImact - unitOutput with null CostPerBen?! "+getId()+" "+unitOutput);
+			Log.d(LOGTAG, "setSimpleImact - unitOutput with null CostPerBen "+getId()+" "+unitOutput);
 			return;
 		}
 		ArrayList impacts = new ArrayList();
