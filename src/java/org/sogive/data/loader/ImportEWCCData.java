@@ -2,9 +2,12 @@ package org.sogive.data.loader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Thing;
@@ -16,8 +19,11 @@ import com.winterwell.gson.JsonArray;
 import com.winterwell.gson.JsonElement;
 import com.winterwell.gson.JsonObject;
 import com.winterwell.gson.JsonParser;
+import com.winterwell.utils.Printer;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.WrappedException;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Pair2;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
 import com.winterwell.utils.web.WebUtils;
@@ -37,6 +43,11 @@ public class ImportEWCCData {
 	public static final String MAIN_FILE = "publicextract.charity.zip";
 	public static final String ANN_RET_HIST_FILE = "publicextract.charity_annual_return_history.zip";
 	public static final String TAG = ImportEWCCData.class.getSimpleName();
+	public static final Integer EWCC_CHARITY_EXCEPTION_LIMIT = 3;
+	private static String eLogDetails = "";
+	private static List<String> newCharities = new ArrayList<>();
+	private static List<String> updatedCharities = new ArrayList<>();
+	private static Map<String,String> errorCharities = new ArrayMap<>();
 	private volatile boolean running;
 	
 	private final DatabaseWriter dbWriter;
@@ -55,25 +66,28 @@ public class ImportEWCCData {
 		return depotServer;
 	}
 
-	protected ArrayMap processEWCCMainFile(File file) throws Exception {
-		List<String> newCharities = new ArrayList<>();
-		List<String> updatedCharities = new ArrayList<>();
-		ArrayMap<String,Exception> errorCharities = new ArrayMap<>();
+	protected JsonArray convertJsonFileToJsonArray(File file) {
+		try {
+			BufferedReader r = FileUtils.getZIPReader(file);
+			JsonElement jElement = new JsonParser().parse(r);
+			return jElement.getAsJsonArray();
+		} catch (Throwable ex) {
+			eLogDetails = String.format("File conversion error for file %s", file.getName());
+			throw ex;
+		}
+	}
+	
+	protected void processEWCCMainData(JsonArray jArray) throws Exception {
+		
 		String cName = "";
 		
-		BufferedReader r = FileUtils.getZIPReader(file);
-		JsonElement jElement = new JsonParser().parse(r);
-		JsonArray jArray = jElement.getAsJsonArray();
 		int cnt = 0;
 		for (JsonElement jElem : jArray) {
 			try {
 				JsonObject charityObj = jElem.getAsJsonObject();
 				cName = jsonToString(charityObj, "charity_name");
 				String cStatus = jsonToString(charityObj, "charity_registration_status");
-				if (cStatus.equals("Removed")) {
-					//System.out.println("EWCC charity status removed: "+ cName);
-					continue;
-				}
+				if (cStatus.equals("Removed")) continue;
 				
 				String ourId = NGO.idFromName(cName);
 				
@@ -102,7 +116,7 @@ public class ImportEWCCData {
 					ngo.put(key, v);
 				}
 				
-				//PUBLISHED status to add new charities in updateCharityRecord()
+				//use PUBLISHED status to add new charities in updateCharityRecord()
 				if (status == KStatus.ABSENT) {
 					status = KStatus.PUBLISHED;
 					newCharities.add(cName);
@@ -114,18 +128,19 @@ public class ImportEWCCData {
 				
 				
 			} catch (Exception e) {
-				//should I use Log.e() here as well?
-				errorCharities.put(cName, e);
-				if (errorCharities.size() > 4) {
+				
+				errorCharities.put(cName, e.getMessage());
+				
+				// if too many errors, stop processing & report
+				if (errorCharities.size() > EWCC_CHARITY_EXCEPTION_LIMIT) {
+					eLogDetails = String.format("Too many recurring exceptions while processing charities. More than %s errors. Error Charities: %s", EWCC_CHARITY_EXCEPTION_LIMIT, errorCharities);
 					throw e;
 				}
 			}
 			
 			cnt++;
-			if (cnt>5) break;
+			if (cnt>15) break;
 		}
-		
-		return new ArrayMap("newCharities", newCharities, "updatedCharities", updatedCharities, "errorCharities", errorCharities);
 	}
 	
 	/**
@@ -142,8 +157,8 @@ public class ImportEWCCData {
 			JsonElement jElement = jObject.get(label);
 			return (jElement.isJsonNull()) ? null : jElement.getAsString();
 		} catch (NullPointerException e) {
-			Log.e(TAG, String.format("Invalid property value, '%s', for data object, '%s', from EWCC file: %s", label, jObject, e.getMessage()));
-			throw new Exception(String.format("Invalid property value, '%s', for data object, '%s', from EWCC file.", label, jObject), e);
+			eLogDetails = String.format("Invalid property value, '%s', for data object, '%s'", label, jObject);
+			throw e;
 		}
 	}
 
@@ -174,22 +189,24 @@ public class ImportEWCCData {
 	 * @param fileName file to be retrieved from Depot or downloaded from EWCC site
 	 * @return File object
 	 */
-	protected File getAndStoreEWCCFile(String fileName) {
+	protected File getAndStoreEWCCFile(String ewccEndpoint, String fileName) {
 		
-		Desc<File> desc = createDesc(fileName);
-		File file = Depot.getDefault().get(desc);
-		System.out.println("depot file already exist?: "+file);
-
-		if (file == null) {
-			/*
-			Note: The main EWCC file is too large for the current MAX_DOWNLOAD limit in the FakeBrowser class.
-			So I updated the limit in FB from 10 to 51, which is the minimum for the main file size.
-			*/
-			FakeBrowser fb = new FakeBrowser();		
-			file = fb.getFile(EWCC_BLOB_ENDPOINT+"/"+WebUtils.urlEncode(fileName));
-			Depot.getDefault().put(desc, file);
+		try {
+			Desc<File> desc = createDesc(fileName);
+			File file = Depot.getDefault().get(desc);
+			System.out.println("depot file already exist?: "+file);
+	
+			if (file == null) {
+				FakeBrowser fb = new FakeBrowser();		
+				fb.setMaxDownload(51);
+				file = fb.getFile(ewccEndpoint+"/"+WebUtils.urlEncode(fileName));
+				Depot.getDefault().put(desc, file);
+			}
+			return file;
+		} catch (Throwable ex) {
+			eLogDetails = String.format("File retrieval error for file %s", fileName);
+			throw ex;
 		}
-		return file;
 	}
 	
 	/*
@@ -198,14 +215,28 @@ public class ImportEWCCData {
 	 */
 	public synchronized ArrayMap run() {
 		System.out.println("ImportEWCCData running...");
+		
 		running = true;
 		
 		try {
-			File file = getAndStoreEWCCFile(MAIN_FILE);
-			return processEWCCMainFile(file);
+			File file = getAndStoreEWCCFile(EWCC_BLOB_ENDPOINT, MAIN_FILE);
+			
+			JsonArray jArray = convertJsonFileToJsonArray(file);
+			
+			processEWCCMainData(jArray);
+			
+			if (errorCharities.size() > 0) {
+				Log.e(TAG, String.format("Some charities produced errors while processing, but less than exception limit of %s: %s", EWCC_CHARITY_EXCEPTION_LIMIT, errorCharities));
+			}
+			
+			ArrayMap<String, Object> report = new ArrayMap<>("errorCharities", errorCharities, "newCharities", newCharities, "updatedCharities", updatedCharities);
+			Log.i(TAG, report);
+			
+			return report;
 			
 		} catch (Throwable ex) {
-			throw Utils.runtime(ex);
+			Log.e(TAG, String.format("%s: %s", eLogDetails, ex.getMessage()));
+			throw new WrappedException(String.format("%s: %s", TAG, eLogDetails), ex);
 		} finally {
 			running = false;
 		}
