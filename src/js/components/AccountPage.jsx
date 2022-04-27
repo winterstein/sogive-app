@@ -51,7 +51,7 @@ const RepeatingDonations = () => {
 	// ListItem={RDListItem}
 	return <ListLoad type={C.TYPES.RepeatDonation} navpage='repeatdonation'
 		q='from:me' checkboxes={false} status={C.KStatus.ALL_BAR_TRASH} ListItem={RDItem}
-		canDelete />;
+		canDelete cannotClick />;
 	// const pvRDons = DataStore.fetch(['list', C.TYPES.RepeatDonation, 'from:me'], () => {
 	// 	return ServerIO.load('/repeatDonation/_list', {data: {q: "from:me"} });
 	// });

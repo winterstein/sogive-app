@@ -96,7 +96,7 @@ const ManageRepeatDonationsPage = () => {
 	return (
 		<div className=''>
 			<h2>Manage Repeat Donations</h2>
-			<ListLoad filterLocally notALink canFilter canDelete status={KStatus.ALL_BAR_TRASH} type={C.TYPES.RepeatDonation} ListItem={RDItem} />
+			<ListLoad filterLocally cannotClick canFilter canDelete status={KStatus.ALL_BAR_TRASH} type={C.TYPES.RepeatDonation} ListItem={RDItem} />
 			{/* <SimpleTable data={dons} columns={columns} csv hasFilter
 				rowsPerPage={100}
 			/> */}
