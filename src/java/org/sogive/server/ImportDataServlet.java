@@ -44,13 +44,15 @@ public class ImportDataServlet implements IServlet {
 		if ("EWCC".equals(dataset)) {
 			DatabaseWriter databaseWriter = new ElasticSearchDatabaseWriter(); 
 			String depotServer = Desc.CENTRAL_SERVER;
-			ewcc = new ImportEWCCData(databaseWriter, depotServer);
+			int ngoExceptionLimit = 30;
+			ewcc = new ImportEWCCData(databaseWriter, depotServer, ngoExceptionLimit);
 			if (ewcc.isRunning()) {
 				throw new WebEx.E400("Repeat call");
 			}
-			ArrayMap results = ewcc.run();
-			JsonResponse output = new JsonResponse(state, results);
+			String resp = "EWCC now processing. Check logs for stats &/or errors.";
+			JsonResponse output = new JsonResponse(state, resp);
 			WebUtils2.sendJson(output, state);
+			ewcc.run();
 		}
 		// A Google doc of editorials?
 		if ("editorials".equals(dataset)) {
