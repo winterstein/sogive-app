@@ -111,8 +111,8 @@ const ContactForm = () => {
 		e.stopPropagation();
 
 		$.ajax({
-			url: 'https://profiler.good-loop.com/form/sogive.org',
-			data: {name, email, message}
+			url: 'https://profiler.good-loop.com/form/sogive.org',			
+			data: {name, email, message, notify:"hello@sogive.org"}
 		}).then(() => setShowAlert(true));
 	};
 
@@ -135,7 +135,7 @@ const ContactForm = () => {
 					<textarea id="message" form="contact-card" onChange={e => setMessage(e.target.value)}></textarea>
 				</div>
 			</div>
-			{ noMessage ? <button className="btn btn-primary mt-1" type='submit' disabled>Submit</button> : <button className="btn btn-primary mt-1" type='submit'>Sumbit</button>}
+			<button className="btn btn-primary mt-1" type='submit' disabled={noMessage}>Submit</button>
 			{ showAlert ? <Alert color="success">Thank you - we will be in touch soon.</Alert> : null}
 		</form>
 	</>)
