@@ -112,7 +112,7 @@ const ContactForm = () => {
 
 		$.ajax({
 			url: 'https://profiler.good-loop.com/form/sogive.org',			
-			data: {name, email, message, notify:"hello@sogive.org"}
+			data: {name, email, message, notify:"sogive@good-loop.com"}
 		}).then(() => setShowAlert(true));
 	};
 
