@@ -46,8 +46,6 @@ public class Ticket extends AThing {
 	 */
 	String message;
 
-	XId oxid;
-
 	/**
 	 * The parent Ticket ID, or null
 	 */
