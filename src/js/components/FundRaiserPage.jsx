@@ -24,7 +24,6 @@ import NGO from '../data/charity/NGO2';
 import FundRaiser from '../data/charity/FundRaiser';
 import Donation from '../data/charity/Donation';
 
-import { DonateButton } from './DonationWizard';
 import { ImpactDesc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
 import { assMatch } from '../base/utils/assert';
@@ -205,7 +204,6 @@ const DonationProgress = ({item, charity}) => {
 			<p>No money raised yet.</p>
 			{isOwner(item)? <p>Why not kick-start things by making a seed donation yourself?</p> : null}
 			{isTarget> 0? <div className='target'>Target: <Misc.Money amount={target} /></div> : null}
-			<DonateButton item={item} />
 		</div>);
 	}
 
@@ -237,7 +235,6 @@ const DonationProgress = ({item, charity}) => {
 				<DonationsSoFar item={item} />
 				{charity && charity.hideImpact? null
 					: <ImpactDesc charity={charity} amount={donated} showMoney={false} beforeText='Your donations so far are enough to fund' maxImpacts={2} />}
-				<DonateButton item={item} />
 			</div>
 		</div>
 	);

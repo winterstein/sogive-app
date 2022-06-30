@@ -19,7 +19,6 @@ import { impactCalc } from "./ImpactWidgetry";
 import C from "../C";
 import { getId } from "../base/data/DataClass";
 import { LearnAboutRatings } from "./LearnAboutRatings";
-import { DonateButton } from './DonationWizard';
 import { RatingBadge } from "./CharityPage";
 import SearchQuery from '../base/searchquery';
 
@@ -403,7 +402,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
             <div className="click-through-action">
                 <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
             </div>
-            <DonateButton item={item} isOutlined={true} isLarge={false} />
         </div>
     ) : null;
 
@@ -413,7 +411,6 @@ const SearchResult = ({ item, CTA, onPick }) => {
             <div className="click-through-action">
                 <CTA itemUrl={charityUrl} onClick={onClick} item={item} />
             </div>
-            <DonateButton item={item} isOutlined={true} isLarge={false} />
         </div>
     ) : null;
     return (
