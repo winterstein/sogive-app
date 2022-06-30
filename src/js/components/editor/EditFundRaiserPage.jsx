@@ -10,7 +10,6 @@ import C from '../../C';
 import Misc from '../../base/components/Misc';
 import PropControl from '../../base/components/PropControl';
 import FundRaiser from '../../data/charity/FundRaiser';
-import { DonateButton } from '../DonationWizard';
 import ShareWidget, {ShareLink, canWrite} from '../../base/components/ShareWidget';
 import {notifyUser} from '../../base/plumbing/Messaging';
 
@@ -108,7 +107,6 @@ const AddOffSiteDonation = ({fundraiser}) => {
 	return (
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere. It will be added to your fundraiser.</p>
-			<DonateButton item={fundraiser} paidElsewhere fromEditor />
 		</Misc.Card>
 	);
 };

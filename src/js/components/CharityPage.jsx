@@ -25,7 +25,6 @@ import Citation from '../data/charity/Citation';
 import ImpactCalculator from './ImpactCalculator';
 import { impactCalc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
-import { DonateButton } from './DonationWizard';
 import { LearnAboutRatings } from './LearnAboutRatings';
 import LinkOut from '../base/components/LinkOut';
 
@@ -98,7 +97,6 @@ const CharityPage = () => {
 const RatingBadgeandDonate = ({charity}) => (
 		<div className="container impact">
 			<RatingBadge charity={charity} />
-			<DonateButton item={charity}/>
 		</div>
 	)
 
@@ -538,7 +536,6 @@ const LogOffSiteDonation = ({item}) => {
 		<Misc.Card title='Add an off-site donation'>
 			<p>Use this form to record a donation which has already been paid for elsewhere.
 				It will be added to your profile dashboard.</p>
-			<DonateButton item={item} paidElsewhere />
 		</Misc.Card>
 	);
 };
