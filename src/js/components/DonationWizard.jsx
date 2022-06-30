@@ -49,7 +49,7 @@ const getWidgetProp = (forItem, prop) => (
  */
 
 /**
- * NB: We can have several DonateButtons, but only one modal form
+ * @deprecated SoGive no longer has a donation platform, will not work
  */
 const DonateButton = ({item, paidElsewhere, isOutlined = false, isLarge = true, ...props}) => {
 	if (NGO.noPublicDonations(item)) {
