@@ -68,7 +68,6 @@ public class FundRaiser extends AThing {
 	 * user photo + name + bio
 	 */
 	PersonLite owner;
-	XId oxid;
 
 	/**
 	 * The user's personal story

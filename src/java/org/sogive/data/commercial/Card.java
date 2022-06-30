@@ -40,7 +40,6 @@ public class Card extends AThing {
 
 	String message;
 
-	XId oxid;
 
 	@ESKeyword
 	String parentTicketId;

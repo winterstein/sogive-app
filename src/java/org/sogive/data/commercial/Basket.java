@@ -48,8 +48,6 @@ public class Basket extends AThing implements IForSale {
 
 	List<Ticket> items;
 
-	XId oxid;
-
 	/**
 	 * e.g. a stripe charge id
 	 */
