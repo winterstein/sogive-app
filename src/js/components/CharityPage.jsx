@@ -18,7 +18,7 @@ import { Tabs, Tab } from '../base/components/Tabs';
 import C from '../C';
 import ActionMan from '../plumbing/ActionMan';
 import NGO from '../data/charity/NGO2';
-import Project from '../data/charity/Project';
+import Project ﻿from '../data/charity/Project';
 import Output from '../data/charity/Output';
 import Citation from '../data/charity/Citation';
 
@@ -27,6 +27,7 @@ import { impactCalc } from './ImpactWidgetry';
 import SocialShare from './SocialShare';
 import { LearnAboutRatings } from './LearnAboutRatings';
 import LinkOut from '../base/components/LinkOut';
+import { BubbleController } from 'chart.js';
 
 const BADGES_WITH_TENTATIVE_VERSIONS = new Enum("high medium slightly-low");
 
@@ -78,20 +79,26 @@ const CharityPage = () => {
 			</div>
 			{impact && <ImpactCalculatorSection charity={charity} />}
 			{/* {charity.summaryDescription || charity.description ? <CharityAboutSection charity={charity} /> : null} */}
-			{charity.recommendation? <CharityAnalysisSection charity={charity} /> : null}
 		</Col>
 	);
-	const spacerColumn = <Col md="1" xs="hidden" />;
 
+
+	const analysisSection = charity.recommendation ? <CharityAnalysisSection charity={charity} /> : null
+	const spacerColumn = <Col md="1" xs="hidden" />;
+	
 	return (
-		<div>
-			<div className='charity-page row'>
-				{impactColumn}
-				{spacerColumn}
-				<InfoColumn charity={charity} />
+			<div>
+				<div className='charity-page row'>
+					{impactColumn}
+					{spacerColumn}
+					<InfoColumn charity={charity} />
+				</div>
+				<hr />
+				<div className='charity-page analysis-section mt-5 pt-5'>
+					{analysisSection}
+				</div>
 			</div>
-		</div>
-	);
+		);
 }; // ./CharityPage
 
 const RatingBadgeandDonate = ({charity}) => (
@@ -151,7 +158,9 @@ const CharityAnalysisSection = ({charity}) => (
 		<div className="header">
 			<h2 className="header-section-title">Our Analysis</h2>
 		</div>
-		<RatingBadgeandDonate charity={charity} />
+		<div className='pb-3'>
+			<RatingBadgeandDonate charity={charity} />		
+		</div>
 		<div className="div-section-text">
 			<MDText source={charity.recommendation} />
 		</div>
