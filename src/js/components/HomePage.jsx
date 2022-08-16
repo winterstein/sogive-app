@@ -10,7 +10,7 @@ const HomePage = () => {
     return (
         <div className="HomePage">
             <HeroBanner/>
-            <Lewis />
+            <strategyChangingWarning />
             <MethodCard />
             <FAQCard />
             <ImpactRatingCard title="Find effective charites." />
@@ -20,8 +20,8 @@ const HomePage = () => {
     );
 };
 
-
-const Lewis = () => {
+// remove once update is completed
+const strategyChangingWarning = () => {
   return (
     <div className="warningBanner container-fulid">
       <div className="container">
