@@ -2,11 +2,15 @@ import React from 'react';
 import Faq from 'react-faq-component';
 import { NewsletterCard, ContactForm, ImpactRatingCard, MethodCard } from './WebsiteCards';
 
+
+
+
 const HomePage = () => {
 
     return (
         <div className="HomePage">
             <HeroBanner/>
+            <StrategyChangingWarning />
             <MethodCard />
             <FAQCard />
             <ImpactRatingCard title="Find effective charites." />
@@ -15,6 +19,18 @@ const HomePage = () => {
         </div>
     );
 };
+
+// re
+const StrategyChangingWarning = () => {
+  return (
+    <div className="warningBanner container-fulid">
+      <div className="container">
+        <p>SoGive is currently redirecting its strategy. In the meantime, not all of the content on our website will necessarily be fully up to date. We will update our site in due course, but in the meantime the content may still be of use to you.</p>
+      </div>
+    </div>
+
+);
+}
 
 const HeroBanner = () => {
 
