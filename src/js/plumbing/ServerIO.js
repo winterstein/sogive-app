@@ -15,8 +15,7 @@ import Messaging, {notifyUser} from '../base/plumbing/Messaging';
 import ServerIO from '../base/plumbing/ServerIOBase';
 import KStatus from '../base/data/KStatus.js';
 
-ServerIO.APIBASE = '';
-
+ServerIO.APIBASE = 'https://app.sogive.org';
 Login.ENDPOINT = 'https://youagain.good-loop.com/youagain.json';
 
 ServerIO.checkBase();
