@@ -5,7 +5,7 @@ import requests
 from pprint import pprint
 import re
 
-
+os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = '5472de0e0ef14d96b49311c366d8c2c5'
 
 def bingSearchWebpages(query: str) -> list:
 	subscription_key = os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY']
@@ -51,5 +51,11 @@ def removeListingDomains(domains: list) -> list:
 	topDomains = 3
 
 	topDomains = domains[:topDomains]
-	for domain in topDomains:
-		if 
+	realDomains = []
+	for i in topDomains:
+		skipping = False
+		for j in unwantedDomains:
+			if j in i: skipping = True
+		if skipping == False: realDomains.append(i)
+	print('Numers of real domain(s) in', domains, ':', len(realDomains))
+	return realDomains
