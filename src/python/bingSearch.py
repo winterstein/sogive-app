@@ -5,7 +5,7 @@ import requests
 from pprint import pprint
 import re
 
-os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = '5472de0e0ef14d96b49311c366d8c2c5'
+os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = ''
 
 def bingSearchWebpages(query: str) -> list:
 	subscription_key = os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY']
