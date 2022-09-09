@@ -47,15 +47,17 @@ def bingSearchGetDomains(results: list):
 	return domainList
 
 def removeListingDomains(domains: list) -> list:
-	unwantedDomains = ['charitynavigator', 'opencorporates', 'georgiacompanyregistry', 'guidestar', 'corporationwiki', 'eintaxid', 'dnb', 'facebook', 'twitter']
-	topDomains = 3
-
-	topDomains = domains[:topDomains]
+	unwantedDomains = ['charitynavigator', 'opencorporates', 'georgiacompanyregistry', 'guidestar', 'corporationwiki', 'eintaxid', 'dnb', 'facebook', 'twitter', 'religiondb', 'yelp', 'wikipedia']
+	# topDomains = 3
+	# topDomains = domains[:topDomains]
 	realDomains = []
-	for i in topDomains:
+	for i in domains:
 		skipping = False
 		for j in unwantedDomains:
 			if j in i: skipping = True
 		if skipping == False: realDomains.append(i)
 	print('Numers of real domain(s) in', domains, ':', len(realDomains))
 	return realDomains
+
+def nameToDomains(query: str) -> list:
+	return removeListingDomains(bingSearchGetDomains(bingSearchWebpages(query)))
