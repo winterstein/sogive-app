@@ -1,8 +1,6 @@
-import json
 import unittest
 import sys
-from unittest import result
-sys.path.insert(0, '/home/wing/winterwell/sogive-app/src/python')
+sys.path.insert(0, '/home/winterwell/sogive-app/src/python')
 
 from bingSearch import bingSearchWebpages, bingSearchGetDomains, removeListingDomains
 
