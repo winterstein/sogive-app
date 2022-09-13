@@ -8,7 +8,8 @@
 		"revenue": "$5.2 B",
 		"fundraisingEfficiency": "88",
 		"charitableCommitment": "85",
-		"description": "Dating back to 1887, United Way Worldwide is the nation's largest charity by donations received, much of it from payroll deductions via 1,3000 local affiliates."
+		"description": "Dating back to 1887, United Way Worldwide is the nation's largest charity by donations received, much of it from payroll deductions via 1,3000 local affiliates.",
+		"domain": "www.unitedway.org"
 	},
 	{
 		"rank": "2",
@@ -19,7 +20,8 @@
 		"revenue": "$3.57 B",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "99",
-		"description": "Founded in 1979, Feeding America is the nation's leading hunger-relief charity."
+		"description": "Founded in 1979, Feeding America is the nation's leading hunger-relief charity.",
+		"domain": "www.feedingamerica.org"
 	},
 	{
 		"rank": "3",
@@ -30,7 +32,8 @@
 		"revenue": "$4.16 B",
 		"fundraisingEfficiency": "90",
 		"charitableCommitment": "82",
-		"description": "Founded in London in 1865, the Salvation Army is a church that is better known for its charity work in over 120 countries."
+		"description": "Founded in London in 1865, the Salvation Army is a church that is better known for its charity work in over 120 countries.",
+		"domain": "www.salvationarmyusa.org"
 	},
 	{
 		"rank": "4",
@@ -41,7 +44,8 @@
 		"revenue": "$4.21 B",
 		"fundraisingEfficiency": "86",
 		"charitableCommitment": "70",
-		"description": "Founded in 1962 by Danny Thomas, St. Jude Children's Research Hospital is a pediatric treatment and research facility in Memphis focused on children's catastrophic diseases."
+		"description": "Founded in 1962 by Danny Thomas, St. Jude Children's Research Hospital is a pediatric treatment and research facility in Memphis focused on children's catastrophic diseases.",
+		"domain": "www.stjude.org"
 	},
 	{
 		"rank": "5",
@@ -52,7 +56,8 @@
 		"revenue": "$1.94 B",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "100",
-		"description": "Founded in 1948, Direct Relief routes donated medicines and supplies to local healthcare providers in more than 140 countries, including the United States."
+		"description": "Founded in 1948, Direct Relief routes donated medicines and supplies to local healthcare providers in more than 140 countries, including the United States.",
+		"domain": "www.directrelief.org"
 	},
 	{
 		"rank": "6",
@@ -63,7 +68,8 @@
 		"revenue": "$2.3 B",
 		"fundraisingEfficiency": "88",
 		"charitableCommitment": "84",
-		"description": "Founded in 1976 as a Christian housing ministry, Habitat for Humanity International musters donations and volunteer help to build actual homes for people that need them."
+		"description": "Founded in 1976 as a Christian housing ministry, Habitat for Humanity International musters donations and volunteer help to build actual homes for people that need them.",
+		"domain": "www.habitat.org"
 	},
 	{
 		"rank": "7",
@@ -74,7 +80,8 @@
 		"revenue": "$1.44 B",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "98",
-		"description": "Founded in 1982, AmeriCares is a disaster relief and humanitarian aid organization providing immediate response to emergency medical needs and supporting long-term health care initiatives in the United States and abroad."
+		"description": "Founded in 1982, AmeriCares is a disaster relief and humanitarian aid organization providing immediate response to emergency medical needs and supporting long-term health care initiatives in the United States and abroad.",
+		"domain": "www.americares.org"
 	},
 	{
 		"rank": "8",
@@ -85,7 +92,8 @@
 		"revenue": "$6.21 B",
 		"fundraisingEfficiency": "89",
 		"charitableCommitment": "84",
-		"description": "Founded in 1844, the Young Men's Christian Association is a worldwide organization perhaps best known in the U.S. for its fitness facilities."
+		"description": "Founded in 1844, the Young Men's Christian Association is a worldwide organization perhaps best known in the U.S. for its fitness facilities.",
+		"domain": "www.ymca.org"
 	},
 	{
 		"rank": "9",
@@ -96,7 +104,8 @@
 		"revenue": "$2.42 B",
 		"fundraisingEfficiency": "88",
 		"charitableCommitment": "80",
-		"description": "Dating back to 1860, Boys & Girls Clubs of America operates after-school care programs nationally."
+		"description": "Dating back to 1860, Boys & Girls Clubs of America operates after-school care programs nationally.",
+		"domain": "www.bgca.org"
 	},
 	{
 		"rank": "10",
@@ -107,7 +116,8 @@
 		"revenue": "$1.1 B",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "83",
-		"description": "Founded in 1952, Compassion International is a Christian child sponsorship organization dedicated to the long-term development of children living in poverty around the world."
+		"description": "Founded in 1952, Compassion International is a Christian child sponsorship organization dedicated to the long-term development of children living in poverty around the world.",
+		"domain": "www.compassion.com"
 	},
 	{
 		"rank": "11",
@@ -118,7 +128,8 @@
 		"revenue": "$4.32 B",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "87",
-		"description": "Founded in 1910, Catholic Charities USA provides service to people in need and pushes for justice in social structures."
+		"description": "Founded in 1910, Catholic Charities USA provides service to people in need and pushes for justice in social structures.",
+		"domain": "www.catholiccharitiesusa.org"
 	},
 	{
 		"rank": "12",
@@ -129,7 +140,8 @@
 		"revenue": "$1.05 B",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "99",
-		"description": "Founded in 1984, Task Force for Global Health helps underserved populations in more than 50 countries."
+		"description": "Founded in 1984, Task Force for Global Health helps underserved populations in more than 50 countries.",
+		"domain": "www.taskforce.org"
 	},
 	{
 		"rank": "13",
@@ -140,7 +152,8 @@
 		"revenue": "$988 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "99",
-		"description": "Founded in 2002, Step Up For Students raises money primarily to provide private school vouchers for poor students in Florida."
+		"description": "Founded in 2002, Step Up For Students raises money primarily to provide private school vouchers for poor students in Florida.",
+		"domain": "www.stepupforstudents.org"
 	},
 	{
 		"rank": "14",
@@ -151,7 +164,8 @@
 		"revenue": "$871 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "100",
-		"description": "Founded in 1983, Good 360 routes donated corporate products to thousands of pre-qualified charities."
+		"description": "Founded in 1983, Good 360 routes donated corporate products to thousands of pre-qualified charities.",
+		"domain": "good360.org"
 	},
 	{
 		"rank": "15",
@@ -162,7 +176,8 @@
 		"revenue": "$1.29 B",
 		"fundraisingEfficiency": "84",
 		"charitableCommitment": "67",
-		"description": "Founded in 1951 and now operating in more than 30 countries, the Nature Conservancy works to preserve land and water."
+		"description": "Founded in 1951 and now operating in more than 30 countries, the Nature Conservancy works to preserve land and water.",
+		"domain": "nature.org"
 	},
 	{
 		"rank": "16",
@@ -173,7 +188,8 @@
 		"revenue": "$3.12 B",
 		"fundraisingEfficiency": "79",
 		"charitableCommitment": "90",
-		"description": "Founded in 1881 by Clara Barton, the American National Red Cross provides emergency assistance, disaster relief and education inside the United States."
+		"description": "Founded in 1881 by Clara Barton, the American National Red Cross provides emergency assistance, disaster relief and education inside the United States.",
+		"domain": "www.redcross.org"
 	},
 	{
 		"rank": "17",
@@ -184,7 +200,8 @@
 		"revenue": "$899 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "85",
-		"description": "Founded in 1970, Samaritan's Purse is a non-denominational evangelical Christian humanitarian organization operating in more than 100 countries."
+		"description": "Founded in 1970, Samaritan's Purse is a non-denominational evangelical Christian humanitarian organization operating in more than 100 countries.",
+		"domain": "www.samaritanspurse.org"
 	},
 	{
 		"rank": "18",
@@ -195,7 +212,8 @@
 		"revenue": "$1.23 B",
 		"fundraisingEfficiency": "89",
 		"charitableCommitment": "88",
-		"description": "Founded in 1950, World Vision is a Christian relief and development umbrella organization that combines staff efforts with donated goods to fight poverty around the world."
+		"description": "Founded in 1950, World Vision is a Christian relief and development umbrella organization that combines staff efforts with donated goods to fight poverty around the world.",
+		"domain": "www.worldvision.org"
 	},
 	{
 		"rank": "19",
@@ -206,7 +224,8 @@
 		"revenue": "$755 M",
 		"fundraisingEfficiency": "95",
 		"charitableCommitment": "93",
-		"description": "Founded in 1982, Food for the Poor is an Christian relief agency specializing in providing donated goods to the needy in Latin America and the Caribbean."
+		"description": "Founded in 1982, Food for the Poor is an Christian relief agency specializing in providing donated goods to the needy in Latin America and the Caribbean.",
+		"domain": "foodforthepoor.org"
 	},
 	{
 		"rank": "20",
@@ -217,7 +236,8 @@
 		"revenue": "$8.99 B",
 		"fundraisingEfficiency": "97",
 		"charitableCommitment": "89",
-		"description": "Dating back to 1852, Mount Sinai Health Systems includes a medical school, a teaching hospital and numerous affiliates in New York City."
+		"description": "Dating back to 1852, Mount Sinai Health Systems includes a medical school, a teaching hospital and numerous affiliates in New York City.",
+		"domain": "www.mountsinai.org"
 	},
 	{
 		"rank": "21",
@@ -228,7 +248,8 @@
 		"revenue": "$23.28 B",
 		"fundraisingEfficiency": "88",
 		"charitableCommitment": "84",
-		"description": "Founded in 1997, Lutheran Services in America coordinates the work of nearly 300 independent Lutheran health and human service organizations affiliated with the Evangelical Lutheran Church in America or recognized by The Lutheran Church-Missouri Synod."
+		"description": "Founded in 1997, Lutheran Services in America coordinates the work of nearly 300 independent Lutheran health and human service organizations affiliated with the Evangelical Lutheran Church in America or recognized by The Lutheran Church-Missouri Synod.",
+		"domain": "lutheranservices.org"
 	},
 	{
 		"rank": "22",
@@ -239,7 +260,8 @@
 		"revenue": "$631 M",
 		"fundraisingEfficiency": "90",
 		"charitableCommitment": "87",
-		"description": "Founded in 1947, the U.S. arm of the Nobel Peace Prize-winning United Nations agency UNICEF raises funds for emergency relief efforts benefiting children outside of the U.S."
+		"description": "Founded in 1947, the U.S. arm of the Nobel Peace Prize-winning United Nations agency UNICEF raises funds for emergency relief efforts benefiting children outside of the U.S.",
+		"domain": "www.unicefusa.org"
 	},
 	{
 		"rank": "23",
@@ -250,7 +272,8 @@
 		"revenue": "$588 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "100",
-		"description": "Founded in 1954, MAP International is a global Christian health organization that provides medicine and health supplies to people in need."
+		"description": "Founded in 1954, MAP International is a global Christian health organization that provides medicine and health supplies to people in need.",
+		"domain": "www.map.org"
 	},
 	{
 		"rank": "24",
@@ -261,7 +284,8 @@
 		"revenue": "$15.15 B",
 		"fundraisingEfficiency": "95",
 		"charitableCommitment": "98",
-		"description": "Dating back to 1864, Mayo Clinic is a medical practice and research group with major facilities in Minnesota, Florida and Arizona."
+		"description": "Dating back to 1864, Mayo Clinic is a medical practice and research group with major facilities in Minnesota, Florida and Arizona.",
+		"domain": "www.mayoclinic.org"
 	},
 	{
 		"rank": "25",
@@ -272,7 +296,8 @@
 		"revenue": "$628 M",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "83",
-		"description": "Founded in 1951, Cru (formerly Campus Crusade for Christ) promotes its religious beliefs in more than 190 countries and supports 25,000 full-time missionaries."
+		"description": "Founded in 1951, Cru (formerly Campus Crusade for Christ) promotes its religious beliefs in more than 190 countries and supports 25,000 full-time missionaries.",
+		"domain": "www.cru.org"
 	},
 	{
 		"rank": "26",
@@ -283,7 +308,8 @@
 		"revenue": "$652 M",
 		"fundraisingEfficiency": "81",
 		"charitableCommitment": "76",
-		"description": "Founded in 1913 in New York City as the American Society for the Control of Cancer, the American Cancer Society works to eliminate cancer."
+		"description": "Founded in 1913 in New York City as the American Society for the Control of Cancer, the American Cancer Society works to eliminate cancer.",
+		"domain": "www.cancer.org"
 	},
 	{
 		"rank": "27",
@@ -294,7 +320,8 @@
 		"revenue": "$579 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "99",
-		"description": "Founded in 2004, Healthwell Foundation provides financial assistance to cover certain medications and therapies."
+		"description": "Founded in 2004, Healthwell Foundation provides financial assistance to cover certain medications and therapies.",
+		"domain": "www.healthwellfoundation.org"
 	},
 	{
 		"rank": "28",
@@ -305,7 +332,8 @@
 		"revenue": "$559 M",
 		"fundraisingEfficiency": "87",
 		"charitableCommitment": "85",
-		"description": "Founded in 1971, Doctors Without Borders, a Nobel Peace Prize winner, provides medical services in war-torn regions and developing countries."
+		"description": "Founded in 1971, Doctors Without Borders, a Nobel Peace Prize winner, provides medical services in war-torn regions and developing countries.",
+		"domain": "www.doctorswithoutborders.org"
 	},
 	{
 		"rank": "29",
@@ -316,7 +344,8 @@
 		"revenue": "$794 M",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "81",
-		"description": "Founded in 1924, the American Heart Association is dedicated to fighting cardiovascular diseases."
+		"description": "Founded in 1924, the American Heart Association is dedicated to fighting cardiovascular diseases.",
+		"domain": "www.heart.org"
 	},
 	{
 		"rank": "30",
@@ -327,7 +356,8 @@
 		"revenue": "$1.64 B",
 		"fundraisingEfficiency": "77",
 		"charitableCommitment": "77",
-		"description": "Dating back to 1916, Planned Parenthood is the largest U.S. provider of reproductive health services, including cancer screening, HIV screening and counseling, contraception, and abortion."
+		"description": "Dating back to 1916, Planned Parenthood is the largest U.S. provider of reproductive health services, including cancer screening, HIV screening and counseling, contraception, and abortion.",
+		"domain": "www.plannedparenthood.org"
 	},
 	{
 		"rank": "31",
@@ -338,7 +368,8 @@
 		"revenue": "$908 M",
 		"fundraisingEfficiency": "84",
 		"charitableCommitment": "85",
-		"description": "Founded in 1932, Save the Children Federation operates in the U.S. and abroad providing programs in health and nutrition, education and emergency response."
+		"description": "Founded in 1932, Save the Children Federation operates in the U.S. and abroad providing programs in health and nutrition, education and emergency response.",
+		"domain": "www.savethechildren.org"
 	},
 	{
 		"rank": "32",
@@ -349,7 +380,8 @@
 		"revenue": "$476 M",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "97",
-		"description": "Founded in 1942 by Samuel Goldwyn, the Entertainment Industry Foundation provides funds to address various health, educational and social issues."
+		"description": "Founded in 1942 by Samuel Goldwyn, the Entertainment Industry Foundation provides funds to address various health, educational and social issues.",
+		"domain": "www.eifoundation.org"
 	},
 	{
 		"rank": "33",
@@ -360,7 +392,8 @@
 		"revenue": "$471 M",
 		"fundraisingEfficiency": "97",
 		"charitableCommitment": "94",
-		"description": "Founded in 1979, Feed The Children is a Christian-themed foreign relief agency whose contributions consist of cash and donated goods."
+		"description": "Founded in 1979, Feed The Children is a Christian-themed foreign relief agency whose contributions consist of cash and donated goods.",
+		"domain": "www.feedthechildren.org"
 	},
 	{
 		"rank": "34",
@@ -371,7 +404,8 @@
 		"revenue": "$477 M",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "98",
-		"description": "Founded by 1912 by a New York City doctor, Catholic Medical Mission Board provides health care programs and services to people of all faiths in need around the world."
+		"description": "Founded by 1912 by a New York City doctor, Catholic Medical Mission Board provides health care programs and services to people of all faiths in need around the world.",
+		"domain": "cmmb.org"
 	},
 	{
 		"rank": "35",
@@ -382,7 +416,8 @@
 		"revenue": "$2 B",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "90",
-		"description": "Founded in 1947 in Boston, Dana-Farber Cancer Institute, a leader in cancer research, is the home of Jimmy Fund, a long-running fundraising effort that began with a radio broadcast by a 12-year-old cancer patient."
+		"description": "Founded in 1947 in Boston, Dana-Farber Cancer Institute, a leader in cancer research, is the home of Jimmy Fund, a long-running fundraising effort that began with a radio broadcast by a 12-year-old cancer patient.",
+		"domain": "www.dana-farber.org"
 	},
 	{
 		"rank": "36",
@@ -393,7 +428,8 @@
 		"revenue": "$450 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "98",
-		"description": "Founded in 2004, Patient Access Network Foundation helps thousands of patients who have medical insurance but can't afford out-of-pocket costs of medications."
+		"description": "Founded in 2004, Patient Access Network Foundation helps thousands of patients who have medical insurance but can't afford out-of-pocket costs of medications.",
+		"domain": "www.panfoundation.org"
 	},
 	{
 		"rank": "37",
@@ -404,7 +440,8 @@
 		"revenue": "$463 M",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "71",
-		"description": "Founded in 1980, Make-A-Wish Foundation of America grants wishes to children with life-threatening medical conditions."
+		"description": "Founded in 1980, Make-A-Wish Foundation of America grants wishes to children with life-threatening medical conditions.",
+		"domain": "www.charities.org"
 	},
 	{
 		"rank": "38",
@@ -415,7 +452,8 @@
 		"revenue": "$509 M",
 		"fundraisingEfficiency": "90",
 		"charitableCommitment": "78",
-		"description": "Founded in 1949, the Leukemia & Lymphoma Society funds blood cancer research, education and patient services."
+		"description": "Founded in 1949, the Leukemia & Lymphoma Society funds blood cancer research, education and patient services.",
+		"domain": "www.lls.org"
 	},
 	{
 		"rank": "39",
@@ -426,7 +464,8 @@
 		"revenue": "$421 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "100",
-		"description": "Founded in 2003, the Midwest Food Bank routes donated food to disaster sites and other nonprofits."
+		"description": "Founded in 2003, the Midwest Food Bank routes donated food to disaster sites and other nonprofits.",
+		"domain": "midwestfoodbank.org"
 	},
 	{
 		"rank": "40",
@@ -437,7 +476,8 @@
 		"revenue": "$933 M",
 		"fundraisingEfficiency": "92",
 		"charitableCommitment": "92",
-		"description": "Founded in 1943 by U.S. Catholic bishops, Catholic Relief Services is an international humanitarian agency assisting the poor and vulnerable overseas."
+		"description": "Founded in 1943 by U.S. Catholic bishops, Catholic Relief Services is an international humanitarian agency assisting the poor and vulnerable overseas.",
+		"domain": "www.crs.org"
 	},
 	{
 		"rank": "41",
@@ -448,7 +488,8 @@
 		"revenue": "$1.87 B",
 		"fundraisingEfficiency": "82",
 		"charitableCommitment": "82",
-		"description": "Founded in 1922, Shriners Hospitals for Children is a network of 22 medical facilities focusing on care to children with neuromuscular conditions and burn injuries."
+		"description": "Founded in 1922, Shriners Hospitals for Children is a network of 22 medical facilities focusing on care to children with neuromuscular conditions and burn injuries.",
+		"domain": "www.shrinerschildrens.org"
 	},
 	{
 		"rank": "42",
@@ -459,7 +500,8 @@
 		"revenue": "$397 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "95",
-		"description": "Founded in 2001, Cross International provides aid to the international poor through church-based organizations."
+		"description": "Founded in 2001, Cross International provides aid to the international poor through church-based organizations.",
+		"domain": "www.crossinternational.org"
 	},
 	{
 		"rank": "43",
@@ -470,7 +512,8 @@
 		"revenue": "$609 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "91",
-		"description": "Founded in 1945, CARE fights global poverty, delivering broad-spectrum emergency relief and planning long-term international development projects."
+		"description": "Founded in 1945, CARE fights global poverty, delivering broad-spectrum emergency relief and planning long-term international development projects.",
+		"domain": "www.care.org"
 	},
 	{
 		"rank": "44",
@@ -481,7 +524,8 @@
 		"revenue": "$396 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "87",
-		"description": "Founded by Pat Robertson in 1961, Christian Broadcasting Network is a religious television network and also channels donated goods to the needy in the U.S. and abroad as Operation Blessing International Relief and Development."
+		"description": "Founded by Pat Robertson in 1961, Christian Broadcasting Network is a religious television network and also channels donated goods to the needy in the U.S. and abroad as Operation Blessing International Relief and Development.",
+		"domain": "www1.cbn.com"
 	},
 	{
 		"rank": "45",
@@ -492,7 +536,8 @@
 		"revenue": "$385 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "97",
-		"description": "Founded in 2009, The Assistance Fund provides under-insured persons with access to critical treatments."
+		"description": "Founded in 2009, The Assistance Fund provides under-insured persons with access to critical treatments.",
+		"domain": "tafcares.org"
 	},
 	{
 		"rank": "46",
@@ -503,7 +548,8 @@
 		"revenue": "$407 M",
 		"fundraisingEfficiency": "81",
 		"charitableCommitment": "78",
-		"description": "Founded in 1980, the Alzheimer's Association funds care, support and research for those with the disease."
+		"description": "Founded in 1980, the Alzheimer's Association funds care, support and research for those with the disease.",
+		"domain": "www.alz.org"
 	},
 	{
 		"rank": "47",
@@ -514,7 +560,8 @@
 		"revenue": "$1.92 B",
 		"fundraisingEfficiency": "90",
 		"charitableCommitment": "88",
-		"description": "Founded in 1919 as the National Society for Crippled Children, Easter Seals provides services to individuals living with autism spectrum disorder and other disabilities."
+		"description": "Founded in 1919 as the National Society for Crippled Children, Easter Seals provides services to individuals living with autism spectrum disorder and other disabilities.",
+		"domain": "www.easterseals.com"
 	},
 	{
 		"rank": "48",
@@ -525,7 +572,8 @@
 		"revenue": "$369 M",
 		"fundraisingEfficiency": "96",
 		"charitableCommitment": "92",
-		"description": "Founded in 1994, Convoy of Hope engages in disaster relief and anti-poverty programs in the U.S. and abroad."
+		"description": "Founded in 1994, Convoy of Hope engages in disaster relief and anti-poverty programs in the U.S. and abroad.",
+		"domain": "convoyofhope.org"
 	},
 	{
 		"rank": "49",
@@ -536,7 +584,8 @@
 		"revenue": "$410 M",
 		"fundraisingEfficiency": "82",
 		"charitableCommitment": "79",
-		"description": "Founded in 2003, Wounded Warrior Project provides aid to and lobbies for injured military service members."
+		"description": "Founded in 2003, Wounded Warrior Project provides aid to and lobbies for injured military service members.",
+		"domain": "www.woundedwarriorproject.org"
 	},
 	{
 		"rank": "50",
@@ -547,7 +596,8 @@
 		"revenue": "$5.82 B",
 		"fundraisingEfficiency": "96",
 		"charitableCommitment": "89",
-		"description": "Founded in 1902 and best known for its used goods stores, Goodwill Industries International also provides job training, employment placement services and other community-based programs."
+		"description": "Founded in 1902 and best known for its used goods stores, Goodwill Industries International also provides job training, employment placement services and other community-based programs.",
+		"domain": "www.goodwill.org"
 	},
 	{
 		"rank": "51",
@@ -558,7 +608,8 @@
 		"revenue": "$337 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "98",
-		"description": "Founded in 1971, the American Kidney Fund focuses on the awareness, prevention and treatment of kidney disease."
+		"description": "Founded in 1971, the American Kidney Fund focuses on the awareness, prevention and treatment of kidney disease.",
+		"domain": "www.kidneyfund.org"
 	},
 	{
 		"rank": "52",
@@ -569,7 +620,8 @@
 		"revenue": "$346 M",
 		"fundraisingEfficiency": "94",
 		"charitableCommitment": "89",
-		"description": "Founded in 1917 to do good in the world, the Rotary Foundation undertakes international humanitarian, educational and cultural exchange programs."
+		"description": "Founded in 1917 to do good in the world, the Rotary Foundation undertakes international humanitarian, educational and cultural exchange programs.",
+		"domain": "www.rotary.org"
 	},
 	{
 		"rank": "53",
@@ -580,7 +632,8 @@
 		"revenue": "$301 M",
 		"fundraisingEfficiency": "94",
 		"charitableCommitment": "87",
-		"description": "Founded in 1920, the ACLU fights to defend various individual rights listed in the U.S. Constitution."
+		"description": "Founded in 1920, the ACLU fights to defend various individual rights listed in the U.S. Constitution.",
+		"domain": "www.aclu.org"
 	},
 	{
 		"rank": "54",
@@ -591,7 +644,8 @@
 		"revenue": "$823 M",
 		"fundraisingEfficiency": "87",
 		"charitableCommitment": "88",
-		"description": "Founded in 1933 at the request of Albert Einstein, the International Rescue Committee provides aid to refugees fleeing war, persecution or natural disaster."
+		"description": "Founded in 1933 at the request of Albert Einstein, the International Rescue Committee provides aid to refugees fleeing war, persecution or natural disaster.",
+		"domain": "www.rescue.org"
 	},
 	{
 		"rank": "55",
@@ -602,7 +656,8 @@
 		"revenue": "$389 M",
 		"fundraisingEfficiency": "84",
 		"charitableCommitment": "95",
-		"description": "Founded in 1982 by Jimmy Carter, the Carter Center seeks to advance human rights and alleviate human suffering around the world."
+		"description": "Founded in 1982 by Jimmy Carter, the Carter Center seeks to advance human rights and alleviate human suffering around the world.",
+		"domain": "www.cartercenter.org"
 	},
 	{
 		"rank": "56",
@@ -613,7 +668,8 @@
 		"revenue": "$415 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "95",
-		"description": "Founded on Passover Eve in 1900, the Jewish United Fund/Jewish Federation of Metropolitan Chicago provides assistance to Jews and persons of all faiths."
+		"description": "Founded on Passover Eve in 1900, the Jewish United Fund/Jewish Federation of Metropolitan Chicago provides assistance to Jews and persons of all faiths.",
+		"domain": "www.charitynavigator.org"
 	},
 	{
 		"rank": "57",
@@ -624,7 +680,8 @@
 		"revenue": "$431 M",
 		"fundraisingEfficiency": "96",
 		"charitableCommitment": "92",
-		"description": "Founded in 1914 and active in more than 70 countries, the American Jewish Joint Distribution Committee primarily offers aid to Jewish communities through a network of social and community assistance programs."
+		"description": "Founded in 1914 and active in more than 70 countries, the American Jewish Joint Distribution Committee primarily offers aid to Jewish communities through a network of social and community assistance programs.",
+		"domain": "en.wikipedia.org"
 	},
 	{
 		"rank": "58",
@@ -635,7 +692,8 @@
 		"revenue": "$362 M",
 		"fundraisingEfficiency": "87",
 		"charitableCommitment": "83",
-		"description": "Founded in 1961, World Wildlife Fund addresses global environmental issues."
+		"description": "Founded in 1961, World Wildlife Fund addresses global environmental issues.",
+		"domain": "www.worldwildlife.org"
 	},
 	{
 		"rank": "59",
@@ -646,7 +704,8 @@
 		"revenue": "$307 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "99",
-		"description": "Founded in 1991 and named after a Biblical passage about compassion, Matthew 25: Ministries provides humanitarian aid in the U.S. and abroad."
+		"description": "Founded in 1991 and named after a Biblical passage about compassion, Matthew 25: Ministries provides humanitarian aid in the U.S. and abroad.",
+		"domain": "m25m.org"
 	},
 	{
 		"rank": "60",
@@ -657,7 +716,8 @@
 		"revenue": "$313 M",
 		"fundraisingEfficiency": "97",
 		"charitableCommitment": "96",
-		"description": "Founded in 1991 and run by the United States Marine Corps Reserve, Toys for Tots distributes toys to children whose parents cannot afford to buy them holiday gifts."
+		"description": "Founded in 1991 and run by the United States Marine Corps Reserve, Toys for Tots distributes toys to children whose parents cannot afford to buy them holiday gifts.",
+		"domain": "www.toysfortots.org"
 	},
 	{
 		"rank": "61",
@@ -668,7 +728,8 @@
 		"revenue": "$291 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "100",
-		"description": "Founded in 1985 as Kids in Distressed Situations, Delivering Good routes donated new clothes and other merchandise to the poor."
+		"description": "Founded in 1985 as Kids in Distressed Situations, Delivering Good routes donated new clothes and other merchandise to the poor.",
+		"domain": "www.delivering-good.org"
 	},
 	{
 		"rank": "62",
@@ -679,7 +740,8 @@
 		"revenue": "$5.26 B",
 		"fundraisingEfficiency": "96",
 		"charitableCommitment": "89",
-		"description": "Dating back to 1902, Cedars-Sinai Health System is anchored by a major hospital in Los Angeles."
+		"description": "Dating back to 1902, Cedars-Sinai Health System is anchored by a major hospital in Los Angeles.",
+		"domain": "www.cedars-sinai.org"
 	},
 	{
 		"rank": "63",
@@ -690,7 +752,8 @@
 		"revenue": "$335 M",
 		"fundraisingEfficiency": "80",
 		"charitableCommitment": "74",
-		"description": "Founded in 1866, the ASPCA is one of the world's largest animal humane organizations."
+		"description": "Founded in 1866, the ASPCA is one of the world's largest animal humane organizations.",
+		"domain": "www.aspca.org"
 	},
 	{
 		"rank": "64",
@@ -701,7 +764,8 @@
 		"revenue": "$322 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "97",
-		"description": "Founded in 1982, Houston Food Bank serves the needy in southeastern Texas."
+		"description": "Founded in 1982, Houston Food Bank serves the needy in southeastern Texas.",
+		"domain": "www.houstonfoodbank.org"
 	},
 	{
 		"rank": "65",
@@ -712,7 +776,8 @@
 		"revenue": "$686 M",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "94",
-		"description": "Founded in 1970, PBS provides programming to more than 350 public television stations in the U.S. "
+		"description": "Founded in 1970, PBS provides programming to more than 350 public television stations in the U.S. ",
+		"domain": "www.pbs.org"
 	},
 	{
 		"rank": "66",
@@ -723,7 +788,8 @@
 		"revenue": "$343 M",
 		"fundraisingEfficiency": "92",
 		"charitableCommitment": "84",
-		"description": "Founded in 1941, Young Life is a Christian ministry focusing on youths."
+		"description": "Founded in 1941, Young Life is a Christian ministry focusing on youths.",
+		"domain": "younglife.org"
 	},
 	{
 		"rank": "67",
@@ -734,7 +800,8 @@
 		"revenue": "$6.53 B",
 		"fundraisingEfficiency": "70",
 		"charitableCommitment": "97",
-		"description": "Founded in 1884, Memorial Sloan Kettering Cancer Center is a New York cancer treatment and research institution credited with many pioneering developments."
+		"description": "Founded in 1884, Memorial Sloan Kettering Cancer Center is a New York cancer treatment and research institution credited with many pioneering developments.",
+		"domain": "www.mskcc.org"
 	},
 	{
 		"rank": "68",
@@ -745,7 +812,8 @@
 		"revenue": "$344 M",
 		"fundraisingEfficiency": "85",
 		"charitableCommitment": "81",
-		"description": "Founded in 1969 by Eunice Kennedy Shriver, Special Olympics provides athletic competitions for persons with intellectual disabilities."
+		"description": "Founded in 1969 by Eunice Kennedy Shriver, Special Olympics provides athletic competitions for persons with intellectual disabilities.",
+		"domain": "www.specialolympics.org"
 	},
 	{
 		"rank": "69",
@@ -756,7 +824,8 @@
 		"revenue": "$236 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "99",
-		"description": "Founded in 1972, Heart to Heart International is a global humanitarian organization focusing on health and disaster relief."
+		"description": "Founded in 1972, Heart to Heart International is a global humanitarian organization focusing on health and disaster relief.",
+		"domain": "www.hearttoheart.org"
 	},
 	{
 		"rank": "70",
@@ -767,7 +836,8 @@
 		"revenue": "$2.04 B",
 		"fundraisingEfficiency": "87",
 		"charitableCommitment": "85",
-		"description": "Founded in 1869, Boston Children's Hospital has pioneered many medical advances."
+		"description": "Founded in 1869, Boston Children's Hospital has pioneered many medical advances.",
+		"domain": "www.childrenshospital.org"
 	},
 	{
 		"rank": "71",
@@ -778,7 +848,8 @@
 		"revenue": "$9.38 B",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "83",
-		"description": "Dating back to 1771, New York-Presbyterian Hospital is one of the world's largest."
+		"description": "Dating back to 1771, New York-Presbyterian Hospital is one of the world's largest.",
+		"domain": "www.nyp.org"
 	},
 	{
 		"rank": "72",
@@ -789,7 +860,8 @@
 		"revenue": "$234 M",
 		"fundraisingEfficiency": "92",
 		"charitableCommitment": "83",
-		"description": "Founded in 1942, Wycliffe Bible Translators works to translate the Bible into every language."
+		"description": "Founded in 1942, Wycliffe Bible Translators works to translate the Bible into every language.",
+		"domain": "www.wycliffe.org"
 	},
 	{
 		"rank": "73",
@@ -800,7 +872,8 @@
 		"revenue": "$238 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "95",
-		"description": "The product of a 2001 merger, Second Harvest Heartland provides food bank services in 59 counties in Minnesota and western Wisconsin."
+		"description": "The product of a 2001 merger, Second Harvest Heartland provides food bank services in 59 counties in Minnesota and western Wisconsin.",
+		"domain": "www.2harvest.org"
 	},
 	{
 		"rank": "74",
@@ -811,7 +884,8 @@
 		"revenue": "$219 M",
 		"fundraisingEfficiency": "90",
 		"charitableCommitment": "80",
-		"description": "Founded in 1938 and previously named Christian Children's Fund, ChildFund International provides assistance to needy children in 30 countries, including the U.S."
+		"description": "Founded in 1938 and previously named Christian Children's Fund, ChildFund International provides assistance to needy children in 30 countries, including the U.S.",
+		"domain": "www.childfund.org"
 	},
 	{
 		"rank": "75",
@@ -822,7 +896,8 @@
 		"revenue": "$278 M",
 		"fundraisingEfficiency": "85",
 		"charitableCommitment": "81",
-		"description": "Founded in 1920, Disabled Amerian Veterans provides services and advocacy to injured military personnel."
+		"description": "Founded in 1920, Disabled Amerian Veterans provides services and advocacy to injured military personnel.",
+		"domain": "www.dav.org"
 	},
 	{
 		"rank": "76",
@@ -833,7 +908,8 @@
 		"revenue": "$221 M",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "77",
-		"description": "Dating back to 1917, UJA/Federation of New York funds a network of organizations to fight poverty and promote Jewish identity."
+		"description": "Dating back to 1917, UJA/Federation of New York funds a network of organizations to fight poverty and promote Jewish identity.",
+		"domain": "www.ujafedny.org"
 	},
 	{
 		"rank": "77",
@@ -844,7 +920,8 @@
 		"revenue": "$222 M",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "80",
-		"description": "Founded in 1967, Environmental Defense Fund is a environmental advocacy group."
+		"description": "Founded in 1967, Environmental Defense Fund is a environmental advocacy group.",
+		"domain": "www.edf.org"
 	},
 	{
 		"rank": "78",
@@ -855,7 +932,8 @@
 		"revenue": "$426 M",
 		"fundraisingEfficiency": "91",
 		"charitableCommitment": "80",
-		"description": "Founded in 1870, the New York City-based Met is the largest art museum in the United States."
+		"description": "Founded in 1870, the New York City-based Met is the largest art museum in the United States.",
+		"domain": "www.metmuseum.org"
 	},
 	{
 		"rank": "79",
@@ -866,7 +944,8 @@
 		"revenue": "$457 M",
 		"fundraisingEfficiency": "100",
 		"charitableCommitment": "93",
-		"description": "Founded in 1970, Population Services International provides health-care aid to poor in the developing world."
+		"description": "Founded in 1970, Population Services International provides health-care aid to poor in the developing world.",
+		"domain": "www.psi.org"
 	},
 	{
 		"rank": "80",
@@ -877,7 +956,8 @@
 		"revenue": "$218 M",
 		"fundraisingEfficiency": "96",
 		"charitableCommitment": "81",
-		"description": "Founded in 1981, Educational Media Foundation operates religious radio networks, including Air1 and K-LOVE."
+		"description": "Founded in 1981, Educational Media Foundation operates religious radio networks, including Air1 and K-LOVE.",
+		"domain": "en.wikipedia.org"
 	},
 	{
 		"rank": "81",
@@ -888,7 +968,8 @@
 		"revenue": "$182 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "92",
-		"description": "Tracing its origins back to 1895, Combined Jewish Philanthropies seeks to strength Jewish life in Boston and around the world."
+		"description": "Tracing its origins back to 1895, Combined Jewish Philanthropies seeks to strength Jewish life in Boston and around the world.",
+		"domain": "www.cjp.org"
 	},
 	{
 		"rank": "82",
@@ -899,7 +980,8 @@
 		"revenue": "$2.52 B",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "76",
-		"description": "Opened in 1914 as a tuberculosis sanitorium in Southern California, City of Hope has evolved into a major cancer treatment hospital."
+		"description": "Opened in 1914 as a tuberculosis sanitorium in Southern California, City of Hope has evolved into a major cancer treatment hospital.",
+		"domain": "www.cityofhope.org"
 	},
 	{
 		"rank": "83",
@@ -910,7 +992,8 @@
 		"revenue": "$226 M",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "95",
-		"description": "Founded in 1958 as Dollars for Scholars, Scholarship America provides scholarships and other educational support for college students."
+		"description": "Founded in 1958 as Dollars for Scholars, Scholarship America provides scholarships and other educational support for college students.",
+		"domain": "scholarshipamerica.org"
 	},
 	{
 		"rank": "84",
@@ -921,7 +1004,8 @@
 		"revenue": "$205 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "87",
-		"description": "Founded in 2000, the Michael J. Fox Foundation for Parkinson's Research funds research seeking a cure for the disease."
+		"description": "Founded in 2000, the Michael J. Fox Foundation for Parkinson's Research funds research seeking a cure for the disease.",
+		"domain": "www.michaeljfox.org"
 	},
 	{
 		"rank": "85",
@@ -932,7 +1016,8 @@
 		"revenue": "$220 M",
 		"fundraisingEfficiency": "95",
 		"charitableCommitment": "92",
-		"description": "Founded in 1988, Robin Hood Foundation uses free-market forces to fight poverty."
+		"description": "Founded in 1988, Robin Hood Foundation uses free-market forces to fight poverty.",
+		"domain": "www.robinhood.org"
 	},
 	{
 		"rank": "86",
@@ -943,7 +1028,8 @@
 		"revenue": "$183 M",
 		"fundraisingEfficiency": "78",
 		"charitableCommitment": "62",
-		"description": "Founded in 1982, Susan G. Komen funds research and services concerning breast cancer."
+		"description": "Founded in 1982, Susan G. Komen funds research and services concerning breast cancer.",
+		"domain": "www.komen.org"
 	},
 	{
 		"rank": "87",
@@ -954,7 +1040,8 @@
 		"revenue": "$298 M",
 		"fundraisingEfficiency": "85",
 		"charitableCommitment": "74",
-		"description": "Founded in 1989, Teach for America recruits freshly minted college graduates as teachers in low-income communities."
+		"description": "Founded in 1989, Teach for America recruits freshly minted college graduates as teachers in low-income communities.",
+		"domain": "www.teachforamerica.org"
 	},
 	{
 		"rank": "88",
@@ -965,7 +1052,8 @@
 		"revenue": "$210 M",
 		"fundraisingEfficiency": "82",
 		"charitableCommitment": "71",
-		"description": "Founded in 1970 and formerly called the Juvenile Diabetes Research Foundation, JDRF International funds research on type 1 diabetes."
+		"description": "Founded in 1970 and formerly called the Juvenile Diabetes Research Foundation, JDRF International funds research on type 1 diabetes.",
+		"domain": "www.jdrf.org"
 	},
 	{
 		"rank": "89",
@@ -976,7 +1064,8 @@
 		"revenue": "$200 M",
 		"fundraisingEfficiency": "97",
 		"charitableCommitment": "95",
-		"description": "Founded in 1975 as the nation's first food bank, St. Mary's Food Bank Alliance serves the Phoenix area."
+		"description": "Founded in 1975 as the nation's first food bank, St. Mary's Food Bank Alliance serves the Phoenix area.",
+		"domain": "www.firstfoodbank.org"
 	},
 	{
 		"rank": "90",
@@ -987,7 +1076,8 @@
 		"revenue": "$303 M",
 		"fundraisingEfficiency": "99",
 		"charitableCommitment": "86",
-		"description": "Founded in 1977 as Program for Appropriate Technology in Health, PATH is an international global health organization."
+		"description": "Founded in 1977 as Program for Appropriate Technology in Health, PATH is an international global health organization.",
+		"domain": "www.path.org"
 	},
 	{
 		"rank": "91",
@@ -998,7 +1088,8 @@
 		"revenue": "$230 M",
 		"fundraisingEfficiency": "84",
 		"charitableCommitment": "78",
-		"description": "Founded in 1941, United Service Organizations provides programs and services to U.S. military members and their families."
+		"description": "Founded in 1941, United Service Organizations provides programs and services to U.S. military members and their families.",
+		"domain": "www.uso.org"
 	},
 	{
 		"rank": "92",
@@ -1009,7 +1100,8 @@
 		"revenue": "$1.79 B",
 		"fundraisingEfficiency": "79",
 		"charitableCommitment": "71",
-		"description": "Founded in 1846, the Smithsonian Institution is a group of museums and other cultural facilities owned around Washington, D.C., by the U.S. Government."
+		"description": "Founded in 1846, the Smithsonian Institution is a group of museums and other cultural facilities owned around Washington, D.C., by the U.S. Government.",
+		"domain": "www.si.edu"
 	},
 	{
 		"rank": "93",
@@ -1020,7 +1112,8 @@
 		"revenue": "$200 M",
 		"fundraisingEfficiency": "93",
 		"charitableCommitment": "88",
-		"description": "Founded in 1883, the Metropolitan Opera Association in New York City regularly stages more than 200 opera performances a year."
+		"description": "Founded in 1883, the Metropolitan Opera Association in New York City regularly stages more than 200 opera performances a year.",
+		"domain": "www.metopera.org"
 	},
 	{
 		"rank": "94",
@@ -1031,7 +1124,8 @@
 		"revenue": "$240 M",
 		"fundraisingEfficiency": "87",
 		"charitableCommitment": "77",
-		"description": "Founded in 1972, Covenant House provides shelter and aid to homeless and runaway youths in the U.S. and abroad."
+		"description": "Founded in 1972, Covenant House provides shelter and aid to homeless and runaway youths in the U.S. and abroad.",
+		"domain": "www.covenanthouse.org"
 	},
 	{
 		"rank": "95",
@@ -1042,7 +1136,8 @@
 		"revenue": "$535 M",
 		"fundraisingEfficiency": "72",
 		"charitableCommitment": "84",
-		"description": "Founded in 1917 as a boys orphanage, Father Flanagan's Boys Town, now known as Boys Town, provides care for boys, girls and families in a number of states."
+		"description": "Founded in 1917 as a boys orphanage, Father Flanagan's Boys Town, now known as Boys Town, provides care for boys, girls and families in a number of states.",
+		"domain": "www.boystown.org"
 	},
 	{
 		"rank": "96",
@@ -1053,7 +1148,8 @@
 		"revenue": "$183 M",
 		"fundraisingEfficiency": "98",
 		"charitableCommitment": "97",
-		"description": "Founded in 1983, Northern Illinois Food Bank distributes food to the needy in 13 northern Illinois counties."
+		"description": "Founded in 1983, Northern Illinois Food Bank distributes food to the needy in 13 northern Illinois counties.",
+		"domain": "www.feedingamerica.org"
 	},
 	{
 		"rank": "97",
@@ -1064,7 +1160,8 @@
 		"revenue": "$4.72 B",
 		"fundraisingEfficiency": "83",
 		"charitableCommitment": "89",
-		"description": "Founded in 1953, The Arc of the United States serves individuals with intellectual and developmental disabilities."
+		"description": "Founded in 1953, The Arc of the United States serves individuals with intellectual and developmental disabilities.",
+		"domain": "thearc.org"
 	},
 	{
 		"rank": "98",
@@ -1075,7 +1172,8 @@
 		"revenue": "$173 M",
 		"fundraisingEfficiency": "95",
 		"charitableCommitment": "56",
-		"description": "Founded in 2014, the Barack Obama Foundation oversees creation of a presidential library in Chicago and runs several other programs."
+		"description": "Founded in 2014, the Barack Obama Foundation oversees creation of a presidential library in Chicago and runs several other programs.",
+		"domain": "www.obama.org"
 	},
 	{
 		"rank": "99",
@@ -1086,7 +1184,8 @@
 		"revenue": "$182 M",
 		"fundraisingEfficiency": "76",
 		"charitableCommitment": "71",
-		"description": "Founded in 1954, Humane Society of the United States is an animal protection organization that focuses on such issues as puppy mills, factory farming and seal slaughter."
+		"description": "Founded in 1954, Humane Society of the United States is an animal protection organization that focuses on such issues as puppy mills, factory farming and seal slaughter.",
+		"domain": "www.humanesociety.org"
 	},
 	{
 		"rank": "100",
@@ -1097,6 +1196,7 @@
 		"revenue": "$165 M",
 		"fundraisingEfficiency": "89",
 		"charitableCommitment": "74",
-		"description": "Founded in 1983, the International Fellowship of Christians and Jews provides financial assistance to Israel and Jews."
+		"description": "Founded in 1983, the International Fellowship of Christians and Jews provides financial assistance to Israel and Jews.",
+		"domain": "www.ifcj.org"
 	}
 ]

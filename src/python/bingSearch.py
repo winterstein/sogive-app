@@ -5,7 +5,7 @@ import requests
 from pprint import pprint
 import re
 
-os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = ''
+os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = '72f7c817c34c4827840e763e2d749564'
 
 # TODO Refactor this into a config file
 UNWANTED_DOMAINS = ['charitynavigator', 'opencorporates', 'georgiacompanyregistry', 
@@ -21,7 +21,7 @@ UNWANTED_DOMAINS = ['charitynavigator', 'opencorporates', 'georgiacompanyregistr
 'chebeague']
 
 def bingSearchWebpages(query: str) -> list:
-	subscription_key = os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY']
+	subscription_key = os.environ['']
 	endpoint = 'https://api.bing.microsoft.com/v7.0/search'
 	
 	# Construct a request
