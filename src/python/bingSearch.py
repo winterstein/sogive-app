@@ -5,7 +5,7 @@ import requests
 from pprint import pprint
 import re
 
-os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = '72f7c817c34c4827840e763e2d749564'
+os.environ['BING_SEARCH_V7_SUBSCRIPTION_KEY'] = ''
 
 # TODO Refactor this into a config file
 UNWANTED_DOMAINS = ['charitynavigator', 'opencorporates', 'georgiacompanyregistry', 
