@@ -73,3 +73,6 @@ def removeListingDomains(domains: list) -> list:
 
 def nameToDomains(query: str) -> list:
 	return removeListingDomains(bingSearchGetDomains(bingSearchWebpages(query)))
+
+def getFirstResult(query: str) -> str:
+	return bingSearchGetDomains(bingSearchWebpages(query))[0]
