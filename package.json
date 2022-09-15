@@ -78,6 +78,7 @@
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
     "mini-css-extract-plugin": "^2.4.5",
+    "prismjs": "^1.29.0",
     "puppeteer": "^2.0.0",
     "querystring-es3": "^0.2.1",
     "regenerator-runtime": "^0.13.7",
