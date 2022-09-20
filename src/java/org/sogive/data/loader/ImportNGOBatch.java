@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.sogive.data.charity.NGO;
 
@@ -14,6 +15,7 @@ import com.winterwell.utils.web.WebUtils2;
 
 /**
  * Convert json file to NGO Object, and then write them into ES
+ * @testby {@link ImportNGOBatchTest}
  * @author wing
  *
  */
@@ -25,6 +27,7 @@ public class ImportNGOBatch {
 		Path path = Paths.get("/home/wing/winterwell/sogive-app/src/python/data/top100Dumps.json");
 		String content = Files.readString(path);
 		
+		// Convert file to a list of NGO Objects
 		ArrayList<NGO> allNGO = jsonToNGO(content);
 		System.out.println(allNGO);
 	}
@@ -41,10 +44,11 @@ public class ImportNGOBatch {
 				put("name", j.get("name"));
 				put("displayName", j.get("name"));
 				put("description", j.get("description"));
-				put("url", j.get("link"));
+				put("url", j.get("domain"));
 			}};
 			
-			String ngoId = String.join("-", j.get("name").strip().toLowerCase().split(" "));
+			String ngoId = String.join("-", j.get("name").replaceAll("[':^&.*()%$#@!/]", "").replaceAll("  ", " ")
+					.strip().toLowerCase().split(" "));
 			
 			NGO ngoObject = new NGO(ngoId) {{
 				putAll(jsonMap);
