@@ -34,7 +34,8 @@ public class ImportNGOBatch {
 		
 		ElasticSearchDatabaseWriter esDbWriter = new ElasticSearchDatabaseWriter();
 		for (NGO ngo : allNGO) {
-			esDbWriter.updateCharityRecord(ngo, KStatus.DRAFT);
+			// Uncomment to actually write things into ES
+//			esDbWriter.updateCharityRecord(ngo, KStatus.DRAFT);
 		}
 	}
 	
