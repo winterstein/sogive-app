@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.sogive.data.charity.NGO;
 
+import com.winterwell.data.KStatus;
 import com.winterwell.utils.web.WebUtils2;
 
 /**
@@ -30,6 +31,11 @@ public class ImportNGOBatch {
 		// Convert file to a list of NGO Objects
 		ArrayList<NGO> allNGO = jsonToNGO(content);
 		System.out.println(allNGO);
+		
+		ElasticSearchDatabaseWriter esDbWriter = new ElasticSearchDatabaseWriter();
+		for (NGO ngo : allNGO) {
+			esDbWriter.updateCharityRecord(ngo, KStatus.DRAFT);
+		}
 	}
 	
 	
