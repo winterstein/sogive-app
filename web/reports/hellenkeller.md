@@ -35,33 +35,33 @@
   - Better understanding the heterogeneity between studies and how this affects reductions in child mortality across different trials, such as DEVTA. If these factors are likely to persist in the future, this could impact our judgement of the cost-effectiveness of VAS. In addition, this could help drive HKI's future work, improving their future cost-effectiveness.
   - Further reviewing estimates of vitamin A deficiency (VAD) prevalence by the Global Burden of Disease project in regions where HKI operates.
 
-**Contents**
+# Contents
 
-**[Introduction](#_6a32h38erj69) 3**
+**[Introduction](#_6a32h38erj69)**
 
-**[Evidence on Vitamin A Supplementation (VAS)](#_7wusr2uaftn7) 4**
+**[Evidence on Vitamin A Supplementation (VAS)](#_7wusr2uaftn7)**
 
-**[Evidence on Helen Keller International's VAS Programmes](#_jyqaacypkvm0) 4**
+**[Evidence on Helen Keller International's VAS Programmes](#_jyqaacypkvm0)**
 
-[a) Are programmes targeted at areas where they are likely to be effective?](#_bqn0f5sh2i5k) 4
+[a) Are programmes targeted at areas where they are likely to be effective?](#_bqn0f5sh2i5k)
 
-[How prevalent is vitamin A deficiency in areas where HKI works?](#_m9r5te3izrlp) 4
+[How prevalent is vitamin A deficiency in areas where HKI works?](#_m9r5te3izrlp)
 
-[How high are child mortality rates in areas where HKI works?](#_jfcyx8um6dug) 7
+[How high are child mortality rates in areas where HKI works?](#_jfcyx8um6dug)
 
-[External validity adjustment](#_oc5cmnve0hax) 8
+[External validity adjustment](#_oc5cmnve0hax)
 
-[b) Are vitamin A supplements delivered to and ingested by recipients?](#_x98ae11g4phr) 10
+[b) Are vitamin A supplements delivered to and ingested by recipients?](#_x98ae11g4phr)
 
-[c) How does HKI's support affect programme outcomes?](#_ebzm1kthw94i) 11
+[c) How does HKI's support affect programme outcomes?](#_ebzm1kthw94i)
 
-**[Cost-effectiveness Analysis](#_int26go473s7) 11**
+**[Cost-effectiveness Analysis](#_int26go473s7)**
 
-**[Room for More Funding](#_pojhf3btp18y) 15**
+**[Room for More Funding](#_pojhf3btp18y)**
 
-**[Should VAS be Funded by Philanthropy or a Different Form of Funding?](#_essk3cojbkk) 15**
+**[Should VAS be Funded by Philanthropy or a Different Form of Funding?](#_essk3cojbkk)**
 
-**[Conclusion](#_8g5qfs7zpwu4) 15**
+**[Conclusion](#_8g5qfs7zpwu4)**
 
 ##
 

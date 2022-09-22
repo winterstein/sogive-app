@@ -2,13 +2,13 @@ This is a supporting document for our [analysis](/#analysis?report=hellenkeller)
 
 # Contents
 
-**[Evidence on Vitamin A Supplementation (VAS)](#_t4nipseedpuy) 1**
+**[Evidence on Vitamin A Supplementation (VAS)](#_t4nipseedpuy)**
 
-[a) Summary of evidence - Is there strong evidence that the program is effective?](#_ogqnltgmtaxt) 1
+[a) Summary of evidence - Is there strong evidence that the program is effective?](#_ogqnltgmtaxt)
 
-[b) DEVTA trial](#_97f7ukpts5w) 2
+[b) DEVTA trial](#_97f7ukpts5w)
 
-[c) Are there any negative or offsetting impacts?](#_n6plqmgw71sr) 4
+[c) Are there any negative or offsetting impacts?](#_n6plqmgw71sr)
 
 # Evidence on Vitamin A Supplementation (VAS)
 
