@@ -1,0 +1,25 @@
+
+.AnalysisPage {
+    .report-card {
+        background: white;
+        border: 1px solid @gl-dark-grey;
+        transition: all 0.2s;
+        //background: linear-gradient(90deg, @green 0%, @pale-blue 100%);;
+        .title-side {
+            border-right: 1px solid @gl-dark-grey;
+        }
+        .worldImage {
+            background-image: url('/img/world.png');
+            background-size: cover;
+            background-position: center;
+            margin: auto;
+            height: 100%;
+        }
+        &:hover {
+            background: linear-gradient(135deg, #79D579 0%, #005484 100%);
+            color: white;
+            cursor: pointer;
+        }
+    }
+
+}
