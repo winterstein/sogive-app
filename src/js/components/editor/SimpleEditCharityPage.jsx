@@ -218,7 +218,7 @@ const ProfileEditor = ({charity}) => {
 		<EditField item={charity} type="text" field="whereTags" label="Where tags, e.g. UK, Africa, developing world"
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
 
-		<EditField item={charity} type="imgUpload" field="logo" help={`Enter a url for the logo image.
+		<EditField item={charity} type="imgUpload" field="logo" label="Logo" help={`Enter a url for the logo image.
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url.
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element".
@@ -226,6 +226,8 @@ const ProfileEditor = ({charity}) => {
 		Copy and paste this URL into this field.
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
 		
+		<EditField item={charity} type="imgUpload" field="altlogo" label="Alternative logo" help="In case the standard logo doesn't work in some cases." />
+
 		<EditField userFilter="goodloop" item={charity} type="color" field="color" label="Charity brand colour" />
 		<EditField userFilter="goodloop" item={charity} type="number" field="circleCrop" label="Circle Crop Factor" max={100} min={0} />
 		{Roles.iCan('goodloop').value?

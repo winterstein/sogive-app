@@ -215,14 +215,16 @@ const ProfileEditor = ({charity}) => {
 			help='How does the charity work? Unlike the other more freeform tags lists, for this one stick to \"Research\", "Direct Work", "Campaigning", "Makes grants to organisations". Multiple tags can be comma-separated.' />
 		<EditField item={charity} type="text" field="whereTags" label="Where tags"
 			help='In which countries or areas does the charity give aid? Be willing to enter info at multiple "levels", e.g. for one charity you might enter Hackney, London, United Kingdom or Nairobi, Kenya, Developing World' />
-
-		<EditField item={charity} type="imgUpload" field="logo" help={`Enter a url for the logo image.
+		
+		<EditField item={charity} type="imgUpload" field="logo" label="Logo" help={`Enter a url for the logo image.
 		Preferably choose a logo with no background, or failing that, a white background. If you can't find one like this, then just go with any background.
 		One way to get this is to use Google Image search, then visit image, and copy the url.
 		Or find the desired logo on the internet (e.g. from the charity's website). Then right click on the logo and click on "inspect element".
 		Some code should appear on the side of the browser window with a section highlighted. Right-click on the link within the highlighted section and then open this link in a new tab.
 		Copy and paste this URL into this field.
 		Sometimes what looks like an image in your browser is not a valid image url. Please check the preview by this editor to make sure the url works correctly.`} />
+
+		<EditField item={charity} type="imgUpload" field="altlogo" label="Alternative logo" help="In case the standard logo doesn't work in some cases." />
 
 		<EditField userFilter="goodloop" item={charity} type="img" field="logo_white" label='White-on-transparent silhouette "poster" logo' />
 		<EditField userFilter="goodloop" item={charity} type="color" field="color" label="Brand colour" />
