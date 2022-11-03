@@ -24,7 +24,6 @@ const ReportCard = ({title, slug, date, authors, summary}) => {
             </Col>
             <Col md={6} className="text-right p-2">
                 <p><i>{date}</i></p>
-                <p><b>{authors.join(", ")}</b></p>
                 <p>{summary}</p>
             </Col>
         </Row>
@@ -119,7 +118,6 @@ const ReportPage = ({slug, title, date, authors}) => {
         <br/><br/>
         <h1 className='text-center'>{title}</h1>
         <p className='text-right'><i>{date}</i></p>
-        <p className='text-right'><i>{authors}</i></p>
         <br/>
         {!text ? <Misc.Loading/>
         : <MDText source={text} components={components}/>}
