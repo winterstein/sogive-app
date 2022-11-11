@@ -49,6 +49,7 @@ import CareersPage from './CareersPage';
 import TermsPage from './TermsPage';
 import { modifyHash, stopEvent } from '../base/utils/miscutils';
 import Icon from '../base/components/Icon';
+import AnalysisPage from './AnalysisPage';
 
 // HACK: Squash "attempt to reuse idempotent Stripe key" error messages - server should be safe now so user doesn't need to see them
 Messaging.registerFilter(msg => {
@@ -90,6 +91,7 @@ const PAGES = {
 	privacypolicy : PrivacyPolicyPage,
 	terms: TermsPage, 
 	careers: CareersPage,
+    analysis: AnalysisPage
 };
 
 const PAGE_LABELS = {
@@ -103,6 +105,7 @@ const PAGE_LABELS = {
 	privacypolicy: "Privacy Policy",
 	terms: "Terms of Service", 
 	careers: "Careers",
+    analysis: "Analysis",
 }
 
 const EXTERNAL_PAGE_LINKS = {
@@ -127,7 +130,7 @@ const EXTERNAL_PAGE_LINKS = {
 
 // Evaluated on every redraw of MainDivBase so once the promise resolves the extra items appear
 const navbarPagesFn = () => {
-	let pages = ['home', 'search', 'methodology', 'about', 'blog'];
+	let pages = ['home', 'search', 'methodology', 'about', 'blog', 'analysis'];
 	if (!Roles.iCan(C.CAN.test).value) return pages;
 	return [...pages];
 };
@@ -176,7 +179,7 @@ const MainDiv = () => {
 		// securityCheck: ({page}) => throw error / return true
 		// SecurityFailPage: ?JSX
 		defaultPage='home'
-		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms', 'careers']}
+		fullWidthPages={['home', 'search', 'methodology', 'about', 'blog', 'privacypolicy', 'financialadvisers', 'corporates', 'terms', 'careers', 'analysis']}
 		navbarExternalLinks={EXTERNAL_PAGE_LINKS}
 		navbarChildren={<SearchWidget />}
 		isBeta={true} 
