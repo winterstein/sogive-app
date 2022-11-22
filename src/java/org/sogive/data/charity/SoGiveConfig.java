@@ -43,14 +43,15 @@ public class SoGiveConfig implements IESRouter, ISiteConfig {
 		case MODIFIED:
 			index += ".draft";
 			break;
-		case TRASH:
-			index += ".trash";
-			break;
+		case PUB_OR_DRAFT:
 		case ALL_BAR_TRASH:
 			String i1 = index;
 			String i2 = index + ".draft";
 			ESPath esp = new ESPath(new String[] { i1, i2 }, stype, id);
 			return esp;
+		case TRASH:
+			index += ".trash";
+			break;
 		default:
 			throw new IllegalArgumentException(type + " " + status);
 		}
