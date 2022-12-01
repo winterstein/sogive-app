@@ -12,7 +12,7 @@ const VolunteerPage = () => {
 
 ## What to expect?
 
-After joining the programme you will initially contribute to SoGive's charity cost-effectiveness research by carrying out 'shallow analysis' on some of the UK's most well known charities. During these first few months we expect you'll become skilled in this type of analysis, so when the next volunteer cohort joins SoGive your responsibilities will evolve to include reviewing the shallow analyses conducted by the newer volunteer cohort. At this point you can also start work on an in-depth research project (or something else if you prefer). After another few months you will relinquish your responsibilities of reviewing shallow analysis if you wish and focus on your in-depth research project. 
+After joining the programme you will initially contribute to SoGive's charity cost-effectiveness research by carrying out ['shallow analysis'](http://thinkingaboutcharity.blogspot.com/2021/04/sogives-analysis-methodology.html) on some of the UK's most well known charities. During these first few months we expect you'll become skilled in this type of analysis, so when the next volunteer cohort joins SoGive your responsibilities will evolve to include reviewing the shallow analyses conducted by the newer volunteer cohort. At this point you can also start work on an in-depth research project (or something else if you prefer). After another few months you will relinquish your responsibilities of reviewing shallow analysis if you wish and focus on your in-depth research project. 
 
 During the volunteer programme you will undertake training in:
 
