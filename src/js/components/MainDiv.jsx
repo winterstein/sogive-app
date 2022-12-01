@@ -50,6 +50,7 @@ import TermsPage from './TermsPage';
 import { modifyHash, stopEvent } from '../base/utils/miscutils';
 import Icon from '../base/components/Icon';
 import AnalysisPage from './AnalysisPage';
+import VolunteerPage from './VolunteerPage';
 
 // HACK: Squash "attempt to reuse idempotent Stripe key" error messages - server should be safe now so user doesn't need to see them
 Messaging.registerFilter(msg => {
@@ -91,7 +92,8 @@ const PAGES = {
 	privacypolicy : PrivacyPolicyPage,
 	terms: TermsPage, 
 	careers: CareersPage,
-    analysis: AnalysisPage
+    analysis: AnalysisPage,
+	volunteer: VolunteerPage
 };
 
 const PAGE_LABELS = {
