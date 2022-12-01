@@ -1,4 +1,5 @@
 import React from 'react';
+import MailTo from '../base/components/MailTo';
 import MDText from '../base/components/MDText';
 import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 
@@ -33,7 +34,7 @@ During 2023, there will be three chances to join the volunteer programme:
 
 SoGive will also have a stand at the EAGx Berkeley Careers Fair, so if you're attending, please come and chat to us to find out more about our volunteer programme!
 
-If you have any questions about the volunteer programme, you can contact Sanjay Joshi, the CEO of SoGive, via email: sanjay@sogive.org
+If you have any questions about the volunteer programme, you can contact Sanjay Joshi, the CEO of SoGive, via email: [sanjay@sogive.org](mailto:sanjay@sogive.org?subject=Volunteering)
 `} />
             
             <NewsletterCard />
