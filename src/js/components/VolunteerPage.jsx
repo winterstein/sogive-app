@@ -3,6 +3,8 @@ import MailTo from '../base/components/MailTo';
 import MDText from '../base/components/MDText';
 import { Banner, NewsletterCard, ImpactRatingCard } from './WebsiteCards';
 
+// see https://docs.google.com/document/d/1tAnhMOYVQuIfsrW6V4zx82oxbLHbjSLvqmlXJp5DuLU/edit#
+
 const VolunteerPage = () => {
 
     return (
