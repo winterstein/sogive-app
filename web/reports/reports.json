@@ -10,5 +10,23 @@
         "date": "March 2022",
         "authors": ["Good-Loop"],
         "slug": "vitamina"
+    },
+    {
+        "title": "SoGive review of GiveWell's discount rates",
+        "date": "November 2022",
+        "authors": ["SoGive, Sanjay"],
+        "slug": "givewelldiscount"
+    },
+    {
+        "title": "Donations to SCI Foundation may funge with other work",
+        "date": "November 2022",
+        "authors": ["SoGive, Sanjay"],
+        "slug": "donationssci"
+    },
+    {
+        "title": "GiveWell’s approach to supplementary adjustments uses questionable priors",
+        "date": "November 2022",
+        "authors": ["SoGive, Sanjay"],
+        "slug": "givewellpriors"
     }
 ]
