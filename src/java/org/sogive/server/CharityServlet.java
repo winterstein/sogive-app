@@ -18,6 +18,7 @@ import com.winterwell.es.client.query.ESQueryBuilder;
 import com.winterwell.es.client.query.ESQueryBuilders;
 import com.winterwell.gson.Gson;
 import com.winterwell.utils.Dep;
+import com.winterwell.utils.Key;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.Log;
@@ -108,6 +109,12 @@ public class CharityServlet extends CrudServlet<NGO> {
 		return f;
 	}
 
+	@Override
+	protected String doList3_QueryString_Custom(String q) {
+		if (q.startsWith("id:")) q = "@" + q;
+		return q;
+	}
+	
 	@Override
 	protected ESQueryBuilder doList4_ESquery_custom(WebRequest state) {
 		BoolQueryBuilder noUnlisted = ESQueryBuilders.boolQuery();
