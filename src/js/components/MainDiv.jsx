@@ -98,7 +98,7 @@ const PAGES = {
 
 const PAGE_LABELS = {
 	home: "Home",
-	search: "Top Charities",
+	search: "Charity Ratings",
 	methodology: "Methodology",
 	about: "About Us",
 	blog: "Blog",
