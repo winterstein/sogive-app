@@ -147,5 +147,4 @@ Excerpts from the relevant annual reports are below.
 | Sightsavers | 5% | 5% | GiveWell's approach seems reasonable: Sightsavers does work other than deworming. Because of time constraints, we did not assess whether the size of the adjustment should be something other than 5%. |
 | Malaria Consortium | 5% | 5% | GiveWell's approach seems reasonable: Malaria consortium also does other work, such as case management (helping people who have malaria) and vector control. Because of time constraints, we did not assess whether the size of the adjustment should be something other than 5%. |
 | Helen Keller | 5% | 5% | GiveWell's approach seems reasonable:Helen Keller does various different things. Because of time constraints, we did not assess whether the size of the adjustment should be something other than 5%. |
-| New Incentives | 0% | 0% | GiveWell's approach seems reasonable: New Incentives seems to do just one thing
- |
+| New Incentives | 0% | 0% | GiveWell's approach seems reasonable: New Incentives seems to do just one thing |
