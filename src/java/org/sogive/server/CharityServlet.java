@@ -111,7 +111,11 @@ public class CharityServlet extends CrudServlet<NGO> {
 
 	@Override
 	protected String doList3_QueryString_Custom(String q) {
-		if (q.startsWith("id:")) q = "@" + q;
+		// HACK: patch that SoGive (due to a historical bad call of following schema.org)
+		// uses "@id" instead of "id"
+		if (q.contains("id:")) {
+			q = q.replace("id:", "@id:");
+		}
 		return q;
 	}
 	
