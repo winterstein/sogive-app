@@ -2,6 +2,7 @@ package org.sogive.server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,11 @@ import com.winterwell.web.app.WebRequest;
 import com.winterwell.web.fields.BoolField;
 import com.winterwell.web.fields.Checkbox;
 
+/**
+ * @testedby CharityServletTest and NGOClientTest
+ * @author daniel
+ *
+ */
 public class CharityServlet extends CrudServlet<NGO> {
 	
 	public static BoolField NO_REDIRECT = new BoolField("noRedirect");
@@ -51,6 +57,34 @@ public class CharityServlet extends CrudServlet<NGO> {
 		config = Dep.get(SoGiveConfig.class);
 		augmentFlag = true;
 		gitAuditTrail = true;
+		// NB: term list taken from a (fairly adhoc) set of results then manually filtered, Jan 2022
+		searchFields = Arrays.asList(
+			("@id\n"
+			+ "@type\n"
+			+ "category\n"
+			+ "description\n"
+			+ "displayName\n"
+			+ "englandWalesCharityRegNum\n"
+			+ "extendedDescription\n"
+			+ "howTags\n"
+			+ "id\n"
+			+ "location\n"
+			+ "name\n"
+			+ "niCharityRegNum\n"
+			+ "parentCharity\n"
+			+ "parentCharityName\n"
+			+ "scotlandCharityRegNum\n"
+			+ "subcategory\n"
+			+ "summaryDescription\n"
+			+ "ukCompanyRegNum\n"
+			+ "unsdg\n"
+			+ "url\n"
+			+ "usCharityRegNum\n"
+			+ "whereTags\n"
+			+ "whoTags\n"
+			+ "whyTags\n"
+			).trim().split("\\s+"));
+		assert searchFields.size() > 5;
 	}
 
 	@Override
@@ -110,7 +144,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	}
 
 	@Override
-	protected String doList3_QueryString_Custom(String q) {
+	protected String doList4_ESquery_customString(String q) {
 		// HACK: patch that SoGive (due to a historical bad call of following schema.org)
 		// uses "@id" instead of "id"
 		if (q.contains("id:")) {
@@ -140,6 +174,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		}
 		return noUnlisted;
 	}
+	
 
 	@Override
 	protected JThing<NGO> doNew(WebRequest state, String id) {
