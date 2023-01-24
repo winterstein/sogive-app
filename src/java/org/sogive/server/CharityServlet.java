@@ -147,7 +147,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 	protected String doList4_ESquery_customString(String q) {
 		// HACK: patch that SoGive (due to a historical bad call of following schema.org)
 		// uses "@id" instead of "id"
-		if (q.contains("id:")) {
+		if (q != null && q.contains("id:")) {
 			q = q.replace("id:", "@id:");
 		}
 		return q;
