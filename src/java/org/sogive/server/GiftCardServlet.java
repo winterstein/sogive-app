@@ -110,7 +110,7 @@ public class GiftCardServlet extends CrudServlet<GiftCard> {
 		String hashedCode = StrUtils.sha1(code);
 
 		// Check DB for code
-		SearchRequest s = new SearchRequest(es);
+		SearchRequest s = new SearchRequest(es());
 		s.setIndex(esRouter.getPath(dataspace, type, null, KStatus.PUBLISHED).index());
 		ESQueryBuilder filter = ESQueryBuilders.termQuery("code", hashedCode);
 
