@@ -167,7 +167,7 @@ public class CharityServlet extends CrudServlet<NGO> {
 		ESQueryBuilder hasRedirect = ESQueryBuilders.existsQuery("redirect");
 		if (r) {
 			// Must have redirects? Odd but OK
-			noUnlisted.must(hasRedirect);
+			noUnlisted.filter(hasRedirect);
 		} else {
 			// Normal - no redirects
 			noUnlisted.mustNot(hasRedirect);

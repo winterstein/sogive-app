@@ -74,7 +74,7 @@ public class EventReportServlet implements IServlet {
 
 		// query ?? cf crudservlet
 //		String q = state.get("q");
-		ESQueryBuilder qb = ESQueryBuilders.boolQuery().must(ESQueryBuilders.termQuery("eventId", eventId));
+		ESQueryBuilder qb = ESQueryBuilders.boolQuery().filter(ESQueryBuilders.termQuery("eventId", eventId));
 
 		s.setQuery(qb);
 
