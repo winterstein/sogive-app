@@ -8,7 +8,6 @@ import org.sogive.server.payment.StripeAuth;
 import com.goodloop.data.Money;
 import com.winterwell.data.AThing;
 import com.winterwell.ical.Repeat;
-import com.winterwell.web.data.XId;
 
 /**
  * The NORMAL status for a Basket is DRAFT!

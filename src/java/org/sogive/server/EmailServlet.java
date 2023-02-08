@@ -1,8 +1,5 @@
 package org.sogive.server;
 
-import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
-
 import org.sogive.data.DBSoGive;
 import org.sogive.data.commercial.Event;
 import org.sogive.data.user.Person;
@@ -17,6 +14,9 @@ import com.winterwell.web.data.XId;
 import com.winterwell.web.email.EmailConfig;
 import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.Checkbox;
+
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 
 public class EmailServlet extends CrudServlet<Event> implements IServlet {
 

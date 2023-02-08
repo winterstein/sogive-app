@@ -5,8 +5,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.mail.internet.InternetAddress;
-
 import org.sogive.data.DBSoGive;
 import org.sogive.data.commercial.Transfer;
 import org.sogive.data.user.Person;
@@ -30,6 +28,8 @@ import com.winterwell.web.email.SimpleMessage;
 import com.winterwell.web.fields.SField;
 import com.winterwell.youagain.client.AuthToken;
 import com.winterwell.youagain.client.YouAgainClient;
+
+import jakarta.mail.internet.InternetAddress;
 
 /**
  * Status: hack

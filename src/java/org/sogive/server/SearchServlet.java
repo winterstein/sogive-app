@@ -9,10 +9,8 @@ import java.util.Map;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.Output;
-import org.sogive.data.charity.Project;
 import org.sogive.data.charity.SoGiveConfig;
 
-import com.goodloop.data.Money;
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
 import com.winterwell.es.client.ESHttpClient;
@@ -26,7 +24,6 @@ import com.winterwell.es.client.sort.Sort;
 import com.winterwell.es.client.suggest.Suggesters;
 import com.winterwell.nlp.query.SearchQuery;
 import com.winterwell.utils.Dep;
-import com.winterwell.utils.StrUtils;
 import com.winterwell.utils.Utils;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Containers;

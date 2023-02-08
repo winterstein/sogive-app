@@ -1,7 +1,5 @@
 package org.sogive.server;
 
-import jakarta.mail.internet.InternetAddress;
-
 import org.sogive.data.commercial.Basket;
 import org.sogive.data.commercial.Card;
 import org.sogive.data.commercial.FundRaiser;
@@ -22,6 +20,8 @@ import com.winterwell.web.ajax.JThing;
 import com.winterwell.web.app.AppUtils;
 import com.winterwell.web.app.Emailer;
 import com.winterwell.web.email.SimpleMessage;
+
+import jakarta.mail.internet.InternetAddress;
 
 /**
  * When a basket is published and paid for. Fulfill the order offline.
