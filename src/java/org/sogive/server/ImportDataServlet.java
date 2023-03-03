@@ -4,9 +4,11 @@ import org.sogive.data.loader.DatabaseWriter;
 import org.sogive.data.loader.ElasticSearchDatabaseWriter;
 import org.sogive.data.loader.ImportEditorialsDataTask;
 import org.sogive.data.loader.ImportOSCRData;
+import org.sogive.data.loader.ImportEWCCData;
 import org.sogive.data.loader.JsoupDocumentFetcher;
 import org.sogive.data.loader.JsoupDocumentFetcherImpl;
 
+import com.winterwell.depot.Desc;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.web.WebUtils2;
 import com.winterwell.web.WebEx;
@@ -25,6 +27,7 @@ public class ImportDataServlet implements IServlet {
 
 	private static ImportEditorialsDataTask importEditorialsTask;
 	private static ImportOSCRData oscr;
+	private static ImportEWCCData ewcc;
 
 	@Override
 	public void process(WebRequest state) throws Exception {
@@ -36,6 +39,20 @@ public class ImportDataServlet implements IServlet {
 				throw new WebEx.E400("Repeat call");
 			}
 			oscr.run();
+		}
+		// England & Wales official data
+		if ("EWCC".equals(dataset)) {
+			DatabaseWriter databaseWriter = new ElasticSearchDatabaseWriter(); 
+			String depotServer = Desc.CENTRAL_SERVER;
+			int ngoExceptionLimit = 30;
+			ewcc = new ImportEWCCData(databaseWriter, depotServer, ngoExceptionLimit);
+			if (ewcc.isRunning()) {
+				throw new WebEx.E400("Repeat call");
+			}
+			String resp = "EWCC now processing. Check logs for stats &/or errors.";
+			JsonResponse output = new JsonResponse(state, resp);
+			WebUtils2.sendJson(output, state);
+			ewcc.run();
 		}
 		// A Google doc of editorials?
 		if ("editorials".equals(dataset)) {
