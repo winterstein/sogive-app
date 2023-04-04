@@ -30,17 +30,17 @@ import com.winterwell.utils.time.Time;
  */
 public class Thing<SubThing extends Thing> extends HashMap<String, Object> implements IInit {
 
-	public static final String description = "description";
+//	public static final String description = "description";
 
 	public static final String ID = "@id";
 
-	public static final String image = "image";
+//	public static final String image = "image";
 
-	public static final String name = "name";
+//	public static final String name = "name";
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String url = "url";
+//	public static final String url = "url";
 
 	public static <T extends Thing> List<T> getLatestYear(List<T> inputs) {
 		if (inputs.isEmpty())

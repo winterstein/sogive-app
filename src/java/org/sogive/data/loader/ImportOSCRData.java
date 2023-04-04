@@ -129,10 +129,10 @@ public class ImportOSCRData {
 			// Build the NGO object
 			// NB: filter out null values, to avoid potentially overwriting existing data 
 			ArrayMap<String,String> _ngoTemp = new ArrayMap(
-				NGO.name, charityName,
+				"name", charityName,
 				"displayName", row[3],
 				OSCR_REG, row[0],
-				Thing.url, website,
+				"url", website,
 				"parentCharityName", row[20],
 				"parentCharity", row[21]
 			);
