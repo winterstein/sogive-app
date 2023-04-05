@@ -342,6 +342,10 @@ const SearchResult = ({ item, CTA, onPick }) => {
     let status = item.status;
     let page = C.KStatus.isDRAFT(status) ? "edit" : "charity";
     const cid = NGO.id(item);
+    if ( ! cid) {
+        console.warn("(skip) SearchResult with no id?!",item);
+        return null; 
+    }
     const charityUrl = "#" + page + "?charityId=" + encURI(cid);
 
     // We need to make impact calculations so we can say e.g. "£1 will find X units of impact"
