@@ -367,7 +367,7 @@ const SearchResult = ({ item, CTA, onPick }) => {
     // NB: exact matches only, to avoid mangling names
     const charityName = NGO.displayName(item);
     let charityDesc = item.summaryDescription || item.description || "";
-    if (charityDesc.substr(0, charityName.length).toLowerCase() === charityName.toLowerCase()) {
+    if (charityName && charityDesc.substr(0, charityName.length).toLowerCase() === charityName.toLowerCase()) {
         charityDesc = "... "+charityDesc.slice(charityName.length).trim();
     }
     // hack: remove markdown links
