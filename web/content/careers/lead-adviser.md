@@ -70,7 +70,10 @@ At the outset, the salary is £35k-£45k + benefits. There is scope for this sal
 
 To formally express an interest in this role, please fill in [this form](https://www.guidedtrack.com/programs/d8c6c00/run).
 
-The deadline is 23:59 UK time on Thurs 11 May.
+**The deadline is 23:59 UK time on Thurs 11 May.**
+
+We aim to proceed with the interviewing process quickly, so please review our [Guidance Document for this role](https://docs.google.com/document/d/1T3euucXgUj9HYolvw_UumNtcfdEIYTEidtUyNnkKA6c/edit#) to ensure you are available for the first steps in the application process. It will also help with the later stages as well.
+
 
 ### <a name="_f9j86mu8fmvg"></a>Equal opportunities statement
 
