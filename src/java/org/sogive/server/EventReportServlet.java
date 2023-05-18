@@ -94,7 +94,7 @@ public class EventReportServlet implements IServlet {
 			return;
 		}
 
-		long total = sr.getTotal();
+		Long total = sr.getTotal();
 		String json = Dep.get(Gson.class).toJson(new ArrayMap("hits", hits2, "total", total));
 		JsonResponse output = new JsonResponse(state).setCargoJson(json);
 		WebUtils2.sendJson(output, state);

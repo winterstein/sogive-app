@@ -263,7 +263,7 @@ public class SearchServlet implements IServlet {
 			return;
 		}
 
-		long total = searchResponse.getTotal();
+		Long total = searchResponse.getTotal();
 		JsonResponse output = new JsonResponse(state, 
 				new ArrayMap("hits", hits2, "total", total));
 		WebUtils2.sendJson(output, state);
