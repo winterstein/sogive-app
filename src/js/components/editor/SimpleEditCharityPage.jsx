@@ -194,28 +194,28 @@ export const RegNumEditor = ({charity}) => {
 		const regBody = DataStore.getValue(regBodyPath);
 		const regNum = DataStore.getValue(regNumPath);
 		if (regBody && regNum) {
-			DataStore.setValue(path.concat(["regs", regBody]), regNum);
+			DataStore.setValue(path.concat(["regNums", regBody]), regNum);
 			DataStore.setValue(regBodyPath, "");
 			DataStore.setValue(regNumPath, "");
 		}
 	}
 
 	const deleteRegNum = (regBody) => {
-		const regs = DataStore.getValue(path.concat("regs"));
+		const regs = DataStore.getValue(path.concat("regNums"));
 		delete regs[regBody];
-		DataStore.setValue(path.concat("regs"), regs);
+		DataStore.setValue(path.concat("regNums"), regs);
 	}
 
 	return <div className="well ml-3">
 		<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-		{charity.regs && Object.keys(charity.regs).map(regBody => <>
+		{charity.regNums && Object.keys(charity.regNums).map(regBody => <>
 			<hr/>
 			<Row>
 				<Col md={4}>
 					<p>{regBody}</p>
 				</Col>
 				<Col md={4}>
-					<PropControl path={path.concat("regs")} prop={regBody} type="text" inline/>
+					<PropControl path={path.concat("regNums")} prop={regBody} type="text" inline/>
 				</Col>
 				<Col md={4}>
 					<Button onClick={() => deleteRegNum(regBody)}>x</Button>
@@ -226,12 +226,6 @@ export const RegNumEditor = ({charity}) => {
 		<PropControl label="Registration body" type="text" path={['widget', 'EditCharity']} prop="regBody"/>
 		<PropControl label="Registration number" type="text" path={['widget', 'EditCharity']} prop="regNum"/>
 		<Button onClick={addRegNum}>+</Button>
-		{/*<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
-		<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-		<EditField label="Northern Ireland registration number" item={charity} type="text" field="niCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-		<EditField label="UK Companies House number" item={charity} type="text" field="ukCompanyRegNum" help="This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number" />
-		<EditField label="USA registration number (i.e. EIN)" item={charity} type="text" field="usCharityRegNum" help="Registration number as a 501(c)(3)." />
-		*/}
 	</div>;
 }
 
