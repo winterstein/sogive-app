@@ -186,7 +186,8 @@ const EditorialEditor = ({charity}) => {
 
 export const RegNumEditor = ({charity}) => {
 	
-	let path = charity && DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:NGO.id(charity)});
+	if ( ! charity) return null;  
+  let path = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:NGO.id(charity)});
 
 	const addRegNum = () => {
 		const regBodyPath = ['widget', 'EditCharity', 'regBody'];
@@ -194,6 +195,10 @@ export const RegNumEditor = ({charity}) => {
 		const regBody = DataStore.getValue(regBodyPath);
 		const regNum = DataStore.getValue(regNumPath);
 		if (regBody && regNum) {
+      if (DataStore.getValue(path.concat(["regNums", regBody]))) {
+        alert("Cannot add duplicate registration numbers!");
+        return;
+      }
 			DataStore.setValue(path.concat(["regNums", regBody]), regNum);
 			DataStore.setValue(regBodyPath, "");
 			DataStore.setValue(regNumPath, "");
@@ -206,13 +211,13 @@ export const RegNumEditor = ({charity}) => {
 		DataStore.setValue(path.concat("regNums"), regs);
 	}
 
-	return <div className="well ml-3">
+	return <div className='well ml-3'>
 		<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-		{charity.regNums && Object.keys(charity.regNums).map(regBody => <>
+		{NGO.regNums(charity) && Object.keys(NGO.regNums(charity)).map(regBody => <>
 			<hr/>
 			<Row>
 				<Col md={4}>
-					<p>{regBody}</p>
+					<p>{NGO.regLabel(regBody)}</p>
 				</Col>
 				<Col md={4}>
 					<PropControl path={path.concat("regNums")} prop={regBody} type="text" inline/>
@@ -223,9 +228,9 @@ export const RegNumEditor = ({charity}) => {
 			</Row>
 		</>)}
 		<hr/>
-		<PropControl label="Registration body" type="text" path={['widget', 'EditCharity']} prop="regBody"/>
+		<PropControl label="Registration body" path={['widget', 'EditCharity']} prop="regBody" type="select" options={NGO.KRegOrg.values} labels={NGO.REG_ORG_LABELS}/>
 		<PropControl label="Registration number" type="text" path={['widget', 'EditCharity']} prop="regNum"/>
-		<Button onClick={addRegNum}>+</Button>
+		<Button onClick={addRegNum} className='align-self-start'>+</Button>
 	</div>;
 }
 
