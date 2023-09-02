@@ -5,7 +5,6 @@ import java.io.File;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.data.charity.Thing;
 import org.sogive.server.SoGiveServer;
 
 import com.winterwell.data.KStatus;
