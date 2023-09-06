@@ -1,7 +1,7 @@
 
 
 import Login from '../base/youagain';
-import PV from 'promise-value';
+import PV from '../base/promise-value';
 import _ from 'lodash';
 import md5 from 'md5';
 
