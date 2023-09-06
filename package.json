@@ -1,6 +1,6 @@
 {
   "name": "SoGive",
-  "version": "0.5.9",
+  "version": "0.6.0",
   "description": "Charity app",
   "author": "Daniel Winterstein",
   "repository": {
@@ -12,7 +12,7 @@
     "@babel/runtime": "^7.16.5",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
-    "chart.js": "^3.3.2",
+    "chart.js": "^3.9.1",
     "data-pivot": "^1.0.2",
     "dayjs": "^1.11.7",
     "dayjs-with-plugins": "^1.0.3",
@@ -27,7 +27,6 @@
     "node-fetch": "^2.6.1",
     "prismjs": "^1.29.0",
     "react": "^17.0.2",
-    "react-autocomplete": "^1.8.1",
     "react-chartjs2": "^1.2.1",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
@@ -42,7 +41,6 @@
     "compile": "webpack --config $PWD/webpack.config.js --progress --color && ./gitstamp.sh",
     "compile-watch": "webpack --config $PWD/webpack.config.js --progress --color --watch",
     "compile-watch-fast": "NO_PROD=true webpack --config $PWD/webpack.config.js --progress --color --watch",
-    "test": "jest",
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
