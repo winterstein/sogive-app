@@ -1,15 +1,10 @@
+// Front-end configuration for `enchantedtray` (DW dev laptop)
 
-// Change to "local", "test" or "" to switch all endpoints together
-const cluster = 
-	'test';
-	// 'local';
-	// 'app'; // if you want production!
+// Change index to switch all endpoints together
+const cluster = ['app', 'stage', 'test', 'local'][2];
+const protocol = 'https';
 
-const protocol = (cluster === 'local') ? 'http' : 'https';
-
-module.exports = {
-	ServerIOOverrides: {
-		APIBASE: `${protocol}://${cluster}.sogive.org`,
-		ENDPOINT_NGO: `${protocol}://${cluster}.sogive.org`,		
-	}
+export const ServerIOOverrides = {
+	APIBASE: `${protocol}://${cluster}.sogive.org`,
+	ENDPOINT_NGO: `${protocol}://${cluster}.sogive.org`,
 };

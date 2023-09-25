@@ -1,11 +1,9 @@
-// Change to "local", "test" or "" to switch all endpoints together
-const cluster = '';
-const protocol = (cluster === 'local') ? 'http' : 'https';
+// Front-end configuration for `sickgamingrig` (WW dev desktop)
 
-const SOGIVE_SUBDOMAINS = { test: 'test', local: 'local', '': 'app' };
+// Change index to switch all endpoints together
+const cluster = ['app', 'stage', 'test', 'local'][0];
+const protocol = 'https';
 
-module.exports = {
-	ServerIOOverrides: {
-    APIBASE: `${protocol}://${SOGIVE_SUBDOMAINS[cluster]}.sogive.org`,
-	}
+export const ServerIOOverrides = {
+	APIBASE: `${protocol}://${cluster}.sogive.org`
 };
