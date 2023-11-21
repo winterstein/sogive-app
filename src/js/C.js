@@ -12,6 +12,7 @@ export default C;
  */
 C.app = {
 	name: "SoGive",
+	id: "sogive",
 	service: "sogive",
 	logo: "/img/SoGive-Light-70px.png",
 	website: "https://sogive.org",
