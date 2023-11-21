@@ -11,7 +11,8 @@ const CareersPageContent = () => {
         <br/><br/>
         <center><p className="text-muted">Current Vacancies</p></center>
 
-        <JobAd title="Lead Researcher/Philanthropy Adviser" url="/content/careers/lead-adviser.md" />
+        <JobAd title="Research Analyst - Full-time temporary contract" url="/content/careers/research-analyst.md" />
+        {/* <JobAd title="Lead Researcher/Philanthropy Adviser" url="/content/careers/lead-adviser.md" /> */}
 
         <br/><hr/><br/>
         <div className="container">
