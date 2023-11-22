@@ -2,12 +2,13 @@
 
 ### <a name="_cyv7i940f9oc"></a>About SoGive
 
-SoGive conducts research on high impact philanthropy. We also support a small number of major donors.
+SoGive supports mid-level and major donors to make high-impact gifts. How?
 
-Our model involves: supporting those donors to have as much impact as possible. Making public the things we learn in the process.
+1. We engage donors in setting a giving strategy that is consistent with their values and with evidence about the potential for impact.
+2. We find best-in-class projects and recommend supporting them.
+3. We manage research into the cost-effectiveness of promising, under-evidenced projects, and we make that research transparent.
 
 Examples of the research we have conducted include:
-
 - Our [review of Cool Earth](https://forum.effectivealtruism.org/posts/RnmZ62kuuC8XzeTBq/why-we-have-over-rated-cool-earth) changed the Effective Altruism community’s perception of high impact climate philanthropy
 - Our [critique of Founders Pledge’s analysis](https://forum.effectivealtruism.org/posts/EAii5kf65cvywb2cF/why-we-think-the-founders-pledge-report-overrates-cfrn) of the Coalition for Rainforest Nations (CfRN) has caused some donors to contact us, and was followed by (but didn’t necessarily cause) FP de-recommending CfRN
 - We conducted [this expert survey](https://forum.effectivealtruism.org/posts/oxdmyQWsnNwCGSLLC/we-re-surprisingly-more-positive-about-tackling-bio-risks) about the extent to which COVID makes GCBRs a more/less impactful cause area.
@@ -77,17 +78,9 @@ The role is funded for 31 days of full-time work, at £800-1000 per day.
 
 To formally express an interest in this role, please fill in [this form](https://forms.gle/mK1GKW7cASKJDzFy9).
 
-The deadline is 23:59 UK time on Wednesday November 22, 2023. Interviews will be conducted on a rolling basis on Google Meet.
-Equal opportunities statement
+The deadline is **23:59 UK time on Wednesday November 22, 2023**. Interviews will be conducted on a rolling basis on Google Meet.
 
-We’re an equal opportunity employer. All applicants will be considered for employment without attention to race, colour, religion, sex, sexual orientation, gender identity, or disability status.
-
-**The deadline is 23:59 UK time on Thurs 11 May.**
-
-We aim to proceed with the interviewing process quickly, so please review our [Guidance Document for this role](https://docs.google.com/document/d/1T3euucXgUj9HYolvw_UumNtcfdEIYTEidtUyNnkKA6c/edit#) to ensure you are available for the first steps in the application process. It will also help with the later stages as well.
-
-
-### <a name="_f9j86mu8fmvg"></a>Equal opportunities statement
+### Equal opportunities statement
 
 We’re an equal opportunity employer. All applicants will be considered for employment without attention to race, colour, religion, sex, sexual orientation, gender identity, or disability status.
 
