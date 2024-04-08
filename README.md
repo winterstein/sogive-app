@@ -82,7 +82,7 @@ a high impact celebration.
 1. Follow steps 1 - 5 in the Linux instructions to install npm, clone the repositories and run `npm i` & `./watch.sh`.
 
 
-2. Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
+2. (update: nginx on Mac is maybe hard-work -- see notes for http-server below) Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
 
 	1. Install nginx
 		```
@@ -130,6 +130,26 @@ a high impact celebration.
 		```
 
 4. Continue following Linux instructions from Step 7 ("Modify your `/etc/hosts` file ...")
+
+### (April 2024 - rough notes!!) What we did to make it work for S.E
+
+
+Install http-server globally:
+
+	sudo npm i -g http-server
+
+In one terminal window, run:
+
+	cd winterwell/sogive-app/web
+	http-server
+
+This will output a url like: http://127.0.0.127:8080
+Open that in your web browser.
+
+In a 2nd terminal window, run this to compile the site:
+
+	cd winterwell/sogive-app
+	./watch.sh
 
 
 ## Java: Server Installation
