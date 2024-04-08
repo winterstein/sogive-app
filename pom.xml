@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>winterwell</groupId>
-  <artifactId>news-sim</artifactId>
+  <artifactId>sogive-app</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Statecraft: Political Simulator</name>
+  <name>SoGive</name>
   
   <dependencies>
 	<dependency>
@@ -31,35 +31,24 @@
       <artifactId>winterwell.webappbase</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>winterwell</groupId>
-      <artifactId>aiqa</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
 <dependency>
-    <groupId>org.eclipse.jetty.websocket</groupId>
-    <artifactId>websocket-javax-server</artifactId>
-    <version>10.0.20</version>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>2.1.0-alpha1</version>
 </dependency>
+	<dependency><groupId>com.stripe</groupId><artifactId>stripe-java</artifactId><version>20.30.0</version></dependency>
 <dependency>
-    <groupId>jakarta.websocket</groupId>
-    <artifactId>jakarta.websocket-api</artifactId>
-    <version>1.1.2</version>
-</dependency>
-
-	<dependency>
 	    <groupId>org.mockito</groupId>
 	    <artifactId>mockito-core</artifactId>
 	    <version>5.11.0</version>
 	    <scope>test</scope>
 	</dependency>
 	<dependency>
-	    <groupId>org.mockito</groupId>
-	    <artifactId>mockito-junit-jupiter</artifactId>
-	    <version>5.11.0</version>
-	    <scope>test</scope>
-	</dependency>	
+  <groupId>com.google.code.gson</groupId>
+  <artifactId>gson</artifactId>
+  <version>2.10.1</version>
+</dependency>
+	<dependency><groupId>org.jsoup</groupId><artifactId>jsoup</artifactId><version>1.13.1</version></dependency>
   </dependencies>
   
   <build>
@@ -108,10 +97,34 @@
         </configuration>
       </plugin>
 
+<plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-5</version>
+                <executions>
+                    <execution>
+                        <id>create-executable-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>
+                                    jar-with-dependencies
+                                </descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <mainClass>aiqa.AIQAMain</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
       </plugins>
 
     </pluginManagement>
 
-    <sourceDirectory>src/java</sourceDirectory>
   </build>
 </project>
