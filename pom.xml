@@ -1,0 +1,117 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>winterwell</groupId>
+  <artifactId>news-sim</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Statecraft: Political Simulator</name>
+  
+  <dependencies>
+	<dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>elasticsearch-java-client</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>flexi-gson</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.depot</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.web</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.webappbase</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>winterwell</groupId>
+      <artifactId>aiqa</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+<dependency>
+    <groupId>org.eclipse.jetty.websocket</groupId>
+    <artifactId>websocket-javax-server</artifactId>
+    <version>10.0.20</version>
+</dependency>
+<dependency>
+    <groupId>jakarta.websocket</groupId>
+    <artifactId>jakarta.websocket-api</artifactId>
+    <version>1.1.2</version>
+</dependency>
+
+	<dependency>
+	    <groupId>org.mockito</groupId>
+	    <artifactId>mockito-core</artifactId>
+	    <version>5.11.0</version>
+	    <scope>test</scope>
+	</dependency>
+	<dependency>
+	    <groupId>org.mockito</groupId>
+	    <artifactId>mockito-junit-jupiter</artifactId>
+	    <version>5.11.0</version>
+	    <scope>test</scope>
+	</dependency>	
+  </dependencies>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.2.3</version>
+          <configuration>
+            <argLine>-ea --add-opens java.base/java.lang=ALL-UNNAMED --add-opens
+              java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens
+              java.base/java.security=ALL-UNNAMED --add-opens
+              java.base/sun.security.pkcs=ALL-UNNAMED --add-opens
+              java.base/java.lang.ref=ALL-UNNAMED</argLine>
+          </configuration>
+        </plugin>
+
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.1</version>
+          <executions>
+            <execution>
+              <id>copy-dependencies</id>
+              <phase>package</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <!--               <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>-->
+                <overWriteIfNewer>true</overWriteIfNewer>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>17</release>
+        </configuration>
+      </plugin>
+
+      </plugins>
+
+    </pluginManagement>
+
+    <sourceDirectory>src/java</sourceDirectory>
+  </build>
+</project>
