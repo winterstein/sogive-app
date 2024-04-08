@@ -42,8 +42,10 @@ const HeroBanner = () => {
                         <div className="col-md-6 mt-5">
                             <div>
                                 <h2>Donate to Charity More Effectively</h2>
-                                <p>SoGive researches which charities achieve outsized impact through analysing independent evaluations and financial data.</p>
-                                <a href="#search" className="btn btn-primary mt-3 p-3">Explore impact ratings</a>
+                                <p>SoGive helps donors clarify their values and find the most cost-effective charities 
+									through evidence based research.
+								</p>								
+                                <a href="#analysis" className="btn btn-primary mt-3 p-3">Explore reports</a>
                             </div>
                         </div>
                         <div className="col-md-6 mt-3">
