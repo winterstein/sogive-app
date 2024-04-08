@@ -21,7 +21,7 @@ This repo contains both the Java server code and the js client code.
 3. Clone this repo, and its sibling wwappbase.js (which contains widgets and utility code)
 
        git clone git@github.com:winterstein/sogive-app.git
-       git clone git@github.com:good-loop/wwappbase.js.git
+       git clone git@github.com:winterstein/wwappbase.js.git
 
 Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js repo. Your folders should look like this:
 
@@ -29,12 +29,12 @@ Note: the sogive-app repo contains some symlinks to folders in the wwappbase.js 
 		/sogive-app
 		/wwappbase.js
 
-4. Install npm packages
+1. Install npm packages
 
        cd sogive-app
        npm i
 
-5. Compile the js and the css (and - joy! - watch for edits). 
+2. Compile the js and the css (and - joy! - watch for edits). 
 
        ./watch.sh
        
@@ -133,7 +133,6 @@ a high impact celebration.
 
 ### (April 2024 - rough notes!!) What we did to make it work for S.E
 
-
 Install http-server globally:
 
 	sudo npm i -g http-server
@@ -154,7 +153,7 @@ In a 2nd terminal window, run this to compile the site:
 
 ## Java: Server Installation
 
-Not needed for UI edits, but if you want to do backend work...
+Not needed for UI edits, but if you want to do backend database work...
 
 Recommended minimum system requirements: Linux with > 8gb ram and better than Intel i3
 
