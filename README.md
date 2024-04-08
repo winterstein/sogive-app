@@ -82,7 +82,7 @@ a high impact celebration.
 1. Follow steps 1 - 5 in the Linux instructions to install npm, clone the repositories and run `npm i` & `./watch.sh`.
 
 
-2. (update: nginx on Mac is maybe hard-work -- see notes for http-server below) Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
+2. **(Update April 2024: nginx on Mac is maybe hard-work -- see notes for http-server below)** Setup a local web-server (e.g. nginx or http-server) serving the sogive-app/web folder. For example, for nginx:  
 
 	1. Install nginx
 		```
