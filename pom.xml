@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>winterwell</groupId>
-  <artifactId>sogive-app</artifactId>
+  <artifactId>sogive</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>SoGive</name>
   
@@ -11,6 +11,11 @@
       <artifactId>elasticsearch-java-client</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+
+	<dependency><groupId>good-loop.com</groupId>
+  <artifactId>winterwell.utils</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
     <dependency>
       <groupId>good-loop.com</groupId>
       <artifactId>flexi-gson</artifactId>
@@ -26,6 +31,17 @@
       <artifactId>winterwell.web</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+	    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.maths</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+		    <dependency>
+      <groupId>good-loop.com</groupId>
+      <artifactId>winterwell.datalog</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>good-loop.com</groupId>
       <artifactId>winterwell.webappbase</artifactId>
@@ -49,11 +65,22 @@
   <version>2.10.1</version>
 </dependency>
 	<dependency><groupId>org.jsoup</groupId><artifactId>jsoup</artifactId><version>1.13.1</version></dependency>
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.5.3</version>
+</dependency>
   </dependencies>
   
   <build>
-    <pluginManagement>
       <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>17</release>
+        </configuration>
+      </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -68,34 +95,6 @@
         </plugin>
 
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.6.1</version>
-          <executions>
-            <execution>
-              <id>copy-dependencies</id>
-              <phase>package</phase>
-              <goals>
-                <goal>copy-dependencies</goal>
-              </goals>
-              <configuration>
-                <!--               <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>-->
-                <overWriteIfNewer>true</overWriteIfNewer>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>17</release>
-        </configuration>
-      </plugin>
 
 <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -124,7 +123,6 @@
             </plugin>
       </plugins>
 
-    </pluginManagement>
 
   </build>
 </project>
