@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.sogive.server.DonationServlet;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.winterwell.data.KStatus;
 import com.winterwell.es.ESPath;
@@ -110,7 +110,7 @@ public class RepeatDonationProcessor {
 
 	/**
 	 * TODO could be run as a separate JVM process. For now this is run via
-	 * {@link SoGiveServer}
+	 * {@link SoGiveMain}
 	 * 
 	 * @param args
 	 */

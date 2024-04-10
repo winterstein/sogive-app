@@ -1,7 +1,7 @@
 package org.sogive.data.commercial;
 
 import org.junit.Test;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.goodloop.data.KCurrency;
 import com.goodloop.data.Money;
@@ -12,7 +12,7 @@ public class TransferTest {
 
 	@Test
 	public void testGetTotalCredit() {
-		SoGiveServer sg = new SoGiveServer();
+		SoGiveMain sg = new SoGiveMain();
 		sg.init();
 
 		XId user = new XId("user" + Utils.getRandomString(6), "test", false);

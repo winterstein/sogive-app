@@ -32,7 +32,7 @@ import com.winterwell.youagain.client.YouAgainClient;
  */
 public class SoGiveTestUtils {
 
-	static SoGiveServer server;
+	static SoGiveMain server;
 
 	/**
 	 * An in-memory server for unit testing
@@ -41,7 +41,7 @@ public class SoGiveTestUtils {
 	 */
 	public static String getStartServer() {
 		if (server == null) {
-			server = new SoGiveServer();
+			server = new SoGiveMain();
 			String[] args = new String[] { "-port", "7312", "-testStripe", "true" };
 			server.doMain(args);
 		}

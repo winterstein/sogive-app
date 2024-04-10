@@ -5,7 +5,7 @@ import java.io.File;
 
 import org.sogive.data.charity.NGO;
 import org.sogive.data.charity.SoGiveConfig;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.winterwell.data.KStatus;
 import com.winterwell.depot.Depot;
@@ -78,7 +78,7 @@ public class ImportOSCRData {
 
 	public static void main(String[] args) {
 
-		new SoGiveServer().init();
+		new SoGiveMain().init();
 
 		new ImportOSCRData().run();
 	}

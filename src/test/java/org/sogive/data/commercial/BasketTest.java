@@ -1,7 +1,7 @@
 package org.sogive.data.commercial;
 
 import org.junit.Test;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.winterwell.web.ajax.JThing;
 
@@ -9,7 +9,7 @@ public class BasketTest {
 
 	@Test
 	public void testInit() {
-		SoGiveServer sg = new SoGiveServer();
+		SoGiveMain sg = new SoGiveMain();
 		sg.init();
 
 		Basket basket = new Basket();

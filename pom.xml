@@ -115,7 +115,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>aiqa.AIQAMain</mainClass>
+                                    <mainClass>org.sogive.server.SoGiveMain</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

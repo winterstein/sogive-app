@@ -1,7 +1,7 @@
 package org.sogive.data.user;
 
 import org.junit.Test;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.winterwell.web.ajax.JThing;
 
@@ -14,7 +14,7 @@ public class DonationTest {
 	@Test
 	public void testDonationFromJson() {
 		// init gson
-		SoGiveServer server = new SoGiveServer();
+		SoGiveMain server = new SoGiveMain();
 		server.init();
 
 		String json = "{\"@class\":\"org.sogive.data.user.Donation\",\"from\":\"daniel@sodash.com@email\",\"to\":\"against-malaria-foundation\",\"collected\":false,\"paidOut\":false,\"paidElsewhere\":false,\"giftAid\":false,\"giftAidOwnMoney\":\"yes\",\"giftAidFundRaisedBySale\":\"no\",\"giftAidBenefitInReturn\":\"no\",\"giftAidTaxpayer\":true,\"giftAidNoCompensation\":false,\"amount\":{\"@class\":\"org.sogive.data.charity.Money\",\"year\":0,\"currency\":\"GBP\",\"value100p\":100000,\"value\":\"10\"},\"id\":\"SKxBKX4gPB\",\"status\":\"DRAFT\"}";

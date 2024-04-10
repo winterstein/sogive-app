@@ -31,13 +31,13 @@ import com.winterwell.web.app.JettyLauncher;
 import com.winterwell.web.data.XId;
 import com.winterwell.youagain.client.YouAgainClient;
 
-public class SoGiveServer extends AMain<SoGiveConfig> {
+public class SoGiveMain extends AMain<SoGiveConfig> {
 
-	private static SoGiveServer main;
+	private static SoGiveMain main;
 	private static RepeatDonationProcessor rdp;
 
 	public static void main(String[] args) {
-		main = new SoGiveServer();
+		main = new SoGiveMain();
 
 		logFile = new LogFile(new File("sogive.log"))
 				// keep 8 weeks of 1 week log files ??revise this??
@@ -50,7 +50,7 @@ public class SoGiveServer extends AMain<SoGiveConfig> {
 		}
 	}
 
-	public SoGiveServer() {
+	public SoGiveMain() {
 		super("sogive", SoGiveConfig.class);
 	}
 

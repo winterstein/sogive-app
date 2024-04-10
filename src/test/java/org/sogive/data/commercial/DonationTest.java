@@ -2,7 +2,7 @@ package org.sogive.data.commercial;
 
 import org.junit.Test;
 import org.sogive.data.user.Donation;
-import org.sogive.server.SoGiveServer;
+import org.sogive.server.SoGiveMain;
 
 import com.goodloop.data.KCurrency;
 import com.goodloop.data.Money;
@@ -13,7 +13,7 @@ import com.winterwell.web.data.XId;
 public class DonationTest {
 	@Test
 	public void testGsonInMemory() {
-		SoGiveServer ss = new SoGiveServer();
+		SoGiveMain ss = new SoGiveMain();
 		ss.init();
 
 		Gson gson = Dep.get(Gson.class);
