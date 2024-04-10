@@ -13,7 +13,7 @@ Description=Lets run SoGive
 Type=simple 
 #User=winterwell
 #Group=winterwell
-ExecStart=/home/winterwell/sogive/run-java.sh
+ExecStart=/bin/bash /home/winterwell/sogive/run-java.sh
 
 [Install]
 WantedBy=default.target
