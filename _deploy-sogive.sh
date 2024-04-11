@@ -4,9 +4,11 @@
 
 PROJECT=sogive
 
+cd /home/winterwell
+
 unzip $PROJECT-build.zip
 
 rm -rf $PROJECT
 mv $PROJECT-build $PROJECT
 
-rm $PROJECT-build.zip
+# rm $PROJECT-build.zip
