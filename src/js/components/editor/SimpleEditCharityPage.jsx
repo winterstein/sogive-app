@@ -20,7 +20,7 @@ import ServerIO from '../../plumbing/ServerIO';
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
 import { getDataItem } from '../../base/plumbing/Crud';
-import { Alert } from 'reactstrap';
+import { Alert, Button, Row, Col } from 'reactstrap';
 
 
 const CONFIDENCE_VALUES = new Enum("high medium low very-low");
@@ -184,22 +184,66 @@ const EditorialEditor = ({charity}) => {
 	</div>);
 };
 
+export const RegNumEditor = ({charity}) => {
+	
+	if ( ! charity) return null;  
+  let path = DataStore.getDataPath({status:C.KStatus.DRAFT, type:C.TYPES.NGO, id:NGO.id(charity)});
+
+	const addRegNum = () => {
+		const regBodyPath = ['widget', 'EditCharity', 'regBody'];
+		const regNumPath = ['widget', 'EditCharity', 'regNum'];
+		const regBody = DataStore.getValue(regBodyPath);
+		const regNum = DataStore.getValue(regNumPath);
+		if (regBody && regNum) {
+      if (DataStore.getValue(path.concat(["regNums", regBody]))) {
+        alert("Cannot add duplicate registration numbers!");
+        return;
+      }
+			DataStore.setValue(path.concat(["regNums", regBody]), regNum);
+			DataStore.setValue(regBodyPath, "");
+			DataStore.setValue(regNumPath, "");
+		}
+	}
+
+	const deleteRegNum = (regBody) => {
+		const regs = DataStore.getValue(path.concat("regNums"));
+		delete regs[regBody];
+		DataStore.setValue(path.concat("regNums"), regs);
+	}
+
+	return <div className='well ml-3'>
+		<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
+		{NGO.regNums(charity) && Object.keys(NGO.regNums(charity)).map(regBody => <>
+			<hr/>
+			<Row>
+				<Col md={4}>
+					<p>{NGO.regLabel(regBody)}</p>
+				</Col>
+				<Col md={4}>
+					<PropControl path={path.concat("regNums")} prop={regBody} type="text" inline/>
+				</Col>
+				<Col md={4}>
+					<Button onClick={() => deleteRegNum(regBody)}>x</Button>
+				</Col>
+			</Row>
+		</>)}
+		<hr/>
+		<PropControl label="Registration body" path={['widget', 'EditCharity']} prop="regBody" type="select" options={NGO.KRegOrg.values} labels={NGO.REG_ORG_LABELS}/>
+		<PropControl label="Registration number" type="text" path={['widget', 'EditCharity']} prop="regNum"/>
+		<Button onClick={addRegNum} className='align-self-start'>+</Button>
+	</div>;
+}
+
 const ProfileEditor = ({charity}) => {
 	if (charity.category && ! charity.whyTags) {
 		charity.whyTags = charity.category;
 	}
+
 	return (<div>
 		<div><small>SoGive ID: {NGO.id(charity)}</small></div>
 		<EditField item={charity} disabled type="text" field="name" label="Official name (locked)" help="The official name, usually as registered with the Charity Commission." />
 
-		<div className="well ml-3">
-			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
-			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-			<EditField label="Northern Ireland registration number" item={charity} type="text" field="niCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-			<EditField label="UK Companies House number" item={charity} type="text" field="ukCompanyRegNum" help="This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number" />
-			<EditField label="USA registration number (i.e. EIN)" item={charity} type="text" field="usCharityRegNum" help="Registration number as a 501(c)(3)." />
-		</div>
+		<RegNumEditor charity={charity} />
 
 		<EditField item={charity} type="url" field="url" label="Website" />
 		<EditField item={charity} type="textarea" label="Summary description" field="summaryDescription" help="About one sentence long, to be used in search results as a summary. A good source for this is to do a google search for the charity, and the google hits page often shows a brief description" />
