@@ -20,7 +20,7 @@ import {LoginLink} from '../../base/components/LoginWidget';
 import Crud, { getDataItem } from '../../base/plumbing/Crud'; //publish
 import { ImpactDesc } from '../ImpactWidgetry';
 import { SuggestedDonationEditor } from './CommonControls';
-import { ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, CONFIDENCE_VALUES } from './SimpleEditCharityPage';
+import { ProjectInputs, AddProject, RemoveProject, ProjectDataSources, STD_INPUTS, AddIO, EditorialEditor, CONFIDENCE_VALUES, RegNumEditor } from './SimpleEditCharityPage';
 import KStatus from '../../base/data/KStatus';
 
 const EditCharityPage = () => {
@@ -177,14 +177,7 @@ const ProfileEditor = ({charity}) => {
 			field="parentCharityName"
 			help="Usually blank. The name of the parent charity, if there is one." />
 
-		<div className="well ml-3">
-			<p>Registration numbers -- most charities only have one, though international charities may be registered in several regions.</p>
-			<EditField label="England &amp; Wales Charity Commission registration number" item={charity} type="text" field="englandWalesCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there."/>
-			<EditField label="Scottish OSCR registration number" item={charity} type="text" field="scotlandCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-			<EditField label="Northern Ireland registration number" item={charity} type="text" field="niCharityRegNum" help="Process to find this: go to the charity website, and scroll to the bottom of the page. 99% of the time, the registration number is stated there." />
-			<EditField label="UK Companies House number" item={charity} type="text" field="ukCompanyRegNum" help="This often exists for charities, but its not mega-important to gather this if we already have the charity number. Should gathered for (e.g.) social enterprises with no charity number" />
-			<EditField label="USA registration number (i.e. EIN)" item={charity} type="text" field="usCharityRegNum" help="Registration number as a 501(c)(3)." />
-		</div>
+		<RegNumEditor charity={charity}/>
 
 		<EditField item={charity} type="url" field="url" label="Website" />
 		<EditField item={charity} type="url" field="wikipedia" label="Wikipedia page" />
